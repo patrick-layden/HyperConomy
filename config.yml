@@ -1,0 +1,18 @@
+config:
+  shopcheckinterval: 20
+  logwriteinterval: 15
+  saveinterval: 700
+  purchasetaxpercent: 3
+  initialpurchasetaxpercent: 100
+  statictaxpercent: 300
+  enchanttaxpercent: 100
+  enchantment:
+    classvalue:
+      wood: .1
+      leather: .1
+      stone: .15
+      chainmail: .2
+      iron: .25
+      gold: .1
+      diamond: 1
+      bow: .25
