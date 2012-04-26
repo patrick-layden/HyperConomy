@@ -6,6 +6,9 @@ import java.util.Date;
 import org.bukkit.configuration.file.FileConfiguration;
 
 
+
+
+
 /**
  * 
  * 
@@ -15,9 +18,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class Log {
 	
 	private ArrayList<String> buffer;	
-	private int logsize;
+	//private int logsize;
 	private HyperConomy hc;
 	private String entry;
+	
+	
+	private boolean requestbuffer;
+	private boolean bufferactive;
+	private int logsize;
+	private long loginterval;
+	private int buffertaskid;
 	
 	
 	public void setEntry(String ent) {
@@ -27,20 +37,22 @@ public class Log {
 	public int getbufferSize() {
 		return buffer.size();
 	}
-	public int getlogSize() {
-		return logsize;
-	}
+
 	
 	//For server start.
-	Log(HyperConomy hyperc, int logsiz) {
+	Log(HyperConomy hyperc) {
 		hc = hyperc;
-		logsize = logsiz;
 		buffer = new ArrayList<String>();	
+		
+    	requestbuffer = false;
+    	bufferactive = false;
+    	logsize = hc.getYaml().getLog().getKeys(true).size();
+    	loginterval = hc.getYaml().getConfig().getLong("config.logwriteinterval");
 	}
 	
   	public void writeBuffer() {
   		buffer.add(entry);
-  		hc.setrequestBuffer(true);
+  		setrequestBuffer(true);
   	}
   	
   	
@@ -55,7 +67,7 @@ public class Log {
 	  		//HyperConomy.yaml.saveYamls();	  		
 	  		buffer.remove(0);
   		} else {
-  			hc.setrequestBuffer(false);
+  			setrequestBuffer(false);
   		}
   	}
   	
@@ -74,6 +86,67 @@ public class Log {
   		}
   		hc.getYaml().saveYamls();	
   	}
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+    public void setrequestBuffer(boolean bufferstate) {
+    	requestbuffer = bufferstate;
+    }
+    
+    public void setlogInterval(long interval) {
+    	loginterval = interval;
+    }
+
+    
+    public void setlogSize(int size) {
+    	logsize = size;
+    }
+  	
+    public int getlogSize() {
+    	return logsize;
+    }
+  	
+    public long getlogInterval() {
+    	return loginterval;
+    }
+  	
+  	
+  	
+  	
+  	
+  	
+    public void startBuffer() {
+    	bufferactive = true;
+		buffertaskid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
+		    public void run() {
+		    	if (!requestbuffer) {
+		    		stopBuffer();
+		    	} else {
+		    		writelogThread();
+		    	}
+		    }
+		}, loginterval, loginterval);
+    }
+    
+    public void stopBuffer() {
+    	hc.getServer().getScheduler().cancelTask(buffertaskid);
+    	bufferactive = false;
+    }
+    
+    
+
+    
+    public void checkBuffer() {
+    	if (requestbuffer && !bufferactive) {
+    		startBuffer();
+    	}
+    }
+  	
   	
   	
 

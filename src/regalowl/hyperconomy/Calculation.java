@@ -533,9 +533,13 @@ public class Calculation {
 			try {
 				int da;
 				if (item != null) {
-				if (item.getTypeId() == 373 && item.getData().getData() != 0) {
-					Potion p = Potion.fromItemStack(item);
-					da = p.toDamageValue();			
+				if (item.getTypeId() == 373) {
+					try {
+						Potion p = Potion.fromItemStack(item);
+						da = p.toDamageValue();		
+					} catch (Exception IllegalArgumentException) {
+						da = item.getData().getData();
+					}
 				} else {
 					da = item.getData().getData();
 				}
@@ -552,6 +556,48 @@ public class Calculation {
 				return da;
 			}
 		}
+		
+		//Gets how many xp points are currently in the players xp bar.
+		public int getbarxpPoints(Player player) {
+			int lvl = player.getLevel();
+			int exppoints = (int) Math.floor(((3.5 * lvl) + 6.7) * player.getExp() + .5);
+			return exppoints;
+		}
+		
+		//Gets how much xp is required to go from the current lvl with an empty xp bar to the next lvl.
+		public int getxpfornextLvl(int lvl) {
+			//int lvl = player.getLevel();
+			int exppoints = (int) Math.floor(((3.5 * lvl) + 6.7) + .5);
+			return exppoints;
+		}
+		
+		//Gets the xp points at the minimum of the specified lvl.
+		public int getlvlxpPoints(int lvl) {
+			//int lvl = player.getLevel();
+			int exppoints = (int) Math.floor((1.75 * Math.pow(lvl, 2)) + (5 * lvl) + .5);
+			return exppoints;
+		}
+		
+		//Gets how many xp points a player has total.
+		public int gettotalxpPoints(Player player) {
+			int lvl = player.getLevel();
+			int lvlxp = getlvlxpPoints(lvl);
+			int barxp = getbarxpPoints(player);
+			int totalxp = lvlxp + barxp;
+			return totalxp;
+		}
+		
+		//Gets a players lvl from their total exp.
+		public int getlvlfromXP(int exp) {
+			double lvlraw = (Math.sqrt((exp * 7.0) + 25.0) - 5.0) * (2.0/7.0);
+			int lvl = (int) Math.floor(lvlraw);
+			//Incase math.floor fails.
+			if ((double)lvl > lvlraw) {
+				lvl = lvl - 1;
+			}
+			return lvl;
+		}
+
 
 		
 
@@ -605,7 +651,6 @@ public class Calculation {
 		public void setPDV(ItemStack itemstack) {
 			item = itemstack;
 		}
-		
 		
 		
 		

@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.901
+version: 0.912
 author: RegalOwl
 softdepend: [Vault]
 commands:
@@ -39,6 +39,21 @@ commands:
       permission: hyperconomy.buy
       permission-message: You don't have permission to do this.
       aliases: [bd]
+   buyxp:
+      description: Buys experience points.
+      permission: hyperconomy.xp
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [bxp]
+   sellxp:
+      description: Sells experience points.
+      permission: hyperconomy.xp
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [sxp]
+   xpinfo:
+      description: Displays information about experience.
+      permission: hyperconomy.info
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [xpi]
    sellall:
       description: Sells all of the items in your inventory.
       permission: hyperconomy.sellall
@@ -58,6 +73,11 @@ commands:
       permission: hyperconomy.top
       permission-message: You don't have permission to do this.
       aliases: [te]
+   browseshop:
+      description: Displays items in the global shop or the specified shop.
+      permission: hyperconomy.top
+      permission-message: You don't have permission to do this.
+      aliases: [bs]
    setshop:
       description: Sets the shop location.
       permission: hyperconomy.admin
@@ -78,6 +98,10 @@ commands:
       permission: hyperconomy.admin
       permission-message: Unknown command. Type "help" for help.
       aliases: [ri]
+   renameshop:
+      description: Renames a shop to the given name.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
    listshops:
       description: Lists all shop names.
       permission: hyperconomy.list
@@ -213,6 +237,24 @@ commands:
       description: Resets the shop stock, initiation, and static pricing.
       permission: hyperconomy.resetshop
       permission-message: Unknown command. Type "help" for help.
+   setstockmedianall:
+      description: Sets the stock of everything in the shop to its median value.
+      permission: hyperconomy.setstockmedianall
+      permission-message: Unknown command. Type "help" for help.
+   setbalance:
+      description: Sets an account's balance.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [sb]
+   scalebypercent:
+      description: Scales the selected value the the given percent.
+      permission: hyperconomy.scalebypercent
+      permission-message: Unknown command. Type "help" for help.
+   notify:
+      description: Toggles the chosen item or enchantments notifications.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [not]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.
@@ -224,6 +266,11 @@ permissions:
             hyperconomy.error: true
             hyperconomy.list: true
             hyperconomy.resetshop: true
+            hyperconomy.setstockmedianall: true
+            hyperconomy.scalebypercent: true
+            hyperconomy.createsign: true
+            hyperconomy.notify: true
+            hyperconomy.xp: true
     hyperconomy.use:
         description: Allows general use of HyperConomy.
         default: true
@@ -234,6 +281,7 @@ permissions:
             hyperconomy.sellall: true
             hyperconomy.info: true
             hyperconomy.top: true
+            hyperconomy.xp: true
     hyperconomy.admin:
         description: Allows use of shop management commands.
         default: false
@@ -266,4 +314,19 @@ permissions:
         default: false
     hyperconomy.resetshop:
         description: Allows the use of resetshop.
+        default: false
+    hyperconomy.setstockmedianall:
+        description: Allows the use of setstockmedianall.
+        default: false
+    hyperconomy.scalebypercent:
+        description: Allows the use of scalebypercent.
+        default: false
+    hyperconomy.createsign:
+        description: Allows the creation of information signs.
+        default: false
+    hyperconomy.notify:
+        description: Sends price/stock notifications.
+        default: false
+    hyperconomy.xp:
+        description: Allows experience trading.
         default: false

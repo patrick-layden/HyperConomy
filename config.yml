@@ -1,11 +1,21 @@
+version: 0.912
 config:
   shopcheckinterval: 20
   logwriteinterval: 15
   saveinterval: 700
+  signupdateinterval: 13
   purchasetaxpercent: 3
   initialpurchasetaxpercent: 100
   statictaxpercent: 300
   enchanttaxpercent: 100
+  daystosavehistory: 30
+  initialshopbalance: 20000000
+  shop-has-unlimited-money: false
+  use-shop-exit-message: true
+  use-notifications: true
+  use-info-signs: true
+  store-price-history: true
+  notify-for: diamond,diamondblock,
   enchantment:
     classvalue:
       wood: .1

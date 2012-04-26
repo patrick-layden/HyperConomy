@@ -1,3 +1,18 @@
+xp:
+  information:
+    material: N/A
+    id: -1
+    data: -1
+  value: 3
+  price:
+    static: false
+    staticprice: 3
+  stock:
+    stock: 0
+    median: 100000
+  initiation:
+    initiation: true
+    startprice: 6
 stone:
   information:
     material: STONE
@@ -1458,7 +1473,7 @@ clay:
     material: CLAY
     id: 82
     data: 0
-  value: 5
+  value: 20
   price:
     static: false
     staticprice: 1
@@ -1467,7 +1482,7 @@ clay:
     median: 1000
   initiation:
     initiation: true
-    startprice: 10
+    startprice: 40
 jukebox:
   information:
     material: JUKEBOX
@@ -2028,7 +2043,7 @@ melonblock:
     material: MELON_BLOCK
     id: 103
     data: 0
-  value: 100
+  value: 90
   price:
     static: false
     staticprice: 1
@@ -5177,7 +5192,7 @@ spotionofslowness2:
   information:
     material: POTION
     id: 373
-    data: 16425
+    data: 16426
   value: 460
   price:
     static: false
@@ -5342,7 +5357,22 @@ mundanepotion:
   information:
     material: POTION
     id: 373
-    data: 16384
+    data: 8192
+  value: 300
+  price:
+    static: false
+    staticprice: 1
+  stock:
+    stock: 0
+    median: 500
+  initiation:
+    initiation: true
+    startprice: 600
+smundanepotion:
+  information:
+    material: POTION
+    id: 373
+    data: 24576
   value: 300
   price:
     static: false

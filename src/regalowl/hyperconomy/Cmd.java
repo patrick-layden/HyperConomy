@@ -1,6 +1,8 @@
 package regalowl.hyperconomy;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -33,12 +35,22 @@ public class Cmd {
 	private Log l;
 	private Shop s;
 	private Account acc;
+	private InfoSign isign;
+	private Notify not;
 	
-
+	private int renameshopint;
+	private String renameshopname;
 	
-	Cmd(HyperConomy hyperc, Economy e, Message message, Transaction transaction, Calculation cal, Enchant en, Log log, Shop sh, Account account){
+	
+	//Constructor for server start.
+	Cmd() {
+		renameshopint = 0;
+		renameshopname = "";
+	}
+	
+	
+	public void setCmd(HyperConomy hyperc, Economy e, Message message, Transaction transaction, Calculation cal, Enchant en, Log log, Shop sh, Account account, InfoSign isig, Notify no) {
 		hc = hyperc;
-		//name = n;
 		economy = e;
 		m = message;
 		tran = transaction;
@@ -47,7 +59,11 @@ public class Cmd {
 		l = log;
 		s = sh;
 		acc = account;
+		isign = isig;
+		not = no;
 	}
+	
+
 	
 	public boolean handleCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		player = null;
@@ -56,7 +72,7 @@ public class Cmd {
     	}
 
     	if (cmd.getName().equalsIgnoreCase("buy") && (player != null)){
-    		//try {
+    		try {
     			s.setinShop(player);
     			if (s.inShop() != -1) {	
     				name = args[0];
@@ -64,7 +80,7 @@ public class Cmd {
     				String teststring = hc.getYaml().getItems().getString(name);
 		
     				if (teststring == null) {
-    					name = fixName(name);
+    					name = hc.fixName(name);
     					teststring = hc.getYaml().getItems().getString(name);
     				}
     				int id = hc.getYaml().getItems().getInt(name + ".information.id");
@@ -110,7 +126,7 @@ public class Cmd {
     				
     			if (teststring != null) {
     				if (s.has(s.getShop(player), name)) {	
-	    				tran.setAll(hc, id, data, amount, name, player, economy, calc, ench, l, acc);
+	    				tran.setAll(hc, id, data, amount, name, player, economy, calc, ench, l, acc, not, isign);
 	    				tran.buy();
 					} else {
 						m.send(player, 95);
@@ -124,9 +140,9 @@ public class Cmd {
     				m.send(player, 2);
     			}
     		return true;
-    		//} catch (Exception e) {
-    		//	m.send(player, 0);
-    		//}
+    		} catch (Exception e) {
+    			m.send(player, 0);
+    		}
     		
 	
     		
@@ -139,7 +155,7 @@ public class Cmd {
     			int amount = 0;
 				String teststring = hc.getYaml().getItems().getString(name);
 				if (teststring == null) {
-					name = fixName(name);
+					name = hc.fixName(name);
 					teststring = hc.getYaml().getItems().getString(name);
 				}
 
@@ -173,7 +189,7 @@ public class Cmd {
     			if (teststring != null) {
     				
     				if (s.has(s.getShop(player), name)) {	
-        				tran.setAll(hc, hc.getYaml().getItems().getInt(name + ".information.id"), hc.getYaml().getItems().getInt(name + ".information.data"), amount, name, player, economy, calc, ench, l, acc);
+        				tran.setAll(hc, hc.getYaml().getItems().getInt(name + ".information.id"), hc.getYaml().getItems().getInt(name + ".information.data"), amount, name, player, economy, calc, ench, l, acc, not, isign);
         				tran.sell();
 					} else {
 						m.send(player, 95);
@@ -244,7 +260,7 @@ public class Cmd {
     	    			if (nam != null) {
     	    				
     	    				if (s.has(s.getShop(player), nam)) {	
-        	    				tran.setAll(hc, itd, newdat, amount, nam, player, economy, calc, ench, l, acc);
+        	    				tran.setAll(hc, itd, newdat, amount, nam, player, economy, calc, ench, l, acc, not, isign);
         	    				tran.sell();
     						} else {
     							m.send(player, 95);
@@ -288,7 +304,7 @@ public class Cmd {
         	    				
 
         	    				if (s.has(s.getShop(player), nam)) {	
-            	    				tran.setAll(hc, itd, newdat, amount, nam, player, economy, calc, ench, l, acc);
+            	    				tran.setAll(hc, itd, newdat, amount, nam, player, economy, calc, ench, l, acc, not, isign);
             	    				tran.sell();
         						} else {
         							m.send(player, 95);
@@ -344,7 +360,7 @@ public class Cmd {
 	        				
 	    		String teststring = hc.getYaml().getItems().getString(name);    	
 				if (teststring == null) {
-					name = fixName(name);
+					name = hc.fixName(name);
 					teststring = hc.getYaml().getItems().getString(name);
 				}
 	    		if (teststring != null) {
@@ -354,7 +370,15 @@ public class Cmd {
 	    			sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + "$" + val);    				
 	    			calc.setVC(hc, player, amount, name, ench);
 	    			double cost = calc.getCost();
-	    			sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + "$" + cost);
+	    			
+					String scost = "";
+					if (cost > Math.pow(10, 10)) {
+						scost = "INFINITY";
+					} else {
+						scost = cost + "";
+					}
+	    			
+	    			sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + "$" + scost);
 					sender.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + hc.getYaml().getItems().getInt(name + ".stock.stock") + ChatColor.AQUA + " " + name + ChatColor.BLUE + " available.");
 					m.send(sender, 6);
 	    				
@@ -441,7 +465,7 @@ public class Cmd {
     					
 
 	    				if (s.has(s.getShop(player), nam)) {	
-	    					tran.setAll(hc, itd, newdat, amount, nam, player, economy, calc, ench, l, acc);
+	    					tran.setAll(hc, itd, newdat, amount, nam, player, economy, calc, ench, l, acc, not, isign);
 	        				tran.buy();
 						} else {
 							m.send(player, 95);
@@ -468,6 +492,102 @@ public class Cmd {
     		
     		
     		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("buyxp") && (player != null)) {
+    		try {
+    			s.setinShop(player);
+    			if (s.inShop() != -1) {
+    				if (args.length <= 1) {
+    					int amount;
+    					if (args.length == 0) {
+    						amount = 1;
+    					} else {
+    						amount = Integer.parseInt(args[0]);
+    					}
+        				String ke = -1 + ":" + -1;
+        				String nam = hc.getnameData(ke);
+        				tran.setAll(hc, -1, -1, amount, nam, player, economy, calc, ench, l, acc, not, isign);
+        				tran.buyXP();
+        				
+    				} else {
+    					player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /buyxp (amount)");
+    				}
+    			} else {
+    				m.send(player, 2);
+    			}
+    			return true;
+    		} catch (Exception e) {
+    			player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /buyxp (amount)");
+    		}
+    		
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("sellxp") && (player != null)) {
+    		try {
+    			s.setinShop(player);
+    			if (s.inShop() != -1) {
+    				if (args.length <= 1) {
+    					int amount;
+    					if (args.length == 0) {
+    						amount = 1;
+    					} else {
+    						try {
+    							amount = Integer.parseInt(args[0]);
+    						} catch (Exception e) {
+    							if (args[0].equalsIgnoreCase("max")) {
+    								amount = calc.gettotalxpPoints(player);
+    							} else {
+    								player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /buyxp (amount)");
+    								return true;
+    							}
+    						}
+    					}
+        				String ke = -1 + ":" + -1;
+        				String nam = hc.getnameData(ke);
+        				tran.setAll(hc, -1, -1, amount, nam, player, economy, calc, ench, l, acc, not, isign);
+        				tran.sellXP();
+        				
+    				} else {
+    					player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /buyxp (amount)");
+    				}
+    			} else {
+    				m.send(player, 2);
+    			}
+    			return true;
+    		} catch (Exception e) {
+    			player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /buyxp (amount)");
+    		}
+    		
+    		
+    		
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("xpinfo") && (player != null)) {
+
+    		try {
+    			
+    			if (args.length == 0) {
+    				
+    				int totalexp = calc.gettotalxpPoints(player);
+    				int lvl = player.getLevel();
+    				int xpfornextlvl = calc.getxpfornextLvl(lvl) - calc.getbarxpPoints(player);
+    				
+    				int xpfor50 = calc.getlvlxpPoints(50) - totalexp;
+    				
+    				m.send(player, 6);
+    				player.sendMessage(ChatColor.BLUE + "Total Experience Points: " + ChatColor.GREEN + "" + totalexp);
+    				player.sendMessage(ChatColor.BLUE + "Experience Needed For The Next Level: " + ChatColor.GREEN + "" + xpfornextlvl);
+    				player.sendMessage(ChatColor.BLUE + "Experience Needed For Level 50: " + ChatColor.GREEN + "" + xpfor50);
+    				m.send(player, 6);
+    			} else {
+    				player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /xpinfo");
+    			}
+
+    			return true;
+    		} catch (Exception e) {
+    			player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /xpinfo");
+    			return true;
+    		}
     		
     		
     		
@@ -505,7 +625,7 @@ public class Cmd {
     					
         				if (s.has(s.getShop(player), nam)) {
         					
-	    					tran.setAll(hc, itd, da, amount, nam, player, economy, calc, ench, l, acc);
+	    					tran.setAll(hc, itd, da, amount, nam, player, economy, calc, ench, l, acc, not, isign);
 	        				tran.buy();
         				
         				} else {
@@ -605,7 +725,7 @@ public class Cmd {
 
         				
 	    				if (s.has(s.getShop(player), nam)) {	
-	    					tran.setAll(hc, itd, newdat, amount, nam, player, economy, calc, ench, l, acc);
+	    					tran.setAll(hc, itd, newdat, amount, nam, player, economy, calc, ench, l, acc, not, isign);
 	        				tran.sell();
 						} else {
 							m.send(player, 95);
@@ -755,8 +875,11 @@ public class Cmd {
     				} else if (args.length == 1) {
     					amount = Integer.parseInt(args[0]);
     					hc.getYaml().getConfig().set("config.purchasetaxpercent", amount);
-    					//hc.getYaml().saveYamls();
     					m.send(sender, 15);
+    					
+						//Updates all information signs.
+						isign.setrequestsignUpdate(true);
+						isign.checksignUpdate();
     				} else {
     					m.send(sender, 14);
     				}
@@ -780,8 +903,11 @@ public class Cmd {
     				} else if (args.length == 1) {
     					amount = Integer.parseInt(args[0]);
     					hc.getYaml().getConfig().set("config.initialpurchasetaxpercent", amount);
-    					//hc.getYaml().saveYamls();
     					m.send(sender, 17);
+    					
+						//Updates all information signs.
+    					isign.setrequestsignUpdate(true);
+    					isign.checksignUpdate();
     				} else {
     					m.send(sender, 16);
     				}
@@ -801,8 +927,11 @@ public class Cmd {
     				} else if (args.length == 1) {
     					amount = Integer.parseInt(args[0]);
     					hc.getYaml().getConfig().set("config.statictaxpercent", amount);
-    					//hc.getYaml().saveYamls();
     					m.send(sender, 19);
+    					
+						//Updates all information signs.
+    					isign.setrequestsignUpdate(true);
+    					isign.checksignUpdate();
     				} else {
     					m.send(sender, 18);
     				}
@@ -821,8 +950,11 @@ public class Cmd {
     				} else if (args.length == 1) {
     					amount = Integer.parseInt(args[0]);
     					hc.getYaml().getConfig().set("config.enchanttaxpercent", amount);
-    					//hc.getYaml().saveYamls();
     					m.send(sender, 21);
+    					
+						//Updates all information signs.
+    					isign.setrequestsignUpdate(true);
+    					isign.checksignUpdate();
     				} else {
     					m.send(sender, 20);
     				}
@@ -843,8 +975,11 @@ public class Cmd {
     					if (hc.getYaml().getConfig().get("config.enchantment.classvalue." + classtype) != null) {
     					double value = Double.parseDouble(args[1]);
     					hc.getYaml().getConfig().set("config.enchantment.classvalue." + classtype, value);
-    					//hc.getYaml().saveYamls();
     					sender.sendMessage(ChatColor.BLUE + "The classvalue for " + ChatColor.AQUA + "" + classtype + ChatColor.BLUE + " has been set.");
+    					
+						//Updates all information signs.
+    					isign.setrequestsignUpdate(true);
+    					isign.checksignUpdate();
     					} else {
     						m.send(sender, 23);
     					}
@@ -883,7 +1018,7 @@ public class Cmd {
         			double value = Double.parseDouble(args[1]);    		
     			String teststring = hc.getYaml().getItems().getString(name);   
 				if (teststring == null) {
-					name = fixName(name);
+					name = hc.fixName(name);
 					teststring = hc.getYaml().getItems().getString(name);
 				}
     			if (teststring != null) {
@@ -891,9 +1026,11 @@ public class Cmd {
     				
 
     				hc.getYaml().getItems().set(name + ".value", value);
-    				//hc.getYaml().saveYamls();
-    				
     				sender.sendMessage(ChatColor.GOLD + "" + name + " value set!");
+    				
+					//Updates all information signs.
+    				isign.setrequestsignUpdate(true);
+    				isign.checksignUpdate();
     			} else {
     			m.send(sender, 1);
     			}    	
@@ -905,7 +1042,7 @@ public class Cmd {
 	        			double value = Double.parseDouble(args[1]);    		
 	    			String teststring = hc.getYaml().getEnchants().getString(name);    		
     				if (teststring == null) {
-    					name = fixeName(name);
+    					name = hc.fixName(name);
     					teststring = hc.getYaml().getEnchants().getString(name);
     				}
 	    			if (teststring != null) {
@@ -915,6 +1052,10 @@ public class Cmd {
 	    				hc.getYaml().getEnchants().set(name + ".value", value);
 	    				
 	    				sender.sendMessage(ChatColor.GOLD + "" + name + " value set!");
+	    				
+						//Updates all information signs.
+	    				isign.setrequestsignUpdate(true);
+	    				isign.checksignUpdate();
 	    			} else {
 	    			m.send(sender, 27);
 	    			}    	
@@ -949,7 +1090,7 @@ public class Cmd {
         			int stock = Integer.parseInt(args[1]);    		
     			String teststring = hc.getYaml().getItems().getString(name);    
 				if (teststring == null) {
-					name = fixName(name);
+					name = hc.fixName(name);
 					teststring = hc.getYaml().getItems().getString(name);
 				}
     			if (teststring != null) {
@@ -957,6 +1098,10 @@ public class Cmd {
     				hc.getYaml().getItems().set(name + ".stock.stock", stock);
     				
     				sender.sendMessage(ChatColor.GOLD + "" + name + " stock set!");
+    				
+					//Updates all information signs.
+    				isign.setrequestsignUpdate(true);
+    				isign.checksignUpdate();
     			} else {
     				m.send(sender, 1);
     			}   
@@ -970,7 +1115,7 @@ public class Cmd {
 	        			int stock = Integer.parseInt(args[1]);    		
 	    			String teststring = hc.getYaml().getEnchants().getString(name); 
     				if (teststring == null) {
-    					name = fixeName(name);
+    					name = hc.fixName(name);
     					teststring = hc.getYaml().getEnchants().getString(name);
     				}
 	    			if (teststring != null) {
@@ -980,6 +1125,10 @@ public class Cmd {
 	    				hc.getYaml().getEnchants().set(name + ".stock.stock", stock);
 	    				
 	    				sender.sendMessage(ChatColor.GOLD + "" + name + " stock set!");
+	    				
+						//Updates all information signs.
+	    				isign.setrequestsignUpdate(true);
+	    				isign.checksignUpdate();
 	    			} else {
 	    				m.send(sender, 27);
 	    			}   
@@ -1021,7 +1170,7 @@ public class Cmd {
         			int median = Integer.parseInt(args[1]);    		
     			String teststring = hc.getYaml().getItems().getString(name);    
 				if (teststring == null) {
-					name = fixName(name);
+					name = hc.fixName(name);
 					teststring = hc.getYaml().getItems().getString(name);
 				}
     			if (teststring != null) {
@@ -1031,6 +1180,10 @@ public class Cmd {
     				hc.getYaml().getItems().set(name + ".stock.median", median);
     				
     				sender.sendMessage(ChatColor.GOLD + "" + name + " median set!");
+    				
+					//Updates all information signs.
+    				isign.setrequestsignUpdate(true);
+    				isign.checksignUpdate();
     			} else {
     				m.send(sender, 1);
     			}    
@@ -1044,7 +1197,7 @@ public class Cmd {
 	        			int median = Integer.parseInt(args[1]);    		
 	    			String teststring = hc.getYaml().getEnchants().getString(name); 
     				if (teststring == null) {
-    					name = fixeName(name);
+    					name = hc.fixName(name);
     					teststring = hc.getYaml().getEnchants().getString(name);
     				}
 	    			if (teststring != null) {
@@ -1054,6 +1207,10 @@ public class Cmd {
 	    				hc.getYaml().getEnchants().set(name + ".stock.median", median);
 	    				
 	    				sender.sendMessage(ChatColor.GOLD + "" + name + " median set!");
+	    				
+						//Updates all information signs.
+	    				isign.setrequestsignUpdate(true);
+	    				isign.checksignUpdate();
 	    			} else {
 	    				m.send(sender, 27);
 	    			} 
@@ -1095,7 +1252,7 @@ public class Cmd {
      		
     			String teststring = hc.getYaml().getItems().getString(name);   
 				if (teststring == null) {
-					name = fixName(name);
+					name = hc.fixName(name);
 					teststring = hc.getYaml().getItems().getString(name);
 				}
     			if (teststring != null) {
@@ -1111,7 +1268,9 @@ public class Cmd {
     				}
 
     				hc.getYaml().getItems().set(name + ".price.static", nstatus);
-    				
+					//Updates all information signs.
+    				isign.setrequestsignUpdate(true);
+    				isign.checksignUpdate();
     				
     			} else {
     				m.send(sender, 1);
@@ -1126,7 +1285,7 @@ public class Cmd {
 	             		
 	        			String teststring = hc.getYaml().getEnchants().getString(name);  
         				if (teststring == null) {
-        					name = fixeName(name);
+        					name = hc.fixName(name);
         					teststring = hc.getYaml().getEnchants().getString(name);
         				}
 	        			if (teststring != null) {
@@ -1142,7 +1301,9 @@ public class Cmd {
 	        				}
 
 	        				hc.getYaml().getEnchants().set(name + ".price.static", nstatus);
-	        				
+							//Updates all information signs.
+	        				isign.setrequestsignUpdate(true);
+	        				isign.checksignUpdate();
 	        				
 	        			} else {
 	        				m.send(sender, 27);
@@ -1176,7 +1337,7 @@ public class Cmd {
         			name = args[0];     		
     			String teststring = hc.getYaml().getItems().getString(name); 
 				if (teststring == null) {
-					name = fixName(name);
+					name = hc.fixName(name);
 					teststring = hc.getYaml().getItems().getString(name);
 				}
     			if (teststring != null) {
@@ -1191,6 +1352,10 @@ public class Cmd {
     				}
 
     				hc.getYaml().getItems().set(name + ".initiation.initiation", nstatus);
+					//Updates all information signs.
+    				isign.setrequestsignUpdate(true);
+    				isign.checksignUpdate();
+					
     			} else {
     				m.send(sender, 1);
     			}    
@@ -1202,7 +1367,7 @@ public class Cmd {
 	        			name = args[0];     		
 	        			String teststring = hc.getYaml().getEnchants().getString(name);  
         				if (teststring == null) {
-        					name = fixeName(name);
+        					name = hc.fixName(name);
         					teststring = hc.getYaml().getEnchants().getString(name);
         				}
 	        			if (teststring != null) {
@@ -1217,7 +1382,9 @@ public class Cmd {
 	        				}
 
 	        				hc.getYaml().getEnchants().set(name + ".initiation.initiation", nstatus);
-	        				//hc.getYaml().saveYamls();	
+							//Updates all information signs.
+	        				isign.setrequestsignUpdate(true);
+	        				isign.checksignUpdate();
 	        			} else {
 	        				m.send(sender, 27);
 	        			}
@@ -1251,7 +1418,7 @@ public class Cmd {
         			Double staticprice = Double.parseDouble(args[1]);    		
     			String teststring = hc.getYaml().getItems().getString(name);    	
 				if (teststring == null) {
-					name = fixName(name);
+					name = hc.fixName(name);
 					teststring = hc.getYaml().getItems().getString(name);
 				}
     			if (teststring != null) {
@@ -1259,9 +1426,11 @@ public class Cmd {
     				
 
     				hc.getYaml().getItems().set(name + ".price.staticprice", staticprice);
-    				//hc.getYaml().saveYamls();
-    				
     				sender.sendMessage(ChatColor.GOLD + "" + name + " static price set!");
+    				
+					//Updates all information signs.
+    				isign.setrequestsignUpdate(true);
+    				isign.checksignUpdate();
     			} else {
     				m.send(sender, 1);
     			}    	
@@ -1273,15 +1442,17 @@ public class Cmd {
 	        			Double staticprice = Double.parseDouble(args[1]);    		
 	    			String teststring = hc.getYaml().getEnchants().getString(name);  
     				if (teststring == null) {
-    					name = fixeName(name);
+    					name = hc.fixName(name);
     					teststring = hc.getYaml().getEnchants().getString(name);
     				}
 	    			if (teststring != null) {
 
 	    				hc.getYaml().getEnchants().set(name + ".price.staticprice", staticprice);
-	    				//hc.getYaml().saveYamls();
-	    				
 	    				sender.sendMessage(ChatColor.GOLD + "" + name + " static price set!");
+	    				
+						//Updates all information signs.
+	    				isign.setrequestsignUpdate(true);
+	    				isign.checksignUpdate();
 	    			} else {
 	    				m.send(sender, 27);
 	    			}
@@ -1313,14 +1484,17 @@ public class Cmd {
         			double startprice = Double.parseDouble(args[1]);    		
     			String teststring = hc.getYaml().getItems().getString(name);  
 				if (teststring == null) {
-					name = fixName(name);
+					name = hc.fixName(name);
 					teststring = hc.getYaml().getItems().getString(name);
 				}
     			if (teststring != null) {
     				hc.getYaml().getItems().set(name + ".initiation.startprice", startprice);
-    				//hc.getYaml().saveYamls();
     				
     				sender.sendMessage(ChatColor.GOLD + "" + name + " start price set!");
+    				
+					//Updates all information signs.
+    				isign.setrequestsignUpdate(true);
+    				isign.checksignUpdate();
     			} else {
     			m.send(sender, 1);
     			}   
@@ -1333,14 +1507,16 @@ public class Cmd {
 	        			double startprice = Double.parseDouble(args[1]);    		
 	    			String teststring = hc.getYaml().getEnchants().getString(name);  
     				if (teststring == null) {
-    					name = fixeName(name);
+    					name = hc.fixName(name);
     					teststring = hc.getYaml().getEnchants().getString(name);
     				}
 	    			if (teststring != null) {
 	    				hc.getYaml().getEnchants().set(name + ".initiation.startprice", startprice);
-	    				//hc.getYaml().saveYamls();
-	    				
 	    				sender.sendMessage(ChatColor.GOLD + "" + name + " start price set!");
+	    				
+						//Updates all information signs.
+	    				isign.setrequestsignUpdate(true);
+	    				isign.checksignUpdate();
 	    			} else {
 	    			m.send(sender, 27);
 	    			} 
@@ -1445,8 +1621,6 @@ public class Cmd {
     		
     		
     	} else if (cmd.getName().equalsIgnoreCase("topitems")) {
-    		//hc.getYaml().saveYamls();
-
 	    		try {
 	        		String nameshop = "";
 	    			if (args.length >= 2) {		
@@ -1463,7 +1637,7 @@ public class Cmd {
 	    				name = name.replace(".", "").replace(":", "");	
 	    				String teststring = hc.getYaml().getShops().getString(name);
 	    				if (teststring == null) {
-	    					name = fixsName(name);
+	    					name = hc.fixsName(name);
 	    				}
 	    				
 	    				
@@ -1472,6 +1646,9 @@ public class Cmd {
 	    				
 	    				if (shoplist.contains(name)) {
 	    					nameshop = name;
+	    				} else {
+	    					sender.sendMessage(ChatColor.DARK_RED + "That shop doesn't exist!");
+	    					return true;
 	    				}
 	    			}
 	    	    		//hc.getYaml().saveYamls();	
@@ -1487,7 +1664,6 @@ public class Cmd {
 	    			while (it2.hasNext()) {   			
 	    				Object element = it2.next();
 	    				String elst = element.toString();    				
-	    				//if (elst.indexOf(".") == -1) {
 	    					
 	    					boolean unavailable = false;
 	    					
@@ -1508,7 +1684,6 @@ public class Cmd {
 		    						itemstocks.put(samount, elst);
 		    					}
 	    					}	
-	    				//}
 	    			}
 	    			int numberpage = page * 10;
 	    			int count = 0;
@@ -1543,7 +1718,6 @@ public class Cmd {
     		
     		
     	} else if (cmd.getName().equalsIgnoreCase("topenchants")) {
-    		//hc.getYaml().saveYamls();
     		try {
     			
     			
@@ -1562,15 +1736,17 @@ public class Cmd {
     				name = name.replace(".", "").replace(":", "");	
     				String teststring = hc.getYaml().getShops().getString(name);
     				if (teststring == null) {
-    					name = fixsName(name);
+    					name = hc.fixsName(name);
     				}
     				String shoplist = s.listShops().toString();
     				
     				if (shoplist.contains(name)) {
     					nameshop = name;
+    				} else {
+    					sender.sendMessage(ChatColor.DARK_RED + "That shop doesn't exist!");
+    					return true;
     				}
     			}
-    	    		//hc.getYaml().saveYamls();	
     			
     			
     			
@@ -1586,12 +1762,6 @@ public class Cmd {
     			while (it2.hasNext()) {   			
     				Object element = it2.next();
     				String elst = element.toString();    				
-    				//if (elst.indexOf(".") == -1) {
-    					
-    					
-    					
-    					
-    					
     					
     					boolean unavailable = false;
     					
@@ -1612,9 +1782,6 @@ public class Cmd {
 	    						enchantstocks.put(samount, elst);
 	    					}
     					}
-    					
-
-    				//}
     			}
     			int numberpage = page * 10;
     			int count = 0;
@@ -1643,6 +1810,119 @@ public class Cmd {
     		} catch (Exception e) {
     			m.send(sender, 40);
     		}
+    		
+    		
+    		
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("browseshop")) {
+	    		
+    		
+    		try {
+	    		//Gets the search string.
+	    		String input = args[0].toLowerCase();
+	    		
+	    		//Gets the page number if given.
+				int page;
+				if (args.length == 1) {
+					page = 1;
+				} else {
+					page = Integer.parseInt(args[1]);
+				}
+				
+				//Gets the shop name if it exists.
+	    		String nameshop = null;
+				if (args.length >= 3) {		
+					int counter = 2;
+					String name = "";
+					while (counter < args.length) {
+						if (counter == 2) {
+							name = args[2];
+						} else {
+							name = name + "_" + args[counter];
+						}
+						counter++;
+					}
+					name = name.replace(".", "").replace(":", "");	
+					String teststring = hc.getYaml().getShops().getString(name);
+					if (teststring == null) {
+						name = hc.fixsName(name);
+					}
+					String shoplist = s.listShops().toString();
+					if (shoplist.contains(name)) {
+						nameshop = name;
+					} else {
+						sender.sendMessage(ChatColor.DARK_RED + "That shop doesn't exist!");
+						return true;
+					}
+				}
+	    		
+	    		
+				//Puts all items and enchantments into names.
+				ArrayList<String> names = hc.getNames();
+				ArrayList<String> rnames = new ArrayList<String>();
+				int i = 0;
+				while(i < names.size()) {
+					String cname = names.get(i);
+					if (cname.startsWith(input)) {
+						//String itemname = hc.fixName(cname);
+						String itemname = cname;
+						if (nameshop == null || s.has(nameshop, itemname)) {
+							rnames.add(cname);
+						}
+					}
+					i++;
+				}
+				//Alphabetizes arraylist.
+				Collections.sort(rnames, String.CASE_INSENSITIVE_ORDER);
+				int numberpage = page * 10;
+				int count = 0;
+				int rsize = rnames.size();
+				double maxpages = rsize/10;
+				maxpages = Math.ceil(maxpages);
+				int maxpi = (int)maxpages + 1;
+				sender.sendMessage(ChatColor.RED + "Page " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
+
+				while (count < numberpage) {
+					if (count > ((page * 10) - 11)) {
+						if (count < rsize) {
+							String iname = rnames.get(count);
+							
+				            String t = hc.getYaml().getItems().getString(iname + ".stock.stock");
+				            String t2 = hc.getYaml().getEnchants().getString(iname + ".stock.stock");
+							
+				            Double cost = 0.0;
+				            int stock = 0;
+				            
+				            
+				            if (t != null) {
+								calc.setVC(hc, null, 1, iname, null);
+								cost = calc.getCost();
+								stock = hc.getYaml().getItems().getInt(iname + ".stock.stock");
+							} else if (t2 != null) {
+								ench.setVC(hc, iname, "diamond");
+								cost = ench.getCost();
+								stock = hc.getYaml().getEnchants().getInt(iname + ".stock.stock");
+							}
+							
+							
+							sender.sendMessage("§b" + iname + " §9[§a" + stock + " §9available: §a$" + cost + " §9each.]");
+						} else {
+							sender.sendMessage("You have reached the end.");
+							break;
+						}
+						
+					}
+					count++;
+				}
+
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /browseshop [Search string] (page) (shop)");
+    			return true;
+    		}
+    		return true;
+    		
+    		
     		
     		
     		
@@ -1808,7 +2088,7 @@ public class Cmd {
     				String nam = args[0];
     				String teststring = hc.getYaml().getItems().getString(nam);
     				if (teststring == null) {
-    					name = fixName(name);
+    					name = hc.fixName(name);
     					teststring = hc.getYaml().getItems().getString(name);
     				}
     				if (teststring != null) {
@@ -1860,7 +2140,7 @@ public class Cmd {
     				
     				String teststring = hc.getYaml().getEnchants().getString(nam);
     				if (teststring == null) {
-    					nam = fixeName(nam);
+    					nam = hc.fixName(nam);
     				}
     				if (!hc.getYaml().getEnchants().getKeys(false).contains(nam)) {
     					m.send(sender, 43);
@@ -1951,6 +2231,7 @@ public class Cmd {
     					m.send(sender, 58);
     					m.send(sender, 59);
     					m.send(sender, 60);
+    					m.send(sender, 100);
     					m.send(sender, 61);
     					m.send(sender, 6);
     				} else if (type.equalsIgnoreCase("buy")) {
@@ -1959,20 +2240,23 @@ public class Cmd {
     					m.send(sender, 63);
     					m.send(sender, 64);
     					m.send(sender, 65);
+    					m.send(sender, 99);
     					m.send(sender, 66);
     					m.send(sender, 6);
     					
     				} else if (type.equalsIgnoreCase("info")) {
-    					m.send(sender, 6);
+    					
     					m.send(sender, 67);
     					m.send(sender, 68);
     					m.send(sender, 69);
     					m.send(sender, 70);
     					m.send(sender, 71);
+    					m.send(sender, 96);
     					m.send(sender, 72);
     					m.send(sender, 73);
+    					m.send(sender, 98);
     					m.send(sender, 74);
-    					m.send(sender, 6);
+    					
     					
     				} else if (type.equalsIgnoreCase("params")) {
     					m.send(sender, 6);
@@ -2011,7 +2295,12 @@ public class Cmd {
     						m.send(sender, 60);
     						m.send(sender, 83);	
     						m.send(sender, 6);
-    					}
+    					} else if(subtype.equalsIgnoreCase("sellxp")) {
+    						m.send(sender, 6);
+    						m.send(sender, 100);
+    						m.send(sender, 102);
+    						m.send(sender, 6);
+    					}						
     				} else if (type.equalsIgnoreCase("buy")) {					
     					if (subtype.equalsIgnoreCase("buy")) {
     						m.send(sender, 6);
@@ -2033,7 +2322,12 @@ public class Cmd {
     						m.send(sender, 65);
     						m.send(sender, 87);
     						m.send(sender, 6);
-    					}		
+    					} else if(subtype.equalsIgnoreCase("buyxp")) {
+    						m.send(sender, 6);
+    						m.send(sender, 99);
+    						m.send(sender, 101);
+    						m.send(sender, 6);
+    					}			
     				} else if (type.equalsIgnoreCase("info")) {
     					if (subtype.equalsIgnoreCase("value")) {
     						m.send(sender, 6);
@@ -2065,10 +2359,20 @@ public class Cmd {
     						m.send(sender, 72);
     						m.send(sender, 92);
     						m.send(sender, 6);
+    					} else if(subtype.equalsIgnoreCase("browseshop")) {
+    						m.send(sender, 6);
+    						m.send(sender, 96);
+    						m.send(sender, 97);
+    						m.send(sender, 6);
     					} else if(subtype.equalsIgnoreCase("evalue")) {
     						m.send(sender, 6);
     						m.send(sender, 73);
     						m.send(sender, 93);
+    						m.send(sender, 6);
+    					} else if(subtype.equalsIgnoreCase("xpinfo")) {
+    						m.send(sender, 6);
+    						m.send(sender, 98);
+    						m.send(sender, 103);
     						m.send(sender, 6);
     					}
     				}		
@@ -2097,7 +2401,7 @@ public class Cmd {
     				
     				String teststring = hc.getYaml().getEnchants().getString(name);
     				if (teststring == null) {
-    					name = fixeName(name);
+    					name = hc.fixName(name);
     					teststring = hc.getYaml().getEnchants().getString(name);
     				}
 
@@ -2105,7 +2409,7 @@ public class Cmd {
     					
     					
         				if (s.has(s.getShop(player), name)) {	
-            				ench.setSBE(hc, player, name, economy, l, acc);
+            				ench.setSBE(hc, player, name, economy, l, acc, isign, not, calc);
             				ench.buyEnchant();
     					} else {
     						m.send(player, 95);
@@ -2163,7 +2467,7 @@ public class Cmd {
         					
         					
             				if (s.has(s.getShop(player), fnam)) {	
-            					ench.setSBE(hc, player, fnam, economy, l, acc);
+            					ench.setSBE(hc, player, fnam, economy, l, acc, isign, not, calc);
             					ench.sellEnchant();
         					} else {
         						m.send(player, 95);
@@ -2173,14 +2477,14 @@ public class Cmd {
     				} else {
         				String teststring = hc.getYaml().getEnchants().getString(name);
         				if (teststring == null) {
-        					name = fixeName(name);
+        					name = hc.fixName(name);
         					teststring = hc.getYaml().getEnchants().getString(name);
         				}
         				if (teststring != null) {
 
         					
             				if (s.has(s.getShop(player), name)) {	
-            					ench.setSBE(hc, player, name, economy, l, acc);
+            					ench.setSBE(hc, player, name, economy, l, acc, isign, not, calc);
             					ench.sellEnchant();
         					} else {
         						m.send(player, 95);
@@ -2215,8 +2519,8 @@ public class Cmd {
     				String nam = args[0];
     				String teststring = hc.getYaml().getEnchants().getString(nam);
     				if (teststring == null) {
-    					name = fixeName(name);
-    					teststring = hc.getYaml().getEnchants().getString(name);
+    					nam = hc.fixName(nam);
+    					teststring = hc.getYaml().getEnchants().getString(nam);
     				}
     				if (teststring != null) {
     				
@@ -2349,7 +2653,7 @@ public class Cmd {
     				}
     				String teststring = hc.getYaml().getShops().getString(name);
     				if (teststring == null) {
-    					name = fixsName(name);
+    					name = hc.fixsName(name);
     				}
     				//sender.sendMessage("name: " + name);
         			s.setrShop(name);
@@ -2393,11 +2697,13 @@ public class Cmd {
     				
     				
     				m.send(sender, 6);
-    				sender.sendMessage(ChatColor.BLUE + "Shop Check Interval: " + ChatColor.GREEN + "" + hc.getshopInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + hc.getshopInterval()/20 + ChatColor.BLUE + " Seconds");
+    				sender.sendMessage(ChatColor.BLUE + "Shop Check Interval: " + ChatColor.GREEN + "" + s.getshopInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + s.getshopInterval()/20 + ChatColor.BLUE + " Seconds");
     				sender.sendMessage(ChatColor.BLUE + "Save Interval: " + ChatColor.GREEN + "" + hc.getsaveInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + hc.getsaveInterval()/20 + ChatColor.BLUE + " Seconds");
-    				sender.sendMessage(ChatColor.BLUE + "Log Write Interval: " + ChatColor.GREEN + "" + hc.getlogInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + hc.getlogInterval()/20 + ChatColor.BLUE + " Seconds");
+    				sender.sendMessage(ChatColor.BLUE + "Log Write Interval: " + ChatColor.GREEN + "" + l.getlogInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + l.getlogInterval()/20 + ChatColor.BLUE + " Seconds");
     				sender.sendMessage(ChatColor.BLUE + "The log buffer currently holds " + ChatColor.GREEN + "" + l.getbufferSize() + ChatColor.BLUE + " entries.");
     				sender.sendMessage(ChatColor.BLUE + "The log has " + ChatColor.GREEN + "" + l.getlogSize() + ChatColor.BLUE + " entries.");
+    				sender.sendMessage(ChatColor.BLUE + "Sign Update Interval: " + ChatColor.GREEN + "" + isign.getsignupdateInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + isign.getsignupdateInterval()/20 + ChatColor.BLUE + " Seconds");
+    				sender.sendMessage(ChatColor.BLUE + "There are " + ChatColor.GREEN + "" + isign.getremainingSigns() + ChatColor.BLUE + " signs waiting to update.");
     				m.send(sender, 6);
     				
     			} else {
@@ -2413,18 +2719,49 @@ public class Cmd {
     		
     		
     		
+    	} else if (cmd.getName().equalsIgnoreCase("setbalance")) {
+    		try {
+
+    			if (args.length == 2) {
+    				String accountname = args[0];
+    				if (acc.checkAccount(accountname)) {
+    					Double balance = Double.parseDouble(args[1]);
+    					acc.setBalance(accountname, balance);
+    					sender.sendMessage(ChatColor.GOLD + "Balance set!");
+    				} else {
+    					sender.sendMessage(ChatColor.DARK_RED + "That account doesn't exist!");
+    				}
+    				
+    				
+    				
+    				
+
+    				
+    			} else {
+    				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /setbalance [account] [balance]");
+    			}
+    			return true;
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /setbalance [account] [balance]");
+    		}
+    		
+    		
+    		
+    		
+    		
+    		
     		
     	} else if (cmd.getName().equalsIgnoreCase("additem")) {
     		try {
     			String itemname = args[0];
     			String teststring2 = hc.getYaml().getEnchants().getString(itemname);
 				if (teststring2 == null) {
-					itemname = fixeName(itemname);
+					itemname = hc.fixName(itemname);
 					teststring2 = hc.getYaml().getEnchants().getString(itemname);
 				}
     			String teststring = hc.getYaml().getItems().getString(itemname);
 				if (teststring == null) {
-					itemname = fixName(itemname);
+					itemname = hc.fixName(itemname);
 					teststring = hc.getYaml().getItems().getString(itemname);
 				}
 
@@ -2444,7 +2781,7 @@ public class Cmd {
 	    				}
 	    				String teststring3 = hc.getYaml().getShops().getString(shopname);
 	    				if (teststring3 == null) {
-	    					shopname = fixsName(shopname);
+	    					shopname = hc.fixsName(shopname);
 	    					teststring3 = hc.getYaml().getShops().getString(shopname);
 	    				}
 	    				if (teststring3 != null) {
@@ -2497,12 +2834,12 @@ public class Cmd {
     			String itemname = args[0];
     			String teststring2 = hc.getYaml().getEnchants().getString(itemname);
 				if (teststring2 == null) {
-					itemname = fixeName(itemname);
+					itemname = hc.fixName(itemname);
 					teststring2 = hc.getYaml().getEnchants().getString(itemname);
 				}
     			String teststring = hc.getYaml().getItems().getString(itemname);
 				if (teststring == null) {
-					itemname = fixName(itemname);
+					itemname = hc.fixName(itemname);
 					teststring = hc.getYaml().getItems().getString(itemname);
 				}
     			if (args.length >= 2) {
@@ -2522,7 +2859,7 @@ public class Cmd {
 	    				
 	    				String teststring3 = hc.getYaml().getShops().getString(shopname);
 	    				if (teststring3 == null) {
-	    					shopname = fixsName(shopname);
+	    					shopname = hc.fixsName(shopname);
 	    					teststring3 = hc.getYaml().getShops().getString(shopname);
 	    				}
 	    				if (teststring3 != null) {
@@ -2595,6 +2932,210 @@ public class Cmd {
     		
     		
     		
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("notify")) {
+    		try {
+
+    			String itemname = hc.fixName(args[0]);
+
+    			if (args.length == 1) {
+    				
+    				if (hc.getYaml().getConfig().getBoolean("config.use-notifications")) {
+    					
+    				
+    				
+	    				if (hc.itemTest(itemname) || hc.enchantTest(itemname) || itemname.equalsIgnoreCase("all")) {
+		    		
+		    				
+	    					if (!itemname.equalsIgnoreCase("all")) {
+			    				boolean note = false;
+			    				String notify = hc.getYaml().getConfig().getString("config.notify-for");
+			    				if (notify != null) {		
+			    					//For everything but the first.  (Which lacks a comma.)
+			    					if (notify.contains("," + itemname + ",")) {
+			    						note = true;
+			    					}
+			    					//For the first/last item.
+			    					if (notify.length() >= itemname.length() && itemname.equalsIgnoreCase(notify.substring(0, itemname.length()))) {
+			    						note = true;
+			    					}
+			    				}
+			    				
+			    				//Toggles the notification.
+			    				if (note) {
+			    					notify = notify.replace("," + itemname + ",", ",");
+			    					if (itemname.equalsIgnoreCase(notify.substring(0, itemname.length()))) {
+			    						notify = notify.substring(itemname.length() + 1, notify.length());
+			    					}
+			    					hc.getYaml().getConfig().set("config.notify-for", notify);
+			    					sender.sendMessage(ChatColor.GOLD + "You will no longer receive notifications for " + itemname);
+			    				} else {
+			    					notify = notify + itemname + ",";
+			    					hc.getYaml().getConfig().set("config.notify-for", notify);
+			    					sender.sendMessage(ChatColor.GOLD + "You will now receive notifications for " + itemname);
+			    				}
+	    					} else {
+	    						
+	    						ArrayList<String> items = hc.getNames();
+	    						String namelist = "";
+	    						int i = 0;
+	    						while (i < items.size()) {
+	    							namelist = namelist + items.get(i) + ",";
+	    							i++;
+	    						}
+	    						
+	    						String notify = hc.getYaml().getConfig().getString("config.notify-for");
+	    						if (notify.equalsIgnoreCase(namelist)) {
+			    					hc.getYaml().getConfig().set("config.notify-for", "");
+			    					sender.sendMessage(ChatColor.GOLD + "You will no longer receive notifications for any item or enchantment.");
+	    						} else {
+			    					hc.getYaml().getConfig().set("config.notify-for", namelist);
+			    					sender.sendMessage(ChatColor.GOLD + "You will now receive notifications for all items and enchantments.");
+	    						}
+	    					}
+	
+			  
+	
+		    				
+		    			} else {
+		    				sender.sendMessage(ChatColor.DARK_RED + "That item or enchantment is not in the database!");
+		    			}
+    				
+	    			} else {
+	    				sender.sendMessage(ChatColor.DARK_RED + "Notifications are currently disabled!");
+	    			}
+    				
+    			} else {
+    				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /notify [name/'all']");
+    			}
+    			return true;
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /notify [name/'all']");
+    		}
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+     	} else if (cmd.getName().equalsIgnoreCase("setstockmedianall")) {
+    		try {
+    			
+    			if (args.length == 0){
+    				sender.sendMessage(ChatColor.RED + "Are you sure you wish to do this?");
+    				sender.sendMessage(ChatColor.RED + "All item and enchantment stocks will be set to their median.");
+    				sender.sendMessage(ChatColor.RED + "All item and enchantments will have initial pricing disabled.");
+    				sender.sendMessage(ChatColor.RED + "Type /setstockmedianall confirm to proceed.");
+
+    			} else if (args[0].equalsIgnoreCase("confirm")){
+	    			FileConfiguration items = hc.getYaml().getItems();
+	    			Iterator<String> it = items.getKeys(false).iterator();
+	    			while (it.hasNext()) {   			
+	    				String elst = it.next().toString();
+	    				items.set(elst + ".stock.stock", items.getInt(elst + ".stock.median"));
+	    				items.set(elst + ".initiation.initiation", false);
+	    			}   
+	    			
+	    			FileConfiguration enchants = hc.getYaml().getEnchants();
+	    			Iterator<String> it2 = enchants.getKeys(false).iterator();
+	    			while (it2.hasNext()) {   			;
+	    				String elst2 = it2.next().toString();
+	    				enchants.set(elst2 + ".stock.stock", enchants.getInt(elst2 + ".stock.median"));
+	    				enchants.set(elst2 + ".initiation.initiation", false);
+	    			}  
+   			
+	    			sender.sendMessage(ChatColor.GOLD + "Shop stocks of all items/enchantments have been set to their medians and initial pricing has been disabled.");
+	    			
+					//Updates all information signs.
+	    			isign.setrequestsignUpdate(true);
+	    			isign.checksignUpdate();
+    			} else {
+    				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /setstockmedianall");
+    			}
+    			
+    			
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /setstockmedianall");
+    		}	
+
+    		
+    		return true;
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("scalebypercent")) {
+    		try {
+    			
+    			if (args.length == 2){
+    				
+    				String type = args[0];
+    				Double percent = Double.parseDouble(args[1]);
+    				percent = percent/100;
+    				
+    				if (percent >= 0) {
+    					if (type.equalsIgnoreCase("value") || type.equalsIgnoreCase("staticprice") || type.equalsIgnoreCase("stock") || type.equalsIgnoreCase("median") || type.equalsIgnoreCase("startprice")) {
+    						String path = "";
+    						if (type.equalsIgnoreCase("value")) {
+    							path = ".value";
+    						} else if (type.equalsIgnoreCase("staticprice")) {
+    							path = ".price.staticprice";
+    						} else if (type.equalsIgnoreCase("stock")) {
+    							path = ".stock.stock";
+    						} else if (type.equalsIgnoreCase("median")) {
+    							path = ".stock.median";
+    						} else if (type.equalsIgnoreCase("startprice")) {
+    							path = ".initiation.startprice";
+    						}
+    						
+    						
+    						FileConfiguration items = hc.getYaml().getItems();
+        	    			Iterator<String> it = items.getKeys(false).iterator();
+        	    			while (it.hasNext()) {   			
+        	    				String elst = it.next().toString();
+        	    				Double newvalue = items.getDouble(elst + path) * percent;
+        	    				DecimalFormat twodigits = new DecimalFormat("#.##");
+        	    				newvalue = Double.valueOf(twodigits.format(newvalue));
+        	    				items.set(elst + path, newvalue);
+        	    			}   
+        	    			
+        	    			FileConfiguration enchants = hc.getYaml().getEnchants();
+        	    			Iterator<String> it2 = enchants.getKeys(false).iterator();
+        	    			while (it2.hasNext()) {   			;
+        	    				String elst2 = it2.next().toString();
+        	    				Double newvalue = enchants.getDouble(elst2 + path) * percent;
+        	    				DecimalFormat twodigits = new DecimalFormat("#.##");
+        	    				newvalue = Double.valueOf(twodigits.format(newvalue));
+        	    				enchants.set(elst2 + path, newvalue);
+        	    			}  
+
+        	    			sender.sendMessage(ChatColor.GOLD + "Adjustment successful!");
+        	    			
+        					//Updates all information signs.
+        	    			isign.setrequestsignUpdate(true);
+        	    			isign.checksignUpdate();
+        				} else {
+            				sender.sendMessage(ChatColor.DARK_RED + "The setting must be either value, staticprice, stock, median, or startprice!");
+            			}
+    						
+    					} else {
+    						sender.sendMessage(ChatColor.DARK_RED + "Percent must be greater than 0!");
+    					}
+    			} else {
+    				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /scalebypercent [setting] [percent]");
+    			}  			  			
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /scalebypercent [setting] [percent]");
+    		}	
+
+    		
+    		return true;
+    		
+    		
+    		
     	} else if (cmd.getName().equalsIgnoreCase("resetshop")) {
     		try {
     			
@@ -2625,8 +3166,11 @@ public class Cmd {
 	    				enchants.set(elst2 + ".price.static", false);
 	    				enchants.set(elst2 + ".initiation.initiation", true);
 	    			}  
-	    			hc.getYaml().saveYamls();
 	    			sender.sendMessage(ChatColor.GOLD + "Shop stock, initiation, and static pricing have been reset!");
+	    			
+					//Updates all information signs.
+	    			isign.setrequestsignUpdate(true);
+	    			isign.checksignUpdate();
     			} else {
     				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /resetshop");
     			}
@@ -2644,6 +3188,68 @@ public class Cmd {
     		
     		
     		
+    	} else if (cmd.getName().equalsIgnoreCase("renameshop")) {
+    		try {
+    			
+    			if (args.length >= 1){
+    				int counter = 0;
+    				String name = "";
+    				while (counter < args.length) {
+    					if (counter == 0) {
+    						name = args[0];
+    					} else {
+    						name = name + "_" + args[counter];
+    					}
+    					counter++;
+    				}
+				    name = hc.fixsName(name);
+				    
+				    if (name.equalsIgnoreCase("reset")) {
+    					renameshopname = "";
+    					renameshopint = 0;
+				    	sender.sendMessage(ChatColor.GOLD + "Command has been reset!");
+				    	return true;
+				    }
+				    
+				    
+					String teststring = hc.getYaml().getShops().getString(name);
+    				
+    				
+    				
+    				if (renameshopint == 0 && teststring != null) {
+    					renameshopname = name;
+    					renameshopint = 1;
+    					sender.sendMessage(ChatColor.GOLD + "Shop to be renamed selected!");
+    					sender.sendMessage(ChatColor.GOLD + "Now type /renameshop [new name]");
+    					sender.sendMessage(ChatColor.GOLD + "To reset the command and start over type /renameshop reset");
+    				} else if (renameshopint == 1) {
+    					
+    					if (name.equalsIgnoreCase(renameshopname)) {
+    						sender.sendMessage(ChatColor.DARK_RED + "You can't give the shop its original name!");
+    						return true;
+    					}
+    					s.setrenShop(renameshopname, name);
+    					s.renameShop();
+    					renameshopname = "";
+    					renameshopint = 0;
+    					sender.sendMessage(ChatColor.GOLD + "Shop renamed successfully!");
+    				} else {
+    					sender.sendMessage(ChatColor.DARK_RED + "That shop doesn't exist!");
+    				}
+    				
+
+    			
+    			} else {
+    				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /renameshop [name]");
+    			}
+    			
+    			
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /renameshop [name]");
+    		}	
+
+    		
+    		return true;
     		
     		
     		
@@ -2660,7 +3266,7 @@ public class Cmd {
 
 	    				String message = args[1];
 
-	    				message = message.replace("&", "§").replace("%s", " ");
+	    				message = message.replace("%s", " ");
 	    				
 	    				int counter = 2;
 	    				String name = "";
@@ -2674,7 +3280,7 @@ public class Cmd {
 	    				}
 	    				String teststring = hc.getYaml().getShops().getString(name);
 	    				if (teststring == null) {
-	    					name = fixsName(name);
+	    					name = hc.fixsName(name);
 	    				}
 	    				
 	    				
@@ -2698,7 +3304,7 @@ public class Cmd {
 	    				
 	    				String message = args[1];
 
-	    				message = message.replace("&", "§").replace("%s", " ");
+	    				message = message.replace("%s", " ");
 	    				
 	    				int counter = 2;
 	    				String name = "";
@@ -2712,7 +3318,7 @@ public class Cmd {
 	    				}
 	    				String teststring = hc.getYaml().getShops().getString(name);
 	    				if (teststring == null) {
-	    					name = fixsName(name);
+	    					name = hc.fixsName(name);
 	    				}
 	    				
 	    				int i = 0;
@@ -2764,7 +3370,7 @@ public class Cmd {
     				}
     				String teststring = hc.getYaml().getShops().getString(name);
     				if (teststring == null) {
-    					name = fixsName(name);
+    					name = hc.fixsName(name);
     				}
     				name = name.replace(".", "").replace(":", "");
         			s.setsShop(name, player);
@@ -2785,7 +3391,7 @@ public class Cmd {
     				name = name.replace(".", "").replace(":", "");
     				String teststring = hc.getYaml().getShops().getString(name);
     				if (teststring == null) {
-    					name = fixsName(name);
+    					name = hc.fixsName(name);
     				}
     				s.setsShop(name, player);
         			s.setShop2();
@@ -2803,79 +3409,16 @@ public class Cmd {
     	
     	
     	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
+
     	
     	
     	
     	return false;
 	}
 		
-	
-	
-	
-	
-	public String fixName(String nam) {
-		String name = nam;
-		int c = 0;
-		int l = hc.getYaml().getItems().getKeys(false).size();
-		while (c < l) {
-			Object names[] = hc.getYaml().getItems().getKeys(false).toArray();
-			if (names[c].toString().equalsIgnoreCase(name)) {
-				name = names[c].toString();
-				return name;
-			}
-			c++;
-		}
-		
-		return name;
-	}
-		
-	
-	public String fixeName(String nam) {
-		String name = nam;
-		int c = 0;
-		int l = hc.getYaml().getEnchants().getKeys(false).size();
-		while (c < l) {
-			Object names[] = hc.getYaml().getEnchants().getKeys(false).toArray();
-			if (names[c].toString().equalsIgnoreCase(name)) {
-				name = names[c].toString();
-				return name;
-			}
-			c++;
-		}
-		
-		return name;
-	}
-	
-	
 
-	public String fixsName(String nam) {
-		String name = nam;
-		int c = 0;
-		int l = hc.getYaml().getShops().getKeys(false).size();
-		while (c < l) {
-			Object names[] = hc.getYaml().getShops().getKeys(false).toArray();
-			if (names[c].toString().equalsIgnoreCase(name)) {
-				name = names[c].toString();
-				return name;
-			}
-			c++;
-		}
-		
-		return name;
-	}
-	
-	
-	
+    
+    
 	}
 	
 	

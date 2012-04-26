@@ -2,6 +2,7 @@ package regalowl.hyperconomy;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -28,6 +29,10 @@ public class HyperConomy extends JavaPlugin{
 	private Log l;
 	private Shop s;
 	private Account acc;
+	private InfoSign isign;
+	private Cmd commandhandler;
+	private History hist;
+	private Notify not;
 	
     //VARIABLES**********************************************************************
 	
@@ -47,24 +52,27 @@ public class HyperConomy extends JavaPlugin{
     public void onEnable() {
     	
     	//Stores the new YamlFile as yaml.
-    	YamlFile yam = new YamlFile();	
+    	YamlFile yam = new YamlFile(this);	
     	yam.YamlEnable();    	
     	yaml = yam;
     	
     	
-    	requestbuffer = false;
-    	bufferactive = false;
-    	logsize = yaml.getLog().getKeys(true).size();
+
+
     	
     	lock = false;
+    	brokenfile = false;
     	
     	
-    	shopinterval = yaml.getConfig().getLong("config.shopcheckinterval");
-    	loginterval = yaml.getConfig().getLong("config.logwriteinterval");
+    	
+    	
     	saveinterval = yaml.getConfig().getLong("config.saveinterval");
+
+    	////////////////////For compatibility with previous versions of HyperConomy./////////////
+    	Compatibility cb = new Compatibility();
+    	cb.checkCompatibility(this, isign);
     	
-    	//shopmessage1 = yaml.getConfig().getString("config.shopmessage1");
-    	//shopmessage2 = yaml.getConfig().getString("config.shopmessage2");
+
     	
     	//Creates the shop from the config.
     	s = new Shop(this);
@@ -73,7 +81,7 @@ public class HyperConomy extends JavaPlugin{
     	m = new Message();
     	
     	//Loads the log.
-    	l = new Log(this, logsize);
+    	l = new Log(this);
     	
     	
     	//Reused Objects
@@ -81,6 +89,10 @@ public class HyperConomy extends JavaPlugin{
     	calc = new Calculation();
     	ench = new Enchant();
     	acc = new Account();
+    	commandhandler = new Cmd();
+    	not = new Notify();
+    	isign = new InfoSign();
+    	hist = new History();
     		
     	
     	
@@ -105,35 +117,49 @@ public class HyperConomy extends JavaPlugin{
     	
     	
         //Map name data to materials for /hb, /hv, and /hs command lookups
-		Iterator<String> it = yaml.getItems().getKeys(true).iterator();
+		Iterator<String> it = yaml.getItems().getKeys(false).iterator();
 		while (it.hasNext()) {   			
-			Object element = it.next();
-			String elst = element.toString();    				
-			if (elst.indexOf(".") == -1) {
-				String i = yaml.getItems().getString(elst + ".information.id");
-				String d = yaml.getItems().getString(elst + ".information.data");
-				String ikey = i + ":" + d;
-				namedata.put(ikey, elst);
-			}
+			String elst = it.next().toString();    				
+			String ikey = yaml.getItems().getString(elst + ".information.id") + ":" + yaml.getItems().getString(elst + ".information.data");
+			namedata.put(ikey, elst);
 		}        
 		
-		Iterator<String> it2 = yaml.getEnchants().getKeys(true).iterator();
+		Iterator<String> it2 = yaml.getEnchants().getKeys(false).iterator();
 		while (it2.hasNext()) {   			
-			Object element2 = it2.next();
-			String elst2 = element2.toString();    				
-			if (elst2.indexOf(".") == -1) {
-				String n = yaml.getEnchants().getString(elst2 + ".information.name");
-				enchantdata.put(n, elst2.substring(0, elst2.length() - 1));
-			}
+			String elst2 = it2.next().toString();    				
+			enchantdata.put(yaml.getEnchants().getString(elst2 + ".information.name"), elst2.substring(0, elst2.length() - 1));
 		}        
 		
+		//Creates the names arraylist storing all item and enchantment names.
+		Iterator<String> it3 = yaml.getItems().getKeys(false).iterator();
+		while (it3.hasNext()) {   			  				
+			names.add(it3.next().toString());
+		}  
+		Iterator<String> it4 = yaml.getEnchants().getKeys(false).iterator();
+		while (it4.hasNext()) {   			
+			names.add(it4.next().toString());
+		}  
 		
 		
-		startshopCheck();
+		
+		s.startshopCheck();
 		startSave();
 		//startBuffer();
 		
+		acc.setAccount(this, null, economy);
+		this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+		    public void run() {
+				//Sets up the global shop account if it doesn't already exist.
+				acc.checkshopAccount();
+		    }
+		}, 300L);
 
+		
+		
+		
+		isign.setinfoSign(this, calc, ench, tran);
+		hist.setHistory(this, calc, ench, isign);
+		hist.starthistoryLog();
 		
 		
 		log.info("HyperConomy has been successfully enabled!");
@@ -149,9 +175,10 @@ public class HyperConomy extends JavaPlugin{
     
     @Override
     public void onDisable() {
-    	stopshopCheck();
+    	s.stopshopCheck();
     	stopSave();
-    	stopBuffer();
+    	l.stopBuffer();
+    	hist.stophistoryLog();
     	l.saveBuffer();
 	
     	//Saves config and items files.
@@ -192,28 +219,29 @@ public class HyperConomy extends JavaPlugin{
     	if (cmd.getName().equalsIgnoreCase("lockshop")) {
     		try {
     			if (args.length == 0) {	
-    				if (lock) {
-    					
+    				if (lock && !brokenfile) {
     					lock = false;
-    					//loginterval = logintervalold;
-		    			//stopBuffer();
-		    			checkBuffer();
-		    			startshopCheck();
+		    			l.checkBuffer();
+		    			isign.checksignUpdate();
+		    			s.startshopCheck();
+		    			hist.starthistoryLog();
 		    			startSave();
 		    			sender.sendMessage(ChatColor.GOLD + "The global shop has been unlocked!");
     					return true;
     				} else if (!lock) {
-    					
     					lock = true;
-    					//loginterval = 1;
-    					
-    					stopshopCheck();
-		    			stopBuffer();
+    					s.stopshopCheck();
+		    			l.stopBuffer();
+		    			hist.stophistoryLog();
+		    			isign.stopsignUpdate();
+		    			isign.resetAll();
 		    			l.saveBuffer();
 		    			stopSave();
 		    			yaml.saveYamls();
 		    			sender.sendMessage(ChatColor.GOLD + "The global shop has been locked!");
-		    			//checkBuffer();
+    					return true;
+    				} else {
+    					sender.sendMessage(ChatColor.DARK_RED + "You must first fix your bad yml file!");
     					return true;
     				}
     			} else {
@@ -228,46 +256,47 @@ public class HyperConomy extends JavaPlugin{
 			try {
 				
 				if (lock) {
-					YamlFile yam = new YamlFile();	
+					YamlFile yam = new YamlFile(this);	
 			    	yam.YamlEnable();    	
 			    	yaml = yam;
 			    	
-			    	shopinterval = yaml.getConfig().getLong("config.shopcheckinterval");
-			    	loginterval = yaml.getConfig().getLong("config.logwriteinterval");
+			    	s.setshopInterval(yaml.getConfig().getLong("config.shopcheckinterval"));
+			    	l.setlogInterval(yaml.getConfig().getLong("config.logwriteinterval"));
 			    	saveinterval = yaml.getConfig().getLong("config.saveinterval");
+			    	isign.setsignupdateInterval(yaml.getConfig().getLong("config.signupdateinterval"));
 
 			    	
 			    	s.clearAll();
 			    	s = new Shop(this);
 			    	
-			    	
-			    	
-			    	
+			    	isign.setinfoSign(this, calc, ench, tran);
+
 			    	
 			    	namedata.clear();
 			    	enchantdata.clear();
+			    	names.clear();
 			    	
 			        //Map name data to materials for /hb, /hv, and /hs command lookups
-					Iterator<String> it = yaml.getItems().getKeys(true).iterator();
+					Iterator<String> it = yaml.getItems().getKeys(false).iterator();
 					while (it.hasNext()) {   			
-						Object element = it.next();
-						String elst = element.toString();    				
-						if (elst.indexOf(".") == -1) {
-							String i = yaml.getItems().getString(elst + ".information.id");
-							String d = yaml.getItems().getString(elst + ".information.data");
-							String ikey = i + ":" + d;
-							namedata.put(ikey, elst);
-						}
+						String elst = it.next().toString();    				
+						String ikey = yaml.getItems().getString(elst + ".information.id") + ":" + yaml.getItems().getString(elst + ".information.data");
+						namedata.put(ikey, elst);
 					}        		
-					Iterator<String> it2 = yaml.getEnchants().getKeys(true).iterator();
+					Iterator<String> it2 = yaml.getEnchants().getKeys(false).iterator();
 					while (it2.hasNext()) {   			
-						Object element2 = it2.next();
-						String elst2 = element2.toString();    				
-						if (elst2.indexOf(".") == -1) {
-							String n = yaml.getEnchants().getString(elst2 + ".information.name");
-							enchantdata.put(n, elst2.substring(0, elst2.length() - 1));
-						}
+						String elst2 = it2.next().toString();    				
+						enchantdata.put(yaml.getEnchants().getString(elst2 + ".information.name"), elst2.substring(0, elst2.length() - 1));
 					}   
+					//Creates the names arraylist storing all item and enchantment names.
+					Iterator<String> it3 = yaml.getItems().getKeys(false).iterator();
+					while (it3.hasNext()) {   			  				
+						names.add(it3.next().toString().toLowerCase());
+					}  
+					Iterator<String> it4 = yaml.getEnchants().getKeys(false).iterator();
+					while (it4.hasNext()) {   			
+						names.add(it4.next().toString().toLowerCase());
+					} 
 					
 					sender.sendMessage(ChatColor.GOLD + "All files have been reloaded.");
 				
@@ -278,7 +307,7 @@ public class HyperConomy extends JavaPlugin{
 				
 				return true;
 			} catch (Exception e) {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /reloadymls");
+				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /reloadfiles");
 				return true;
 			}
     	}
@@ -295,18 +324,17 @@ public class HyperConomy extends JavaPlugin{
 		    		if (args.length == 2) {
 		    			
 		    			if (args[0].equalsIgnoreCase("shop")) {
-			    			long inter = Long.parseLong(args[1]);
-			    			shopinterval = inter;
-			    			yaml.getConfig().set("config.shopcheckinterval", shopinterval);
+			    			s.setshopInterval(Long.parseLong(args[1]));
+			    			yaml.getConfig().set("config.shopcheckinterval", s.getshopInterval());
 			    			//yaml.saveYamls();
-			    			stopshopCheck();
-			    			startshopCheck();
+			    			s.stopshopCheck();
+			    			s.startshopCheck();
 			    			sender.sendMessage(ChatColor.GOLD + "Shop check interval set!");
 		    			} else if (args[0].equalsIgnoreCase("log")) {
-		    				loginterval = Long.parseLong(args[1]);
-			    			yaml.getConfig().set("config.logwriteinterval", loginterval);		    		
-			    			stopBuffer();
-			    			checkBuffer();	
+		    				l.setlogInterval(Long.parseLong(args[1]));
+			    			yaml.getConfig().set("config.logwriteinterval", l.getlogInterval());		    		
+			    			l.stopBuffer();
+			    			l.checkBuffer();	
 			    			sender.sendMessage(ChatColor.GOLD + "Log write interval set!");
 		    				
 			    			
@@ -318,16 +346,24 @@ public class HyperConomy extends JavaPlugin{
 			    			startSave();	
 			    			sender.sendMessage(ChatColor.GOLD + "Save interval set!");
 		    				
+			    			
+		    			} else if (args[0].equalsIgnoreCase("sign")) {
+		    				
+		    				isign.setsignupdateInterval(Long.parseLong(args[1]));
+			    			yaml.getConfig().set("config.signupdateinterval", isign.getsignupdateInterval());		    		
+			    			isign.stopsignUpdate();
+			    			isign.checksignUpdate();	
+			    			sender.sendMessage(ChatColor.GOLD + "Sign update interval set!");
 		    			} else {
-		    				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /setinterval ['shop'/'log'/'save'] [interval]");
+		    				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /setinterval ['shop'/'log'/'save'/'sign'] [interval]");
 		    			}
 		    			
 		    		} else {
-		    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /setinterval ['shop'/'log'/'save'] [interval]");
+		    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /setinterval ['shop'/'log'/'save'/'sign'] [interval]");
 		    		}
 		    		return true;
 	    		} catch (Exception e) {
-	    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Usage.  Use /setinterval ['shop'/'log'/'save'] [interval]");
+	    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Usage.  Use /setinterval ['shop'/'log'/'save'/'sign'] [interval]");
 	    			return true;
 	    		}
 	    		
@@ -337,10 +373,10 @@ public class HyperConomy extends JavaPlugin{
 	    	
 	    	
 	    	
-	        Cmd commandhandler = new Cmd(this, economy, m, tran, calc, ench, l, s, acc);
+	        commandhandler.setCmd(this, economy, m, tran, calc, ench, l, s, acc, isign, not);
 	    	boolean result = commandhandler.handleCommand(sender, cmd, label, args);
 	    	
-	    	checkBuffer();
+	    	l.checkBuffer();
 	
 	        return result;
         
@@ -355,47 +391,9 @@ public class HyperConomy extends JavaPlugin{
 
     
     
-    //Threading related functions.
-    public void startshopCheck() {
-		shoptaskid = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-		    public void run() {
-		    	s.shopThread();
-		    }
-		}, shopinterval, shopinterval);
-    }
+
     
-    
-    public void stopshopCheck() {
-    	this.getServer().getScheduler().cancelTask(shoptaskid);
-    }
-    
-    
-    public void startBuffer() {
-    	bufferactive = true;
-		buffertaskid = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-		    public void run() {
-		    	//Bukkit.broadcastMessage("requestbuffer=" + requestbuffer + " bufferactive=" + bufferactive);
-		    	if (!requestbuffer) {
-		    		stopBuffer();
-		    	} else {
-		    		l.writelogThread();
-		    		//Bukkit.broadcastMessage("Buffer thread");
-		    	}
-		    }
-		}, loginterval, loginterval);
-    }
-    
-    public void stopBuffer() {
-    	this.getServer().getScheduler().cancelTask(buffertaskid);
-    	bufferactive = false;
-    }
-    
-    
-    public void checkBuffer() {
-    	if (requestbuffer && !bufferactive) {
-    		startBuffer();
-    	}
-    }
+
     
     public void startSave() {
 		savetaskid = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -411,21 +409,15 @@ public class HyperConomy extends JavaPlugin{
     
     //Getters and Setters
     
-    public long getshopInterval() {
-    	return shopinterval;
-    }
-    public long getlogInterval() {
-    	return loginterval;
-    }
+
+
     public long getsaveInterval() {
     	return saveinterval;
     }
     public YamlFile getYaml() {
     	return yaml;
     }
-    public int getlogSize() {
-    	return logsize;
-    }
+
     public String getnameData(String key) {
     	return namedata.get(key);
     }
@@ -435,13 +427,86 @@ public class HyperConomy extends JavaPlugin{
 
     
     
-    public void setrequestBuffer(boolean bufferstate) {
-    	requestbuffer = bufferstate;
-    }
-    public void setlogSize(int size) {
-    	logsize = size;
+
+
+    
+    
+    public void ymlCheck(int failcount) {
+    	if (failcount == 0) {
+    		brokenfile = false;
+    	} else {
+        	brokenfile = true;
+        	if (!lock) {	
+				lock = true;
+				s.stopshopCheck();
+    			l.stopBuffer();
+    			hist.stophistoryLog();
+    			isign.stopsignUpdate();
+    			isign.resetAll();
+    			l.saveBuffer();
+    			stopSave();	
+    		}
+    	}
     }
     
+    
+    
+    
+    
+    
+    
+	public String fixName(String nam) {
+		int c = 0;
+		int l = names.size();
+		while (c < l) {
+			if (names.get(c).equalsIgnoreCase(nam)) {
+				nam = names.get(c);
+				return nam;
+			}
+			c++;
+		}
+		return nam;
+	}
+
+	
+
+	public String fixsName(String nam) {
+		String name = nam;
+		int c = 0;
+		int l = getYaml().getShops().getKeys(false).size();
+		Object names[] = getYaml().getShops().getKeys(false).toArray();
+		while (c < l) {
+			if (names[c].toString().equalsIgnoreCase(name)) {
+				name = names[c].toString();
+				return name;
+			}
+			c++;
+		}
+		
+		return name;
+	}
+	
+	public ArrayList<String> getNames() {
+		return names;
+	}
+
+	public boolean itemTest(String name) {
+        String teststring = yaml.getItems().getString(name + ".stock.stock");
+        boolean item = false;
+        if (teststring != null) {
+        	item = true;
+        }
+        return item;
+	}
+    
+	public boolean enchantTest(String name) {
+		 String teststring = yaml.getEnchants().getString(name + ".stock.stock");
+        boolean enchant = false;
+        if (teststring != null) {
+        	enchant = true;
+        }
+        return enchant;
+	}
     
     
     
@@ -451,20 +516,21 @@ public class HyperConomy extends JavaPlugin{
     //Fields
     
     
-	private long shopinterval;
-	private long loginterval;	
+
+	
 	private long saveinterval;
+	private int savetaskid;
 	
 	private YamlFile yaml;
 	private boolean lock;
+	private boolean brokenfile;
 	
-	private boolean requestbuffer;
-	private boolean bufferactive;
-	private int logsize;
+
 	
-	private int shoptaskid;
-	private int buffertaskid;
-	private int savetaskid;
+
+
+
+
 	
 	
 	//private String name;
@@ -476,6 +542,9 @@ public class HyperConomy extends JavaPlugin{
 	private HashMap <String, String> namedata = new HashMap<String, String>();
 	private HashMap <String, String> enchantdata = new HashMap<String, String>();
 	
+	//Stores an arraylist of all item and enchantment names for other plugins to use.
+	private ArrayList<String> names = new ArrayList<String>();
+	
 }
 
-
+//Latest error number: 32

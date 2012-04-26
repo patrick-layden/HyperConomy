@@ -46,14 +46,7 @@ public class Enchant {
 			int truelvl = p.getItemInHand().getEnchantmentLevel(ench);
 			if (p.getItemInHand().containsEnchantment(ench) && lvl == truelvl) {
 				
-				//Removes the sold enchantment from the item.
-				p.getItemInHand().removeEnchantment(ench);
-		
-				//Adds the sold items to the shopstock and saves the yaml file.
-				int shopstock = enchants.getInt(name + ".stock.stock");
-				enchants.set((name + ".stock.stock"), (shopstock + 1));					
-				//hc.getYaml().saveYamls();
-						
+				
 				//Gets the actual value of the enchantment and stores it in fprice, factoring in durability, and then
 				//adds the value to the player's balance.
 				double dura = p.getItemInHand().getDurability();
@@ -63,23 +56,56 @@ public class Enchant {
 				setVC(hc, name, mater);
 				double price = getValue();
 				double fprice = duramult * price;
-				acc.setAccount(p, economy);
-				acc.deposit(fprice);
 				
-				//Formats the sale value to two digits for display.
-				DecimalFormat twodigits = new DecimalFormat("#.##");
-				fprice = Double.valueOf(twodigits.format(fprice));
 				
-				//Informs the player of their sale.
-				p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-				p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + fprice + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
-				p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-				
-				//Writes the transaction to the log.
-				String logentry = p.getName() + " sold " + name + " for $" + fprice + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
-				log.setEntry(logentry);
-				log.writeBuffer();
-				
+				boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
+				if (acc.checkshopBalance(fprice) || sunlimited) {
+					
+
+					//Removes the sold enchantment from the item.
+					p.getItemInHand().removeEnchantment(ench);
+			
+					//Adds the sold items to the shopstock and saves the yaml file.
+					int shopstock = enchants.getInt(name + ".stock.stock");
+					enchants.set((name + ".stock.stock"), (shopstock + 1));					
+							
+					acc.setAccount(hc, p, economy);
+					acc.deposit(fprice);
+					
+					//Removes the final transaction price from the shop's account.
+					acc.withdrawShop(fprice);
+					
+					//Reverts any changes to the global shop account if the account is set to unlimited.
+					if (sunlimited) {
+						acc.setBalance("hyperconomy", 0);
+					}
+					
+					//Formats the sale value to two digits for display.
+					DecimalFormat twodigits = new DecimalFormat("#.##");
+					fprice = Double.valueOf(twodigits.format(fprice));
+					
+					//Informs the player of their sale.
+					p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+					p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + fprice + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
+					p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+					
+					//Writes the transaction to the log.
+					String logentry = p.getName() + " sold " + name + " for $" + fprice + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
+					log.setEntry(logentry);
+					log.writeBuffer();
+					
+					
+					//Updates all information signs.
+					isign.setrequestsignUpdate(true);
+					isign.checksignUpdate();
+					
+					//Sends price update notifications.
+					not.setNotify(hc, calc, this, name, mater);
+					not.sendNotification();
+	
+				} else {
+					p.sendMessage(ChatColor.BLUE + "Sorry, the shop currently does not have enough money.");
+				}
 				//If the item does not have the enchantment that the player is trying to sell, this informs them.
 			} else {
 				p.sendMessage(ChatColor.BLUE + "The item you're holding doesn't have " + ChatColor.AQUA + "" + name + "!");
@@ -128,7 +154,7 @@ public class Enchant {
 					if (!p.getItemInHand().containsEnchantment(ench)) {
 						
 						//Makes sure the player has enough money for the purchase.
-						acc.setAccount(p, economy);
+						acc.setAccount(hc, p, economy);
 						if (acc.checkFunds(price)) {
 							
 							//Makes sure the item can accept the chosen enchantment.  (Need to add new bukkit method for this when 1.2 RB comes out.)
@@ -147,7 +173,6 @@ public class Enchant {
 										enchtest = false;
 									}
 								}
-									//p.sendMessage("allenchants: " + allenchants);
 							}
 							
 							//ench.conflictsWith(arg0)
@@ -159,6 +184,14 @@ public class Enchant {
 								
 								//Removes the cost from the player's account.
 								acc.withdraw(price);
+								
+								//Deposits the money spent by the player into the server account.
+								acc.depositShop(price);
+								
+								//Reverts any changes to the global shop account if the account is set to unlimited.
+								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
+									acc.setBalance("hyperconomy", 0);
+								}
 		
 								//Gets the enchantment level from the enchantment's name.
 								int l = name.length();
@@ -198,6 +231,16 @@ public class Enchant {
 								String logentry = p.getName() + " bought " + name + " for $" + price + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
 								log.setEntry(logentry);
 								log.writeBuffer();
+								
+								
+								//Updates all information signs.
+								isign.setrequestsignUpdate(true);
+								isign.checksignUpdate();
+								
+								
+								//Sends price update notifications.
+								not.setNotify(hc, calc, this, name, mater);
+								not.sendNotification();
 		
 							} else {
 								p.sendMessage(ChatColor.BLUE + "The item you're holding cannot accept that enchantment!");
@@ -495,13 +538,16 @@ public class Enchant {
 	
 
 		
-		public void setSBE(HyperConomy hyperc, Player player, String nam, Economy econ, Log lo, Account account) {
+		public void setSBE(HyperConomy hyperc, Player player, String nam, Economy econ, Log lo, Account account, InfoSign infosign, Notify no, Calculation cal) {
 			hc = hyperc;
 			p = player;
 			name = nam;
 			economy = econ;
 			log = lo;
 			acc = account;
+			isign = infosign;
+			not = no;
+			calc = cal;
 		}
 		
 		public void setVC(HyperConomy hyperc, String nam, String mat){
@@ -527,5 +573,8 @@ public class Enchant {
 		private ItemStack stack;
 		private Log log;
 		private Account acc;
+		private InfoSign isign;
+		private Notify not;
+		private Calculation calc;
 
 }

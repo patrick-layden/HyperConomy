@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 public class Message {
 	
 	//Stores the messages to a String array and sets up values for color codes.
-	String message[] = new String[96];
+	String message[] = new String[104];
 	String darkred = "§4";
 	String blue = "§9";
 	String gold = "§6";
@@ -37,7 +37,7 @@ public class Message {
 		//buy
 		message[0] = darkred + perror + "Use /buy [name] (amount or 'max')";
 		message[1] = darkred + "Invalid item name.";
-		message[2] = darkred + "You must be in a shop to buy or sell items!";
+		message[2] = darkred + "You must be in a shop to buy or sell!";
 		//sell
 		message[3] = darkred + perror + "Use /sell [name] (amount or 'max')";
 		message[4] = blue + "You cannot buy or sell enchanted items!";
@@ -105,7 +105,7 @@ public class Message {
 		//is
 		message[42] = blue + "Sorry, that item or enchantment is not in the database.";
 		message[43] = blue + "Sorry, that enchantment is not in the enchantment database.";
-		message[44] = darkred + perror + "Hold an item and use /itemsettings (name)";
+		message[44] = darkred + perror + "Hold an item and use /itemsettings (id) (damage value)";
 		//taxsettings
 		message[45] = darkred + perror + "Use /taxsettings";
 		//hc
@@ -130,13 +130,16 @@ public class Message {
 	    message[58] = green + "/hs" + yellow + " (amount/'max')";
 		message[59] = green + "/esell" + red + " [name/'max']";
 		message[60] = green + "/sellall";
+		message[100] = green + "/sellxp" + yellow + " (amount/'max')";
 		message[61] = aqua + "For more help type /hc sell " + red + "[command]";
 		//hc buy
 		message[62] = green + "/buy" + red + " [name]" + yellow + " (amount/'max')";
 	    message[63] = green + "/hb" + yellow + " (amount/'max')";
 		message[64] = green + "/buyid" + red + " [amount] [id]" + yellow + " (damage value)";
 		message[65] = green + "/ebuy" + red + " [name]";
+		message[99] = green + "/buyxp" + yellow + " (amount)";
 		message[66] = aqua + "For more help type /hc buy " + green + "[command]";
+		
 		//hc info
 		message[67] = green + "/value" + red + " [name]" + yellow + " (amount)";
 	    message[68] = green + "/hv" + yellow + " (amount)";
@@ -144,6 +147,8 @@ public class Message {
 		message[70] = green + "/ii" + yellow + " (id) (damage value)";
 		message[71] = green + "/topitems" + yellow + " (page) (shop)";
 	    message[72] = green+ "/topenchants" + yellow + " (page) (shop)";
+	    message[96] = green+ "/browseshop" + red + " [name]" + yellow + " (page) (shop)";
+	    message[98] = green+ "/xpinfo";
 		message[73] = green + "/evalue" + pink + " {enchantment name} {'b'/'s'/'a'}";
 		message[74] = aqua + "For more help type /hc info " + green + "[command]";
 		//hc params
@@ -179,11 +184,20 @@ public class Message {
 		message[91] = ChatColor.AQUA + "Displays all of the items available in all shops or the selected shop. Items with the highest stock are shown first.  If no page is specified it shows the first page.";
 		//hc info topenchants
 		message[92] = ChatColor.AQUA + "Displays all of the enchantments available in all shops or the selected shop. Enchantments with the highest stock are shown first.  If no page is specified it shows the first page.";
+		//hc info browseshop
+		message[97] = ChatColor.AQUA + "Searches for items or enchantments that begin with the specified name.  It will display the items/enchantments in alphabetical order with their stock and purchase price.  If a shop is specified it will show what is available in that shop.";
 		//hc info evalue
 		message[93] = ChatColor.AQUA + "If no parameters are given, displays the sell value, purchase price, and shopstock of all the enchantments on the item you're holding. If given an enchantment name, you must also specify 'b' for buy, 's' for sell, or 'a' for amount. If 'b' for instance, it will display the purchase price for all the enchantment on all item classes. (gold, diamond, iron, etc.)";
 		//enchantsettings/es
 		message[94] = darkred + perror + "Use /enchantsettings [enchantment] or /es [enchantment]";
 		message[95] = blue + "Sorry, that item or enchantment cannot be traded at this shop.";
+		//buyxp
+		message[101] = aqua + "Buys the specified amount of experience points.";
+		//sellxp
+		message[102] = aqua + "Sells the specified amount of experience points, or all of the experience points that you have if you type 'max' as the amount.";
+		//xpinfo
+		message[103] = aqua + "Displays information about how much experience you have, how much experience is needed to level up, and how much experience is needed to reach level 50.";
+		//Next message: 97
 	}
 			
 	/**

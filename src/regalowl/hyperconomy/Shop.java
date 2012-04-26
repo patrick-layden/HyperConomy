@@ -33,9 +33,14 @@ public class Shop {
 	private ArrayList<Integer> p2y = new ArrayList<Integer>();
 	private ArrayList<Integer> p2z = new ArrayList<Integer>();
 	
-
+	private boolean useshopexitmessage;
+	
+	private long shopinterval;
+	private int shoptaskid;
 	
 	private String name;
+	private String newname;
+	
 	private Player p;
 	private HyperConomy hc;
 
@@ -96,6 +101,17 @@ public class Shop {
 	/**
 	 * 
 	 * 
+	 * Setter for renameShop()
+	 * 
+	 */
+	public void setrenShop(String n, String nn) {
+		name = n;
+		newname = nn;
+	}
+	
+	/**
+	 * 
+	 * 
 	 * Setter for removeShop()
 	 * 
 	 */
@@ -115,7 +131,7 @@ public class Shop {
 		hc = hyperc;
 		sp = new HashMap<Player, Boolean>();
 		
-		
+		shopinterval = hc.getYaml().getConfig().getLong("config.shopcheckinterval");
 		
 		Iterator<String> it = hc.getYaml().getShops().getKeys(false).iterator();
 		int counter = 0;
@@ -146,7 +162,7 @@ public class Shop {
 		}
 		
 		
-		//sp = new ShopPlayer();	
+		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
 	}
 	
 	/**
@@ -197,9 +213,8 @@ public class Shop {
 				} else {
 					
 					p.sendMessage(ChatColor.BLACK + "------------------------");
-					p.sendMessage(shopmessage1.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")));
-					p.sendMessage(shopmessage2.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")));
-					//p.sendMessage(ChatColor.BLUE + "Type " + ChatColor.AQUA + "/hc" + ChatColor.BLUE + " for help." );
+					p.sendMessage(shopmessage1.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")).replace("&","§"));
+					p.sendMessage(shopmessage2.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")).replace("&","§"));
 					p.sendMessage(ChatColor.BLACK + "------------------------");
 					
 					//Sets the player to being in the shop in the inshop.txt file.
@@ -216,7 +231,9 @@ public class Shop {
 					//Sets the player to not being in the shop in the inshop.txt file.
 					//sp.setData(p.getName(), "false");
 					sp.put(p, false);
-					p.sendMessage(ChatColor.BLUE + "You have left the shop.");
+					if (useshopexitmessage) {
+						p.sendMessage(ChatColor.BLUE + "You have left the shop.");
+					}		
 				}
 			}
 			c++;
@@ -335,7 +352,6 @@ public class Shop {
 		shop.set(name + ".p2.x", x);
 		shop.set(name + ".p2.y", y);
 		shop.set(name + ".p2.z", z);
-		//hc.getYaml().saveYamls();
 		if (shopdata.indexOf(name) == -1) {
 			shopdata.add(name);
 		}
@@ -355,7 +371,6 @@ public class Shop {
 			shop.set(name + ".p1.x", x);
 			shop.set(name + ".p1.y", y);
 			shop.set(name + ".p1.z", z);
-			//hc.getYaml().saveYamls();
 		} else {
 			shopworld.set(shopnumber, w);
 			p2x.set(shopnumber, x);
@@ -377,7 +392,6 @@ public class Shop {
 	public void removeShop() {
 		
 		hc.getYaml().getShops().set(name, null);
-		//hc.getYaml().saveYamls();
 		int shopnumber = shopdata.indexOf(name);
 		shopdata.remove(shopnumber);
 			p1x.remove(shopnumber);
@@ -392,6 +406,31 @@ public class Shop {
 			shopmessage2.remove(shopnumber);
 
 		nshops = nshops - 1;
+	}
+	
+	
+	public void renameShop() {
+		FileConfiguration shopsfile = hc.getYaml().getShops();
+		shopsfile.set(newname + ".world", shopsfile.get(name + ".world"));
+		shopsfile.set(newname + ".p1.x", shopsfile.get(name + ".p1.x"));
+		shopsfile.set(newname + ".p1.y", shopsfile.get(name + ".p1.y"));
+		shopsfile.set(newname + ".p1.z", shopsfile.get(name + ".p1.z"));
+		shopsfile.set(newname + ".p2.x", shopsfile.get(name + ".p2.x"));
+		shopsfile.set(newname + ".p2.y", shopsfile.get(name + ".p2.y"));
+		shopsfile.set(newname + ".p2.z", shopsfile.get(name + ".p2.z"));
+		shopsfile.set(newname + ".shopmessage1", shopsfile.get(name + ".shopmessage1"));
+		shopsfile.set(newname + ".shopmessage2", shopsfile.get(name + ".shopmessage2"));
+		shopsfile.set(newname + ".unavailable", shopsfile.get(name + ".unavailable"));
+		shopsfile.set(name, null);
+
+		shopdata.clear();
+		Iterator<String> it = shopsfile.getKeys(false).iterator();
+		while (it.hasNext()) {   			
+			Object element2 = it.next();
+			String ele = element2.toString(); 
+			shopdata.add(ele);
+		}
+
 	}
 	
 	public ArrayList<String> listShops() {
@@ -424,6 +463,38 @@ public class Shop {
 		String shopname = shopdata.get(shopnumber);
 		return shopname;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    //Threading related functions.
+    public void startshopCheck() {
+		shoptaskid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
+		    public void run() {
+		    	shopThread();
+		    }
+		}, shopinterval, shopinterval);
+    }
+    
+    
+    public void stopshopCheck() {
+    	hc.getServer().getScheduler().cancelTask(shoptaskid);
+    }
+    
+    
+    public long getshopInterval() {
+    	return shopinterval;
+    }
+	
+    public void setshopInterval(long interval) {
+    	shopinterval = interval;
+    }
+	
 
 	
 }
