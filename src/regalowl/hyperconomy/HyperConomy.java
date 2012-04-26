@@ -460,8 +460,8 @@ public class HyperConomy extends JavaPlugin{
 		int l = names.size();
 		while (c < l) {
 			if (names.get(c).equalsIgnoreCase(nam)) {
-				nam = names.get(c);
-				return nam;
+				String newname = names.get(c);
+				return newname;
 			}
 			c++;
 		}

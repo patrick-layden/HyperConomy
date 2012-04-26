@@ -358,7 +358,7 @@ public class Cmd {
 	        			amount = 1;
 	        		}
 	        				
-	    		String teststring = hc.getYaml().getItems().getString(name);    	
+	    		String teststring = hc.getYaml().getItems().getString(name);
 				if (teststring == null) {
 					name = hc.fixName(name);
 					teststring = hc.getYaml().getItems().getString(name);
@@ -2088,8 +2088,8 @@ public class Cmd {
     				String nam = args[0];
     				String teststring = hc.getYaml().getItems().getString(nam);
     				if (teststring == null) {
-    					name = hc.fixName(name);
-    					teststring = hc.getYaml().getItems().getString(name);
+    					nam = hc.fixName(nam);
+    					teststring = hc.getYaml().getItems().getString(nam);
     				}
     				if (teststring != null) {
     					FileConfiguration it = hc.getYaml().getItems();    
