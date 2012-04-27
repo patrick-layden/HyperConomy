@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -567,8 +566,7 @@ public class Transaction {
 				taxrate = hc.getYaml().getConfig().getDouble("config.statictaxpercent");
 			}
 			double taxpaid = price - (price/(1 + taxrate/100));
-			DecimalFormat twodigits = new DecimalFormat("#.##");
-			taxpaid = Double.valueOf(twodigits.format(taxpaid));
+			taxpaid = calc.twoDecimals(taxpaid);
 			return taxpaid;
 		} catch (Exception e) {
 			e.printStackTrace();

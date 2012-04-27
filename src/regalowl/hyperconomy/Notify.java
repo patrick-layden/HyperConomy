@@ -65,7 +65,7 @@ public class Notify {
 				stock = hc.getYaml().getItems().getInt(name.get(0) + ".stock.stock");
 				Bukkit.broadcast("§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a$" + cost + " §9each.", "hyperconomy.notify");
 			} else if (hc.enchantTest(name.get(0))) {
-				ench.setVC(hc, name.get(0), eclass.get(0));
+				ench.setVC(hc, name.get(0), eclass.get(0), calc);
 				cost = ench.getCost();
 				stock = hc.getYaml().getEnchants().getInt(name.get(0) + ".stock.stock");
 				Bukkit.broadcast("§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a$" + cost + " §9each.", "hyperconomy.notify");

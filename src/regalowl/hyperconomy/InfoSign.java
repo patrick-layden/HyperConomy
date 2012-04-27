@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -198,12 +197,12 @@ public class InfoSign implements Listener {
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
 								if (line3.contains("$") && sns.getString(signkey + ".enchantclass") != null) {			
 	
-									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"));
+									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
 									line23 = "§fSell: " + "§a$" + ench.getValue();
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
-										ench.setVC(hc, itemn, line3);
+										ench.setVC(hc, itemn, line3, calc);
 										line23 = "§fSell: " + "§a$" + ench.getValue();
 										sns.set(signkey + ".enchantclass", line3);
 									} else {
@@ -222,12 +221,12 @@ public class InfoSign implements Listener {
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
 								if (line3.contains("$") && sns.getString(signkey + ".enchantclass") != null) {			
 	
-									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"));
+									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
 									line23 = "§fBuy: " + "§a$" + ench.getCost();
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
-										ench.setVC(hc, itemn, line3);
+										ench.setVC(hc, itemn, line3, calc);
 										line23 = "§fBuy: " + "§a$" + ench.getCost();
 										sns.set(signkey + ".enchantclass", line3);
 									} else {
@@ -366,7 +365,7 @@ public class InfoSign implements Listener {
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
 								if (line3.contains("$") && sns.getString(signkey + ".enchantclass") != null) {			
 	
-									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"));
+									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
 									double price = ench.getCost();
 									Boolean stax = enchantsyml.getBoolean(itemn + ".price.static");
 									double taxrate;
@@ -376,13 +375,12 @@ public class InfoSign implements Listener {
 										taxrate = hc.getYaml().getConfig().getDouble("config.statictaxpercent");
 									}
 									double taxpaid = price - (price/(1 + taxrate/100));
-									DecimalFormat twodigits = new DecimalFormat("#.##");
-									taxpaid = Double.valueOf(twodigits.format(taxpaid));
+									taxpaid = calc.twoDecimals(taxpaid);
 									line23 = "§fTax: " + "§a$" + taxpaid;
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
-										ench.setVC(hc, itemn, line3);
+										ench.setVC(hc, itemn, line3, calc);
 										double price = ench.getCost();
 										Boolean stax = enchantsyml.getBoolean(itemn + ".price.static");
 										double taxrate;
@@ -392,8 +390,7 @@ public class InfoSign implements Listener {
 											taxrate = hc.getYaml().getConfig().getDouble("config.statictaxpercent");
 										}
 										double taxpaid = price - (price/(1 + taxrate/100));
-										DecimalFormat twodigits = new DecimalFormat("#.##");
-										taxpaid = Double.valueOf(twodigits.format(taxpaid));
+										taxpaid = calc.twoDecimals(taxpaid);
 										line23 = "§fTax: " + "§a$" + taxpaid;
 										sns.set(signkey + ".enchantclass", line3);
 									} else {
@@ -581,14 +578,13 @@ public class InfoSign implements Listener {
 				Double historicvalue = Double.parseDouble(historylist.substring(historylist.lastIndexOf(",") + 1, historylist.length()));
 				
 				percentc = ((currentvalue - historicvalue)/currentvalue) * 100;
-				DecimalFormat threedigits = new DecimalFormat("#.###");
-				percentc = Double.valueOf(threedigits.format(percentc));
+				percentc = calc.threeDecimals(percentc);
 				
 			
 
 				
 			} else if (teststring2 != null) {
-				ench.setVC(hc, itemn, "diamond");
+				ench.setVC(hc, itemn, "diamond", calc);
 				Double currentvalue = ench.getValue();
 				
 				int i = 1;
@@ -603,8 +599,7 @@ public class InfoSign implements Listener {
 				Double historicvalue = Double.parseDouble(historylist.substring(historylist.lastIndexOf(",") + 1, historylist.length()));
 				
 				percentc = (currentvalue - historicvalue)/currentvalue;
-				DecimalFormat threedigits = new DecimalFormat("#.###");
-				percentc = Double.valueOf(threedigits.format(percentc));
+				percentc = calc.threeDecimals(percentc);
 				
 			
 				

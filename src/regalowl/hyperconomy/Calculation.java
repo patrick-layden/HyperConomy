@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -86,8 +85,7 @@ public class Calculation {
 			//Checks if the price is infinite, and if it is sets the cost to a specific value that can later be identified.
 			if (totalvalue < Math.pow(10, 10)) {
 				//Rounds to two decimal places if not infinite
-				DecimalFormat twodigits = new DecimalFormat("#.##");
-				totalvalue = Double.valueOf(twodigits.format(totalvalue));
+				totalvalue = twoDecimals(totalvalue);
 			} else {
 				totalvalue = 3235624645000.7;
 			}
@@ -184,8 +182,7 @@ public class Calculation {
 					}
 					
 					//Rounds to two decimal places.
-					DecimalFormat twodigits = new DecimalFormat("#.##");
-					cost = Double.valueOf(twodigits.format(cost));
+					cost = twoDecimals(cost);
 				} else {
 					cost = 3235624645000.7;
 				}
@@ -495,8 +492,7 @@ public class Calculation {
 					//Checks if the price is infinite, and if it is sets the cost to a specific value that can later be used.
 					if (cost < Math.pow(10, 10)) {
 						//Rounds to two decimal places if not infinite
-						DecimalFormat twodigits = new DecimalFormat("#.##");
-						cost = Double.valueOf(twodigits.format(cost));
+						cost = twoDecimals(cost);
 					} else {
 						cost = 3235624645000.7;
 					}
@@ -599,7 +595,19 @@ public class Calculation {
 		}
 
 
+		//Rounds to two decimal places.
+		public double twoDecimals(double input) {
+			int nodecimals = (int) Math.ceil((input * 100) - .5);
+			double twodecimals = (double)nodecimals/100.0;
+			return twodecimals;
+		}
 		
+		//Rounds to tree decimal places.
+		public double threeDecimals(double input) {
+			int nodecimals = (int) Math.ceil((input * 1000) - .5);
+			double threedecimals = (double)nodecimals/1000.0;
+			return threedecimals;
+		}
 
 		
 		/**

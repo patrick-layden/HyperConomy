@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -53,7 +52,7 @@ public class Enchant {
 				double maxdura = p.getItemInHand().getType().getMaxDurability();
 				double duramult = (1 - dura/maxdura);	
 				String mater = p.getItemInHand().getType().toString();
-				setVC(hc, name, mater);
+				setVC(hc, name, mater, calc);
 				double price = getValue();
 				double fprice = duramult * price;
 				
@@ -81,8 +80,7 @@ public class Enchant {
 					}
 					
 					//Formats the sale value to two digits for display.
-					DecimalFormat twodigits = new DecimalFormat("#.##");
-					fprice = Double.valueOf(twodigits.format(fprice));
+					fprice = calc.twoDecimals(fprice);
 					
 					//Informs the player of their sale.
 					p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
@@ -144,7 +142,7 @@ public class Enchant {
 				String mater = p.getItemInHand().getType().toString();
 				
 				//Calculates the cost to buy the given enchantment for the relevant material class
-				setVC(hc, name, mater);
+				setVC(hc, name, mater, calc);
 				double price = getCost();
 				
 				//Checks for infinite values.  (The cost returns as this number if such a value exists.)
@@ -214,12 +212,10 @@ public class Enchant {
 								
 								//Calculates the tax that was paid and formats it to two decimals.
 								double taxpaid = price - (price/(1 + taxrate/100));
-								DecimalFormat twodigits = new DecimalFormat("#.##");
-								taxpaid = Double.valueOf(twodigits.format(taxpaid));
+								taxpaid = calc.twoDecimals(taxpaid);
 									
 								//Formats the price to two decimals for display.	
-								DecimalFormat twodigits2 = new DecimalFormat("#.##");
-								price = Double.valueOf(twodigits2.format(price));
+								price = calc.twoDecimals(price);
 								
 								//Displays purchase information to the player.
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
@@ -317,8 +313,7 @@ public class Enchant {
 				if (cost < Math.pow(10, 10)) {
 					
 					//Rounds to two decimal places.
-					DecimalFormat twodigits = new DecimalFormat("#.##");
-					cost = Double.valueOf(twodigits.format(cost));
+					cost = calc.twoDecimals(cost);
 				} else {
 					cost = 3235624645000.7;
 				}
@@ -406,8 +401,7 @@ public class Enchant {
 						}
 						
 						//Formats the cost.
-						DecimalFormat twodigits = new DecimalFormat("#.##");
-						cost = Double.valueOf(twodigits.format(cost));
+						cost = calc.twoDecimals(cost);
 					} else {
 						cost = 3235624645000.7;
 					}
@@ -550,10 +544,11 @@ public class Enchant {
 			calc = cal;
 		}
 		
-		public void setVC(HyperConomy hyperc, String nam, String mat){
+		public void setVC(HyperConomy hyperc, String nam, String mat, Calculation c){
 			hc = hyperc;
 			name = nam;
 			mater = mat;
+			calc = c;
 		}
 		
 		public void setDM(Player player) {

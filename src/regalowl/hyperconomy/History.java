@@ -83,7 +83,7 @@ public class History {
 		while (iterat3.hasNext()) { 
 			String currentenchant = iterat3.next().toString();
 			
-			ench.setVC(hc, currentenchant, "diamond");
+			ench.setVC(hc, currentenchant, "diamond", calc);
 			
 			if (!historykeys.contains(currentenchant)) {
 				historykeys.add(currentenchant);

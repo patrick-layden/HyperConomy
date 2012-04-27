@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -1622,36 +1621,24 @@ public class Cmd {
     		
     	} else if (cmd.getName().equalsIgnoreCase("topitems")) {
 	    		try {
-	        		String nameshop = "";
-	    			if (args.length >= 2) {		
-	    				int counter = 1;
-	    				String name = "";
-	    				while (counter < args.length) {
-	    					if (counter == 1) {
-	    						name = args[1];
-	    					} else {
-	    						name = name + "_" + args[counter];
-	    					}
-	    					counter++;
-	    				}
-	    				name = name.replace(".", "").replace(":", "");	
-	    				String teststring = hc.getYaml().getShops().getString(name);
-	    				if (teststring == null) {
-	    					name = hc.fixsName(name);
-	    				}
-	    				
-	    				
-	    				
-	    				String shoplist = s.listShops().toString();
-	    				
-	    				if (shoplist.contains(name)) {
-	    					nameshop = name;
-	    				} else {
-	    					sender.sendMessage(ChatColor.DARK_RED + "That shop doesn't exist!");
-	    					return true;
-	    				}
+
+	    			
+	    			if (args.length > 1) {
+	    				m.send(sender, 39);
+	    				return true;
 	    			}
-	    	    		//hc.getYaml().saveYamls();	
+	    			
+					//Gets the shop name if the player is in a shop.
+		    		String nameshop = "";
+		    		if (player != null) {
+		    			s.setinShop(player);
+		    			if (s.inShop() != -1) {
+		    				nameshop = s.getShop(player);
+		    			}	    			
+		    		}
+	    			
+	    			
+	    			
 	    			int page;
 	        			if (args.length == 0) {
 	        				page = 1;
@@ -1719,34 +1706,20 @@ public class Cmd {
     		
     	} else if (cmd.getName().equalsIgnoreCase("topenchants")) {
     		try {
-    			
-    			
-    			String nameshop = "";
-    			if (args.length >= 2) {		
-    				int counter = 1;
-    				String name = "";
-    				while (counter < args.length) {
-    					if (counter == 1) {
-    						name = args[1];
-    					} else {
-    						name = name + "_" + args[counter];
-    					}
-    					counter++;
-    				}
-    				name = name.replace(".", "").replace(":", "");	
-    				String teststring = hc.getYaml().getShops().getString(name);
-    				if (teststring == null) {
-    					name = hc.fixsName(name);
-    				}
-    				String shoplist = s.listShops().toString();
-    				
-    				if (shoplist.contains(name)) {
-    					nameshop = name;
-    				} else {
-    					sender.sendMessage(ChatColor.DARK_RED + "That shop doesn't exist!");
-    					return true;
-    				}
+
+    			if (args.length > 1) {
+    				m.send(sender, 40);
+    				return true;
     			}
+    			
+				//Gets the shop name if the player is in a shop.
+	    		String nameshop = "";
+	    		if (player != null) {
+	    			s.setinShop(player);
+	    			if (s.inShop() != -1) {
+	    				nameshop = s.getShop(player);
+	    			}	    			
+	    		}
     			
     			
     			
@@ -1819,6 +1792,11 @@ public class Cmd {
 	    		
     		
     		try {
+    			
+    			if (args.length > 2) {
+    				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /browseshop [Search string] (page)");
+    				return true;
+    			}
 	    		//Gets the search string.
 	    		String input = args[0].toLowerCase();
 	    		
@@ -1830,32 +1808,16 @@ public class Cmd {
 					page = Integer.parseInt(args[1]);
 				}
 				
-				//Gets the shop name if it exists.
+				//Gets the shop name if the player is in a shop.
 	    		String nameshop = null;
-				if (args.length >= 3) {		
-					int counter = 2;
-					String name = "";
-					while (counter < args.length) {
-						if (counter == 2) {
-							name = args[2];
-						} else {
-							name = name + "_" + args[counter];
-						}
-						counter++;
-					}
-					name = name.replace(".", "").replace(":", "");	
-					String teststring = hc.getYaml().getShops().getString(name);
-					if (teststring == null) {
-						name = hc.fixsName(name);
-					}
-					String shoplist = s.listShops().toString();
-					if (shoplist.contains(name)) {
-						nameshop = name;
-					} else {
-						sender.sendMessage(ChatColor.DARK_RED + "That shop doesn't exist!");
-						return true;
-					}
-				}
+	    		if (player != null) {
+	    			s.setinShop(player);
+	    			if (s.inShop() != -1) {
+	    				nameshop = s.getShop(player);
+	    			}	    			
+	    		}
+
+	    		
 	    		
 	    		
 				//Puts all items and enchantments into names.
@@ -1900,7 +1862,7 @@ public class Cmd {
 								cost = calc.getCost();
 								stock = hc.getYaml().getItems().getInt(iname + ".stock.stock");
 							} else if (t2 != null) {
-								ench.setVC(hc, iname, "diamond");
+								ench.setVC(hc, iname, "diamond", calc);
 								cost = ench.getCost();
 								stock = hc.getYaml().getEnchants().getInt(iname + ".stock.stock");
 							}
@@ -1917,7 +1879,7 @@ public class Cmd {
 				}
 
     		} catch (Exception e) {
-    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /browseshop [Search string] (page) (shop)");
+    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /browseshop [Search string] (page)");
     			return true;
     		}
     		return true;
@@ -2547,7 +2509,7 @@ public class Cmd {
 	    				int n = 0;
 	    				m.send(sender, 6);		
 	    				while (n < 8) {
-	    				ench.setVC(hc, nam, classtype[n]);
+	    				ench.setVC(hc, nam, classtype[n], calc);
 	    				double value = ench.getValue();    				
 	    				sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be sold for: " + ChatColor.GREEN + "$" + value);
 	    				n++;
@@ -2567,7 +2529,7 @@ public class Cmd {
     	    				int n = 0;
     	    				m.send(sender, 6);
     	    				while (n < 8) {
-    	    				ench.setVC(hc, nam, classtype[n]);
+    	    				ench.setVC(hc, nam, classtype[n], calc);
     	    				double cost = ench.getCost();    				
     	    				sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be bought for: " + ChatColor.GREEN + "$" + cost);
     	    				n++;
@@ -2606,13 +2568,12 @@ public class Cmd {
     					String nam = hc.getenchantData(enchname);
     					String fnam = nam + lvl;
     					String mater = player.getItemInHand().getType().name();
-    					ench.setVC(hc, fnam, mater);
+    					ench.setVC(hc, fnam, mater, calc);
     					double value = ench.getValue() * duramult;
-    					ench.setVC(hc, fnam, mater);
+    					ench.setVC(hc, fnam, mater, calc);
     					double cost = ench.getCost();
-						DecimalFormat twodigits = new DecimalFormat("#.##");
-						value = Double.valueOf(twodigits.format(value));
-						cost = Double.valueOf(twodigits.format(cost));
+						value = calc.twoDecimals(value);
+						cost = calc.twoDecimals(cost);
     					player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + "$" + value);
     					player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + "$" + cost);
     					player.sendMessage(ChatColor.BLUE + "The global shop currently has" + ChatColor.GREEN + " " + hc.getYaml().getEnchants().getInt(fnam + ".stock.stock") + ChatColor.AQUA + " " + fnam + ChatColor.BLUE + " available.");
@@ -3097,8 +3058,7 @@ public class Cmd {
         	    			while (it.hasNext()) {   			
         	    				String elst = it.next().toString();
         	    				Double newvalue = items.getDouble(elst + path) * percent;
-        	    				DecimalFormat twodigits = new DecimalFormat("#.##");
-        	    				newvalue = Double.valueOf(twodigits.format(newvalue));
+        	    				newvalue = calc.twoDecimals(newvalue);
         	    				items.set(elst + path, newvalue);
         	    			}   
         	    			
@@ -3107,8 +3067,7 @@ public class Cmd {
         	    			while (it2.hasNext()) {   			;
         	    				String elst2 = it2.next().toString();
         	    				Double newvalue = enchants.getDouble(elst2 + path) * percent;
-        	    				DecimalFormat twodigits = new DecimalFormat("#.##");
-        	    				newvalue = Double.valueOf(twodigits.format(newvalue));
+        	    				newvalue = calc.twoDecimals(newvalue);
         	    				enchants.set(elst2 + path, newvalue);
         	    			}  
 

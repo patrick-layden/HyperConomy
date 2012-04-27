@@ -176,20 +176,16 @@ public class Shop {
 		//Maybe cache online players and update when someone logs in or out
 		Player[] players = Bukkit.getOnlinePlayers();
 		
-		//Gets the number of players online.
-		int l = players.length;
-		
 		//Counts how many players have been processed.
 		int c = 0;
 	
 		//Runs through all online players before stopping.
-		while (c < l) {
+		while (c < players.length) {
 			
 			//Gets the current player.
 			p = players[c];
 			int snum = inShop();
 			//Gets whether or not the player was in the shop the last time the function was run.
-			//boolean pinshop = Boolean.parseBoolean(sp.getData(p.getName()));
 			boolean testshop = sp.containsKey(p);
 
 			boolean pinshop;

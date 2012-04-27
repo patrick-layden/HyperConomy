@@ -97,9 +97,9 @@ public class Message {
 		message[37] = darkred + perror + "Use /writeitems ['row'/'column'] ('e')";
 		//topitems
 		message[38] = "You have reached the end.";
-		message[39] = darkred + perror + "Use /topitems (page) (shop)";
+		message[39] = darkred + perror + "Use /topitems (page)";
 		//topenchants
-		message[40] = darkred + perror + "Use /topenchants (page) (shop)";
+		message[40] = darkred + perror + "Use /topenchants (page)";
 		//ii
 		message[41] = darkred + "Invalid item or parameters.  Hold an item and use /iteminfo (id) (damage value)";
 		//is
@@ -145,9 +145,9 @@ public class Message {
 	    message[68] = green + "/hv" + yellow + " (amount)";
 		message[69] = green + "/iteminfo" + yellow + " (id) (damage value)";
 		message[70] = green + "/ii" + yellow + " (id) (damage value)";
-		message[71] = green + "/topitems" + yellow + " (page) (shop)";
-	    message[72] = green+ "/topenchants" + yellow + " (page) (shop)";
-	    message[96] = green+ "/browseshop" + red + " [name]" + yellow + " (page) (shop)";
+		message[71] = green + "/topitems" + yellow + " (page)";
+	    message[72] = green+ "/topenchants" + yellow + " (page)";
+	    message[96] = green+ "/browseshop" + red + " [name]" + yellow + " (page)";
 	    message[98] = green+ "/xpinfo";
 		message[73] = green + "/evalue" + pink + " {enchantment name} {'b'/'s'/'a'}";
 		message[74] = aqua + "For more help type /hc info " + green + "[command]";
@@ -181,11 +181,11 @@ public class Message {
 		//hc info ii
 		message[90] = ChatColor.AQUA + "Displays information about the item you're holding.  If an id and damage value is specified it returns the name of the item, even if you're not holding it.";
 		//hc info topitems
-		message[91] = ChatColor.AQUA + "Displays all of the items available in all shops or the selected shop. Items with the highest stock are shown first.  If no page is specified it shows the first page.";
+		message[91] = ChatColor.AQUA + "Displays all of the items available in the global shop is not in a shop, or in the shop that the player is currently in. Items with the highest stock are shown first.  If no page is specified it shows the first page.";
 		//hc info topenchants
-		message[92] = ChatColor.AQUA + "Displays all of the enchantments available in all shops or the selected shop. Enchantments with the highest stock are shown first.  If no page is specified it shows the first page.";
+		message[92] = ChatColor.AQUA + "Displays all of the enchantments available in all shops, if the player isn't in a shop, or in the shop that the player is currently in. Enchantments with the highest stock are shown first.  If no page is specified it shows the first page.";
 		//hc info browseshop
-		message[97] = ChatColor.AQUA + "Searches for items or enchantments that begin with the specified name.  It will display the items/enchantments in alphabetical order with their stock and purchase price.  If a shop is specified it will show what is available in that shop.";
+		message[97] = ChatColor.AQUA + "Searches for items or enchantments that begin with the specified name.  It will display the items/enchantments in alphabetical order with their stock and purchase price.  If the player is in a shop it will only display items available in that shop.";
 		//hc info evalue
 		message[93] = ChatColor.AQUA + "If no parameters are given, displays the sell value, purchase price, and shopstock of all the enchantments on the item you're holding. If given an enchantment name, you must also specify 'b' for buy, 's' for sell, or 'a' for amount. If 'b' for instance, it will display the purchase price for all the enchantment on all item classes. (gold, diamond, iron, etc.)";
 		//enchantsettings/es

@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.913
+version: 0.914
 author: RegalOwl
 softdepend: [Vault]
 commands:
