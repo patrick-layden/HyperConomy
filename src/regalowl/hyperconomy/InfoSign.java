@@ -355,7 +355,7 @@ public class InfoSign implements Listener {
 							if (item) {
 								calc.setVC(hc, null, 1, itemn, null);
 								calc.getCost();
-								trans.settaxPaid(hc, itemn);
+								trans.settaxPaid(hc, itemn, calc);
 								line23 = "§fTax: " + "§a$" + trans.gettaxPaid(calc.getCost());
 							} else if (enchant) {
 								

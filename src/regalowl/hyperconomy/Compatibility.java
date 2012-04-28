@@ -59,7 +59,8 @@ public class Compatibility {
 	    	}
 	    	String t10 = yaml.getConfig().getString("version");
 	    	if (t10 == null) {
-	    		yaml.getConfig().set("version", hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion());
+	    		Double newversion = Double.parseDouble(hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion());
+	    		yaml.getConfig().set("version", newversion);
 	    		uptodate = false;
 	    	}
 	    	
@@ -76,7 +77,9 @@ public class Compatibility {
 	    		hc.getYaml().getItems().set("xp.initiation.startprice", 6);
 	    	}
 		}
-
+		Double newversion = Double.parseDouble(hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion());
+		yaml.getConfig().set("version", newversion);
+		
     	return uptodate;
 	}
 	

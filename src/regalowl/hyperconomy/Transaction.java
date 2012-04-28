@@ -899,9 +899,10 @@ public class Transaction {
 	 * Setter gettaxPaid() function.
 	 * 
 	 */	
-	public void settaxPaid(HyperConomy hyperc, String itemname) {
+	public void settaxPaid(HyperConomy hyperc, String itemname, Calculation cal) {
 		hc = hyperc;
 		name = itemname;
+		calc = cal;
 	}
 	
 
