@@ -14,6 +14,7 @@ config:
   use-shop-exit-message: true
   use-notifications: true
   use-info-signs: true
+  use-transaction-signs: true
   store-price-history: true
   notify-for: diamond,diamondblock,
   enchantment:

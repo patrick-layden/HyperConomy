@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.915
+version: 0.918
 author: RegalOwl
 softdepend: [Vault]
 commands:
@@ -322,7 +322,7 @@ permissions:
         description: Allows the use of scalebypercent.
         default: false
     hyperconomy.createsign:
-        description: Allows the creation of information signs.
+        description: Allows the creation of information signs and transaction signs.
         default: false
     hyperconomy.notify:
         description: Sends price/stock notifications.

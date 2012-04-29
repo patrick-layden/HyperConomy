@@ -13,12 +13,15 @@ public class Notify {
 	private ArrayList<String> name = new ArrayList<String>();
 	private ArrayList<String> eclass = new ArrayList<String>();
 	
+	private String previousmessage;
+	
 	
 	private int notifrequests;
 	
 	boolean usenotify;
 	
 	Notify() {
+		previousmessage = "";
 		notifrequests = 0;
 		usenotify = false;
 	}
@@ -63,12 +66,20 @@ public class Notify {
 				calc.setVC(hc, null, 1, name.get(0), null);
 				cost = calc.getCost();
 				stock = hc.getYaml().getItems().getInt(name.get(0) + ".stock.stock");
-				Bukkit.broadcast("§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a$" + cost + " §9each.", "hyperconomy.notify");
+				String message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a$" + cost + " §9each.";
+				if (!message.equalsIgnoreCase(previousmessage)) {
+					Bukkit.broadcast(message, "hyperconomy.notify");
+					previousmessage = message;
+				}
 			} else if (hc.enchantTest(name.get(0))) {
 				ench.setVC(hc, name.get(0), eclass.get(0), calc);
 				cost = ench.getCost();
 				stock = hc.getYaml().getEnchants().getInt(name.get(0) + ".stock.stock");
-				Bukkit.broadcast("§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a$" + cost + " §9each.", "hyperconomy.notify");
+				String message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a$" + cost + " §9each.";
+				if (!message.equalsIgnoreCase(previousmessage)) {
+					Bukkit.broadcast(message, "hyperconomy.notify");
+					previousmessage = message;
+				}
 			} else {
 		    	Logger log = Logger.getLogger("Minecraft");
 		    	log.info("HyperConomy ERROR #32--Notifcation Error");

@@ -608,6 +608,16 @@ public class Calculation {
 			double threedecimals = (double)nodecimals/1000.0;
 			return threedecimals;
 		}
+		
+		//Gets an item's true damage value, restoring damaged item's damage value to its original value and getting the correct damage value for potions.
+		public int getdamageValue(ItemStack item) {
+			int itd = item.getTypeId();
+			setPDV(item);
+			int da = getpotionDV();
+			setNdata(itd, da);
+			int newdat = newData();
+			return newdat;
+		}
 
 		
 		/**

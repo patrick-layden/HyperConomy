@@ -63,6 +63,11 @@ public class Compatibility {
 	    		yaml.getConfig().set("version", newversion);
 	    		uptodate = false;
 	    	}
+	    	String t11 = yaml.getConfig().getString("config.use-transaction-signs");
+	    	if (t11 == null) {
+	    		yaml.getConfig().set("config.use-transaction-signs", true);
+	    		uptodate = false;
+	    	}
 	    	
 	    	if (configversion == null || Double.parseDouble(configversion) < .912) {
 	    		hc.getYaml().getItems().set("xp.information.material", "N/A");

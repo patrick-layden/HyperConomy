@@ -95,14 +95,17 @@ public class Cmd {
     					} catch (Exception e) {
     						String max = args[1];
     						if (max.equalsIgnoreCase("max")) {
-    							tran.setSlots(player);
-    							int space = tran.getavailableSlots();
+    							MaterialData damagemd = new MaterialData(id, (byte) data);
+    							ItemStack damagestack = damagemd.toItemStack();
+    							tran.setSpace(player, calc);
+    							int space = tran.getavailableSpace(id, calc.getdamageValue(damagestack));
 
     							
-    							MaterialData md = new MaterialData(id, (byte) data);
-    							ItemStack stack = md.toItemStack();				
-    							int maxstack = stack.getMaxStackSize();
-    							amount = space * maxstack;
+    							//MaterialData md = new MaterialData(id, (byte) data);
+    							//ItemStack stack = md.toItemStack();				
+    							//int maxstack = stack.getMaxStackSize();
+    							//amount = space * maxstack;
+    							amount = space;
     							
     	    					int shopstock = hc.getYaml().getItems().getInt(name + ".stock.stock");	
     	    					//Buys the most possible from the shop if the amount is more than that for max.
@@ -235,27 +238,15 @@ public class Cmd {
     				if (itd != 0) {
     					calc.setPDV(invent.getItem(heldslot));
     					int da = calc.getpotionDV();
-
     					
-    					
-
-    					
-    					
-    	    			//int amount = invent.getItem(heldslot).getAmount();
     	    			calc.setNdata(itd, da);
     	    			int newdat = calc.newData();
     	    			String ke = itd + ":" + newdat;
     	    			String nam = hc.getnameData(ke);
     	    			
-    	    			
-    	    			
-    	    			//experimental
     					tran.setCount(player, itd, newdat, calc, ench);
 	    				int amount = tran.countInvitems();
-    	    			
-    	    			
-    	    			
-    	    			
+    	    						
     	    			if (nam != null) {
     	    				
     	    				if (s.has(s.getShop(player), nam)) {	
@@ -421,12 +412,13 @@ public class Cmd {
     						String max = args[0];
     						if (max.equalsIgnoreCase("max")) {
     							ma = true;
-    							tran.setSlots(player);
-    							int space = tran.getavailableSlots();
-    							int maxstack = iinhand.getMaxStackSize();
+    							tran.setSpace(player, calc);
+    							int space = tran.getavailableSpace(player.getItemInHand().getTypeId(), calc.getdamageValue(player.getItemInHand()));
+    							//int maxstack = iinhand.getMaxStackSize();
     							
     							
-    							amount = space * maxstack;
+    							//amount = space * maxstack;
+    							amount = space;
     							
     							
     						} else {

@@ -33,6 +33,7 @@ public class HyperConomy extends JavaPlugin{
 	private Cmd commandhandler;
 	private History hist;
 	private Notify not;
+	private TransactionSign tsign;
 	
     //VARIABLES**********************************************************************
 	
@@ -93,6 +94,7 @@ public class HyperConomy extends JavaPlugin{
     	not = new Notify();
     	isign = new InfoSign();
     	hist = new History();
+    	tsign = new TransactionSign();
     		
     	
     	
@@ -161,6 +163,7 @@ public class HyperConomy extends JavaPlugin{
 		hist.setHistory(this, calc, ench, isign);
 		hist.starthistoryLog();
 		
+		tsign.setTransactionSign(this, tran, calc, ench, l, acc, isign, not, economy);
 		
 		log.info("HyperConomy has been successfully enabled!");
 		
@@ -547,4 +550,4 @@ public class HyperConomy extends JavaPlugin{
 	
 }
 
-//Latest error number: 32
+//Latest error number: 34

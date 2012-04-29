@@ -45,6 +45,7 @@ public class InfoSign implements Listener {
 	private boolean signupdaterepeat;
 	private int signupdatetaskid;
 	
+	private ArrayList<String> signtypes = new ArrayList<String>();
 	
 	
 	public void setinfoSign(HyperConomy hyperc, Calculation clc, Enchant enchant, Transaction tran) {
@@ -96,6 +97,17 @@ public class InfoSign implements Listener {
 			signkeys.add(iterat.next().toString());
 		}
 		
+		signtypes.add("Buy");
+		signtypes.add("Sell");
+		signtypes.add("Stock");
+		signtypes.add("Value");
+		signtypes.add("Status");
+		signtypes.add("Static Price");
+		signtypes.add("Start Price");
+		signtypes.add("Median");
+		signtypes.add("History");
+		signtypes.add("Tax");
+
 	}
 	
 
@@ -114,6 +126,7 @@ public class InfoSign implements Listener {
 	
 			if (names.contains(line12.toLowerCase())) {
 				String type = getsignType(scevent.getLine(2));
+
 				if (type != null) {
 					
 					String locat = scevent.getBlock().getWorld().getName() + "|" + scevent.getBlock().getX() + "|" + scevent.getBlock().getY() + "|" + scevent.getBlock().getZ();
@@ -468,30 +481,17 @@ public class InfoSign implements Listener {
 
 	
 	private String getsignType(String line3){
-		String type = null;
-		line3 = line3.toLowerCase();
-		if (line3.startsWith("stock")) {
-			type = "Stock";
-		} else if (line3.startsWith("sell")) {
-			type = "Sell";
-		} else if (line3.startsWith("buy")) {
-			type = "Buy";
-		} else if (line3.startsWith("status")) {
-			type = "Status";
-		} else if (line3.startsWith("value")) {
-			type = "Value";
-		} else if (line3.startsWith("static price")) {
-			type = "Static Price";
-		} else if (line3.startsWith("start price")) {
-			type = "Start Price";
-		} else if (line3.startsWith("median")) {
-			type = "Median";
-		} else if (line3.startsWith("history")) {
-			type = "History";
-		} else if (line3.startsWith("tax")) {
-			type = "Tax";
-		}
 		
+		String type = null;
+		int counter = 0;
+		while (counter < signtypes.size()) {
+			if (line3.equalsIgnoreCase(signtypes.get(counter))) {
+				type = signtypes.get(counter);
+				break;
+			}
+			counter++;
+		}
+
 		return type;
 	}
 	
@@ -577,7 +577,7 @@ public class InfoSign implements Listener {
 				
 				Double historicvalue = Double.parseDouble(historylist.substring(historylist.lastIndexOf(",") + 1, historylist.length()));
 				
-				percentc = ((currentvalue - historicvalue)/currentvalue) * 100;
+				percentc = ((currentvalue - historicvalue)/historicvalue) * 100;
 				percentc = calc.threeDecimals(percentc);
 				
 			

@@ -58,14 +58,18 @@ public class Transaction {
 						if (acc.checkFunds(price)) {
 					
 							//Calculates the maximum stack size of the item being purchased.
-							MaterialData md = new MaterialData(id, (byte) data);
-							ItemStack stack = md.toItemStack();				
-							int maxstack = stack.getMaxStackSize();
+							//MaterialData md = new MaterialData(id, (byte) data);
+							//ItemStack stack = md.toItemStack();
+							//int maxstack = stack.getMaxStackSize();
 					
 								//Makes sure their inventory has enough room for the purchase.  It only counts empty inventory slots and factors in the maximum stack size.
-								int space = getavailableSlots();
-								if ((maxstack * space) >= amount) {
+								//int space = getavailableSlots();
+								//if ((maxstack * space) >= amount) {
+								int space = getavailableSpace(id, data);
+								if (space >= amount) {
 						
+									addboughtItems(amount, id, data);
+									/*
 									//ramount holds the number of items remaining to be placed in the player's inventory.
 									int ramount = amount;		
 						
@@ -73,7 +77,7 @@ public class Transaction {
 									//the first available slot until there are no remaining items to be placed.
 									while (ramount > 0) {
 							
-										//Checks if the item it a potion and not a water bottle and then creates an ItemStack of that potion.
+										//Checks if the item is a potion and not a water bottle and then creates an ItemStack of that potion.
 										ItemStack stack2;
 										if (id == 373 && data != 0) {
 											Potion pot = Potion.fromDamage(data);
@@ -95,9 +99,16 @@ public class Transaction {
 										//the remaining items.
 										stack2.setAmount(pamount);	
 										int fe = p.getInventory().firstEmpty();
+										
 										p.getInventory().setItem(fe, stack2);
+										
+										//needed for transaction signs.  It creates ghost items otherwise for some reason.
+										p.updateInventory();
 										ramount = ramount - pamount;
 									}
+									
+									
+									*/
 					
 									//Removes the number of items purchased from the shop's stock and saves the HyperConomy.yaml.
 									items.set((name + ".stock.stock"), (shopstock - amount));
@@ -139,7 +150,7 @@ public class Transaction {
 									
 									//This informs the player of how many of an item they can buy if they don't have enough space for the requested amount.
 								} else {
-									p.sendMessage(ChatColor.BLUE + "You only have room to buy " + (space * maxstack) + " " + name + "!");
+									p.sendMessage(ChatColor.BLUE + "You only have room to buy " + space + " " + name + "!");
 								}
 								//This informs the player that they don't have enough money for a transaction.
 						} else {
@@ -380,6 +391,7 @@ public class Transaction {
 	 * This function determines how many empty inventory slots a player has.
 	 * 
 	 */
+	/*
 	public int getavailableSlots(){
 		
 		try {
@@ -401,10 +413,130 @@ public class Transaction {
 			return availablespace;
 		}
 	}
+	*/
+	
+
+	
+	/**
+	 * 
+	 * 
+	 * This function determines how much more of an item a player's inventory can hold.
+	 * 
+	 */
+	public int getavailableSpace(int itd, int idata){
+		int id = itd;
+		int data = idata;
+		MaterialData md = new MaterialData(id, (byte) data);
+		ItemStack stack = md.toItemStack();
+		int maxstack = stack.getMaxStackSize();
+		
+		try {
+			int availablespace = 0;
+			int slot = 0;
+			while (slot < 36) {
+				ItemStack citem = p.getInventory().getItem(slot);
+				if (p.getInventory().getItem(slot) == null) {
+					availablespace = availablespace + maxstack;
+				} else if (citem != null && citem.getTypeId() == id && idata == calc.getdamageValue(citem)) {
+					availablespace = availablespace + (maxstack - citem.getAmount());
+				}
+				
+			slot++;
+			}
+			return availablespace;
+		} catch (Exception e) {
+			e.printStackTrace();
+	    	Logger log = Logger.getLogger("Minecraft");
+	    	log.info("HyperConomy ERROR #33");
+	    	Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #33", "hyperconomy.error");
+			int availablespace = 0;
+			return availablespace;
+		}
+	}
 	
 	
+	/**
+	 * 
+	 * 
+	 * This function adds purchased items to a player's inventory.
+	 * 
+	 */
+	@SuppressWarnings("deprecation")
+	private void addboughtItems(int amount, int itd, int idata){
+		
+		try {
+			int id = itd;
+			int data = idata;
+			
+			//ramount holds the number of items remaining to be placed in the player's inventory.
+			int ramount = amount;	
+			
+			MaterialData md = new MaterialData(id, (byte) data);
+			ItemStack stack = md.toItemStack();
+			int maxstack = stack.getMaxStackSize();
+
+			//While the player still has items to be placed into their inventory this places the max stack size of that item into
+			//the first available slot until there are no remaining items to be placed.
+			int slot = 0;
+			while (ramount > 0) {
+
+				//Stores how many items are being placed into the current slot.
+				int pamount = 0;
+
+				//Handles slots that already have some of the same item in it.
+				ItemStack citem = p.getInventory().getItem(slot);
+				if (citem != null && citem.getTypeId() == id && data == calc.getdamageValue(citem)) {
+					int currentamount = citem.getAmount();
+					if ((maxstack - currentamount) >= ramount) {
+						pamount = ramount;
+						citem.setAmount(pamount + currentamount);
+					} else {
+						pamount = maxstack - currentamount;
+						citem.setAmount(maxstack);
+					}
+				//Handles empty slots.
+				} else if (p.getInventory().getItem(slot) == null) {
+					//Checks if the item is a potion and not a water bottle and then creates an ItemStack of that potion.
+					ItemStack stack2;
+					if (id == 373 && data != 0) {
+						Potion pot = Potion.fromDamage(data);
+						stack2 = pot.toItemStack(amount);			
+					} else {
+						stack2 = md.toItemStack();
+					}
+					
+					//Checks if the items remaining to be put in a player's inventory exceed the maximum stack size.  If they do it sets pamount (the amount to be placed into
+					//the player's inventory to the max amount, otherwise it sets pamount to the remaining number of items.
+
+					if (ramount > maxstack) {
+						pamount = maxstack;
+					} else {
+						pamount = ramount;
+					}
+				
+					//Places the determined amount in the first empty inventory slot that a player has and then subtracts the amount of items placed in their inventory from
+					//the remaining items.
+					stack2.setAmount(pamount);	
+					p.getInventory().setItem(slot, stack2);
+				}
+
+
+				ramount = ramount - pamount;
+				slot++;
+			}
+			//needed for transaction signs.  It creates ghost items otherwise for some reason.
+			p.updateInventory();
+		} catch (Exception e) {
+			e.printStackTrace();
+	    	Logger log = Logger.getLogger("Minecraft");
+	    	log.info("HyperConomy ERROR #32");
+	    	Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #32", "hyperconomy.error");
+		}
+	}
 	
 	
+
+
 	/**
 	 * 
 	 * 
@@ -885,11 +1017,12 @@ public class Transaction {
 	/**
 	 * 
 	 * 
-	 * Setter for getavailableSlots() function.
+	 * Setter for getavailableSpace() function.
 	 * 
 	 */	
-	public void setSlots(Player player) {
+	public void setSpace(Player player, Calculation cal) {
 		p = player;
+		calc = cal;
 	}
 	
 	
