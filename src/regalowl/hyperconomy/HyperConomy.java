@@ -24,7 +24,7 @@ public class HyperConomy extends JavaPlugin{
 	//Reused Objects
 	private Transaction tran;
 	private Calculation calc;
-	private Enchant ench;
+	private ETransaction ench;
 	private Message m;
 	private Log l;
 	private Shop s;
@@ -34,6 +34,10 @@ public class HyperConomy extends JavaPlugin{
 	private History hist;
 	private Notify not;
 	private TransactionSign tsign;
+	private ChestShop cs;
+	
+	
+	public static HyperObject hyperobject;
 	
     //VARIABLES**********************************************************************
 	
@@ -71,7 +75,7 @@ public class HyperConomy extends JavaPlugin{
 
     	////////////////////For compatibility with previous versions of HyperConomy./////////////
     	Compatibility cb = new Compatibility();
-    	cb.checkCompatibility(this, isign);
+    	cb.checkCompatibility(this);
     	
 
     	
@@ -88,7 +92,7 @@ public class HyperConomy extends JavaPlugin{
     	//Reused Objects
     	tran = new Transaction();
     	calc = new Calculation();
-    	ench = new Enchant();
+    	ench = new ETransaction();
     	acc = new Account();
     	commandhandler = new Cmd();
     	not = new Notify();
@@ -165,6 +169,11 @@ public class HyperConomy extends JavaPlugin{
 		
 		tsign.setTransactionSign(this, tran, calc, ench, l, acc, isign, not, economy);
 		
+		
+		
+		hyperobject = new HyperObject(this, yam, tran, calc, ench, m, l, s, acc, isign, commandhandler, hist, not, tsign, economy);
+		
+		cs = new ChestShop();
 		log.info("HyperConomy has been successfully enabled!");
 		
     }
@@ -300,6 +309,8 @@ public class HyperConomy extends JavaPlugin{
 					while (it4.hasNext()) {   			
 						names.add(it4.next().toString().toLowerCase());
 					} 
+					
+					hyperobject = new HyperObject(this, yam, tran, calc, ench, m, l, s, acc, isign, commandhandler, hist, not, tsign, economy);
 					
 					sender.sendMessage(ChatColor.GOLD + "All files have been reloaded.");
 				

@@ -626,7 +626,7 @@ public class Calculation {
 		 * Setter for getValue(), getCost(), and getTvalue() functions.
 		 * 
 		 */
-		public void setVC(HyperConomy hyperc, Player player, int itemamount, String itemname, Enchant enc) {
+		public void setVC(HyperConomy hyperc, Player player, int itemamount, String itemname, ETransaction enc) {
 			hc = hyperc;
 			p = player;
 			amount = itemamount;
@@ -682,7 +682,7 @@ public class Calculation {
 		private int id;
 		private int data;
 		private ItemStack item;
-		private Enchant ench;
+		private ETransaction ench;
 		
 	
 }

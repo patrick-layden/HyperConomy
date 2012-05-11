@@ -1,8 +1,8 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.918
+version: 0.92
 author: RegalOwl
-softdepend: [Vault]
+softdepend: [Vault, Buycraft]
 commands:
    buy:
       description: Buys items.
@@ -255,6 +255,10 @@ commands:
       permission: hyperconomy.admin
       permission-message: Unknown command. Type "help" for help.
       aliases: [not]
+   renameeconomyaccount:
+      description: Renames the account used by the global shop.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.
@@ -270,7 +274,7 @@ permissions:
             hyperconomy.scalebypercent: true
             hyperconomy.createsign: true
             hyperconomy.notify: true
-            hyperconomy.xp: true
+            hyperconomy.shop.*: true
     hyperconomy.use:
         description: Allows general use of HyperConomy.
         default: true
@@ -282,6 +286,7 @@ permissions:
             hyperconomy.info: true
             hyperconomy.top: true
             hyperconomy.xp: true
+            hyperconomy.chestshop: true
     hyperconomy.admin:
         description: Allows use of shop management commands.
         default: false
@@ -329,4 +334,10 @@ permissions:
         default: false
     hyperconomy.xp:
         description: Allows experience trading.
+        default: false
+    hyperconomy.chestshop:
+        description: Allows the creation of chest shops.
+        default: false
+    hyperconomy.shop.*:
+        description: Allows access to all functions at all shops.
         default: false

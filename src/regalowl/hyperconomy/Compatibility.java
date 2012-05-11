@@ -3,7 +3,7 @@ package regalowl.hyperconomy;
 public class Compatibility {
 	
 	
-	public boolean checkCompatibility(HyperConomy hc, InfoSign isign) {
+	public boolean checkCompatibility(HyperConomy hc) {
 		boolean uptodate = true;
 		YamlFile yaml = hc.getYaml();
 		
@@ -13,7 +13,7 @@ public class Compatibility {
 		if (configversion == null || !configversion.equalsIgnoreCase(version)) {
 	    	String t = yaml.getConfig().getString("config.signupdateinterval");
 	    	if (t == null) {
-	    		isign.setsignupdateInterval(13L);
+	    		//isign.setsignupdateInterval(13L);
 	    		yaml.getConfig().set("config.signupdateinterval", 13);
 	    		uptodate = false;
 	    	}
@@ -66,6 +66,26 @@ public class Compatibility {
 	    	String t11 = yaml.getConfig().getString("config.use-transaction-signs");
 	    	if (t11 == null) {
 	    		yaml.getConfig().set("config.use-transaction-signs", true);
+	    		uptodate = false;
+	    	}
+	    	String t12 = yaml.getConfig().getString("config.global-shop-account");
+	    	if (t12 == null) {
+	    		yaml.getConfig().set("config.global-shop-account", "hyperconomy");
+	    		uptodate = false;
+	    	}
+	    	String t13 = yaml.getConfig().getString("config.use-chest-shops");
+	    	if (t13 == null) {
+	    		yaml.getConfig().set("config.use-chest-shops", true);
+	    		uptodate = false;
+	    	}
+	    	String t14 = yaml.getConfig().getString("config.use-shop-permissions");
+	    	if (t14 == null) {
+	    		yaml.getConfig().set("config.use-shop-permissions", false);
+	    		uptodate = false;
+	    	}
+	    	String t15 = yaml.getConfig().getString("config.require-chest-shops-to-be-in-shop");
+	    	if (t15 == null) {
+	    		yaml.getConfig().set("config.require-chest-shops-to-be-in-shop", false);
 	    		uptodate = false;
 	    	}
 	    	

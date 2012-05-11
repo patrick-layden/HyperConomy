@@ -30,7 +30,7 @@ public class Cmd {
 	private HyperConomy hc;
 	private Transaction tran;
 	private Calculation calc;
-	private Enchant ench;
+	private ETransaction ench;
 	private Log l;
 	private Shop s;
 	private Account acc;
@@ -48,7 +48,7 @@ public class Cmd {
 	}
 	
 	
-	public void setCmd(HyperConomy hyperc, Economy e, Message message, Transaction transaction, Calculation cal, Enchant en, Log log, Shop sh, Account account, InfoSign isig, Notify no) {
+	public void setCmd(HyperConomy hyperc, Economy e, Message message, Transaction transaction, Calculation cal, ETransaction en, Log log, Shop sh, Account account, InfoSign isig, Notify no) {
 		hc = hyperc;
 		economy = e;
 		m = message;
@@ -73,7 +73,10 @@ public class Cmd {
     	if (cmd.getName().equalsIgnoreCase("buy") && (player != null)){
     		try {
     			s.setinShop(player);
-    			if (s.inShop() != -1) {	
+    			if (s.inShop() != -1) {
+    				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
+    					
+    				
     				name = args[0];
     				int amount = 0;
     				String teststring = hc.getYaml().getItems().getString(name);
@@ -139,6 +142,10 @@ public class Cmd {
     				m.send(player, 1);
     			}
     			} else {
+    				player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+    			}
+    			
+    			} else {
     				m.send(player, 2);
     			}
     		return true;
@@ -153,6 +160,9 @@ public class Cmd {
     		try {    			
     			s.setinShop(player);
     			if (s.inShop() != -1) {
+    				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
+    					
+    				
     			name = args[0];
     			int amount = 0;
 				String teststring = hc.getYaml().getItems().getString(name);
@@ -201,6 +211,9 @@ public class Cmd {
     				m.send(player, 1);
     			}	
     			} else {
+    				player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+    			}
+    			} else {
     				m.send(player, 2);
     			}
     			return true;
@@ -221,6 +234,9 @@ public class Cmd {
     		try {    			
     			s.setinShop(player);
     			if (s.inShop() != -1) {
+    				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
+    					
+    				
     			if (args.length == 0) {
     				
     				int slotn = 0;
@@ -313,6 +329,10 @@ public class Cmd {
     				m.send(player, 5);
     			}
     			} else {
+    				player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+    			}
+    			
+    			} else {
     				m.send(player, 2);
     			}
     			return true;
@@ -394,6 +414,8 @@ public class Cmd {
     		try {
     			s.setinShop(player);
     			if (s.inShop() != -1) {
+    				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
+    					
     				
     				
 					//Experimental enchantment block
@@ -469,7 +491,11 @@ public class Cmd {
 					m.send(player, 4);
 				}
     				
-    				
+    			} else {
+    				player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+    			}
+					
+					
     			} else {
     				m.send(player, 2);
     			}
@@ -488,6 +514,10 @@ public class Cmd {
     		try {
     			s.setinShop(player);
     			if (s.inShop() != -1) {
+    				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || 
+    						player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
+    					
+    				
     				if (args.length <= 1) {
     					int amount;
     					if (args.length == 0) {
@@ -504,6 +534,9 @@ public class Cmd {
     					player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /buyxp (amount)");
     				}
     			} else {
+    				player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+    			}
+    			} else {
     				m.send(player, 2);
     			}
     			return true;
@@ -517,6 +550,10 @@ public class Cmd {
     		try {
     			s.setinShop(player);
     			if (s.inShop() != -1) {
+    				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || 
+    						player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
+    					
+    				
     				if (args.length <= 1) {
     					int amount;
     					if (args.length == 0) {
@@ -541,6 +578,10 @@ public class Cmd {
     				} else {
     					player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /buyxp (amount)");
     				}
+    			} else {
+    				player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+    			}
+    				
     			} else {
     				m.send(player, 2);
     			}
@@ -592,6 +633,10 @@ public class Cmd {
     		try {
     			s.setinShop(player);
     			if (s.inShop() != -1) {
+    				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || 
+    						player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
+    					
+    				
     				
     				if (args.length == 2) {
     					amount = Integer.parseInt(args[0]);
@@ -626,7 +671,9 @@ public class Cmd {
     				
     				
     				
-    				
+    			} else {
+    				player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+    			}
     				
     				
     			} else {
@@ -650,6 +697,10 @@ public class Cmd {
     		try {
     			s.setinShop(player);
     			if (s.inShop() != -1) {
+    				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || 
+    						player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
+    					
+    				
     				if (args.length == 0) {
     					amount = 1;
     				} else {
@@ -730,6 +781,11 @@ public class Cmd {
         				
         				
     				}
+    				
+    			} else {
+    				player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+    			}
+    				
     			} else {
     				m.send(player, 2);
     			}
@@ -2349,6 +2405,10 @@ public class Cmd {
     		try {
     			s.setinShop(player);
     			if (s.inShop() != -1) {
+    				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || 
+    						player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
+    					
+    				
     				
     				String name = args[0];
     				
@@ -2376,6 +2436,10 @@ public class Cmd {
     				}
 
     				
+    			} else {
+    				player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+    			}
+    				
     				
     			} else {
     				m.send(player, 49);
@@ -2396,6 +2460,10 @@ public class Cmd {
     		try {
     			s.setinShop(player);
     			if (s.inShop() != -1) {
+    				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || 
+    						player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
+    					
+    				
     				
     				String name = args[0];
     				
@@ -2450,7 +2518,9 @@ public class Cmd {
         				}
     				}
 
-    				
+    			} else {
+    				player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+    			}
     				
     			} else {
     				m.send(player, 49);
@@ -3135,6 +3205,41 @@ public class Cmd {
     		return true;
     		
     		
+    		
+    		
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("renameeconomyaccount")) {
+    		try {
+    			
+    			if (args.length == 1) {
+    				
+    				//Gets the account names.
+    				String newaccount = args[0];
+    				String oldaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+    				
+    				//Creates the new account.
+    				acc.createAccount(newaccount);
+    				acc.setBalance(newaccount, acc.getBalance(oldaccount));
+    				
+    				//Deletes the old account.
+    				acc.setBalance(oldaccount, 0);
+    				
+    				hc.getYaml().getConfig().set("config.global-shop-account", newaccount);
+    				
+    				sender.sendMessage(ChatColor.GOLD + "The global shop account has been successfully renamed!");
+    				
+    			} else {
+    				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /renameeconomyaccount [new name]");
+    			}
+    			
+    			
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /renameeconomyaccount [new name]");
+    		}	
+
+    		
+    		return true;
     		
     		
     		

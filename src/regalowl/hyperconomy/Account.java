@@ -74,6 +74,23 @@ public class Account {
 		}
 	}
 	
+	
+	/**
+	 * 
+	 * 
+	 * This function withdraws money from a player's account.
+	 * 
+	 */
+	public void withdrawAccount(String name, double money){
+		if (economy != null) {
+			economy.withdrawPlayer(name, money);
+		} else {
+			Bukkit.broadcast(ChatColor.DARK_RED + "No economy plugin detected! No money can be gained or lost.", "hyperconomy.error");
+	    	Logger log = Logger.getLogger("Minecraft");
+	    	log.info("No economy plugin detected! No money can be gained or lost. Please read the installation guide here: http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/");
+		}
+	}
+	
 	/**
 	 * 
 	 * 
@@ -92,6 +109,23 @@ public class Account {
 	}
 	
 	
+	/**
+	 * 
+	 * 
+	 * This function deposits money into a player's account.
+	 * 
+	 */
+	public void depositAccount(String name, double money){		
+		if (economy != null) {
+			economy.depositPlayer(name, money);
+		} else {
+			Bukkit.broadcast(ChatColor.DARK_RED + "No economy plugin detected! No money can be gained or lost.", "hyperconomy.error");
+	    	Logger log = Logger.getLogger("Minecraft");
+	    	log.info("No economy plugin detected! No money can be gained or lost. Please read the installation guide here: http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/");
+		}
+	}
+	
+	
 	
 	/**
 	 * 
@@ -101,7 +135,8 @@ public class Account {
 	 */
 	public void withdrawShop(double money){
 		if (economy != null) {
-			economy.withdrawPlayer("hyperconomy", money);
+			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+			economy.withdrawPlayer(globalaccount, money);
 		} else {
 			Bukkit.broadcast(ChatColor.DARK_RED + "No economy plugin detected! No money can be gained or lost.", "hyperconomy.error");
 	    	Logger log = Logger.getLogger("Minecraft");
@@ -118,7 +153,8 @@ public class Account {
 	 */
 	public void depositShop(double money){		
 		if (economy != null) {
-			economy.depositPlayer("hyperconomy", money);
+			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+			economy.depositPlayer(globalaccount, money);
 		} else {
 			Bukkit.broadcast(ChatColor.DARK_RED + "No economy plugin detected! No money can be gained or lost.", "hyperconomy.error");
 	    	Logger log = Logger.getLogger("Minecraft");
@@ -186,8 +222,9 @@ public class Account {
 	public boolean checkshopBalance(double money){		
 		if (economy != null) {
 			
+			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 			boolean result = false;
-			if ((economy.getBalance("hyperconomy") - money) >= 0) {
+			if ((economy.getBalance(globalaccount) - money) >= 0) {
 				result = true;
 			}
 			return result;
@@ -209,9 +246,75 @@ public class Account {
 	 */
 	public void checkshopAccount(){		
 		if (economy != null) {
+			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+			if (!economy.hasAccount(globalaccount)) {
+				setBalance(globalaccount, hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
+			}
 			
-			if (!economy.hasAccount("hyperconomy")) {
-				setBalance("hyperconomy", hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
+		} else {
+			Bukkit.broadcast(ChatColor.DARK_RED + "No economy plugin detected! No money can be gained or lost.", "hyperconomy.error");
+	    	Logger log = Logger.getLogger("Minecraft");
+	    	log.info("No economy plugin detected! No money can be gained or lost. Please read the installation guide here: http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/");
+		}
+	}
+	
+	
+	
+	/**
+	 * 
+	 * 
+	 * This function returns the current balance of an account.
+	 * 
+	 */
+	public double getBalance(String account){		
+		if (economy != null) {
+			
+			return economy.getBalance(account);
+			
+		} else {
+			Bukkit.broadcast(ChatColor.DARK_RED + "No economy plugin detected! No money can be gained or lost.", "hyperconomy.error");
+	    	Logger log = Logger.getLogger("Minecraft");
+	    	log.info("No economy plugin detected! No money can be gained or lost. Please read the installation guide here: http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/");
+	    	return 0;
+		}
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * 
+	 * This function creates a new account if it doesn't already exist.
+	 * 
+	 */
+	public void createAccount(String account){		
+		if (economy != null) {
+
+			if (!economy.hasAccount(account)) {
+				setBalance(account, 0);
+			}
+			
+		} else {
+			Bukkit.broadcast(ChatColor.DARK_RED + "No economy plugin detected! No money can be gained or lost.", "hyperconomy.error");
+	    	Logger log = Logger.getLogger("Minecraft");
+	    	log.info("No economy plugin detected! No money can be gained or lost. Please read the installation guide here: http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/");
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * 
+	 * This function deletes an account.
+	 * 
+	 */
+	public void deleteAccount(String account){		
+		if (economy != null) {
+
+			if (economy.hasAccount(account)) {
+				//TODO  Currently don't know how.
 			}
 			
 		} else {

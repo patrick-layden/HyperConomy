@@ -1,4 +1,4 @@
-version: 0.912
+version: 0.92
 config:
   shopcheckinterval: 20
   logwriteinterval: 15
@@ -11,11 +11,15 @@ config:
   daystosavehistory: 30
   initialshopbalance: 20000000
   shop-has-unlimited-money: false
+  global-shop-account: hyperconomy
   use-shop-exit-message: true
   use-notifications: true
   use-info-signs: true
   use-transaction-signs: true
   store-price-history: true
+  use-chest-shops: true
+  use-shop-permissions: false
+  require-chest-shops-to-be-in-shop: false
   notify-for: diamond,diamondblock,
   enchantment:
     classvalue:
