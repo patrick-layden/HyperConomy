@@ -66,7 +66,7 @@ public class Notify {
 				calc.setVC(hc, null, 1, name.get(0), null);
 				cost = calc.getCost();
 				stock = hc.getYaml().getItems().getInt(name.get(0) + ".stock.stock");
-				String message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a$" + cost + " §9each.";
+				String message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					Bukkit.broadcast(message, "hyperconomy.notify");
 					previousmessage = message;
@@ -75,7 +75,7 @@ public class Notify {
 				ench.setVC(hc, name.get(0), eclass.get(0), calc);
 				cost = ench.getCost();
 				stock = hc.getYaml().getEnchants().getInt(name.get(0) + ".stock.stock");
-				String message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a$" + cost + " §9each.";
+				String message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					Bukkit.broadcast(message, "hyperconomy.notify");
 					previousmessage = message;

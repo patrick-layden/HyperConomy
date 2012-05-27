@@ -1,4 +1,4 @@
-version: 0.92
+version: 0.922
 config:
   shopcheckinterval: 20
   logwriteinterval: 15
@@ -20,6 +20,7 @@ config:
   use-chest-shops: true
   use-shop-permissions: false
   require-chest-shops-to-be-in-shop: false
+  currency-symbol: $
   notify-for: diamond,diamondblock,
   enchantment:
     classvalue:

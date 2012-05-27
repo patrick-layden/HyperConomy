@@ -88,6 +88,11 @@ public class Compatibility {
 	    		yaml.getConfig().set("config.require-chest-shops-to-be-in-shop", false);
 	    		uptodate = false;
 	    	}
+	    	String t16 = yaml.getConfig().getString("config.currency-symbol");
+	    	if (t16 == null) {
+	    		yaml.getConfig().set("config.currency-symbol", "$");
+	    		uptodate = false;
+	    	}
 	    	
 	    	if (configversion == null || Double.parseDouble(configversion) < .912) {
 	    		hc.getYaml().getItems().set("xp.information.material", "N/A");

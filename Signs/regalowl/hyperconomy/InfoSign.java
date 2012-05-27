@@ -208,19 +208,19 @@ public class InfoSign implements Listener {
 						if (type.equalsIgnoreCase("Sell")) {
 							if (item) {
 								calc.setVC(hc, null, 1, itemn, null);
-								line23 = "§fSell: " + "§a$" + calc.getTvalue();
+								line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue();
 							} else if (enchant) {
 	
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
-								if (line3.contains("$") && sns.getString(signkey + ".enchantclass") != null) {			
+								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {			
 	
 									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
-									line23 = "§fSell: " + "§a$" + ench.getValue();
+									line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getValue();
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
 										ench.setVC(hc, itemn, line3, calc);
-										line23 = "§fSell: " + "§a$" + ench.getValue();
+										line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getValue();
 										sns.set(signkey + ".enchantclass", line3);
 									} else {
 										activesign++;
@@ -232,19 +232,19 @@ public class InfoSign implements Listener {
 						} else if (type.equalsIgnoreCase("Buy")) {
 							if (item) {
 								calc.setVC(hc, null, 1, itemn, null);
-								line23 = "§fBuy: " + "§a$" + calc.getCost();
+								line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getCost();
 							} else if (enchant) {
 	
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
-								if (line3.contains("$") && sns.getString(signkey + ".enchantclass") != null) {			
+								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {			
 	
 									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
-									line23 = "§fBuy: " + "§a$" + ench.getCost();
+									line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getCost();
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
 										ench.setVC(hc, itemn, line3, calc);
-										line23 = "§fBuy: " + "§a$" + ench.getCost();
+										line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getCost();
 										sns.set(signkey + ".enchantclass", line3);
 									} else {
 										activesign++;
@@ -260,27 +260,27 @@ public class InfoSign implements Listener {
 							if (item) {
 								line23 = null;
 								calc.setVC(hc, null, 1, itemn, null);
-								SB4 = "§fB:" + "§a$" + calc.getCost();
+								SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getCost();
 								calc.setVC(hc, null, 1, itemn, null);
-								SB3 = "§fS:" + "§a$" + calc.getTvalue();
+								SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue();
 							} else if (enchant) {
 	
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
-								if (line3.contains("$") && sns.getString(signkey + ".enchantclass") != null) {			
+								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {			
 									line23 = null;
 									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
-									SB4 = "§fB:" + "§a$" + ench.getCost();
+									SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getCost();
 									
 									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
-									SB3 = "§fS:" + "§a$" + ench.getValue();
+									SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getValue();
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
 										line23 = null;
 										ench.setVC(hc, itemn, line3, calc);
-										SB4 = "§fB:" + "§a$" + ench.getCost();
+										SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getCost();
 										ench.setVC(hc, itemn, line3, calc);
-										SB3 = "§fS:" + "§a$" + ench.getValue();
+										SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getValue();
 										
 										sns.set(signkey + ".enchantclass", line3);
 									} else {
@@ -412,14 +412,14 @@ public class InfoSign implements Listener {
 								calc.setVC(hc, null, 1, itemn, null);
 								calc.getCost();
 								trans.settaxPaid(hc, itemn, calc);
-								line23 = "§fTax: " + "§a$" + trans.gettaxPaid(calc.getCost());
+								line23 = "§fTax: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + trans.gettaxPaid(calc.getCost());
 							} else if (enchant) {
 								
 								
 								
 								
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
-								if (line3.contains("$") && sns.getString(signkey + ".enchantclass") != null) {			
+								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {			
 	
 									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
 									double price = ench.getCost();
@@ -432,7 +432,7 @@ public class InfoSign implements Listener {
 									}
 									double taxpaid = price - (price/(1 + taxrate/100));
 									taxpaid = calc.twoDecimals(taxpaid);
-									line23 = "§fTax: " + "§a$" + taxpaid;
+									line23 = "§fTax: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid;
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
@@ -447,7 +447,7 @@ public class InfoSign implements Listener {
 										}
 										double taxpaid = price - (price/(1 + taxrate/100));
 										taxpaid = calc.twoDecimals(taxpaid);
-										line23 = "§fTax: " + "§a$" + taxpaid;
+										line23 = "§fTax: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid;
 										sns.set(signkey + ".enchantclass", line3);
 									} else {
 										activesign++;
@@ -553,7 +553,7 @@ public class InfoSign implements Listener {
 		String itemn = sns.getString(signkey + ".itemname");
 		String type = sns.getString(signkey + ".type").replace(" ", "");
 		
-		String types = ChatColor.stripColor(s.getLine(2).replace("$", "").replace(":", "").replace(".", "").replaceAll("[0-9]", "")).trim();
+		String types = ChatColor.stripColor(s.getLine(2).replace(hc.getYaml().getConfig().getString("config.currency-symbol"), "").replace(":", "").replace(".", "").replaceAll("[0-9]", "")).trim();
         String line12 = ChatColor.stripColor(s.getLine(0)+ s.getLine(1)).trim();
 		line12 = hc.fixName(line12);
 		

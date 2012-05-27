@@ -101,7 +101,10 @@ public class Cmd {
     							MaterialData damagemd = new MaterialData(id, (byte) data);
     							ItemStack damagestack = damagemd.toItemStack();
     							tran.setSpace(player, calc);
-    							int space = tran.getavailableSpace(id, calc.getdamageValue(damagestack));
+    							int space = 0;
+    							if (id >= 0) {
+    								space = tran.getavailableSpace(id, calc.getdamageValue(damagestack));
+    							}
 
     							
     							//MaterialData md = new MaterialData(id, (byte) data);
@@ -377,7 +380,7 @@ public class Cmd {
 	    			calc.setVC(hc, player, amount, name, ench);
 	    			double val = calc.getTvalue();
 	    			m.send(sender, 6);		
-	    			sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + "$" + val);    				
+	    			sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + val);    				
 	    			calc.setVC(hc, player, amount, name, ench);
 	    			double cost = calc.getCost();
 	    			
@@ -388,7 +391,7 @@ public class Cmd {
 						scost = cost + "";
 					}
 	    			
-	    			sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + "$" + scost);
+	    			sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + scost);
 					sender.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + hc.getYaml().getItems().getInt(name + ".stock.stock") + ChatColor.AQUA + " " + name + ChatColor.BLUE + " available.");
 					m.send(sender, 6);
 	    				
@@ -869,7 +872,7 @@ public class Cmd {
     					
     					
     					m.send(player, 6);
-    					player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + "$" + val);
+    					player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + val);
     					
     					
     					
@@ -886,7 +889,7 @@ public class Cmd {
 
     					
     					
-    					player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + "$" + scost);
+    					player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + scost);
     					player.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + hc.getYaml().getItems().getInt(nam + ".stock.stock") + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " available.");
     					m.send(player, 6);
     				}
@@ -1916,7 +1919,7 @@ public class Cmd {
 							}
 							
 							
-							sender.sendMessage("§b" + iname + " §9[§a" + stock + " §9available: §a$" + cost + " §9each.]");
+							sender.sendMessage("§b" + iname + " §9[§a" + stock + " §9available: §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.]");
 						} else {
 							sender.sendMessage("You have reached the end.");
 							break;
@@ -2573,7 +2576,7 @@ public class Cmd {
 	    				while (n < 8) {
 	    				ench.setVC(hc, nam, classtype[n], calc);
 	    				double value = ench.getValue();    				
-	    				sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be sold for: " + ChatColor.GREEN + "$" + value);
+	    				sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + value);
 	    				n++;
 	    				}
 	    				m.send(sender, 6);	
@@ -2593,7 +2596,7 @@ public class Cmd {
     	    				while (n < 8) {
     	    				ench.setVC(hc, nam, classtype[n], calc);
     	    				double cost = ench.getCost();    				
-    	    				sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be bought for: " + ChatColor.GREEN + "$" + cost);
+    	    				sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be bought for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + cost);
     	    				n++;
     	    				}
     	    				m.send(sender, 6);	
@@ -2636,8 +2639,8 @@ public class Cmd {
     					double cost = ench.getCost();
 						value = calc.twoDecimals(value);
 						cost = calc.twoDecimals(cost);
-    					player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + "$" + value);
-    					player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + "$" + cost);
+    					player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + value);
+    					player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + cost);
     					player.sendMessage(ChatColor.BLUE + "The global shop currently has" + ChatColor.GREEN + " " + hc.getYaml().getEnchants().getInt(fnam + ".stock.stock") + ChatColor.AQUA + " " + fnam + ChatColor.BLUE + " available.");
     				}
     				m.send(player, 6);	

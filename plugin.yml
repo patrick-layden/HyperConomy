@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.92
+version: 0.922
 author: RegalOwl
 softdepend: [Vault, Buycraft]
 commands:
@@ -287,6 +287,8 @@ permissions:
             hyperconomy.top: true
             hyperconomy.xp: true
             hyperconomy.chestshop: true
+            hyperconomy.buysign: true
+            hyperconomy.sellsign: true
     hyperconomy.admin:
         description: Allows use of shop management commands.
         default: false
@@ -340,4 +342,10 @@ permissions:
         default: false
     hyperconomy.shop.*:
         description: Allows access to all functions at all shops.
+        default: false
+    hyperconomy.buysign:
+        description: Allows purchasing from transaction signs.
+        default: false
+    hyperconomy.sellsign:
+        description: Allows selling to transaction signs.
         default: false

@@ -35,6 +35,7 @@ public class HyperConomy extends JavaPlugin{
 	private Notify not;
 	private TransactionSign tsign;
 	private ChestShop cs;
+	private UpdateSign us;
 	
 	
 	public static HyperObject hyperobject;
@@ -99,6 +100,7 @@ public class HyperConomy extends JavaPlugin{
     	isign = new InfoSign();
     	hist = new History();
     	tsign = new TransactionSign();
+    	us = new UpdateSign();
     		
     	
     	
@@ -167,7 +169,7 @@ public class HyperConomy extends JavaPlugin{
 		hist.setHistory(this, calc, ench, isign);
 		hist.starthistoryLog();
 		
-		tsign.setTransactionSign(this, tran, calc, ench, l, acc, isign, not, economy);
+		tsign.setTransactionSign(this, tran, calc, ench, l, acc, isign, not, economy, us);
 		
 		
 		
@@ -522,7 +524,9 @@ public class HyperConomy extends JavaPlugin{
         return enchant;
 	}
     
-    
+    public boolean isLocked() {
+    	return lock;
+    }
     
     
     

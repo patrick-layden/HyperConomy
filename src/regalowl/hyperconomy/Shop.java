@@ -357,7 +357,7 @@ public class Shop {
 
 		
 		if (p2x.size() < nshops) {
-			shopworld.set(shopnumber, w);
+			shopworld.add(shopnumber, w);
 			p2x.add(shopnumber, x);
 			p2y.add(shopnumber, y);
 			p2z.add(shopnumber, z);

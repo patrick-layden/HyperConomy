@@ -32,12 +32,13 @@ public class TransactionSign implements Listener {
 	private Economy economy;
 	
 	private Set<String> names;
+	private UpdateSign us;
 	
 	
 	
 	
 	
-	public void setTransactionSign(HyperConomy hyperc, Transaction trans, Calculation cal, ETransaction enchant, Log lo, Account account, InfoSign infosign, Notify notify, Economy eco) {
+	public void setTransactionSign(HyperConomy hyperc, Transaction trans, Calculation cal, ETransaction enchant, Log lo, Account account, InfoSign infosign, Notify notify, Economy eco, UpdateSign ups) {
 		
 		hc = hyperc;
 		tran = trans;
@@ -48,6 +49,7 @@ public class TransactionSign implements Listener {
 		isign = infosign;
 		not = notify;
 		economy = eco;
+		us = ups;
 		
 		//Adds all enchantment and item names to names Set.
 		names = new HashSet<String>();
@@ -148,11 +150,14 @@ public class TransactionSign implements Listener {
 			    	if (names.contains(line12.toLowerCase())) {
 						//Colors the sign if it isn't already colored.
 			    		if (!s.getLine(0).startsWith("§")) {
+			    			us.updateSign(hc, s, "§1" + s.getLine(0), "§1" + s.getLine(1), "§f" + s.getLine(2), "§a" + s.getLine(3));
+			    			/*
 			    			s.setLine(0, "§1" + s.getLine(0));
 			    			s.setLine(1, "§1" + s.getLine(1));
 			    			s.setLine(2, "§f" + s.getLine(2));
 			    			s.setLine(3, "§a" + s.getLine(3));
 			    			s.update();
+			    			*/
 			    		}
 						
 						String action = ievent.getAction().name();
@@ -162,56 +167,96 @@ public class TransactionSign implements Listener {
 							String l3 = s.getLine(2);
 							String l4 = s.getLine(3);
 							
-							if (p.hasPermission("hyperconomy.buy")) {
+							if (p.hasPermission("hyperconomy.buysign")) {
 								if (hc.itemTest(line12)) {
 									int id = hc.getYaml().getItems().getInt(line12 + ".information.id");
 									if (id >= 0) {
-										tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
-										tran.buy();
+										if (!hc.isLocked()) {
+											tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
+											tran.buy();
+										} else {
+											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+										}
+
 									} else if (id == -1) {
-										tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
-										tran.buyXP();
+										if (!hc.isLocked()) {
+											tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
+											tran.buyXP();
+										} else {
+											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+										}
+
 									}
 								} else if (hc.enchantTest(line12)) {
-									ench.setSBE(hc, p, line12, economy, l, acc, isign, not, calc);
-									ench.buyEnchant();
+									if (!hc.isLocked()) {
+										ench.setSBE(hc, p, line12, economy, l, acc, isign, not, calc);
+										ench.buyEnchant();
+									} else {
+										p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+									}
+
 								}
+							} else {
+								p.sendMessage("You don't have permission to do this.");
 							}
 
 							ievent.setCancelled(true);
+							us.updateSign(hc, s, l1, l2, l3, l4);
+							/*
 							s.setLine(0, l1);
 							s.setLine(1, l2);
 							s.setLine(2, l3);
 							s.setLine(3, l4);
 							s.update();
+							*/
 						} else if (action.equalsIgnoreCase("LEFT_CLICK_BLOCK")) {
 							String l1 = s.getLine(0);
 							String l2 = s.getLine(1);
 							String l3 = s.getLine(2);
 							String l4 = s.getLine(3);
 							
-							if (p.hasPermission("hyperconomy.sell")) {
+							if (p.hasPermission("hyperconomy.sellsign")) {
 								if (hc.itemTest(line12)) {
 									int id = hc.getYaml().getItems().getInt(line12 + ".information.id");
 									if (id >= 0) {
-										tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
-										tran.sell();
+										if (!hc.isLocked()) {
+											tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
+											tran.sell();
+										} else {
+											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+										}
+
 									} else if (id == -1) {
-										tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
-										tran.sellXP();
+										if (!hc.isLocked()) {
+											tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
+											tran.sellXP();
+										} else {
+											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+										}
+
 									}
 								} else if (hc.enchantTest(line12)) {
-									ench.setSBE(hc, p, line12, economy, l, acc, isign, not, calc);
-									ench.sellEnchant();
+									if (!hc.isLocked()) {
+										ench.setSBE(hc, p, line12, economy, l, acc, isign, not, calc);
+										ench.sellEnchant();
+									} else {
+										p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+									}
+
 								}
+							} else {
+								p.sendMessage("You don't have permission to do this.");
 							}
 							
 							ievent.setCancelled(true);
+							us.updateSign(hc, s, l1, l2, l3, l4);
+							/*
 							s.setLine(0, l1);
 							s.setLine(1, l2);
 							s.setLine(2, l3);
 							s.setLine(3, l4);
 							s.update();
+							*/
 						}  		
 			    	}
 		    	}  

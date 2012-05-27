@@ -82,13 +82,13 @@ public class Transaction {
 					
 									//Informs the player about their purchase including how much was bought, how much was spent, and how much was spent on taxes.
 									p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-									p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + taxpaid + " was tax!" );
-									//p.sendMessage(ChatColor.BLUE + "" + "You bought " + ChatColor.GREEN + "" + "" + amount + ChatColor.AQUA + "" + " " + name + " for " + ChatColor.GREEN + "" + "$" + price + ChatColor.BLUE + "" + " and paid " + ChatColor.GREEN + "" + "$" + taxpaid + " in taxes!" );
+									p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid + " was tax!" );
+									//p.sendMessage(ChatColor.BLUE + "" + "You bought " + ChatColor.GREEN + "" + "" + amount + ChatColor.AQUA + "" + " " + name + " for " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + " and paid " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid + " in taxes!" );
 									p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");	
 	
 									//This writes a log entry for the transaction in the HyperConomy log.txt file.
 									
-									String logentry = p.getName() + " bought " + amount + " " + name + " for $" + price + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
+									String logentry = p.getName() + " bought " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
 									log.setEntry(logentry);
 									log.writeBuffer();
 									
@@ -225,8 +225,8 @@ public class Transaction {
 								}
 								
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + price + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
-								//p.sendMessage(ChatColor.BLUE + "" + "You sold " + ChatColor.GREEN + "" + "" + amount + ChatColor.AQUA + "" + " " + name + " for " + ChatColor.GREEN + "" + "$" + price + ChatColor.BLUE + "" + "!");
+								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
+								//p.sendMessage(ChatColor.BLUE + "" + "You sold " + ChatColor.GREEN + "" + "" + amount + ChatColor.AQUA + "" + " " + name + " for " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + "!");
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 								
 								//Plays smoke effects.  (Pointless but funny.)
@@ -235,7 +235,7 @@ public class Transaction {
 								
 								//Writes a log entry in the HyperConomy log.txt file.
 								
-								String logentry = p.getName() + " sold " + amount + " " + name + " for $" + price + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
+								String logentry = p.getName() + " sold " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
 								log.setEntry(logentry);
 								log.writeBuffer();			
 								
@@ -730,13 +730,13 @@ public class Transaction {
 				
 						//Informs the player about their purchase including how much was bought, how much was spent, and how much was spent on taxes.
 						p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-						p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " and paid " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + taxpaid + " in taxes!" );
-						//p.sendMessage(ChatColor.BLUE + "" + "You bought " + ChatColor.GREEN + "" + "" + amount + ChatColor.AQUA + "" + " " + name + " for " + ChatColor.GREEN + "" + "$" + price + ChatColor.BLUE + "" + " and paid " + ChatColor.GREEN + "" + "$" + taxpaid + " in taxes!" );
+						p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " and paid " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid + " in taxes!" );
+						//p.sendMessage(ChatColor.BLUE + "" + "You bought " + ChatColor.GREEN + "" + "" + amount + ChatColor.AQUA + "" + " " + name + " for " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + " and paid " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid + " in taxes!" );
 						p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");	
 
 						//This writes a log entry for the transaction in the HyperConomy log.txt file.
 								
-						String logentry = p.getName() + " bought " + amount + " " + name + " for $" + price + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
+						String logentry = p.getName() + " bought " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
 						log.setEntry(logentry);
 						log.writeBuffer();
 								
@@ -872,8 +872,8 @@ public class Transaction {
 							}
 							
 							p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-							p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + price + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
-							//p.sendMessage(ChatColor.BLUE + "" + "You sold " + ChatColor.GREEN + "" + "" + amount + ChatColor.AQUA + "" + " " + name + " for " + ChatColor.GREEN + "" + "$" + price + ChatColor.BLUE + "" + "!");
+							p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
+							//p.sendMessage(ChatColor.BLUE + "" + "You sold " + ChatColor.GREEN + "" + "" + amount + ChatColor.AQUA + "" + " " + name + " for " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + "!");
 							p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 							
 							//Plays smoke effects.  (Pointless but funny.)
@@ -882,7 +882,7 @@ public class Transaction {
 							
 							//Writes a log entry in the HyperConomy log.txt file.
 							
-							String logentry = p.getName() + " sold " + amount + " " + name + " for $" + price + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
+							String logentry = p.getName() + " sold " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
 							log.setEntry(logentry);
 							log.writeBuffer();			
 							
@@ -976,18 +976,18 @@ public class Transaction {
 					
 									//Informs the player about their purchase including how much was bought, how much was spent, and how much was spent on taxes.
 									p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-									p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
+									p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
 									p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");	
 	
 									//This writes a log entry for the transaction in the HyperConomy log.txt file.
 									
-									String logentry = p.getName() + " bought " + amount + " " + name + " for $" + price + " from " + owner + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
+									String logentry = p.getName() + " bought " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
 									log.setEntry(logentry);
 									log.writeBuffer();
 									
 									Player o = Bukkit.getPlayer(owner);
 									if (o != null) {
-										o.sendMessage("§9" + p.getName() + " bought §a" + amount + " §b" + name + " §9from you for §a$" + price + "§9.");
+										o.sendMessage("§9" + p.getName() + " bought §a" + amount + " §b" + name + " §9from you for §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "§9.");
 									}
 
 									return true;
@@ -1088,7 +1088,7 @@ public class Transaction {
 								acc.withdrawAccount(owner, price);
 								
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + ChatColor.ITALIC + " to " + owner + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + price + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
+								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + ChatColor.ITALIC + " to " + owner + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 								
 								//Plays smoke effects.  (Pointless but funny.)
@@ -1097,13 +1097,13 @@ public class Transaction {
 								
 								//Writes a log entry in the HyperConomy log.txt file.
 								
-								String logentry = p.getName() + " sold " + amount + " " + name + " for $" + price + " to " + owner + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
+								String logentry = p.getName() + " sold " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " to " + owner + ". [Static Price=" + items.getBoolean(name + ".price.static") + "][Initial Price=" + items.getBoolean(name + ".initiation.initiation") + "]";
 								log.setEntry(logentry);
 								log.writeBuffer();			
 
 								Player o = Bukkit.getPlayer(owner);
 								if (o != null) {
-									o.sendMessage("§9" + p.getName() + " sold §a" + amount + " §b" + name + " §9to you for §a$" + price + "§9.");
+									o.sendMessage("§9" + p.getName() + " sold §a" + amount + " §b" + name + " §9to you for §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "§9.");
 								}
 								return true;
 						

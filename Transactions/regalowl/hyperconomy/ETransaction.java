@@ -109,11 +109,11 @@ public class ETransaction {
 					
 					//Informs the player of their sale.
 					p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-					p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + fprice + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
+					p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
 					p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 					
 					//Writes the transaction to the log.
-					String logentry = p.getName() + " sold " + name + " for $" + fprice + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
+					String logentry = p.getName() + " sold " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
 					log.setEntry(logentry);
 					log.writeBuffer();
 					
@@ -245,12 +245,12 @@ public class ETransaction {
 								
 								//Displays purchase information to the player.
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + taxpaid + " was tax!" );
+								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid + " was tax!" );
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");	
 									
 								//Logs the transaction.
 								
-								String logentry = p.getName() + " bought " + name + " for $" + price + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
+								String logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
 								log.setEntry(logentry);
 								log.writeBuffer();
 								
@@ -373,18 +373,18 @@ public class ETransaction {
 								
 								//Displays purchase information to the player.
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + "$" + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
+								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");	
 
 								//This writes a log entry for the transaction in the HyperConomy log.txt file.
 								
-								String logentry = p.getName() + " bought " + name + " for $" + price + " from " + owner + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
+								String logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
 								log.setEntry(logentry);
 								log.writeBuffer();
 								
 								Player o = Bukkit.getPlayer(owner);
 								if (o != null) {
-									o.sendMessage("§9" + p.getName() + " bought"  + " §b" + name + " §9from you for §a$" + price + "§9.");
+									o.sendMessage("§9" + p.getName() + " bought"  + " §b" + name + " §9from you for §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "§9.");
 								}
 								
 								return true;

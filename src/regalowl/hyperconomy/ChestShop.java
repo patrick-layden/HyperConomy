@@ -112,9 +112,9 @@ public class ChestShop implements Listener{
 		    					int nlength = pname.length();
 		    					String line3 = "";
 		    					String line4 = "";	
-		    					if (nlength >= 13) {
-		    						line3 = pname.substring(0, 12);
-		    						line4 = pname.substring(13, pname.length());
+		    					if (nlength > 12) {
+		    						line3 = pname.substring(0, 11);
+		    						line4 = pname.substring(12, pname.length());
 		    					} else {
 		    						line3 = pname;
 		    					}
@@ -163,7 +163,7 @@ public class ChestShop implements Listener{
 		    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
 					BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
 			    	if (chestblock instanceof Chest) {
-			    		if (!(ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim()).equalsIgnoreCase(bbevent.getPlayer().getName())) {
+			    		if (!(ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim()).equalsIgnoreCase(bbevent.getPlayer().getName()) && !bbevent.getPlayer().hasPermission("hyperconomy.admin")) {
 				    		bbevent.setCancelled(true);
 				    		s.update();
 				    		return;
@@ -456,7 +456,7 @@ public class ChestShop implements Listener{
 					    				if (buy) {
 							    			calc.setVC(hc, null, 1, name, null);
 							    			p.sendMessage("§0-----------------------------------------------------");
-							    			p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + Bukkit.getPlayer(line34).getName() + " for: " + ChatColor.GREEN + ChatColor.ITALIC + "$" + calc.getTvalue());
+							    			p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + Bukkit.getPlayer(line34).getName() + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue());
 							    			p.sendMessage("§0-----------------------------------------------------");
 					    				} else {
 					    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
@@ -473,7 +473,7 @@ public class ChestShop implements Listener{
 					    					if (itemamount > 0) {
 					    						calc.setVC(hc, null, 1, name, null);
 							    				p.sendMessage("§0-----------------------------------------------------");
-							    				p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 "  + ChatColor.AQUA + ""  + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be sold to " + Bukkit.getPlayer(line34).getName() + " for: " + ChatColor.GREEN + ChatColor.ITALIC + "$" + calc.getTvalue());
+							    				p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 "  + ChatColor.AQUA + ""  + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be sold to " + Bukkit.getPlayer(line34).getName() + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue());
 							    				p.sendMessage("§0-----------------------------------------------------");	
 					    					} else {
 					    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
@@ -508,7 +508,7 @@ public class ChestShop implements Listener{
 							        				price = calc.twoDecimals(price);
 							        			if (ench.isEnchantable(p.getItemInHand())) {
 									    			p.sendMessage("§0-----------------------------------------------------");
-									    			p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + Bukkit.getPlayer(line34).getName() + " for: " + ChatColor.GREEN + ChatColor.ITALIC + "$" + price);
+									    			p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + Bukkit.getPlayer(line34).getName() + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
 									    			p.sendMessage("§0-----------------------------------------------------");
 						    					} else {
 						    						p.sendMessage(ChatColor.BLUE + "That item cannot accept enchantments.");
