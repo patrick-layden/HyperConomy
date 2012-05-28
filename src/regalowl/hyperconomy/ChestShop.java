@@ -113,7 +113,7 @@ public class ChestShop implements Listener{
 		    					String line3 = "";
 		    					String line4 = "";	
 		    					if (nlength > 12) {
-		    						line3 = pname.substring(0, 11);
+		    						line3 = pname.substring(0, 12);
 		    						line4 = pname.substring(12, pname.length());
 		    					} else {
 		    						line3 = pname;
