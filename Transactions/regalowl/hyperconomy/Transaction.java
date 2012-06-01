@@ -63,7 +63,6 @@ public class Transaction {
 					
 									//Removes the number of items purchased from the shop's stock and saves the HyperConomy.yaml.
 									items.set((name + ".stock.stock"), (shopstock - amount));
-									//HyperConomy.yaml.saveYamls();
 								
 									//Withdraws the price of the transaction from the player's account.
 									acc.withdraw(price);
@@ -711,7 +710,6 @@ public class Transaction {
 						
 						//Removes the number of items purchased from the shop's stock and saves the HyperConomy.yaml.
 						items.set((name + ".stock.stock"), (shopstock - amount));
-						//HyperConomy.yaml.saveYamls();
 							
 						//Withdraws the price of the transaction from the player's account.
 						acc.withdraw(price);

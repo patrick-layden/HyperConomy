@@ -203,7 +203,6 @@ public class ETransaction {
 		
 								//Removes 1 of the enchantment from the shop and saves the yml.	
 								enchants.set((name + ".stock.stock"), (shopstock - 1));	
-								//HyperConomy.yaml.saveYamls();
 								
 								//Removes the cost from the player's account.
 								acc.withdraw(price);
@@ -447,7 +446,6 @@ public class ETransaction {
 				//Deactivates the initial pricing period if the value is equal to the normal value and the shop has more than 0 items.
 				if (icost >= ((median * value)/shopstock) && shopstock > 0) {
 					enchants.set(name + ".initiation.initiation", false);
-					//HyperConomy.yaml.saveYamls();
 				}
 		
 				//Calculates the value for the given enchantment.
@@ -539,7 +537,6 @@ public class ETransaction {
 						//Checks to see if initiation should be disabled, if not, recalculates the cost and applies tax.
 						if (price < icost && oshopstock > 0){
 							enchants.set(name + ".initiation.initiation", false);
-							//HyperConomy.yaml.saveYamls();
 						} else {
 							cost = ((icost * etax) + icost) * classvalue;
 						} 

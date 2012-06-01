@@ -401,12 +401,10 @@ public class ChestShop implements Listener{
 					    			} else if (slot >= 27 && name != null){
 					    				
 					    				if (sell) {
-					    					//tran.setAddRemoveItems(hc, id, data, camount, calc, ench, icevent.getView().getTopInventory());
 					    					tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
 					    					int itemamount = tran.countItems();
 					    					
 					    					if (itemamount > 0) {
-						    					//tran.setAddRemoveItems(hc, id, data, camount, calc, ench, icevent.getView().getBottomInventory());
 					    						tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getBottomInventory());
 							    				int space = tran.getSpace();
 							    				if (space >= camount) {
@@ -414,9 +412,6 @@ public class ChestShop implements Listener{
 						    						calc.setVC(hc, null, camount, name, ench);
 						    						double cost = calc.getTvalue();
 						    						if (bal >= cost) {
-								    					//tran.setAddRemoveItems(hc, id, data, camount, calc, ench, icevent.getView().getTopInventory());
-									    				//tran.addItems();
-										    			//tran.setAll(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign);
 						    							tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
 										    			tran.sellChest(line34);
 						    						} else {
@@ -456,7 +451,7 @@ public class ChestShop implements Listener{
 					    				if (buy) {
 							    			calc.setVC(hc, null, 1, name, null);
 							    			p.sendMessage("§0-----------------------------------------------------");
-							    			p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + Bukkit.getPlayer(line34).getName() + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue());
+							    			p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue());
 							    			p.sendMessage("§0-----------------------------------------------------");
 					    				} else {
 					    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
@@ -473,7 +468,7 @@ public class ChestShop implements Listener{
 					    					if (itemamount > 0) {
 					    						calc.setVC(hc, null, 1, name, null);
 							    				p.sendMessage("§0-----------------------------------------------------");
-							    				p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 "  + ChatColor.AQUA + ""  + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be sold to " + Bukkit.getPlayer(line34).getName() + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue());
+							    				p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 "  + ChatColor.AQUA + ""  + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be sold to " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue());
 							    				p.sendMessage("§0-----------------------------------------------------");	
 					    					} else {
 					    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
@@ -508,7 +503,7 @@ public class ChestShop implements Listener{
 							        				price = calc.twoDecimals(price);
 							        			if (ench.isEnchantable(p.getItemInHand())) {
 									    			p.sendMessage("§0-----------------------------------------------------");
-									    			p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + Bukkit.getPlayer(line34).getName() + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
+									    			p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
 									    			p.sendMessage("§0-----------------------------------------------------");
 						    					} else {
 						    						p.sendMessage(ChatColor.BLUE + "That item cannot accept enchantments.");
@@ -542,9 +537,6 @@ public class ChestShop implements Listener{
 					    				
 					    				if (buy) {
 					    					tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
-						    				//tran.setAddRemoveItems(hc, id, data, 1, calc, ench, icevent.getView().getTopInventory());
-						    				//tran.removeItems();
-							    			//tran.setAll(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign);
 							    			tran.buyChest(line34);
 					    				} else {
 					    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
@@ -555,12 +547,10 @@ public class ChestShop implements Listener{
 					    				
 					    				if (sell) {
 					    					tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
-					    					//tran.setAddRemoveItems(hc, id, data, 1, calc, ench, icevent.getView().getTopInventory());
 					    					int itemamount = tran.countItems();
 					    					
 					    					if (itemamount > 0) {
 					    						tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getBottomInventory());
-					    						//tran.setAddRemoveItems(hc, id, data, 1, calc, ench, icevent.getView().getBottomInventory());
 						    					int space = tran.getSpace();
 						    					if (space >= 1) {
 						    						double bal = acc.getBalance(line34);
@@ -568,9 +558,6 @@ public class ChestShop implements Listener{
 						    						double cost = calc.getTvalue();
 						    						if (bal >= cost) {
 						    							tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
-							    						//tran.setAddRemoveItems(hc, id, data, 1, calc, ench, icevent.getView().getTopInventory());
-								    					//tran.addItems();
-									    				//tran.setAll(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign);
 									    				tran.sellChest(line34);
 						    						} else {
 						    							p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
@@ -588,11 +575,7 @@ public class ChestShop implements Listener{
 		
 					    				
 					    			}
-				    			} else {
-				    				
-				    				
-				    				
-				    				
+				    			} else {				    				
 				        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
 					    				String name = hc.getnameData(key);
 					    				
@@ -615,20 +598,11 @@ public class ChestShop implements Listener{
 						    				} else {
 						    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
 						    				}
-			
-						    				
 						    			} else if (slot >= 27 && name != null) {
 						    				
 						    				p.sendMessage(ChatColor.BLUE + "You cannot sell enchantments here.");
 						    				
 						    			}
-				    				
-				    				
-				    				
-				    				
-				    				
-				    				
-				    				
 				    			}
 				
 				    			

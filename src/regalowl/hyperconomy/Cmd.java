@@ -2822,13 +2822,11 @@ public class Cmd {
 			    					}
 			    					
 			    					hc.getYaml().getShops().set(shopname + ".unavailable", unavailable);
-			    					//hc.getYaml().saveYamls();
 			    					sender.sendMessage(ChatColor.GOLD + itemname + " added to " + shopname.replace("_", " "));
 		    					} else if (itemname.equalsIgnoreCase("all")) {
 	
 			    					
 			    					hc.getYaml().getShops().set(shopname + ".unavailable", null);
-			    					//hc.getYaml().saveYamls();
 			    					sender.sendMessage(ChatColor.GOLD + "All items have been added to " + shopname.replace("_", " "));
 		    					}
 		    					
@@ -2900,7 +2898,6 @@ public class Cmd {
 		    						}
 			    					unavailable = unavailable + itemname + ",";
 			    					hc.getYaml().getShops().set(shopname + ".unavailable", unavailable);
-			    					//hc.getYaml().saveYamls();
 			    					sender.sendMessage(ChatColor.GOLD + itemname + " removed from " + shopname.replace("_", " "));
 		    					} else if (itemname.equalsIgnoreCase("all")) {
 		    						
@@ -2928,7 +2925,6 @@ public class Cmd {
 		    	    				
 		    						
 			    					hc.getYaml().getShops().set(shopname + ".unavailable", itemlist + enchantlist);
-			    					//hc.getYaml().saveYamls();
 			    					sender.sendMessage(ChatColor.GOLD + "All items and enchantments have been removed from " + shopname.replace("_", " "));
 		    					}
 		    				} else {

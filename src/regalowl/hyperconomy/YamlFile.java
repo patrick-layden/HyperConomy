@@ -36,10 +36,13 @@ public class YamlFile extends HyperConomy {
     File signsFile;
     File historyFile;
     
+    private boolean brokenfile;
+    
     
     HyperConomy hc;
     
     YamlFile(HyperConomy hyperc) {
+    	brokenfile = false;
     	hc = hyperc;
     }
 	
@@ -206,7 +209,9 @@ public class YamlFile extends HyperConomy {
 			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #30.  Bad history.yml file.", "hyperconomy.error");
 			failcount++;
         }
-        
+        if (failcount != 0) {
+        	brokenfile = true;
+        }
         hc.ymlCheck(failcount);
 
     }
@@ -218,13 +223,17 @@ public class YamlFile extends HyperConomy {
 	 */
     public void saveYamls() {
         try {
-            config.save(configFile); 
-            items.save(itemsFile);
-            enchants.save(enchantsFile);
-            shops.save(shopsFile);
-            log.save(logFile);
-            signs.save(signsFile);
-            history.save(historyFile);
+        	if (!brokenfile) {
+            	//Logger logger = Logger.getLogger("Minecraft");
+            	//logger.info("---------------HyperConomy Files Saved----------------");
+                config.save(configFile); 
+                items.save(itemsFile);
+                enchants.save(enchantsFile);
+                shops.save(shopsFile);
+                log.save(logFile);
+                signs.save(signsFile);
+                history.save(historyFile);
+        	}
         } catch (IOException e) {
             e.printStackTrace();
         }

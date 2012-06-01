@@ -59,7 +59,6 @@ public class Calculation {
 			//Deactivates the initial pricing period if the initial price is greater than or equal to the hyperbolic price and if the shop has more than 0 items.
 			if (icost >= ((median * value)/shopstock) && shopstock > 0) {
 				items.set(name + ".initiation.initiation", false);
-				//HyperConomy.yaml.saveYamls();
 			}
 			
 			//Sums the value of all desired items.
@@ -163,7 +162,6 @@ public class Calculation {
 					//If the shop has more than 0 items (which results in infinite values), it makes sure the real cost is less than the initial cost.  If not, it turns off initiation.
 					if (cost < (icost * amount) && oshopstock > 0){
 						items.set(name + ".initiation.initiation", false);
-						//HyperConomy.yaml.saveYamls();
 						
 					//If the initial cost is indeed more than the normal cost, the cost is recalculated to the correct initial cost. 
 					} else {

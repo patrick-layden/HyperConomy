@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -57,6 +59,9 @@ public class HyperConomy extends JavaPlugin{
     @Override
     public void onEnable() {
     	
+    	lock = false;
+    	brokenfile = false;
+    	
     	//Stores the new YamlFile as yaml.
     	YamlFile yam = new YamlFile(this);	
     	yam.YamlEnable();    	
@@ -65,118 +70,118 @@ public class HyperConomy extends JavaPlugin{
     	
 
 
-    	
-    	lock = false;
-    	brokenfile = false;
-    	
-    	
-    	
-    	
-    	saveinterval = yaml.getConfig().getLong("config.saveinterval");
-
-    	////////////////////For compatibility with previous versions of HyperConomy./////////////
-    	Compatibility cb = new Compatibility();
-    	cb.checkCompatibility(this);
-    	
-
-    	
-    	//Creates the shop from the config.
-    	s = new Shop(this);
-    	
-    	//Loads command messages.
-    	m = new Message();
-    	
-    	//Loads the log.
-    	l = new Log(this);
-    	
-    	
-    	//Reused Objects
-    	tran = new Transaction();
-    	calc = new Calculation();
-    	ench = new ETransaction();
-    	acc = new Account();
-    	commandhandler = new Cmd();
-    	not = new Notify();
-    	isign = new InfoSign();
-    	hist = new History();
-    	tsign = new TransactionSign();
-    	us = new UpdateSign();
+    	if (!brokenfile) {
     		
-    	
-    	
-    	
-        //VAULT**********************************************************************
-    	Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
-        if(x != null & x instanceof Vault) {
-        	
-        	this.setupEconomy();
-            vault = (Vault) x;
-            log.info(String.format("[%s] Hooked %s %s", getDescription().getName(), vault.getDescription().getName(), vault.getDescription().getVersion()));
-        } else {
-            log.warning(String.format("[%s] Vault was _NOT_ found! Disabling plugin.", getDescription().getName()));
-            getPluginLoader().disablePlugin(this);
-            return;
-        }
-        
-        log.info(String.format("[%s] Enabled Version %s", getDescription().getName(), getDescription().getVersion()));
-    	
-        //VAULT**********************************************************************
-    	
-    	
-    	
-        //Map name data to materials for /hb, /hv, and /hs command lookups
-		Iterator<String> it = yaml.getItems().getKeys(false).iterator();
-		while (it.hasNext()) {   			
-			String elst = it.next().toString();    				
-			String ikey = yaml.getItems().getString(elst + ".information.id") + ":" + yaml.getItems().getString(elst + ".information.data");
-			namedata.put(ikey, elst);
-		}        
-		
-		Iterator<String> it2 = yaml.getEnchants().getKeys(false).iterator();
-		while (it2.hasNext()) {   			
-			String elst2 = it2.next().toString();    				
-			enchantdata.put(yaml.getEnchants().getString(elst2 + ".information.name"), elst2.substring(0, elst2.length() - 1));
-		}        
-		
-		//Creates the names arraylist storing all item and enchantment names.
-		Iterator<String> it3 = yaml.getItems().getKeys(false).iterator();
-		while (it3.hasNext()) {   			  				
-			names.add(it3.next().toString());
-		}  
-		Iterator<String> it4 = yaml.getEnchants().getKeys(false).iterator();
-		while (it4.hasNext()) {   			
-			names.add(it4.next().toString());
-		}  
-		
-		
-		
-		s.startshopCheck();
-		startSave();
-		//startBuffer();
-		
-		acc.setAccount(this, null, economy);
-		this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-		    public void run() {
-				//Sets up the global shop account if it doesn't already exist.
-				acc.checkshopAccount();
-		    }
-		}, 300L);
+    		
+    		saveinterval = yaml.getConfig().getLong("config.saveinterval");
 
-		
-		
-		
-		isign.setinfoSign(this, calc, ench, tran);
-		hist.setHistory(this, calc, ench, isign);
-		hist.starthistoryLog();
-		
-		tsign.setTransactionSign(this, tran, calc, ench, l, acc, isign, not, economy, us);
-		
-		
-		
-		hyperobject = new HyperObject(this, yam, tran, calc, ench, m, l, s, acc, isign, commandhandler, hist, not, tsign, economy);
-		
-		cs = new ChestShop();
-		log.info("HyperConomy has been successfully enabled!");
+        	////////////////////For compatibility with previous versions of HyperConomy./////////////
+        	Compatibility cb = new Compatibility();
+        	cb.checkCompatibility(this);
+        	
+
+        	
+        	//Creates the shop from the config.
+        	s = new Shop(this);
+        	
+        	//Loads command messages.
+        	m = new Message();
+        	
+        	//Loads the log.
+        	l = new Log(this);
+        	
+        	
+        	//Reused Objects
+        	tran = new Transaction();
+        	calc = new Calculation();
+        	ench = new ETransaction();
+        	acc = new Account();
+        	commandhandler = new Cmd();
+        	not = new Notify();
+        	isign = new InfoSign();
+        	hist = new History();
+        	tsign = new TransactionSign();
+        	us = new UpdateSign();
+        		
+        	
+        	
+        	
+            //VAULT**********************************************************************
+        	Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
+            if(x != null & x instanceof Vault) {
+            	
+            	this.setupEconomy();
+                vault = (Vault) x;
+                log.info(String.format("[%s] Hooked %s %s", getDescription().getName(), vault.getDescription().getName(), vault.getDescription().getVersion()));
+            } else {
+                log.warning(String.format("[%s] Vault was _NOT_ found! Disabling plugin.", getDescription().getName()));
+                getPluginLoader().disablePlugin(this);
+                return;
+            }
+            
+            log.info(String.format("[%s] Enabled Version %s", getDescription().getName(), getDescription().getVersion()));
+        	
+            //VAULT**********************************************************************
+        	
+        	
+        	
+            //Map name data to materials for /hb, /hv, and /hs command lookups
+    		Iterator<String> it = yaml.getItems().getKeys(false).iterator();
+    		while (it.hasNext()) {   			
+    			String elst = it.next().toString();    				
+    			String ikey = yaml.getItems().getString(elst + ".information.id") + ":" + yaml.getItems().getString(elst + ".information.data");
+    			namedata.put(ikey, elst);
+    		}        
+    		
+    		Iterator<String> it2 = yaml.getEnchants().getKeys(false).iterator();
+    		while (it2.hasNext()) {   			
+    			String elst2 = it2.next().toString();    				
+    			enchantdata.put(yaml.getEnchants().getString(elst2 + ".information.name"), elst2.substring(0, elst2.length() - 1));
+    		}        
+    		
+    		//Creates the names arraylist storing all item and enchantment names.
+    		Iterator<String> it3 = yaml.getItems().getKeys(false).iterator();
+    		while (it3.hasNext()) {   			  				
+    			names.add(it3.next().toString());
+    		}  
+    		Iterator<String> it4 = yaml.getEnchants().getKeys(false).iterator();
+    		while (it4.hasNext()) {   			
+    			names.add(it4.next().toString());
+    		}  
+    		
+    		
+
+    		s.startshopCheck();
+    		startSave();
+
+    		//startBuffer();
+    		
+    		acc.setAccount(this, null, economy);
+    		this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+    		    public void run() {
+    				//Sets up the global shop account if it doesn't already exist.
+    				acc.checkshopAccount();
+    		    }
+    		}, 300L);
+
+    		
+    		
+    		
+    		isign.setinfoSign(this, calc, ench, tran);
+    		hist.setHistory(this, calc, ench, isign);
+    		hist.starthistoryLog();
+    		
+    		tsign.setTransactionSign(this, tran, calc, ench, l, acc, isign, not, economy, us);
+    		
+    		
+    		
+    		hyperobject = new HyperObject(this, yam, tran, calc, ench, m, l, s, acc, isign, commandhandler, hist, not, tsign, economy);
+    		
+    		cs = new ChestShop();
+    		log.info("HyperConomy has been successfully enabled!");
+    		
+    		
+    	}
 		
     }
     
@@ -189,14 +194,17 @@ public class HyperConomy extends JavaPlugin{
     
     @Override
     public void onDisable() {
-    	s.stopshopCheck();
-    	stopSave();
-    	l.stopBuffer();
-    	hist.stophistoryLog();
-    	l.saveBuffer();
-	
+    	if (s != null) {
+        	s.stopshopCheck();
+        	stopSave();
+        	l.stopBuffer();
+        	hist.stophistoryLog();
+        	l.saveBuffer();
+    	}
+
     	//Saves config and items files.
         yaml.saveYamls();
+
         log.info("HyperConomy has been disabled!");
     }
     
@@ -342,7 +350,6 @@ public class HyperConomy extends JavaPlugin{
 		    			if (args[0].equalsIgnoreCase("shop")) {
 			    			s.setshopInterval(Long.parseLong(args[1]));
 			    			yaml.getConfig().set("config.shopcheckinterval", s.getshopInterval());
-			    			//yaml.saveYamls();
 			    			s.stopshopCheck();
 			    			s.startshopCheck();
 			    			sender.sendMessage(ChatColor.GOLD + "Shop check interval set!");
@@ -414,7 +421,9 @@ public class HyperConomy extends JavaPlugin{
     public void startSave() {
 		savetaskid = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 		    public void run() {
-		    	yaml.saveYamls();
+		    	if (!brokenfile) {
+		    		yaml.saveYamls();
+		    	}
 		    }
 		}, saveinterval, saveinterval);
     }
@@ -452,15 +461,20 @@ public class HyperConomy extends JavaPlugin{
     		brokenfile = false;
     	} else {
         	brokenfile = true;
-        	if (!lock) {	
+        	if (!lock) {
+        		if (s == null) {
+        			log.info("Bad YML files detected, disabling HyperConomy!");
+        			Bukkit.getPluginManager().disablePlugin(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy"));
+        			return;
+        		}
 				lock = true;
 				s.stopshopCheck();
-    			l.stopBuffer();
-    			hist.stophistoryLog();
-    			isign.stopsignUpdate();
-    			isign.resetAll();
-    			l.saveBuffer();
-    			stopSave();	
+		    	l.stopBuffer();
+		    	hist.stophistoryLog();
+		    	isign.stopsignUpdate();
+		    	isign.resetAll();
+		    	l.saveBuffer();
+		    	stopSave();	
     		}
     	}
     }

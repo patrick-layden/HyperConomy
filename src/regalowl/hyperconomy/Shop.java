@@ -291,7 +291,6 @@ public class Shop {
 		shop.set(name + ".p1.x", x);
 		shop.set(name + ".p1.y", y);
 		shop.set(name + ".p1.z", z);
-		//hc.getYaml().saveYamls();
 		
 		if (shopdata.indexOf(name) == -1) {
 			shopdata.add(name);

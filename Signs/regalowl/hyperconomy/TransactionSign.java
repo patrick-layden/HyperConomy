@@ -199,7 +199,6 @@ public class TransactionSign implements Listener {
 							} else {
 								p.sendMessage("You don't have permission to do this.");
 							}
-
 							ievent.setCancelled(true);
 							us.updateSign(hc, s, l1, l2, l3, l4);
 							/*
