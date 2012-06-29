@@ -22,6 +22,7 @@ public class Shop {
 	private HashMap<Player, Boolean> sp;
 	private ArrayList<String> shopdata = new ArrayList<String>();
 	private ArrayList<String> shopworld = new ArrayList<String>();
+	private ArrayList<String> shopecon = new ArrayList<String>();
 	private ArrayList<String> shopmessage1 = new ArrayList<String>();
 	private ArrayList<String> shopmessage2 = new ArrayList<String>();
 	private int nshops;
@@ -64,6 +65,7 @@ public class Shop {
 	public void clearAll() {
     	sp.clear();
     	shopdata.clear();
+    	shopecon.clear();
     	shopworld.clear();
     	shopmessage1.clear();
     	shopmessage2.clear();
@@ -150,6 +152,7 @@ public class Shop {
 		while (counter < nshops) {
 			String nameshop = shopdata.get(counter);
 			shopworld.add(sh.getString(nameshop + ".world"));
+			shopecon.add(sh.getString(nameshop + ".economy"));
 			p1x.add(sh.getInt(nameshop + ".p1.x"));
 			p1y.add(sh.getInt(nameshop + ".p1.y"));
 			p1z.add(sh.getInt(nameshop + ".p1.z"));
@@ -216,6 +219,19 @@ public class Shop {
 					//Sets the player to being in the shop in the inshop.txt file.
 	    			//sp.setData(p.getName(), "true");
 					sp.put(p, true);
+					
+					if (hc.useSQL()) {
+						//Sets the player to the shop's economy.
+						String shopecon = hc.getYaml().getShops().getString(shopdata.get(snum) + ".economy");
+						if (shopecon == null) {
+							shopecon = "default";
+						}
+						if (hc.getSQLEconomy().exists(shopecon)) {
+							hc.getSQLFunctions().setPlayerEconomy(p.getName().toLowerCase(), shopecon);
+						}
+					}
+
+					
 				}
 				
 			//Deals with players that were in the shop previously.
@@ -301,12 +317,14 @@ public class Shop {
 
 			if (p1x.size() < nshops) {
 				shopworld.add(shopnumber, w);
+				shopecon.add(shopnumber, "default");
 				p1x.add(shopnumber, x);
 				p1y.add(shopnumber, y);
 				p1z.add(shopnumber, z);
 				p2x.add(shopnumber, x);
 				p2y.add(shopnumber, y);
 				p2z.add(shopnumber, z);
+				shop.set(name + ".economy", "default");
 				shop.set(name + ".p2.x", x);
 				shop.set(name + ".p2.y", y);
 				shop.set(name + ".p2.z", z);
@@ -319,12 +337,12 @@ public class Shop {
 			
 			
 			if (shopmessage1.size() < nshops) {
-				shopmessage1.add(shopnumber, "§aWelcome to %n");
-				shop.set(name + ".shopmessage1", "§aWelcome to %n");
+				shopmessage1.add(shopnumber, "&aWelcome to %n");
+				shop.set(name + ".shopmessage1", "&aWelcome to %n");
 			}
 			if (shopmessage2.size() < nshops) {
-				shopmessage2.add(shopnumber, "§9Type §b/hc §9for help.");
-				shop.set(name + ".shopmessage2", "§9Type §b/hc §9for help.");
+				shopmessage2.add(shopnumber, "&9Type &b/hc &9for help.");
+				shop.set(name + ".shopmessage2", "&9Type &b/hc &9for help.");
 			}
 
 	}
@@ -357,12 +375,14 @@ public class Shop {
 		
 		if (p2x.size() < nshops) {
 			shopworld.add(shopnumber, w);
+			shopecon.add(shopnumber, "default");
 			p2x.add(shopnumber, x);
 			p2y.add(shopnumber, y);
 			p2z.add(shopnumber, z);
 			p1x.add(shopnumber, x);
 			p1y.add(shopnumber, y);
 			p1z.add(shopnumber, z);
+			shop.set(name + ".economy", "default");
 			shop.set(name + ".p1.x", x);
 			shop.set(name + ".p1.y", y);
 			shop.set(name + ".p1.z", z);
@@ -374,12 +394,12 @@ public class Shop {
 		}
 		
 		if (shopmessage1.size() < nshops) {
-			shopmessage1.add(shopnumber, "§aWelcome to %n");
-			shop.set(name + ".shopmessage1", "§aWelcome to %n");
+			shopmessage1.add(shopnumber, "&aWelcome to %n");
+			shop.set(name + ".shopmessage1", "&aWelcome to %n");
 		}
 		if (shopmessage2.size() < nshops) {
-			shopmessage2.add(shopnumber, "§9Type §b/hc §9for help.");
-			shop.set(name + ".shopmessage2", "§9Type §b/hc §9for help.");
+			shopmessage2.add(shopnumber, "&9Type &b/hc &9for help.");
+			shop.set(name + ".shopmessage2", "&9Type &b/hc &9for help.");
 		}
 
 	}
@@ -396,6 +416,7 @@ public class Shop {
 			p2y.remove(shopnumber);
 			p2z.remove(shopnumber);
 			shopworld.remove(shopnumber);
+			shopecon.remove(shopnumber);
 			
 			shopmessage1.remove(shopnumber);
 			shopmessage2.remove(shopnumber);
@@ -416,6 +437,7 @@ public class Shop {
 		shopsfile.set(newname + ".shopmessage1", shopsfile.get(name + ".shopmessage1"));
 		shopsfile.set(newname + ".shopmessage2", shopsfile.get(name + ".shopmessage2"));
 		shopsfile.set(newname + ".unavailable", shopsfile.get(name + ".unavailable"));
+		shopsfile.set(newname + ".economy", shopsfile.get(name + ".economy"));
 		shopsfile.set(name, null);
 
 		shopdata.clear();

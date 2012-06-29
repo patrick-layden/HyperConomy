@@ -13,6 +13,8 @@ public class Notify {
 	private ArrayList<String> name = new ArrayList<String>();
 	private ArrayList<String> eclass = new ArrayList<String>();
 	
+	private String econ;
+	
 	private String previousmessage;
 	
 	
@@ -27,12 +29,13 @@ public class Notify {
 	}
 	
 	
-	public void setNotify(HyperConomy hyperc, Calculation cal, ETransaction enchant, String nam, String ecla) {
+	public void setNotify(HyperConomy hyperc, Calculation cal, ETransaction enchant, String nam, String ecla, String economy) {
 		
 		hc = hyperc;
 		calc = cal;
 		ench = enchant;
 		usenotify = hc.getYaml().getConfig().getBoolean("config.use-notifications");
+		econ = economy;
 		
 		if (usenotify) {
 			name.add(nam);
@@ -59,14 +62,26 @@ public class Notify {
     }
 	
 	public void send() {
+		SQLFunctions sf = hc.getSQLFunctions();
 		if (checkNotify(name.get(0))) {
 			double cost = 0.0;
 			int stock = 0;
 			if (hc.itemTest(name.get(0))) {
 				calc.setVC(hc, null, 1, name.get(0), null);
+				if (hc.useSQL()) {
+					stock = (int) sf.getStock(name.get(0), econ);
+				} else {
+					stock = hc.getYaml().getItems().getInt(name.get(0) + ".stock.stock");
+				}
 				cost = calc.getCost();
-				stock = hc.getYaml().getItems().getInt(name.get(0) + ".stock.stock");
-				String message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
+				
+				String message = "";
+				if (hc.useSQL()) {
+					message = "§9The §f" + econ + " §9economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
+				} else {
+					message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
+				}
+				
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					Bukkit.broadcast(message, "hyperconomy.notify");
 					previousmessage = message;
@@ -74,8 +89,17 @@ public class Notify {
 			} else if (hc.enchantTest(name.get(0))) {
 				ench.setVC(hc, name.get(0), eclass.get(0), calc);
 				cost = ench.getCost();
-				stock = hc.getYaml().getEnchants().getInt(name.get(0) + ".stock.stock");
-				String message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
+				if (hc.useSQL()) {
+					stock = (int) sf.getStock(name.get(0), econ);
+				} else {
+					stock = hc.getYaml().getEnchants().getInt(name.get(0) + ".stock.stock");
+				}
+				String message = "";
+				if (hc.useSQL()) {
+					message = "§9The §f" + econ + " §9economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
+				} else {
+					message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
+				}
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					Bukkit.broadcast(message, "hyperconomy.notify");
 					previousmessage = message;

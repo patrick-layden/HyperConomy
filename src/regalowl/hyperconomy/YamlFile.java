@@ -19,7 +19,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  *This class handles the items, config, and enchants yaml files.
  *
  */
-public class YamlFile extends HyperConomy {
+public class YamlFile {
 
     FileConfiguration config;
     FileConfiguration items;
@@ -263,7 +263,7 @@ public class YamlFile extends HyperConomy {
 	 * This gets the FileConfiguration items.
 	 * 
 	 */
-	public FileConfiguration getItems(){
+   public FileConfiguration getItems(){
 		return items;
 	}
 	

@@ -1,4 +1,4 @@
-version: 0.924
+version: 0.933
 config:
   shopcheckinterval: 20
   logwriteinterval: 15
@@ -22,6 +22,12 @@ config:
   require-chest-shops-to-be-in-shop: false
   currency-symbol: $
   notify-for: diamond,diamondblock,
+  sales-tax-percent: 0
+  dynamic-tax:
+    use-dynamic-tax: false
+    money-floor: 0
+    money-cap: 1000000
+    max-tax-percent: 100
   enchantment:
     classvalue:
       wood: .1
@@ -32,3 +38,10 @@ config:
       gold: .1
       diamond: 1
       bow: .25
+  sql-connection:
+    use-sql: false
+    username: default
+    port: 3306
+    password: default
+    host: localhost
+    database: minecraft

@@ -5,8 +5,10 @@
 	<classpathentry kind="src" path="Logging"/>
 	<classpathentry kind="src" path="Transactions"/>
 	<classpathentry kind="src" path="Messaging"/>
+	<classpathentry kind="src" path="SQL"/>
+	<classpathentry kind="src" path="Commands"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Bukkit API/Vault.jar"/>
-	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Bukkit API/craftbukkit-1.2.5-R3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Bukkit API/craftbukkit-1.2.5-R4.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

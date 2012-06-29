@@ -74,7 +74,7 @@ public class TransactionSign implements Listener {
 	public void onSignChangeEvent(SignChangeEvent scevent) {
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
 			String line3 = ChatColor.stripColor(scevent.getLine(2)).trim();
-	    	if (line3.equalsIgnoreCase("[sell:buy]")) {
+	    	if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
 		    	String line4 = ChatColor.stripColor(scevent.getLine(3)).trim();
 		    	try {
 		    		Integer.parseInt(line4);
@@ -84,7 +84,14 @@ public class TransactionSign implements Listener {
 		    	    	if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
 			    			scevent.setLine(0, "§1" + scevent.getLine(0));
 			    			scevent.setLine(1, "§1" + scevent.getLine(1));
-			    			scevent.setLine(2, "§f[Sell:Buy]");
+			    			if (line3.equalsIgnoreCase("[sell:buy]")) {
+			    				scevent.setLine(2, "§f[Sell:Buy]");
+			    			} else if (line3.equalsIgnoreCase("[sell]")) {
+			    				scevent.setLine(2, "§f[Sell]");
+			    			} else if (line3.equalsIgnoreCase("[buy]")) {
+			    				scevent.setLine(2, "§f[Buy]");
+			    			}
+ 			    			
 			    			scevent.setLine(3, "§a" + scevent.getLine(3));
 		    	    	} else if (!scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
 			    			scevent.setLine(0, "");
@@ -134,7 +141,7 @@ public class TransactionSign implements Listener {
 				Sign s = (Sign) b.getState();
 	
 		    	String line3 = ChatColor.stripColor(s.getLine(2)).trim();
-		    	if (line3.equalsIgnoreCase("[sell:buy]")) {
+		    	if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
 		    		
 		    		String line4 = ChatColor.stripColor(s.getLine(3)).trim();
 		    		int amount = 0;
@@ -161,101 +168,99 @@ public class TransactionSign implements Listener {
 			    		}
 						
 						String action = ievent.getAction().name();
-						if (action.equalsIgnoreCase("RIGHT_CLICK_BLOCK")) {	
-							String l1 = s.getLine(0);
-							String l2 = s.getLine(1);
-							String l3 = s.getLine(2);
-							String l4 = s.getLine(3);
-							
-							if (p.hasPermission("hyperconomy.buysign")) {
-								if (hc.itemTest(line12)) {
-									int id = hc.getYaml().getItems().getInt(line12 + ".information.id");
-									if (id >= 0) {
-										if (!hc.isLocked()) {
-											tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
-											tran.buy();
-										} else {
-											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
-										}
+						if (action.equalsIgnoreCase("RIGHT_CLICK_BLOCK")) {
+							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[buy]")) {
+								String l1 = s.getLine(0);
+								String l2 = s.getLine(1);
+								String l3 = s.getLine(2);
+								String l4 = s.getLine(3);
+								
+								if (p.hasPermission("hyperconomy.buysign")) {
+									if (hc.itemTest(line12)) {
+										int id = hc.getYaml().getItems().getInt(line12 + ".information.id");
+										if (id >= 0) {
+											if (!hc.isLocked()) {
+												tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
+												tran.buy();
+											} else {
+												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+											}
 
-									} else if (id == -1) {
+										} else if (id == -1) {
+											if (!hc.isLocked()) {
+												tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
+												tran.buyXP();
+											} else {
+												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+											}
+
+										}
+									} else if (hc.enchantTest(line12)) {
 										if (!hc.isLocked()) {
-											tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
-											tran.buyXP();
+											ench.setSBE(hc, p, line12, economy, l, acc, isign, not, calc);
+											ench.buyEnchant();
 										} else {
 											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
 										}
 
 									}
-								} else if (hc.enchantTest(line12)) {
-									if (!hc.isLocked()) {
-										ench.setSBE(hc, p, line12, economy, l, acc, isign, not, calc);
-										ench.buyEnchant();
-									} else {
-										p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
-									}
-
+								} else {
+									p.sendMessage("You don't have permission to do this.");
 								}
-							} else {
-								p.sendMessage("You don't have permission to do this.");
+								ievent.setCancelled(true);
+								us.updateSign(hc, s, l1, l2, l3, l4);
 							}
-							ievent.setCancelled(true);
-							us.updateSign(hc, s, l1, l2, l3, l4);
-							/*
-							s.setLine(0, l1);
-							s.setLine(1, l2);
-							s.setLine(2, l3);
-							s.setLine(3, l4);
-							s.update();
-							*/
+
 						} else if (action.equalsIgnoreCase("LEFT_CLICK_BLOCK")) {
-							String l1 = s.getLine(0);
-							String l2 = s.getLine(1);
-							String l3 = s.getLine(2);
-							String l4 = s.getLine(3);
-							
-							if (p.hasPermission("hyperconomy.sellsign")) {
-								if (hc.itemTest(line12)) {
-									int id = hc.getYaml().getItems().getInt(line12 + ".information.id");
-									if (id >= 0) {
-										if (!hc.isLocked()) {
-											tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
-											tran.sell();
-										} else {
-											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
-										}
+							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]")) {
+								String l1 = s.getLine(0);
+								String l2 = s.getLine(1);
+								String l3 = s.getLine(2);
+								String l4 = s.getLine(3);
+								
+								if (p.hasPermission("hyperconomy.sellsign")) {
+									if (hc.itemTest(line12)) {
+										int id = hc.getYaml().getItems().getInt(line12 + ".information.id");
+										if (id >= 0) {
+											if (!hc.isLocked()) {
+												tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
+												tran.sell();
+											} else {
+												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+											}
 
-									} else if (id == -1) {
+										} else if (id == -1) {
+											if (!hc.isLocked()) {
+												tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
+												tran.sellXP();
+											} else {
+												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+											}
+
+										}
+									} else if (hc.enchantTest(line12)) {
 										if (!hc.isLocked()) {
-											tran.setAll(hc, id, hc.getYaml().getItems().getInt(line12 + ".information.data"), amount, line12, p, economy, calc, ench, l, acc, not, isign);
-											tran.sellXP();
+											ench.setSBE(hc, p, line12, economy, l, acc, isign, not, calc);
+											ench.sellEnchant();
 										} else {
 											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
 										}
 
 									}
-								} else if (hc.enchantTest(line12)) {
-									if (!hc.isLocked()) {
-										ench.setSBE(hc, p, line12, economy, l, acc, isign, not, calc);
-										ench.sellEnchant();
-									} else {
-										p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
-									}
-
+								} else {
+									p.sendMessage("You don't have permission to do this.");
 								}
-							} else {
-								p.sendMessage("You don't have permission to do this.");
+								
+								ievent.setCancelled(true);
+								us.updateSign(hc, s, l1, l2, l3, l4);
+							} else if (line3.equalsIgnoreCase("[buy]")) {
+								String l1 = s.getLine(0);
+								String l2 = s.getLine(1);
+								String l3 = s.getLine(2);
+								String l4 = s.getLine(3);
+								ievent.setCancelled(true);
+								us.updateSign(hc, s, l1, l2, l3, l4);
 							}
-							
-							ievent.setCancelled(true);
-							us.updateSign(hc, s, l1, l2, l3, l4);
-							/*
-							s.setLine(0, l1);
-							s.setLine(1, l2);
-							s.setLine(2, l3);
-							s.setLine(3, l4);
-							s.update();
-							*/
 						}  		
 			    	}
 		    	}  

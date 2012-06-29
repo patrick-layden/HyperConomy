@@ -23,7 +23,9 @@ import org.bukkit.inventory.ItemStack;
 public class ETransaction {
 	private ArrayList<Enchantment> enchantments = new ArrayList<Enchantment>();
 	
-	ETransaction() {
+	ETransaction(HyperConomy hyc) {
+		hc = hyc;
+		
 		enchantments.add(Enchantment.ARROW_DAMAGE);
 		enchantments.add(Enchantment.ARROW_FIRE);
 		enchantments.add(Enchantment.ARROW_INFINITE);
@@ -45,6 +47,8 @@ public class ETransaction {
 		enchantments.add(Enchantment.PROTECTION_PROJECTILE);
 		enchantments.add(Enchantment.SILK_TOUCH);
 		enchantments.add(Enchantment.WATER_WORKER);
+		
+		sf = hc.getSQLFunctions();
 	}
 	
 	
@@ -61,7 +65,14 @@ public class ETransaction {
 			
 			//Gets the enchantment from the enchants.yml file and creates a new enchantment from the stored name.
 			FileConfiguration enchants = hc.getYaml().getEnchants();
-			String nenchant = enchants.getString(name + ".information.name");
+			String nenchant = "";
+			if (hc.useSQL()) {
+				playerecon = sf.getPlayerEconomy(p.getName());
+				nenchant = sf.getMaterial(name, playerecon);
+			} else {
+				nenchant = enchants.getString(name + ".information.name");
+			}
+			
 			Enchantment ench = Enchantment.getByName(nenchant);
 			
 			//Makes sure the item being held has the correct enchantment and enchantment level.
@@ -89,14 +100,22 @@ public class ETransaction {
 					p.getItemInHand().removeEnchantment(ench);
 			
 					//Adds the sold items to the shopstock and saves the yaml file.
-					int shopstock = enchants.getInt(name + ".stock.stock");
-					enchants.set((name + ".stock.stock"), (shopstock + 1));					
+					int shopstock = 0;
+					if (hc.useSQL()) {
+						shopstock = (int) sf.getStock(name, playerecon);
+						sf.setStock(name, playerecon, shopstock + 1);
+					} else {
+						shopstock = enchants.getInt(name + ".stock.stock");
+						enchants.set((name + ".stock.stock"), (shopstock + 1));	
+					}
+				
+					double salestax = calc.getSalesTax(hc, p, fprice);
 							
 					acc.setAccount(hc, p, economy);
-					acc.deposit(fprice);
+					acc.deposit(fprice - salestax);
 					
 					//Removes the final transaction price from the shop's account.
-					acc.withdrawShop(fprice);
+					acc.withdrawShop(fprice - salestax);
 					
 					//Reverts any changes to the global shop account if the account is set to unlimited.
 					if (sunlimited) {
@@ -109,13 +128,25 @@ public class ETransaction {
 					
 					//Informs the player of their sale.
 					p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-					p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
+					p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.twoDecimals(salestax) + ChatColor.BLUE + ChatColor.ITALIC + " went to tax!");
 					p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 					
 					//Writes the transaction to the log.
-					String logentry = p.getName() + " sold " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
-					log.setEntry(logentry);
-					log.writeBuffer();
+					
+					if (hc.useSQL()) {
+						String type = "dynamic";
+						if (enchants.getBoolean(name + ".initiation.initiation")) {
+							type = "initial";
+						} else if (enchants.getBoolean(name + ".price.static")) {
+							type = "static";
+						}
+						log.writeSQLLog(p.getName(), "sale", name, 1.0, fprice - salestax, salestax, playerecon, type);
+					} else {
+						String logentry = p.getName() + " sold " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
+						log.setEntry(logentry);
+						log.writeBuffer();
+					}
+
 					
 					
 					//Updates all information signs.
@@ -123,7 +154,7 @@ public class ETransaction {
 					isign.checksignUpdate();
 					
 					//Sends price update notifications.
-					not.setNotify(hc, calc, this, name, mater);
+					not.setNotify(hc, calc, this, name, mater, playerecon);
 					not.sendNotification();
 	
 				} else {
@@ -160,7 +191,13 @@ public class ETransaction {
 			Enchantment ench = Enchantment.getByName(nenchant);		
 					
 			//Makes sure the shop has the given enchantment.
-			int shopstock = enchants.getInt(name + ".stock.stock");
+			int shopstock = 0;
+			if (hc.useSQL()) {
+				playerecon = sf.getPlayerEconomy(p.getName());
+				shopstock = (int) sf.getStock(name, playerecon);
+			} else {
+				shopstock = enchants.getInt(name + ".stock.stock");
+			}
 			if (shopstock >= 1) {
 				
 				//Gets the material of the item the player is holding.
@@ -202,7 +239,12 @@ public class ETransaction {
 							if (enchtest) {
 		
 								//Removes 1 of the enchantment from the shop and saves the yml.	
-								enchants.set((name + ".stock.stock"), (shopstock - 1));	
+								if (hc.useSQL()) {
+									sf.setStock(name, playerecon, shopstock - 1);
+								} else {
+									enchants.set((name + ".stock.stock"), (shopstock - 1));	
+								}
+								
 								
 								//Removes the cost from the player's account.
 								acc.withdraw(price);
@@ -225,7 +267,13 @@ public class ETransaction {
 								p.getItemInHand().addEnchantment(ench, level);
 								
 								//Gets whether or not the enchantment uses static pricing.
-								Boolean stax = enchants.getBoolean(name + ".price.static");
+								boolean stax;
+								if (hc.useSQL()) {
+									stax = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+								} else {
+									stax = enchants.getBoolean(name + ".price.static");
+								}
+
 								
 								//Sets the taxrate to the correct rate, after determining what sort of tax should be used.
 								double taxrate;
@@ -248,10 +296,27 @@ public class ETransaction {
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");	
 									
 								//Logs the transaction.
-								
-								String logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
-								log.setEntry(logentry);
-								log.writeBuffer();
+								String logentry = "";
+								/*
+								if (hc.useSQL()) {
+									logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+								} else {
+									
+								}
+								*/
+								if (hc.useSQL()) {
+									String type = "dynamic";
+									if (enchants.getBoolean(name + ".initiation.initiation")) {
+										type = "initial";
+									} else if (enchants.getBoolean(name + ".price.static")) {
+										type = "static";
+									}
+									log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, taxpaid, playerecon, type);
+								} else {
+									logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
+									log.setEntry(logentry);
+									log.writeBuffer();
+								}
 								
 								
 								//Updates all information signs.
@@ -260,7 +325,7 @@ public class ETransaction {
 								
 								
 								//Sends price update notifications.
-								not.setNotify(hc, calc, this, name, mater);
+								not.setNotify(hc, calc, this, name, mater, playerecon);
 								not.sendNotification();
 		
 							} else {
@@ -301,7 +366,13 @@ public class ETransaction {
 		
 			//Gets the enchantment from the enchants.yml file and creates a new enchantment from the stored name.
 			FileConfiguration enchants = hc.getYaml().getEnchants();
-			String nenchant = enchants.getString(name + ".information.name");
+			String nenchant = "";
+			if (hc.useSQL()) {
+				playerecon = sf.getPlayerEconomy(owner);
+				nenchant = sf.getMaterial(name, playerecon);
+			} else {
+				nenchant = enchants.getString(name + ".information.name");
+			}
 			Enchantment ench = Enchantment.getByName(nenchant);		
 					
 				
@@ -377,9 +448,27 @@ public class ETransaction {
 
 								//This writes a log entry for the transaction in the HyperConomy log.txt file.
 								
-								String logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
-								log.setEntry(logentry);
-								log.writeBuffer();
+								String logentry = "";
+								/*
+								if (hc.useSQL()) {
+									logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+								} else {
+										
+								}
+								*/
+								if (hc.useSQL()) {
+									String type = "dynamic";
+									if (enchants.getBoolean(name + ".initiation.initiation")) {
+										type = "initial";
+									} else if (enchants.getBoolean(name + ".price.static")) {
+										type = "static";
+									}
+									log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, 0.0, owner, type);
+								} else {
+									logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + enchants.getBoolean(name + ".price.static") + "][Initial Price=" + enchants.getBoolean(name + ".initiation.initiation") + "]";
+									log.setEntry(logentry);
+									log.writeBuffer();
+								}
 								
 								Player o = Bukkit.getPlayer(owner);
 								if (o != null) {
@@ -435,17 +524,44 @@ public class ETransaction {
 		    double classvalue = getclassValue(mater);
 			
 			//Checks if the price is set to static.
-			if (enchants.getBoolean(name + ".price.static") == false) {
+		    boolean stax;
+		    if (hc.useSQL()) {
+		    	if (p != null) {
+		    		playerecon = sf.getPlayerEconomy(p.getName());
+		    	}
+		    	
+		    	stax = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+		    } else {
+		    	stax = enchants.getBoolean(name + ".price.static");
+		    }
+			if (!stax) {
 				
 				//Gets item data from the items yml file.
-				double shopstock = enchants.getDouble(name + ".stock.stock");
-				double value = enchants.getDouble(name + ".value");
-				double median = enchants.getDouble(name + ".stock.median");
-				double icost = enchants.getDouble(name + ".initiation.startprice");
+				double shopstock;
+				double value;
+				double median;
+				double icost;
+				if (hc.useSQL()) {
+					shopstock = sf.getStock(name, playerecon);
+					value = sf.getValue(name, playerecon);
+					median = sf.getMedian(name, playerecon);
+					icost = sf.getStartPrice(name, playerecon);
+				} else {
+					shopstock = enchants.getDouble(name + ".stock.stock");
+					value = enchants.getDouble(name + ".value");
+					median = enchants.getDouble(name + ".stock.median");
+					icost = enchants.getDouble(name + ".initiation.startprice");
+				}
+
 		
 				//Deactivates the initial pricing period if the value is equal to the normal value and the shop has more than 0 items.
 				if (icost >= ((median * value)/shopstock) && shopstock > 0) {
-					enchants.set(name + ".initiation.initiation", false);
+					if (hc.useSQL()) {
+						sf.setInitiation(name, playerecon, "false");
+					} else {
+						enchants.set(name + ".initiation.initiation", false);
+					}
+					
 				}
 		
 				//Calculates the value for the given enchantment.
@@ -455,7 +571,13 @@ public class ETransaction {
 				cost = cost * classvalue;
 					
 				//Determines whether initial prices will be used, if yes it recalculates the value.
-				Boolean initial = enchants.getBoolean(name + ".initiation.initiation");
+				
+				Boolean initial;
+				if (hc.useSQL()) {
+					initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+				} else {
+					initial = enchants.getBoolean(name + ".initiation.initiation");
+				}
 				if (initial == true){	
 						cost = icost * classvalue;		
 				}
@@ -471,7 +593,12 @@ public class ETransaction {
 			
 			//Handles the value calculation if the enchantment is using a static price.
 			} else {
-				double statprice = enchants.getDouble(name + ".price.staticprice");
+				double statprice;
+				if (hc.useSQL()) {
+					statprice = sf.getStaticPrice(name, playerecon);
+				} else {
+					statprice = enchants.getDouble(name + ".price.staticprice");
+				}
 				cost = statprice * classvalue;
 			}	
 			return cost;
@@ -509,34 +636,69 @@ public class ETransaction {
 			if (classvalue != 123456789) {
 					
 				//Checks if the enchantment uses static pricing.	
-				if (enchants.getBoolean(name + ".price.static") == false) {
+			    boolean stax;
+			    if (hc.useSQL()) {
+			    	if (p != null) {
+			    		playerecon = sf.getPlayerEconomy(p.getName());
+			    	}
+			    	stax = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+			    } else {
+			    	stax = enchants.getBoolean(name + ".price.static");
+			    }
+				if (!stax) {
 	
+					double shopstock;
+					double value;
+					double median;
+					if (hc.useSQL()) {
+						shopstock = sf.getStock(name, playerecon);
+						value = sf.getValue(name, playerecon);
+						median = sf.getMedian(name, playerecon);
+					} else {
+						shopstock = enchants.getDouble(name + ".stock.stock");
+						value = enchants.getDouble(name + ".value");
+						median = enchants.getDouble(name + ".stock.median");
+					}
 					//Gets the shopstock.
-					double shopstock = enchants.getDouble(name + ".stock.stock");
+					
 					
 					//Stores the original shopstock before modification.
 					double oshopstock = shopstock;
 					
 					//Calculates the cost.
-					double value = enchants.getDouble(name + ".value");
-					double median = enchants.getDouble(name + ".stock.median");
+
 					shopstock = shopstock - 1;
 					double price = ((median * value)/shopstock);			
 					cost = price * classvalue;
 							
 					//Checks whether or not the enchantment is in the initial pricing period.
-					Boolean initial = enchants.getBoolean(name + ".initiation.initiation");
+					boolean initial;
+					if (hc.useSQL()) {
+						initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+					} else {
+						initial = enchants.getBoolean(name + ".initiation.initiation");
+					}
 					
 					//Gets the enchantment tax percent from the config file.
 					double etax = (hc.getYaml().getConfig().getDouble("config.enchanttaxpercent"))/100;
 					
 					//If the enchantment is in the initial pricing period, the cost is recalculated.
-					if (initial == true){
-						double icost = enchants.getDouble(name + ".initiation.startprice");
+					if (initial == true) {
+						double icost;
+						if (hc.useSQL()) {
+							icost = sf.getStaticPrice(name, playerecon);
+						} else {
+							icost = enchants.getDouble(name + ".initiation.startprice");
+						}
 	
 						//Checks to see if initiation should be disabled, if not, recalculates the cost and applies tax.
 						if (price < icost && oshopstock > 0){
-							enchants.set(name + ".initiation.initiation", false);
+							if (hc.useSQL()) {
+								sf.setInitiation(name, playerecon, "false");
+							} else {
+								enchants.set(name + ".initiation.initiation", false);
+							}
+							
 						} else {
 							cost = ((icost * etax) + icost) * classvalue;
 						} 
@@ -563,7 +725,12 @@ public class ETransaction {
 					double statictax = (hc.getYaml().getConfig().getDouble("config.statictaxpercent"))/100;
 					
 					//Gets the static price from the enchantments file.
-					double staticcost = enchants.getDouble(name + ".price.staticprice");
+					double staticcost;
+					if (hc.useSQL()) {
+						staticcost = sf.getStartPrice(name, playerecon);
+					} else {
+						staticcost = enchants.getDouble(name + ".price.staticprice");
+					}
 					
 					//Calculates the static cost.
 					cost = (((staticcost * statictax) + staticcost) * classvalue);
@@ -720,6 +887,10 @@ public class ETransaction {
 		public void setHE(ItemStack st) {
 			stack = st;
 		}
+		
+		public void setPlayerEconomy(String econ) {
+			playerecon = econ;
+		}
 	
 		//Enchant fields.
 		private HyperConomy hc;
@@ -733,5 +904,8 @@ public class ETransaction {
 		private InfoSign isign;
 		private Notify not;
 		private Calculation calc;
+		private SQLFunctions sf;
+		
+		private String playerecon;
 
 }

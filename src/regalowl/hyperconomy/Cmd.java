@@ -2,10 +2,14 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import net.milkbowl.vault.economy.Economy;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -36,10 +40,11 @@ public class Cmd {
 	private Account acc;
 	private InfoSign isign;
 	private Notify not;
+	private SQLFunctions sf;
 	
 	private int renameshopint;
 	private String renameshopname;
-	
+	private String playerecon;
 	
 	//Constructor for server start.
 	Cmd() {
@@ -70,6 +75,12 @@ public class Cmd {
     		player = (Player) sender;
     	}
 
+		
+		sf = hc.getSQLFunctions();
+		if (hc.useSQL()) {
+			playerecon = sf.getPlayerEconomy(player.getName());
+		}
+
     	if (cmd.getName().equalsIgnoreCase("buy") && (player != null)){
     		try {
     			s.setinShop(player);
@@ -79,14 +90,18 @@ public class Cmd {
     				
     				name = args[0];
     				int amount = 0;
-    				String teststring = hc.getYaml().getItems().getString(name);
-		
-    				if (teststring == null) {
-    					name = hc.fixName(name);
-    					teststring = hc.getYaml().getItems().getString(name);
+    				String teststring = hc.testiString(name);
+    				
+    				int id = 0;
+    				int data = 0;
+    				if (hc.useSQL()) {
+    					id = sf.getId(name, playerecon);
+    					data = sf.getData(name, playerecon);
+    				} else {
+        				id = hc.getYaml().getItems().getInt(name + ".information.id");
+        				data = hc.getYaml().getItems().getInt(name + ".information.data");	
     				}
-    				int id = hc.getYaml().getItems().getInt(name + ".information.id");
-    				int data = hc.getYaml().getItems().getInt(name + ".information.data");	
+
 
     				if (teststring != null) {
     				if (args.length == 1) {
@@ -106,14 +121,13 @@ public class Cmd {
     								space = tran.getavailableSpace(id, calc.getdamageValue(damagestack));
     							}
 
-    							
-    							//MaterialData md = new MaterialData(id, (byte) data);
-    							//ItemStack stack = md.toItemStack();				
-    							//int maxstack = stack.getMaxStackSize();
-    							//amount = space * maxstack;
     							amount = space;
-    							
-    	    					int shopstock = hc.getYaml().getItems().getInt(name + ".stock.stock");	
+    							int shopstock = 0;
+    							if (hc.useSQL()) {
+    								sf.getStock(name, playerecon);
+    							} else {
+    								shopstock = hc.getYaml().getItems().getInt(name + ".stock.stock");	
+    							}
     	    					//Buys the most possible from the shop if the amount is more than that for max.
     	    					if (amount > shopstock) {
     	    						amount = shopstock;
@@ -168,11 +182,7 @@ public class Cmd {
     				
     			name = args[0];
     			int amount = 0;
-				String teststring = hc.getYaml().getItems().getString(name);
-				if (teststring == null) {
-					name = hc.fixName(name);
-					teststring = hc.getYaml().getItems().getString(name);
-				}
+    			String teststring = hc.testiString(name);
 
 				if (teststring != null) {
 				if (args.length == 1) {
@@ -371,14 +381,26 @@ public class Cmd {
 	        			amount = 1;
 	        		}
 	        				
-	    		String teststring = hc.getYaml().getItems().getString(name);
-				if (teststring == null) {
-					name = hc.fixName(name);
-					teststring = hc.getYaml().getItems().getString(name);
-				}
+	        		String teststring = hc.testiString(name);
 	    		if (teststring != null) {
 	    			calc.setVC(hc, player, amount, name, ench);
 	    			double val = calc.getTvalue();
+	    			
+					double salestax = 0;
+					if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+						double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
+						double cbal = acc.getBalance(player.getName());
+						if (cbal >= moneycap) {
+							salestax = val * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent")/100);
+						} else {
+							salestax = val * (cbal/moneycap);
+						}
+					} else {
+						double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
+						salestax = (salestaxpercent/100) * val;
+					}
+	    			val = calc.twoDecimals(val - salestax);
+	    			
 	    			m.send(sender, 6);		
 	    			sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + val);    				
 	    			calc.setVC(hc, player, amount, name, ench);
@@ -390,9 +412,15 @@ public class Cmd {
 					} else {
 						scost = cost + "";
 					}
-	    			
+	    			double stock = 0;
+	    			if (hc.useSQL()) {
+	    				stock = sf.getStock(name, playerecon);
+	    			} else {
+	    				stock = hc.getYaml().getItems().getInt(name + ".stock.stock");
+	    			}
+					
 	    			sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + scost);
-					sender.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + hc.getYaml().getItems().getInt(name + ".stock.stock") + ChatColor.AQUA + " " + name + ChatColor.BLUE + " available.");
+					sender.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + stock + ChatColor.AQUA + " " + name + ChatColor.BLUE + " available.");
 					m.send(sender, 6);
 	    				
 	    		} else {
@@ -412,7 +440,7 @@ public class Cmd {
     		
     		
     	} else if (cmd.getName().equalsIgnoreCase("hb") && (player != null)) {
-    		int amount;
+    		double amount;
     		boolean ma = false;
     		try {
     			s.setinShop(player);
@@ -472,8 +500,12 @@ public class Cmd {
     					m.send(player, 9);
     				} else {
     					
-    					
-    					int shopstock = hc.getYaml().getItems().getInt(nam + ".stock.stock");	
+    	    			double shopstock = 0;
+    	    			if (hc.useSQL()) {
+    	    				shopstock = sf.getStock(nam, playerecon);
+    	    			} else {
+    	    				shopstock = hc.getYaml().getItems().getDouble(nam + ".stock.stock");
+    	    			}
     					//Buys the most possible from the shop if the amount is more than that for max.
     					if (amount > shopstock && ma) {
     						amount = shopstock;
@@ -481,7 +513,7 @@ public class Cmd {
     					
 
 	    				if (s.has(s.getShop(player), nam)) {	
-	    					tran.setAll(hc, itd, newdat, amount, nam, player, economy, calc, ench, l, acc, not, isign);
+	    					tran.setAll(hc, itd, newdat, (int)Math.rint(amount), nam, player, economy, calc, ench, l, acc, not, isign);
 	        				tran.buy();
 						} else {
 							m.send(player, 95);
@@ -870,6 +902,22 @@ public class Cmd {
     						}
     					}
     					
+    					double salestax = 0;
+    					if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+    						double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
+    						double cbal = acc.getBalance(player.getName());
+    						if (cbal >= moneycap) {
+    							salestax = val * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent")/100);
+    						} else {
+    							salestax = val * (cbal/moneycap);
+    						}
+    					} else {
+    						double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
+    						salestax = (salestaxpercent/100) * val;
+    					}
+    					
+    					val = calc.twoDecimals(val - salestax);
+    					
     					
     					m.send(player, 6);
     					player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + val);
@@ -887,10 +935,15 @@ public class Cmd {
     						scost = cost + "";
     					}
 
-    					
+    	    			double stock = 0;
+    	    			if (hc.useSQL()) {
+    	    				stock = sf.getStock(nam, playerecon);
+    	    			} else {
+    	    				stock = hc.getYaml().getItems().getInt(nam + ".stock.stock");
+    	    			}
     					
     					player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + scost);
-    					player.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + hc.getYaml().getItems().getInt(nam + ".stock.stock") + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " available.");
+    					player.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + stock + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " available.");
     					m.send(player, 6);
     				}
     				
@@ -1015,6 +1068,29 @@ public class Cmd {
     		
     		
     		
+    	} else if (cmd.getName().equalsIgnoreCase("setsalestax")) {
+    		int amount = 0;
+    		try {
+    				if (args.length == 0) {
+    					sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters. Use /setsalestax [percent]");
+    				} else if (args.length == 1) {
+    					amount = Integer.parseInt(args[0]);
+    					hc.getYaml().getConfig().set("config.sales-tax-percent", amount);
+    					sender.sendMessage(ChatColor.GOLD + "Sales Tax Set!");
+    					
+						//Updates all information signs.
+    					isign.setrequestsignUpdate(true);
+    					isign.checksignUpdate();
+    				} else {
+    					sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters. Use /setsalestax [percent]");
+    				}
+    			return true;
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters. Use /setsalestax [percent]");
+    		}
+    		
+    		
+    		
     		
     	} else if (cmd.getName().equalsIgnoreCase("setclassvalue")) {
     		try {
@@ -1066,16 +1142,16 @@ public class Cmd {
     			if (args.length == 2) {
         			name = args[0];
         			double value = Double.parseDouble(args[1]);    		
-    			String teststring = hc.getYaml().getItems().getString(name);   
-				if (teststring == null) {
-					name = hc.fixName(name);
-					teststring = hc.getYaml().getItems().getString(name);
-				}
+        			String teststring = hc.testiString(name);
     			if (teststring != null) {
     				
-    				
+    				if (hc.useSQL()) {
+    					sf.setValue(name, playerecon, value);
+    				} else {
+    					hc.getYaml().getItems().set(name + ".value", value);
+    				}
 
-    				hc.getYaml().getItems().set(name + ".value", value);
+    				
     				sender.sendMessage(ChatColor.GOLD + "" + name + " value set!");
     				
 					//Updates all information signs.
@@ -1090,17 +1166,15 @@ public class Cmd {
 						
 						name = args[0];
 	        			double value = Double.parseDouble(args[1]);    		
-	    			String teststring = hc.getYaml().getEnchants().getString(name);    		
-    				if (teststring == null) {
-    					name = hc.fixName(name);
-    					teststring = hc.getYaml().getEnchants().getString(name);
-    				}
+	    			String teststring = hc.testeString(name);
 	    			if (teststring != null) {
 	    				
 	    				
-
-	    				hc.getYaml().getEnchants().set(name + ".value", value);
-	    				
+	    				if (hc.useSQL()) {
+	    					sf.setValue(name, playerecon, value);
+	    				} else {
+	    					hc.getYaml().getEnchants().set(name + ".value", value);
+	    				}
 	    				sender.sendMessage(ChatColor.GOLD + "" + name + " value set!");
 	    				
 						//Updates all information signs.
@@ -1138,14 +1212,14 @@ public class Cmd {
     			if (args.length == 2) {
         			name = args[0];
         			int stock = Integer.parseInt(args[1]);    		
-    			String teststring = hc.getYaml().getItems().getString(name);    
-				if (teststring == null) {
-					name = hc.fixName(name);
-					teststring = hc.getYaml().getItems().getString(name);
-				}
+        			String teststring = hc.testiString(name);
     			if (teststring != null) {
-
-    				hc.getYaml().getItems().set(name + ".stock.stock", stock);
+    				if (hc.useSQL()) {
+    					sf.setStock(name, playerecon, stock);
+    				} else {
+    					hc.getYaml().getItems().set(name + ".stock.stock", stock);
+    				}
+    				
     				
     				sender.sendMessage(ChatColor.GOLD + "" + name + " stock set!");
     				
@@ -1163,17 +1237,14 @@ public class Cmd {
 						
 						name = args[0];
 	        			int stock = Integer.parseInt(args[1]);    		
-	    			String teststring = hc.getYaml().getEnchants().getString(name); 
-    				if (teststring == null) {
-    					name = hc.fixName(name);
-    					teststring = hc.getYaml().getEnchants().getString(name);
-    				}
+		    			String teststring = hc.testeString(name);
 	    			if (teststring != null) {
 	    				
-	    				
-
-	    				hc.getYaml().getEnchants().set(name + ".stock.stock", stock);
-	    				
+	    				if (hc.useSQL()) {
+	    					sf.setStock(name, playerecon, stock);
+	    				} else {
+	    					hc.getYaml().getEnchants().set(name + ".stock.stock", stock);
+	    				}
 	    				sender.sendMessage(ChatColor.GOLD + "" + name + " stock set!");
 	    				
 						//Updates all information signs.
@@ -1181,10 +1252,7 @@ public class Cmd {
 	    				isign.checksignUpdate();
 	    			} else {
 	    				m.send(sender, 27);
-	    			}   
-						
-						
-						
+	    			}   	
 					} else {
 						m.send(sender, 29);
 					}
@@ -1218,17 +1286,14 @@ public class Cmd {
     			
         			name = args[0];
         			int median = Integer.parseInt(args[1]);    		
-    			String teststring = hc.getYaml().getItems().getString(name);    
-				if (teststring == null) {
-					name = hc.fixName(name);
-					teststring = hc.getYaml().getItems().getString(name);
-				}
+        			String teststring = hc.testiString(name);
     			if (teststring != null) {
     				
-    				
-
-    				hc.getYaml().getItems().set(name + ".stock.median", median);
-    				
+    				if (hc.useSQL()) {
+    					sf.setMedian(name, playerecon, median);
+    				} else {
+    					hc.getYaml().getItems().set(name + ".stock.median", median);
+    				}
     				sender.sendMessage(ChatColor.GOLD + "" + name + " median set!");
     				
 					//Updates all information signs.
@@ -1245,16 +1310,16 @@ public class Cmd {
 						
 	        			name = args[0];
 	        			int median = Integer.parseInt(args[1]);    		
-	    			String teststring = hc.getYaml().getEnchants().getString(name); 
-    				if (teststring == null) {
-    					name = hc.fixName(name);
-    					teststring = hc.getYaml().getEnchants().getString(name);
-    				}
+	    			String teststring = hc.testeString(name);
 	    			if (teststring != null) {
 	    				
-	    				
+	    				if (hc.useSQL()) {
+	    					sf.setMedian(name, playerecon, median);
+	    				} else {
+	    					hc.getYaml().getEnchants().set(name + ".stock.median", median);
+	    				}
 
-	    				hc.getYaml().getEnchants().set(name + ".stock.median", median);
+	    				
 	    				
 	    				sender.sendMessage(ChatColor.GOLD + "" + name + " median set!");
 	    				
@@ -1300,14 +1365,15 @@ public class Cmd {
     			if (args.length == 1) {
         			name = args[0];
      		
-    			String teststring = hc.getYaml().getItems().getString(name);   
-				if (teststring == null) {
-					name = hc.fixName(name);
-					teststring = hc.getYaml().getItems().getString(name);
-				}
+        			String teststring = hc.testiString(name);
     			if (teststring != null) {
     				boolean nstatus;
-    				boolean sstatus = hc.getYaml().getItems().getBoolean(name + ".price.static");
+    				boolean sstatus = false;
+    				if (hc.useSQL()) {
+    					sstatus = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+    				} else {
+    					sstatus = hc.getYaml().getItems().getBoolean(name + ".price.static");
+    				}
     				
     				if (sstatus) {
     					nstatus = false;
@@ -1317,7 +1383,12 @@ public class Cmd {
     					sender.sendMessage(ChatColor.GOLD + "" + name + " will now use a static price.");
     				}
 
-    				hc.getYaml().getItems().set(name + ".price.static", nstatus);
+    				if (hc.useSQL()) {
+    					sf.setStatic(name, playerecon, nstatus + "");
+    				} else {
+    					hc.getYaml().getItems().set(name + ".price.static", nstatus);
+    				}
+    				
 					//Updates all information signs.
     				isign.setrequestsignUpdate(true);
     				isign.checksignUpdate();
@@ -1333,14 +1404,15 @@ public class Cmd {
 						
 	        			name = args[0];
 	             		
-	        			String teststring = hc.getYaml().getEnchants().getString(name);  
-        				if (teststring == null) {
-        					name = hc.fixName(name);
-        					teststring = hc.getYaml().getEnchants().getString(name);
-        				}
+	        			String teststring = hc.testeString(name);
 	        			if (teststring != null) {
 	        				boolean nstatus;
 	        				boolean sstatus = hc.getYaml().getEnchants().getBoolean(name + ".price.static");
+	        				if (hc.useSQL()) {
+	        					sstatus = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+	        				} else {
+	        					sstatus = hc.getYaml().getEnchants().getBoolean(name + ".price.static");
+	        				}
 	        				
 	        				if (sstatus) {
 	        					nstatus = false;
@@ -1349,8 +1421,12 @@ public class Cmd {
 	        					nstatus = true;
 	        					sender.sendMessage(ChatColor.GOLD + "" + name + " will now use a static price.");
 	        				}
-
-	        				hc.getYaml().getEnchants().set(name + ".price.static", nstatus);
+	        				
+	        				if (hc.useSQL()) {
+	        					sf.setStatic(name, playerecon, nstatus + "");
+	        				} else {
+	        					hc.getYaml().getEnchants().set(name + ".price.static", nstatus);
+	        				}
 							//Updates all information signs.
 	        				isign.setrequestsignUpdate(true);
 	        				isign.checksignUpdate();
@@ -1385,14 +1461,15 @@ public class Cmd {
     			if (args.length == 1) {
     				
         			name = args[0];     		
-    			String teststring = hc.getYaml().getItems().getString(name); 
-				if (teststring == null) {
-					name = hc.fixName(name);
-					teststring = hc.getYaml().getItems().getString(name);
-				}
+        			String teststring = hc.testiString(name);
     			if (teststring != null) {
     				boolean nstatus;
-    				boolean istatus = hc.getYaml().getItems().getBoolean(name + ".initiation.initiation");    				
+    				boolean istatus = hc.getYaml().getItems().getBoolean(name + ".initiation.initiation");    	
+    				if (hc.useSQL()) {
+    					istatus = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+    				} else {
+    					istatus = hc.getYaml().getItems().getBoolean(name + ".initiation.initiation"); 
+    				}
     				if (istatus) {
     					nstatus = false;
     					sender.sendMessage(ChatColor.GOLD + "Initiation price is set to false for " + name);
@@ -1401,7 +1478,12 @@ public class Cmd {
     					sender.sendMessage(ChatColor.GOLD + "Initiation price is set to true for " + name);
     				}
 
-    				hc.getYaml().getItems().set(name + ".initiation.initiation", nstatus);
+    				
+    				if (hc.useSQL()) {
+    					sf.setInitiation(name, playerecon, nstatus + "");
+    				} else {
+    					hc.getYaml().getItems().set(name + ".initiation.initiation", nstatus);
+    				}
 					//Updates all information signs.
     				isign.setrequestsignUpdate(true);
     				isign.checksignUpdate();
@@ -1415,14 +1497,15 @@ public class Cmd {
 					if (ench.equalsIgnoreCase("e")) {
 						
 	        			name = args[0];     		
-	        			String teststring = hc.getYaml().getEnchants().getString(name);  
-        				if (teststring == null) {
-        					name = hc.fixName(name);
-        					teststring = hc.getYaml().getEnchants().getString(name);
-        				}
+	        			String teststring = hc.testeString(name);
 	        			if (teststring != null) {
 	        				boolean nstatus;
-	        				boolean istatus = hc.getYaml().getEnchants().getBoolean(name + ".initiation.initiation");    				
+	        				boolean istatus = hc.getYaml().getEnchants().getBoolean(name + ".initiation.initiation");   
+	        				if (hc.useSQL()) {
+	        					Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+	        				} else {
+	        					istatus = hc.getYaml().getEnchants().getBoolean(name + ".initiation.initiation"); 
+	        				}
 	        				if (istatus) {
 	        					nstatus = false;
 	        					sender.sendMessage(ChatColor.GOLD + "Initiation price is set to false for " + name);
@@ -1430,8 +1513,12 @@ public class Cmd {
 	        					nstatus = true;
 	        					sender.sendMessage(ChatColor.GOLD + "Initiation price is set to true for " + name);
 	        				}
-
-	        				hc.getYaml().getEnchants().set(name + ".initiation.initiation", nstatus);
+	        				if (hc.useSQL()) {
+	        					sf.setInitiation(name, playerecon, nstatus + "");
+	        				} else {
+	        					hc.getYaml().getEnchants().set(name + ".initiation.initiation", nstatus);
+	        				}
+	        				
 							//Updates all information signs.
 	        				isign.setrequestsignUpdate(true);
 	        				isign.checksignUpdate();
@@ -1466,16 +1553,16 @@ public class Cmd {
     			if (args.length == 2) {
         			name = args[0];
         			Double staticprice = Double.parseDouble(args[1]);    		
-    			String teststring = hc.getYaml().getItems().getString(name);    	
-				if (teststring == null) {
-					name = hc.fixName(name);
-					teststring = hc.getYaml().getItems().getString(name);
-				}
+        			String teststring = hc.testiString(name);
     			if (teststring != null) {
     				
-    				
+    				if (hc.useSQL()) {
+    					sf.setStaticPrice(name, playerecon, staticprice);
+    				} else {
+    					hc.getYaml().getItems().set(name + ".price.staticprice", staticprice);
+    				}
 
-    				hc.getYaml().getItems().set(name + ".price.staticprice", staticprice);
+    				
     				sender.sendMessage(ChatColor.GOLD + "" + name + " static price set!");
     				
 					//Updates all information signs.
@@ -1490,14 +1577,14 @@ public class Cmd {
 						
 	        			name = args[0];
 	        			Double staticprice = Double.parseDouble(args[1]);    		
-	    			String teststring = hc.getYaml().getEnchants().getString(name);  
-    				if (teststring == null) {
-    					name = hc.fixName(name);
-    					teststring = hc.getYaml().getEnchants().getString(name);
-    				}
+	    			String teststring = hc.testeString(name);
 	    			if (teststring != null) {
-
-	    				hc.getYaml().getEnchants().set(name + ".price.staticprice", staticprice);
+	    				if (hc.useSQL()) {
+	    					sf.setStaticPrice(name, playerecon, staticprice);
+	    				} else {
+	    					hc.getYaml().getEnchants().set(name + ".price.staticprice", staticprice);
+	    				}
+	    				
 	    				sender.sendMessage(ChatColor.GOLD + "" + name + " static price set!");
 	    				
 						//Updates all information signs.
@@ -1532,13 +1619,14 @@ public class Cmd {
     			if (args.length == 2) {
         			name = args[0];
         			double startprice = Double.parseDouble(args[1]);    		
-    			String teststring = hc.getYaml().getItems().getString(name);  
-				if (teststring == null) {
-					name = hc.fixName(name);
-					teststring = hc.getYaml().getItems().getString(name);
-				}
+        			String teststring = hc.testiString(name);
     			if (teststring != null) {
-    				hc.getYaml().getItems().set(name + ".initiation.startprice", startprice);
+    				if (hc.useSQL()) {
+    					sf.setStartPrice(name, playerecon, startprice);
+    				} else {
+    					hc.getYaml().getItems().set(name + ".initiation.startprice", startprice);
+    				}
+    				
     				
     				sender.sendMessage(ChatColor.GOLD + "" + name + " start price set!");
     				
@@ -1555,13 +1643,14 @@ public class Cmd {
 						
 	        			name = args[0];
 	        			double startprice = Double.parseDouble(args[1]);    		
-	    			String teststring = hc.getYaml().getEnchants().getString(name);  
-    				if (teststring == null) {
-    					name = hc.fixName(name);
-    					teststring = hc.getYaml().getEnchants().getString(name);
-    				}
+	    			String teststring = hc.testeString(name);
 	    			if (teststring != null) {
-	    				hc.getYaml().getEnchants().set(name + ".initiation.startprice", startprice);
+	    				if (hc.useSQL()) {
+	    					sf.setStartPrice(name, playerecon, startprice);
+	    				} else {
+	    					hc.getYaml().getEnchants().set(name + ".initiation.startprice", startprice);
+	    				}
+	    				
 	    				sender.sendMessage(ChatColor.GOLD + "" + name + " start price set!");
 	    				
 						//Updates all information signs.
@@ -1594,12 +1683,11 @@ public class Cmd {
 					
 					if (args.length == 1) {
 						
-	    			Iterator<String> it2 = hc.getYaml().getItems().getKeys(true).iterator();
-	    				while (it2.hasNext()) {   			
-	    					Object element2 = it2.next();
-	    					String elst2 = element2.toString();    				
-	    					if (elst2.indexOf(".") == -1) {
-	    						if (args[0].equalsIgnoreCase("column")) {
+						if (hc.useSQL()) {
+							ArrayList<String> names = hc.getNames();
+							for (int c = 0; c < names.size(); c++) {
+								String elst2 = names.get(c);
+								if (args[0].equalsIgnoreCase("column")) {
 	    							String itemname = elst2 + "\n";
 	    							l.setEntry(itemname);
 	        						l.writeItems();
@@ -1608,37 +1696,58 @@ public class Cmd {
 	    							l.setEntry(itemname);
 	        						l.writeItems();
 	    						}
-	    					}
-	    				}
-	    				m.send(sender, 35);
+							}
+						} else {
+			    			Iterator<String> it2 = hc.getYaml().getItems().getKeys(true).iterator();
+		    				while (it2.hasNext()) {   			
+		    					Object element2 = it2.next();
+		    					String elst2 = element2.toString();    				
+		    					if (elst2.indexOf(".") == -1) {
+		    						if (args[0].equalsIgnoreCase("column")) {
+		    							String itemname = elst2 + "\n";
+		    							l.setEntry(itemname);
+		        						l.writeItems();
+		    						} else if (args[0].equalsIgnoreCase("row")) {
+		    							String itemname = elst2 + ",";
+		    							l.setEntry(itemname);
+		        						l.writeItems();
+		    						}
+		    					}
+		    				}
+		    				m.send(sender, 35);
+						}
+						
+
 	    				
 					} else if (args.length == 2) {
-						String ench = args[1];
-						if (ench.equalsIgnoreCase("e")) {
 						
-		    			Iterator<String> it2 = hc.getYaml().getEnchants().getKeys(true).iterator();
-	    				while (it2.hasNext()) {   			
-	    					Object element2 = it2.next();
-	    					String elst2 = element2.toString();    				
-	    					if (elst2.indexOf(".") == -1) {
-					
-	    						if (args[0].equalsIgnoreCase("column")) {
-	    							String itemname = elst2 + "\n";
-	    							l.setEntry(itemname);
-	        						l.writeEnchants();
-	    						} else if (args[0].equalsIgnoreCase("row")) {
-	    							String itemname = elst2 + ",";
-	    							l.setEntry(itemname);
-	        						l.writeEnchants();
-	    						}
-	    					}
-	    				}
-	    				m.send(sender, 36);
-	    				
-	    				
+						if (hc.useSQL()) {
+							
 						} else {
-							m.send(sender, 37);
+							String ench = args[1];
+							if (ench.equalsIgnoreCase("e")) {
+							
+			    			Iterator<String> it2 = hc.getYaml().getEnchants().getKeys(true).iterator();
+		    				while (it2.hasNext()) {   			
+		    					Object element2 = it2.next();
+		    					String elst2 = element2.toString();    				
+		    					if (elst2.indexOf(".") == -1) {
+						
+		    						if (args[0].equalsIgnoreCase("column")) {
+		    							String itemname = elst2 + "\n";
+		    							l.setEntry(itemname);
+		        						l.writeEnchants();
+		    						} else if (args[0].equalsIgnoreCase("row")) {
+		    							String itemname = elst2 + ",";
+		    							l.setEntry(itemname);
+		        						l.writeEnchants();
+		    						}
+		    					}
+		    				}
+		    				m.send(sender, 36);
 						}
+
+						} 
 					} else {
 						m.send(sender, 37);
 					}
@@ -1696,33 +1805,59 @@ public class Cmd {
 	        			} else {
 	        				page = Integer.parseInt(args[0]);
 	        			}
-	
-					SortedMap <Double, String> itemstocks = new TreeMap<Double, String>();
-	    			Iterator<String> it2 = hc.getYaml().getItems().getKeys(false).iterator();
-	    			while (it2.hasNext()) {   			
-	    				Object element = it2.next();
-	    				String elst = element.toString();    				
-	    					
-	    					boolean unavailable = false;
-	    					
-	    					if (nameshop != "") {
-	    												
-	    						if (!s.has(nameshop, elst)) {
-	    							unavailable = true;
-	    						}
-	    					}
-	    					
-	    					if (!unavailable) {
-		    					double samount = hc.getYaml().getItems().getDouble(elst + ".stock.stock");
-		    					if (samount > 0) {
-		    						
-		    						while (itemstocks.containsKey(samount)) {
-		    							samount = samount + .00001;
-		    						}
-		    						itemstocks.put(samount, elst);
-		    					}
-	    					}	
-	    			}
+	        			
+	        			SortedMap <Double, String> itemstocks = new TreeMap<Double, String>();
+	        			if (hc.useSQL()) {
+	        	        	ArrayList<String> inames = hc.getInames();
+
+
+	        	        	for (int c = 0; c < inames.size(); c++) {
+	    	    				String elst = inames.get(c);  				
+	    	    					boolean unavailable = false;
+	    	    					if (nameshop != "") {						
+	    	    						if (!s.has(nameshop, elst)) {
+	    	    							unavailable = true;
+	    	    						}
+	    	    					}
+	    	    					if (!unavailable) {
+	    	    						double samount = sf.getStock(elst, playerecon);
+	    		    					if (samount > 0) {
+	    		    						while (itemstocks.containsKey(samount)) {
+	    		    							samount = samount + .00001;
+	    		    						}
+	    		    						itemstocks.put(samount, elst);
+	    		    					}
+	    	    					}	
+	        	        	}
+	        			} else {
+	    	    			Iterator<String> it2 = hc.getYaml().getItems().getKeys(false).iterator();
+	    	    			while (it2.hasNext()) {   			
+	    	    				Object element = it2.next();
+	    	    				String elst = element.toString();    				
+	    	    					
+	    	    					boolean unavailable = false;
+	    	    					
+	    	    					if (nameshop != "") {
+	    	    												
+	    	    						if (!s.has(nameshop, elst)) {
+	    	    							unavailable = true;
+	    	    						}
+	    	    					}
+	    	    					
+	    	    					if (!unavailable) {
+	    		    					double samount = hc.getYaml().getItems().getDouble(elst + ".stock.stock");
+	    		    					if (samount > 0) {
+	    		    						
+	    		    						while (itemstocks.containsKey(samount)) {
+	    		    							samount = samount + .00001;
+	    		    						}
+	    		    						itemstocks.put(samount, elst);
+	    		    					}
+	    	    					}	
+	    	    			}
+	        			}
+					
+
 	    			int numberpage = page * 10;
 	    			int count = 0;
 	    			int le = itemstocks.size();
@@ -1782,31 +1917,49 @@ public class Cmd {
         			}
 
 				SortedMap <Double, String> enchantstocks = new TreeMap<Double, String>();
-    			Iterator<String> it2 = hc.getYaml().getEnchants().getKeys(false).iterator();
-    			while (it2.hasNext()) {   			
-    				Object element = it2.next();
-    				String elst = element.toString();    				
-    					
-    					boolean unavailable = false;
-    					
-    					if (nameshop != "") {
-    											
-    						if (!s.has(nameshop, elst)) {
-    							unavailable = true;
-    						}
-    					}
-    					
-    					if (!unavailable) {
-	    					double samount = hc.getYaml().getEnchants().getDouble(elst + ".stock.stock");
-	    					if (samount > 0) {
-	    						
-	    						while (enchantstocks.containsKey(samount)) {
-	    							samount = samount + .00001;
+				if (hc.useSQL()) {
+    	        	ArrayList<String> enames = hc.getEnames();
+    	        	for (int c = 0; c < enames.size(); c++) {
+	    				String elst = enames.get(c);  				
+	    					boolean unavailable = false;
+	    					if (nameshop != "") {						
+	    						if (!s.has(nameshop, elst)) {
+	    							unavailable = true;
 	    						}
-	    						enchantstocks.put(samount, elst);
 	    					}
-    					}
-    			}
+	    					if (!unavailable) {
+	    						double samount = sf.getStock(elst, playerecon);
+		    					if (samount > 0) {
+		    						while (enchantstocks.containsKey(samount)) {
+		    							samount = samount + .00001;
+		    						}
+		    						enchantstocks.put(samount, elst);
+		    					}
+	    					}	
+    	        	}
+				} else {
+	    			Iterator<String> it2 = hc.getYaml().getEnchants().getKeys(false).iterator();
+	    			while (it2.hasNext()) {   			
+	    				Object element = it2.next();
+	    				String elst = element.toString();    				
+	    					boolean unavailable = false;
+	    					if (nameshop != "") {					
+	    						if (!s.has(nameshop, elst)) {
+	    							unavailable = true;
+	    						}
+	    					}
+	    					if (!unavailable) {
+		    					double samount = hc.getYaml().getEnchants().getDouble(elst + ".stock.stock");
+		    					if (samount > 0) {
+		    						while (enchantstocks.containsKey(samount)) {
+		    							samount = samount + .00001;
+		    						}
+		    						enchantstocks.put(samount, elst);
+		    					}
+	    					}
+	    			}
+				}
+
     			int numberpage = page * 10;
     			int count = 0;
     			int le = enchantstocks.size();
@@ -1900,22 +2053,37 @@ public class Cmd {
 					if (count > ((page * 10) - 11)) {
 						if (count < rsize) {
 							String iname = rnames.get(count);
-							
-				            String t = hc.getYaml().getItems().getString(iname + ".stock.stock");
-				            String t2 = hc.getYaml().getEnchants().getString(iname + ".stock.stock");
+							String t = "";
+							String t2 = "";
+							if (hc.useSQL()) {
+								t = hc.testiString(iname);
+								t2 = hc.testeString(iname);
+							} else {
+					            t = hc.getYaml().getItems().getString(iname + ".stock.stock");
+					            t2 = hc.getYaml().getEnchants().getString(iname + ".stock.stock");
+							}
+
 							
 				            Double cost = 0.0;
-				            int stock = 0;
+				            double stock = 0;
 				            
 				            
 				            if (t != null) {
-								calc.setVC(hc, null, 1, iname, null);
+								calc.setVC(hc, player, 1, iname, null);
 								cost = calc.getCost();
-								stock = hc.getYaml().getItems().getInt(iname + ".stock.stock");
+								if (hc.useSQL()) {
+									stock = sf.getStock(iname, playerecon);
+								} else {
+									stock = hc.getYaml().getItems().getInt(iname + ".stock.stock");
+								}
 							} else if (t2 != null) {
 								ench.setVC(hc, iname, "diamond", calc);
 								cost = ench.getCost();
-								stock = hc.getYaml().getEnchants().getInt(iname + ".stock.stock");
+								if (hc.useSQL()) {
+									stock = sf.getStock(iname, playerecon);
+								} else {
+									stock = hc.getYaml().getEnchants().getInt(iname + ".stock.stock");
+								}
 							}
 							
 							
@@ -2074,13 +2242,31 @@ public class Cmd {
     				} else {
     					FileConfiguration it = hc.getYaml().getItems();
     
-    					Double val = it.getDouble(nam + ".value");
-    					Boolean stat = it.getBoolean(nam + ".price.static");
-    					Double statprice = it.getDouble(nam + ".price.staticprice");
-    					int sto = it.getInt(nam + ".stock.stock");
-    					int med = it.getInt(nam + ".stock.median");
-    					Boolean init = it.getBoolean(nam + ".initiation.initiation");
-    					Double starprice = it.getDouble(nam + ".initiation.startprice");
+    					double val = 0;
+    					boolean stat = false;
+    					double statprice = 0;
+    					double sto = 0;
+    					double med = 0;
+    					boolean init = false;
+    					double starprice = -0;
+    					if (hc.useSQL()) {
+    						val = sf.getValue(nam, playerecon);
+    						stat = Boolean.parseBoolean(sf.getStatic(nam, playerecon));
+    						statprice = sf.getStaticPrice(nam, playerecon);
+    						sto = sf.getStock(nam, playerecon);
+    						med = sf.getMedian(nam, playerecon);
+    						init = Boolean.parseBoolean(sf.getInitiation(nam, playerecon));
+    						starprice = sf.getStartPrice(nam, playerecon);
+    					} else {
+        					val = it.getDouble(nam + ".value");
+        					stat = it.getBoolean(nam + ".price.static");
+        					statprice = it.getDouble(nam + ".price.staticprice");
+        					sto = it.getInt(nam + ".stock.stock");
+        					med = it.getInt(nam + ".stock.median");
+        					init = it.getBoolean(nam + ".initiation.initiation");
+        					starprice = it.getDouble(nam + ".initiation.startprice");
+    					}
+
     					
     					double totalstock = ((med * val)/starprice);
     					int maxinitialitems = 0;
@@ -2099,20 +2285,33 @@ public class Cmd {
     				}
     			} else if (args.length == 1) {
     				String nam = args[0];
-    				String teststring = hc.getYaml().getItems().getString(nam);
-    				if (teststring == null) {
-    					nam = hc.fixName(nam);
-    					teststring = hc.getYaml().getItems().getString(nam);
-    				}
+    				String teststring = hc.testiString(nam);
     				if (teststring != null) {
     					FileConfiguration it = hc.getYaml().getItems();    
-    					Double val = it.getDouble(nam + ".value");
-    					Boolean stat = it.getBoolean(nam + ".price.static");
-    					Double statprice = it.getDouble(nam + ".price.staticprice");
-    					int sto = it.getInt(nam + ".stock.stock");
-    					int med = it.getInt(nam + ".stock.median");
-    					Boolean init = it.getBoolean(nam + ".initiation.initiation");
-    					Double starprice = it.getDouble(nam + ".initiation.startprice");
+    					double val = 0;
+    					boolean stat = false;
+    					double statprice = 0;
+    					double sto = 0;
+    					double med = 0;
+    					boolean init = false;
+    					double starprice = -0;
+    					if (hc.useSQL()) {
+    						val = sf.getValue(nam, playerecon);
+    						stat = Boolean.parseBoolean(sf.getStatic(nam, playerecon));
+    						statprice = sf.getStaticPrice(nam, playerecon);
+    						sto = sf.getStock(nam, playerecon);
+    						med = sf.getMedian(nam, playerecon);
+    						init = Boolean.parseBoolean(sf.getInitiation(nam, playerecon));
+    						starprice = sf.getStartPrice(nam, playerecon);
+    					} else {
+        					val = it.getDouble(nam + ".value");
+        					stat = it.getBoolean(nam + ".price.static");
+        					statprice = it.getDouble(nam + ".price.staticprice");
+        					sto = it.getInt(nam + ".stock.stock");
+        					med = it.getInt(nam + ".stock.median");
+        					init = it.getBoolean(nam + ".initiation.initiation");
+        					starprice = it.getDouble(nam + ".initiation.startprice");
+    					}
     					
     					double totalstock = ((med * val)/starprice);
     					int maxinitialitems = 0;
@@ -2151,22 +2350,36 @@ public class Cmd {
 
     				String nam = args[0];
     				
-    				String teststring = hc.getYaml().getEnchants().getString(nam);
-    				if (teststring == null) {
-    					nam = hc.fixName(nam);
-    				}
-    				if (!hc.getYaml().getEnchants().getKeys(false).contains(nam)) {
+    				String teststring = hc.testeString(nam);
+    				if (nam == null) {
     					m.send(sender, 43);
     				} else {
     					FileConfiguration it = hc.getYaml().getEnchants();
     
-    					Double val = it.getDouble(nam + ".value");
-    					Boolean stat = it.getBoolean(nam + ".price.static");
-    					Double statprice = it.getDouble(nam + ".price.staticprice");
-    					int sto = it.getInt(nam + ".stock.stock");
-    					int med = it.getInt(nam + ".stock.median");
-    					Boolean init = it.getBoolean(nam + ".initiation.initiation");
-    					Double starprice = it.getDouble(nam + ".initiation.startprice");
+    					double val = 0;
+    					boolean stat = false;
+    					double statprice = 0;
+    					double sto = 0;
+    					double med = 0;
+    					boolean init = false;
+    					double starprice = -0;
+    					if (hc.useSQL()) {
+    						val = sf.getValue(nam, playerecon);
+    						stat = Boolean.parseBoolean(sf.getStatic(nam, playerecon));
+    						statprice = sf.getStaticPrice(nam, playerecon);
+    						sto = sf.getStock(nam, playerecon);
+    						med = sf.getMedian(nam, playerecon);
+    						init = Boolean.parseBoolean(sf.getInitiation(nam, playerecon));
+    						starprice = sf.getStartPrice(nam, playerecon);
+    					} else {
+        					val = it.getDouble(nam + ".value");
+        					stat = it.getBoolean(nam + ".price.static");
+        					statprice = it.getDouble(nam + ".price.staticprice");
+        					sto = it.getInt(nam + ".stock.stock");
+        					med = it.getInt(nam + ".stock.median");
+        					init = it.getBoolean(nam + ".initiation.initiation");
+        					starprice = it.getDouble(nam + ".initiation.startprice");
+    					}
     					
     					double totalstock = ((med * val)/starprice);
     					int maxinitialitems = 0;
@@ -2199,19 +2412,20 @@ public class Cmd {
     		
     	} else if (cmd.getName().equalsIgnoreCase("taxsettings")) {
     		try {
-
     					FileConfiguration conf = hc.getYaml().getConfig();
     
     					Double purchasetaxpercent = conf.getDouble("config.purchasetaxpercent");
     					Double initialpurchasetaxpercent = conf.getDouble("config.initialpurchasetaxpercent");
     					Double statictaxpercent = conf.getDouble("config.statictaxpercent");
     					Double enchanttaxpercent = conf.getDouble("config.enchanttaxpercent");
+    					Double salestaxpercent = conf.getDouble("config.sales-tax-percent");
   
     					m.send(sender, 6);
     					sender.sendMessage(ChatColor.BLUE + "Purchase Tax Percent: " + ChatColor.GREEN + "" + purchasetaxpercent);
     					sender.sendMessage(ChatColor.BLUE + "Initial Purchase Tax Percent: " + ChatColor.GREEN + "" + initialpurchasetaxpercent);
     					sender.sendMessage(ChatColor.BLUE + "Static Tax Percent: " + ChatColor.GREEN + "" + statictaxpercent);
     					sender.sendMessage(ChatColor.BLUE + "Enchantment Tax Percent: " + ChatColor.GREEN + "" + enchanttaxpercent);
+    					sender.sendMessage(ChatColor.BLUE + "Sales Tax Percent: " + ChatColor.GREEN + "" + salestaxpercent);
     					m.send(sender, 6);
     				
 
@@ -2219,7 +2433,173 @@ public class Cmd {
     		} catch (Exception e) {
     			m.send(sender, 45);
     		}
+    		
+    		
+    		
+    		
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("createeconomy")) {
+    		try {
+    			if (hc.useSQL()) {
+        			if (args.length == 1) {
+        				String economy = args[0];
+        				if (!hc.getSQLEconomy().exists(economy)) {
+        					hc.getSQLEconomy().createNewEconomy(economy);
+        					sender.sendMessage(ChatColor.GOLD + "New economy created!");
+        				} else {
+        					sender.sendMessage(ChatColor.RED + "That economy already exists!");
+        				}
+        				
+        			} else {
+        				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /createeconomy [name]");
+        			}
+    			} else {
+    				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+    			}
+    			return true;
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /createeconomy [name]");
+    			return true;
+    		}
 
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("seteconomy")) {
+    		try {
+    			if (hc.useSQL()) {
+    				if (args.length == 1) {
+        				String economy = args[0];
+        				if (hc.getSQLEconomy().exists(economy)) {
+        					sf.setPlayerEconomy(player.getName(), economy);
+        					sender.sendMessage(ChatColor.GOLD + "Economy set!");
+        				} else {
+        					sender.sendMessage(ChatColor.RED + "That economy doesn't exist!");
+        				}
+        				
+        			} else {
+        				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /seteconomy [name]");
+        			}
+    			} else {
+    				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+    			}
+
+    			return true;
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /seteconomy [name]");
+    			return true;
+    		}
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("economyinfo") && player != null) {
+    		try {
+    			if (hc.useSQL()) {
+        			if (args.length == 0) {
+        				sender.sendMessage(ChatColor.BLUE + "You are currently a part of the " + ChatColor.AQUA + "" + sf.getPlayerEconomy(player.getName()) + ChatColor.BLUE + " economy.");			
+        			} else {
+        				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /economyinfo");
+        			}
+    			} else {
+    				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+    			}
+
+    			return true;
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /economyinfo");
+    			return true;
+    		}
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("setshopeconomy")) {
+    		try {
+    			if (hc.useSQL()) {
+    				if (args.length == 2) {
+        				String name = args[0];
+        				String teststring = hc.getYaml().getShops().getString(name);
+        				if (teststring == null) {
+        					name = hc.fixsName(name);
+        				}
+        				if (name == null) {
+        					sender.sendMessage(ChatColor.RED + "That shop doesn't exist!");
+        					return true;
+        				}
+        				
+        				String economy = args[1];
+        				if (hc.getSQLEconomy().exists(economy)) {
+        					hc.getYaml().getShops().set(name + ".economy", economy);
+        					sender.sendMessage(ChatColor.GOLD + "Shop economy set!");
+        				} else {
+        					sender.sendMessage(ChatColor.RED + "That economy doesn't exist!");
+        				}
+        				
+        			} else {
+        				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /setshopeconomy [shop name] [economy]");
+        			}
+    			} else {
+    				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+    			}
+    			return true;
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /setshopeconomy [shop name] [economy]");
+    			return true;
+    		}
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("deleteeconomy")) {
+    		try {
+    			if (hc.useSQL()) {
+        			if (args.length == 1) {
+        				String economy = args[0];
+        				if (economy.equalsIgnoreCase("default")) {
+        					sender.sendMessage(ChatColor.RED + "You can't delete the default economy!");
+        					return true;
+        				}
+        				if (hc.getSQLEconomy().exists(economy)) {
+        					hc.getSQLEconomy().deleteEconomy(economy);
+        					sender.sendMessage(ChatColor.GOLD + "Economy deleted!");
+        				} else {
+        					sender.sendMessage(ChatColor.RED + "That economy doesn't exist!");
+        				}
+
+
+    				
+    			} else {
+    				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /deleteeconomy [name]");
+    			}
+    				
+    			} else {
+    				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+    			}
+    			return true;
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /deleteeconomy [name]");
+    			return true;
+    		}
+    		
+    		
+    	} else if (cmd.getName().equalsIgnoreCase("listeconomies")) {
+    		try {
+    			if (hc.useSQL()) {
+    				if (args.length == 0) {
+        				ArrayList<String> economies = sf.getStringColumn("SELECT ECONOMY FROM hyperobjects");
+        				HashMap<String, String> uecons = new HashMap<String, String>();
+        				for (int c = 0; c < economies.size(); c++) {
+        					uecons.put(economies.get(c), "irrelevant");
+        				}
+        				sender.sendMessage(ChatColor.AQUA + uecons.keySet().toString());
+        			} else {
+        				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /listeconomies");
+        			}
+        				
+    			} else {
+    				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+    			}
+
+    			return true;
+    		} catch (Exception e) {
+    			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /listeconomies");
+    			return true;
+    		}
     		
     		
     		
@@ -2416,11 +2796,7 @@ public class Cmd {
     				String name = args[0];
     				
     				
-    				String teststring = hc.getYaml().getEnchants().getString(name);
-    				if (teststring == null) {
-    					name = hc.fixName(name);
-    					teststring = hc.getYaml().getEnchants().getString(name);
-    				}
+    				String teststring = hc.testeString(name);
 
     				if (teststring != null) {
     					
@@ -2500,11 +2876,7 @@ public class Cmd {
         					
         				}
     				} else {
-        				String teststring = hc.getYaml().getEnchants().getString(name);
-        				if (teststring == null) {
-        					name = hc.fixName(name);
-        					teststring = hc.getYaml().getEnchants().getString(name);
-        				}
+        				String teststring = hc.testeString(name);
         				if (teststring != null) {
 
         					
@@ -2544,11 +2916,7 @@ public class Cmd {
     			if (args.length == 2) {
 
     				String nam = args[0];
-    				String teststring = hc.getYaml().getEnchants().getString(nam);
-    				if (teststring == null) {
-    					nam = hc.fixName(nam);
-    					teststring = hc.getYaml().getEnchants().getString(nam);
-    				}
+    				String teststring = hc.testeString(nam);
     				if (teststring != null) {
     				
 
@@ -2575,7 +2943,26 @@ public class Cmd {
 	    				m.send(sender, 6);		
 	    				while (n < 8) {
 	    				ench.setVC(hc, nam, classtype[n], calc);
-	    				double value = ench.getValue();    				
+	    				double value = ench.getValue();    	
+	    				
+	    				
+						double salestax = 0;
+						if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+							double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
+							double cbal = acc.getBalance(player.getName());
+							if (cbal >= moneycap) {
+								salestax = value * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent")/100);
+							} else {
+								salestax = value * (cbal/moneycap);
+							}
+						} else {
+							double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
+							salestax = (salestaxpercent/100) * value;
+						}
+	    				
+						value = calc.twoDecimals(value - salestax);
+	    				
+	    				
 	    				sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + value);
 	    				n++;
 	    				}
@@ -2594,6 +2981,7 @@ public class Cmd {
     	    				int n = 0;
     	    				m.send(sender, 6);
     	    				while (n < 8) {
+    	    				ench.setPlayerEconomy(playerecon);
     	    				ench.setVC(hc, nam, classtype[n], calc);
     	    				double cost = ench.getCost();    				
     	    				sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be bought for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + cost);
@@ -2639,6 +3027,24 @@ public class Cmd {
     					double cost = ench.getCost();
 						value = calc.twoDecimals(value);
 						cost = calc.twoDecimals(cost);
+						
+						
+						double salestax = 0;
+						if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+							double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
+							double cbal = acc.getBalance(player.getName());
+							if (cbal >= moneycap) {
+								salestax = value * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent")/100);
+							} else {
+								salestax = value * (cbal/moneycap);
+							}
+						} else {
+							double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
+							salestax = (salestaxpercent/100) * value;
+						}
+	    				
+						value = calc.twoDecimals(value - salestax);
+						
     					player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + value);
     					player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + cost);
     					player.sendMessage(ChatColor.BLUE + "The global shop currently has" + ChatColor.GREEN + " " + hc.getYaml().getEnchants().getInt(fnam + ".stock.stock") + ChatColor.AQUA + " " + fnam + ChatColor.BLUE + " available.");
@@ -2719,17 +3125,24 @@ public class Cmd {
     		try {
 
     			if (args.length == 0) {
-    				
-    				
-    				
+    				SQLWrite sw = hc.getSQLWrite();
     				m.send(sender, 6);
     				sender.sendMessage(ChatColor.BLUE + "Shop Check Interval: " + ChatColor.GREEN + "" + s.getshopInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + s.getshopInterval()/20 + ChatColor.BLUE + " Seconds");
     				sender.sendMessage(ChatColor.BLUE + "Save Interval: " + ChatColor.GREEN + "" + hc.getsaveInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + hc.getsaveInterval()/20 + ChatColor.BLUE + " Seconds");
-    				sender.sendMessage(ChatColor.BLUE + "Log Write Interval: " + ChatColor.GREEN + "" + l.getlogInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + l.getlogInterval()/20 + ChatColor.BLUE + " Seconds");
-    				sender.sendMessage(ChatColor.BLUE + "The log buffer currently holds " + ChatColor.GREEN + "" + l.getbufferSize() + ChatColor.BLUE + " entries.");
-    				sender.sendMessage(ChatColor.BLUE + "The log has " + ChatColor.GREEN + "" + l.getlogSize() + ChatColor.BLUE + " entries.");
+    				if (!hc.useSQL()) {
+    					sender.sendMessage(ChatColor.BLUE + "Log Write Interval: " + ChatColor.GREEN + "" + l.getlogInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + l.getlogInterval()/20 + ChatColor.BLUE + " Seconds");
+        				sender.sendMessage(ChatColor.BLUE + "The log buffer currently holds " + ChatColor.GREEN + "" + l.getbufferSize() + ChatColor.BLUE + " entries.");
+        				sender.sendMessage(ChatColor.BLUE + "The log has " + ChatColor.GREEN + "" + l.getlogSize() + ChatColor.BLUE + " entries.");	
+    				}
+
     				sender.sendMessage(ChatColor.BLUE + "Sign Update Interval: " + ChatColor.GREEN + "" + isign.getsignupdateInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + isign.getsignupdateInterval()/20 + ChatColor.BLUE + " Seconds");
     				sender.sendMessage(ChatColor.BLUE + "There are " + ChatColor.GREEN + "" + isign.getremainingSigns() + ChatColor.BLUE + " signs waiting to update.");
+    				if (hc.useSQL()) {
+    					sender.sendMessage(ChatColor.BLUE + "The log has " + ChatColor.GREEN + "" + sf.countTableEntries("hyperlog") + ChatColor.BLUE + " entries.");	
+        				sender.sendMessage(ChatColor.BLUE + "The SQL buffer contains " + ChatColor.GREEN + "" + sw.getBufferSize() + ChatColor.BLUE + " statements.");
+        				sender.sendMessage(ChatColor.BLUE + "There are currently " + ChatColor.GREEN + "" + sw.getActiveThreads() + ChatColor.BLUE + " active SQL threads.");
+    				}
+
     				m.send(sender, 6);
     				
     			} else {
@@ -2780,16 +3193,8 @@ public class Cmd {
     	} else if (cmd.getName().equalsIgnoreCase("additem")) {
     		try {
     			String itemname = args[0];
-    			String teststring2 = hc.getYaml().getEnchants().getString(itemname);
-				if (teststring2 == null) {
-					itemname = hc.fixName(itemname);
-					teststring2 = hc.getYaml().getEnchants().getString(itemname);
-				}
-    			String teststring = hc.getYaml().getItems().getString(itemname);
-				if (teststring == null) {
-					itemname = hc.fixName(itemname);
-					teststring = hc.getYaml().getItems().getString(itemname);
-				}
+    			String teststring2 = hc.testeString(itemname);
+				String teststring = hc.testiString(itemname);
 
     			if (args.length >= 2) {
     				if (teststring != null || teststring2 != null || itemname.equalsIgnoreCase("all")) {
@@ -2856,16 +3261,8 @@ public class Cmd {
     		try {
 
     			String itemname = args[0];
-    			String teststring2 = hc.getYaml().getEnchants().getString(itemname);
-				if (teststring2 == null) {
-					itemname = hc.fixName(itemname);
-					teststring2 = hc.getYaml().getEnchants().getString(itemname);
-				}
-    			String teststring = hc.getYaml().getItems().getString(itemname);
-				if (teststring == null) {
-					itemname = hc.fixName(itemname);
-					teststring = hc.getYaml().getItems().getString(itemname);
-				}
+    			String teststring2 = hc.testeString(itemname);
+				String teststring = hc.testiString(itemname);
     			if (args.length >= 2) {
     				if (teststring != null || teststring2 != null || itemname.equalsIgnoreCase("all")) {
 	    			
@@ -2900,30 +3297,41 @@ public class Cmd {
 			    					hc.getYaml().getShops().set(shopname + ".unavailable", unavailable);
 			    					sender.sendMessage(ChatColor.GOLD + itemname + " removed from " + shopname.replace("_", " "));
 		    					} else if (itemname.equalsIgnoreCase("all")) {
-		    						
-	
 		    						String itemlist = "";
-		    		    			Iterator<String> it2 = hc.getYaml().getItems().getKeys(true).iterator();
-		    	    				while (it2.hasNext()) {   			
-		    	    					Object element2 = it2.next();
-		    	    					String elst2 = element2.toString();    				
-		    	    					if (elst2.indexOf(".") == -1) {
-		    	    							itemlist = itemlist + elst2 + ",";	    	    						
-		    	    					}
-		    	    				}
-		    	    				
-		    	    				
 		    						String enchantlist = "";
-		    		    			Iterator<String> it3 = hc.getYaml().getEnchants().getKeys(true).iterator();
-		    	    				while (it3.hasNext()) {   			
-		    	    					Object element2 = it3.next();
-		    	    					String elst2 = element2.toString();    				
-		    	    					if (elst2.indexOf(".") == -1) {
-		    	    							enchantlist = enchantlist + elst2 + ",";
-		    	    					}
-		    	    				}
-		    	    				
-		    						
+		    						if (hc.useSQL()) {
+		    	        	        	ArrayList<String> inames = hc.getInames();
+		    	        	        	for (int c = 0; c < inames.size(); c++) {
+			    	    					String elst2 = inames.get(c);			
+			    	    					itemlist = itemlist + elst2 + ",";	    	    						
+		    	        	        	}
+		    	        	        	
+		    	        	        	ArrayList<String> enames = hc.getEnames();
+		    	        	        	for (int c = 0; c < enames.size(); c++) {
+			    	    					String elst2 = enames.get(c);			
+			    	    					enchantlist = enchantlist + elst2 + ",";    	    						
+		    	        	        	}
+		    						} else {
+			    						
+			    		    			Iterator<String> it2 = hc.getYaml().getItems().getKeys(true).iterator();
+			    	    				while (it2.hasNext()) {   			
+			    	    					Object element2 = it2.next();
+			    	    					String elst2 = element2.toString();    				
+			    	    					if (elst2.indexOf(".") == -1) {
+			    	    							itemlist = itemlist + elst2 + ",";	    	    						
+			    	    					}
+			    	    				}
+	
+			    		    			Iterator<String> it3 = hc.getYaml().getEnchants().getKeys(true).iterator();
+			    	    				while (it3.hasNext()) {   			
+			    	    					Object element2 = it3.next();
+			    	    					String elst2 = element2.toString();    				
+			    	    					if (elst2.indexOf(".") == -1) {
+			    	    							enchantlist = enchantlist + elst2 + ",";
+			    	    					}
+			    	    				}
+		    						}
+
 			    					hc.getYaml().getShops().set(shopname + ".unavailable", itemlist + enchantlist);
 			    					sender.sendMessage(ChatColor.GOLD + "All items and enchantments have been removed from " + shopname.replace("_", " "));
 		    					}
@@ -3055,21 +3463,32 @@ public class Cmd {
     				sender.sendMessage(ChatColor.RED + "Type /setstockmedianall confirm to proceed.");
 
     			} else if (args[0].equalsIgnoreCase("confirm")){
-	    			FileConfiguration items = hc.getYaml().getItems();
-	    			Iterator<String> it = items.getKeys(false).iterator();
-	    			while (it.hasNext()) {   			
-	    				String elst = it.next().toString();
-	    				items.set(elst + ".stock.stock", items.getInt(elst + ".stock.median"));
-	    				items.set(elst + ".initiation.initiation", false);
-	    			}   
-	    			
-	    			FileConfiguration enchants = hc.getYaml().getEnchants();
-	    			Iterator<String> it2 = enchants.getKeys(false).iterator();
-	    			while (it2.hasNext()) {   			;
-	    				String elst2 = it2.next().toString();
-	    				enchants.set(elst2 + ".stock.stock", enchants.getInt(elst2 + ".stock.median"));
-	    				enchants.set(elst2 + ".initiation.initiation", false);
-	    			}  
+    				
+    				if (hc.useSQL()) {
+    					ArrayList<String> names = hc.getNames();
+    					for (int c = 0; c < names.size(); c++) {
+    						sf.setStock(names.get(c), playerecon, sf.getMedian(names.get(c), playerecon));
+    						sf.setInitiation(names.get(c), playerecon, "false");
+    					}
+    					
+    				} else {
+    	    			FileConfiguration items = hc.getYaml().getItems();
+    	    			Iterator<String> it = items.getKeys(false).iterator();
+    	    			while (it.hasNext()) {   			
+    	    				String elst = it.next().toString();
+    	    				items.set(elst + ".stock.stock", items.getInt(elst + ".stock.median"));
+    	    				items.set(elst + ".initiation.initiation", false);
+    	    			}   
+    	    			
+    	    			FileConfiguration enchants = hc.getYaml().getEnchants();
+    	    			Iterator<String> it2 = enchants.getKeys(false).iterator();
+    	    			while (it2.hasNext()) {   			;
+    	    				String elst2 = it2.next().toString();
+    	    				enchants.set(elst2 + ".stock.stock", enchants.getInt(elst2 + ".stock.median"));
+    	    				enchants.set(elst2 + ".initiation.initiation", false);
+    	    			}  
+    				}
+
    			
 	    			sender.sendMessage(ChatColor.GOLD + "Shop stocks of all items/enchantments have been set to their medians and initial pricing has been disabled.");
 	    			
@@ -3113,25 +3532,42 @@ public class Cmd {
     							path = ".initiation.startprice";
     						}
     						
+    						if (hc.useSQL()) {
+    		   					ArrayList<String> names = hc.getNames();
+    	    					for (int c = 0; c < names.size(); c++) {
+    	    						String cname = names.get(c);
+    	    						if (type.equalsIgnoreCase("value")) {
+    	    							sf.setValue(cname, playerecon, calc.twoDecimals(sf.getValue(cname, playerecon) * percent));
+    	    						} else if (type.equalsIgnoreCase("staticprice")) {
+    	    							sf.setStaticPrice(cname, playerecon, calc.twoDecimals(sf.getStaticPrice(cname, playerecon) * percent));
+    	    						} else if (type.equalsIgnoreCase("stock")) {
+    	    							sf.setStock(cname, playerecon, Math.floor(sf.getStock(cname, playerecon) * percent + .5));
+    	    						} else if (type.equalsIgnoreCase("median")) {
+    	    							sf.setMedian(cname, playerecon, calc.twoDecimals(sf.getMedian(cname, playerecon) * percent));
+    	    						} else if (type.equalsIgnoreCase("startprice")) {
+    	    							sf.setStartPrice(cname, playerecon, calc.twoDecimals(sf.getStartPrice(cname, playerecon) * percent));
+    	    						}
+    	    					}
+    						} else {
+        						FileConfiguration items = hc.getYaml().getItems();
+            	    			Iterator<String> it = items.getKeys(false).iterator();
+            	    			while (it.hasNext()) {   			
+            	    				String elst = it.next().toString();
+            	    				Double newvalue = items.getDouble(elst + path) * percent;
+            	    				newvalue = calc.twoDecimals(newvalue);
+            	    				items.set(elst + path, newvalue);
+            	    			}   
+            	    			
+            	    			FileConfiguration enchants = hc.getYaml().getEnchants();
+            	    			Iterator<String> it2 = enchants.getKeys(false).iterator();
+            	    			while (it2.hasNext()) {   			;
+            	    				String elst2 = it2.next().toString();
+            	    				Double newvalue = enchants.getDouble(elst2 + path) * percent;
+            	    				newvalue = calc.twoDecimals(newvalue);
+            	    				enchants.set(elst2 + path, newvalue);
+            	    			}  
+    						}
     						
-    						FileConfiguration items = hc.getYaml().getItems();
-        	    			Iterator<String> it = items.getKeys(false).iterator();
-        	    			while (it.hasNext()) {   			
-        	    				String elst = it.next().toString();
-        	    				Double newvalue = items.getDouble(elst + path) * percent;
-        	    				newvalue = calc.twoDecimals(newvalue);
-        	    				items.set(elst + path, newvalue);
-        	    			}   
-        	    			
-        	    			FileConfiguration enchants = hc.getYaml().getEnchants();
-        	    			Iterator<String> it2 = enchants.getKeys(false).iterator();
-        	    			while (it2.hasNext()) {   			;
-        	    				String elst2 = it2.next().toString();
-        	    				Double newvalue = enchants.getDouble(elst2 + path) * percent;
-        	    				newvalue = calc.twoDecimals(newvalue);
-        	    				enchants.set(elst2 + path, newvalue);
-        	    			}  
-
         	    			sender.sendMessage(ChatColor.GOLD + "Adjustment successful!");
         	    			
         					//Updates all information signs.
@@ -3167,25 +3603,36 @@ public class Cmd {
     				sender.sendMessage(ChatColor.RED + "Type /resetshop confirm to proceed.");
 
     			} else if (args[0].equalsIgnoreCase("confirm")){
-	    			FileConfiguration items = hc.getYaml().getItems();
-	    			Iterator<String> it = items.getKeys(false).iterator();
-	    			while (it.hasNext()) {   			
-	    				Object element = it.next();
-	    				String elst = element.toString();
-	    				items.set(elst + ".stock.stock", 0);
-	    				items.set(elst + ".price.static", false);
-	    				items.set(elst + ".initiation.initiation", true);
-	    			}   
-	    			
-	    			FileConfiguration enchants = hc.getYaml().getEnchants();
-	    			Iterator<String> it2 = enchants.getKeys(false).iterator();
-	    			while (it2.hasNext()) {   			
-	    				Object element2 = it2.next();
-	    				String elst2 = element2.toString();
-	    				enchants.set(elst2 + ".stock.stock", 0);
-	    				enchants.set(elst2 + ".price.static", false);
-	    				enchants.set(elst2 + ".initiation.initiation", true);
-	    			}  
+    				
+    				if (hc.useSQL()) {
+	   					ArrayList<String> names = hc.getNames();
+    					for (int c = 0; c < names.size(); c++) {
+    						String cname = names.get(c);
+    						sf.setStock(cname, playerecon, 0);
+    						sf.setStatic(cname, playerecon, "false");
+    						sf.setInitiation(cname, playerecon, "true");
+    					}
+    				} else {
+    	    			FileConfiguration items = hc.getYaml().getItems();
+    	    			Iterator<String> it = items.getKeys(false).iterator();
+    	    			while (it.hasNext()) {   			
+    	    				Object element = it.next();
+    	    				String elst = element.toString();
+    	    				items.set(elst + ".stock.stock", 0);
+    	    				items.set(elst + ".price.static", false);
+    	    				items.set(elst + ".initiation.initiation", true);
+    	    			}   
+    	    			
+    	    			FileConfiguration enchants = hc.getYaml().getEnchants();
+    	    			Iterator<String> it2 = enchants.getKeys(false).iterator();
+    	    			while (it2.hasNext()) {   			
+    	    				Object element2 = it2.next();
+    	    				String elst2 = element2.toString();
+    	    				enchants.set(elst2 + ".stock.stock", 0);
+    	    				enchants.set(elst2 + ".price.static", false);
+    	    				enchants.set(elst2 + ".initiation.initiation", true);
+    	    			}  
+    				}
 	    			sender.sendMessage(ChatColor.GOLD + "Shop stock, initiation, and static pricing have been reset!");
 	    			
 					//Updates all information signs.
@@ -3471,9 +3918,48 @@ public class Cmd {
     	return false;
 	}
 		
+	/*
+private String testString (String name) {
+	String teststring = null;
+	if (hc.useSQL()) {
+		teststring = sf.testName(name, playerecon);
+	} else {
+		teststring = hc.getYaml().getItems().getString(name);
+	}
+	
+	if (teststring == null) {
+		name = hc.fixName(name);
+		if (hc.useSQL()) {
+			teststring = sf.testName(name, playerecon);
+		} else {
+			teststring = hc.getYaml().getItems().getString(name);
+		}
+	}
+	
+	return teststring;
+}
+    
+private String testeString (String name) {
+	String teststring = null;
+	if (hc.useSQL()) {
+		teststring = sf.testName(name, playerecon);
+	} else {
+		teststring = hc.getYaml().getEnchants().getString(name);
+	}
+	
+	if (teststring == null) {
+		name = hc.fixName(name);
+		if (hc.useSQL()) {
+			teststring = sf.testName(name, playerecon);
+		} else {
+			teststring = hc.getYaml().getEnchants().getString(name);
+		}
+	}
+	
+	return teststring;
+}
+*/
 
-    
-    
 	}
 	
 	

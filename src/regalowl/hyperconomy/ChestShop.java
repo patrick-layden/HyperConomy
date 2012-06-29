@@ -8,6 +8,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -20,6 +21,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -77,12 +79,19 @@ public class ChestShop implements Listener{
 		    		//String line34 = ChatColor.stripColor(scevent.getLine(2)).trim() + ChatColor.stripColor(scevent.getLine(3)).trim();
 		    		if (scevent.getPlayer().hasPermission("hyperconomy.chestshop")) {
 		    			Block signblock = scevent.getBlock();
-		    			int x = signblock.getX();
-		    			int y = signblock.getY() - 1;
-		    			int z = signblock.getZ();
-		    			String world = scevent.getBlock().getWorld().getName();
+		    			//int x = signblock.getX();
+		    			//int y = signblock.getY() - 1;
+		    			//int z = signblock.getZ();
+		    			//String world = scevent.getBlock().getWorld().getName();
 		    			
-		    			BlockState chestblock = Bukkit.getWorld(world).getBlockAt(x, y, z).getState();
+		    			//BlockState chestblock = Bukkit.getWorld(world).getBlockAt(x, y, z).getState();
+	        	    	org.bukkit.material.Sign msign = (org.bukkit.material.Sign)signblock.getState().getData();
+	        	    	BlockFace attachedface = msign.getAttachedFace();
+	        	    	Block attachedblock = signblock.getRelative(attachedface);
+	        	    	Material am = attachedblock.getType();
+	        	    	
+		    			
+		    			BlockState chestblock = signblock.getRelative(BlockFace.DOWN).getState();
 		    			if (chestblock instanceof Chest) {
 		    				
 		    				s.setinShop(scevent.getPlayer());
@@ -98,30 +107,41 @@ public class ChestShop implements Listener{
 		    					count++;
 		    				}
 		    				if (emptyslots == 27) {
-		    					//probably add a check for lockette/deadbolt/lwc chests
 		    					
-		    					String fline = "";
-		    					if (line2.equalsIgnoreCase("[Trade]")) {
-		    						fline = "[Trade]";
-		    					} else if (line2.equalsIgnoreCase("[Buy]")) {
-		    						fline = "[Buy]";
-		    					} else if (line2.equalsIgnoreCase("[Sell]")) {
-		    						fline = "[Sell]";
-		    					}
-		    					String pname = scevent.getPlayer().getName();
-		    					int nlength = pname.length();
-		    					String line3 = "";
-		    					String line4 = "";	
-		    					if (nlength > 12) {
-		    						line3 = pname.substring(0, 12);
-		    						line4 = pname.substring(12, pname.length());
+		    					if (am == Material.ICE || am == Material.LEAVES || am == Material.SAND || am == Material.GRAVEL || am == Material.SIGN || am == Material.SIGN_POST || am == Material.TNT) {
+		    						
+			    					scevent.setLine(0, "§4You can't");
+			    					scevent.setLine(1, "§4attach your");
+			    					scevent.setLine(2, "§4sign to that");
+			    					scevent.setLine(3, "§4block!");
+
 		    					} else {
-		    						line3 = pname;
+			    					//probably add a check for lockette/deadbolt/lwc chests
+			    					
+			    					String fline = "";
+			    					if (line2.equalsIgnoreCase("[Trade]")) {
+			    						fline = "[Trade]";
+			    					} else if (line2.equalsIgnoreCase("[Buy]")) {
+			    						fline = "[Buy]";
+			    					} else if (line2.equalsIgnoreCase("[Sell]")) {
+			    						fline = "[Sell]";
+			    					}
+			    					String pname = scevent.getPlayer().getName();
+			    					int nlength = pname.length();
+			    					String line3 = "";
+			    					String line4 = "";	
+			    					if (nlength > 12) {
+			    						line3 = pname.substring(0, 12);
+			    						line4 = pname.substring(12, pname.length());
+			    					} else {
+			    						line3 = pname;
+			    					}
+			    					
+			    					scevent.setLine(1, "§b" + fline);
+					    			scevent.setLine(2, "§f" + line3);
+					    			scevent.setLine(3, "§f" + line4);
 		    					}
-		    					
-		    					scevent.setLine(1, "§b" + fline);
-				    			scevent.setLine(2, "§f" + line3);
-				    			scevent.setLine(3, "§f" + line4);
+
 		    				} else {
 		    					scevent.setLine(0, "§4You must");
 		    					scevent.setLine(1, "§4use an");
@@ -334,160 +354,298 @@ public class ChestShop implements Listener{
 	
 	
 	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onBlockPlaceEvent(BlockPlaceEvent bpevent) {
+		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
+			Block b = bpevent.getBlock();
+			if (b.getState() instanceof Chest) {
+	    		int count = 0;
+	    		while (count < 4) {		
+	    			BlockFace cface = faces.get(count);
+	            	Block relative = b.getRelative(cface);         	
+	            	if (relative.getState() instanceof Chest) {
+	            		Block signblock = relative.getRelative(BlockFace.UP);
+						if (signblock != null && signblock.getType().equals(Material.WALL_SIGN)) {
+				    		Sign s = (Sign) signblock.getState();
+							String line2 = s.getLine(1).trim();
+					    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
+					    		bpevent.setCancelled(true);
+					    		return;
+					    	}
+				    	}
+	            	}	
+	    			count++;
+	    		}	 
+			}	
+		}  	
+	}
+	
+	
+	
+	
 	
 	
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onInventoryClickEvent(InventoryClickEvent icevent) {
 		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
-			if (icevent.getInventory().getHolder() instanceof Chest) {
-				Chest invchest = (Chest) icevent.getInventory().getHolder();
-				int x = invchest.getX();
-				int y = invchest.getY() + 1;
-				int z = invchest.getZ();
-				String world = invchest.getBlock().getWorld().getName();
-				BlockState signblock = Bukkit.getWorld(world).getBlockAt(x, y, z).getState();
-				if (signblock instanceof Sign) {
-					Sign s = (Sign) signblock;
-					String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-			    	if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
-			    		
-			    		int slot = icevent.getRawSlot();
-			    		
-			    		
-						boolean buy = false;
-						boolean sell = false;
-						if (line2.equalsIgnoreCase("[Trade]")) {
-							buy = true;
-							sell = true;
-						} else if (line2.equalsIgnoreCase("[Buy]")) {
-							buy = true;
-						} else if (line2.equalsIgnoreCase("[Sell]")) {
-							sell = true;
-						}
-			    		
-			    		String line34 = ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim();
-			    		String clicker = icevent.getWhoClicked().getName();
-			    		//Handles everyone besides the owner of the chest. (make it ! when done testing)
-			    		if (!clicker.equalsIgnoreCase(line34)) {
-			    			
-			    			if (icevent.getCurrentItem() == null) {
-				    			icevent.setCancelled(true);
-				    			return;
-			    			}
-
-			    			
-			    			if (icevent.isShiftClick()) {
-			    				
-			    				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
-				    			ench.setHE(icevent.getCurrentItem());
-				    			if (!ench.hasenchants()) {
-				    				
-					    			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
-				    				String name = hc.getnameData(key);
-				    				int id = icevent.getCurrentItem().getTypeId();
-				    				int data =  icevent.getCurrentItem().getData().getData();
-				    				int camount = icevent.getCurrentItem().getAmount();
-				    				
-					    			if (slot < 27 && name != null) {
-					    				
-					    				if (buy) {
-							    			tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
-							    			tran.buyChest(line34);
-					    				} else {
-					    					p.sendMessage(ChatColor.BLUE + "You cannot purchase items from this chest.");
-					    				}
-
-					    			} else if (slot >= 27 && name != null){
-					    				
-					    				if (sell) {
-					    					tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
-					    					int itemamount = tran.countItems();
-					    					
-					    					if (itemamount > 0) {
-					    						tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getBottomInventory());
-							    				int space = tran.getSpace();
-							    				if (space >= camount) {
-						    						double bal = acc.getBalance(line34);
-						    						calc.setVC(hc, null, camount, name, ench);
-						    						double cost = calc.getTvalue();
-						    						if (bal >= cost) {
-						    							tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
-										    			tran.sellChest(line34);
-						    						} else {
-						    							p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
-						    						}
-							    				} else {
-							    					p.sendMessage(ChatColor.BLUE + "You don't have enough space.");
-							    				}
-					    					} else {
-					    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
-					    					}
-		
-						    				
-					    				} else {
-					    					p.sendMessage(ChatColor.BLUE + "You cannot sell items to this chest.");
-					    				}
-					    				
-					    				
-					    			}
+			if (!hc.isLocked()) { 
+				if (icevent.getInventory().getHolder() instanceof Chest) {
+					Chest invchest = (Chest) icevent.getInventory().getHolder();
+					int x = invchest.getX();
+					int y = invchest.getY() + 1;
+					int z = invchest.getZ();
+					String world = invchest.getBlock().getWorld().getName();
+					BlockState signblock = Bukkit.getWorld(world).getBlockAt(x, y, z).getState();
+					if (signblock instanceof Sign) {
+						Sign s = (Sign) signblock;
+						String line2 = ChatColor.stripColor(s.getLine(1)).trim();
+				    	if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
+				    		
+				    		int slot = icevent.getRawSlot();
+				    		
+				    		
+							boolean buy = false;
+							boolean sell = false;
+							if (line2.equalsIgnoreCase("[Trade]")) {
+								buy = true;
+								sell = true;
+							} else if (line2.equalsIgnoreCase("[Buy]")) {
+								buy = true;
+							} else if (line2.equalsIgnoreCase("[Sell]")) {
+								sell = true;
+							}
+				    		
+				    		String line34 = ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim();
+				    		String clicker = icevent.getWhoClicked().getName();
+				    		//Handles everyone besides the owner of the chest. (make it ! when done testing)
+				    		if (!clicker.equalsIgnoreCase(line34)) {
+				    			
+				    			if (icevent.getCurrentItem() == null) {
+					    			icevent.setCancelled(true);
+					    			return;
 				    			}
+				    			if (hc.useSQL()) {
+				    				calc.setPlayerEcon(hc.getSQLFunctions().getPlayerEconomy(line34));
+				    				ench.setPlayerEconomy(hc.getSQLFunctions().getPlayerEconomy(line34));
+				    			}
+				    			
 
-				    			icevent.setCancelled(true);
-				    			return;
 				    			
-				    			
-				    		} else if (icevent.isLeftClick()) {
-				    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
-				    			ench.setHE(icevent.getCurrentItem());
-				    			if (!ench.hasenchants()) {
-					    			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
-				    				String name = hc.getnameData(key);
-				    				int id = icevent.getCurrentItem().getTypeId();
-				    				int data =  icevent.getCurrentItem().getData().getData();
+				    			if (icevent.isShiftClick()) {
 				    				
-					    			if (slot < 27 && name != null) {
+				    				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
+					    			ench.setHE(icevent.getCurrentItem());
+					    			if (!ench.hasenchants()) {
 					    				
-					    				if (buy) {
-							    			calc.setVC(hc, null, 1, name, null);
-							    			p.sendMessage("§0-----------------------------------------------------");
-							    			p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue());
-							    			p.sendMessage("§0-----------------------------------------------------");
-					    				} else {
-					    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
-					    				}
-		
-						    			
-					    			} else if (slot >= 27 && name != null) {
-					    				
-					    				if (sell) {
-					    					//tran.setAddRemoveItems(hc, id, data, 1, calc, ench, icevent.getView().getTopInventory());
-					    					tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
-					    					int itemamount = tran.countItems();
-					    					
-					    					if (itemamount > 0) {
-					    						calc.setVC(hc, null, 1, name, null);
-							    				p.sendMessage("§0-----------------------------------------------------");
-							    				p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 "  + ChatColor.AQUA + ""  + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be sold to " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue());
-							    				p.sendMessage("§0-----------------------------------------------------");	
-					    					} else {
-					    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
-					    					}
-					    				} else {
-					    					p.sendMessage(ChatColor.BLUE + "You cannot sell items to this chest.");
-					    				}
-		
-					    			}
-				    			} else {
-
-				        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
+						    			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
 					    				String name = hc.getnameData(key);
+					    				int id = icevent.getCurrentItem().getTypeId();
+					    				int data =  icevent.getCurrentItem().getData().getData();
+					    				int camount = icevent.getCurrentItem().getAmount();
 					    				
 						    			if (slot < 27 && name != null) {
 						    				
 						    				if (buy) {
+								    			tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
+								    			tran.buyChest(line34);
+						    				} else {
+						    					p.sendMessage(ChatColor.BLUE + "You cannot purchase items from this chest.");
+						    				}
+
+						    			} else if (slot >= 27 && name != null){
+						    				
+						    				if (sell) {
+						    					tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
+						    					int itemamount = tran.countItems();
+						    					
+						    					if (itemamount > 0) {
+						    						tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getBottomInventory());
+								    				int space = tran.getSpace();
+								    				if (space >= camount) {
+							    						double bal = acc.getBalance(line34);
+							    						calc.setVC(hc, null, camount, name, ench);
+							    						double cost = calc.getTvalue();
+							    						if (bal >= cost) {
+							    							tran.setChestShop(hc, id, data, camount, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
+											    			tran.sellChest(line34);
+							    						} else {
+							    							p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
+							    						}
+								    				} else {
+								    					p.sendMessage(ChatColor.BLUE + "You don't have enough space.");
+								    				}
+						    					} else {
+						    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
+						    					}
 			
-						    						double price = 0;
+							    				
+						    				} else {
+						    					p.sendMessage(ChatColor.BLUE + "You cannot sell items to this chest.");
+						    				}
+						    				
+						    				
+						    			}
+					    			}
+
+					    			icevent.setCancelled(true);
+					    			return;
+					    			
+					    			
+					    		} else if (icevent.isLeftClick()) {
+					    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
+					    			ench.setHE(icevent.getCurrentItem());
+					    			if (!ench.hasenchants()) {
+						    			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
+					    				String name = hc.getnameData(key);
+					    				int id = icevent.getCurrentItem().getTypeId();
+					    				int data =  icevent.getCurrentItem().getData().getData();
+					    				
+						    			if (slot < 27 && name != null) {
+						    				
+						    				if (buy) {
+								    			calc.setVC(hc, null, 1, name, null);
+								    			if (hc.useSQL()) {
+								    				calc.setPlayerEcon(hc.getSQLFunctions().getPlayerEconomy(line34));
+								    			}
+								    			p.sendMessage("§0-----------------------------------------------------");
+								    			p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue());
+								    			p.sendMessage("§0-----------------------------------------------------");
+						    				} else {
+						    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
+						    				}
+			
+							    			
+						    			} else if (slot >= 27 && name != null) {
+						    				
+						    				if (sell) {
+						    					//tran.setAddRemoveItems(hc, id, data, 1, calc, ench, icevent.getView().getTopInventory());
+						    					tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
+						    					int itemamount = tran.countItems();
+						    					
+						    					if (itemamount > 0) {
+						    						calc.setVC(hc, null, 1, name, null);
+						    						if (hc.useSQL()) {
+						    							calc.setPlayerEcon(hc.getSQLFunctions().getPlayerEconomy(line34));
+						    						}
+						    						
+								    				p.sendMessage("§0-----------------------------------------------------");
+								    				p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 "  + ChatColor.AQUA + ""  + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be sold to " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue());
+								    				p.sendMessage("§0-----------------------------------------------------");	
+						    					} else {
+						    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
+						    					}
+						    				} else {
+						    					p.sendMessage(ChatColor.BLUE + "You cannot sell items to this chest.");
+						    				}
+			
+						    			}
+					    			} else {
+
+					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
+						    				String name = hc.getnameData(key);
+						    				
+							    			if (slot < 27 && name != null) {
+							    				
+							    				if (buy) {
+				
+							    						double price = 0;
+								    					Iterator<Enchantment> ite = icevent.getCurrentItem().getEnchantments().keySet().iterator();
+								        				while (ite.hasNext()) {;
+								        					String rawstring = ite.next().toString();
+								        					String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
+								        					Enchantment en = null;
+								        					en = Enchantment.getByName(enchname);
+								        					int lvl = icevent.getCurrentItem().getEnchantmentLevel(en);
+								        					String nam = hc.getenchantData(enchname);
+								        					String fnam = nam + lvl;
+								        					ench.setPlayerEconomy(hc.getSQLFunctions().getPlayerEconomy(line34));
+								        					ench.setVC(hc, fnam, p.getItemInHand().getType().toString(), calc);
+								        					
+								        					price = price + ench.getValue();
+								        				}
+								        				price = calc.twoDecimals(price);
+								        			if (ench.isEnchantable(p.getItemInHand())) {
+										    			p.sendMessage("§0-----------------------------------------------------");
+										    			p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
+										    			p.sendMessage("§0-----------------------------------------------------");
+							    					} else {
+							    						p.sendMessage(ChatColor.BLUE + "That item cannot accept enchantments.");
+							    					}
+							    					
+
+							    				} else {
+							    					p.sendMessage(ChatColor.BLUE + "You cannot purchase enchantments from this chest.");
+							    				}
+				
+							    				
+							    			} else if (slot >= 27 && name != null) {
+							    				
+							    				p.sendMessage(ChatColor.BLUE + "You cannot sell enchantments here.");
+							    				
+							    			}
+					    			}
+
+					    			icevent.setCancelled(true);
+					    			return;
+					    		} else if (icevent.isRightClick()) {
+					    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
+					    			ench.setHE(icevent.getCurrentItem());
+					    			if (!ench.hasenchants()) {
+					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
+					    				String name = hc.getnameData(key);
+					    				int id = icevent.getCurrentItem().getTypeId();
+					    				int data =  icevent.getCurrentItem().getData().getData();
+					    				
+						    			if (slot < 27 && name != null) {
+						    				
+						    				if (buy) {
+						    					tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
+								    			tran.buyChest(line34);
+						    				} else {
+						    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
+						    				}
+			
+						    				
+						    			} else if (slot >= 27 && name != null) {
+						    				
+						    				if (sell) {
+						    					tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
+						    					int itemamount = tran.countItems();
+						    					
+						    					if (itemamount > 0) {
+						    						tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getBottomInventory());
+							    					int space = tran.getInventoryAvailableSpace(id, data, icevent.getView().getTopInventory(), 27);
+							    					if (space >= 1) {
+							    						double bal = acc.getBalance(line34);
+							    						calc.setVC(hc, null, 1, name, ench);
+							    						double cost = calc.getTvalue();
+							    						if (bal >= cost) {
+							    							tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
+										    				tran.sellChest(line34);
+							    						} else {
+							    							p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
+							    						}
+							    					} else {
+							    						p.sendMessage(ChatColor.BLUE + "The chest shop doesn't have enough space.");
+							    					}
+						    					} else {
+						    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
+						    					}
+						    				} else {
+						    					p.sendMessage(ChatColor.BLUE + "You cannot sell items to this chest.");
+						    				}
+			
+			
+						    				
+						    			}
+					    			} else {				    				
+					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
+						    				String name = hc.getnameData(key);
+						    				
+							    			if (slot < 27 && name != null) {
+							    				
+							    				if (buy) {					    					
 							    					Iterator<Enchantment> ite = icevent.getCurrentItem().getEnchantments().keySet().iterator();
 							        				while (ite.hasNext()) {;
 							        					String rawstring = ite.next().toString();
@@ -497,123 +655,32 @@ public class ChestShop implements Listener{
 							        					int lvl = icevent.getCurrentItem().getEnchantmentLevel(en);
 							        					String nam = hc.getenchantData(enchname);
 							        					String fnam = nam + lvl;
-							        					ench.setVC(hc, fnam, p.getItemInHand().getType().toString(), calc);
-							        					price = price + ench.getValue();
+							        					ench.setSBE(hc, p, fnam, economy, l, acc, isign, not, calc);
+							        					ench.buyChestEnchant(icevent.getCurrentItem(), line34);
 							        				}
-							        				price = calc.twoDecimals(price);
-							        			if (ench.isEnchantable(p.getItemInHand())) {
-									    			p.sendMessage("§0-----------------------------------------------------");
-									    			p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
-									    			p.sendMessage("§0-----------------------------------------------------");
-						    					} else {
-						    						p.sendMessage(ChatColor.BLUE + "That item cannot accept enchantments.");
-						    					}
-						    					
 
-						    				} else {
-						    					p.sendMessage(ChatColor.BLUE + "You cannot purchase enchantments from this chest.");
-						    				}
-			
-						    				
-						    			} else if (slot >= 27 && name != null) {
-						    				
-						    				p.sendMessage(ChatColor.BLUE + "You cannot sell enchantments here.");
-						    				
-						    			}
-				    			}
-
-				    			icevent.setCancelled(true);
-				    			return;
-				    		} else if (icevent.isRightClick()) {
-				    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
-				    			ench.setHE(icevent.getCurrentItem());
-				    			if (!ench.hasenchants()) {
-				        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
-				    				String name = hc.getnameData(key);
-				    				int id = icevent.getCurrentItem().getTypeId();
-				    				int data =  icevent.getCurrentItem().getData().getData();
-				    				
-					    			if (slot < 27 && name != null) {
-					    				
-					    				if (buy) {
-					    					tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
-							    			tran.buyChest(line34);
-					    				} else {
-					    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
-					    				}
-		
-					    				
-					    			} else if (slot >= 27 && name != null) {
-					    				
-					    				if (sell) {
-					    					tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
-					    					int itemamount = tran.countItems();
-					    					
-					    					if (itemamount > 0) {
-					    						tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getBottomInventory());
-						    					int space = tran.getSpace();
-						    					if (space >= 1) {
-						    						double bal = acc.getBalance(line34);
-						    						calc.setVC(hc, null, 1, name, ench);
-						    						double cost = calc.getTvalue();
-						    						if (bal >= cost) {
-						    							tran.setChestShop(hc, id, data, 1, name, p, economy, calc, ench, l, acc, not, isign, icevent.getView().getTopInventory());
-									    				tran.sellChest(line34);
-						    						} else {
-						    							p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
-						    						}
-						    					} else {
-						    						p.sendMessage(ChatColor.BLUE + "You don't have enough space.");
-						    					}
-					    					} else {
-					    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
-					    					}
-					    				} else {
-					    					p.sendMessage(ChatColor.BLUE + "You cannot sell items to this chest.");
-					    				}
-		
-		
-					    				
+							    				} else {
+							    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
+							    				}
+							    			} else if (slot >= 27 && name != null) {
+							    				
+							    				p.sendMessage(ChatColor.BLUE + "You cannot sell enchantments here.");
+							    				
+							    			}
 					    			}
-				    			} else {				    				
-				        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
-					    				String name = hc.getnameData(key);
-					    				
-						    			if (slot < 27 && name != null) {
-						    				
-						    				if (buy) {					    					
-						    					Iterator<Enchantment> ite = icevent.getCurrentItem().getEnchantments().keySet().iterator();
-						        				while (ite.hasNext()) {;
-						        					String rawstring = ite.next().toString();
-						        					String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
-						        					Enchantment en = null;
-						        					en = Enchantment.getByName(enchname);
-						        					int lvl = icevent.getCurrentItem().getEnchantmentLevel(en);
-						        					String nam = hc.getenchantData(enchname);
-						        					String fnam = nam + lvl;
-						        					ench.setSBE(hc, p, fnam, economy, l, acc, isign, not, calc);
-						        					ench.buyChestEnchant(icevent.getCurrentItem(), line34);
-						        				}
-
-						    				} else {
-						    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
-						    				}
-						    			} else if (slot >= 27 && name != null) {
-						    				
-						    				p.sendMessage(ChatColor.BLUE + "You cannot sell enchantments here.");
-						    				
-						    			}
-				    			}
-				
-				    			
-				    			
-				    			icevent.setCancelled(true);
-				    			return;
-				    		}
-			    		}		
-			    	}					
-				}
-			}		
+					
+					    			
+					    			
+					    			icevent.setCancelled(true);
+					    			return;
+					    		}
+				    		}		
+				    	}					
+					}
+				}	
+			} else {
+				Bukkit.getPlayer(icevent.getWhoClicked().getName()).sendMessage(ChatColor.RED + "The global shop is currently locked!");
+			}
 		}		
 	}
 

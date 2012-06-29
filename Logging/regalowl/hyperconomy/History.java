@@ -25,10 +25,10 @@ public class History {
 	
 	private long historyloginterval;
 	private int historylogtaskid;
-	
+	private SQLFunctions sf;
 	
 	//For server start.
-	public void setHistory(HyperConomy hyperc, Calculation cal, ETransaction enchant, InfoSign infosign) {
+	History(HyperConomy hyperc, Calculation cal, ETransaction enchant, InfoSign infosign) {
 		hc = hyperc;
 		calc = cal;
 		ench = enchant;
@@ -44,61 +44,71 @@ public class History {
   	
   	public void writehistoryThread() {
   		
-  		FileConfiguration items = hc.getYaml().getItems();
-  		FileConfiguration enchants = hc.getYaml().getEnchants();
-  		FileConfiguration history = hc.getYaml().getHistory();
+  		if (hc.useSQL()) {
+  			
+  			sf = hc.getSQLFunctions();
+  			
+  			
+  			
+  		} else {
 
-		//Creates an ArrayList of all history entry keys.
-		Iterator<String> iterat = history.getKeys(false).iterator();
-		while (iterat.hasNext()) { 
-			historykeys.add(iterat.next().toString());
-		}
-		
-		//Adds all items to the history file.
-		Iterator<String> iterat2 = items.getKeys(false).iterator();
-		while (iterat2.hasNext()) { 
-			String currentitem = iterat2.next().toString();
-			
-			calc.setVC(hc, null, 1, currentitem, null);
-			
-			if (!historykeys.contains(currentitem)) {
-				historykeys.add(currentitem);
-				history.set(currentitem, calc.getTvalue() + ",");
-			} else {
-				String historylist = history.getString(currentitem);
-				historylist = historylist + calc.getTvalue() + ",";
-				//Stops the history file from growing larger than 2 weeks of entries.
-				if (historylist.replaceAll("[\\d]", "").replace(".", "").length() > (daystosavehistory * 24)) {
-					historylist = historylist.substring(historylist.indexOf(",") + 1, historylist.length());
-				}
-				history.set(currentitem, historylist);
-				
+  	  		FileConfiguration items = hc.getYaml().getItems();
+  	  		FileConfiguration enchants = hc.getYaml().getEnchants();
+  	  		FileConfiguration history = hc.getYaml().getHistory();
 
-			}
-		}
-		
-		
-		//Adds all enchants to the history file.
-		Iterator<String> iterat3 = enchants.getKeys(false).iterator();
-		while (iterat3.hasNext()) { 
-			String currentenchant = iterat3.next().toString();
-			
-			ench.setVC(hc, currentenchant, "diamond", calc);
-			
-			if (!historykeys.contains(currentenchant)) {
-				historykeys.add(currentenchant);
-				history.set(currentenchant, ench.getValue() + ",");
-			} else {
-				String historylist = history.getString(currentenchant);
-				historylist = historylist + ench.getValue() + ",";
-				//Stops the history file from growing larger than 2 weeks of entries.
-				if (historylist.replaceAll("[\\d]", "").replace(".", "").length() > (daystosavehistory * 24)) {
-					historylist = historylist.substring(historylist.indexOf(",") + 1, historylist.length());
-				}
-				history.set(currentenchant, historylist);
-			}
-		}
+  			//Creates an ArrayList of all history entry keys.
+  			Iterator<String> iterat = history.getKeys(false).iterator();
+  			while (iterat.hasNext()) { 
+  				historykeys.add(iterat.next().toString());
+  			}
+  			
+  			//Adds all items to the history file.
+  			Iterator<String> iterat2 = items.getKeys(false).iterator();
+  			while (iterat2.hasNext()) { 
+  				String currentitem = iterat2.next().toString();
+  				
+  				calc.setVC(hc, null, 1, currentitem, null);
+  				
+  				if (!historykeys.contains(currentitem)) {
+  					historykeys.add(currentitem);
+  					history.set(currentitem, calc.getTvalue() + ",");
+  				} else {
+  					String historylist = history.getString(currentitem);
+  					historylist = historylist + calc.getTvalue() + ",";
+  					//Stops the history file from growing larger than 2 weeks of entries.
+  					if (historylist.replaceAll("[\\d]", "").replace(".", "").length() > (daystosavehistory * 24)) {
+  						historylist = historylist.substring(historylist.indexOf(",") + 1, historylist.length());
+  					}
+  					history.set(currentitem, historylist);
+  					
 
+  				}
+  			}
+  			
+  			
+  			//Adds all enchants to the history file.
+  			Iterator<String> iterat3 = enchants.getKeys(false).iterator();
+  			while (iterat3.hasNext()) { 
+  				String currentenchant = iterat3.next().toString();
+  				
+  				ench.setVC(hc, currentenchant, "diamond", calc);
+  				
+  				if (!historykeys.contains(currentenchant)) {
+  					historykeys.add(currentenchant);
+  					history.set(currentenchant, ench.getValue() + ",");
+  				} else {
+  					String historylist = history.getString(currentenchant);
+  					historylist = historylist + ench.getValue() + ",";
+  					//Stops the history file from growing larger than 2 weeks of entries.
+  					if (historylist.replaceAll("[\\d]", "").replace(".", "").length() > (daystosavehistory * 24)) {
+  						historylist = historylist.substring(historylist.indexOf(",") + 1, historylist.length());
+  					}
+  					history.set(currentenchant, historylist);
+  				}
+  			}
+
+  		}
+  		
   	}
   	
   	

@@ -38,7 +38,7 @@ public class UpdateSign {
 			    	l3.remove(0);
 			    	l4.remove(0);
 			    }
-			}, 40L);
+			}, 20L);
 		}
 		
 		

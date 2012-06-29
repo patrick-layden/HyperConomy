@@ -37,6 +37,15 @@ public class Log {
 	public int getbufferSize() {
 		return buffer.size();
 	}
+	
+	
+	
+	public void writeSQLLog(String playername, String action, String object, Double amount, Double money, Double tax, String store, String type) {
+		String statement = "Insert Into hyperlog (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE)"
+	            + " Values (NOW(),'" + playername + "','" + action + "','" + object + "','" + amount + "','" + hc.getCalculation().twoDecimals(money) + "','" + hc.getCalculation().twoDecimals(tax) + "','" + store + 
+	        "','" + type + "')";
+		hc.getSQLWrite().writeData(statement);
+	}
 
 	
 	//For server start.

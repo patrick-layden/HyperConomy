@@ -38,13 +38,24 @@ public class HyperConomy extends JavaPlugin{
 	private TransactionSign tsign;
 	private ChestShop cs;
 	private UpdateSign us;
+	private SQLFunctions sf;
+	private SQLPlayers sqp;
+	private SQLWrite sw;
+	private SQLEconomy sqe;
 	
 	
 	public static HyperObject hyperobject;
 	
     //VARIABLES**********************************************************************
 	
+	private boolean usesql;
+	private long saveinterval;
+	private int savetaskid;
 	
+	private YamlFile yaml;
+	private boolean lock;
+	private boolean sqllock;
+	private boolean brokenfile;
 	
     //VAULT**********************************************************************
 	
@@ -79,8 +90,17 @@ public class HyperConomy extends JavaPlugin{
         	Compatibility cb = new Compatibility();
         	cb.checkCompatibility(this);
         	
-
+        	usesql = yaml.getConfig().getBoolean("config.sql-connection.use-sql");
         	
+
+        	if (usesql) {
+            	sf = new SQLFunctions(this);
+            	sw = new SQLWrite(this);
+            	sqe = new SQLEconomy(this);
+            	sqe.checkDatabase();
+            	//sf.loadPlayers();
+        	}
+
         	//Creates the shop from the config.
         	s = new Shop(this);
         	
@@ -92,14 +112,14 @@ public class HyperConomy extends JavaPlugin{
         	
         	
         	//Reused Objects
+        	
         	tran = new Transaction();
         	calc = new Calculation();
-        	ench = new ETransaction();
+        	ench = new ETransaction(this);
         	acc = new Account();
         	commandhandler = new Cmd();
         	not = new Notify();
         	isign = new InfoSign();
-        	hist = new History();
         	tsign = new TransactionSign();
         	us = new UpdateSign();
         		
@@ -123,33 +143,13 @@ public class HyperConomy extends JavaPlugin{
         	
             //VAULT**********************************************************************
         	
-        	
-        	
-            //Map name data to materials for /hb, /hv, and /hs command lookups
-    		Iterator<String> it = yaml.getItems().getKeys(false).iterator();
-    		while (it.hasNext()) {   			
-    			String elst = it.next().toString();    				
-    			String ikey = yaml.getItems().getString(elst + ".information.id") + ":" + yaml.getItems().getString(elst + ".information.data");
-    			namedata.put(ikey, elst);
-    		}        
-    		
-    		Iterator<String> it2 = yaml.getEnchants().getKeys(false).iterator();
-    		while (it2.hasNext()) {   			
-    			String elst2 = it2.next().toString();    				
-    			enchantdata.put(yaml.getEnchants().getString(elst2 + ".information.name"), elst2.substring(0, elst2.length() - 1));
-    		}        
-    		
-    		//Creates the names arraylist storing all item and enchantment names.
-    		Iterator<String> it3 = yaml.getItems().getKeys(false).iterator();
-    		while (it3.hasNext()) {   			  				
-    			names.add(it3.next().toString());
-    		}  
-    		Iterator<String> it4 = yaml.getEnchants().getKeys(false).iterator();
-    		while (it4.hasNext()) {   			
-    			names.add(it4.next().toString());
-    		}  
-    		
-    		
+            
+            
+            buildData();
+            if (useSQL()) {
+            	sf.load();
+            }
+            
 
     		s.startshopCheck();
     		startSave();
@@ -168,7 +168,7 @@ public class HyperConomy extends JavaPlugin{
     		
     		
     		isign.setinfoSign(this, calc, ench, tran);
-    		hist.setHistory(this, calc, ench, isign);
+    		hist = new History(this, calc, ench, isign);
     		hist.starthistoryLog();
     		
     		tsign.setTransactionSign(this, tran, calc, ench, l, acc, isign, not, economy, us);
@@ -178,7 +178,17 @@ public class HyperConomy extends JavaPlugin{
     		hyperobject = new HyperObject(this, yam, tran, calc, ench, m, l, s, acc, isign, commandhandler, hist, not, tsign, economy);
     		
     		cs = new ChestShop();
+    		
+    		if (usesql) {
+    			sqp = new SQLPlayers(this);
+    		}
+    		
+    		
+    		
     		log.info("HyperConomy has been successfully enabled!");
+    		
+    		
+    		
     		
     		
     	}
@@ -200,6 +210,9 @@ public class HyperConomy extends JavaPlugin{
         	l.stopBuffer();
         	hist.stophistoryLog();
         	l.saveBuffer();
+        	if (useSQL()) {
+        		sw.shutDown();
+        	}
     	}
 
     	//Saves config and items files.
@@ -282,6 +295,7 @@ public class HyperConomy extends JavaPlugin{
 			    	yam.YamlEnable();    	
 			    	yaml = yam;
 			    	
+			    	usesql = yaml.getConfig().getBoolean("config.sql-connection.use-sql");
 			    	s.setshopInterval(yaml.getConfig().getLong("config.shopcheckinterval"));
 			    	l.setlogInterval(yaml.getConfig().getLong("config.logwriteinterval"));
 			    	saveinterval = yaml.getConfig().getLong("config.saveinterval");
@@ -297,30 +311,14 @@ public class HyperConomy extends JavaPlugin{
 			    	namedata.clear();
 			    	enchantdata.clear();
 			    	names.clear();
+			    	inames.clear();
+			    	enames.clear();
 			    	
-			        //Map name data to materials for /hb, /hv, and /hs command lookups
-					Iterator<String> it = yaml.getItems().getKeys(false).iterator();
-					while (it.hasNext()) {   			
-						String elst = it.next().toString();    				
-						String ikey = yaml.getItems().getString(elst + ".information.id") + ":" + yaml.getItems().getString(elst + ".information.data");
-						namedata.put(ikey, elst);
-					}        		
-					Iterator<String> it2 = yaml.getEnchants().getKeys(false).iterator();
-					while (it2.hasNext()) {   			
-						String elst2 = it2.next().toString();    				
-						enchantdata.put(yaml.getEnchants().getString(elst2 + ".information.name"), elst2.substring(0, elst2.length() - 1));
-					}   
-					//Creates the names arraylist storing all item and enchantment names.
-					Iterator<String> it3 = yaml.getItems().getKeys(false).iterator();
-					while (it3.hasNext()) {   			  				
-						names.add(it3.next().toString().toLowerCase());
-					}  
-					Iterator<String> it4 = yaml.getEnchants().getKeys(false).iterator();
-					while (it4.hasNext()) {   			
-						names.add(it4.next().toString().toLowerCase());
-					} 
+			    	buildData();
 					
 					hyperobject = new HyperObject(this, yam, tran, calc, ench, m, l, s, acc, isign, commandhandler, hist, not, tsign, economy);
+					
+					sqllock = false;
 					
 					sender.sendMessage(ChatColor.GOLD + "All files have been reloaded.");
 				
@@ -340,7 +338,7 @@ public class HyperConomy extends JavaPlugin{
     	
     	
     	
-    	if (!lock) {
+    	if (!lock && !sqllock) {
     	
 	    	if (cmd.getName().equalsIgnoreCase("setinterval")) {
 	    		try {
@@ -414,6 +412,56 @@ public class HyperConomy extends JavaPlugin{
 
     
     
+    
+    
+    public void buildData() {
+    	inames.clear();
+    	namedata.clear();
+    	enames.clear();
+    	enchantdata.clear();
+    	names.clear();
+        if (usesql) {
+        	inames = sf.getStringColumn("SELECT NAME FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+        	ArrayList<String> iids = sf.getStringColumn("SELECT ID FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+        	ArrayList<String> idatas = sf.getStringColumn("SELECT DATA FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+        	for (int c = 0; c < inames.size(); c++) {
+        		namedata.put(iids.get(c) + ":" + idatas.get(c), inames.get(c));
+        	}
+        	//log.info(namedata.toString());
+        	enames = sf.getStringColumn("SELECT NAME FROM hyperobjects WHERE TYPE='enchantment' AND ECONOMY='default'");
+        	ArrayList<String> eids = sf.getStringColumn("SELECT MATERIAL FROM hyperobjects WHERE TYPE='enchantment' AND ECONOMY='default'");
+        	for (int c = 0; c < enames.size(); c++) {
+        		String enchantname = enames.get(c);
+        		enchantdata.put(eids.get(c), enchantname.substring(0, enchantname.length() - 1));
+        	}
+        	//log.info(enchantdata.toString());
+        	names = sf.getStringColumn("SELECT NAME FROM hyperobjects WHERE ECONOMY='default'");
+        } else {
+            //Map name data to materials for /hb, /hv, and /hs command lookups
+    		Iterator<String> it = yaml.getItems().getKeys(false).iterator();
+    		while (it.hasNext()) {   			
+    			String elst = it.next().toString();    				
+    			String ikey = yaml.getItems().getString(elst + ".information.id") + ":" + yaml.getItems().getString(elst + ".information.data");
+    			namedata.put(ikey, elst);
+    		}        
+    		
+    		Iterator<String> it2 = yaml.getEnchants().getKeys(false).iterator();
+    		while (it2.hasNext()) {   			
+    			String elst2 = it2.next().toString();    				
+    			enchantdata.put(yaml.getEnchants().getString(elst2 + ".information.name"), elst2.substring(0, elst2.length() - 1));
+    		}        
+    		
+    		//Creates the names arraylist storing all item and enchantment names.
+    		Iterator<String> it3 = yaml.getItems().getKeys(false).iterator();
+    		while (it3.hasNext()) {   			  				
+    			names.add(it3.next().toString());
+    		}  
+    		Iterator<String> it4 = yaml.getEnchants().getKeys(false).iterator();
+    		while (it4.hasNext()) {   			
+    			names.add(it4.next().toString());
+    		}  
+        }
+    }
 
     
 
@@ -519,6 +567,12 @@ public class HyperConomy extends JavaPlugin{
 	public ArrayList<String> getNames() {
 		return names;
 	}
+	public ArrayList<String> getInames() {
+		return inames;
+	}
+	public ArrayList<String> getEnames() {
+		return enames;
+	}
 
 	public boolean itemTest(String name) {
         String teststring = yaml.getItems().getString(name + ".stock.stock");
@@ -537,46 +591,139 @@ public class HyperConomy extends JavaPlugin{
         }
         return enchant;
 	}
+	
+	public String testiString (String name) {
+		String teststring = null;
+		if (useSQL()) {
+			 if (inames.contains(name)) {
+				 teststring = name;
+			 } else {
+				 teststring = null;
+			 }
+		} else {
+			teststring = getYaml().getItems().getString(name);
+		}
+		
+		if (teststring == null) {
+			name = fixName(name);
+			if (useSQL()) {
+				 if (inames.contains(name)) {
+					 teststring = name;
+				 } else {
+					 teststring = null;
+				 }
+			} else {
+				teststring = getYaml().getItems().getString(name);
+			}
+		}
+		
+		return teststring;
+	}
+	    
+	public String testeString (String name) {
+		String teststring = null;
+		if (useSQL()) {
+			 if (enames.contains(name)) {
+				 teststring = name;
+			 } else {
+				 teststring = null;
+			 }
+		} else {
+			teststring = getYaml().getEnchants().getString(name);
+		}
+		
+		if (teststring == null) {
+			name = fixName(name);
+			if (useSQL()) {
+				 if (enames.contains(name)) {
+					 teststring = name;
+				 } else {
+					 teststring = null;
+				 }
+			} else {
+				teststring = getYaml().getEnchants().getString(name);
+			}
+		}
+		
+		return teststring;
+	}
+	
     
     public boolean isLocked() {
     	return lock;
     }
     
+    public void sqllockShop() {
+    	sqllock = true;
+    }
+    
+    public void sqlunlockShop() {
+    	sqllock = false;
+    }
+    
+    public boolean sqlLock() {
+    	return sqllock;
+    }
+    
+    public boolean useSQL() {
+    	return usesql;
+    }
     
     
-    
-    //Fields
-    
-    
 
-	
-	private long saveinterval;
-	private int savetaskid;
-	
-	private YamlFile yaml;
-	private boolean lock;
-	private boolean brokenfile;
-	
-
-	
-
-
-
-
-	
-	
-	//private String name;
-	
-	
 	
 	
 	//Stores all item and enchantment names for reverse lookups.
 	private HashMap <String, String> namedata = new HashMap<String, String>();
 	private HashMap <String, String> enchantdata = new HashMap<String, String>();
 	
-	//Stores an arraylist of all item and enchantment names for other plugins to use.
+	//Stores an arraylist of all item and enchantment names for other functions to use.
 	private ArrayList<String> names = new ArrayList<String>();
+	private ArrayList<String> inames = new ArrayList<String>();
+	private ArrayList<String> enames = new ArrayList<String>();
 	
-}
+	
+
 
 //Latest error number: 34
+
+
+//Getters
+
+	public SQLFunctions getSQLFunctions() {
+		return sf;
+	}
+	public Transaction getTransaction() {
+		return tran;
+	}
+	public Calculation getCalculation() {
+		return calc;
+	}
+	public Shop getShop() {
+		return s;
+	}
+	public Economy getEconomy() {
+		return economy;
+	}
+	public ETransaction getETransaction() {
+		return ench;
+	}
+	public Log getLog() {
+		return l;
+	}
+	public Notify getNotify() {
+		return not;
+	}
+	public Account getAccount() {
+		return acc;
+	}
+	public InfoSign getInfoSign() {
+		return isign;
+	}
+	public SQLWrite getSQLWrite() {
+		return sw;
+	}
+	public SQLEconomy getSQLEconomy() {
+		return sqe;
+	}
+}

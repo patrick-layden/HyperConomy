@@ -93,6 +93,61 @@ public class Compatibility {
 	    		yaml.getConfig().set("config.currency-symbol", "$");
 	    		uptodate = false;
 	    	}
+	    	String t17 = yaml.getConfig().getString("config.sql-connection.use-sql");
+	    	if (t17 == null) {
+	    		yaml.getConfig().set("config.sql-connection.use-sql", false);
+	    		uptodate = false;
+	    	}
+	    	String t18 = yaml.getConfig().getString("config.sql-connection.username");
+	    	if (t18 == null) {
+	    		yaml.getConfig().set("config.sql-connection.username", "default");
+	    		uptodate = false;
+	    	}
+	    	String t19 = yaml.getConfig().getString("config.sql-connection.port");
+	    	if (t19 == null) {
+	    		yaml.getConfig().set("config.sql-connection.port", 3306);
+	    		uptodate = false;
+	    	}
+	    	String t20 = yaml.getConfig().getString("config.sql-connection.password");
+	    	if (t20 == null) {
+	    		yaml.getConfig().set("config.sql-connection.password", "default");
+	    		uptodate = false;
+	    	}
+	    	String t21 = yaml.getConfig().getString("config.sql-connection.host");
+	    	if (t21 == null) {
+	    		yaml.getConfig().set("config.sql-connection.host", "localhost");
+	    		uptodate = false;
+	    	}
+	    	String t22 = yaml.getConfig().getString("config.sql-connection.database");
+	    	if (t22 == null) {
+	    		yaml.getConfig().set("config.sql-connection.database", "minecraft");
+	    		uptodate = false;
+	    	}
+	    	String t23 = yaml.getConfig().getString("config.sales-tax-percent");
+	    	if (t23 == null) {
+	    		yaml.getConfig().set("config.sales-tax-percent", 0);
+	    		uptodate = false;
+	    	}
+	    	String t24 = yaml.getConfig().getString("config.dynamic-tax.use-dynamic-tax");
+	    	if (t24 == null) {
+	    		yaml.getConfig().set("config.dynamic-tax.use-dynamic-tax", false);
+	    		uptodate = false;
+	    	}
+	    	String t25 = yaml.getConfig().getString("config.dynamic-tax.money-cap");
+	    	if (t25 == null) {
+	    		yaml.getConfig().set("config.dynamic-tax.money-cap", 1000000);
+	    		uptodate = false;
+	    	}
+	    	String t26 = yaml.getConfig().getString("config.dynamic-tax.max-tax-percent");
+	    	if (t26 == null) {
+	    		yaml.getConfig().set("config.dynamic-tax.max-tax-percent", 100);
+	    		uptodate = false;
+	    	}
+	    	String t27 = yaml.getConfig().getString("config.dynamic-tax.money-floor");
+	    	if (t27 == null) {
+	    		yaml.getConfig().set("config.dynamic-tax.money-floor", 0);
+	    		uptodate = false;
+	    	}
 	    	
 	    	if (configversion == null || Double.parseDouble(configversion) < .912) {
 	    		hc.getYaml().getItems().set("xp.information.material", "N/A");

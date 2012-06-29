@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.924
+version: 0.933
 author: RegalOwl
 softdepend: [Vault, Buycraft]
 commands:
@@ -126,6 +126,10 @@ commands:
       permission: hyperconomy.admin
       permission-message: Unknown command. Type "help" for help.
       aliases: [sntax]
+   setsalestax:
+      description: Sets the sales tax.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
    setclassvalue:
       description: Sets the enchantment tax.
       permission: hyperconomy.admin
@@ -259,6 +263,35 @@ commands:
       description: Renames the account used by the global shop.
       permission: hyperconomy.admin
       permission-message: Unknown command. Type "help" for help.
+   seteconomy:
+      description: Sets your economy to the specified one.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [se]
+   setshopeconomy:
+      description: Sets a shop to use the specified economy.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [sse]
+   createeconomy:
+      description: Creates a new economy.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [cre]
+   deleteeconomy:
+      description: Deletes an economy.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+   listeconomies:
+      description: Lists all economies.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [lec]
+   economyinfo:
+      description: Tells you what economy you are a part of.
+      permission: hyperconomy.use
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [ei]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

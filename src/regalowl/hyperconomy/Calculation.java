@@ -30,6 +30,8 @@ public class Calculation {
 	 */
 	public double getValue(){
 		
+		sf = hc.getSQLFunctions();
+		
 		try {
 		
 		//Stores the total value for the item(s).
@@ -38,27 +40,57 @@ public class Calculation {
 		//Gets the items config file.
 		FileConfiguration items = hc.getYaml().getItems();
 		
+		int itemid = 0;
 		//Gets the item id and initializes the damage variable;
-		int itemid = items.getInt(name + ".information.id");
+		if (hc.useSQL()) {
+			playerecon = sf.getPlayerEconomy(p.getName());
+			itemid = sf.getId(name, playerecon);
+		} else {
+			itemid = items.getInt(name + ".information.id");
+		}
+		
 		id = itemid;
 		double damage = 0;
 
+		boolean isstatic = false;
+		if (hc.useSQL()) {
+			isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+		} else {
+			isstatic = items.getBoolean(name + ".price.static");
+		}
+		
 		//Checks to make sure the price is not static.
-		if (items.getBoolean(name + ".price.static") == false) {
+		if (!isstatic) {
 			
 			//Gets the total damage of all items with the given id and divides it by the number of items.
 			damage = getDamage(itemid);
 			//p.sendMessage("damage: " + damage);
 
 			//Gets the item's data from the items yaml file.
-			double shopstock = items.getDouble(name + ".stock.stock");
-			double value = items.getDouble(name + ".value");
-			double median = items.getDouble(name + ".stock.median");
-			double icost = items.getDouble(name + ".initiation.startprice");
+			double shopstock = 0;
+			double value = 0;
+			double median = 0;
+			double icost = 0;
+			
+			if (hc.useSQL()) {
+				shopstock = sf.getStock(name, playerecon);
+				value = sf.getValue(name, playerecon);
+				median = sf.getMedian(name, playerecon);
+				icost = sf.getStartPrice(name, playerecon);
+			} else {
+				shopstock = items.getDouble(name + ".stock.stock");
+				value = items.getDouble(name + ".value");
+				median = items.getDouble(name + ".stock.median");
+				icost = items.getDouble(name + ".initiation.startprice");
+			}
 			
 			//Deactivates the initial pricing period if the initial price is greater than or equal to the hyperbolic price and if the shop has more than 0 items.
 			if (icost >= ((median * value)/shopstock) && shopstock > 0) {
-				items.set(name + ".initiation.initiation", false);
+				if (hc.useSQL()) {
+					sf.setInitiation(name, playerecon, "false");
+				} else {
+					items.set(name + ".initiation.initiation", false);
+				}
 			}
 			
 			//Sums the value of all desired items.
@@ -76,7 +108,12 @@ public class Calculation {
 			totalvalue = totalvalue * damage;
 
 			//Checks to see if initiation is active.  If it is it converts the totalvalue to the initial value.
-			Boolean initial = items.getBoolean(name + ".initiation.initiation");
+			Boolean initial = false;
+			if (hc.useSQL()) {
+				initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+			} else {
+				initial = items.getBoolean(name + ".initiation.initiation");
+			}
 			if (initial == true){
 				totalvalue = icost * damage * amount;	
 			}
@@ -96,7 +133,12 @@ public class Calculation {
 			damage = getDamage(itemid);
 			
 			//Gets the static price and multiplies it by the number of items.
-			double statprice = items.getDouble(name + ".price.staticprice");
+			double statprice = 0;
+			if (hc.useSQL()) {
+				statprice = sf.getStaticPrice(name, playerecon);
+			} else {
+				statprice = items.getDouble(name + ".price.staticprice");
+			}
 			totalvalue = (statprice * amount) * damage;
 		}
 		
@@ -124,7 +166,7 @@ public class Calculation {
 	public double getCost(){
 		
 		try {
-		
+			sf = hc.getSQLFunctions();
 			//Stores the total cost for the item(s).
 			double cost = 0;
 	
@@ -132,13 +174,34 @@ public class Calculation {
 			FileConfiguration items = hc.getYaml().getItems();
 			
 			//Checks to see if the price is static.
-			if (items.getBoolean(name + ".price.static") == false) {
+			boolean isstatic = false;
+			if (hc.useSQL()) {
+				if (p != null) {
+					playerecon = sf.getPlayerEconomy(p.getName());
+				}
 				
+				isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+			} else {
+				isstatic = items.getBoolean(name + ".price.static");
+			}
+			if (isstatic == false) {
+				double shopstock = 0;
+				double oshopstock = 0;
+				double value = 0;
+				double median = 0;
+				if (hc.useSQL()) {
+					shopstock = sf.getStock(name, playerecon);
+					oshopstock = shopstock;
+					value = sf.getValue(name, playerecon);
+					median = sf.getMedian(name, playerecon);
+				} else {
+					shopstock = items.getDouble(name + ".stock.stock");
+					oshopstock = shopstock;
+					value = items.getDouble(name + ".value");
+					median = items.getDouble(name + ".stock.median");
+				}
 				//Gets the shop data for the item from the items file.
-				double shopstock = items.getDouble(name + ".stock.stock");
-				double oshopstock = shopstock;
-				double value = items.getDouble(name + ".value");
-				double median = items.getDouble(name + ".stock.median");
+
 		
 				//Offsets the shop stock by one so that buying and selling will result in no money gained or lost.  (The purchase price is set to what the price would have been after the purchase.)
 				shopstock = shopstock - 1;
@@ -153,15 +216,30 @@ public class Calculation {
 				}	
 				
 				//Checks to see if initiation is active.
-				Boolean initial = items.getBoolean(name + ".initiation.initiation");
+				Boolean initial = false;
+				if (hc.useSQL()) {
+					initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+				} else {
+					initial = items.getBoolean(name + ".initiation.initiation");
+				}
 				if (initial == true){
 					
 					//If initiation is active, gets the correct cost.
-					double icost = items.getDouble(name + ".initiation.startprice");
+					double icost = 0;
+					if (hc.useSQL()) {
+						icost = sf.getStartPrice(name, playerecon);
+					} else {
+						icost = items.getDouble(name + ".initiation.startprice");
+					}
+					
 		
 					//If the shop has more than 0 items (which results in infinite values), it makes sure the real cost is less than the initial cost.  If not, it turns off initiation.
 					if (cost < (icost * amount) && oshopstock > 0){
-						items.set(name + ".initiation.initiation", false);
+						if (hc.useSQL()) {
+							sf.setInitiation(name, playerecon, "false");
+						} else {
+							items.set(name + ".initiation.initiation", false);
+						}
 						
 					//If the initial cost is indeed more than the normal cost, the cost is recalculated to the correct initial cost. 
 					} else {
@@ -451,7 +529,7 @@ public class Calculation {
 	 * 
 	 */
 		public double getTvalue(){
-			
+			sf = hc.getSQLFunctions();
 			try {
 				
 				double cost = 0;
@@ -461,16 +539,43 @@ public class Calculation {
 				FileConfiguration items = hc.getYaml().getItems();
 	
 				//Determines whether initial prices will be used.
-				Boolean initial = items.getBoolean(name + ".initiation.initiation");
+				Boolean initial = false;
+				if (hc.useSQL()) {
+					if (p != null) {
+						playerecon = sf.getPlayerEconomy(p.getName());
+					}
+					initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+				} else {
+					initial = items.getBoolean(name + ".initiation.initiation");
+				}
+				
 				
 				//Checks if the price is set to static.
-				if (items.getBoolean(name + ".price.static") == false) {
+				boolean isstatic = false;
+				if (hc.useSQL()) {
+					sf.getStatic(name, playerecon);
+				} else {
+					isstatic = items.getBoolean(name + ".price.static");
+				}
+				if (!isstatic) {
 					
 					//Gets item data from the items yml file.
-					double shopstock = items.getDouble(name + ".stock.stock");
-					double value = items.getDouble(name + ".value");
-					double median = items.getDouble(name + ".stock.median");
-					double icost = items.getDouble(name + ".initiation.startprice");
+					double shopstock = 0;
+					double value = 0;
+					double median = 0;
+					double icost = 0;
+					if (hc.useSQL()) {
+						shopstock = sf.getStock(name, playerecon);
+						value = sf.getValue(name, playerecon);
+						median = sf.getMedian(name, playerecon);
+						icost = sf.getStartPrice(name, playerecon);
+					} else {
+						shopstock = items.getDouble(name + ".stock.stock");
+						value = items.getDouble(name + ".value");
+						median = items.getDouble(name + ".stock.median");
+						icost = items.getDouble(name + ".initiation.startprice");
+					}
+
 					
 					//Sums the cost in a loop.
 					while (counter < amount) {
@@ -496,8 +601,13 @@ public class Calculation {
 					}
 	
 				} else {
+					double statprice = 0;
+					if (hc.useSQL()) {
+						statprice = sf.getStaticPrice(name, playerecon);
+					} else {
+						statprice = items.getDouble(name + ".price.staticprice");
+					}
 					
-					double statprice = items.getDouble(name + ".price.staticprice");
 					cost = statprice * amount;
 				}
 			
@@ -608,6 +718,7 @@ public class Calculation {
 		}
 		
 		//Gets an item's true damage value, restoring damaged item's damage value to its original value and getting the correct damage value for potions.
+		
 		public int getdamageValue(ItemStack item) {
 			int itd = item.getTypeId();
 			setPDV(item);
@@ -616,7 +727,32 @@ public class Calculation {
 			int newdat = newData();
 			return newdat;
 		}
-
+		 
+		
+		public double getSalesTax(HyperConomy hyc, Player player, Double fprice) {
+			hc = hyc;
+			p = player;
+			acc = hc.getAccount();
+			double salestax = 0;
+			if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+				double moneyfloor = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-floor");
+				double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
+				double cbal = acc.getBalance(p.getName());
+				if (cbal >= moneycap) {
+					salestax = fprice * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent")/100);
+				} else if (cbal <= moneyfloor) {
+					salestax = 0;
+				} else {
+					salestax = fprice * ((cbal - moneyfloor)/(moneycap - moneyfloor));
+				}
+			} else {
+				double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
+				salestax = (salestaxpercent/100) * fprice;
+			}
+			return salestax;
+		}
+		
+		
 		
 		/**
 		 * 
@@ -668,6 +804,9 @@ public class Calculation {
 			item = itemstack;
 		}
 		
+		public void setPlayerEcon(String econ) {
+			playerecon = econ;
+		}
 		
 		
 		
@@ -681,6 +820,9 @@ public class Calculation {
 		private int data;
 		private ItemStack item;
 		private ETransaction ench;
+		private SQLFunctions sf;
+		private String playerecon;
+		private Account acc;
 		
 	
 }
