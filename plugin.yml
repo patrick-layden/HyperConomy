@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.933
+version: 0.944
 author: RegalOwl
 softdepend: [Vault, Buycraft]
 commands:
@@ -111,25 +111,6 @@ commands:
       permission: hyperconomy.admin
       permission-message: Unknown command. Type "help" for help.
       aliases: [stax]
-   setinitialtax:
-      description: Sets the initial tax.
-      permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
-      aliases: [sitax]
-   setstatictax:
-      description: Sets the static tax.
-      permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
-      aliases: [sstax]
-   setenchanttax:
-      description: Sets the enchantment tax.
-      permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
-      aliases: [sntax]
-   setsalestax:
-      description: Sets the sales tax.
-      permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
    setclassvalue:
       description: Sets the enchantment tax.
       permission: hyperconomy.admin
@@ -292,6 +273,51 @@ commands:
       permission: hyperconomy.use
       permission-message: Unknown command. Type "help" for help.
       aliases: [ei]
+   loaditems:
+      description: Loads new items into the specified economy.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+   exporttoyml:
+      description: Exports the selected economy to the items and enchants yml files.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+   hcbackup:
+      description: Backs up all HyperConomy data.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+   ymladditem:
+      description: Adds the item you're holding to the yml item database.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+   importsql:
+      description: Imports HyperConomy SQL backup files.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+   addcategory:
+      description: Adds a category to a shop.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [acat]
+   removecategory:
+      description: Removes a category from a shop.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [rcat]
+   listcategories:
+      description: Lists all categories.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [lcat]
+   setstockall:
+      description: Sets the stock of all items to the specified amount.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [ssa]
+   setinitiationall:
+      description: Sets all objects to use initial pricing.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [sia]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

@@ -1,6 +1,6 @@
 package regalowl.hyperconomy;
 
-import java.io.FileWriter;
+
 import java.util.ArrayList;
 import java.util.Date;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,7 +18,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class Log {
 	
 	private ArrayList<String> buffer;	
-	//private int logsize;
 	private HyperConomy hc;
 	private String entry;
 	
@@ -96,13 +95,7 @@ public class Log {
   		hc.getYaml().saveYamls();	
   	}
   	
-  	
-  	
-  	
-  	
-  	
-  	
-  	
+
     public void setrequestBuffer(boolean bufferstate) {
     	requestbuffer = bufferstate;
     }
@@ -124,10 +117,7 @@ public class Log {
     	return loginterval;
     }
   	
-  	
-  	
-  	
-  	
+
   	
     public void startBuffer() {
     	bufferactive = true;
@@ -155,36 +145,5 @@ public class Log {
     		startBuffer();
     	}
     }
-  	
-  	
-  	
 
-  	//Used by the /writeitems command to write a list of all item names to file.
-  	public void writeItems() {
-  		try{
-  			// Create file 
-  			FileWriter fstream = new FileWriter("plugins\\HyperConomy\\ItemNames.txt", true);
-  			fstream.write(entry);
-  			//Close the output stream
-  			fstream.close();
-  		}catch (Exception e){//Catch exception if any
-  			e.printStackTrace();
-  		}
-  	}
-  	public void writeEnchants() {
-  		try{
-  			// Create file 
-  			FileWriter fstream = new FileWriter("plugins\\HyperConomy\\EnchantmentNames.txt", true);
-  			fstream.write(entry);
-  			//Close the output stream
-  			fstream.close();
-  		}catch (Exception e){//Catch exception if any
-  			e.printStackTrace();
-  		}
-  	}
-  	
-  	
-  	
-  	
-  	
 }

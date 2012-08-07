@@ -24,15 +24,9 @@ public class InfoSign implements Listener {
 	private boolean stoprequested;
 	
 	private FileConfiguration sns;
-	private FileConfiguration itemsyml;
-	private FileConfiguration enchantsyml;
-	private FileConfiguration historyyml;
 	
 	private HyperConomy hc;
 	private Calculation calc;
-	private ETransaction ench;
-	private Transaction trans;
-	
 	private Set<String> names;
 	
 	private ArrayList<String> signkeys = new ArrayList<String>();
@@ -49,29 +43,17 @@ public class InfoSign implements Listener {
 	
 	
 	public void setinfoSign(HyperConomy hyperc, Calculation clc, ETransaction enchant, Transaction tran) {
-		
 		activesign = 0;
 		stoprequested = false;
-		
-		//Reused Variables
 		hc = hyperc;
 		calc = clc;
-		ench = enchant;
-		trans = tran;
-		
-		//Just for shortening of future code.
 		sns = hc.getYaml().getSigns();
-		itemsyml = hc.getYaml().getItems();
-		enchantsyml = hc.getYaml().getEnchants();
-		historyyml = hc.getYaml().getHistory();
 		
 		signupdateinterval = hc.getYaml().getConfig().getLong("config.signupdateinterval");
     	requestsignupdate = false;
     	signupdateactive = false;
     	signupdaterepeat = false;
-		
-		//Registers the event.
-		
+
 		if (hc.getYaml().getConfig().getBoolean("config.use-info-signs")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
 		}
@@ -80,14 +62,10 @@ public class InfoSign implements Listener {
 		
 		//Adds all enchantment and item names to names Set.
 		names = new HashSet<String>();
-		Iterator<String> it = hc.getYaml().getItems().getKeys(false).iterator();
-		while (it.hasNext()) {   			  				
-			names.add(it.next().toString().toLowerCase());
-		}  
-		Iterator<String> it2 = hc.getYaml().getEnchants().getKeys(false).iterator();
-		while (it2.hasNext()) {   			
-			names.add(it2.next().toString().toLowerCase());
-		}  
+		ArrayList<String> anames = hc.getNames();
+		for (int i = 0; i < anames.size(); i ++) {
+			names.add(anames.get(i));
+		}
 		
 		
 		//Creates an ArrayList of all sign keys.
@@ -177,13 +155,15 @@ public class InfoSign implements Listener {
 					String type = sns.getString(signkey + ".type");
 					String economy = sns.getString(signkey + ".economy");
 					if (hc.useSQL()) {
-						if (!hc.getSQLEconomy().exists(economy)) {
+						if (!hc.getSQLFunctions().testEconomy(economy)) {
 							sns.set(signkey + ".economy", "default");
 							economy = "default";
 						}
-						if (economy == null) {
-							economy = "default";
-						}
+					}
+					
+					if (economy == null) {
+						sns.set(signkey + ".economy", "default");
+						economy = "default";
 					}
 
 					
@@ -221,24 +201,26 @@ public class InfoSign implements Listener {
 			            boolean item = hc.itemTest(itemn);
 			            boolean enchant = hc.enchantTest(itemn);
 			            
+			            //Bukkit.broadcastMessage(itemn + ":" + economy);
+			            
 						if (type.equalsIgnoreCase("Sell")) {
 							if (item) {
-								calc.setVC(hc, null, 1, itemn, null);
-								calc.setPlayerEcon(economy);
-								line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue();
+								double value = calc.getTvalue(itemn, 1, economy);
+								value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+								line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 							} else if (enchant) {
 	
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
 								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {			
-									ench.setPlayerEconomy(economy);
-									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
-									line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getValue();
+									double value = calc.getEnchantValue(itemn, sns.getString(signkey + ".enchantclass"), economy);
+									value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+									line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
-										ench.setPlayerEconomy(economy);
-										ench.setVC(hc, itemn, line3, calc);
-										line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getValue();
+										double value = calc.getEnchantValue(itemn, line3, economy);
+										value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+										line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 										sns.set(signkey + ".enchantclass", line3);
 									} else {
 										activesign++;
@@ -249,22 +231,21 @@ public class InfoSign implements Listener {
 	
 						} else if (type.equalsIgnoreCase("Buy")) {
 							if (item) {
-								calc.setVC(hc, null, 1, itemn, null);
-								calc.setPlayerEcon(economy);
-								line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getCost();
+								double pcost = calc.getCost(itemn, 1, economy);
+								line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + (pcost + calc.getPurchaseTax(itemn, economy, pcost));
 							} else if (enchant) {
 	
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
-								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {			
-									ench.setPlayerEconomy(economy);
-									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
-									line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getCost();
+								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {		
+									double cost = calc.getEnchantCost(itemn, sns.getString(signkey + ".enchantclass"), economy);
+									cost = cost + calc.getEnchantTax(itemn, economy, cost);
+									line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost;
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
-										ench.setPlayerEconomy(economy);
-										ench.setVC(hc, itemn, line3, calc);
-										line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getCost();
+										double cost = calc.getEnchantCost(itemn, line3, economy);
+										cost = cost + calc.getEnchantTax(itemn, economy, cost);
+										line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost;
 										sns.set(signkey + ".enchantclass", line3);
 									} else {
 										activesign++;
@@ -279,33 +260,32 @@ public class InfoSign implements Listener {
 						} else if (type.equalsIgnoreCase("SB")) {
 							if (item) {
 								line23 = null;
-								calc.setVC(hc, null, 1, itemn, null);
-								calc.setPlayerEcon(economy);
-								SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getCost();
-								calc.setVC(hc, null, 1, itemn, null);
-								SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getTvalue();
+								double pcost = calc.getCost(itemn, 1, economy);
+								SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + (pcost + calc.getPurchaseTax(itemn, economy, pcost));
+								double value = calc.getTvalue(itemn, 1, economy);
+								value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+								SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 							} else if (enchant) {
 	
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
 								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {			
 									line23 = null;
-									ench.setPlayerEconomy(economy);
-									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
-									SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getCost();
-									ench.setPlayerEconomy(economy);
-									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
-									SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getValue();
+									double cost = calc.getEnchantCost(itemn, sns.getString(signkey + ".enchantclass"), economy);
+									cost = cost + calc.getEnchantTax(itemn, economy, cost);
+									SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost;
+									double value = calc.getEnchantValue(itemn, sns.getString(signkey + ".enchantclass"), economy);
+									value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+									SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
 										line23 = null;
-										ench.setPlayerEconomy(economy);
-										ench.setVC(hc, itemn, line3, calc);
-										SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getCost();
-										ench.setPlayerEconomy(economy);
-										ench.setVC(hc, itemn, line3, calc);
-										SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + ench.getValue();
-										
+										double cost = calc.getEnchantCost(itemn, line3, economy);
+										cost = cost + calc.getEnchantTax(itemn, economy, cost);
+										SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost;
+										double value = calc.getEnchantValue(itemn, line3, economy);
+										value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+										SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 										sns.set(signkey + ".enchantclass", line3);
 									} else {
 										activesign++;
@@ -318,35 +298,20 @@ public class InfoSign implements Listener {
 							
 						} else if (type.equalsIgnoreCase("Stock")) {
 							if (item) {
-								if (hc.useSQL()) {
-									line23 = "§fStock: " + "§a" + hc.getSQLFunctions().getStock(itemn, economy);
-								} else {
-									line23 = "§fStock: " + "§a" + itemsyml.getInt(itemn + ".stock.stock");
-								}
+								line23 = "§fStock: " + "§a" + hc.getSQLFunctions().getStock(itemn, economy);
 							} else if (enchant) {
-								if (hc.useSQL()) {
-									line23 = "§fStock: " + "§a" + hc.getSQLFunctions().getStock(itemn, economy);
-								} else {
-									line23 = "§fStock: " + "§a" + enchantsyml.getInt(itemn + ".stock.stock");
-								}
+								line23 = "§fStock: " + "§a" + hc.getSQLFunctions().getStock(itemn, economy);
 							}
 						} else if (type.equalsIgnoreCase("Status")) {
 							if (item) {
 								boolean staticstatus;
-								if (hc.useSQL()) {
-									staticstatus = Boolean.parseBoolean(hc.getSQLFunctions().getStatic(itemn, economy));
-								} else {
-									staticstatus = itemsyml.getBoolean(itemn + ".price.static");
-								}
+								staticstatus = Boolean.parseBoolean(hc.getSQLFunctions().getStatic(itemn, economy));
 								if (staticstatus) {
 									line23 = "§fStatus: " + "§a" + "Static";
 								} else {
 									boolean initialstatus;
-									if (hc.useSQL()) {
-										initialstatus = Boolean.parseBoolean(hc.getSQLFunctions().getInitiation(itemn, economy));
-									} else {
-										initialstatus = itemsyml.getBoolean(itemn + ".initiation.initiation");
-									}
+									initialstatus = Boolean.parseBoolean(hc.getSQLFunctions().getInitiation(itemn, economy));
+	
 									if (initialstatus) {
 										line23 = "§fStatus: " + "§a" + "Initial";
 									} else {
@@ -355,20 +320,12 @@ public class InfoSign implements Listener {
 								}
 							} else if (enchant) {
 								boolean staticstatus;
-								if (hc.useSQL()) {
-									staticstatus = Boolean.parseBoolean(hc.getSQLFunctions().getStatic(itemn, economy));
-								} else {
-									staticstatus = enchantsyml.getBoolean(itemn + ".price.static");
-								}
+								staticstatus = Boolean.parseBoolean(hc.getSQLFunctions().getStatic(itemn, economy));
 								if (staticstatus) {
 									line23 = "§fStatus: " + "§a" + "Static";
 								} else {
 									boolean initialstatus;
-									if (hc.useSQL()) {
-										initialstatus = Boolean.parseBoolean(hc.getSQLFunctions().getInitiation(itemn, economy));
-									} else {
-										initialstatus = enchantsyml.getBoolean(itemn + ".initiation.initiation");
-									}
+									initialstatus = Boolean.parseBoolean(hc.getSQLFunctions().getInitiation(itemn, economy));
 									if (initialstatus) {
 										line23 = "§fStatus: " + "§a" + "Initial";
 									} else {
@@ -378,59 +335,27 @@ public class InfoSign implements Listener {
 							}
 						} else if (type.equalsIgnoreCase("Value")) {
 							if (item) {
-								if (hc.useSQL()) {
-									line23 = "§fValue: " + "§a" + hc.getSQLFunctions().getValue(itemn, economy);
-								} else {
-									line23 = "§fValue: " + "§a" + itemsyml.getDouble(itemn + ".value");
-								}
+								line23 = "§fValue: " + "§a" + hc.getSQLFunctions().getValue(itemn, economy);
 							} else if (enchant) {
-								if (hc.useSQL()) {
-									line23 = "§fValue: " + "§a" + hc.getSQLFunctions().getValue(itemn, economy);;
-								} else {
-									line23 = "§fValue: " + "§a" + enchantsyml.getDouble(itemn + ".value");
-								}
+								line23 = "§fValue: " + "§a" + hc.getSQLFunctions().getValue(itemn, economy);;
 							}
 						} else if (type.equalsIgnoreCase("Static Price")) {
 							if (item) {
-								if (hc.useSQL()) {
-									line23 = "§fStatic Price: " + "§a" + hc.getSQLFunctions().getStaticPrice(itemn, economy);
-								} else {
-									line23 = "§fStatic Price: " + "§a" + itemsyml.getDouble(itemn + ".price.staticprice");
-								}
+								line23 = "§fStatic Price: " + "§a" + hc.getSQLFunctions().getStaticPrice(itemn, economy);
 							} else if (enchant) {
-								if (hc.useSQL()) {
-									line23 = "§fStatic Price: " + "§a" + hc.getSQLFunctions().getStaticPrice(itemn, economy);
-								} else {
-									line23 = "§fStatic Price: " + "§a" + enchantsyml.getDouble(itemn + ".price.staticprice");
-								}
+								line23 = "§fStatic Price: " + "§a" + hc.getSQLFunctions().getStaticPrice(itemn, economy);
 							}
 						} else if (type.equalsIgnoreCase("Start Price")) {
 							if (item) {
-								if (hc.useSQL()) {
-									line23 = "§fStart Price: " + "§a" + hc.getSQLFunctions().getStartPrice(itemn, economy);
-								} else {
-									line23 = "§fStart Price: " + "§a" + itemsyml.getDouble(itemn + ".initiation.startprice");
-								}
+								line23 = "§fStart Price: " + "§a" + hc.getSQLFunctions().getStartPrice(itemn, economy);
 							} else if (enchant) {
-								if (hc.useSQL()) {
-									line23 = "§fStart Price: " + "§a" + hc.getSQLFunctions().getStartPrice(itemn, economy);
-								} else {
-									line23 = "§fStart Price: " + "§a" + enchantsyml.getDouble(itemn + ".initiation.startprice");
-								}
+								line23 = "§fStart Price: " + "§a" + hc.getSQLFunctions().getStartPrice(itemn, economy);
 							}
 						} else if (type.equalsIgnoreCase("Median")) {
 							if (item) {
-								if (hc.useSQL()) {
-									line23 = "§fMedian: " + "§a" + hc.getSQLFunctions().getMedian(itemn, economy);
-								} else {
-									line23 = "§fMedian: " + "§a" + itemsyml.getInt(itemn + ".stock.median");
-								}
+								line23 = "§fMedian: " + "§a" + hc.getSQLFunctions().getMedian(itemn, economy);
 							} else if (enchant) {
-								if (hc.useSQL()) {
-									line23 = "§fMedian: " + "§a" + hc.getSQLFunctions().getMedian(itemn, economy);
-								} else {
-									line23 = "§fMedian: " + "§a" + enchantsyml.getInt(itemn + ".stock.median");
-								}
+								line23 = "§fMedian: " + "§a" + hc.getSQLFunctions().getMedian(itemn, economy);
 							}
 						} else if (type.equalsIgnoreCase("History")) {
 							
@@ -494,43 +419,20 @@ public class InfoSign implements Listener {
 		
 							
 						} else if (type.equalsIgnoreCase("Tax")) {
-							if (item) {
-								calc.setVC(hc, null, 1, itemn, null);
-								calc.setPlayerEcon(economy);
-								calc.getCost();
-								trans.settaxPaid(hc, itemn, calc);
-								line23 = "§fTax: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + trans.gettaxPaid(calc.getCost());
+							if (item) {			
+								line23 = "§fTax: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.getPurchaseTax(itemn, economy, calc.getCost(itemn, 1, economy));
 							} else if (enchant) {
 
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
 								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {			
-									ench.setPlayerEconomy(economy);
-									ench.setVC(hc, itemn, sns.getString(signkey + ".enchantclass"), calc);
-									double price = ench.getCost();
-									Boolean stax = enchantsyml.getBoolean(itemn + ".price.static");
-									double taxrate;
-									if (!stax) {
-										taxrate = hc.getYaml().getConfig().getDouble("config.enchanttaxpercent");
-									} else {
-										taxrate = hc.getYaml().getConfig().getDouble("config.statictaxpercent");
-									}
-									double taxpaid = price - (price/(1 + taxrate/100));
-									taxpaid = calc.twoDecimals(taxpaid);
+									double price = calc.getEnchantCost(itemn, sns.getString(signkey + ".enchantclass"), economy);
+									double taxpaid = calc.twoDecimals(calc.getEnchantTax(itemn, economy, price));
 									line23 = "§fTax: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid;
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
 									if (testtype != 0) {
-										ench.setPlayerEconomy(economy);
-										ench.setVC(hc, itemn, line3, calc);
-										double price = ench.getCost();
-										Boolean stax = enchantsyml.getBoolean(itemn + ".price.static");
-										double taxrate;
-										if (!stax) {
-											taxrate = hc.getYaml().getConfig().getDouble("config.enchanttaxpercent");
-										} else {
-											taxrate = hc.getYaml().getConfig().getDouble("config.statictaxpercent");
-										}
-										double taxpaid = price - (price/(1 + taxrate/100));
+										double price = calc.getEnchantCost(itemn, line3, economy);
+										double taxpaid = calc.twoDecimals(calc.getEnchantTax(itemn, economy, price));
 										taxpaid = calc.twoDecimals(taxpaid);
 										line23 = "§fTax: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid;
 										sns.set(signkey + ".enchantclass", line3);
@@ -577,7 +479,6 @@ public class InfoSign implements Listener {
 					
 					
 				} catch (Exception e) {
-					
 					activesign++;
 					return false;
 				}
@@ -685,72 +586,25 @@ public class InfoSign implements Listener {
 	
 	
 	private String getpercentChange(String itemn, int timevalue, String economy) {
-		
-		Double percentc = 0.0;
-		
-        String teststring = itemsyml.getString(itemn + ".stock.stock");
-        String teststring2 = enchantsyml.getString(itemn + ".stock.stock");
-		String historylist = historyyml.getString(itemn);
-		
-		
-		int numberentries = 0;
-		if (historylist != null) {
-			numberentries = historylist.replaceAll("[\\d]", "").replace(".", "").length();
+		String percentchange = "";
+		SQLFunctions sf = hc.getSQLFunctions();
+		double percentc = 0.0;
+		String teststring = hc.testiString(itemn);
+        String teststring2 = hc.testeString(itemn);
+        double historicvalue = sf.getHistoryData(itemn, economy, timevalue);
+        if (historicvalue == -1.0) {
+        	return "?";
+        }
+		if (teststring != null) {
+			Double currentvalue = calc.getTvalue(itemn, 1, economy);
+			percentc = ((currentvalue - historicvalue)/historicvalue) * 100;
+			percentc = calc.threeDecimals(percentc);
+		} else if (teststring2 != null) {
+			Double currentvalue = calc.getEnchantValue(itemn, "diamond", economy);
+			percentc = ((currentvalue - historicvalue)/historicvalue) * 100;
+			percentc = calc.threeDecimals(percentc);
 		}
-		
-		
-		if (numberentries >= (timevalue)) {
-			
-			if (teststring != null) {
-				calc.setVC(hc, null, 1, itemn, null);
-				calc.setPlayerEcon(economy);
-				Double currentvalue = calc.getTvalue();
-				int i = 1;
-				while (i < timevalue) {
-					historylist = historylist.substring(0, historylist.length() - 1);
-					historylist = historylist.substring(0, historylist.lastIndexOf(",") + 1);
-					i++;
-				}
-				
-				historylist = historylist.substring(0, historylist.length() - 1);
-				
-				Double historicvalue = Double.parseDouble(historylist.substring(historylist.lastIndexOf(",") + 1, historylist.length()));
-				
-				percentc = ((currentvalue - historicvalue)/historicvalue) * 100;
-				percentc = calc.threeDecimals(percentc);
-				
-			
-
-				
-			} else if (teststring2 != null) {
-				ench.setVC(hc, itemn, "diamond", calc);
-				calc.setPlayerEcon(economy);
-				Double currentvalue = ench.getValue();
-				
-				int i = 1;
-				while (i < timevalue) {
-					historylist = historylist.substring(0, historylist.length() - 1);
-					historylist = historylist.substring(0, historylist.lastIndexOf(",") + 1);
-					i++;
-				}
-				
-				historylist = historylist.substring(0, historylist.length() - 1);
-				
-				Double historicvalue = Double.parseDouble(historylist.substring(historylist.lastIndexOf(",") + 1, historylist.length()));
-				
-				percentc = (currentvalue - historicvalue)/currentvalue;
-				percentc = calc.threeDecimals(percentc);
-				
-			
-				
-			}
-			
-		}
-		String percentchange = percentc + "";
-		if (numberentries < (timevalue)) {
-			percentchange = "?";
-		}
-		
+		percentchange = percentc + "";
 		return percentchange;
 	}
 

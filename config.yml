@@ -1,4 +1,4 @@
-version: 0.933
+version: 0.944
 config:
   shopcheckinterval: 20
   logwriteinterval: 15
@@ -23,6 +23,7 @@ config:
   currency-symbol: $
   notify-for: diamond,diamondblock,
   sales-tax-percent: 0
+  run-automatic-backups: true
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0
@@ -45,3 +46,14 @@ config:
     password: default
     host: localhost
     database: minecraft
+    max-sql-threads: 20
+  web-page:
+    port: 8765
+    use-web-page: false
+    background-color: EEEEF6
+    font-color: 333333
+    border-color: D8DFE4
+    increase-value-color: A0FFB0
+    decrease-value-color: FFA0A0
+    highlight-row-color: B4FAF9
+    header-color: B8B4FF

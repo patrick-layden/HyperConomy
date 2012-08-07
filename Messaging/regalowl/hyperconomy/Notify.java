@@ -9,7 +9,6 @@ public class Notify {
 	
 	private HyperConomy hc;
 	private Calculation calc;
-	private ETransaction ench;
 	private ArrayList<String> name = new ArrayList<String>();
 	private ArrayList<String> eclass = new ArrayList<String>();
 	
@@ -33,7 +32,6 @@ public class Notify {
 		
 		hc = hyperc;
 		calc = cal;
-		ench = enchant;
 		usenotify = hc.getYaml().getConfig().getBoolean("config.use-notifications");
 		econ = economy;
 		
@@ -67,13 +65,8 @@ public class Notify {
 			double cost = 0.0;
 			int stock = 0;
 			if (hc.itemTest(name.get(0))) {
-				calc.setVC(hc, null, 1, name.get(0), null);
-				if (hc.useSQL()) {
-					stock = (int) sf.getStock(name.get(0), econ);
-				} else {
-					stock = hc.getYaml().getItems().getInt(name.get(0) + ".stock.stock");
-				}
-				cost = calc.getCost();
+				stock = (int) sf.getStock(name.get(0), econ);
+				cost = calc.getCost(name.get(0), 1, econ);
 				
 				String message = "";
 				if (hc.useSQL()) {
@@ -87,13 +80,9 @@ public class Notify {
 					previousmessage = message;
 				}
 			} else if (hc.enchantTest(name.get(0))) {
-				ench.setVC(hc, name.get(0), eclass.get(0), calc);
-				cost = ench.getCost();
-				if (hc.useSQL()) {
-					stock = (int) sf.getStock(name.get(0), econ);
-				} else {
-					stock = hc.getYaml().getEnchants().getInt(name.get(0) + ".stock.stock");
-				}
+				cost = calc.getEnchantCost(name.get(0), eclass.get(0), econ);
+				cost = cost + calc.getEnchantTax(name.get(0), econ, cost);
+				stock = (int) sf.getStock(name.get(0), econ);
 				String message = "";
 				if (hc.useSQL()) {
 					message = "§9The §f" + econ + " §9economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";

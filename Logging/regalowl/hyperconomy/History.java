@@ -1,9 +1,6 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.bukkit.configuration.file.FileConfiguration;
 
 
 /**
@@ -16,12 +13,10 @@ public class History {
 	
 	private HyperConomy hc;
 	private Calculation calc;
-	private ETransaction ench;
 	private InfoSign isign;
 	
 	private ArrayList<String> historykeys = new ArrayList<String>();
-	
-	private int daystosavehistory;
+
 	
 	private long historyloginterval;
 	private int historylogtaskid;
@@ -31,84 +26,34 @@ public class History {
 	History(HyperConomy hyperc, Calculation cal, ETransaction enchant, InfoSign infosign) {
 		hc = hyperc;
 		calc = cal;
-		ench = enchant;
 		isign = infosign;
-		
-		daystosavehistory = hc.getYaml().getConfig().getInt("config.daystosavehistory");
+
 		historyloginterval = 72000;
-		//historyloginterval = 200;
+		//historyloginterval = 800;
 	}
 
 
 
   	
   	public void writehistoryThread() {
-  		
-  		if (hc.useSQL()) {
-  			
   			sf = hc.getSQLFunctions();
+  			historykeys = sf.getKeys();
   			
+  			ArrayList<String> inames = hc.getInames();
+  			ArrayList<String> enames = hc.getEnames();
   			
-  			
-  		} else {
-
-  	  		FileConfiguration items = hc.getYaml().getItems();
-  	  		FileConfiguration enchants = hc.getYaml().getEnchants();
-  	  		FileConfiguration history = hc.getYaml().getHistory();
-
-  			//Creates an ArrayList of all history entry keys.
-  			Iterator<String> iterat = history.getKeys(false).iterator();
-  			while (iterat.hasNext()) { 
-  				historykeys.add(iterat.next().toString());
-  			}
-  			
-  			//Adds all items to the history file.
-  			Iterator<String> iterat2 = items.getKeys(false).iterator();
-  			while (iterat2.hasNext()) { 
-  				String currentitem = iterat2.next().toString();
-  				
-  				calc.setVC(hc, null, 1, currentitem, null);
-  				
-  				if (!historykeys.contains(currentitem)) {
-  					historykeys.add(currentitem);
-  					history.set(currentitem, calc.getTvalue() + ",");
-  				} else {
-  					String historylist = history.getString(currentitem);
-  					historylist = historylist + calc.getTvalue() + ",";
-  					//Stops the history file from growing larger than 2 weeks of entries.
-  					if (historylist.replaceAll("[\\d]", "").replace(".", "").length() > (daystosavehistory * 24)) {
-  						historylist = historylist.substring(historylist.indexOf(",") + 1, historylist.length());
-  					}
-  					history.set(currentitem, historylist);
-  					
-
+  			for (int i = 0; i < historykeys.size(); i++) {
+  				String key = historykeys.get(i);
+  				String name = key.substring(0, key.indexOf(":"));
+  				String economy = key.substring(key.indexOf(":") + 1, key.length());
+  				Double price = 0.0;
+  				if (inames.contains(name)) {
+  					price = calc.getTvalue(name, 1, economy);
+  				} else if (enames.contains(name)) {
+  					price = calc.getEnchantValue(name, "diamond", economy);
   				}
+  				sf.writeHistoryData(name, economy, price);
   			}
-  			
-  			
-  			//Adds all enchants to the history file.
-  			Iterator<String> iterat3 = enchants.getKeys(false).iterator();
-  			while (iterat3.hasNext()) { 
-  				String currentenchant = iterat3.next().toString();
-  				
-  				ench.setVC(hc, currentenchant, "diamond", calc);
-  				
-  				if (!historykeys.contains(currentenchant)) {
-  					historykeys.add(currentenchant);
-  					history.set(currentenchant, ench.getValue() + ",");
-  				} else {
-  					String historylist = history.getString(currentenchant);
-  					historylist = historylist + ench.getValue() + ",";
-  					//Stops the history file from growing larger than 2 weeks of entries.
-  					if (historylist.replaceAll("[\\d]", "").replace(".", "").length() > (daystosavehistory * 24)) {
-  						historylist = historylist.substring(historylist.indexOf(",") + 1, historylist.length());
-  					}
-  					history.set(currentenchant, historylist);
-  				}
-  			}
-
-  		}
-  		
   	}
   	
   	
@@ -121,8 +66,12 @@ public class History {
 			    	writehistoryThread();
 			    	
 					//Updates all information signs.
-					isign.setrequestsignUpdate(true);
-					isign.checksignUpdate();
+					historylogtaskid = hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+					    public void run() {
+					    	isign.setrequestsignUpdate(true);
+					    	isign.checksignUpdate();
+					    }
+					}, 200L);
 			    }
 			}, (historyloginterval/2), historyloginterval);
     	}
@@ -132,7 +81,6 @@ public class History {
     public void stophistoryLog() {
     	hc.getServer().getScheduler().cancelTask(historylogtaskid);
     }
-
 
   	
 }

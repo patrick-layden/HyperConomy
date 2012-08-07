@@ -2,19 +2,15 @@ package regalowl.hyperconomy;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
-public class Buy {
+public class Sell {
 	HyperConomy hc;
 
-	Buy(String args[], Player player, String playerecon) {
+	Sell(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		Transaction tran = hc.getTransaction();
-		Calculation calc = hc.getCalculation();
 		Shop s = hc.getShop();
-
 		try {
 			s.setinShop(player);
 			if (s.inShop() != -1) {
@@ -24,14 +20,11 @@ public class Buy {
 						|| player.hasPermission("hyperconomy.shop."
 								+ s.getShop(player))
 						|| player.hasPermission("hyperconomy.shop."
-								+ s.getShop(player) + ".buy")) {
+								+ s.getShop(player) + ".sell")) {
 					String name = args[0];
 					int amount = 0;
 					String teststring = hc.testiString(name);
-					int id = 0;
-					int data = 0;
-					id = sf.getId(name, playerecon);
-					data = sf.getData(name, playerecon);
+
 					if (teststring != null) {
 						if (args.length == 1) {
 							amount = 1;
@@ -41,27 +34,13 @@ public class Buy {
 							} catch (Exception e) {
 								String max = args[1];
 								if (max.equalsIgnoreCase("max")) {
-									MaterialData damagemd = new MaterialData(
-											id, (byte) data);
-									ItemStack damagestack = damagemd
-											.toItemStack();
-									int space = 0;
-									if (id >= 0) {
-										space = tran.getavailableSpace(id, calc
-												.getdamageValue(damagestack),
-												player);
-									}
-									amount = space;
-									int shopstock = (int) sf.getStock(name,
-											playerecon);
-									// Buys the most possible from the shop if
-									// the amount is more than that for max.
-									if (amount > shopstock) {
-										amount = shopstock;
-									}
+									amount = tran.countInvitems(
+											sf.getId(name, playerecon),
+											sf.getData(name, playerecon),
+											player);
 								} else {
 									player.sendMessage(ChatColor.DARK_RED
-											+ "Invalid Parameters. Use /buy [name] (amount or 'max')");
+											+ "Invalid parameters. Use /sell [name] (amount or 'max').");
 									return;
 								}
 							}
@@ -69,7 +48,9 @@ public class Buy {
 					}
 					if (teststring != null) {
 						if (s.has(s.getShop(player), name)) {
-							tran.buy(name, amount, id, data, player);
+							tran.sell(name, sf.getId(name, playerecon),
+									sf.getData(name, playerecon), amount,
+									player);
 						} else {
 							player.sendMessage(ChatColor.BLUE
 									+ "Sorry, that item or enchantment cannot be traded at this shop.");
@@ -92,7 +73,7 @@ public class Buy {
 			}
 		} catch (Exception e) {
 			player.sendMessage(ChatColor.DARK_RED
-					+ "Invalid Parameters. Use /buy [name] (amount or 'max')");
+					+ "Invalid parameters. Use /sell [name] (amount or 'max').");
 			return;
 		}
 	}
