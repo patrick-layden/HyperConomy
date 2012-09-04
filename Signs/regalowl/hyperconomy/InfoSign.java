@@ -146,7 +146,7 @@ public class InfoSign implements Listener {
 			//Goes through all signs in the signs.yml file.
 			if (activesign < signkeys.size()) {		
 				
-				try {
+				//try {
 					
 					
 					//Gets current sign and info.
@@ -201,7 +201,9 @@ public class InfoSign implements Listener {
 			            boolean item = hc.itemTest(itemn);
 			            boolean enchant = hc.enchantTest(itemn);
 			            
+			            
 			            //Bukkit.broadcastMessage(itemn + ":" + economy);
+			           // Bukkit.broadcastMessage(enchant + "");
 			            
 						if (type.equalsIgnoreCase("Sell")) {
 							if (item) {
@@ -217,15 +219,13 @@ public class InfoSign implements Listener {
 									line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
-									if (testtype != 0) {
-										double value = calc.getEnchantValue(itemn, line3, economy);
-										value = calc.twoDecimals(value - calc.getSalesTax(null, value));
-										line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
-										sns.set(signkey + ".enchantclass", line3);
-									} else {
-										activesign++;
-										return false;
+									if (testtype == 0) {
+										testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.diamond");
 									}
+									double value = calc.getEnchantValue(itemn, line3, economy);
+									value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+									line23 = "§fSell: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
+									sns.set(signkey + ".enchantclass", line3);
 								}
 							}
 	
@@ -238,19 +238,17 @@ public class InfoSign implements Listener {
 								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
 								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {		
 									double cost = calc.getEnchantCost(itemn, sns.getString(signkey + ".enchantclass"), economy);
-									cost = cost + calc.getEnchantTax(itemn, economy, cost);
+									cost = calc.twoDecimals(cost + calc.getEnchantTax(itemn, economy, cost));
 									line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost;
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
-									if (testtype != 0) {
+									if (testtype == 0) {
+										testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.diamond");
+									}
 										double cost = calc.getEnchantCost(itemn, line3, economy);
-										cost = cost + calc.getEnchantTax(itemn, economy, cost);
+										cost = calc.twoDecimals(cost + calc.getEnchantTax(itemn, economy, cost));
 										line23 = "§fBuy: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost;
 										sns.set(signkey + ".enchantclass", line3);
-									} else {
-										activesign++;
-										return false;
-									}
 								}
 								
 							}
@@ -271,26 +269,25 @@ public class InfoSign implements Listener {
 								if (line3.contains(hc.getYaml().getConfig().getString("config.currency-symbol")) && sns.getString(signkey + ".enchantclass") != null) {			
 									line23 = null;
 									double cost = calc.getEnchantCost(itemn, sns.getString(signkey + ".enchantclass"), economy);
-									cost = cost + calc.getEnchantTax(itemn, economy, cost);
+									cost = calc.twoDecimals(cost + calc.getEnchantTax(itemn, economy, cost));
 									SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost;
 									double value = calc.getEnchantValue(itemn, sns.getString(signkey + ".enchantclass"), economy);
 									value = calc.twoDecimals(value - calc.getSalesTax(null, value));
 									SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
-									if (testtype != 0) {
+									if (testtype == 0) {
+										testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.diamond");
+									}
 										line23 = null;
 										double cost = calc.getEnchantCost(itemn, line3, economy);
-										cost = cost + calc.getEnchantTax(itemn, economy, cost);
+										cost = calc.twoDecimals(cost + calc.getEnchantTax(itemn, economy, cost));
 										SB4 = "§fB:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost;
 										double value = calc.getEnchantValue(itemn, line3, economy);
 										value = calc.twoDecimals(value - calc.getSalesTax(null, value));
 										SB3 = "§fS:" + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 										sns.set(signkey + ".enchantclass", line3);
-									} else {
-										activesign++;
-										return false;
-									}
+
 								}
 								
 							}
@@ -430,16 +427,14 @@ public class InfoSign implements Listener {
 									line23 = "§fTax: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid;
 								} else {
 									Double testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue." + line3);
-									if (testtype != 0) {
+									if (testtype == 0) {
+										testtype = hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.diamond");
+									}
 										double price = calc.getEnchantCost(itemn, line3, economy);
 										double taxpaid = calc.twoDecimals(calc.getEnchantTax(itemn, economy, price));
 										taxpaid = calc.twoDecimals(taxpaid);
 										line23 = "§fTax: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid;
 										sns.set(signkey + ".enchantclass", line3);
-									} else {
-										activesign++;
-										return false;
-									}
 								}
 							}
 						}
@@ -478,10 +473,10 @@ public class InfoSign implements Listener {
 					
 					
 					
-				} catch (Exception e) {
-					activesign++;
-					return false;
-				}
+				//} catch (Exception e) {
+				//	activesign++;
+				//	return false;
+				//}
 				
 	
 			} else {

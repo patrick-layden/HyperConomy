@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,6 +20,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -355,7 +357,31 @@ public class ChestShop implements Listener{
 	
 	
 	
-	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onBlockPistonRetractEvent(BlockPistonRetractEvent bprevent) {
+		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
+			Location l = bprevent.getRetractLocation();
+			Block b = l.getBlock();
+			int count = 0;
+			while (count < 4) {
+				BlockFace cface = faces.get(count);
+				Block relative = b.getRelative(cface);
+				if (relative.getType().equals(Material.WALL_SIGN)) {
+					Sign s = (Sign) relative.getState();
+					String line2 = s.getLine(1).trim();
+					if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
+						org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
+						BlockFace attachedface = sign.getFacing();
+						if (attachedface == cface) {
+							bprevent.setCancelled(true);
+							return;
+						}
+					}
+				}
+				count++;
+			}
+		}
+	}
 	
 	
 	
@@ -448,10 +474,10 @@ public class ChestShop implements Listener{
 				    				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 					    			if (!ench.hasenchants(icevent.getCurrentItem())) {
 					    				
-						    			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
+						    			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getDurability();
 					    				String name = hc.getnameData(key);
 					    				int id = icevent.getCurrentItem().getTypeId();
-					    				int data =  icevent.getCurrentItem().getData().getData();
+					    				int data =  icevent.getCurrentItem().getDurability();
 					    				int camount = icevent.getCurrentItem().getAmount();
 					    				
 						    			if (slot < 27 && name != null) {
@@ -512,10 +538,10 @@ public class ChestShop implements Listener{
 					    		} else if (icevent.isLeftClick()) {
 					    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 					    			if (!ench.hasenchants(icevent.getCurrentItem())) {
-						    			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
+						    			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getDurability();
 					    				String name = hc.getnameData(key);
 					    				int id = icevent.getCurrentItem().getTypeId();
-					    				int data =  icevent.getCurrentItem().getData().getData();
+					    				int data =  icevent.getCurrentItem().getDurability();
 					    				
 						    			if (slot < 27 && name != null) {
 						    				
@@ -555,7 +581,7 @@ public class ChestShop implements Listener{
 						    			}
 					    			} else {
 
-					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
+					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getDurability();
 						    				String name = hc.getnameData(key);
 						    				
 							    			if (slot < 27 && name != null) {
@@ -604,10 +630,10 @@ public class ChestShop implements Listener{
 					    		} else if (icevent.isRightClick()) {
 					    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 					    			if (!ench.hasenchants(icevent.getCurrentItem())) {
-					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
+					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getDurability();
 					    				String name = hc.getnameData(key);
 					    				int id = icevent.getCurrentItem().getTypeId();
-					    				int data =  icevent.getCurrentItem().getData().getData();
+					    				int data =  icevent.getCurrentItem().getDurability();
 					    				
 						    			if (slot < 27 && name != null) {
 						    				
@@ -659,7 +685,7 @@ public class ChestShop implements Listener{
 						    				
 						    			}
 					    			} else {				    				
-					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getData().getData();
+					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getDurability();
 						    				String name = hc.getnameData(key);
 						    				
 							    			if (slot < 27 && name != null) {

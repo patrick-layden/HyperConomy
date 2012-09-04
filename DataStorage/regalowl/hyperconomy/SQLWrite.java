@@ -1,6 +1,8 @@
 package regalowl.hyperconomy;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 
 public class SQLWrite {
@@ -23,6 +25,14 @@ public class SQLWrite {
 		sqw = this;
 		cp = new ConnectionPool(hc, this, threadlimit);
 		writePaused = false;
+		
+		ArrayList<String> sstatements = loadStatements();
+		if (sstatements.size() > 0) {
+			writeData(sstatements);
+			//SQLFunctions sf = hc.getSQLFunctions();
+			//sf.load();
+		}
+		
 	}
 
 	public void writeData(ArrayList<String> statements) {
@@ -98,6 +108,8 @@ public class SQLWrite {
     public void writeFailed(String statement) {
     	workingBuffer.add(statement);
     	activethreads--;
+		Logger l = Logger.getLogger("Minecraft");
+		l.severe("Failed: " + statement);
     }
 
 
@@ -121,4 +133,19 @@ public class SQLWrite {
 		cp.closeConnections();
 	}
 	
+
+	public ArrayList<String> loadStatements() {
+		FileTools ft = new FileTools();
+		SerializeArrayList sal =  new SerializeArrayList();
+		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "temp" + File.separator + "buffer.txt";
+		if (ft.fileExists(path)) {
+			String statements = ft.getStringFromFile(path);
+			ft.deleteFile(path);
+			return sal.stringToArray(statements);
+		} else {
+			ArrayList<String> empty = new ArrayList<String>();
+			return empty;
+		}
+
+	}
 }

@@ -30,13 +30,17 @@ public class Enchantsettings {
 				int maxinitialitems = 0;			
 				double roundedtotalstock = Math.rint( totalstock * 1.0d ) / 1.0d;
 				maxinitialitems = (int) (roundedtotalstock - sto);
+				double ceiling = sf.getCeiling(nam, playerecon);
+				double floor = sf.getFloor(nam, playerecon);
 				sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 				sender.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
 				sender.sendMessage(ChatColor.BLUE + "Value: " + ChatColor.AQUA + "" + val);
 				sender.sendMessage(ChatColor.BLUE + "Use Start Price: " + ChatColor.AQUA + "" + init + ChatColor.BLUE + ", " + ChatColor.GREEN + starprice);
 				sender.sendMessage(ChatColor.BLUE + "Static price: " + ChatColor.AQUA + "" + stat + ChatColor.BLUE + ", " + ChatColor.GREEN + "" + statprice);       				
 				sender.sendMessage(ChatColor.BLUE + "Stock: " + ChatColor.GREEN + "" + sto);
-				sender.sendMessage(ChatColor.BLUE + "Median stock: " + ChatColor.GREEN + "" + med);			
+				sender.sendMessage(ChatColor.BLUE + "Median stock: " + ChatColor.GREEN + "" + med);	
+				sender.sendMessage(ChatColor.BLUE + "Ceiling: " + ChatColor.GREEN + "" + ceiling);	
+				sender.sendMessage(ChatColor.BLUE + "Floor: " + ChatColor.GREEN + "" + floor);
 				sender.sendMessage(ChatColor.BLUE + "Items Needed To Reach Hyperbolic Curve: " + ChatColor.GREEN + "" + maxinitialitems);
 				sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 			}

@@ -54,7 +54,7 @@ public class HyperWebPrices extends AbstractHandler {
 				boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
 				if (isstatic) {
 					double statprice = sf.getStaticPrice(name, playerecon);
-					cost = statprice;
+					cost = calc.applyCeilingFloor(name, playerecon, statprice);
 					return cost;
 				} else {
 					double shopstock = 0;
@@ -65,16 +65,16 @@ public class HyperWebPrices extends AbstractHandler {
 					value = sf.getValue(name, playerecon);
 					median = sf.getMedian(name, playerecon);
 					icost = sf.getStartPrice(name, playerecon);
-					cost = ((median * value)/shopstock);
+					double rawcost = ((median * value)/shopstock);
+					cost = calc.applyCeilingFloor(name, playerecon, rawcost);
 					if (initial == true){
-						cost = icost;	
+						cost = calc.applyCeilingFloor(name, playerecon, icost);
 					}
 					if (cost < Math.pow(10, 10)) {
 						cost = calc.twoDecimals(cost);
 					} else {
 						cost = 3235624645000.7;
 					}
-					
 					return cost;
 				}
 			} catch (Exception e) {				
@@ -98,7 +98,7 @@ public class HyperWebPrices extends AbstractHandler {
 					boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
 					if (isstatic) {
 						double statprice = sf.getStaticPrice(name, playerecon);
-						cost = statprice;
+						cost = calc.applyCeilingFloor(name, playerecon, statprice);
 						return cost;
 					} else {
 						double shopstock = 0;
@@ -109,9 +109,10 @@ public class HyperWebPrices extends AbstractHandler {
 						value = sf.getValue(name, playerecon);
 						median = sf.getMedian(name, playerecon);
 						icost = sf.getStartPrice(name, playerecon);
-						cost = ((median * value)/shopstock);
+						double rawcost = ((median * value)/shopstock);
+						cost = calc.applyCeilingFloor(name, playerecon, rawcost);
 						if (initial == true){
-							cost = icost;	
+							cost = calc.applyCeilingFloor(name, playerecon, icost);
 						}
 						if (cost < Math.pow(10, 10)) {
 							cost = calc.twoDecimals(cost);

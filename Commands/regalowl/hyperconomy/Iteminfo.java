@@ -83,8 +83,9 @@ public class Iteminfo {
 				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
 				player.sendMessage(ChatColor.BLUE + "Material: " + ChatColor.AQUA + "" + mat);
 				player.sendMessage(ChatColor.BLUE + "ID: " + ChatColor.GREEN + "" + itemid);
-				player.sendMessage(ChatColor.BLUE + "Damage Value: " + ChatColor.GREEN + "" + dv);
-				player.sendMessage(ChatColor.BLUE + "Durability: " + ChatColor.GREEN + "" + durp + "%");
+				player.sendMessage(ChatColor.BLUE + "Damage Value: " + ChatColor.GREEN + "" + player.getItemInHand().getData().getData());
+				player.sendMessage(ChatColor.BLUE + "Durability: " + ChatColor.GREEN + "" + (int)dura);
+				player.sendMessage(ChatColor.BLUE + "Durability Percent: " + ChatColor.GREEN + "" + durp + "%");
 				player.sendMessage(ChatColor.BLUE + "Enchantments: " + ChatColor.AQUA + "" + enchantments);
 				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 			return;

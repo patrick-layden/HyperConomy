@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Hs {
-
 	Hs(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getShop();
@@ -16,13 +15,7 @@ public class Hs {
 		try {
 			s.setinShop(player);
 			if (s.inShop() != -1) {
-				if (!hc.getYaml().getConfig()
-						.getBoolean("config.use-shop-permissions")
-						|| player.hasPermission("hyperconomy.shop.*")
-						|| player.hasPermission("hyperconomy.shop."
-								+ s.getShop(player))
-						|| player.hasPermission("hyperconomy.shop."
-								+ s.getShop(player) + ".sell")) {
+				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					if (args.length == 0) {
 						amount = 1;
 					} else {
@@ -32,14 +25,11 @@ public class Hs {
 							String max = args[0];
 							if (max.equalsIgnoreCase("max")) {
 								int itmid = player.getItemInHand().getTypeId();
-								int da = calc.getpotionDV(player
-										.getItemInHand());
+								int da = calc.getpotionDV(player.getItemInHand());
 								int newdat = calc.newData(itmid, da);
-								amount = tran.countInvitems(itmid, newdat,
-										player);
+								amount = tran.countInvitems(itmid, newdat, player);
 							} else {
-								player.sendMessage(ChatColor.DARK_RED
-										+ "Use /hs (amount or 'max').");
+								player.sendMessage(ChatColor.DARK_RED + "Use /hs (amount or 'max').");
 								return;
 							}
 						}
@@ -50,32 +40,27 @@ public class Hs {
 					String ke = itd + ":" + newdat;
 					String nam = hc.getnameData(ke);
 					if (nam == null) {
-						player.sendMessage(ChatColor.BLUE
-								+ "Sorry, you cannot sell that item.");
+						player.sendMessage(ChatColor.BLUE + "Sorry, you cannot sell that item.");
 					} else {
 						ItemStack iinhand = player.getItemInHand();
 						if (ench.hasenchants(iinhand) == false) {
 							if (s.has(s.getShop(player), nam)) {
 								tran.sell(nam, itd, newdat, amount, player);
 							} else {
-								player.sendMessage(ChatColor.BLUE
-										+ "Sorry, that item or enchantment cannot be traded at this shop.");
+								player.sendMessage(ChatColor.BLUE + "Sorry, that item or enchantment cannot be traded at this shop.");
 							}
 						} else {
 							player.sendMessage("You cannot buy or sell enchanted items.");
 						}
 					}
 				} else {
-					player.sendMessage(ChatColor.BLUE
-							+ "Sorry, you don't have permission to trade here.");
+					player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
 				}
 			} else {
-				player.sendMessage(ChatColor.DARK_RED
-						+ "You must be in a shop to buy or sell.");
+				player.sendMessage(ChatColor.DARK_RED + "You must be in a shop to buy or sell.");
 			}
 		} catch (Exception e) {
-			player.sendMessage(ChatColor.DARK_RED
-					+ "Use /hs (amount or 'max').");
+			player.sendMessage(ChatColor.DARK_RED + "Use /hs (amount or 'max').");
 		}
 	}
 }

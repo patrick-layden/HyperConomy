@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 public class Notify {
 	
@@ -76,7 +77,8 @@ public class Notify {
 				}
 				
 				if (!message.equalsIgnoreCase(previousmessage)) {
-					Bukkit.broadcast(message, "hyperconomy.notify");
+					//Bukkit.broadcast(message, "hyperconomy.notify");
+					manualNotify(message);
 					previousmessage = message;
 				}
 			} else if (hc.enchantTest(name.get(0))) {
@@ -90,7 +92,8 @@ public class Notify {
 					message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
 				}
 				if (!message.equalsIgnoreCase(previousmessage)) {
-					Bukkit.broadcast(message, "hyperconomy.notify");
+					//Bukkit.broadcast(message, "hyperconomy.notify");
+					manualNotify(message);
 					previousmessage = message;
 				}
 			} else {
@@ -120,6 +123,17 @@ public class Notify {
 			}
 		}
 		return note;
+	}
+	
+	//Workaround for lame bug...
+	public void manualNotify(String message) {
+		Player[] players = Bukkit.getOnlinePlayers();
+		for (int i = 0; i < players.length; i++) {
+			Player p = players[i];
+			if (p.hasPermission("hyperconomy.notify")) {
+				p.sendMessage(message);
+			}
+		}
 	}
 
 

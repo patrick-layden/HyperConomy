@@ -1,5 +1,9 @@
 package regalowl.hyperconomy;
 
+import java.util.Iterator;
+
+import org.bukkit.configuration.file.FileConfiguration;
+
 public class Update {
 	
 	
@@ -13,13 +17,13 @@ public class Update {
 		if (configversion == null || !configversion.equalsIgnoreCase(version)) {
 			
 			if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
-				Backup back = new Backup();
-				back.BackupData();
+				//Removed for the sql table alteration.  When finished, reorder so that SQLFunctions is initialized first.
+				//Backup back = new Backup();
+				//back.BackupData();
 			}
 			
 	    	String t = yaml.getConfig().getString("config.signupdateinterval");
 	    	if (t == null) {
-	    		//isign.setsignupdateInterval(13L);
 	    		yaml.getConfig().set("config.signupdateinterval", 13);
 	    		uptodate = false;
 	    	}
@@ -182,6 +186,43 @@ public class Update {
 	    		uptodate = false;
 	    	}
 
+	    	if (hc.useSQL()) {
+	    		SQLUtils su = new SQLUtils();
+	    		FileConfiguration config = hc.getYaml().getConfig();
+	    		boolean exists = su.tableExists(config.getString("config.sql-connection.host"), config.getInt("config.sql-connection.port"), config.getString("config.sql-connection.database"), config.getString("config.sql-connection.username"), config.getString("config.sql-connection.password"), "hyperobjects", "ceiling");
+	    		if (!exists) {
+	    			String statement = "ALTER TABLE hyperobjects ADD CEILING DOUBLE AFTER STARTPRICE";
+	    			su.executeSQL(config.getString("config.sql-connection.host"), config.getInt("config.sql-connection.port"), config.getString("config.sql-connection.database"), config.getString("config.sql-connection.username"), config.getString("config.sql-connection.password"), statement);
+	    			statement = "ALTER TABLE hyperobjects ADD FLOOR DOUBLE AFTER CEILING";
+	    			su.executeSQL(config.getString("config.sql-connection.host"), config.getInt("config.sql-connection.port"), config.getString("config.sql-connection.database"), config.getString("config.sql-connection.username"), config.getString("config.sql-connection.password"), statement);
+	    		}
+	    	}
+	    	
+	    	double dversion = Double.parseDouble(configversion);
+
+	    	if (dversion < .946) {
+	    		Iterator<String> it = yaml.getItems().getKeys(false).iterator();
+	    		while (it.hasNext()) {   			
+	    			String elst = it.next().toString();    				
+	    			String ctest1 = yaml.getItems().getString(elst + ".price.ceiling");
+	    			String ctest2 = yaml.getItems().getString(elst + ".price.floor");
+	    			if (ctest1 == null && ctest2 == null) {
+	    				yaml.getItems().set(elst + ".price.ceiling", -1.0);
+	    				yaml.getItems().set(elst + ".price.floor", -1.0);
+	    			}
+	    		}   
+	    		Iterator<String> it2 = yaml.getEnchants().getKeys(false).iterator();
+	    		while (it2.hasNext()) {   			
+	    			String elst = it2.next().toString();    				
+	    			String ctest1 = yaml.getEnchants().getString(elst + ".price.ceiling");
+	    			String ctest2 = yaml.getEnchants().getString(elst + ".price.floor");
+	    			if (ctest1 == null && ctest2 == null) {
+	    				yaml.getEnchants().set(elst + ".price.ceiling", -1.0);
+	    				yaml.getEnchants().set(elst + ".price.floor", -1.0);
+	    			}
+	    		}
+	    	}
+	    	
 		}
 		Double newversion = Double.parseDouble(hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion());
 		yaml.getConfig().set("version", newversion);

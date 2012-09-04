@@ -1,8 +1,8 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.944
+version: 0.947
 author: RegalOwl
-softdepend: [Vault, Buycraft]
+softdepend: [Vault, Buycraft, HeroStronghold]
 commands:
    buy:
       description: Buys items.
@@ -156,6 +156,16 @@ commands:
       permission: hyperconomy.admin
       permission-message: Unknown command. Type "help" for help.
       aliases: [startprice]
+   setceiling:
+      description: Sets the ceiling for an object.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [ceiling]
+   setfloor:
+      description: Sets the floor for an object.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [floor]
    writeitems:
       description: Creates a list of all item names or enchantment names in the plugin's folder.
       permission: hyperconomy.admin

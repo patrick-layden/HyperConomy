@@ -5,9 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Value {
-
 	HyperConomy hc;
-
 	Value(String args[], CommandSender sender, String playerecon) {
 		hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
@@ -17,7 +15,6 @@ public class Value {
 		try {
 			String name = args[0];
 			int amount;
-
 			if (args.length == 2) {
 				amount = Integer.parseInt(args[1]);
 			} else {
@@ -26,49 +23,17 @@ public class Value {
 			String teststring = hc.testiString(name);
 			if (teststring != null) {
 				double val = calc.getTvalue(name, amount, playerecon);
-
 				double salestax = 0;
 				if (sender instanceof Player) {
 					player = (Player) sender;
-
-					if (hc.getYaml().getConfig()
-							.getBoolean("config.dynamic-tax.use-dynamic-tax")) {
-						double moneycap = hc.getYaml().getConfig()
-								.getDouble("config.dynamic-tax.money-cap");
-						double cbal = acc.getBalance(player.getName());
-						if (cbal >= moneycap) {
-							salestax = val
-									* (hc.getYaml()
-											.getConfig()
-											.getDouble(
-													"config.dynamic-tax.max-tax-percent") / 100);
-						} else {
-							salestax = val * (cbal / moneycap);
-						}
-					} else {
-						double salestaxpercent = hc.getYaml().getConfig()
-								.getDouble("config.sales-tax-percent");
-						salestax = (salestaxpercent / 100) * val;
-					}
+					salestax = calc.getSalesTax(player, val);
 				}
 				val = calc.twoDecimals(val - salestax);
-				sender.sendMessage(ChatColor.BLACK
-						+ "-----------------------------------------------------");
-				sender.sendMessage(ChatColor.GREEN
-						+ ""
-						+ amount
-						+ ChatColor.AQUA
-						+ " "
-						+ name
-						+ ChatColor.BLUE
-						+ " can be sold for: "
-						+ ChatColor.GREEN
-						+ hc.getYaml().getConfig()
-								.getString("config.currency-symbol") + val);
+				sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+				sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + val);
 				double cost = calc.getCost(name, amount, playerecon);
 				double taxpaid = calc.getPurchaseTax(name, playerecon, cost);
 				cost = calc.twoDecimals(cost + taxpaid);
-
 				String scost = "";
 				if (cost > Math.pow(10, 10)) {
 					scost = "INFINITY";
@@ -77,33 +42,16 @@ public class Value {
 				}
 				double stock = 0;
 				stock = sf.getStock(name, playerecon);
-				sender.sendMessage(ChatColor.GREEN
-						+ ""
-						+ amount
-						+ ChatColor.AQUA
-						+ " "
-						+ name
-						+ ChatColor.BLUE
-						+ " can be purchased for: "
-						+ ChatColor.GREEN
-						+ hc.getYaml().getConfig()
-								.getString("config.currency-symbol") + scost);
-				sender.sendMessage(ChatColor.BLUE
-						+ "The global shop currently has " + ChatColor.GREEN
-						+ "" + stock + ChatColor.AQUA + " " + name
-						+ ChatColor.BLUE + " available.");
-				sender.sendMessage(ChatColor.BLACK
-						+ "-----------------------------------------------------");
+				sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + scost);
+				sender.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + stock + ChatColor.AQUA + " " + name + ChatColor.BLUE + " available.");
+				sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 			} else {
 				sender.sendMessage(ChatColor.DARK_RED + "Invalid item name!");
 				return;
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED
-					+ "Use /value [item name] (amount)");
+			sender.sendMessage(ChatColor.DARK_RED + "Use /value [item name] (amount)");
 			return;
 		}
-
 	}
-
 }

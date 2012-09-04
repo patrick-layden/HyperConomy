@@ -47,6 +47,8 @@ public class HyperObjectsBackup {
 		ArrayList<Double> median = sf.getDoubleColumn("SELECT MEDIAN FROM hyperobjects");
 		ArrayList<String> isinitial = sf.getStringColumn("SELECT INITIATION FROM hyperobjects");
 		ArrayList<Double> startprice = sf.getDoubleColumn("SELECT STARTPRICE FROM hyperobjects");
+		ArrayList<Double> ceiling = sf.getDoubleColumn("SELECT CEILING FROM hyperobjects");
+		ArrayList<Double> floor = sf.getDoubleColumn("SELECT FLOOR FROM hyperobjects");
 		hyperobjects += sal.stringArrayToString(names) + ";";
 		hyperobjects += sal.stringArrayToString(economies) + ";";
 		hyperobjects += sal.stringArrayToString(type) + ";";
@@ -62,6 +64,8 @@ public class HyperObjectsBackup {
 		hyperobjects += sal.doubleArrayToString(median) + ";";
 		hyperobjects += sal.stringArrayToString(isinitial) + ";";
 		hyperobjects += sal.doubleArrayToString(startprice) + ";";
+		hyperobjects += sal.doubleArrayToString(ceiling) + ";";
+		hyperobjects += sal.doubleArrayToString(floor) + ";";
 		ft.writeStringToFile(hyperobjects, dpath + File.separator + "HyperObjects.txt");
 	}
 }

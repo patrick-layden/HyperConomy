@@ -5,14 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Hv {
-
 	Hv(String args[], Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Transaction tran = hc.getTransaction();
 		ETransaction ench = hc.getETransaction();
-		Account acc = hc.getAccount();
 		int amount;
 		try {
 			ItemStack iinhand = player.getItemInHand();
@@ -28,55 +26,20 @@ public class Hv {
 				String ke = itd + ":" + newdat;
 				String nam = hc.getnameData(ke);
 				if (nam == null) {
-					player.sendMessage(ChatColor.BLUE
-							+ "Sorry, that item is not currently available.");
+					player.sendMessage(ChatColor.BLUE + "Sorry, that item is not currently available.");
 				} else {
 					double val = calc.getValue(nam, amount, player);
 					if (calc.testId(itd) && amount > 1) {
-						int numberofitem = tran.countInvitems(itd, player
-								.getItemInHand().getData().getData(), player);
-
+						int numberofitem = tran.countInvitems(itd, player.getItemInHand().getData().getData(), player);
 						if (amount - numberofitem > 0) {
-
 							int addamount = amount - numberofitem;
-							val = val
-									+ calc.getTvalue(nam, addamount, playerecon);
+							val = val + calc.getTvalue(nam, addamount, playerecon);
 						}
 					}
-					double salestax = 0;
-					if (hc.getYaml().getConfig()
-							.getBoolean("config.dynamic-tax.use-dynamic-tax")) {
-						double moneycap = hc.getYaml().getConfig()
-								.getDouble("config.dynamic-tax.money-cap");
-						double cbal = acc.getBalance(player.getName());
-						if (cbal >= moneycap) {
-							salestax = val
-									* (hc.getYaml()
-											.getConfig()
-											.getDouble(
-													"config.dynamic-tax.max-tax-percent") / 100);
-						} else {
-							salestax = val * (cbal / moneycap);
-						}
-					} else {
-						double salestaxpercent = hc.getYaml().getConfig()
-								.getDouble("config.sales-tax-percent");
-						salestax = (salestaxpercent / 100) * val;
-					}
+					double salestax = calc.getSalesTax(player, val);
 					val = calc.twoDecimals(val - salestax);
-					player.sendMessage(ChatColor.BLACK
-							+ "-----------------------------------------------------");
-					player.sendMessage(ChatColor.GREEN
-							+ ""
-							+ amount
-							+ ChatColor.AQUA
-							+ " "
-							+ nam
-							+ ChatColor.BLUE
-							+ " can be sold for: "
-							+ ChatColor.GREEN
-							+ hc.getYaml().getConfig()
-									.getString("config.currency-symbol") + val);
+					player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+					player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + val);
 					double cost = calc.getCost(nam, amount, playerecon);
 					double taxpaid = calc.getPurchaseTax(nam, playerecon, cost);
 					cost = calc.twoDecimals(cost + taxpaid);
@@ -88,24 +51,9 @@ public class Hv {
 					}
 					double stock = 0;
 					stock = sf.getStock(nam, playerecon);
-					player.sendMessage(ChatColor.GREEN
-							+ ""
-							+ amount
-							+ ChatColor.AQUA
-							+ " "
-							+ nam
-							+ ChatColor.BLUE
-							+ " can be purchased for: "
-							+ ChatColor.GREEN
-							+ hc.getYaml().getConfig()
-									.getString("config.currency-symbol")
-							+ scost);
-					player.sendMessage(ChatColor.BLUE
-							+ "The global shop currently has "
-							+ ChatColor.GREEN + "" + stock + ChatColor.AQUA
-							+ " " + nam + ChatColor.BLUE + " available.");
-					player.sendMessage(ChatColor.BLACK
-							+ "-----------------------------------------------------");
+					player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + scost);
+					player.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + stock + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " available.");
+					player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 				}
 			} else {
 				player.sendMessage("You cannot buy or sell enchanted items.");

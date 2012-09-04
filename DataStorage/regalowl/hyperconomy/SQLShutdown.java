@@ -1,6 +1,7 @@
 package regalowl.hyperconomy;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -20,7 +21,17 @@ public class SQLShutdown {
 		counter = 0;
 		
 		statements = sw.getBuffer();
-		
+		if (statements.size() > 0) {
+			FileTools ft = new FileTools();
+			SerializeArrayList sal =  new SerializeArrayList();
+			String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "temp";
+			ft.makeFolder(path);
+			path += File.separator + "buffer.txt";
+			String stringBuffer = sal.stringArrayToString(statements);
+			ft.writeStringToFile(stringBuffer, path);
+		}
+
+		/*
 		ArrayList<ArrayList<String>> sstatements = new ArrayList<ArrayList<String>>();
 		
 		for (int i = 0; i < 20; i++) {
@@ -42,10 +53,15 @@ public class SQLShutdown {
 		for (int i = 0; i < 20; i++) {
 			new ShutdownThread(hc, this, sstatements.get(i));
 		}
-		
+		*/
 		
 	}
+	
+	
 
+
+	
+	
 	public void statementComplete() {
 		finishedStatements++;
 		counter++;

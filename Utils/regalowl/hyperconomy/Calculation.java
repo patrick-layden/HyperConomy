@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -20,6 +21,7 @@ public class Calculation {
 	
 
 	private HyperConomy hc;
+	private ArrayList<Integer> durableIds;
 	
 	/**
 	 * 
@@ -29,6 +31,56 @@ public class Calculation {
 	 */
 	Calculation() {
 		hc = HyperConomy.hc;
+		durableIds = new ArrayList<Integer>();
+		durableIds.add(268);
+		durableIds.add(272);
+		durableIds.add(267);
+		durableIds.add(283);
+		durableIds.add(276);		
+		durableIds.add(290);
+		durableIds.add(291);
+		durableIds.add(292);
+		durableIds.add(294);
+		durableIds.add(293);		
+		durableIds.add(270);
+		durableIds.add(274);
+		durableIds.add(257);
+		durableIds.add(285);
+		durableIds.add(278);		
+		durableIds.add(269);
+		durableIds.add(273);
+		durableIds.add(256);
+		durableIds.add(284);
+		durableIds.add(277);		
+		durableIds.add(271);
+		durableIds.add(275);
+		durableIds.add(258);
+		durableIds.add(286);
+		durableIds.add(279);
+		durableIds.add(298);
+		durableIds.add(299);
+		durableIds.add(300);
+		durableIds.add(301);
+		durableIds.add(302);
+		durableIds.add(303);
+		durableIds.add(304);
+		durableIds.add(305);
+		durableIds.add(306);
+		durableIds.add(307);
+		durableIds.add(308);
+		durableIds.add(309);
+		durableIds.add(310);
+		durableIds.add(311);
+		durableIds.add(312);
+		durableIds.add(313);
+		durableIds.add(314);
+		durableIds.add(315);
+		durableIds.add(316);
+		durableIds.add(317);		
+		durableIds.add(261);
+		durableIds.add(346);
+		durableIds.add(359);
+		durableIds.add(259);
 	}
 	
 	/**
@@ -77,6 +129,7 @@ public class Calculation {
 			median = sf.getMedian(name, playerecon);
 			icost = sf.getStartPrice(name, playerecon);
 
+
 			
 			//Deactivates the initial pricing period if the initial price is greater than or equal to the hyperbolic price and if the shop has more than 0 items.
 			if (icost >= ((median * value)/shopstock) && shopstock > 0) {
@@ -89,6 +142,7 @@ public class Calculation {
 
 				//Calculates the price for each individual item and sums them up in totalvalue.
 				double price = ((median * value)/shopstock);
+				price = applyCeilingFloor(name, playerecon, price);
 				shopstock = shopstock + 1;
 				totalvalue = totalvalue + price;
 				counter++;
@@ -103,7 +157,8 @@ public class Calculation {
 			initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
 
 			if (initial == true){
-				totalvalue = icost * damage * amount;	
+				double ivalue = applyCeilingFloor(name, playerecon, icost);
+				totalvalue = ivalue * damage * amount;	
 			}
 		
 			//Checks if the price is infinite, and if it is sets the cost to a specific value that can later be identified.
@@ -121,10 +176,9 @@ public class Calculation {
 			damage = getDamage(itemid, amount, p);
 			
 			//Gets the static price and multiplies it by the number of items.
-			double statprice = 0;
-			statprice = sf.getStaticPrice(name, playerecon);
-
-			totalvalue = (statprice * amount) * damage;
+			double statprice = sf.getStaticPrice(name, playerecon);
+			double svalue = applyCeilingFloor(name, playerecon, statprice);
+			totalvalue = svalue * amount * damage;
 		}
 		
 		//Returns the resulting value calculation.
@@ -176,7 +230,8 @@ public class Calculation {
 				//Sums up the cost of all items.
 				int counter = 0;
 				while (counter < amount) {
-					double price = ((median * value)/shopstock);			
+					double price = ((median * value)/shopstock);	
+					price = applyCeilingFloor(name, playerecon, price);
 					shopstock = shopstock - 1;
 					cost = cost + price;
 					counter++;
@@ -197,7 +252,8 @@ public class Calculation {
 					//If the initial cost is indeed more than the normal cost, the cost is recalculated to the correct initial cost. 
 					} else {	
 						//Gets the initial tax multiplier and calculates the cost.
-						cost = icost * amount;
+						double price = applyCeilingFloor(name, playerecon, icost);
+						cost = price * amount;
 					} 
 				}
 		
@@ -212,7 +268,8 @@ public class Calculation {
 			//If the item is using a static price, this calculates the correct cost, factoring in the static tax.
 			} else {
 				double staticcost = sf.getStaticPrice(name, playerecon);
-				cost = staticcost * amount;
+				double price = applyCeilingFloor(name, playerecon, staticcost);
+				cost = price * amount;
 				cost = twoDecimals(cost);
 			}
 			
@@ -267,13 +324,14 @@ public class Calculation {
 					sf.setInitiation(name, playerecon, "false");
 				}
 				double price = (median * value)/shopstock;
-				shopstock = shopstock + 1;
 				cost = cost + price;
 				cost = cost * classvalue;
+				cost = applyCeilingFloor(name, playerecon, cost);
 				Boolean initial;
 				initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
 				if (initial == true){	
 						cost = icost * classvalue;		
+						cost = applyCeilingFloor(name, playerecon, cost);
 				}
 				if (cost < Math.pow(10, 10)) {
 					cost = calc.twoDecimals(cost);
@@ -284,6 +342,7 @@ public class Calculation {
 				double statprice;
 				statprice = sf.getStaticPrice(name, playerecon);
 				cost = statprice * classvalue;
+				cost = applyCeilingFloor(name, playerecon, cost);
 			}	
 			return cost;
 		} catch (Exception e) {
@@ -325,6 +384,7 @@ public class Calculation {
 					shopstock = shopstock - 1;
 					double price = ((median * value)/shopstock);			
 					cost = price * classvalue;
+					cost = applyCeilingFloor(name, playerecon, cost);
 					boolean initial;
 					initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
 					if (initial == true) {
@@ -334,6 +394,7 @@ public class Calculation {
 							sf.setInitiation(name, playerecon, "false");
 						} else {
 							cost = icost * classvalue;
+							cost = applyCeilingFloor(name, playerecon, cost);
 						} 
 					}
 					if (cost < Math.pow(10, 10)) {
@@ -345,6 +406,7 @@ public class Calculation {
 					double staticcost;
 					staticcost = sf.getStaticPrice(name, playerecon);
 					cost =  staticcost * classvalue;
+					cost = applyCeilingFloor(name, playerecon, cost);
 				}		
 			} else {
 				cost = 123456789;
@@ -526,69 +588,12 @@ public class Calculation {
 	 * 
 	 */
 	public boolean testId(int id) {
-		
 		try {		
 			boolean datatest = false;
-			int durableIds[] = new int[49];
-			durableIds[0] = 268;
-			durableIds[1] = 272;
-			durableIds[2] = 267;
-			durableIds[3] = 283;
-			durableIds[4] = 276;		
-			durableIds[5] = 290;
-			durableIds[6] = 291;
-			durableIds[7] = 292;
-			durableIds[8] = 294;
-			durableIds[9] = 293;		
-			durableIds[10] = 270;
-			durableIds[11] = 274;
-			durableIds[12] = 257;
-			durableIds[13] = 285;
-			durableIds[14] = 278;		
-			durableIds[15] = 269;
-			durableIds[16] = 273;
-			durableIds[17] = 256;
-			durableIds[18] = 284;
-			durableIds[19] = 277;		
-			durableIds[20] = 271;
-			durableIds[21] = 275;
-			durableIds[22] = 258;
-			durableIds[23] = 286;
-			durableIds[24] = 279;
-			durableIds[25] = 298;
-			durableIds[26] = 299;
-			durableIds[27] = 300;
-			durableIds[28] = 301;
-			durableIds[29] = 302;
-			durableIds[30] = 303;
-			durableIds[31] = 304;
-			durableIds[32] = 305;
-			durableIds[33] = 306;
-			durableIds[34] = 307;
-			durableIds[35] = 308;
-			durableIds[36] = 309;
-			durableIds[37] = 310;
-			durableIds[38] = 311;
-			durableIds[39] = 312;
-			durableIds[40] = 313;
-			durableIds[41] = 314;
-			durableIds[42] = 315;
-			durableIds[43] = 316;
-			durableIds[44] = 317;		
-			durableIds[45] = 261;
-			durableIds[46] = 346;
-			durableIds[47] = 359;
-			durableIds[48] = 259;		
-			int l = durableIds.length;
-			int count = 0;	
-			while (l > count) {
-				if (id == durableIds[count]) {
-					datatest = true;
-				}
-				count++;
-			}		
+			if (durableIds.contains(id)) {
+				datatest = true;
+			}
 			return datatest;
-		
 		} catch (Exception e) {
 			e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
@@ -652,6 +657,7 @@ public class Calculation {
 						
 						//Calculates the price for each individual item and sums them up in the cost variable.
 						double price = ((median * value)/shopstock);
+						price = applyCeilingFloor(name, playerecon, price);
 						shopstock = shopstock + 1;
 						cost = cost + price;
 						counter++;
@@ -659,7 +665,8 @@ public class Calculation {
 	
 	
 					if (initial == true){
-							cost = icost * amount;	
+						double price = applyCeilingFloor(name, playerecon, icost);
+						cost = price * amount;	
 					}
 				
 					//Checks if the price is infinite, and if it is sets the cost to a specific value that can later be used.
@@ -671,12 +678,9 @@ public class Calculation {
 					}
 	
 				} else {
-					double statprice = 0;
-
-					statprice = sf.getStaticPrice(name, playerecon);
-
-					
-					cost = statprice * amount;
+					double statprice = sf.getStaticPrice(name, playerecon);
+					double price = applyCeilingFloor(name, playerecon, statprice);
+					cost = price * amount;
 				}
 			
 				return cost;
@@ -738,14 +742,12 @@ public class Calculation {
 		
 		//Gets how much xp is required to go from the current lvl with an empty xp bar to the next lvl.
 		public int getxpfornextLvl(int lvl) {
-			//int lvl = player.getLevel();
 			int exppoints = (int) Math.floor(((3.5 * lvl) + 6.7) + .5);
 			return exppoints;
 		}
 		
 		//Gets the xp points at the minimum of the specified lvl.
 		public int getlvlxpPoints(int lvl) {
-			//int lvl = player.getLevel();
 			int exppoints = (int) Math.floor((1.75 * Math.pow(lvl, 2)) + (5 * lvl) + .5);
 			return exppoints;
 		}
@@ -805,14 +807,27 @@ public class Calculation {
 				double moneyfloor = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-floor");
 				double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
 				double cbal = acc.getBalance(p.getName());
+				double maxtaxrate = hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent")/100.0;
+				//Bukkit.broadcastMessage("Floor: " + moneyfloor);
+				//Bukkit.broadcastMessage("Cap: " + moneycap);
+				//Bukkit.broadcastMessage("Balance: " + cbal);
+				//Bukkit.broadcastMessage("Max Rate: " + maxtaxrate);
 				if (cbal >= moneycap) {
-					salestax = fprice * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent")/100);
+					//Bukkit.broadcastMessage("Above Cap");
+					salestax = fprice * maxtaxrate;
 				} else if (cbal <= moneyfloor) {
+					//Bukkit.broadcastMessage("Below Floor");
 					salestax = 0;
 				} else {
-					salestax = fprice * ((cbal - moneyfloor)/(moneycap - moneyfloor));
+					//Bukkit.broadcastMessage("Dynamic Rate");
+					double taxrate = ((cbal - moneyfloor)/(moneycap - moneyfloor));
+					if (taxrate > maxtaxrate) {
+						taxrate = maxtaxrate;
+					}
+					salestax = fprice * taxrate;
 				}
 			} else {
+				//Bukkit.broadcastMessage("Dynamic Tax Disabled");
 				double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
 				salestax = (salestaxpercent/100) * fprice;
 			}
@@ -845,6 +860,37 @@ public class Calculation {
 				tax = hc.getYaml().getConfig().getDouble("config.enchanttaxpercent")/100.0;
 			}
 			return twoDecimals(cost * tax);
+		}
+		
+		public double getCeiling(String name, String economy) {
+			SQLFunctions sf = hc.getSQLFunctions();
+			double ceiling = sf.getCeiling(name, economy);
+			double floor = sf.getFloor(name, economy);
+			if (ceiling <= 0 || floor > ceiling) {
+				ceiling = 9999999999999.99;
+			}
+			return ceiling;
+		}
+		
+		public double getFloor(String name, String economy) {
+			SQLFunctions sf = hc.getSQLFunctions();
+			double floor = sf.getFloor(name, economy);
+			double ceiling = sf.getCeiling(name, economy);
+			if (floor < 0 || ceiling < floor) {
+				floor = 0.0;
+			}
+			return floor;
+		}
+		
+		public double applyCeilingFloor(String name, String playerecon, double price) {
+			double floor = getFloor(name, playerecon);
+			double ceiling = getCeiling(name, playerecon);
+			if (price > ceiling) {
+				price = ceiling;
+			} else if (price < floor) {
+				price = floor;
+			}
+			return price;
 		}
 	
 }

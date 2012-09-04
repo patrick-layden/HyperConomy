@@ -37,7 +37,6 @@ public class Transaction {
 		hc = HyperConomy.hc;
 	}
 	
-	
 	/**
 	 * 
 	 * 
@@ -54,106 +53,111 @@ public class Transaction {
 		Notify not = hc.getNotify();
 		InfoSign isign = hc.getInfoSign();
 		String playerecon = sf.getPlayerEconomy(p.getName());
-		//Handles buy function errors.
+		// Handles buy function errors.
 		try {
-			//Makes sure that the player is buying at least 1 item.
-			if (amount > 0){
-		
-				//Makes sure that the shop has enough of the item.
+			// Makes sure that the player is buying at least 1 item.
+			if (amount > 0) {
+				// Makes sure that the shop has enough of the item.
 				double shopstock = sf.getStock(name, playerecon);
 				if (shopstock >= amount) {
-					
-					//Makes sure that its a real item.  (Not experience.)
+					// Makes sure that its a real item. (Not experience.)
 					if (id >= 0) {
-			
-						//Calculates the cost of the purchase for the player.
+						// Calculates the cost of the purchase for the player.
 						double price = calc.getCost(name, amount, playerecon);
 						double taxpaid = calc.getPurchaseTax(name, playerecon, price);
 						price = calc.twoDecimals(price + taxpaid);
-					
-						//Makes sure that the player has enough money for the transaction.
+						// Makes sure that the player has enough money for the
+						// transaction.
 						acc.setAccount(hc, p, economy);
 						if (acc.checkFunds(price)) {
-					
-								int space = getavailableSpace(id, data, p);
-								if (space >= amount) {
-						
-									addboughtItems(amount, id, data, p);
-					
-									//Removes the number of items purchased from the shop's stock and saves the HyperConomy.yaml.
-									sf.setStock(name, playerecon, shopstock - amount);
-								
-									//Withdraws the price of the transaction from the player's account.
-									acc.withdraw(price);
-									
-									//Deposits the money spent by the player into the server account.
-									acc.depositShop(price);
-									
-									//Reverts any changes to the global shop account if the account is set to unlimited.
-									if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
-										String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-										acc.setBalance(globalaccount, 0);
-									}
-
-									//Informs the player about their purchase including how much was bought, how much was spent, and how much was spent on taxes.
-									p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-									p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid + ChatColor.BLUE + ChatColor.ITALIC + " was tax!" );
-									//p.sendMessage(ChatColor.BLUE + "" + "You bought " + ChatColor.GREEN + "" + "" + amount + ChatColor.AQUA + "" + " " + name + " for " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + " and paid " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid + " in taxes!" );
-									p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");	
-	
-									//This writes a log entry for the transaction in the HyperConomy log.txt file.
-									
-
-									
-									if (hc.useSQL()) {
-										String type = "dynamic";
-										if (Boolean.parseBoolean(sf.getInitiation(name, playerecon))) {
-											type = "initial";
-										} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
-											type = "static";
-										}
-										log.writeSQLLog(p.getName(), "purchase", name, (double) amount, price, taxpaid, playerecon, type);
-									} else {
-										String logentry = p.getName() + " bought " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
-										log.setEntry(logentry);
-										log.writeBuffer();
-									}
-									
-									//Updates all information signs.
-									isign.setrequestsignUpdate(true);
-									isign.checksignUpdate();
-									
-									//Sends price update notifications.
-									not.setNotify(hc, calc, ench, name, null, playerecon);
-									not.sendNotification();
-									
-									//This informs the player of how many of an item they can buy if they don't have enough space for the requested amount.
-								} else {
-									p.sendMessage(ChatColor.BLUE + "You only have room to buy " + space + " " + name + "!");
+							int space = getavailableSpace(id, data, p);
+							if (space >= amount) {
+								addboughtItems(amount, id, data, p);
+								// Removes the number of items purchased from
+								// the shop's stock and saves the
+								// HyperConomy.yaml.
+								sf.setStock(name, playerecon, shopstock - amount);
+								// Withdraws the price of the transaction from
+								// the player's account.
+								acc.withdraw(price);
+								// Deposits the money spent by the player into
+								// the server account.
+								acc.depositShop(price);
+								// Reverts any changes to the global shop
+								// account if the account is set to unlimited.
+								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
+									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+									acc.setBalance(globalaccount, 0);
 								}
-								//This informs the player that they don't have enough money for a transaction.
+								// Informs the player about their purchase
+								// including how much was bought, how much was
+								// spent, and how much was spent on taxes.
+								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol")
+										+ taxpaid + ChatColor.BLUE + ChatColor.ITALIC + " was tax!");
+								// p.sendMessage(ChatColor.BLUE + "" +
+								// "You bought " + ChatColor.GREEN + "" + "" +
+								// amount + ChatColor.AQUA + "" + " " + name +
+								// " for " + ChatColor.GREEN + "" +
+								// hc.getYaml().getConfig().getString("config.currency-symbol")
+								// + price + ChatColor.BLUE + "" + " and paid "
+								// + ChatColor.GREEN + "" +
+								// hc.getYaml().getConfig().getString("config.currency-symbol")
+								// + taxpaid + " in taxes!" );
+								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+								// This writes a log entry for the transaction
+								// in the HyperConomy log.txt file.
+								if (hc.useSQL()) {
+									String type = "dynamic";
+									if (Boolean.parseBoolean(sf.getInitiation(name, playerecon))) {
+										type = "initial";
+									} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
+										type = "static";
+									}
+									log.writeSQLLog(p.getName(), "purchase", name, (double) amount, price, taxpaid, playerecon, type);
+								} else {
+									String logentry = p.getName() + " bought " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+									log.setEntry(logentry);
+									log.writeBuffer();
+								}
+								// Updates all information signs.
+								isign.setrequestsignUpdate(true);
+								isign.checksignUpdate();
+								// Sends price update notifications.
+								not.setNotify(hc, calc, ench, name, null, playerecon);
+								not.sendNotification();
+								// This informs the player of how many of an
+								// item they can buy if they don't have enough
+								// space for the requested amount.
+							} else {
+								p.sendMessage(ChatColor.BLUE + "You only have room to buy " + space + " " + name + "!");
+							}
+							// This informs the player that they don't have
+							// enough money for a transaction.
 						} else {
 							p.sendMessage(ChatColor.BLUE + "Insufficient Funds!");
 						}
-					//Informs the player if it's not a real item.
+						// Informs the player if it's not a real item.
 					} else {
 						p.sendMessage(ChatColor.BLUE + "Sorry, " + name + " cannot be purchased with this command.");
 					}
-					//This informs the player that the shop doesn't have enough of the chosen item.	
+					// This informs the player that the shop doesn't have enough
+					// of the chosen item.
 				} else {
 					p.sendMessage(ChatColor.BLUE + "The shop doesn't have enough " + name + "!");
 				}
-				//This informs the player that they can't try to buy negative values or 0 of an item.
+				// This informs the player that they can't try to buy negative
+				// values or 0 of an item.
 			} else {
 				p.sendMessage(ChatColor.BLUE + "You can't buy less than 1 " + name + "!");
 			}
-		
-		//Reports the error to the player making the transaction and prints the stack trace for analysis.
+			// Reports the error to the player making the transaction and prints
+			// the stack trace for analysis.
 		} catch (Exception e) {
 			e.printStackTrace();
-	    	Logger l = Logger.getLogger("Minecraft");
-	    	l.info("HyperConomy ERROR #2");
-	    	Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #2", "hyperconomy.error");
+			Logger l = Logger.getLogger("Minecraft");
+			l.info("HyperConomy ERROR #2");
+			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #2", "hyperconomy.error");
 		}
 	}
 	
@@ -175,41 +179,45 @@ public class Transaction {
 		Notify not = hc.getNotify();
 		InfoSign isign = hc.getInfoSign();
 		String playerecon = sf.getPlayerEconomy(p.getName());
-		//Handles sell function errors.
+		// Handles sell function errors.
 		try {
-			//Makes sure that they aren't selling negative items, or 0.
-			if (amount > 0){
-				
-				//Makes sure that its a real item.  (Not experience.)
+			// Makes sure that they aren't selling negative items, or 0.
+			if (amount > 0) {
+				// Makes sure that its a real item. (Not experience.)
 				if (id >= 0) {
-				
-					//Counts the number of the chosen item that the player has in their inventory and makes sure that they have enough of the item for the transaction.		
+					// Counts the number of the chosen item that the player has
+					// in their inventory and makes sure that they have enough
+					// of the item for the transaction.
 					int totalitems = countInvitems(id, data, p);
-					//If someone tries to sell more than they have, it will just sell all that they have.
+					// If someone tries to sell more than they have, it will
+					// just sell all that they have.
 					if (totalitems < amount) {
 						amount = totalitems;
 					}
-					
 					if (amount > 0) {
-						
-						//Determines the sale value of the items being sold.
+						// Determines the sale value of the items being sold.
 						double price = calc.getValue(name, amount, p);
-						
-						//If the cost is greater than 10^10 the getValue calculation sets the value to this arbitrary number to indicate this.  This makes sure no many infinite values exist
-						//and limits the number of items that can be sold at a time.
+						// If the cost is greater than 10^10 the getValue
+						// calculation sets the value to this arbitrary number
+						// to indicate this. This makes sure no many infinite
+						// values exist
+						// and limits the number of items that can be sold at a
+						// time.
 						Boolean toomuch = false;
 						if (price == 3235624645000.7) {
 							toomuch = true;
 						}
-						
-						//Makes sure that the value of the items is not extremely high or infinite.			
-						if (!toomuch){
-							
-							//Calculates how many items can be sold before hitting the hyperbolic curve so as to not allow it to be bypassed temporarily.
-
+						// Makes sure that the value of the items is not
+						// extremely high or infinite.
+						if (!toomuch) {
+							// Calculates how many items can be sold before
+							// hitting the hyperbolic curve so as to not allow
+							// it to be bypassed temporarily.
 							int maxi = getmaxInitial(name, p);
-							
-							//EXPERIMENTAL  Sets the amount to the transition point between Dynamic and Initial pricing if the requested amount is greater than the transition point.
+							// EXPERIMENTAL Sets the amount to the transition
+							// point between Dynamic and Initial pricing if the
+							// requested amount is greater than the transition
+							// point.
 							boolean isstatic = false;
 							boolean isinitial = false;
 							isinitial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
@@ -218,61 +226,65 @@ public class Transaction {
 								amount = maxi;
 								price = calc.getValue(name, amount, p);
 							}
-							
 							boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
-							//Makes sure the global shop has enough money for the transaction.					
+							// Makes sure the global shop has enough money for
+							// the transaction.
 							if (acc.checkshopBalance(price) || sunlimited) {
-								
-								//This recalculates the value of the sale if the getValue function sets the initiation period to false (Not sure if this is necessary).
+								// This recalculates the value of the sale if
+								// the getValue function sets the initiation
+								// period to false (Not sure if this is
+								// necessary).
 								if (maxi == 0) {
-									price = calc.getValue(name, id, p);
+									price = calc.getValue(name, amount, p);
 								}
-								
-								//Removes the sold items from the player's inventory.
+								// Removes the sold items from the player's
+								// inventory.
 								removesoldItems(id, data, amount, p);
-							
-								//Adds the sold items to the shopstock and saves the yaml file.
+								// Adds the sold items to the shopstock and
+								// saves the yaml file.
 								double shopstock = 0;
 								shopstock = sf.getStock(name, playerecon);
 								sf.setStock(name, playerecon, (shopstock + amount));
-
-								
-								//Sets the initiation period to false if the item has reached the hyperbolic pricing curve 
-								//after the transaction is complete so that the value is calculated correctly for future value inquiries.
+								// Sets the initiation period to false if the
+								// item has reached the hyperbolic pricing curve
+								// after the transaction is complete so that the
+								// value is calculated correctly for future
+								// value inquiries.
 								int maxi2 = getmaxInitial(name, p);
 								if (maxi2 == 0) {
 									sf.setInitiation(name, playerecon, "false");
 								}
-								
 								double salestax = calc.getSalesTax(p, price);
-								
-								
-								//Deposits money in players account and tells them of transaction success and details about the transaction.
+								// Deposits money in players account and tells
+								// them of transaction success and details about
+								// the transaction.
 								acc.setAccount(hc, p, economy);
 								acc.deposit(price - salestax);
-								
-								//Withdraws money from the global shop's account.
+								// Withdraws money from the global shop's
+								// account.
 								acc.withdrawShop(price - salestax);
-								
-								//Reverts any changes to the global shop account if the account is set to unlimited.
+								// Reverts any changes to the global shop
+								// account if the account is set to unlimited.
 								if (sunlimited) {
 									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 									acc.setBalance(globalaccount, 0);
 								}
-								
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.twoDecimals(salestax) + ChatColor.BLUE + ChatColor.ITALIC + " went to tax!");
-								//p.sendMessage(ChatColor.BLUE + "" + "You sold " + ChatColor.GREEN + "" + "" + amount + ChatColor.AQUA + "" + " " + name + " for " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + "!");
+								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol")
+										+ calc.twoDecimals(salestax) + ChatColor.BLUE + ChatColor.ITALIC + " went to tax!");
+								// p.sendMessage(ChatColor.BLUE + "" +
+								// "You sold " + ChatColor.GREEN + "" + "" +
+								// amount + ChatColor.AQUA + "" + " " + name +
+								// " for " + ChatColor.GREEN + "" +
+								// hc.getYaml().getConfig().getString("config.currency-symbol")
+								// + price + ChatColor.BLUE + "" + "!");
 								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-								
-								//Plays smoke effects.  (Pointless but funny.)
+								// Plays smoke effects. (Pointless but funny.)
 								World w = p.getWorld();
-								w.playEffect(p.getLocation(), Effect.SMOKE, 4);									
-								
-								//Writes a log entry in the HyperConomy log.txt file.
+								w.playEffect(p.getLocation(), Effect.SMOKE, 4);
+								// Writes a log entry in the HyperConomy log.txt
+								// file.
 								String logentry = "";
-								
-								
 								if (hc.useSQL()) {
 									String type = "dynamic";
 									if (Boolean.parseBoolean(sf.getInitiation(name, playerecon))) {
@@ -285,50 +297,45 @@ public class Transaction {
 									logentry = p.getName() + " sold " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
 									log.setEntry(logentry);
 									log.writeBuffer();
-								}			
-								
-								//Updates all information signs.
+								}
+								// Updates all information signs.
 								isign.setrequestsignUpdate(true);
 								isign.checksignUpdate();
-								
-								//Sends price update notifications.
+								// Sends price update notifications.
 								not.setNotify(hc, calc, ench, name, null, playerecon);
 								not.sendNotification();
-							
-							//Informs the player if the shop doesn't have enough money.
+								// Informs the player if the shop doesn't have
+								// enough money.
 							} else {
 								p.sendMessage(ChatColor.BLUE + "Sorry, the shop currently does not have enough money.");
 							}
-						
-						//Informs the player if they're trying to sell too many items at once, resulting in an infinite value.
+							// Informs the player if they're trying to sell too
+							// many items at once, resulting in an infinite
+							// value.
 						} else {
 							p.sendMessage(ChatColor.BLUE + "Currently, you can't sell more than " + sf.getStock(name, playerecon) + " " + name + "!");
-
 						}
-						
-					//Informs the player that they don't have enough of the item to complete the transaction.	
+						// Informs the player that they don't have enough of the
+						// item to complete the transaction.
 					} else {
 						p.sendMessage(ChatColor.BLUE + "You don't have enough " + name + "!");
 					}
-			
-				//Informs the player if it's not a real item.
+					// Informs the player if it's not a real item.
 				} else {
 					p.sendMessage(ChatColor.BLUE + "Sorry, " + name + " cannot be sold with this command.");
 				}
-				
-		//Informs the player that they can't sell negative or 0 items.
+				// Informs the player that they can't sell negative or 0 items.
 			} else {
 				p.sendMessage(ChatColor.BLUE + "You can't sell less than 1 " + name + "!");
 			}
-		
-		//Reports the error to the player making the transaction and prints the stack trace for analysis.
+			// Reports the error to the player making the transaction and prints
+			// the stack trace for analysis.
 		} catch (Exception e) {
 			e.printStackTrace();
-	    	Logger l = Logger.getLogger("Minecraft");
-	    	l.info("HyperConomy ERROR #3");
-	    	Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #3", "hyperconomy.error");
+			Logger l = Logger.getLogger("Minecraft");
+			l.info("HyperConomy ERROR #3");
+			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #3", "hyperconomy.error");
 		}
-	
 	}
 	
 	

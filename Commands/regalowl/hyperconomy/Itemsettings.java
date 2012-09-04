@@ -37,6 +37,8 @@ public class Itemsettings {
 					int maxinitialitems = 0;		
 					double roundedtotalstock = Math.rint( totalstock * 1.0d ) / 1.0d;
 					maxinitialitems = (int) (roundedtotalstock - sto);
+					double ceiling = sf.getCeiling(nam, playerecon);
+					double floor = sf.getFloor(nam, playerecon);
 					player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 					player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
     				player.sendMessage(ChatColor.BLUE + "Value: " + ChatColor.AQUA + "" + val);
@@ -44,6 +46,8 @@ public class Itemsettings {
     				player.sendMessage(ChatColor.BLUE + "Static price: " + ChatColor.AQUA + "" + stat + ChatColor.BLUE + ", " + ChatColor.GREEN + "" + statprice);
     				player.sendMessage(ChatColor.BLUE + "Stock: " + ChatColor.GREEN + "" + sto);
     				player.sendMessage(ChatColor.BLUE + "Median stock: " + ChatColor.GREEN + "" + med);		
+    				player.sendMessage(ChatColor.BLUE + "Ceiling: " + ChatColor.GREEN + "" + ceiling);	
+    				player.sendMessage(ChatColor.BLUE + "Floor: " + ChatColor.GREEN + "" + floor);	
     				player.sendMessage(ChatColor.BLUE + "Items Needed To Reach Hyperbolic Curve: " + ChatColor.GREEN + "" + maxinitialitems);
     				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 				}
@@ -69,6 +73,8 @@ public class Itemsettings {
 					int maxinitialitems = 0;
 					double roundedtotalstock = Math.rint( totalstock * 1.0d ) / 1.0d;
 					maxinitialitems = (int) (roundedtotalstock - sto);
+					double ceiling = sf.getCeiling(nam, playerecon);
+					double floor = sf.getFloor(nam, playerecon);
 					sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 					sender.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
     				sender.sendMessage(ChatColor.BLUE + "Value: " + ChatColor.AQUA + "" + val);
@@ -76,6 +82,8 @@ public class Itemsettings {
     				sender.sendMessage(ChatColor.BLUE + "Static price: " + ChatColor.AQUA + "" + stat + ChatColor.BLUE + ", " + ChatColor.GREEN + "" + statprice);
     				sender.sendMessage(ChatColor.BLUE + "Stock: " + ChatColor.GREEN + "" + sto);
     				sender.sendMessage(ChatColor.BLUE + "Median stock: " + ChatColor.GREEN + "" + med);		
+    				sender.sendMessage(ChatColor.BLUE + "Ceiling: " + ChatColor.GREEN + "" + ceiling);	
+    				sender.sendMessage(ChatColor.BLUE + "Floor: " + ChatColor.GREEN + "" + floor);
     				sender.sendMessage(ChatColor.BLUE + "Items Needed To Reach Hyperbolic Curve: " + ChatColor.GREEN + "" + maxinitialitems);
     				sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 				} else {
