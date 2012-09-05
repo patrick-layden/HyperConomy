@@ -146,7 +146,7 @@ public class InfoSign implements Listener {
 			//Goes through all signs in the signs.yml file.
 			if (activesign < signkeys.size()) {		
 				
-				//try {
+				try {
 					
 					
 					//Gets current sign and info.
@@ -473,10 +473,10 @@ public class InfoSign implements Listener {
 					
 					
 					
-				//} catch (Exception e) {
-				//	activesign++;
-				//	return false;
-				//}
+				} catch (Exception e) {
+					activesign++;
+					return false;
+				}
 				
 	
 			} else {
