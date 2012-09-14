@@ -114,7 +114,7 @@ public class Transaction {
 									} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
 										type = "static";
 									}
-									log.writeSQLLog(p.getName(), "purchase", name, (double) amount, price, taxpaid, playerecon, type);
+									log.writeSQLLog(p.getName(), "purchase", name, (double) amount, price - taxpaid, taxpaid, playerecon, type);
 								} else {
 									String logentry = p.getName() + " bought " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
 									log.setEntry(logentry);

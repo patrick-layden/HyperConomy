@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,6 +23,8 @@ public class SQLFunctions {
 	private int port;
 	private String host;
 	private String database;
+	private boolean sqlloaded;
+	private boolean databuilt;
 	private ArrayList<String> tne = new ArrayList<String>();
 	private ArrayList<String> tname = new ArrayList<String>();
 	private ArrayList<String> teconomy = new ArrayList<String>();
@@ -69,338 +70,527 @@ public class SQLFunctions {
 			enchants = hc.getYaml().getEnchants();
 			economies.add("default");
 		}
+		sqlloaded = false;
+		databuilt = false;
 	}
 
 	public void setName(String name, String economy, String newname) {
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET NAME='" + newname + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-			int keyloc = tne.indexOf(name + ":" + economy);
-			tname.set(keyloc, newname);
-		} else {
-			// not implemented
+		try {
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET NAME='" + newname + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+				int keyloc = tne.indexOf(name + ":" + economy);
+				tname.set(keyloc, newname);
+			} else {
+				// not implemented
+			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setName() passed values name='" + name + "', economy='" + economy + "', value='" + newname + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setEconomy(String name, String economy, String neweconomy) {
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET ECONOMY='" + neweconomy + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-			int keyloc = tne.indexOf(name + ":" + economy);
-			teconomy.set(keyloc, neweconomy);
-		} else {
-			// irrelevant
+		try {
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET ECONOMY='" + neweconomy + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+				int keyloc = tne.indexOf(name + ":" + economy);
+				teconomy.set(keyloc, neweconomy);
+			} else {
+				// irrelevant
+			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setEconomy() passed values name='" + name + "', economy='" + economy + "', value='" + neweconomy + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setType(String name, String economy, String newtype) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		ttype.set(keyloc, newtype);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET TYPE='" + newtype + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".information.type", newtype);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".information.type", newtype);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			ttype.set(keyloc, newtype);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET TYPE='" + newtype + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".information.type", newtype);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".information.type", newtype);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setType() passed values name='" + name + "', economy='" + economy + "', value='" + newtype + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setCategory(String name, String economy, String newcategory) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tcategory.set(keyloc, newcategory);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET CATEGORY='" + newcategory + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".information.category", newcategory);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".information.category", newcategory);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tcategory.set(keyloc, newcategory);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET CATEGORY='" + newcategory + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".information.category", newcategory);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".information.category", newcategory);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setCategory() passed values name='" + name + "', economy='" + economy + "', value='" + newcategory + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setMaterial(String name, String economy, String newmaterial) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tmaterial.set(keyloc, newmaterial);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET MATERIAL='" + newmaterial + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".information.material", newmaterial);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".information.name", newmaterial);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tmaterial.set(keyloc, newmaterial);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET MATERIAL='" + newmaterial + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".information.material", newmaterial);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".information.name", newmaterial);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setMaterial() passed values name='" + name + "', economy='" + economy + "', value='" + newmaterial + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setId(String name, String economy, int newid) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tid.set(keyloc, newid);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET ID='" + newid + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".information.id", newid);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".information.id", newid);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tid.set(keyloc, newid);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET ID='" + newid + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".information.id", newid);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".information.id", newid);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setId() passed values name='" + name + "', economy='" + economy + "', value='" + newid + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setData(String name, String economy, int newdata) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tdata.set(keyloc, newdata);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET DATA='" + newdata + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".information.data", newdata);
-			} else if (hc.enchantTest(name)) {
-				// do nothing
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tdata.set(keyloc, newdata);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET DATA='" + newdata + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".information.data", newdata);
+				} else if (hc.enchantTest(name)) {
+					// do nothing
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setData() passed values name='" + name + "', economy='" + economy + "', value='" + newdata + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setDurability(String name, String economy, int newdurability) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tdurability.set(keyloc, newdurability);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET DURABILITY='" + newdurability + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".information.data", newdurability);
-			} else if (hc.enchantTest(name)) {
-				// do nothing
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tdurability.set(keyloc, newdurability);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET DURABILITY='" + newdurability + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".information.data", newdurability);
+				} else if (hc.enchantTest(name)) {
+					// do nothing
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setDurability() passed values name='" + name + "', economy='" + economy + "', value='" + newdurability + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setValue(String name, String economy, double newvalue) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tvalue.set(keyloc, newvalue);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET VALUE='" + newvalue + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".value", newvalue);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".value", newvalue);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tvalue.set(keyloc, newvalue);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET VALUE='" + newvalue + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".value", newvalue);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".value", newvalue);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setValue() passed values name='" + name + "', economy='" + economy + "', value='" + newvalue + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setStatic(String name, String economy, String newstatic) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tstatic.set(keyloc, newstatic);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET STATIC='" + newstatic + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".price.static", Boolean.parseBoolean(newstatic));
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".price.static", Boolean.parseBoolean(newstatic));
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tstatic.set(keyloc, newstatic);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET STATIC='" + newstatic + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".price.static", Boolean.parseBoolean(newstatic));
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".price.static", Boolean.parseBoolean(newstatic));
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setStatic() passed values name='" + name + "', economy='" + economy + "', value='" + newstatic + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setStaticPrice(String name, String economy, double newstaticprice) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tstaticprice.set(keyloc, newstaticprice);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET STATICPRICE='" + newstaticprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".price.staticprice", newstaticprice);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".price.staticprice", newstaticprice);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tstaticprice.set(keyloc, newstaticprice);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET STATICPRICE='" + newstaticprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".price.staticprice", newstaticprice);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".price.staticprice", newstaticprice);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setStaticPrice() passed values name='" + name + "', economy='" + economy + "', value='" + newstaticprice + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setStock(String name, String economy, double newstock) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tstock.set(keyloc, newstock);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET STOCK='" + newstock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".stock.stock", newstock);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".stock.stock", newstock);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tstock.set(keyloc, newstock);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET STOCK='" + newstock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".stock.stock", newstock);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".stock.stock", newstock);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setStock() passed values name='" + name + "', economy='" + economy + "', value='" + newstock + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setMedian(String name, String economy, double newmedian) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tmedian.set(keyloc, newmedian);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET MEDIAN='" + newmedian + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".stock.median", newmedian);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".stock.median", newmedian);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tmedian.set(keyloc, newmedian);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET MEDIAN='" + newmedian + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".stock.median", newmedian);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".stock.median", newmedian);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setMedian() passed values name='" + name + "', economy='" + economy + "', value='" + newmedian + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setInitiation(String name, String economy, String newinitiation) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tinitiation.set(keyloc, newinitiation);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET INITIATION='" + newinitiation + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tinitiation.set(keyloc, newinitiation);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET INITIATION='" + newinitiation + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setInitiation() passed values name='" + name + "', economy='" + economy + "', value='" + newinitiation + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setStartPrice(String name, String economy, double newstartprice) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tstartprice.set(keyloc, newstartprice);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET STARTPRICE='" + newstartprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".initiation.startprice", newstartprice);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".initiation.startprice", newstartprice);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tstartprice.set(keyloc, newstartprice);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET STARTPRICE='" + newstartprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".initiation.startprice", newstartprice);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".initiation.startprice", newstartprice);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setStartPrice() passed values name='" + name + "', economy='" + economy + "', value='" + newstartprice + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setCeiling(String name, String economy, double newceiling) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tceiling.set(keyloc, newceiling);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET CEILING='" + newceiling + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".price.ceiling", newceiling);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".price.ceiling", newceiling);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tceiling.set(keyloc, newceiling);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET CEILING='" + newceiling + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".price.ceiling", newceiling);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".price.ceiling", newceiling);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setCeiling() passed values name='" + name + "', economy='" + economy + "', value='" + newceiling + "'";
+			new Error(e, info);
 		}
 	}
 
 	public void setFloor(String name, String economy, double newfloor) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		tfloor.set(keyloc, newfloor);
-		if (hc.useSQL()) {
-			statement = "UPDATE hyperobjects SET FLOOR='" + newfloor + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-			write();
-		} else {
-			if (hc.itemTest(name)) {
-				items.set(name + ".price.floor", newfloor);
-			} else if (hc.enchantTest(name)) {
-				enchants.set(name + ".price.floor", newfloor);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			tfloor.set(keyloc, newfloor);
+			if (hc.useSQL()) {
+				statement = "UPDATE hyperobjects SET FLOOR='" + newfloor + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				write();
+			} else {
+				if (hc.itemTest(name)) {
+					items.set(name + ".price.floor", newfloor);
+				} else if (hc.enchantTest(name)) {
+					enchants.set(name + ".price.floor", newfloor);
+				}
 			}
+		} catch (Exception e) {
+			String info = "SQLFunctions setFloor() passed values name='" + name + "', economy='" + economy + "', value='" + newfloor + "'";
+			new Error(e, info);
 		}
 	}
 
 	public String getName(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tname.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tname.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getName() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return "error";
+		}
 	}
 
 	public String getEconomy(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return teconomy.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return teconomy.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getEconomy() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return "error";
+		}
 	}
 
 	public String getType(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return ttype.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return ttype.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getType() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return "error";
+		}
 	}
 
 	public String getCategory(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tcategory.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tcategory.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getCategory() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return "error";
+		}
 	}
 
 	public String getMaterial(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tmaterial.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tmaterial.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getMaterial() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return "error";
+		}
 	}
 
 	public int getId(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tid.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tid.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getId() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -11;
+		}
 	}
 
 	public int getData(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tdata.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tdata.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getData() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -11;
+		}
 	}
 
 	public int getDurability(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tdurability.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tdurability.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getDurability() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -11;
+		}
 	}
 
 	public double getValue(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tvalue.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tvalue.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getValue() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -1;
+		}
 	}
 
 	public String getStatic(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tstatic.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tstatic.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getStatic() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return "error";
+		}
 	}
 
 	public double getStaticPrice(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tstaticprice.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tstaticprice.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getStaticPrice() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -1;
+		}
 	}
 
 	public double getStock(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tstock.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tstock.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getStock() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -1;
+		}
 	}
 
 	public double getMedian(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tmedian.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tmedian.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getMedian() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -1;
+		}
 	}
 
 	public String getInitiation(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tinitiation.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tinitiation.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getInitiation() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return "error";
+		}
 	}
 
 	public double getStartPrice(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tstartprice.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tstartprice.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getStartPrice() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -1;
+		}
 	}
 
 	public double getCeiling(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tceiling.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tceiling.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getCeiling() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -1;
+		}
 	}
 
 	public double getFloor(String name, String economy) {
-		int keyloc = tne.indexOf(name + ":" + economy);
-		return tfloor.get(keyloc);
+		try {
+			int keyloc = tne.indexOf(name + ":" + economy);
+			return tfloor.get(keyloc);
+		} catch (Exception e) {
+			String info = "SQLFunctions getFloor() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -1;
+		}
 	}
 
 	public String testName(String name, String economy) {
@@ -434,14 +624,14 @@ public class SQLFunctions {
 		hc.getServer().getScheduler().cancelTask(sqllockthreadid);
 		hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
 			public void run() {
-				hc.buildData();
-				loadSQL();
+				databuilt = hc.buildData();
+				sqlloaded = loadSQL();
 				hc.sqlunlockShop();
 			}
 		}, 40L);
 	}
 
-	private void loadSQL() {
+	private boolean loadSQL() {
 		tne.clear();
 		tname.clear();
 		teconomy.clear();
@@ -498,6 +688,7 @@ public class SQLFunctions {
 			koec.add(hobject.get(c) + ":" + heconomy.get(c) + ":" + hcount.get(c));
 		}
 		startHistoryDataCount();
+		return true;
 	}
 
 	public void loadYML() {
@@ -624,6 +815,49 @@ public class SQLFunctions {
 	}
 
 	// make next 3 private again later
+	
+	
+	
+	
+	public ArrayList<String> getHyperLog(String statement) {
+		ArrayList<String> entries = new ArrayList<String>();
+		try {
+			Connection connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+			Statement state = connect.createStatement();
+			ResultSet result = state.executeQuery(statement);
+			while (result.next()) {
+				//int id = result.getInt(1);
+				String time = result.getString(2);
+				String customer = result.getString(3);
+				String action = result.getString(4);
+				String object = result.getString(5);
+				String amount = result.getString(6);
+				double money = result.getDouble(7);
+				//double tax = result.getDouble(8);
+				String store = result.getString(9);
+				//String type = result.getString(10);
+				String entry = "";
+				if (action.equalsIgnoreCase("purchase")) {
+					entry = "[" + time + "]" + customer + " purchased " + amount + " " + object + " from " + store + " for " + money;
+				} else if (action.equalsIgnoreCase("sale")) {
+					entry = "[" + time + "]" + customer + " sold " + amount + " " + object + " to " + store + " for " + money;
+				}
+				entries.add(entry);
+			}
+			result.close();
+			state.close();
+			connect.close();
+			return entries;
+		} catch (SQLException e) {
+			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "hyperconomy.error");
+			e.printStackTrace();
+			return entries;
+		}
+	}
+	
+	
+	
+	
 	public ArrayList<String> getStringColumn(String statement) {
 		ArrayList<String> data = new ArrayList<String>();
 		try {
@@ -810,13 +1044,24 @@ public class SQLFunctions {
 	}
 
 	public int getHistoryDataCount(String name, String economy) {
-		String match = name + ":" + economy;
-		return historyDataCount.get(match);
+		try {
+			String match = name + ":" + economy;
+			return historyDataCount.get(match);
+		} catch (Exception e) {
+			String info = "SQLFunctions getHistoryDataCount() passed values name='" + name + "', economy='" + economy + "'";
+			new Error(e, info);
+			return -1;
+		}
 	}
 
 	public void setHistoryDataCount(String name, String economy, int value) {
-		String match = name + ":" + economy;
-		historyDataCount.put(match, value);
+		try {
+			String match = name + ":" + economy;
+			historyDataCount.put(match, value);
+		} catch (Exception e) {
+			String info = "SQLFunctions setHistoryDataCount() passed values name='" + name + "', economy='" + economy + "', value='" + value + "'";
+			new Error(e, info);
+		}
 	}
 
 	public void writeHistoryData(String object, String economy, double price) {
@@ -857,15 +1102,21 @@ public class SQLFunctions {
 	}
 
 	public Double getHistoryData(String object, String economy, int count) {
-		int lcount = getHistoryDataCount(object, economy);
-		count = lcount - count + 1;
-		String key = object + ":" + economy + ":" + count;
-		int keyloc = koec.indexOf(key);
-		if (keyloc == -1) {
+		try {
+			int lcount = getHistoryDataCount(object, economy);
+			count = lcount - count + 1;
+			String key = object + ":" + economy + ":" + count;
+			int keyloc = koec.indexOf(key);
+			if (keyloc == -1) {
+				return -1.0;
+			}
+			Double hvalue = hprice.get(keyloc);
+			return hvalue;
+		} catch (Exception e) {
+			String info = "SQLFunctions getHistoryData() passed values object='" + object + "', economy='" + economy + "', count='" + count + "'";
+			new Error(e, info);
 			return -1.0;
 		}
-		Double hvalue = hprice.get(keyloc);
-		return hvalue;
 	}
 
 	public boolean testEconomy(String economy) {
@@ -896,7 +1147,21 @@ public class SQLFunctions {
 		return port;
 	}
 
-	public ArrayList<String> getEconomies() {
-		return economies;
+	public ArrayList<String> getEconomyList() {
+		ArrayList<String> econs = new ArrayList<String>();
+		for (int i = 0; i < economies.size(); i++) {
+			if (!econs.contains(economies.get(i))) {
+				econs.add(economies.get(i));
+			}
+		}
+		return econs;
+	}
+
+	public boolean sqlLoaded() {
+		return sqlloaded;
+	}
+
+	public boolean dataBuilt() {
+		return databuilt;
 	}
 }

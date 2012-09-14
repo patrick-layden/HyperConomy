@@ -1,8 +1,5 @@
 package regalowl.hyperconomy;
 
-
-
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,32 +15,13 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class TransactionSign implements Listener {
-	
 	private HyperConomy hc;
 	private Transaction tran;
 	private ETransaction ench;
 	private SQLFunctions sf;
 	private Set<String> names;
 	private String playerecon;
-	
-/*
-	TransactionSign() {
-		hc = HyperConomy.hc;
-		tran = hc.getTransaction();
-		ench = hc.getETransaction();
-		sf = hc.getSQLFunctions();
-		names = new HashSet<String>();
-		ArrayList<String> anames = hc.getNames();
-		for (int i = 0; i < anames.size(); i ++) {
-			names.add(anames.get(i));
-		}
-		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
-			hc.getServer().getPluginManager().registerEvents(this, hc);
-		}
-	}
-	*/
-	
-	
+
 	public void setTransactionSign(HyperConomy hyperc, Transaction trans, Calculation cal, ETransaction enchant, Log lo, Account account, InfoSign infosign, Notify notify) {
 		hc = hyperc;
 		tran = trans;
@@ -51,70 +29,57 @@ public class TransactionSign implements Listener {
 		sf = hc.getSQLFunctions();
 		names = new HashSet<String>();
 		ArrayList<String> anames = hc.getNames();
-		for (int i = 0; i < anames.size(); i ++) {
+		for (int i = 0; i < anames.size(); i++) {
 			names.add(anames.get(i));
 		}
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
 		}
-		
-		
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChangeEvent(SignChangeEvent scevent) {
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
 			String line3 = ChatColor.stripColor(scevent.getLine(2)).trim();
-	    	if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
-		    	String line4 = ChatColor.stripColor(scevent.getLine(3)).trim();
-		    	try {
-		    		Integer.parseInt(line4);
-		        	String line12 = ChatColor.stripColor(scevent.getLine(0)).trim() + ChatColor.stripColor(scevent.getLine(1)).trim();
-		        	line12 = hc.fixName(line12);
-		    	    if (names.contains(line12.toLowerCase())) {
-		    	    	if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
-			    			scevent.setLine(0, "§1" + scevent.getLine(0));
-			    			scevent.setLine(1, "§1" + scevent.getLine(1));
-			    			if (line3.equalsIgnoreCase("[sell:buy]")) {
-			    				scevent.setLine(2, "§f[Sell:Buy]");
-			    			} else if (line3.equalsIgnoreCase("[sell]")) {
-			    				scevent.setLine(2, "§f[Sell]");
-			    			} else if (line3.equalsIgnoreCase("[buy]")) {
-			    				scevent.setLine(2, "§f[Buy]");
-			    			}
- 			    			
-			    			scevent.setLine(3, "§a" + scevent.getLine(3));
-		    	    	} else if (!scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
-			    			scevent.setLine(0, "");
-			    			scevent.setLine(1, "");
-			    			scevent.setLine(2, "");
-			    			scevent.setLine(3, "");
-		    	    	}			
-				
-		    	    	if (scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.SIGN_POST) || scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.WALL_SIGN)) {
-		    	    		Sign s = (Sign) scevent.getBlock().getState();
-		    	    		s.update();
-		    	    	}
-					
-					
-	
-		    	    	
-		    	    }
-		    			
-		    	} catch (Exception e) {
-		    		return;
-		    	}
-	    	}
-    	}
+			if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
+				String line4 = ChatColor.stripColor(scevent.getLine(3)).trim();
+				try {
+					Integer.parseInt(line4);
+					String line12 = ChatColor.stripColor(scevent.getLine(0)).trim() + ChatColor.stripColor(scevent.getLine(1)).trim();
+					line12 = hc.fixName(line12);
+					if (names.contains(line12.toLowerCase())) {
+						if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
+							scevent.setLine(0, "§1" + scevent.getLine(0));
+							scevent.setLine(1, "§1" + scevent.getLine(1));
+							if (line3.equalsIgnoreCase("[sell:buy]")) {
+								scevent.setLine(2, "§f[Sell:Buy]");
+							} else if (line3.equalsIgnoreCase("[sell]")) {
+								scevent.setLine(2, "§f[Sell]");
+							} else if (line3.equalsIgnoreCase("[buy]")) {
+								scevent.setLine(2, "§f[Buy]");
+							}
+							scevent.setLine(3, "§a" + scevent.getLine(3));
+						} else if (!scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
+							scevent.setLine(0, "");
+							scevent.setLine(1, "");
+							scevent.setLine(2, "");
+							scevent.setLine(3, "");
+						}
+						if (scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.SIGN_POST) || scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.WALL_SIGN)) {
+							Sign s = (Sign) scevent.getBlock().getState();
+							s.update();
+						}
+					}
+				} catch (Exception e) {
+					return;
+				}
+			}
+		}
 	}
-	
-	
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteractEvent(PlayerInteractEvent ievent) {
-		
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
-		
 			Player p = ievent.getPlayer();
 			playerecon = sf.getPlayerEconomy(p.getName());
 			boolean sneak = false;
@@ -125,40 +90,28 @@ public class TransactionSign implements Listener {
 				ievent.setCancelled(false);
 				return;
 			}
-			
 			Block b = ievent.getClickedBlock();
-			
-			
 			if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
 				Sign s = (Sign) b.getState();
-	
-		    	String line3 = ChatColor.stripColor(s.getLine(2)).trim();
-		    	if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
-		    		
-		    		String line4 = ChatColor.stripColor(s.getLine(3)).trim();
-		    		int amount = 0;
-		    		try {
-		    			amount = Integer.parseInt(line4);
-		    		} catch (Exception e) {
-		    			return;
-		    		}
-		    		
-		    		
-		    		String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
-		    		line12 = hc.fixName(line12);
-			    	if (names.contains(line12.toLowerCase())) {
-						//Colors the sign if it isn't already colored.
-			    		if (!s.getLine(0).startsWith("§")) {
-			    			//us.updateSign(hc, s, "§1" + s.getLine(0), "§1" + s.getLine(1), "§f" + s.getLine(2), "§a" + s.getLine(3));
-			    			
-			    			s.setLine(0, "§1" + s.getLine(0));
-			    			s.setLine(1, "§1" + s.getLine(1));
-			    			s.setLine(2, "§f" + s.getLine(2));
-			    			s.setLine(3, "§a" + s.getLine(3));
-			    			s.update();
-			    			
-			    		}
-						
+				String line3 = ChatColor.stripColor(s.getLine(2)).trim();
+				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
+					String line4 = ChatColor.stripColor(s.getLine(3)).trim();
+					int amount = 0;
+					try {
+						amount = Integer.parseInt(line4);
+					} catch (Exception e) {
+						return;
+					}
+					String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
+					line12 = hc.fixName(line12);
+					if (names.contains(line12.toLowerCase())) {
+						if (!s.getLine(0).startsWith("§")) {
+							s.setLine(0, "§1" + s.getLine(0));
+							s.setLine(1, "§1" + s.getLine(1));
+							s.setLine(2, "§f" + s.getLine(2));
+							s.setLine(3, "§a" + s.getLine(3));
+							s.update();
+						}
 						String action = ievent.getAction().name();
 						if (action.equalsIgnoreCase("RIGHT_CLICK_BLOCK")) {
 							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[buy]")) {
@@ -166,7 +119,6 @@ public class TransactionSign implements Listener {
 								String l2 = s.getLine(1);
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
-								
 								if (p.hasPermission("hyperconomy.buysign")) {
 									if (hc.itemTest(line12)) {
 										int id = sf.getId(line12, playerecon);
@@ -176,14 +128,12 @@ public class TransactionSign implements Listener {
 											} else {
 												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
 											}
-
 										} else if (id == -1) {
 											if (!hc.isLocked()) {
 												tran.buyXP(line12, amount, p);
 											} else {
 												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
 											}
-
 										}
 									} else if (hc.enchantTest(line12)) {
 										if (!hc.isLocked()) {
@@ -191,27 +141,23 @@ public class TransactionSign implements Listener {
 										} else {
 											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
 										}
-
 									}
 								} else {
 									p.sendMessage("You don't have permission to do this.");
 								}
 								ievent.setCancelled(true);
-						    	s.setLine(0, l1);
-						    	s.setLine(1, l2);
-						    	s.setLine(2, l3);
-						    	s.setLine(3, l4);
-						    	s.update();
-								//us.updateSign(hc, s, l1, l2, l3, l4);
+								s.setLine(0, l1);
+								s.setLine(1, l2);
+								s.setLine(2, l3);
+								s.setLine(3, l4);
+								s.update();
 							}
-
 						} else if (action.equalsIgnoreCase("LEFT_CLICK_BLOCK")) {
 							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]")) {
 								String l1 = s.getLine(0);
 								String l2 = s.getLine(1);
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
-								
 								if (p.hasPermission("hyperconomy.sellsign")) {
 									if (hc.itemTest(line12)) {
 										int id = sf.getId(line12, playerecon);
@@ -221,14 +167,12 @@ public class TransactionSign implements Listener {
 											} else {
 												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
 											}
-
 										} else if (id == -1) {
 											if (!hc.isLocked()) {
 												tran.sellXP(line12, amount, p);
 											} else {
 												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
 											}
-
 										}
 									} else if (hc.enchantTest(line12)) {
 										if (!hc.isLocked()) {
@@ -236,41 +180,32 @@ public class TransactionSign implements Listener {
 										} else {
 											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
 										}
-
 									}
 								} else {
 									p.sendMessage("You don't have permission to do this.");
 								}
-								
 								ievent.setCancelled(true);
-						    	s.setLine(0, l1);
-						    	s.setLine(1, l2);
-						    	s.setLine(2, l3);
-						    	s.setLine(3, l4);
-						    	s.update();
+								s.setLine(0, l1);
+								s.setLine(1, l2);
+								s.setLine(2, l3);
+								s.setLine(3, l4);
+								s.update();
 							} else if (line3.equalsIgnoreCase("[buy]")) {
 								String l1 = s.getLine(0);
 								String l2 = s.getLine(1);
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								ievent.setCancelled(true);
-						    	s.setLine(0, l1);
-						    	s.setLine(1, l2);
-						    	s.setLine(2, l3);
-						    	s.setLine(3, l4);
-						    	s.update();
+								s.setLine(0, l1);
+								s.setLine(1, l2);
+								s.setLine(2, l3);
+								s.setLine(3, l4);
+								s.update();
 							}
-						}  		
-			    	}
-		    	}  
+						}
+					}
+				}
 			}
 		}
 	}
-
-	
-	
-	
-	
-	
-
 }

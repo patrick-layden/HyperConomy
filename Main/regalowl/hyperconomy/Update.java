@@ -185,22 +185,32 @@ public class Update {
 	    		yaml.getConfig().set("config.run-automatic-backups", true);
 	    		uptodate = false;
 	    	}
-
-	    	if (hc.useSQL()) {
-	    		SQLUtils su = new SQLUtils();
-	    		FileConfiguration config = hc.getYaml().getConfig();
-	    		boolean exists = su.tableExists(config.getString("config.sql-connection.host"), config.getInt("config.sql-connection.port"), config.getString("config.sql-connection.database"), config.getString("config.sql-connection.username"), config.getString("config.sql-connection.password"), "hyperobjects", "ceiling");
-	    		if (!exists) {
-	    			String statement = "ALTER TABLE hyperobjects ADD CEILING DOUBLE AFTER STARTPRICE";
-	    			su.executeSQL(config.getString("config.sql-connection.host"), config.getInt("config.sql-connection.port"), config.getString("config.sql-connection.database"), config.getString("config.sql-connection.username"), config.getString("config.sql-connection.password"), statement);
-	    			statement = "ALTER TABLE hyperobjects ADD FLOOR DOUBLE AFTER CEILING";
-	    			su.executeSQL(config.getString("config.sql-connection.host"), config.getInt("config.sql-connection.port"), config.getString("config.sql-connection.database"), config.getString("config.sql-connection.username"), config.getString("config.sql-connection.password"), statement);
-	    		}
+	    	String t32 = yaml.getConfig().getString("config.error-count");
+	    	if (t32 == null) {
+	    		yaml.getConfig().set("config.error-count", 0);
+	    		uptodate = false;
 	    	}
+	    	String t33 = yaml.getConfig().getString("config.web-page.web-page-economy");
+	    	if (t33 == null) {
+	    		yaml.getConfig().set("config.web-page.web-page-economy", "default");
+	    		uptodate = false;
+	    	}
+
 	    	
 	    	double dversion = Double.parseDouble(configversion);
 
 	    	if (dversion < .946) {
+		    	if (hc.useSQL()) {
+		    		SQLUtils su = new SQLUtils();
+		    		FileConfiguration config = hc.getYaml().getConfig();
+		    		boolean exists = su.tableExists(config.getString("config.sql-connection.host"), config.getInt("config.sql-connection.port"), config.getString("config.sql-connection.database"), config.getString("config.sql-connection.username"), config.getString("config.sql-connection.password"), "hyperobjects", "ceiling");
+		    		if (!exists) {
+		    			String statement = "ALTER TABLE hyperobjects ADD CEILING DOUBLE AFTER STARTPRICE";
+		    			su.executeSQL(config.getString("config.sql-connection.host"), config.getInt("config.sql-connection.port"), config.getString("config.sql-connection.database"), config.getString("config.sql-connection.username"), config.getString("config.sql-connection.password"), statement);
+		    			statement = "ALTER TABLE hyperobjects ADD FLOOR DOUBLE AFTER CEILING";
+		    			su.executeSQL(config.getString("config.sql-connection.host"), config.getInt("config.sql-connection.port"), config.getString("config.sql-connection.database"), config.getString("config.sql-connection.username"), config.getString("config.sql-connection.password"), statement);
+		    		}
+		    	}
 	    		Iterator<String> it = yaml.getItems().getKeys(false).iterator();
 	    		while (it.hasNext()) {   			
 	    			String elst = it.next().toString();    				

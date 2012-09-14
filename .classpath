@@ -12,13 +12,13 @@
 	<classpathentry kind="src" path="Shops"/>
 	<classpathentry kind="src" path="Backups"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Dependencies/bukkit-1.3.1-R2.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Dependencies/Vault.jar"/>
-	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Dependencies/lib/jetty/jetty-continuation-8.1.4.v20120524.jar"/>
-	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Dependencies/lib/jetty/jetty-http-8.1.4.v20120524.jar"/>
-	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Dependencies/lib/jetty/jetty-io-8.1.4.v20120524.jar"/>
-	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Dependencies/lib/jetty/jetty-server-8.1.4.v20120524.jar"/>
-	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Dependencies/lib/jetty/jetty-util-8.1.4.v20120524.jar"/>
-	<classpathentry kind="lib" path="C:/Users/I72/Desktop/Plugin Development/Dependencies/lib/jetty/servlet-api-3.0.jar"/>
+	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/bukkit-1.3.1-R2.0.jar"/>
+	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/Vault.jar"/>
+	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/jetty-continuation-8.1.4.v20120524.jar"/>
+	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/jetty-http-8.1.4.v20120524.jar"/>
+	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/jetty-io-8.1.4.v20120524.jar"/>
+	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/jetty-server-8.1.4.v20120524.jar"/>
+	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/jetty-util-8.1.4.v20120524.jar"/>
+	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/servlet-api-3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

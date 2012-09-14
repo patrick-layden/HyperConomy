@@ -242,7 +242,7 @@ public class HyperConomy extends JavaPlugin {
 		return (economy != null);
 	}
 
-	public void buildData() {
+	public boolean buildData() {
 		inames.clear();
 		namedata.clear();
 		enames.clear();
@@ -287,6 +287,7 @@ public class HyperConomy extends JavaPlugin {
 				enames.add(cname);
 			}
 		}
+		return true;
 	}
 
 	public void startSave() {

@@ -16,12 +16,12 @@ public class Xpinfo {
 				int lvl = player.getLevel();
 				int xpfornextlvl = calc.getxpfornextLvl(lvl) - calc.getbarxpPoints(player);
 				
-				int xpfor50 = calc.getlvlxpPoints(50) - totalexp;
+				int xpfor30 = calc.getlvlxpPoints(30) - totalexp;
 				
 				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 				player.sendMessage(ChatColor.BLUE + "Total Experience Points: " + ChatColor.GREEN + "" + totalexp);
 				player.sendMessage(ChatColor.BLUE + "Experience Needed For The Next Level: " + ChatColor.GREEN + "" + xpfornextlvl);
-				player.sendMessage(ChatColor.BLUE + "Experience Needed For Level 50: " + ChatColor.GREEN + "" + xpfor50);
+				player.sendMessage(ChatColor.BLUE + "Experience Needed For Level 30: " + ChatColor.GREEN + "" + xpfor30);
 				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
 			} else {
 				player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /xpinfo");

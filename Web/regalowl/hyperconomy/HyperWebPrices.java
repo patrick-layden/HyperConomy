@@ -23,7 +23,9 @@ public class HyperWebPrices extends AbstractHandler {
 		hws = hyws;
 		hc.getServer().getScheduler().scheduleAsyncRepeatingTask(hc, new Runnable() {
 			public void run() {
-				page = buildPage();
+				//SQLFunctions sf = hc.getSQLFunctions();
+				//ArrayList<String> econs = sf.getEconomyList();
+				page = buildPage(hws.getPageEconomy());
 			}
 		}, 400L, 6000L);
 	}
@@ -124,7 +126,7 @@ public class HyperWebPrices extends AbstractHandler {
 					}
 				} catch (Exception e) {				
 					e.printStackTrace();
-					double cost = 99999999;
+					double cost = -1;
 					return cost;			
 				}
 			}
@@ -158,11 +160,10 @@ public class HyperWebPrices extends AbstractHandler {
 		
 		
 		
-		private String buildPage() {
+		private String buildPage(String economy) {
 			
 			String page = "";
 			if (!hc.sqlLock()) {
-				String economy = "default";
 				SQLFunctions sf = hc.getSQLFunctions();
 				ArrayList<String> names = hc.getNames();
 				ArrayList<Integer> timevalues = new ArrayList<Integer>();

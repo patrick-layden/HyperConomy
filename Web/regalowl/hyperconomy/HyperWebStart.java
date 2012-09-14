@@ -52,6 +52,8 @@ public class HyperWebStart {
 		currencySymbol = conf.getString("config.currency-symbol");
 		port = conf.getInt("config.web-page.port");
 		useHistory = conf.getBoolean("config.store-price-history");
+		pageEconomy = conf.getString("config.web-page.web-page-economy");
+		
 		
 
 		FileTools ft = new FileTools();
@@ -132,6 +134,7 @@ public class HyperWebStart {
 	private double initialtax;
 	private String currencySymbol;
 	private boolean useHistory;
+	private String pageEconomy;
 	
 	
 	public String getBackgroundColor() {
@@ -175,5 +178,8 @@ public class HyperWebStart {
 	}
 	public boolean getUseHistory() {
 		return useHistory;
+	}
+	public String getPageEconomy() {
+		return pageEconomy;
 	}
 	}
