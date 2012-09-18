@@ -1,0 +1,7208 @@
+birchleaves:
+  information:
+    type: item
+    category: unknown
+    material: LEAVES
+    id: 18
+    data: 6
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+jungleleaves:
+  information:
+    type: item
+    category: unknown
+    material: LEAVES
+    id: 18
+    data: 7
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+sponge:
+  information:
+    type: item
+    category: unknown
+    material: SPONGE
+    id: 19
+    data: 0
+  value: 25.0
+  price:
+    static: false
+    staticprice: 2000.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 50.0
+glass:
+  information:
+    type: item
+    category: unknown
+    material: GLASS
+    id: 20
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+lapisore:
+  information:
+    type: item
+    category: unknown
+    material: LAPIS_ORE
+    id: 21
+    data: 0
+  value: 250.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 500.0
+lapisblock:
+  information:
+    type: item
+    category: unknown
+    material: LAPIS_BLOCK
+    id: 22
+    data: 0
+  value: 250.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 500.0
+dispenser:
+  information:
+    type: item
+    category: unknown
+    material: DISPENSER
+    id: 23
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+sandstone:
+  information:
+    type: item
+    category: unknown
+    material: SANDSTONE
+    id: 24
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+hieroglyph:
+  information:
+    type: item
+    category: unknown
+    material: SANDSTONE
+    id: 24
+    data: 1
+  value: 22.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 42.0
+smoothsandstone:
+  information:
+    type: item
+    category: unknown
+    material: SANDSTONE
+    id: 24
+    data: 2
+  value: 22.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 44.0
+noteblock:
+  information:
+    type: item
+    category: unknown
+    material: NOTE_BLOCK
+    id: 25
+    data: 0
+  value: 15.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 30.0
+poweredrail:
+  information:
+    type: item
+    category: unknown
+    material: POWERED_RAIL
+    id: 27
+    data: 0
+  value: 150.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 300.0
+detectorrail:
+  information:
+    type: item
+    category: unknown
+    material: DETECTOR_RAIL
+    id: 28
+    data: 0
+  value: 40.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 80.0
+stickypiston:
+  information:
+    type: item
+    category: unknown
+    material: PISTON_STICKY_BASE
+    id: 29
+    data: 7
+  value: 600.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 3000.0
+web:
+  information:
+    type: item
+    category: unknown
+    material: WEB
+    id: 30
+    data: 0
+  value: 2000.0
+  price:
+    static: false
+    staticprice: 125.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 4000.0
+tallgrass:
+  information:
+    type: item
+    category: unknown
+    material: LONG_GRASS
+    id: 31
+    data: 1
+  value: 2.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 4.0
+fern:
+  information:
+    type: item
+    category: unknown
+    material: LONG_GRASS
+    id: 31
+    data: 2
+  value: 3.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 6.0
+deadbush:
+  information:
+    type: item
+    category: unknown
+    material: DEAD_BUSH
+    id: 32
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+piston:
+  information:
+    type: item
+    category: unknown
+    material: PISTON_BASE
+    id: 33
+    data: 7
+  value: 50.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+wool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 10.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+orangewool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 1
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+magentawool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 2
+  value: 38.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 70.0
+lightbluewool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 3
+  value: 33.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+yellowwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 4
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 16.0
+limewool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 5
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+pinkwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 6
+  value: 12.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 24.0
+graywool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 7
+  value: 15.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 30.0
+lightgraywool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 8
+  value: 16.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 32.0
+cyanwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 9
+  value: 37.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 70.0
+purplewool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 10
+  value: 33.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+bluewool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 11
+  value: 30.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+brownwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 12
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+greenwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 13
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+redwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 14
+  value: 12.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 24.0
+blackwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 15
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+yellowflower:
+  information:
+    type: item
+    category: unknown
+    material: YELLOW_FLOWER
+    id: 37
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+redrose:
+  information:
+    type: item
+    category: unknown
+    material: RED_ROSE
+    id: 38
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+brownmushroom:
+  information:
+    type: item
+    category: unknown
+    material: BROWN_MUSHROOM
+    id: 39
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+redmushroom:
+  information:
+    type: item
+    category: unknown
+    material: RED_MUSHROOM
+    id: 40
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+goldblock:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_BLOCK
+    id: 41
+    data: 0
+  value: 1200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 2400.0
+ironblock:
+  information:
+    type: item
+    category: unknown
+    material: IRON_BLOCK
+    id: 42
+    data: 0
+  value: 288.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 2000.0
+  initiation:
+    initiation: true
+    startprice: 576.0
+stoneslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 0
+  value: 3.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 6.0
+sandstoneslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 1
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+oakwoodslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 2
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 5000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+cobblestoneslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 3
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 1.0
+brickslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 4
+  value: 16.66
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 33.0
+stonebrickslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 5
+  value: 3.33
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 6.66
+brick:
+  information:
+    type: item
+    category: unknown
+    material: BRICK
+    id: 45
+    data: 0
+  value: 50.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+tnt:
+  information:
+    type: item
+    category: unknown
+    material: TNT
+    id: 46
+    data: 0
+  value: 275.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 550.0
+bookshelf:
+  information:
+    type: item
+    category: unknown
+    material: BOOKSHELF
+    id: 47
+    data: 0
+  value: 55.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 110.0
+mossstone:
+  information:
+    type: item
+    category: unknown
+    material: MOSSY_COBBLESTONE
+    id: 48
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+obsidian:
+  information:
+    type: item
+    category: unknown
+    material: OBSIDIAN
+    id: 49
+    data: 0
+  value: 100.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 200.0
+torch:
+  information:
+    type: item
+    category: unknown
+    material: TORCH
+    id: 50
+    data: 0
+  value: 3.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 6.0
+fire:
+  information:
+    type: item
+    category: unknown
+    material: FIRE
+    id: 51
+    data: 0
+  value: 4500.0
+  price:
+    static: false
+    staticprice: 4500.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 9000.0
+spawner:
+  information:
+    type: item
+    category: unknown
+    material: MOB_SPAWNER
+    id: 52
+    data: 0
+  value: 4000.0
+  price:
+    static: false
+    staticprice: 8000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8000.0
+oakwoodstairs:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_STAIRS
+    id: 53
+    data: 0
+  value: 2.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 4.0
+chest:
+  information:
+    type: item
+    category: unknown
+    material: CHEST
+    id: 54
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+diamondore:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_ORE
+    id: 56
+    data: 0
+  value: 12000.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 18000.0
+diamondblock:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_BLOCK
+    id: 57
+    data: 0
+  value: 18000.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 200.0
+  initiation:
+    initiation: true
+    startprice: 36000.0
+craftingtable:
+  information:
+    type: item
+    category: unknown
+    material: WORKBENCH
+    id: 58
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+furnace:
+  information:
+    type: item
+    category: unknown
+    material: FURNACE
+    id: 61
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+ladder:
+  information:
+    type: item
+    category: unknown
+    material: LADDER
+    id: 65
+    data: 0
+  value: 2.5
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 5.0
+rails:
+  information:
+    type: item
+    category: unknown
+    material: RAILS
+    id: 66
+    data: 0
+  value: 14.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 20000.0
+  initiation:
+    initiation: true
+    startprice: 28.0
+cobblestonestairs:
+  information:
+    type: item
+    category: unknown
+    material: COBBLESTONE_STAIRS
+    id: 67
+    data: 0
+  value: 1.5
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 3.0
+lever:
+  information:
+    type: item
+    category: unknown
+    material: LEVER
+    id: 69
+    data: 0
+  value: 2.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 4.0
+stonepressureplate:
+  information:
+    type: item
+    category: unknown
+    material: STONE_PLATE
+    id: 70
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+woodpressureplate:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_PLATE
+    id: 72
+    data: 0
+  value: 1.5
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 3.0
+redstoneore:
+  information:
+    type: item
+    category: unknown
+    material: REDSTONE_ORE
+    id: 73
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+redstonetorch:
+  information:
+    type: item
+    category: unknown
+    material: REDSTONE_TORCH_ON
+    id: 76
+    data: 0
+  value: 8.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 16.0
+button:
+  information:
+    type: item
+    category: unknown
+    material: STONE_BUTTON
+    id: 77
+    data: 0
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+ice:
+  information:
+    type: item
+    category: unknown
+    material: ICE
+    id: 79
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 187.5
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+snowblock:
+  information:
+    type: item
+    category: unknown
+    material: SNOW_BLOCK
+    id: 80
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+cactus:
+  information:
+    type: item
+    category: unknown
+    material: CACTUS
+    id: 81
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+clay:
+  information:
+    type: item
+    category: unknown
+    material: CLAY
+    id: 82
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+jukebox:
+  information:
+    type: item
+    category: unknown
+    material: JUKEBOX
+    id: 84
+    data: 0
+  value: 2050.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 4100.0
+fence:
+  information:
+    type: item
+    category: unknown
+    material: FENCE
+    id: 85
+    data: 0
+  value: 2.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 4.0
+pumpkin:
+  information:
+    type: item
+    category: unknown
+    material: PUMPKIN
+    id: 86
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 3000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+netherrack:
+  information:
+    type: item
+    category: unknown
+    material: NETHERRACK
+    id: 87
+    data: 0
+  value: 3.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 6.0
+soulsand:
+  information:
+    type: item
+    category: unknown
+    material: SOUL_SAND
+    id: 88
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 3000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+glowstone:
+  information:
+    type: item
+    category: unknown
+    material: GLOWSTONE
+    id: 89
+    data: 0
+  value: 64.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 2000.0
+  initiation:
+    initiation: true
+    startprice: 128.0
+jackolantern:
+  information:
+    type: item
+    category: unknown
+    material: JACK_O_LANTERN
+    id: 91
+    data: 0
+  value: 25.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 50.0
+purpleemeraldblock:
+  information:
+    type: item
+    category: unknown
+    material: LOCKED_CHEST
+    id: 95
+    data: 0
+  value: 1000.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 1000.0
+trapdoor:
+  information:
+    type: item
+    category: unknown
+    material: TRAP_DOOR
+    id: 96
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+stonebrick:
+  information:
+    type: item
+    category: unknown
+    material: SMOOTH_BRICK
+    id: 98
+    data: 0
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+mossystonebrick:
+  information:
+    type: item
+    category: unknown
+    material: SMOOTH_BRICK
+    id: 98
+    data: 1
+  value: 150.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 300.0
+crackedstonebrick:
+  information:
+    type: item
+    category: unknown
+    material: SMOOTH_BRICK
+    id: 98
+    data: 2
+  value: 150.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 300.0
+chiseledstonebrick:
+  information:
+    type: item
+    category: unknown
+    material: SMOOTH_BRICK
+    id: 98
+    data: 3
+  value: 8000.0
+  price:
+    static: false
+    staticprice: 16000.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 16000.0
+hugebrownmushroom0:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugebrownmushroom1:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 1
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugebrownmushroom2:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 2
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugebrownmushroom3:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 3
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugebrownmushroom4:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 4
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugebrownmushroom5:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 5
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugebrownmushroom6:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 6
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugebrownmushroom7:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 7
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugebrownmushroom8:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 8
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugebrownmushroom9:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 9
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugebrownmushroom10:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 10
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom0:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom1:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 1
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom2:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 2
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom3:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 3
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom4:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 4
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom5:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 5
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom6:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 6
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom7:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 7
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom8:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 8
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom9:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 9
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+hugeredmushroom10:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 10
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+ironbars:
+  information:
+    type: item
+    category: unknown
+    material: IRON_FENCE
+    id: 101
+    data: 0
+  value: 14.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 28.0
+glasspane:
+  information:
+    type: item
+    category: unknown
+    material: THIN_GLASS
+    id: 102
+    data: 0
+  value: 3.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 6.0
+melonblock:
+  information:
+    type: item
+    category: unknown
+    material: MELON_BLOCK
+    id: 103
+    data: 0
+  value: 90.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 200.0
+vine:
+  information:
+    type: item
+    category: unknown
+    material: VINE
+    id: 106
+    data: 0
+  value: 2.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 4.0
+gate:
+  information:
+    type: item
+    category: unknown
+    material: FENCE_GATE
+    id: 107
+    data: 0
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+brickstairs:
+  information:
+    type: item
+    category: unknown
+    material: BRICK_STAIRS
+    id: 108
+    data: 0
+  value: 80.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 160.0
+stonebrickstairs:
+  information:
+    type: item
+    category: unknown
+    material: SMOOTH_STAIRS
+    id: 109
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+mycelium:
+  information:
+    type: item
+    category: unknown
+    material: MYCEL
+    id: 110
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+lilypad:
+  information:
+    type: item
+    category: unknown
+    material: WATER_LILY
+    id: 111
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+netherbrick:
+  information:
+    type: item
+    category: unknown
+    material: NETHER_BRICK
+    id: 112
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 4000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+netherfence:
+  information:
+    type: item
+    category: unknown
+    material: NETHER_FENCE
+    id: 113
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+netherbrickstairs:
+  information:
+    type: item
+    category: unknown
+    material: NETHER_BRICK_STAIRS
+    id: 114
+    data: 0
+  value: 30.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+enchantmenttable:
+  information:
+    type: item
+    category: unknown
+    material: ENCHANTMENT_TABLE
+    id: 116
+    data: 0
+  value: 4650.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 9300.0
+endstone:
+  information:
+    type: item
+    category: unknown
+    material: ENDER_STONE
+    id: 121
+    data: 0
+  value: 75.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 150.0
+dragonegg:
+  information:
+    type: item
+    category: unknown
+    material: DRAGON_EGG
+    id: 122
+    data: 0
+  value: 7000.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10.0
+  initiation:
+    initiation: true
+    startprice: 14000.0
+redstonelamp:
+  information:
+    type: item
+    category: unknown
+    material: REDSTONE_LAMP_OFF
+    id: 123
+    data: 0
+  value: 100.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 3000.0
+  initiation:
+    initiation: true
+    startprice: 200.0
+ironshovel:
+  information:
+    type: item
+    category: unknown
+    material: IRON_SPADE
+    id: 256
+    data: 0
+  value: 35.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 70.0
+ironpickaxe:
+  information:
+    type: item
+    category: unknown
+    material: IRON_PICKAXE
+    id: 257
+    data: 0
+  value: 100.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 300.0
+ironaxe:
+  information:
+    type: item
+    category: unknown
+    material: IRON_AXE
+    id: 258
+    data: 0
+  value: 100.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 300.0
+flintandsteel:
+  information:
+    type: item
+    category: unknown
+    material: FLINT_AND_STEEL
+    id: 259
+    data: 0
+  value: 50.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+apple:
+  information:
+    type: item
+    category: unknown
+    material: APPLE
+    id: 260
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 2000.0
+  initiation:
+    initiation: true
+    startprice: 300.0
+bow:
+  information:
+    type: item
+    category: unknown
+    material: BOW
+    id: 261
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 5000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+arrow:
+  information:
+    type: item
+    category: unknown
+    material: ARROW
+    id: 262
+    data: 0
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 25000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+coal:
+  information:
+    type: item
+    category: unknown
+    material: COAL
+    id: 263
+    data: 0
+  value: 6.66
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+charcoal:
+  information:
+    type: item
+    category: unknown
+    material: COAL
+    id: 263
+    data: 1
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 5000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+diamond:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND
+    id: 264
+    data: 0
+  value: 2000.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 2500.0
+  initiation:
+    initiation: true
+    startprice: 4000.0
+ironingot:
+  information:
+    type: item
+    category: unknown
+    material: IRON_INGOT
+    id: 265
+    data: 0
+  value: 32.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 15000.0
+  initiation:
+    initiation: true
+    startprice: 64.0
+goldingot:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_INGOT
+    id: 266
+    data: 0
+  value: 133.33
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 5000.0
+  initiation:
+    initiation: true
+    startprice: 266.66
+ironsword:
+  information:
+    type: item
+    category: unknown
+    material: IRON_SWORD
+    id: 267
+    data: 0
+  value: 68.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 132.0
+woodsword:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_SWORD
+    id: 268
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+woodshovel:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_SPADE
+    id: 269
+    data: 0
+  value: 2.5
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 5.0
+woodpickaxe:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_PICKAXE
+    id: 270
+    data: 0
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+woodaxe:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_AXE
+    id: 271
+    data: 0
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+stonesword:
+  information:
+    type: item
+    category: unknown
+    material: STONE_SWORD
+    id: 272
+    data: 0
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+stoneshovel:
+  information:
+    type: item
+    category: unknown
+    material: STONE_SPADE
+    id: 273
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+stonepickaxe:
+  information:
+    type: item
+    category: unknown
+    material: STONE_PICKAXE
+    id: 274
+    data: 0
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+stoneaxe:
+  information:
+    type: item
+    category: unknown
+    material: STONE_AXE
+    id: 275
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+diamondsword:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_SWORD
+    id: 276
+    data: 0
+  value: 4050.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 300.0
+  initiation:
+    initiation: true
+    startprice: 8100.0
+diamondshovel:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_SPADE
+    id: 277
+    data: 0
+  value: 2050.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 300.0
+  initiation:
+    initiation: true
+    startprice: 4100.0
+diamondpickaxe:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_PICKAXE
+    id: 278
+    data: 0
+  value: 6100.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 300.0
+  initiation:
+    initiation: true
+    startprice: 12200.0
+diamondaxe:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_AXE
+    id: 279
+    data: 0
+  value: 6100.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 300.0
+  initiation:
+    initiation: true
+    startprice: 12200.0
+stick:
+  information:
+    type: item
+    category: unknown
+    material: STICK
+    id: 280
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 1.0
+bowl:
+  information:
+    type: item
+    category: unknown
+    material: BOWL
+    id: 281
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+mushroomsoup:
+  information:
+    type: item
+    category: unknown
+    material: MUSHROOM_SOUP
+    id: 282
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+goldsword:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_SWORD
+    id: 283
+    data: 0
+  value: 270.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 540.0
+goldshovel:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_SPADE
+    id: 284
+    data: 0
+  value: 140.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 280.0
+goldpickaxe:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_PICKAXE
+    id: 285
+    data: 0
+  value: 410.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 820.0
+goldaxe:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_AXE
+    id: 286
+    data: 0
+  value: 405.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 810.0
+string:
+  information:
+    type: item
+    category: unknown
+    material: STRING
+    id: 287
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+feather:
+  information:
+    type: item
+    category: unknown
+    material: FEATHER
+    id: 288
+    data: 0
+  value: 3.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 6.0
+gunpowder:
+  information:
+    type: item
+    category: unknown
+    material: SULPHUR
+    id: 289
+    data: 0
+  value: 30.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+woodhoe:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_HOE
+    id: 290
+    data: 0
+  value: 2.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 4.0
+stonehoe:
+  information:
+    type: item
+    category: unknown
+    material: STONE_HOE
+    id: 291
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+ironhoe:
+  information:
+    type: item
+    category: unknown
+    material: IRON_HOE
+    id: 292
+    data: 0
+  value: 70.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 140.0
+diamondhoe:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_HOE
+    id: 293
+    data: 0
+  value: 4050.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 300.0
+  initiation:
+    initiation: true
+    startprice: 8100.0
+goldhoe:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_HOE
+    id: 294
+    data: 0
+  value: 270.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 520.0
+seeds:
+  information:
+    type: item
+    category: unknown
+    material: SEEDS
+    id: 295
+    data: 0
+  value: 2.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 4.0
+wheat:
+  information:
+    type: item
+    category: unknown
+    material: WHEAT
+    id: 296
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+bread:
+  information:
+    type: item
+    category: unknown
+    material: BREAD
+    id: 297
+    data: 0
+  value: 16.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 32.0
+leatherhelmet:
+  information:
+    type: item
+    category: unknown
+    material: LEATHER_HELMET
+    id: 298
+    data: 0
+  value: 50.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+leatherchestplate:
+  information:
+    type: item
+    category: unknown
+    material: LEATHER_CHESTPLATE
+    id: 299
+    data: 0
+  value: 80.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 160.0
+leatherleggings:
+  information:
+    type: item
+    category: unknown
+    material: LEATHER_LEGGINGS
+    id: 300
+    data: 0
+  value: 70.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 140.0
+leatherboots:
+  information:
+    type: item
+    category: unknown
+    material: LEATHER_BOOTS
+    id: 301
+    data: 0
+  value: 40.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 80.0
+chainmailhelmet:
+  information:
+    type: item
+    category: unknown
+    material: CHAINMAIL_HELMET
+    id: 302
+    data: 0
+  value: 5000.0
+  price:
+    static: false
+    staticprice: 10000.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 10000.0
+chainmailchestplate:
+  information:
+    type: item
+    category: unknown
+    material: CHAINMAIL_CHESTPLATE
+    id: 303
+    data: 0
+  value: 8000.0
+  price:
+    static: false
+    staticprice: 16000.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 8000.0
+chainmailleggings:
+  information:
+    type: item
+    category: unknown
+    material: CHAINMAIL_LEGGINGS
+    id: 304
+    data: 0
+  value: 7000.0
+  price:
+    static: false
+    staticprice: 14000.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 14000.0
+chainmailboots:
+  information:
+    type: item
+    category: unknown
+    material: CHAINMAIL_BOOTS
+    id: 305
+    data: 0
+  value: 4000.0
+  price:
+    static: false
+    staticprice: 8000.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 4000.0
+ironhelmet:
+  information:
+    type: item
+    category: unknown
+    material: IRON_HELMET
+    id: 306
+    data: 0
+  value: 170.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 340.0
+ironchestplate:
+  information:
+    type: item
+    category: unknown
+    material: IRON_CHESTPLATE
+    id: 307
+    data: 0
+  value: 270.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 540.0
+ironleggings:
+  information:
+    type: item
+    category: unknown
+    material: IRON_LEGGINGS
+    id: 308
+    data: 0
+  value: 235.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 470.0
+ironboots:
+  information:
+    type: item
+    category: unknown
+    material: IRON_BOOTS
+    id: 309
+    data: 0
+  value: 135.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 270.0
+diamondhelmet:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_HELMET
+    id: 310
+    data: 0
+  value: 10000.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 20000.0
+diamondchestplate:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_CHESTPLATE
+    id: 311
+    data: 0
+  value: 16000.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 32000.0
+diamondleggings:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_LEGGINGS
+    id: 312
+    data: 0
+  value: 14000.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 28000.0
+diamondboots:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_BOOTS
+    id: 313
+    data: 0
+  value: 8000.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 16000.0
+goldhelmet:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_HELMET
+    id: 314
+    data: 0
+  value: 675.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 300.0
+  initiation:
+    initiation: true
+    startprice: 1350.0
+goldchestplate:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_CHESTPLATE
+    id: 315
+    data: 0
+  value: 1100.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 300.0
+  initiation:
+    initiation: true
+    startprice: 2200.0
+goldleggings:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_LEGGINGS
+    id: 316
+    data: 0
+  value: 940.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 300.0
+  initiation:
+    initiation: true
+    startprice: 1880.0
+goldboots:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_BOOTS
+    id: 317
+    data: 0
+  value: 550.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 300.0
+  initiation:
+    initiation: true
+    startprice: 1100.0
+flint:
+  information:
+    type: item
+    category: unknown
+    material: FLINT
+    id: 318
+    data: 0
+  value: 8.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 16.0
+rawpork:
+  information:
+    type: item
+    category: unknown
+    material: PORK
+    id: 319
+    data: 0
+  value: 30.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+cookedpork:
+  information:
+    type: item
+    category: unknown
+    material: GRILLED_PORK
+    id: 320
+    data: 0
+  value: 40.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 80.0
+painting:
+  information:
+    type: item
+    category: unknown
+    material: PAINTING
+    id: 321
+    data: 0
+  value: 8.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 16.0
+goldenapple:
+  information:
+    type: item
+    category: unknown
+    material: GOLDEN_APPLE
+    id: 322
+    data: 0
+  value: 350.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 700.0
+sign:
+  information:
+    type: item
+    category: unknown
+    material: SIGN
+    id: 323
+    data: 0
+  value: 7.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 14.0
+wooddoor:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_DOOR
+    id: 324
+    data: 0
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+bucket:
+  information:
+    type: item
+    category: unknown
+    material: BUCKET
+    id: 325
+    data: 0
+  value: 100.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 200.0
+waterbucket:
+  information:
+    type: item
+    category: unknown
+    material: WATER_BUCKET
+    id: 326
+    data: 0
+  value: 120.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 240.0
+lavabucket:
+  information:
+    type: item
+    category: unknown
+    material: LAVA_BUCKET
+    id: 327
+    data: 0
+  value: 175.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 300.0
+minecart:
+  information:
+    type: item
+    category: unknown
+    material: MINECART
+    id: 328
+    data: 0
+  value: 160.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 320.0
+saddle:
+  information:
+    type: item
+    category: unknown
+    material: SADDLE
+    id: 329
+    data: 0
+  value: 400.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 800.0
+irondoor:
+  information:
+    type: item
+    category: unknown
+    material: IRON_DOOR
+    id: 330
+    data: 0
+  value: 192.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 384.0
+redstone:
+  information:
+    type: item
+    category: unknown
+    material: REDSTONE
+    id: 331
+    data: 0
+  value: 6.66
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 13.0
+snowball:
+  information:
+    type: item
+    category: unknown
+    material: SNOW_BALL
+    id: 332
+    data: 0
+  value: 2.5
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 5.0
+boat:
+  information:
+    type: item
+    category: unknown
+    material: BOAT
+    id: 333
+    data: 0
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+leather:
+  information:
+    type: item
+    category: unknown
+    material: LEATHER
+    id: 334
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 3000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+milk:
+  information:
+    type: item
+    category: unknown
+    material: MILK_BUCKET
+    id: 335
+    data: 0
+  value: 120.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 240.0
+claybrick:
+  information:
+    type: item
+    category: unknown
+    material: CLAY_BRICK
+    id: 336
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+clayball:
+  information:
+    type: item
+    category: unknown
+    material: CLAY_BALL
+    id: 337
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+sugarcane:
+  information:
+    type: item
+    category: unknown
+    material: SUGAR_CANE
+    id: 338
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+paper:
+  information:
+    type: item
+    category: unknown
+    material: PAPER
+    id: 339
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+book:
+  information:
+    type: item
+    category: unknown
+    material: BOOK
+    id: 340
+    data: 0
+  value: 15.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 30.0
+slimeball:
+  information:
+    type: item
+    category: unknown
+    material: SLIME_BALL
+    id: 341
+    data: 0
+  value: 500.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 2500.0
+minecartwithchest:
+  information:
+    type: item
+    category: unknown
+    material: STORAGE_MINECART
+    id: 342
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 700.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+minecartwithfurnace:
+  information:
+    type: item
+    category: unknown
+    material: POWERED_MINECART
+    id: 343
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 700.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+egg:
+  information:
+    type: item
+    category: unknown
+    material: EGG
+    id: 344
+    data: 0
+  value: 2.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 4.0
+compass:
+  information:
+    type: item
+    category: unknown
+    material: COMPASS
+    id: 345
+    data: 0
+  value: 140.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 280.0
+fishingrod:
+  information:
+    type: item
+    category: unknown
+    material: FISHING_ROD
+    id: 346
+    data: 0
+  value: 3.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 6.0
+clock:
+  information:
+    type: item
+    category: unknown
+    material: WATCH
+    id: 347
+    data: 0
+  value: 550.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 300.0
+  initiation:
+    initiation: true
+    startprice: 1100.0
+glowstonedust:
+  information:
+    type: item
+    category: unknown
+    material: GLOWSTONE_DUST
+    id: 348
+    data: 0
+  value: 16.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 32.0
+rawfish:
+  information:
+    type: item
+    category: unknown
+    material: RAW_FISH
+    id: 349
+    data: 0
+  value: 25.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 3000.0
+  initiation:
+    initiation: true
+    startprice: 50.0
+cookedfish:
+  information:
+    type: item
+    category: unknown
+    material: COOKED_FISH
+    id: 350
+    data: 0
+  value: 32.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 64.0
+inksac:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 0
+  value: 15.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 30.0
+rosered:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 1
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+cactusgreen:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 2
+  value: 12.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 24.0
+cocoabeans:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 3
+  value: 6.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 12.0
+lapislazuli:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 4
+  value: 25.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 50.0
+purpledye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 5
+  value: 70.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 140.0
+cyandye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 6
+  value: 70.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 140.0
+lightgraydye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 7
+  value: 25.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 50.0
+graydye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 8
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+pinkdye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 9
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+limedye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 10
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+dandelionyellow:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 11
+  value: 15.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 30.0
+lightbluedye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 12
+  value: 70.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 140.0
+magentadye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 13
+  value: 75.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 150.0
+orangedye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 14
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+bonemeal:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 15
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+bone:
+  information:
+    type: item
+    category: unknown
+    material: BONE
+    id: 352
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+sugar:
+  information:
+    type: item
+    category: unknown
+    material: SUGAR
+    id: 353
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+cake:
+  information:
+    type: item
+    category: unknown
+    material: CAKE
+    id: 354
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+bed:
+  information:
+    type: item
+    category: unknown
+    material: BED
+    id: 355
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+repeater:
+  information:
+    type: item
+    category: unknown
+    material: DIODE
+    id: 356
+    data: 0
+  value: 35.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 70.0
+cookie:
+  information:
+    type: item
+    category: unknown
+    material: COOKIE
+    id: 357
+    data: 0
+  value: 2.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 4.0
+map:
+  information:
+    type: item
+    category: unknown
+    material: MAP
+    id: 358
+    data: 0
+  value: 190.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 380.0
+shears:
+  information:
+    type: item
+    category: unknown
+    material: SHEARS
+    id: 359
+    data: 0
+  value: 70.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 140.0
+melon:
+  information:
+    type: item
+    category: unknown
+    material: MELON
+    id: 360
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+pumpkinseeds:
+  information:
+    type: item
+    category: unknown
+    material: PUMPKIN_SEEDS
+    id: 361
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+melonseeds:
+  information:
+    type: item
+    category: unknown
+    material: MELON_SEEDS
+    id: 362
+    data: 0
+  value: 30.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+rawbeef:
+  information:
+    type: item
+    category: unknown
+    material: RAW_BEEF
+    id: 363
+    data: 0
+  value: 30.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+cookedbeef:
+  information:
+    type: item
+    category: unknown
+    material: COOKED_BEEF
+    id: 364
+    data: 0
+  value: 40.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 80.0
+rawchicken:
+  information:
+    type: item
+    category: unknown
+    material: RAW_CHICKEN
+    id: 365
+    data: 0
+  value: 25.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 50.0
+cookedchicken:
+  information:
+    type: item
+    category: unknown
+    material: COOKED_CHICKEN
+    id: 366
+    data: 0
+  value: 32.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 64.0
+rottenflesh:
+  information:
+    type: item
+    category: unknown
+    material: ROTTEN_FLESH
+    id: 367
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+enderpearl:
+  information:
+    type: item
+    category: unknown
+    material: ENDER_PEARL
+    id: 368
+    data: 0
+  value: 400.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 800.0
+blazerod:
+  information:
+    type: item
+    category: unknown
+    material: BLAZE_ROD
+    id: 369
+    data: 0
+  value: 250.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 500.0
+ghasttear:
+  information:
+    type: item
+    category: unknown
+    material: GHAST_TEAR
+    id: 370
+    data: 0
+  value: 400.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 800.0
+goldnugget:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_NUGGET
+    id: 371
+    data: 0
+  value: 14.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 28.0
+netherwarts:
+  information:
+    type: item
+    category: unknown
+    material: NETHER_STALK
+    id: 372
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+waterbottle:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+potionofregen:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 1
+  value: 700.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1400.0
+potionofregen2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 33
+  value: 720.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1440.0
+potionofregenext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 65
+  value: 710.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1420.0
+potionofregen2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 97
+  value: 730.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1460.0
+spotionofregen:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16385
+  value: 750.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1500.0
+spotionofregenext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16449
+  value: 760.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1520.0
+spotionofregen2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16417
+  value: 770.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1540.0
+spotionofregen2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16481
+  value: 780.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1560.0
+potionofspeed:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 2
+  value: 310.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 620.0
+potionofspeed2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 34
+  value: 340.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 680.0
+potionofspeedext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 66
+  value: 320.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 640.0
+potionofspeed2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 98
+  value: 340.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 680.0
+spotionofspeed:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16386
+  value: 410.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 820.0
+spotionofspeedext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16450
+  value: 420.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 840.0
+spotionofspeed2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16418
+  value: 420.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 840.0
+spotionofspeed2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16482
+  value: 430.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 860.0
+potionoffireresist:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 3
+  value: 625.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1250.0
+potionoffireresist2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 35
+  value: 645.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1290.0
+potionoffireresistext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 67
+  value: 635.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1270.0
+potionoffireresist2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 99
+  value: 655.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1310.0
+spotionoffireresist:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16387
+  value: 725.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1450.0
+spotionoffireresistext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16451
+  value: 735.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1470.0
+spotionoffireresist2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16419
+  value: 745.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1490.0
+spotionoffireresist2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16483
+  value: 755.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1510.0
+potionofpoison:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 4
+  value: 320.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 640.0
+potionofpoison2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 36
+  value: 340.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 680.0
+potionofpoisonext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 68
+  value: 330.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 660.0
+potionofpoison2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 100
+  value: 350.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 700.0
+spotionofpoison:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16388
+  value: 420.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 840.0
+spotionofpoisonext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16452
+  value: 430.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 860.0
+spotionofpoison2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16420
+  value: 440.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 880.0
+spotionofpoison2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16484
+  value: 450.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 900.0
+potionofhealing:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 5
+  value: 325.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 650.0
+potionofhealing2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 37
+  value: 345.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 690.0
+potionofhealingext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 69
+  value: 335.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 670.0
+potionofhealing2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 101
+  value: 355.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 710.0
+spotionofhealing:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16389
+  value: 425.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 850.0
+spotionofhealingext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16453
+  value: 435.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 870.0
+spotionofhealing2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16421
+  value: 445.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 890.0
+spotionofhealing2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16485
+  value: 455.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 910.0
+potionofweakness:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 8
+  value: 330.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 660.0
+potionofweakness2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 40
+  value: 350.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 700.0
+potionofweaknessext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 72
+  value: 340.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 680.0
+potionofweakness2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 104
+  value: 360.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 720.0
+spotionofweakness:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16392
+  value: 430.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 860.0
+spotionofweaknessext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16456
+  value: 440.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 880.0
+spotionofweakness2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16424
+  value: 450.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 900.0
+spotionofweakness2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16488
+  value: 460.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 920.0
+potionofstrength:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 9
+  value: 430.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 860.0
+potionofstrength2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 41
+  value: 450.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 900.0
+potionofstrengthext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 73
+  value: 440.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 880.0
+potionofstrength2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 105
+  value: 460.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 920.0
+spotionofstrength:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16393
+  value: 530.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1060.0
+spotionofstrengthext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16457
+  value: 540.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1080.0
+spotionofstrength2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16425
+  value: 550.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1100.0
+spotionofstrength2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16489
+  value: 560.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 1120.0
+potionofslowness:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 10
+  value: 340.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 680.0
+potionofslowness2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 42
+  value: 360.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 720.0
+potionofslownessext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 74
+  value: 350.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 700.0
+potionofslowness2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 106
+  value: 360.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 720.0
+spotionofslowness:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16394
+  value: 440.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 880.0
+spotionofslownessext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16458
+  value: 450.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 900.0
+spotionofslowness2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16426
+  value: 460.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 920.0
+spotionofslowness2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16490
+  value: 470.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 940.0
+potionofharming:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 12
+  value: 350.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 700.0
+potionofharming2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 44
+  value: 370.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 740.0
+potionofharmingext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 76
+  value: 360.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 720.0
+potionofharming2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 108
+  value: 380.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 760.0
+spotionofharming:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16396
+  value: 450.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 900.0
+spotionofharmingext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16460
+  value: 460.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 920.0
+spotionofharming2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16428
+  value: 470.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 940.0
+spotionofharming2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16492
+  value: 480.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 960.0
+thickpotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 32
+  value: 320.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 640.0
+mundanepotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 8192
+  value: 300.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 600.0
+smundanepotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 24576
+  value: 300.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 600.0
+mundanepotionext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 64
+  value: 300.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 600.0
+awkwardpotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16
+  value: 300.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 600.0
+glassbottle:
+  information:
+    type: item
+    category: unknown
+    material: GLASS_BOTTLE
+    id: 374
+    data: 0
+  value: 30.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+spidereye:
+  information:
+    type: item
+    category: unknown
+    material: SPIDER_EYE
+    id: 375
+    data: 0
+  value: 15.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 30.0
+fermentedspidereye:
+  information:
+    type: item
+    category: unknown
+    material: FERMENTED_SPIDER_EYE
+    id: 376
+    data: 0
+  value: 45.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 5000.0
+  initiation:
+    initiation: true
+    startprice: 90.0
+blazepowder:
+  information:
+    type: item
+    category: unknown
+    material: BLAZE_POWDER
+    id: 377
+    data: 0
+  value: 125.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 250.0
+magmacream:
+  information:
+    type: item
+    category: unknown
+    material: MAGMA_CREAM
+    id: 378
+    data: 0
+  value: 325.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 650.0
+brewingstand:
+  information:
+    type: item
+    category: unknown
+    material: BREWING_STAND_ITEM
+    id: 379
+    data: 0
+  value: 260.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 520.0
+cauldron:
+  information:
+    type: item
+    category: unknown
+    material: CAULDRON_ITEM
+    id: 380
+    data: 0
+  value: 230.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 460.0
+eyeofender:
+  information:
+    type: item
+    category: unknown
+    material: BUCKET
+    id: 381
+    data: 0
+  value: 530.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 1060.0
+glisteringmelon:
+  information:
+    type: item
+    category: unknown
+    material: SPECKLED_MELON
+    id: 382
+    data: 0
+  value: 30.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+creeper:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 50
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+skeleton:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 51
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+spider:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 52
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+giant:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 53
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+zombie:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 54
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+slime:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 55
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+ghast:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 56
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+zombiepigman:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 57
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+enderman:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 58
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+cavespider:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 59
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+silverfish:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 60
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+blaze:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 61
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+magmacube:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 62
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+enderdragon:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 63
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+pig:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 90
+  value: 1.0
+  price:
+    static: false
+    staticprice: 3000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+sheep:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 91
+  value: 1.0
+  price:
+    static: false
+    staticprice: 3000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+cow:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 92
+  value: 1.0
+  price:
+    static: false
+    staticprice: 3500.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+chicken:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 93
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+squid:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 94
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+wolf:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 95
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+mooshroom:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 96
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+snowgolem:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 97
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+ocelot:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 98
+  value: 1.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+villager:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 120
+  value: 1.0
+  price:
+    static: false
+    staticprice: 12500.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+bottleoenchanting:
+  information:
+    type: item
+    category: unknown
+    material: EXP_BOTTLE
+    id: 384
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1000.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+firecharge:
+  information:
+    type: item
+    category: unknown
+    material: FIREBALL
+    id: 385
+    data: 0
+  value: 160.0
+  price:
+    static: false
+    staticprice: 1000.0
+  stock:
+    stock: 0.0
+    median: 3000.0
+  initiation:
+    initiation: true
+    startprice: 320.0
+13disk:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_RECORD
+    id: 2256
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 250.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+catdisk:
+  information:
+    type: item
+    category: unknown
+    material: GREEN_RECORD
+    id: 2257
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 250.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+blocksdisk:
+  information:
+    type: item
+    category: unknown
+    material: RECORD_3
+    id: 2258
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 250.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+chirpdisk:
+  information:
+    type: item
+    category: unknown
+    material: RECORD_4
+    id: 2259
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 250.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+fardisk:
+  information:
+    type: item
+    category: unknown
+    material: RECORD_5
+    id: 2260
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 250.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+malldisk:
+  information:
+    type: item
+    category: unknown
+    material: RECORD_6
+    id: 2261
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 250.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+mellohidisk:
+  information:
+    type: item
+    category: unknown
+    material: RECORD_7
+    id: 2262
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 250.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+staldisk:
+  information:
+    type: item
+    category: unknown
+    material: RECORD_8
+    id: 2263
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 250.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+straddisk:
+  information:
+    type: item
+    category: unknown
+    material: RECORD_9
+    id: 2264
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 250.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+warddisk:
+  information:
+    type: item
+    category: unknown
+    material: RECORD_10
+    id: 2265
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 250.0
+  initiation:
+    initiation: true
+    startprice: 400.0
+11disk:
+  information:
+    type: item
+    category: unknown
+    material: RECORD_11
+    id: 2266
+    data: 0
+  value: 50000.0
+  price:
+    static: false
+    staticprice: 25000.0
+  stock:
+    stock: 0.0
+    median: 20.0
+  initiation:
+    initiation: true
+    startprice: 50000.0
+enderportalframe:
+  information:
+    type: item
+    category: unknown
+    material: ENDER_PORTAL_FRAME
+    id: 120
+    data: 0
+  value: 5000.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10.0
+  initiation:
+    initiation: true
+    startprice: 5000.0
+portal:
+  information:
+    type: item
+    category: unknown
+    material: PORTAL
+    id: 90
+    data: 0
+  value: 5000.0
+  price:
+    static: false
+    staticprice: 5000.0
+  stock:
+    stock: 0.0
+    median: 10.0
+  initiation:
+    initiation: true
+    startprice: 5000.0
+sandstonestairs:
+  information:
+    type: item
+    category: unknown
+    material: SANDSTONE_STAIRS
+    id: 128
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 40.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 40.0
+emeraldore:
+  information:
+    type: item
+    category: unknown
+    material: EMERALD_ORE
+    id: 129
+    data: 0
+  value: 16000.0
+  price:
+    static: false
+    staticprice: 18000.0
+  stock:
+    stock: 0.0
+    median: 100.0
+  initiation:
+    initiation: true
+    startprice: 18000.0
+emerald:
+  information:
+    type: item
+    category: unknown
+    material: EMERALD
+    id: 388
+    data: 0
+  value: 32.0
+  price:
+    static: false
+    staticprice: 64.0
+  stock:
+    stock: 0.0
+    median: 15000.0
+  initiation:
+    initiation: true
+    startprice: 64.0
+junglewoodstairs:
+  information:
+    type: item
+    category: unknown
+    material: JUNGLE_WOOD_STAIRS
+    id: 136
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+birchwoodstairs:
+  information:
+    type: item
+    category: unknown
+    material: BIRCH_WOOD_STAIRS
+    id: 135
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+sprucewoodstairs:
+  information:
+    type: item
+    category: unknown
+    material: SPRUCE_WOOD_STAIRS
+    id: 134
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+oakwoodslab:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_STEP
+    id: 126
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+sprucewoodslab:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_STEP
+    id: 126
+    data: 1
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+birchwoodslab:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_STEP
+    id: 126
+    data: 2
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+junglewoodslab:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_STEP
+    id: 126
+    data: 3
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+emeraldblock:
+  information:
+    type: item
+    category: unknown
+    material: EMERALD_BLOCK
+    id: 133
+    data: 0
+  value: 288.0
+  price:
+    static: false
+    staticprice: 576.0
+  stock:
+    stock: 0.0
+    median: 7500.0
+  initiation:
+    initiation: true
+    startprice: 576.0
+enderchest:
+  information:
+    type: item
+    category: unknown
+    material: ENDER_CHEST
+    id: 130
+    data: 0
+  value: 1730.0
+  price:
+    static: false
+    staticprice: 3460.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 3460.0
+tripwirehook:
+  information:
+    type: item
+    category: unknown
+    material: TRIPWIRE_HOOK
+    id: 131
+    data: 0
+  value: 17.0
+  price:
+    static: false
+    staticprice: 34.0
+  stock:
+    stock: 0.0
+    median: 5000.0
+  initiation:
+    initiation: true
+    startprice: 34.0
+bookandquill:
+  information:
+    type: item
+    category: unknown
+    material: BOOK_AND_QUILL
+    id: 386
+    data: 0
+  value: 33.0
+  price:
+    static: false
+    staticprice: 66.0
+  stock:
+    stock: 0.0
+    median: 5000.0
+  initiation:
+    initiation: true
+    startprice: 66.0
+enchantedapple:
+  information:
+    type: item
+    category: unknown
+    material: GOLDEN_APPLE
+    id: 322
+    data: 1
+  value: 9800.0
+  price:
+    static: false
+    staticprice: 19600.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 19600.0
+xp:
+  information:
+    type: experience
+    category: unknown
+    material: none
+    id: -1
+    data: -1
+  value: 3.0
+  price:
+    static: false
+    staticprice: 3.0
+  stock:
+    stock: 0.0
+    median: 100000.0
+  initiation:
+    initiation: true
+    startprice: 6.0
+stone:
+  information:
+    type: item
+    category: unknown
+    material: STONE
+    id: 1
+    data: 0
+  value: 3.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 6.0
+grass:
+  information:
+    type: item
+    category: unknown
+    material: GRASS
+    id: 2
+    data: 0
+  value: 50.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+dirt:
+  information:
+    type: item
+    category: unknown
+    material: DIRT
+    id: 3
+    data: 0
+  value: 0.5
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 1.0
+cobblestone:
+  information:
+    type: item
+    category: unknown
+    material: COBBLESTONE
+    id: 4
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 25000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+oakwood:
+  information:
+    type: item
+    category: unknown
+    material: WOOD
+    id: 5
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+birchwood:
+  information:
+    type: item
+    category: unknown
+    material: WOOD
+    id: 5
+    data: 2
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+junglewood:
+  information:
+    type: item
+    category: unknown
+    material: WOOD
+    id: 5
+    data: 3
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+oaksapling:
+  information:
+    type: item
+    category: unknown
+    material: SAPLING
+    id: 6
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+birchsapling:
+  information:
+    type: item
+    category: unknown
+    material: SAPLING
+    id: 6
+    data: 2
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+junglesapling:
+  information:
+    type: item
+    category: unknown
+    material: SAPLING
+    id: 6
+    data: 3
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+bedrock:
+  information:
+    type: item
+    category: unknown
+    material: BEDROCK
+    id: 7
+    data: 0
+  value: 10000.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20000.0
+sand:
+  information:
+    type: item
+    category: unknown
+    material: SAND
+    id: 12
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 10.0
+gravel:
+  information:
+    type: item
+    category: unknown
+    material: GRAVEL
+    id: 13
+    data: 0
+  value: 0.5
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 1.0
+goldore:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_ORE
+    id: 14
+    data: 0
+  value: 130.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 260.0
+ironore:
+  information:
+    type: item
+    category: unknown
+    material: IRON_ORE
+    id: 15
+    data: 0
+  value: 30.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 60.0
+coalore:
+  information:
+    type: item
+    category: unknown
+    material: COAL_ORE
+    id: 16
+    data: 0
+  value: 50.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 1000.0
+  initiation:
+    initiation: true
+    startprice: 100.0
+oaklog:
+  information:
+    type: item
+    category: unknown
+    material: LOG
+    id: 17
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+birchlog:
+  information:
+    type: item
+    category: unknown
+    material: LOG
+    id: 17
+    data: 2
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+junglelog:
+  information:
+    type: item
+    category: unknown
+    material: LOG
+    id: 17
+    data: 3
+  value: 4.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 8.0
+oakleaves:
+  information:
+    type: item
+    category: unknown
+    material: LEAVES
+    id: 18
+    data: 4
+  value: 1.0
+  price:
+    static: false
+    staticprice: 1.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 2.0
+sprucewood:
+  information:
+    type: item
+    category: unknown
+    material: WOOD
+    id: 5
+    data: 1
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 2.0
+sprucesapling:
+  information:
+    type: item
+    category: unknown
+    material: SAPLING
+    id: 6
+    data: 1
+  value: 5.0
+  price:
+    static: false
+    staticprice: 10.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 10.0
+sprucelog:
+  information:
+    type: item
+    category: unknown
+    material: LOG
+    id: 17
+    data: 1
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+spruceleaves:
+  information:
+    type: item
+    category: unknown
+    material: LEAVES
+    id: 18
+    data: 5
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 2.0
