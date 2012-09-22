@@ -2,7 +2,6 @@ package regalowl.hyperconomy;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 
 public class SQLWrite {
@@ -108,8 +107,8 @@ public class SQLWrite {
     public void writeFailed(String statement) {
     	workingBuffer.add(statement);
     	activethreads--;
-		Logger l = Logger.getLogger("Minecraft");
-		l.severe("Failed: " + statement);
+		//Logger l = Logger.getLogger("Minecraft");
+		//l.severe("Failed: " + statement);
     }
 
 

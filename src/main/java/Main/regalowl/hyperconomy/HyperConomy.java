@@ -328,14 +328,10 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public String fixName(String nam) {
-		int c = 0;
-		int l = names.size();
-		while (c < l) {
-			if (names.get(c).equalsIgnoreCase(nam)) {
-				String newname = names.get(c);
-				return newname;
+		for (int i = 0; i < names.size(); i++) {
+			if (names.get(i).equalsIgnoreCase(nam)) {
+				return names.get(i);
 			}
-			c++;
 		}
 		return nam;
 	}

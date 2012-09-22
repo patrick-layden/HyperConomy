@@ -43,7 +43,7 @@ public class SQLWriteThread {
 					    savecomplete = true;
 					}
 				} catch (SQLException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 					cp.returnConnection(connection);
 					sw.writeFailed(statement);
 					savecomplete = true;

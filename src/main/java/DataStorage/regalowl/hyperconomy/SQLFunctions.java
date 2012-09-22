@@ -75,6 +75,7 @@ public class SQLFunctions {
 	}
 
 	public void setName(String name, String economy, String newname) {
+		name = hc.fixName(name);
 		try {
 			if (hc.useSQL()) {
 				statement = "UPDATE hyperobjects SET NAME='" + newname + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
@@ -91,6 +92,7 @@ public class SQLFunctions {
 	}
 
 	public void setEconomy(String name, String economy, String neweconomy) {
+		name = hc.fixName(name);
 		try {
 			if (hc.useSQL()) {
 				statement = "UPDATE hyperobjects SET ECONOMY='" + neweconomy + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
@@ -107,6 +109,7 @@ public class SQLFunctions {
 	}
 
 	public void setType(String name, String economy, String newtype) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			ttype.set(keyloc, newtype);
@@ -127,6 +130,7 @@ public class SQLFunctions {
 	}
 
 	public void setCategory(String name, String economy, String newcategory) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tcategory.set(keyloc, newcategory);
@@ -147,6 +151,7 @@ public class SQLFunctions {
 	}
 
 	public void setMaterial(String name, String economy, String newmaterial) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tmaterial.set(keyloc, newmaterial);
@@ -167,6 +172,7 @@ public class SQLFunctions {
 	}
 
 	public void setId(String name, String economy, int newid) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tid.set(keyloc, newid);
@@ -187,6 +193,7 @@ public class SQLFunctions {
 	}
 
 	public void setData(String name, String economy, int newdata) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tdata.set(keyloc, newdata);
@@ -207,6 +214,7 @@ public class SQLFunctions {
 	}
 
 	public void setDurability(String name, String economy, int newdurability) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tdurability.set(keyloc, newdurability);
@@ -227,6 +235,7 @@ public class SQLFunctions {
 	}
 
 	public void setValue(String name, String economy, double newvalue) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tvalue.set(keyloc, newvalue);
@@ -247,6 +256,7 @@ public class SQLFunctions {
 	}
 
 	public void setStatic(String name, String economy, String newstatic) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tstatic.set(keyloc, newstatic);
@@ -267,6 +277,7 @@ public class SQLFunctions {
 	}
 
 	public void setStaticPrice(String name, String economy, double newstaticprice) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tstaticprice.set(keyloc, newstaticprice);
@@ -287,6 +298,7 @@ public class SQLFunctions {
 	}
 
 	public void setStock(String name, String economy, double newstock) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tstock.set(keyloc, newstock);
@@ -309,6 +321,7 @@ public class SQLFunctions {
 	}
 
 	public void setMedian(String name, String economy, double newmedian) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tmedian.set(keyloc, newmedian);
@@ -329,6 +342,7 @@ public class SQLFunctions {
 	}
 
 	public void setInitiation(String name, String economy, String newinitiation) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tinitiation.set(keyloc, newinitiation);
@@ -349,6 +363,7 @@ public class SQLFunctions {
 	}
 
 	public void setStartPrice(String name, String economy, double newstartprice) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tstartprice.set(keyloc, newstartprice);
@@ -369,6 +384,7 @@ public class SQLFunctions {
 	}
 
 	public void setCeiling(String name, String economy, double newceiling) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tceiling.set(keyloc, newceiling);
@@ -389,6 +405,7 @@ public class SQLFunctions {
 	}
 
 	public void setFloor(String name, String economy, double newfloor) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tfloor.set(keyloc, newfloor);
@@ -409,6 +426,7 @@ public class SQLFunctions {
 	}
 
 	public String getName(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tname.get(keyloc);
@@ -420,6 +438,7 @@ public class SQLFunctions {
 	}
 
 	public String getEconomy(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return teconomy.get(keyloc);
@@ -431,6 +450,7 @@ public class SQLFunctions {
 	}
 
 	public String getType(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return ttype.get(keyloc);
@@ -442,6 +462,7 @@ public class SQLFunctions {
 	}
 
 	public String getCategory(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tcategory.get(keyloc);
@@ -453,6 +474,7 @@ public class SQLFunctions {
 	}
 
 	public String getMaterial(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tmaterial.get(keyloc);
@@ -464,6 +486,7 @@ public class SQLFunctions {
 	}
 
 	public int getId(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tid.get(keyloc);
@@ -475,6 +498,7 @@ public class SQLFunctions {
 	}
 
 	public int getData(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tdata.get(keyloc);
@@ -486,6 +510,7 @@ public class SQLFunctions {
 	}
 
 	public int getDurability(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tdurability.get(keyloc);
@@ -497,6 +522,7 @@ public class SQLFunctions {
 	}
 
 	public double getValue(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tvalue.get(keyloc);
@@ -508,6 +534,7 @@ public class SQLFunctions {
 	}
 
 	public String getStatic(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tstatic.get(keyloc);
@@ -519,6 +546,7 @@ public class SQLFunctions {
 	}
 
 	public double getStaticPrice(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tstaticprice.get(keyloc);
@@ -530,6 +558,7 @@ public class SQLFunctions {
 	}
 
 	public double getStock(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tstock.get(keyloc);
@@ -541,6 +570,7 @@ public class SQLFunctions {
 	}
 
 	public double getMedian(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tmedian.get(keyloc);
@@ -552,6 +582,7 @@ public class SQLFunctions {
 	}
 
 	public String getInitiation(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tinitiation.get(keyloc);
@@ -563,6 +594,7 @@ public class SQLFunctions {
 	}
 
 	public double getStartPrice(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tstartprice.get(keyloc);
@@ -574,6 +606,7 @@ public class SQLFunctions {
 	}
 
 	public double getCeiling(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tceiling.get(keyloc);
@@ -585,6 +618,7 @@ public class SQLFunctions {
 	}
 
 	public double getFloor(String name, String economy) {
+		name = hc.fixName(name);
 		try {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			return tfloor.get(keyloc);
