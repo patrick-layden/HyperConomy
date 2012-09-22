@@ -21,14 +21,12 @@
 		<connection>scm:git:git://github.com/RegalOwl/HyperConomy.git</connection>
 		<url>https://github.com/RegalOwl/HyperConomy/tree/master/</url>
 	</scm>
-	
-
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
 			<version>1.3.2-R0.1</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
@@ -62,4 +60,20 @@
 			<version>8.1.5.v20120716</version>
 		</dependency>
 	</dependencies>
+		<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
