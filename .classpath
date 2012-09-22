@@ -1,24 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="Main"/>
-	<classpathentry kind="src" path="Signs"/>
-	<classpathentry kind="src" path="Logging"/>
-	<classpathentry kind="src" path="Utils"/>
-	<classpathentry kind="src" path="Messaging"/>
-	<classpathentry kind="src" path="DataStorage"/>
-	<classpathentry kind="src" path="Commands"/>
-	<classpathentry kind="src" path="Web"/>
-	<classpathentry kind="src" path="API"/>
-	<classpathentry kind="src" path="Shops"/>
-	<classpathentry kind="src" path="Backups"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/bukkit-1.3.1-R2.0.jar"/>
-	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/Vault.jar"/>
-	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/jetty-continuation-8.1.4.v20120524.jar"/>
-	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/jetty-http-8.1.4.v20120524.jar"/>
-	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/jetty-io-8.1.4.v20120524.jar"/>
-	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/jetty-server-8.1.4.v20120524.jar"/>
-	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/jetty-util-8.1.4.v20120524.jar"/>
-	<classpathentry kind="lib" path="E:/Minecraft/Plugin Development/Dependencies/lib/jetty/servlet-api-3.0.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry excluding="**" kind="src" output="target/classes"
+		path="src/main/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes"
+		path="src/test/java">
+		<attributes>
+			<attribute name="optional" value="true" />
+			<attribute name="maven.pomderived" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src"
+		output="target/test-classes" path="src/test/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src/main/java/Main" />
+	<classpathentry kind="src" path="src/main/java/Signs" />
+	<classpathentry kind="src" path="src/main/java/Logging" />
+	<classpathentry kind="src" path="src/main/java/Utils" />
+	<classpathentry kind="src" path="src/main/java/Messaging" />
+	<classpathentry kind="src" path="src/main/java/DataStorage" />
+	<classpathentry kind="src" path="src/main/java/Commands" />
+	<classpathentry kind="src" path="src/main/java/Web" />
+	<classpathentry kind="src" path="src/main/java/API" />
+	<classpathentry kind="src" path="src/main/java/Shops" />
+	<classpathentry kind="src" path="src/main/java/Backups" />
+	<classpathentry kind="con"
+		path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6" />
+	<classpathentry kind="con"
+		path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes" />
 </classpath>

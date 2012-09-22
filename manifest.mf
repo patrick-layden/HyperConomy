@@ -1,2 +1,0 @@
-Manifest-Version: 1.0
-Class-Path: ../plugins/HyperConomy/lib/jetty/jetty-continuation-8.1.4.v20120524.jar ../plugins/HyperConomy/lib/jetty/jetty-http-8.1.4.v20120524.jar ../plugins/HyperConomy/lib/jetty/jetty-io-8.1.4.v20120524.jar ../plugins/HyperConomy/lib/jetty/jetty-server-8.1.4.v20120524.jar ../plugins/HyperConomy/lib/jetty/jetty-util-8.1.4.v20120524.jar ../plugins/HyperConomy/lib/jetty/servlet-api-3.0.jar

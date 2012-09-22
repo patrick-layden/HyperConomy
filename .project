@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>HyperConomy</name>
+	<name>hyperconomy</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -10,8 +10,115 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.m2e.core.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
+	<filteredResources>
+		<filter>
+			<id>1348003663501</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Main/</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1348003663503</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Signs/</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1348003663505</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Logging/</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1348003663507</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Utils/</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1348003663543</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Shops/</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1348003663545</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-API/</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1348003663548</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Web/</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1348003663551</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Backups/</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1348003663554</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Commands/</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1348003663556</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Messaging/</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1348003663560</id>
+			<name>src/main/java</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-DataStorage/</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>
