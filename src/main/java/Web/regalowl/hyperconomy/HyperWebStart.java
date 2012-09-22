@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -56,8 +55,11 @@ public class HyperWebStart {
 		
 		
 
-		FileTools ft = new FileTools();
+		//FileTools ft = new FileTools();
 		if (useWebPage) {
+			startServer();
+	    	log.info("[HyperConomy] web page enabled.");
+			/*
 			String serverpath = ft.getJarPath();
 			String jettypath = serverpath + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "lib" + File.separator + "jetty";
 			ArrayList<String> jettyContents = ft.getFolderContents(jettypath);
@@ -72,7 +74,9 @@ public class HyperWebStart {
 		    	ft.unZipFile(jettypath + File.separator + "Jetty.zip", jettypath);
 		    	ft.deleteFile(jettypath + File.separator + "Jetty.zip");
 		    	log.warning("[HyperConomy] You must restart your server to enable the HyperConomy web page.");
+		  
 		    }
+		    */
 		}
 	}
 	
@@ -108,6 +112,7 @@ public class HyperWebStart {
 		hc.getServer().getScheduler().cancelTask(serverid);
 	}
 
+	/*
 	private boolean checkDependencies(ArrayList<String> libfiles) {
 		boolean hasdependencies = true;
 		for (int i = 0; i < dependencies.size(); i++) {
@@ -117,7 +122,7 @@ public class HyperWebStart {
 		}
 		return hasdependencies;
 	}
-	
+	*/
 
 	private boolean useWebPage;
 	private String backgroundColor;
