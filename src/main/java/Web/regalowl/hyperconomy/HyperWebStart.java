@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.eclipse.jetty.server.Server;
@@ -13,7 +12,7 @@ public class HyperWebStart {
 	private Logger log = Logger.getLogger("Minecraft");
 	private HyperConomy hc;
 	private Calculation calc;
-	private ArrayList<String> dependencies = new ArrayList<String>();
+	//private ArrayList<String> dependencies = new ArrayList<String>();
 	private HyperWebStart hws;
 	private int serverid;
 	private Server server;
@@ -26,12 +25,12 @@ public class HyperWebStart {
 		calc = hc.getCalculation();
 		hws = this;
 		
-		dependencies.add("jetty-continuation-8.1.4.v20120524.jar");
-		dependencies.add("jetty-http-8.1.4.v20120524.jar");
-		dependencies.add("jetty-io-8.1.4.v20120524.jar");
-		dependencies.add("jetty-server-8.1.4.v20120524.jar");
-		dependencies.add("jetty-util-8.1.4.v20120524.jar");
-		dependencies.add("servlet-api-3.0.jar");
+		//dependencies.add("jetty-continuation-8.1.4.v20120524.jar");
+		//dependencies.add("jetty-http-8.1.4.v20120524.jar");
+		//dependencies.add("jetty-io-8.1.4.v20120524.jar");
+		//dependencies.add("jetty-server-8.1.4.v20120524.jar");
+		//dependencies.add("jetty-util-8.1.4.v20120524.jar");
+		//dependencies.add("servlet-api-3.0.jar");
 		
 		FileConfiguration conf = hc.getYaml().getConfig();
 		useWebPage = conf.getBoolean("config.web-page.use-web-page");
