@@ -322,7 +322,7 @@ public class InfoSign implements Listener {
 				} catch (Exception e) {
 					activesign++;
 					String info = "InfoSign error: signkey='" + signkey + "', type='" + type + "', object='" + itemn + "', economy='" + economy + "'";
-					new Error(e, info);
+					new Error(info, e);
 					return false;
 				}
 			} else {

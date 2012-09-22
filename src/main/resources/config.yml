@@ -1,0 +1,61 @@
+version: 0.949
+config:
+  shopcheckinterval: 20
+  logwriteinterval: 15
+  saveinterval: 700
+  signupdateinterval: 13
+  purchasetaxpercent: 3
+  initialpurchasetaxpercent: 100
+  statictaxpercent: 300
+  enchanttaxpercent: 100
+  daystosavehistory: 30
+  initialshopbalance: 20000000
+  shop-has-unlimited-money: false
+  global-shop-account: hyperconomy
+  use-shop-exit-message: true
+  use-notifications: true
+  use-info-signs: true
+  use-transaction-signs: true
+  store-price-history: true
+  use-chest-shops: true
+  use-shop-permissions: false
+  require-chest-shops-to-be-in-shop: false
+  currency-symbol: $
+  notify-for: diamond,diamondblock,
+  sales-tax-percent: 0
+  run-automatic-backups: true
+  error-count: 0
+  dynamic-tax:
+    use-dynamic-tax: false
+    money-floor: 0
+    money-cap: 1000000
+    max-tax-percent: 100
+  enchantment:
+    classvalue:
+      wood: .1
+      leather: .1
+      stone: .15
+      chainmail: .2
+      iron: .25
+      gold: .1
+      diamond: 1
+      bow: .25
+  sql-connection:
+    use-sql: false
+    username: default
+    port: 3306
+    password: default
+    host: localhost
+    database: minecraft
+    max-sql-threads: 20
+  web-page:
+    port: 8765
+    use-web-page: false
+    web-page-economy: default
+    background-color: EEEEF6
+    font-color: 333333
+    border-color: D8DFE4
+    increase-value-color: A0FFB0
+    decrease-value-color: FFA0A0
+    highlight-row-color: B4FAF9
+    header-color: B8B4FF

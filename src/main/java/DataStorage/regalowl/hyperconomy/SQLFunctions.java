@@ -86,7 +86,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setName() passed values name='" + name + "', economy='" + economy + "', value='" + newname + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setEconomy() passed values name='" + name + "', economy='" + economy + "', value='" + neweconomy + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -122,7 +122,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setType() passed values name='" + name + "', economy='" + economy + "', value='" + newtype + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -142,7 +142,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setCategory() passed values name='" + name + "', economy='" + economy + "', value='" + newcategory + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -162,7 +162,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setMaterial() passed values name='" + name + "', economy='" + economy + "', value='" + newmaterial + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -182,7 +182,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setId() passed values name='" + name + "', economy='" + economy + "', value='" + newid + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -202,7 +202,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setData() passed values name='" + name + "', economy='" + economy + "', value='" + newdata + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -222,7 +222,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setDurability() passed values name='" + name + "', economy='" + economy + "', value='" + newdurability + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -242,7 +242,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setValue() passed values name='" + name + "', economy='" + economy + "', value='" + newvalue + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -262,7 +262,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setStatic() passed values name='" + name + "', economy='" + economy + "', value='" + newstatic + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -282,7 +282,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setStaticPrice() passed values name='" + name + "', economy='" + economy + "', value='" + newstaticprice + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -302,7 +302,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setStock() passed values name='" + name + "', economy='" + economy + "', value='" + newstock + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -322,7 +322,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setMedian() passed values name='" + name + "', economy='" + economy + "', value='" + newmedian + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -342,7 +342,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setInitiation() passed values name='" + name + "', economy='" + economy + "', value='" + newinitiation + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -362,7 +362,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setStartPrice() passed values name='" + name + "', economy='" + economy + "', value='" + newstartprice + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -382,7 +382,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setCeiling() passed values name='" + name + "', economy='" + economy + "', value='" + newceiling + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -402,7 +402,7 @@ public class SQLFunctions {
 			}
 		} catch (Exception e) {
 			String info = "SQLFunctions setFloor() passed values name='" + name + "', economy='" + economy + "', value='" + newfloor + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -412,7 +412,7 @@ public class SQLFunctions {
 			return tname.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getName() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return "error";
 		}
 	}
@@ -423,7 +423,7 @@ public class SQLFunctions {
 			return teconomy.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getEconomy() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return "error";
 		}
 	}
@@ -434,7 +434,7 @@ public class SQLFunctions {
 			return ttype.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getType() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return "error";
 		}
 	}
@@ -445,7 +445,7 @@ public class SQLFunctions {
 			return tcategory.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getCategory() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return "error";
 		}
 	}
@@ -456,7 +456,7 @@ public class SQLFunctions {
 			return tmaterial.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getMaterial() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return "error";
 		}
 	}
@@ -467,7 +467,7 @@ public class SQLFunctions {
 			return tid.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getId() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -11;
 		}
 	}
@@ -478,7 +478,7 @@ public class SQLFunctions {
 			return tdata.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getData() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -11;
 		}
 	}
@@ -489,7 +489,7 @@ public class SQLFunctions {
 			return tdurability.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getDurability() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -11;
 		}
 	}
@@ -500,7 +500,7 @@ public class SQLFunctions {
 			return tvalue.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getValue() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -1;
 		}
 	}
@@ -511,7 +511,7 @@ public class SQLFunctions {
 			return tstatic.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getStatic() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return "error";
 		}
 	}
@@ -522,7 +522,7 @@ public class SQLFunctions {
 			return tstaticprice.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getStaticPrice() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -1;
 		}
 	}
@@ -533,7 +533,7 @@ public class SQLFunctions {
 			return tstock.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getStock() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -1;
 		}
 	}
@@ -544,7 +544,7 @@ public class SQLFunctions {
 			return tmedian.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getMedian() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -1;
 		}
 	}
@@ -555,7 +555,7 @@ public class SQLFunctions {
 			return tinitiation.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getInitiation() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return "error";
 		}
 	}
@@ -566,7 +566,7 @@ public class SQLFunctions {
 			return tstartprice.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getStartPrice() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -1;
 		}
 	}
@@ -577,7 +577,7 @@ public class SQLFunctions {
 			return tceiling.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getCeiling() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -1;
 		}
 	}
@@ -588,7 +588,7 @@ public class SQLFunctions {
 			return tfloor.get(keyloc);
 		} catch (Exception e) {
 			String info = "SQLFunctions getFloor() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -1;
 		}
 	}
@@ -1049,7 +1049,7 @@ public class SQLFunctions {
 			return historyDataCount.get(match);
 		} catch (Exception e) {
 			String info = "SQLFunctions getHistoryDataCount() passed values name='" + name + "', economy='" + economy + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -1;
 		}
 	}
@@ -1060,7 +1060,7 @@ public class SQLFunctions {
 			historyDataCount.put(match, value);
 		} catch (Exception e) {
 			String info = "SQLFunctions setHistoryDataCount() passed values name='" + name + "', economy='" + economy + "', value='" + value + "'";
-			new Error(e, info);
+			new Error(info, e);
 		}
 	}
 
@@ -1114,7 +1114,7 @@ public class SQLFunctions {
 			return hvalue;
 		} catch (Exception e) {
 			String info = "SQLFunctions getHistoryData() passed values object='" + object + "', economy='" + economy + "', count='" + count + "'";
-			new Error(e, info);
+			new Error(info, e);
 			return -1.0;
 		}
 	}
