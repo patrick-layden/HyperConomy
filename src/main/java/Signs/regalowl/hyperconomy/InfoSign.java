@@ -79,7 +79,6 @@ public class InfoSign implements Listener {
 				String type = getsignType(scevent.getLine(2));
 				if (type != null) {
 					String locat = scevent.getBlock().getWorld().getName() + "|" + scevent.getBlock().getX() + "|" + scevent.getBlock().getY() + "|" + scevent.getBlock().getZ();
-					if (sns.get(locat) == null) {
 						sns.set(locat + ".itemname", line12);
 						sns.set(locat + ".type", type);
 						if (hc.useSQL()) {
@@ -92,7 +91,6 @@ public class InfoSign implements Listener {
 						while (iterat.hasNext()) {
 							signkeys.add(iterat.next().toString());
 						}
-					}
 					setrequestsignUpdate(true);
 					checksignUpdate();
 				}
@@ -292,7 +290,7 @@ public class InfoSign implements Listener {
 							if (item) {
 								line23 = "§fTax: " + "§a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.twoDecimals(calc.getPurchaseTax(itemn, economy, calc.getCost(itemn, 1, economy)));
 							} else if (enchant) {
-								String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
+								//String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
 								if (sns.getString(signkey + ".enchantclass") == null) {
 									sns.set(signkey + ".enchantclass", "diamond");
 								}
@@ -381,8 +379,9 @@ public class InfoSign implements Listener {
 		
 		if (!line12.equalsIgnoreCase(itemn) || !type.equalsIgnoreCase(types)) {
 			resetsign = true;
-			sns.set(signkey + ".itemname", line12);
-			sns.set(signkey + ".type", types);
+			//sns.set(signkey + ".itemname", line12);
+			//sns.set(signkey + ".type", types);
+			sns.set(signkey, null);
 		}
 		return resetsign;
 	}
