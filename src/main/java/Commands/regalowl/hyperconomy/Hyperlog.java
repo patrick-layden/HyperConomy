@@ -86,11 +86,17 @@ public class Hyperlog {
 					}
 
 				}
+				
+				statement += " ORDER BY TIME DESC";
 				SQLFunctions sf = hc.getSQLFunctions();
 				ArrayList<String> result = sf.getHyperLog(statement);
 				//sender.sendMessage(ChatColor.RED + statement);
 				
-				for (int k = 0; k < result.size(); k++) {
+				int m = result.size();
+				if (m > 100) {
+					m = 100;
+				}
+				for (int k = 0; k < m; k++) {
 					sender.sendMessage(result.get(k));
 				}
 

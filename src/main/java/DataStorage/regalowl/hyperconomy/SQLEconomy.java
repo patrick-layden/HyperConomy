@@ -9,7 +9,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
