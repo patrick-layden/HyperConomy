@@ -131,10 +131,15 @@ public class Shop {
 	 */
 	Shop(HyperConomy hyperc) {
 		hc = hyperc;
-		sp = new HashMap<Player, Boolean>();
-		
+		sp = new HashMap<Player, Boolean>();	
 		shopinterval = hc.getYaml().getConfig().getLong("config.shopcheckinterval");
-		
+		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
+		buildShopData();
+	}
+	
+	
+	private void buildShopData() {
+		clearAll();
 		Iterator<String> it = hc.getYaml().getShops().getKeys(false).iterator();
 		int counter = 0;
 		while (it.hasNext()) {   			
@@ -143,10 +148,7 @@ public class Shop {
 			shopdata.add(ele);
 			counter++;
 		}
-		
 		nshops = shopdata.size();
-
-		
 		counter = 0;
 		FileConfiguration sh = hc.getYaml().getShops();
 		while (counter < nshops) {
@@ -163,10 +165,9 @@ public class Shop {
 			shopmessage2.add(sh.getString(nameshop + ".shopmessage2"));
 			counter++;
 		}
-		
-		
-		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
 	}
+	
+	
 	
 	/**
 	 * 
@@ -440,13 +441,7 @@ public class Shop {
 		shopsfile.set(newname + ".economy", shopsfile.get(name + ".economy"));
 		shopsfile.set(name, null);
 
-		shopdata.clear();
-		Iterator<String> it = shopsfile.getKeys(false).iterator();
-		while (it.hasNext()) {   			
-			Object element2 = it.next();
-			String ele = element2.toString(); 
-			shopdata.add(ele);
-		}
+		buildShopData();
 
 	}
 	
