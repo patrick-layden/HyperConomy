@@ -873,10 +873,12 @@ public class SQLFunctions {
 				String store = result.getString(9);
 				//String type = result.getString(10);
 				String entry = "";
+				time = time.substring(0, time.indexOf(" "));
+				time = time.substring(time.indexOf("-") + 1, time.length());
 				if (action.equalsIgnoreCase("purchase")) {
-					entry = "[" + time + "]" + customer + " purchased " + amount + " " + object + " from " + store + " for " + money;
+					entry = "[" + ChatColor.RED + time + ChatColor.WHITE + "]" + ChatColor.YELLOW + store + ChatColor.WHITE + "->" + ChatColor.AQUA + customer + ChatColor.WHITE + "[" + ChatColor.BLUE + amount + " " + ChatColor.BLUE + object + ChatColor.WHITE + "]" + "[" + ChatColor.GREEN + HyperConomy.currency + money + ChatColor.WHITE + "]";
 				} else if (action.equalsIgnoreCase("sale")) {
-					entry = "[" + time + "]" + customer + " sold " + amount + " " + object + " to " + store + " for " + money;
+					entry = "[" + ChatColor.RED + time + ChatColor.WHITE + "]" + ChatColor.AQUA + customer + ChatColor.WHITE + "->" + ChatColor.YELLOW + store + ChatColor.WHITE + "[" + ChatColor.BLUE + amount + " " + ChatColor.BLUE + object + ChatColor.WHITE + "]" + "[" + ChatColor.GREEN + HyperConomy.currency + money + ChatColor.WHITE + "]";
 				}
 				entries.add(entry);
 			}

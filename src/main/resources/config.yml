@@ -1,4 +1,4 @@
-version: 0.949
+version: 0.950
 config:
   shopcheckinterval: 20
   logwriteinterval: 15
@@ -20,10 +20,12 @@ config:
   use-chest-shops: true
   use-shop-permissions: false
   require-chest-shops-to-be-in-shop: false
+  require-transaction-signs-to-be-in-shop: false
   currency-symbol: $
   notify-for: diamond,diamondblock,
   sales-tax-percent: 0
   run-automatic-backups: true
+  unlimited-stock-for-static-items: false
   error-count: 0
   dynamic-tax:
     use-dynamic-tax: false

@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>regalowl</groupId>
 	<artifactId>hyperconomy</artifactId>
-	<version>0.9.5-SNAPSHOT</version>
+	<version>0.950-SNAPSHOT</version>
 	<name>HyperConomy</name>
-	<description>HyperConomy creates a global market that can be accessed via designated shops. Prices follow a hyperbolic curve, and vary based on the stock of the item or enchantment. Everything in the market can be customized, from the items themselves to the names of the shops. HyperConomy supports every item in Minecraft, even the normally impossible to obtain ones. It allows a great deal of control over the economy, allowing you to edit any setting without a server restart. I originally made this plugin for my own server, but I've decided to share it with the community. If you'd like to try it out feel free to hop on my server at MCFinest.com</description>
+	<description>HyperConomy creates a global market that can be accessed via designated shops. Prices follow a hyperbolic curve, and vary based on the stock of the item or enchantment. Everything in the market can be customized, from the items themselves to the names of the shops. HyperConomy supports every item in Minecraft, even the normally impossible to obtain ones. It allows a great deal of control over the economy, allowing you to edit any setting without a server restart.</description>
 	<repositories>
 		<repository>
 			<id>bukkit-repo</id>

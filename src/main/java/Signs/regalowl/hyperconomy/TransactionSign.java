@@ -21,6 +21,7 @@ public class TransactionSign implements Listener {
 	private SQLFunctions sf;
 	private Set<String> names;
 	private String playerecon;
+	private Shop shop;
 
 	public void setTransactionSign(HyperConomy hyperc, Transaction trans, Calculation cal, ETransaction enchant, Log lo, Account account, InfoSign infosign, Notify notify) {
 		hc = hyperc;
@@ -28,6 +29,7 @@ public class TransactionSign implements Listener {
 		ench = enchant;
 		sf = hc.getSQLFunctions();
 		names = new HashSet<String>();
+		shop = hc.getShop();
 		ArrayList<String> anames = hc.getNames();
 		for (int i = 0; i < anames.size(); i++) {
 			names.add(anames.get(i));
@@ -120,27 +122,32 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.buysign")) {
-									if (hc.itemTest(line12)) {
-										int id = sf.getId(line12, playerecon);
-										if (id >= 0) {
-											if (!hc.isLocked()) {
-												tran.buy(line12, amount, id, sf.getData(line12, playerecon), p);
-											} else {
-												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+									shop.setinShop(p);
+									if (shop.inShop() != -1 || !hc.getYaml().getConfig().getBoolean("config.require-transaction-signs-to-be-in-shop")) {
+										if (hc.itemTest(line12)) {
+											int id = sf.getId(line12, playerecon);
+											if (id >= 0) {
+												if (!hc.isLocked()) {
+													tran.buy(line12, amount, id, sf.getData(line12, playerecon), p);
+												} else {
+													p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+												}
+											} else if (id == -1) {
+												if (!hc.isLocked()) {
+													tran.buyXP(line12, amount, p);
+												} else {
+													p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+												}
 											}
-										} else if (id == -1) {
+										} else if (hc.enchantTest(line12)) {
 											if (!hc.isLocked()) {
-												tran.buyXP(line12, amount, p);
+												ench.buyEnchant(line12, p);
 											} else {
 												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
 											}
 										}
-									} else if (hc.enchantTest(line12)) {
-										if (!hc.isLocked()) {
-											ench.buyEnchant(line12, p);
-										} else {
-											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
-										}
+									} else {
+										p.sendMessage("You must be in a shop to use transaction signs!");
 									}
 								} else {
 									p.sendMessage("You don't have permission to do this.");
@@ -159,27 +166,31 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
-									if (hc.itemTest(line12)) {
-										int id = sf.getId(line12, playerecon);
-										if (id >= 0) {
-											if (!hc.isLocked()) {
-												tran.sell(line12, id, sf.getData(line12, playerecon), amount, p);
-											} else {
-												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+									if (shop.inShop() != -1 || !hc.getYaml().getConfig().getBoolean("config.require-transaction-signs-to-be-in-shop")) {
+										if (hc.itemTest(line12)) {
+											int id = sf.getId(line12, playerecon);
+											if (id >= 0) {
+												if (!hc.isLocked()) {
+													tran.sell(line12, id, sf.getData(line12, playerecon), amount, p);
+												} else {
+													p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+												}
+											} else if (id == -1) {
+												if (!hc.isLocked()) {
+													tran.sellXP(line12, amount, p);
+												} else {
+													p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+												}
 											}
-										} else if (id == -1) {
+										} else if (hc.enchantTest(line12)) {
 											if (!hc.isLocked()) {
-												tran.sellXP(line12, amount, p);
+												ench.sellEnchant(line12, p);
 											} else {
 												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
 											}
 										}
-									} else if (hc.enchantTest(line12)) {
-										if (!hc.isLocked()) {
-											ench.sellEnchant(line12, p);
-										} else {
-											p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
-										}
+									} else {
+										p.sendMessage("You must be in a shop to use transaction signs!");
 									}
 								} else {
 									p.sendMessage("You don't have permission to do this.");

@@ -119,6 +119,9 @@ public class Cmd {
 		} else if (cmd.getName().equalsIgnoreCase("setinitiationall")) {
 			new Setinitiationall(args, sender, playerecon);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("setstaticall")) {
+			new Setstaticall(args, sender, playerecon);
+			return true;
 		} else if (cmd.getName().equalsIgnoreCase("setstaticprice")) {
 			new Setstaticprice(args, sender, playerecon);
 			return true;
@@ -234,42 +237,8 @@ public class Cmd {
 				return true;
 			}
 		} else if (cmd.getName().equalsIgnoreCase("hyperlog")) {
-			try {
-				if (hc.useSQL()) {
-					if (args.length % 2 != 0) {
-						sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /hyperlog [Please read about this command's arguments on bukkit.]");
-					}
-					String playr = "";
-					int days = -1;
-					for (int i = 0; i < args.length; i+=2) {
-						String type = args[i];
-						String value = args[i+1];
-						
-						if (type.equalsIgnoreCase("player") || type.equalsIgnoreCase("p")) {
-							playr = value;
-						} else if (type.equalsIgnoreCase("day") || type.equalsIgnoreCase("d")) {
-							days = Integer.parseInt(value);
-						}
-
-					}
-					String statement = "SELECT * FROM hyperlog WHERE";
-					if (playr != "") {
-						statement += " CUSTOMER='" + playr + "'";
-					}
-					//if (days != -1) {
-					//	statement += " TIME='" + playr + "'";
-					//}
-					SQLFunctions sf = hc.getSQLFunctions();
-					ArrayList<String> result = sf.getHyperLog(statement);
-					sender.sendMessage(result.toString());
-				} else {
-					sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
-				}
-				return true;
-			} catch (Exception e) {
-				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /hyperlog [Please read about this command's arguments on bukkit.]");
-				return true;
-			}
+			new Hyperlog(args, sender);
+			return true;
 		} else if (cmd.getName().equalsIgnoreCase("listcategories")) {
 			try {
 				Iterator<String> it = hc.getYaml().getCategories().getKeys(false).iterator();

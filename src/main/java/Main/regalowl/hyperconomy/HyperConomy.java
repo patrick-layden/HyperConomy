@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class HyperConomy extends JavaPlugin {
 	public static HyperConomy hc;
+	public static String currency;
 	private Transaction tran;
 	private Calculation calc;
 	private ETransaction ench;
@@ -60,6 +61,7 @@ public class HyperConomy extends JavaPlugin {
 		if (!brokenfile) {
 			saveinterval = yaml.getConfig().getLong("config.saveinterval");
 			usesql = yaml.getConfig().getBoolean("config.sql-connection.use-sql");
+			currency = hc.getYaml().getConfig().getString("config.currency-symbol");
 			Update cb = new Update();
 			cb.checkCompatibility(this);
 			sf = new SQLFunctions();

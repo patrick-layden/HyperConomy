@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.949
+version: 0.950
 author: RegalOwl
 softdepend: [Vault, Buycraft, HeroStronghold]
 commands:
@@ -324,10 +324,15 @@ commands:
       permission-message: Unknown command. Type "help" for help.
       aliases: [ssa]
    setinitiationall:
-      description: Sets all objects to use initial pricing.
+      description: Toggles initial pricing.
       permission: hyperconomy.admin
       permission-message: Unknown command. Type "help" for help.
       aliases: [sia]
+   setstaticall:
+      description: Toggles static pricing.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [ssta]
    hyperlog:
       description: Displays HyperConomy log information.
       permission: hyperconomy.admin

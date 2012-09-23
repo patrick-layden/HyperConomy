@@ -195,6 +195,16 @@ public class Update {
 	    		yaml.getConfig().set("config.web-page.web-page-economy", "default");
 	    		uptodate = false;
 	    	}
+	    	String t34 = yaml.getConfig().getString("config.require-transaction-signs-to-be-in-shop");
+	    	if (t34 == null) {
+	    		yaml.getConfig().set("config.require-transaction-signs-to-be-in-shop", false);
+	    		uptodate = false;
+	    	}
+	    	String t35 = yaml.getConfig().getString("config.unlimited-stock-for-static-items");
+	    	if (t35 == null) {
+	    		yaml.getConfig().set("config.unlimited-stock-for-static-items", false);
+	    		uptodate = false;
+	    	}
 
 	    	
 	    	double dversion = Double.parseDouble(configversion);

@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack;
 public class APIBridge implements HyperAPI
 {
 
-	@Override
 	public double getTheoreticalPurchasePrice(int id, int durability, int amount, String economy)
 	{
 		if (economy == null)
@@ -22,7 +21,6 @@ public class APIBridge implements HyperAPI
 		return price;
 	}
 
-	@Override
 	public double getTheoreticalSaleValue(int id, int durability, int amount, String economy)
 	{
 		if (economy == null)
@@ -38,7 +36,6 @@ public class APIBridge implements HyperAPI
 		return value;
 	}
 
-	@Override
 	public double getTruePurchasePrice(int id, int durability, int amount, String economy)
 	{
 		if (economy == null)
@@ -63,7 +60,6 @@ public class APIBridge implements HyperAPI
 		return price;
 	}
 
-	@Override
 	public double getTrueSaleValue(int id, int durability, int amount, Player player)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -84,7 +80,6 @@ public class APIBridge implements HyperAPI
 		return value;
 	}
 
-	@Override
 	public String getName(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -92,7 +87,6 @@ public class APIBridge implements HyperAPI
 		return sf.getName(name, economy);
 	}
 
-	@Override
 	public String getEconomy(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -100,7 +94,6 @@ public class APIBridge implements HyperAPI
 		return sf.getEconomy(name, economy);
 	}
 
-	@Override
 	public String getType(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -108,7 +101,6 @@ public class APIBridge implements HyperAPI
 		return sf.getType(name, economy);
 	}
 
-	@Override
 	public String getCategory(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -116,7 +108,6 @@ public class APIBridge implements HyperAPI
 		return sf.getCategory(name, economy);
 	}
 
-	@Override
 	public String getMaterial(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -124,7 +115,6 @@ public class APIBridge implements HyperAPI
 		return sf.getMaterial(name, economy);
 	}
 
-	@Override
 	public int getId(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -132,7 +122,6 @@ public class APIBridge implements HyperAPI
 		return sf.getId(name, economy);
 	}
 
-	@Override
 	public int getData(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -140,7 +129,6 @@ public class APIBridge implements HyperAPI
 		return sf.getData(name, economy);
 	}
 
-	@Override
 	public int getDurability(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -148,7 +136,7 @@ public class APIBridge implements HyperAPI
 		return sf.getDurability(name, economy);
 	}
 
-	@Override
+	
 	public double getValue(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -156,7 +144,7 @@ public class APIBridge implements HyperAPI
 		return sf.getValue(name, economy);
 	}
 
-	@Override
+	
 	public String getStatic(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -164,7 +152,7 @@ public class APIBridge implements HyperAPI
 		return sf.getStatic(name, economy);
 	}
 
-	@Override
+	
 	public double getStaticPrice(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -172,7 +160,7 @@ public class APIBridge implements HyperAPI
 		return sf.getStaticPrice(name, economy);
 	}
 
-	@Override
+	
 	public double getStock(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -180,7 +168,7 @@ public class APIBridge implements HyperAPI
 		return sf.getStock(name, economy);
 	}
 
-	@Override
+	
 	public double getMedian(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -188,7 +176,7 @@ public class APIBridge implements HyperAPI
 		return sf.getMedian(name, economy);
 	}
 
-	@Override
+	
 	public String getInitiation(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -196,7 +184,7 @@ public class APIBridge implements HyperAPI
 		return sf.getInitiation(name, economy);
 	}
 
-	@Override
+	
 	public double getStartPrice(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -204,7 +192,7 @@ public class APIBridge implements HyperAPI
 		return sf.getStartPrice(name, economy);
 	}
 
-	@Override
+	
 	public void setName(String name, String economy, String newname)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -212,7 +200,7 @@ public class APIBridge implements HyperAPI
 		sf.setName(name, economy, newname);
 	}
 
-	@Override
+	
 	public void setEconomy(String name, String economy, String neweconomy)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -220,7 +208,7 @@ public class APIBridge implements HyperAPI
 		sf.setEconomy(name, economy, neweconomy);
 	}
 
-	@Override
+	
 	public void setType(String name, String economy, String newtype)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -228,7 +216,7 @@ public class APIBridge implements HyperAPI
 		sf.setType(name, economy, newtype);
 	}
 
-	@Override
+	
 	public void setCategory(String name, String economy, String newcategory)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -236,7 +224,7 @@ public class APIBridge implements HyperAPI
 		sf.setCategory(name, economy, newcategory);
 	}
 
-	@Override
+	
 	public void setMaterial(String name, String economy, String newmaterial)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -244,7 +232,7 @@ public class APIBridge implements HyperAPI
 		sf.setMaterial(name, economy, newmaterial);
 	}
 
-	@Override
+	
 	public void setId(String name, String economy, int newid)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -252,7 +240,7 @@ public class APIBridge implements HyperAPI
 		sf.setId(name, economy, newid);
 	}
 
-	@Override
+	
 	public void setData(String name, String economy, int newdata)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -260,7 +248,7 @@ public class APIBridge implements HyperAPI
 		sf.setData(name, economy, newdata);
 	}
 
-	@Override
+	
 	public void setDurability(String name, String economy, int newdurability)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -268,7 +256,7 @@ public class APIBridge implements HyperAPI
 		sf.setDurability(name, economy, newdurability);
 	}
 
-	@Override
+	
 	public void setValue(String name, String economy, double newvalue)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -276,7 +264,7 @@ public class APIBridge implements HyperAPI
 		sf.setValue(name, economy, newvalue);
 	}
 
-	@Override
+	
 	public void setStatic(String name, String economy, String newstatic)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -284,7 +272,7 @@ public class APIBridge implements HyperAPI
 		sf.setStatic(name, economy, newstatic);
 	}
 
-	@Override
+	
 	public void setStaticPrice(String name, String economy, double newstaticprice)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -292,7 +280,7 @@ public class APIBridge implements HyperAPI
 		sf.setStaticPrice(name, economy, newstaticprice);
 	}
 
-	@Override
+	
 	public void setStock(String name, String economy, double newstock)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -300,7 +288,7 @@ public class APIBridge implements HyperAPI
 		sf.setStock(name, economy, newstock);
 	}
 
-	@Override
+	
 	public void setMedian(String name, String economy, double newmedian)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -308,7 +296,7 @@ public class APIBridge implements HyperAPI
 		sf.setMedian(name, economy, newmedian);
 	}
 
-	@Override
+	
 	public void setInitiation(String name, String economy, String newinitiation)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -316,7 +304,7 @@ public class APIBridge implements HyperAPI
 		sf.setInitiation(name, economy, newinitiation);
 	}
 
-	@Override
+	
 	public void setStartPrice(String name, String economy, double newstartprice)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -324,7 +312,7 @@ public class APIBridge implements HyperAPI
 		sf.setStartPrice(name, economy, newstartprice);
 	}
 
-	@Override
+	
 	public double getItemPurchasePrice(int id, int data, int amount)
 	{
 		HyperConomy hc = HyperConomy.hc;
@@ -336,7 +324,7 @@ public class APIBridge implements HyperAPI
 		return price;
 	}
 
-	@Override
+	
 	public double getItemSaleValue(int id, int data, int amount)
 	{
 		HyperConomy hc = HyperConomy.hc;
