@@ -31,29 +31,6 @@ public class SQLShutdown {
 			ft.writeStringToFile(stringBuffer, path);
 		}
 
-		/*
-		ArrayList<ArrayList<String>> sstatements = new ArrayList<ArrayList<String>>();
-		
-		for (int i = 0; i < 20; i++) {
-			ArrayList<String> substatements = new ArrayList<String>();
-			sstatements.add(substatements);
-		}
-		totalStatements = statements.size();
-		int counter = 0;
-		for (int i = 0; i < statements.size(); i++) {
-			if (counter >= 20) {
-				counter = 0;
-			}
-			ArrayList<String> cstatement = sstatements.get(counter);
-			cstatement.add(statements.get(i));
-			sstatements.set(counter, cstatement);
-			counter++;
-		}
-		
-		for (int i = 0; i < 20; i++) {
-			new ShutdownThread(hc, this, sstatements.get(i));
-		}
-		*/
 		
 	}
 	

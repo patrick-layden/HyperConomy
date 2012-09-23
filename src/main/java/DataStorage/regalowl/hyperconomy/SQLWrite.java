@@ -16,6 +16,7 @@ public class SQLWrite {
 	private boolean writePaused;
 	private boolean writeActive;
 	private ConnectionPool cp;
+	private boolean initialWrite;
 	
 	SQLWrite(HyperConomy hyc) {
 		hc = hyc;
@@ -24,10 +25,14 @@ public class SQLWrite {
 		sqw = this;
 		cp = new ConnectionPool(hc, this, threadlimit);
 		writePaused = false;
+		initialWrite = false;
 		
 		ArrayList<String> sstatements = loadStatements();
 		if (sstatements.size() > 0) {
+			initialWrite = true;
+			hc.sqllockShop();
 			writeData(sstatements);
+			
 			//SQLFunctions sf = hc.getSQLFunctions();
 			//sf.load();
 		}
@@ -75,6 +80,9 @@ public class SQLWrite {
     private void Write() {
     	if (workingBuffer.size() == 0) {
     		stopWrite();
+    		if (initialWrite) {
+    			initialWrite = false;
+    		}
     	}
     	while (activethreads < threadlimit && workingBuffer.size() > 0) {
 			activethreads++;
@@ -130,6 +138,10 @@ public class SQLWrite {
 	
 	public void closeConnections() {
 		cp.closeConnections();
+	}
+	
+	public boolean initialWrite() {
+		return initialWrite;
 	}
 	
 

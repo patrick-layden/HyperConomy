@@ -643,28 +643,19 @@ public class SQLFunctions {
 	}
 
 	public void load() {
-		if (!hc.sqlLock()) {
-			hc.sqllockShop();
-			sqllockthreadid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
-				public void run() {
-					int activethreads = hc.getSQLWrite().getActiveThreads();
-					if (activethreads == 0) {
-						cancelLock();
-					}
-				}
-			}, 200L, 10L);
-		}
-	}
-
-	private void cancelLock() {
-		hc.getServer().getScheduler().cancelTask(sqllockthreadid);
-		hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+		reset();
+		hc.sqllockShop();
+		sqllockthreadid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
 			public void run() {
-				databuilt = hc.buildData();
-				sqlloaded = loadSQL();
-				hc.sqlunlockShop();
+				SQLWrite sw = hc.getSQLWrite();
+				if (hc.getSQLWrite().getBuffer().size() == 0 && !sw.initialWrite()) {
+					databuilt = hc.buildData();
+					sqlloaded = loadSQL();
+					hc.sqlunlockShop();
+					hc.getServer().getScheduler().cancelTask(sqllockthreadid);
+				}
 			}
-		}, 40L);
+		}, 0L, 10L);
 	}
 
 	private boolean loadSQL() {
@@ -1201,5 +1192,10 @@ public class SQLFunctions {
 
 	public boolean dataBuilt() {
 		return databuilt;
+	}
+	
+	public void reset() {
+		sqlloaded = false;
+		databuilt = false;
 	}
 }
