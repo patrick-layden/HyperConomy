@@ -25,6 +25,7 @@ public class Setstaticall {
 			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /setstaticall ['true' or 'false']");
 			return;
 		}
+		new Backup();
 		for (int i = 0; i < names.size(); i++) {
 			name = names.get(i);
 			sf.setStatic(name, playerecon, setting);

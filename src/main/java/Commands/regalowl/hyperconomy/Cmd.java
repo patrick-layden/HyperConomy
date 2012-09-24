@@ -187,8 +187,7 @@ public class Cmd {
 						if (hc.getSQLFunctions().testEconomy(economy)) {
 							if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
 								if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
-									Backup back = new Backup();
-									back.BackupData();
+									new Backup();
 								}
 								SQLEconomy sqe = hc.getSQLEconomy();
 								sqe.exportToYml(economy);
@@ -216,8 +215,7 @@ public class Cmd {
 					if (args.length == 1 || args.length == 0) {
 						if (args.length == 1 && args[0].equalsIgnoreCase("confirm")) {
 							if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
-								Backup back = new Backup();
-								back.BackupData();
+								new Backup();
 							}
 							RestoreSQL rs = new RestoreSQL();
 							rs.restore(sender);
@@ -288,8 +286,7 @@ public class Cmd {
 			}
 		} else if (cmd.getName().equalsIgnoreCase("hcbackup")) {
 			try {
-				Backup back = new Backup();
-				back.BackupData();
+				new Backup();
 				sender.sendMessage(ChatColor.GOLD + "All files have been backed up!");
 				return true;
 			} catch (Exception e) {
@@ -701,8 +698,7 @@ public class Cmd {
 					sender.sendMessage(ChatColor.RED + "Type /setstockmedianall confirm to proceed.");
 				} else if (args[0].equalsIgnoreCase("confirm")) {
 					if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
-						Backup back = new Backup();
-						back.BackupData();
+						new Backup();
 					}
 					ArrayList<String> names = hc.getNames();
 					for (int c = 0; c < names.size(); c++) {
@@ -729,8 +725,7 @@ public class Cmd {
 					if (percent >= 0) {
 						if (type.equalsIgnoreCase("value") || type.equalsIgnoreCase("staticprice") || type.equalsIgnoreCase("stock") || type.equalsIgnoreCase("median") || type.equalsIgnoreCase("startprice")) {
 							if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
-								Backup back = new Backup();
-								back.BackupData();
+								new Backup();
 							}
 							ArrayList<String> names = hc.getNames();
 							for (int c = 0; c < names.size(); c++) {
@@ -774,8 +769,7 @@ public class Cmd {
 					sender.sendMessage(ChatColor.RED + "Type /resetshop confirm to proceed.");
 				} else if (args[0].equalsIgnoreCase("confirm")) {
 					if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
-						Backup back = new Backup();
-						back.BackupData();
+						new Backup();
 					}
 					ArrayList<String> names = hc.getNames();
 					for (int c = 0; c < names.size(); c++) {

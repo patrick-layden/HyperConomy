@@ -16,8 +16,7 @@ public class Deleteeconomy {
     				}
     				if (hc.getSQLFunctions().testEconomy(economy)) {
     					if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
-    						Backup back = new Backup();
-    						back.BackupData();
+    						new Backup();
     					}
     					hc.getSQLEconomy().deleteEconomy(economy);
     					sender.sendMessage(ChatColor.GOLD + "Economy deleted!");

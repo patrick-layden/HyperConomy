@@ -25,6 +25,7 @@ public class Setinitiationall {
 			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /setinitiationall ['true' or 'false']");
 			return;
 		}
+		new Backup();
 		for (int i = 0; i < names.size(); i++) {
 			name = names.get(i);
 			sf.setInitiation(name, playerecon, setting);

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Backup {
-	public void BackupData() {
+	Backup() {
 		HyperConomy hc = HyperConomy.hc;
 		FileTools ft = new FileTools();
 		ArrayList<String> backupFiles = new ArrayList<String>();

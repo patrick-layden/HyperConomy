@@ -70,8 +70,7 @@ public class SQLEconomy {
 		testdata = hc.getSQLFunctions().getStringColumn("SELECT NAME FROM hyperobjects WHERE ECONOMY='default'");
 		if (testdata.size() == 0) {
 			migrate = true;
-			Backup back = new Backup();
-			back.BackupData();
+			new Backup();
 			migrate();
 		}
 		return migrate;
