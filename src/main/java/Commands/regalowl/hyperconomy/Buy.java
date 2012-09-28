@@ -23,9 +23,9 @@ public class Buy {
 					String teststring = hc.testiString(name);
 					int id = 0;
 					int data = 0;
-					id = sf.getId(name, playerecon);
-					data = sf.getData(name, playerecon);
 					if (teststring != null) {
+						id = sf.getId(name, playerecon);
+						data = sf.getData(name, playerecon);
 						if (args.length == 1) {
 							amount = 1;
 						} else {
