@@ -7,14 +7,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class Addcategory {
-	
-	
+public class Addcategory implements Information {
 	private HyperConomy hc;
 	private CommandSender sender;
 	private HashMap<CommandSender, String> messages = new HashMap<CommandSender, String>();
 	private boolean messageActive = false;
-	
+
 	Addcategory(String args[], CommandSender se) {
 		sender = se;
 		hc = HyperConomy.hc;
@@ -24,8 +22,7 @@ public class Addcategory {
 			FileConfiguration category = hc.getYaml().getCategories();
 			String testcategory = category.getString(args[0]);
 			if (testcategory == null) {
-				sender.sendMessage(ChatColor.DARK_RED
-						+ "That category does not exist.");
+				sender.sendMessage(CATEGORY_NOT_EXIST);
 				return;
 			}
 			ArrayList<String> objects = sal.stringToArray(testcategory);
@@ -40,59 +37,39 @@ public class Addcategory {
 					}
 					counter++;
 				}
-				String teststring3 = hc.getYaml().getShops()
-						.getString(shopname);
+				String teststring3 = hc.getYaml().getShops().getString(shopname);
 				if (teststring3 == null) {
 					shopname = hc.fixsName(shopname);
 					teststring3 = hc.getYaml().getShops().getString(shopname);
 				}
-
 				if (teststring3 != null) {
-
 					for (int i = 0; i < objects.size(); i++) {
 						String itemname = objects.get(i);
 						String teststring2 = hc.testeString(itemname);
 						String teststring = hc.testiString(itemname);
-
 						if (teststring != null || teststring2 != null) {
-
-							String unavailable = hc.getYaml().getShops()
-									.getString(shopname + ".unavailable");
+							String unavailable = hc.getYaml().getShops().getString(shopname + ".unavailable");
 							if (!s.has(shopname, itemname)) {
-								unavailable = unavailable.replace(","
-										+ itemname + ",", ",");
-								if (itemname.equalsIgnoreCase(unavailable
-										.substring(0, itemname.length()))) {
-									unavailable = unavailable.substring(
-											itemname.length() + 1,
-											unavailable.length());
+								unavailable = unavailable.replace("," + itemname + ",", ",");
+								if (itemname.equalsIgnoreCase(unavailable.substring(0, itemname.length()))) {
+									unavailable = unavailable.substring(itemname.length() + 1, unavailable.length());
 								}
-								hc.getYaml()
-										.getShops()
-										.set(shopname + ".unavailable",
-												unavailable);
-								sendMessage(ChatColor.GOLD + args[0]
-										+ " added to "
-										+ shopname.replace("_", " "));
+								hc.getYaml().getShops().set(shopname + ".unavailable", unavailable);
+								sendMessage(ChatColor.GOLD + args[0] + " " + ADDED_TO + " " + shopname.replace("_", " "));
 							}
 						}
 					}
-
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED
-							+ "That shop doesn't exist!");
+					sender.sendMessage(SHOP_NOT_EXIST);
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED
-						+ "Invalid Parameters.  Use /addcategory [name] [shop]");
+				sender.sendMessage(ADD_CATEGORY_INVALID);
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED
-					+ "Invalid Parameters.  Use /addcategory [name] [shop]");
+			sender.sendMessage(ADD_CATEGORY_INVALID);
 		}
 	}
-	
-	
+
 	/**
 	 * 
 	 * Limits messages sent to player to 1 per second.
@@ -101,17 +78,13 @@ public class Addcategory {
 		messages.put(sender, message);
 		if (!messageActive) {
 			messageActive = true;
-			hc.getServer().getScheduler()
-					.scheduleSyncDelayedTask(hc, new Runnable() {
-						public void run() {
-							sender.sendMessage(messages.get(sender));
-							messages.remove(sender);
-							messageActive = false;
-						}
-					}, 20L);
+			hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+				public void run() {
+					sender.sendMessage(messages.get(sender));
+					messages.remove(sender);
+					messageActive = false;
+				}
+			}, 20L);
 		}
-
 	}
-	
-	
 }
