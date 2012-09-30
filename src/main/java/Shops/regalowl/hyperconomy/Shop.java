@@ -213,8 +213,8 @@ public class Shop {
 				} else {
 					
 					p.sendMessage(ChatColor.BLACK + "------------------------");
-					p.sendMessage(shopmessage1.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")).replace("&","§"));
-					p.sendMessage(shopmessage2.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")).replace("&","§"));
+					p.sendMessage(shopmessage1.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")).replace("&","\u00A7"));
+					p.sendMessage(shopmessage2.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")).replace("&","\u00A7"));
 					p.sendMessage(ChatColor.BLACK + "------------------------");
 					
 					//Sets the player to being in the shop in the inshop.txt file.

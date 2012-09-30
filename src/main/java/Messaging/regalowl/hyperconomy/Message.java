@@ -14,15 +14,15 @@ public class Message {
 	
 	//Stores the messages to a String array and sets up values for color codes.
 	String message[] = new String[104];
-	String darkred = "§4";
-	String blue = "§9";
-	String gold = "§6";
-	String black = "§0";
-	String aqua = "§b";
-	String green = "§a";
-	String red = "§c";
-	String yellow = "§e";
-	String pink = "§d";
+	String darkred = "\u00A74";
+	String blue = "\u00A79";
+	String gold = "\u00A76";
+	String black = "\u00A70";
+	String aqua = "\u00A7b";
+	String green = "\u00A7a";
+	String red = "\u00A7c";
+	String yellow = "\u00A7e";
+	String pink = "\u00A7d";
 	String perror = "Invalid Parameters. ";
 
 	

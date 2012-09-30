@@ -51,16 +51,16 @@ public class TransactionSign implements Listener {
 					line12 = hc.fixName(line12);
 					if (names.contains(line12.toLowerCase())) {
 						if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
-							scevent.setLine(0, "§1" + scevent.getLine(0));
-							scevent.setLine(1, "§1" + scevent.getLine(1));
+							scevent.setLine(0, "\u00A71" + scevent.getLine(0));
+							scevent.setLine(1, "\u00A71" + scevent.getLine(1));
 							if (line3.equalsIgnoreCase("[sell:buy]")) {
-								scevent.setLine(2, "§f[Sell:Buy]");
+								scevent.setLine(2, "\u00A7f[Sell:Buy]");
 							} else if (line3.equalsIgnoreCase("[sell]")) {
-								scevent.setLine(2, "§f[Sell]");
+								scevent.setLine(2, "\u00A7f[Sell]");
 							} else if (line3.equalsIgnoreCase("[buy]")) {
-								scevent.setLine(2, "§f[Buy]");
+								scevent.setLine(2, "\u00A7f[Buy]");
 							}
-							scevent.setLine(3, "§a" + scevent.getLine(3));
+							scevent.setLine(3, "\u00A7a" + scevent.getLine(3));
 						} else if (!scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
 							scevent.setLine(0, "");
 							scevent.setLine(1, "");
@@ -107,11 +107,11 @@ public class TransactionSign implements Listener {
 					String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
 					line12 = hc.fixName(line12);
 					if (names.contains(line12.toLowerCase())) {
-						if (!s.getLine(0).startsWith("§")) {
-							s.setLine(0, "§1" + s.getLine(0));
-							s.setLine(1, "§1" + s.getLine(1));
-							s.setLine(2, "§f" + s.getLine(2));
-							s.setLine(3, "§a" + s.getLine(3));
+						if (!s.getLine(0).startsWith("\u00A7")) {
+							s.setLine(0, "\u00A71" + s.getLine(0));
+							s.setLine(1, "\u00A71" + s.getLine(1));
+							s.setLine(2, "\u00A7f" + s.getLine(2));
+							s.setLine(3, "\u00A7a" + s.getLine(3));
 							s.update();
 						}
 						String action = ievent.getAction().name();

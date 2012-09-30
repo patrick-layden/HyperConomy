@@ -7,7 +7,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class Addcategory implements Information {
+import static regalowl.hyperconomy.Messages.*;
+
+
+public class Addcategory {
 	private HyperConomy hc;
 	private CommandSender sender;
 	private HashMap<CommandSender, String> messages = new HashMap<CommandSender, String>();

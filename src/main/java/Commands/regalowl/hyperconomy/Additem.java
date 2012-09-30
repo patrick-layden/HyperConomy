@@ -2,7 +2,7 @@ package regalowl.hyperconomy;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-
+import static regalowl.hyperconomy.Messages.*;
 public class Additem {
 	Additem(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
@@ -37,25 +37,25 @@ public class Additem {
 		    						unavailable = unavailable.substring(itemname.length() + 1, unavailable.length());
 		    					}
 		    					hc.getYaml().getShops().set(shopname + ".unavailable", unavailable);
-		    					sender.sendMessage(ChatColor.GOLD + itemname + " added to " + shopname.replace("_", " "));
+		    					sender.sendMessage(ChatColor.GOLD + itemname + " " + ADDED_TO + " " + shopname.replace("_", " "));
 	    					} else if (itemname.equalsIgnoreCase("all")) {
 		    					hc.getYaml().getShops().set(shopname + ".unavailable", null);
-		    					sender.sendMessage(ChatColor.GOLD + "All items have been added to " + shopname.replace("_", " "));
+		    					sender.sendMessage(ChatColor.GOLD + ALL_ITEMS_ADDED + " " + shopname.replace("_", " "));
 	    					}
 	    				} else {
-	    					sender.sendMessage(ChatColor.DARK_RED + "The shop already has that item.");
+	    					sender.sendMessage(SHOP_ALREADY_HAS);
 	    				}
     				} else {
-    					sender.sendMessage(ChatColor.DARK_RED + "That shop doesn't exist!");
+    					sender.sendMessage(SHOP_NOT_EXIST);
     				}
     			} else {
-    				sender.sendMessage(ChatColor.BLUE + "Sorry, that item or enchantment is not in the database.");
+    				sender.sendMessage(OBJECT_NOT_IN_DATABASE);
     			}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /additem [name/'all'] [shop]");
+				sender.sendMessage(ADD_ITEM_INVALID);
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /additem [name/'all'] [shop]");
+			sender.sendMessage(ADD_ITEM_INVALID);
 		}
 	}
 }

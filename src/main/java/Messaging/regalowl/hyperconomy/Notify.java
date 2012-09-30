@@ -71,9 +71,9 @@ public class Notify {
 				
 				String message = "";
 				if (hc.useSQL()) {
-					message = "§9The §f" + econ + " §9economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
+					message = "\u00A79The \u00A7f" + econ + " \u00A79economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
 				} else {
-					message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
+					message = "\u00A79The economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
 				}
 				
 				if (!message.equalsIgnoreCase(previousmessage)) {
@@ -87,9 +87,9 @@ public class Notify {
 				stock = (int) sf.getStock(name.get(0), econ);
 				String message = "";
 				if (hc.useSQL()) {
-					message = "§9The §f" + econ + " §9economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
+					message = "\u00A79The \u00A7f" + econ + " \u00A79economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
 				} else {
-					message = "§9The economy now has §a" + stock + " §b" + name.get(0) + " §9priced at §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " §9each.";
+					message = "\u00A79The economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
 				}
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					//Bukkit.broadcast(message, "hyperconomy.notify");

@@ -335,7 +335,7 @@ public class ETransaction {
 							}
 							Player o = Bukkit.getPlayer(owner);
 							if (o != null) {
-								o.sendMessage("§9" + p.getName() + " bought" + " §b" + name + " §9from you for §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "§9.");
+								o.sendMessage("\u00A79" + p.getName() + " bought" + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 							}
 							return true;
 						} else {
@@ -432,7 +432,7 @@ public class ETransaction {
 						}
 						Player o = Bukkit.getPlayer(owner);
 						if (o != null) {
-							o.sendMessage("§9" + p.getName() + " bought" + " §b" + name + " §9from you for §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "§9.");
+							o.sendMessage("\u00A79" + p.getName() + " bought" + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 						}
 						return true;
 					} else {

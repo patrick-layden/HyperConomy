@@ -1027,7 +1027,7 @@ public class Transaction {
 					}
 					Player o = Bukkit.getPlayer(owner);
 					if (o != null) {
-						o.sendMessage("§9" + p.getName() + " bought §a" + amount + " §b" + name + " §9from you for §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "§9.");
+						o.sendMessage("\u00A79" + p.getName() + " bought \u00A7a" + amount + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 					}
 					return true;
 					// This informs the player of how many of an item they can
@@ -1102,7 +1102,7 @@ public class Transaction {
 					}
 					Player o = Bukkit.getPlayer(owner);
 					if (o != null) {
-						o.sendMessage("§9" + p.getName() + " bought §a" + amount + " §b" + name + " §9from you for §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "§9.");
+						o.sendMessage("\u00A79" + p.getName() + " bought \u00A7a" + amount + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 					}
 					return true;
 					// This informs the player of how many of an item they can
@@ -1182,7 +1182,7 @@ public class Transaction {
 				}
 				Player o = Bukkit.getPlayer(owner);
 				if (o != null) {
-					o.sendMessage("§9" + p.getName() + " sold §a" + amount + " §b" + name + " §9to you for §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "§9.");
+					o.sendMessage("\u00A79" + p.getName() + " sold \u00A7a" + amount + " \u00A7b" + name + " \u00A79to you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 				}
 				return true;
 				// Informs the player if they're trying to sell too many items
@@ -1244,7 +1244,7 @@ public class Transaction {
 			}
 			Player o = Bukkit.getPlayer(owner);
 			if (o != null) {
-				o.sendMessage("§9" + p.getName() + " sold §a" + amount + " §b" + name + " §9to you for §a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "§9.");
+				o.sendMessage("\u00A79" + p.getName() + " sold \u00A7a" + amount + " \u00A7b" + name + " \u00A79to you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 			}
 			return true;
 			// Reports the error to the player making the transaction and prints

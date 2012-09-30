@@ -54,7 +54,7 @@ public class Sellall {
 								if (s.has(s.getShop(player), nam)) {
 									tran.sell(nam, itd, newdat, amount, player);
 								} else {
-									sendMessage("§9Sorry, one or more of those items cannot be traded at this shop.");
+									sendMessage("\u00A79Sorry, one or more of those items cannot be traded at this shop.");
 								}
 							}
 						}
@@ -80,29 +80,29 @@ public class Sellall {
 											tran.sell(nam, itd, newdat, amount,
 													player);
 										} else {
-											sendMessage("§9Sorry, one or more of those items cannot be traded at this shop.");
+											sendMessage("\u00A79Sorry, one or more of those items cannot be traded at this shop.");
 										}
 									}
 								} else {
-									sendMessage("§9You cannot buy or sell enchanted items!");
+									sendMessage("\u00A79You cannot buy or sell enchanted items!");
 								}
 							}
 							slotn++;
 						}
 					} else {
-						player.sendMessage("§4Invalid Parameters. Use /sellall");
+						player.sendMessage("\u00A74Invalid Parameters. Use /sellall");
 						return;
 					}
 				} else {
-					player.sendMessage("§9Sorry, you don't have permission to trade here.");
+					player.sendMessage("\u00A79Sorry, you don't have permission to trade here.");
 					return;
 				}
 			} else {
-				player.sendMessage("§4You must be in a shop to buy or sell!");
+				player.sendMessage("\u00A74You must be in a shop to buy or sell!");
 				return;
 			}
 		} catch (Exception e) {
-			player.sendMessage("§4Invalid Parameters. Use /sellall");
+			player.sendMessage("\u00A74Invalid Parameters. Use /sellall");
 			return;
 		}
 	}

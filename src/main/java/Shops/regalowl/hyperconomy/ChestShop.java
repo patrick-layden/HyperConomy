@@ -98,10 +98,10 @@ public class ChestShop implements Listener{
 			    					
 				    					if (am == Material.ICE || am == Material.LEAVES || am == Material.SAND || am == Material.GRAVEL || am == Material.SIGN || am == Material.SIGN_POST || am == Material.TNT) {
 				    						
-					    					scevent.setLine(0, "§4You can't");
-					    					scevent.setLine(1, "§4attach your");
-					    					scevent.setLine(2, "§4sign to that");
-					    					scevent.setLine(3, "§4block!");
+					    					scevent.setLine(0, "\u00A74You can't");
+					    					scevent.setLine(1, "\u00A74attach your");
+					    					scevent.setLine(2, "\u00A74sign to that");
+					    					scevent.setLine(3, "\u00A74block!");
 	
 				    					} else {
 					    					//probably add a check for lockette/deadbolt/lwc chests
@@ -111,7 +111,7 @@ public class ChestShop implements Listener{
 				    							try {
 				    								String price = line1.substring(1, line1.length());
 				    								Double.parseDouble(price);
-				    								scevent.setLine(0, "§a" + line1);
+				    								scevent.setLine(0, "\u00A7a" + line1);
 				    							} catch (Exception e) {
 				    								scevent.setLine(0, "");
 				    							}
@@ -136,29 +136,29 @@ public class ChestShop implements Listener{
 					    						line3 = pname;
 					    					}
 					    					
-					    					scevent.setLine(1, "§b" + fline);
-							    			scevent.setLine(2, "§f" + line3);
-							    			scevent.setLine(3, "§f" + line4);
+					    					scevent.setLine(1, "\u00A7b" + fline);
+							    			scevent.setLine(2, "\u00A7f" + line3);
+							    			scevent.setLine(3, "\u00A7f" + line4);
 				    					}
 
 				    				} else {
-				    					scevent.setLine(0, "§4You must");
-				    					scevent.setLine(1, "§4use an");
-				    					scevent.setLine(2, "§4empty");
-				    					scevent.setLine(3, "§4chest.");
+				    					scevent.setLine(0, "\u00A74You must");
+				    					scevent.setLine(1, "\u00A74use an");
+				    					scevent.setLine(2, "\u00A74empty");
+				    					scevent.setLine(3, "\u00A74chest.");
 				    				}
 			    				
 				    			} else {
-			    					scevent.setLine(0, "§4You must");
-			    					scevent.setLine(1, "§4place your");
-			    					scevent.setLine(2, "§4chest shop");
-			    					scevent.setLine(3, "§4in a shop.");
+			    					scevent.setLine(0, "\u00A74You must");
+			    					scevent.setLine(1, "\u00A74place your");
+			    					scevent.setLine(2, "\u00A74chest shop");
+			    					scevent.setLine(3, "\u00A74in a shop.");
 				    			}
 		    				} else {
-		    					scevent.setLine(0, "§4You can't");
-		    					scevent.setLine(1, "§4use a");
-		    					scevent.setLine(2, "§4double");
-		    					scevent.setLine(3, "§4chest.");
+		    					scevent.setLine(0, "\u00A74You can't");
+		    					scevent.setLine(1, "\u00A74use a");
+		    					scevent.setLine(2, "\u00A74double");
+		    					scevent.setLine(3, "\u00A74chest.");
 		    				}
 		    				
 
@@ -187,7 +187,7 @@ public class ChestShop implements Listener{
 	    	if (b != null && b.getType().equals(Material.WALL_SIGN)) {
 	    	    Sign s = (Sign) b.getState();
 				String line2 = s.getLine(1).trim();
-		    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
+		    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
 					BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
 			    	if (chestblock instanceof Chest) {
 			    		if (!(ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim()).equalsIgnoreCase(bbevent.getPlayer().getName()) && !bbevent.getPlayer().hasPermission("hyperconomy.admin")) {
@@ -205,7 +205,7 @@ public class ChestShop implements Listener{
 				if (signblock != null && signblock.getType().equals(Material.WALL_SIGN)) {
 		    		Sign s = (Sign) signblock.getState();
 					String line2 = s.getLine(1).trim();
-			    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
+			    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
 			    		bbevent.setCancelled(true);
 			    		return;
 			    	}
@@ -220,7 +220,7 @@ public class ChestShop implements Listener{
 	            	if (relative.getType().equals(Material.WALL_SIGN)) {
 	            		Sign s = (Sign) relative.getState();
 	        			String line2 = s.getLine(1).trim();
-	        	    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {       	    		   			
+	        	    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {       	    		   			
 	        	    		//Gets the material.Sign version of the sign surrounding the broken block
 		        	    	org.bukkit.material.Sign sign = (org.bukkit.material.Sign)relative.getState().getData();
 		        	    	BlockFace attachedface = sign.getFacing();
@@ -248,7 +248,7 @@ public class ChestShop implements Listener{
 		    	if (b != null && b.getType().equals(Material.WALL_SIGN)) {
 		    	    Sign s = (Sign) b.getState();
 					String line2 = s.getLine(1).trim();
-			    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
+			    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
 						BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
 				    	if (chestblock instanceof Chest) {
 					    	eeevent.setCancelled(true);
@@ -262,7 +262,7 @@ public class ChestShop implements Listener{
 					if (signblock != null && signblock.getType().equals(Material.WALL_SIGN)) {
 			    		Sign s = (Sign) signblock.getState();
 						String line2 = s.getLine(1).trim();
-				    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
+				    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
 				    		eeevent.setCancelled(true);
 				    		return;
 				    	}
@@ -277,7 +277,7 @@ public class ChestShop implements Listener{
 		            	if (relative.getType().equals(Material.WALL_SIGN)) {
 		            		Sign s = (Sign) relative.getState();
 		        			String line2 = s.getLine(1).trim();
-		        	    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {       	    		   			
+		        	    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {       	    		   			
 		        	    		//Gets the material.Sign version of the sign surrounding the broken block
 			        	    	org.bukkit.material.Sign sign = (org.bukkit.material.Sign)relative.getState().getData();
 			        	    	BlockFace attachedface = sign.getFacing();
@@ -308,7 +308,7 @@ public class ChestShop implements Listener{
 		    	if (b != null && b.getType().equals(Material.WALL_SIGN)) {
 		    	    Sign s = (Sign) b.getState();
 					String line2 = s.getLine(1).trim();
-			    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
+			    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
 						BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
 				    	if (chestblock instanceof Chest) {
 					    	bpeevent.setCancelled(true);
@@ -322,7 +322,7 @@ public class ChestShop implements Listener{
 					if (signblock != null && signblock.getType().equals(Material.WALL_SIGN)) {
 			    		Sign s = (Sign) signblock.getState();
 						String line2 = s.getLine(1).trim();
-				    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
+				    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
 				    		bpeevent.setCancelled(true);
 				    		return;
 				    	}
@@ -337,7 +337,7 @@ public class ChestShop implements Listener{
 		            	if (relative.getType().equals(Material.WALL_SIGN)) {
 		            		Sign s = (Sign) relative.getState();
 		        			String line2 = s.getLine(1).trim();
-		        	    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {       	    		   			
+		        	    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {       	    		   			
 		        	    		//Gets the material.Sign version of the sign surrounding the broken block
 			        	    	org.bukkit.material.Sign sign = (org.bukkit.material.Sign)relative.getState().getData();
 			        	    	BlockFace attachedface = sign.getFacing();
@@ -369,7 +369,7 @@ public class ChestShop implements Listener{
 				if (relative.getType().equals(Material.WALL_SIGN)) {
 					Sign s = (Sign) relative.getState();
 					String line2 = s.getLine(1).trim();
-					if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
+					if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
 						org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
 						BlockFace attachedface = sign.getFacing();
 						if (attachedface == cface) {
@@ -399,7 +399,7 @@ public class ChestShop implements Listener{
 						if (signblock != null && signblock.getType().equals(Material.WALL_SIGN)) {
 				    		Sign s = (Sign) signblock.getState();
 							String line2 = s.getLine(1).trim();
-					    	if (line2.equalsIgnoreCase("§b[Trade]") || line2.equalsIgnoreCase("§b[Buy]") || line2.equalsIgnoreCase("§b[Sell]")) {
+					    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
 					    		bpevent.setCancelled(true);
 					    		return;
 					    	}
@@ -550,9 +550,9 @@ public class ChestShop implements Listener{
 						    					if (setprice) {
 						    						price = staticprice;
 						    					}
-								    			p.sendMessage("§0-----------------------------------------------------");
+								    			p.sendMessage("\u00A70-----------------------------------------------------");
 								    			p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
-								    			p.sendMessage("§0-----------------------------------------------------");
+								    			p.sendMessage("\u00A70-----------------------------------------------------");
 						    				} else {
 						    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
 						    				}
@@ -568,9 +568,9 @@ public class ChestShop implements Listener{
 							    					if (setprice) {
 							    						price = staticprice;
 							    					}
-								    				p.sendMessage("§0-----------------------------------------------------");
+								    				p.sendMessage("\u00A70-----------------------------------------------------");
 								    				p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 "  + ChatColor.AQUA + ""  + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be sold to " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
-								    				p.sendMessage("§0-----------------------------------------------------");	
+								    				p.sendMessage("\u00A70-----------------------------------------------------");	
 						    					} else {
 						    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
 						    					}
@@ -605,9 +605,9 @@ public class ChestShop implements Listener{
 								        				}
 								        				price = calc.twoDecimals(price);
 								        			if (ench.isEnchantable(p.getItemInHand())) {
-										    			p.sendMessage("§0-----------------------------------------------------");
+										    			p.sendMessage("\u00A70-----------------------------------------------------");
 										    			p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
-										    			p.sendMessage("§0-----------------------------------------------------");
+										    			p.sendMessage("\u00A70-----------------------------------------------------");
 							    					} else {
 							    						p.sendMessage(ChatColor.BLUE + "That item cannot accept enchantments.");
 							    					}

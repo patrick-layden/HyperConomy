@@ -58,6 +58,7 @@ public class HyperConomy extends JavaPlugin {
 		YamlFile yam = new YamlFile(this);
 		yam.YamlEnable();
 		yaml = yam;
+		new Messages();
 		if (!brokenfile) {
 			saveinterval = yaml.getConfig().getLong("config.saveinterval");
 			usesql = yaml.getConfig().getBoolean("config.sql-connection.use-sql");
