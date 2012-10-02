@@ -346,7 +346,6 @@ permissions:
             hyperconomy.use: true
             hyperconomy.settings: true
             hyperconomy.admin: true
-            hyperconomy.error: true
             hyperconomy.list: true
             hyperconomy.resetshop: true
             hyperconomy.setstockmedianall: true

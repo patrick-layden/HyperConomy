@@ -2,10 +2,6 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Logger;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -89,9 +85,9 @@ public class Calculation {
 	 * 
 	 */
 	public double getValue(String name, int amount, Player p) {
-		SQLFunctions sf = hc.getSQLFunctions();
-		String playerecon = sf.getPlayerEconomy(p.getName());
 		try {
+			SQLFunctions sf = hc.getSQLFunctions();
+			String playerecon = sf.getPlayerEconomy(p.getName());
 			double totalvalue = 0;
 			int itemid = 0;
 			itemid = sf.getId(name, playerecon);
@@ -139,10 +135,8 @@ public class Calculation {
 			}
 			return totalvalue;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #16");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #16", "hyperconomy.error");
+			String info = "Calculation countItems() passed values name='" + name + "', amount='" + amount + "', player='" + p + "'";
+			new HyperError(e, info);
 			double totalvalue = 0;
 			return totalvalue;
 		}
@@ -155,9 +149,8 @@ public class Calculation {
 	 * 
 	 */
 	public double getCost(String name, int amount, String playerecon) {
-		SQLFunctions sf = hc.getSQLFunctions();
 		try {
-			sf = hc.getSQLFunctions();
+			SQLFunctions sf = hc.getSQLFunctions();
 			double cost = 0;
 			boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
 			if (isstatic == false) {
@@ -202,10 +195,8 @@ public class Calculation {
 			}
 			return cost;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #15");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #15", "hyperconomy.error");
+			String info = "Calculation getCost() passed values name='" + name + "', amount='" + amount + "', economy='" + playerecon + "'";
+			new HyperError(e, info);
 			double cost = 99999999;
 			return cost;
 		}
@@ -218,10 +209,10 @@ public class Calculation {
 	 * 
 	 */
 	public double getEnchantValue(String name, String mater, String playerecon) {
-		SQLFunctions sf = hc.getSQLFunctions();
-		Calculation calc = hc.getCalculation();
-		ETransaction etran = hc.getETransaction();
 		try {
+			SQLFunctions sf = hc.getSQLFunctions();
+			Calculation calc = hc.getCalculation();
+			ETransaction etran = hc.getETransaction();
 			double cost = 0;
 			double classvalue = etran.getclassValue(mater);
 			boolean stax;
@@ -261,10 +252,8 @@ public class Calculation {
 			}
 			return cost;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger l = Logger.getLogger("Minecraft");
-			l.info("HyperConomy ERROR #19");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #19", "hyperconomy.error");
+			String info = "Calculation getEnchantValue() passed values name='" + name + "', material='" + mater + "', economy='" + playerecon + "'";
+			new HyperError(e, info);
 			double value = 0;
 			return value;
 		}
@@ -277,10 +266,10 @@ public class Calculation {
 	 * 
 	 */
 	public double getEnchantCost(String name, String mater, String playerecon) {
-		SQLFunctions sf = hc.getSQLFunctions();
-		Calculation calc = hc.getCalculation();
-		ETransaction etran = hc.getETransaction();
 		try {
+			SQLFunctions sf = hc.getSQLFunctions();
+			Calculation calc = hc.getCalculation();
+			ETransaction etran = hc.getETransaction();
 			double cost = 0;
 			double classvalue = etran.getclassValue(mater);
 			if (classvalue != 123456789) {
@@ -326,10 +315,8 @@ public class Calculation {
 			}
 			return cost;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger l = Logger.getLogger("Minecraft");
-			l.info("HyperConomy ERROR #20");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #20", "hyperconomy.error");
+			String info = "Calculation getEnchantCost() passed values name='" + name + "', material='" + mater + "', economy='" + playerecon + "'";
+			new HyperError(e, info);
 			double cost = 99999999;
 			return cost;
 		}
@@ -343,8 +330,8 @@ public class Calculation {
 	 * 
 	 */
 	private double getDamage(int itemid, int amount, Player p) {
-		ETransaction ench = hc.getETransaction();
 		try {
+			ETransaction ench = hc.getETransaction();
 			double damage = 0;
 			if (testId(itemid)) {
 				Inventory pinv = p.getInventory();
@@ -371,10 +358,8 @@ public class Calculation {
 			}
 			return damage;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #14");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #14", "hyperconomy.error");
+			String info = "Calculation getDamage() passed values id='" + itemid + "', amount='" + amount + "', player='" + p + "'";
+			new HyperError(e, info);
 			double damage = 0;
 			return damage;
 		}
@@ -403,10 +388,8 @@ public class Calculation {
 			}
 			return durabilitypercent;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #13");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #13", "hyperconomy.error");
+			String info = "Calculation getdurabilityPercent() passed values ItemStack='" + i + "'";
+			new HyperError(e, info);
 			double durabilitypercent = 1;
 			return durabilitypercent;
 		}
@@ -430,10 +413,8 @@ public class Calculation {
 			}
 			return newData;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #12");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #12", "hyperconomy.error");
+			String info = "Calculation newData() passed values id='" + id + "', data='" + data + "'";
+			new HyperError(e, info);
 			int newData = data;
 			return newData;
 		}
@@ -454,10 +435,8 @@ public class Calculation {
 			}
 			return datatest;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #11");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #11", "hyperconomy.error");
+			String info = "Calculation testId() passed values id='" + id + "'";
+			new HyperError(e, info);
 			boolean datatest = false;
 			return datatest;
 		}
@@ -511,10 +490,8 @@ public class Calculation {
 			}
 			return cost;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #10");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #10", "hyperconomy.error");
+			String info = "Calculation getTvalue() passed values name='" + name + "', amount='" + amount + "', economy='" + playerecon + "'";
+			new HyperError(e, info);
 			double cost = 99999999;
 			return cost;
 		}
@@ -545,10 +522,8 @@ public class Calculation {
 			}
 			return da;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #9");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #9", "hyperconomy.error");
+			String info = "Calculation getpotionDV() passed values ItemStack='" + item + "'";
+			new HyperError(e, info);
 			int da = 0;
 			return da;
 		}
