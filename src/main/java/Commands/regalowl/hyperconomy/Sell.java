@@ -10,6 +10,7 @@ public class Sell {
 		hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		Transaction tran = hc.getTransaction();
+		Calculation calc = hc.getCalculation();
 		Shop s = hc.getShop();
 		try {
 			s.setinShop(player);
@@ -17,6 +18,14 @@ public class Sell {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					String name = args[0];
 					int amount = 0;
+					boolean xp = false;
+					int txpid = sf.getId(name, playerecon);
+					int txpdata = sf.getData(name, playerecon);
+					if (txpid == -1 && txpdata == -1) {
+						xp = true;
+					}
+					
+					
 					String teststring = hc.testiString(name);
 					if (teststring != null) {
 						if (args.length == 1) {
@@ -27,7 +36,11 @@ public class Sell {
 							} catch (Exception e) {
 								String max = args[1];
 								if (max.equalsIgnoreCase("max")) {
-									amount = tran.countInvitems(sf.getId(name, playerecon), sf.getData(name, playerecon), player);
+									if (xp) {
+										amount = calc.gettotalxpPoints(player);
+									} else {
+										amount = tran.countInvitems(sf.getId(name, playerecon), sf.getData(name, playerecon), player);	
+									}
 								} else {
 									player.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /sell [name] (amount or 'max').");
 									return;
@@ -37,7 +50,11 @@ public class Sell {
 					}
 					if (teststring != null) {
 						if (s.has(s.getShop(player), name)) {
-							tran.sell(name, sf.getId(name, playerecon), sf.getData(name, playerecon), amount, player);
+							if (xp) {
+								tran.sellXP(name, amount, player);
+							} else {
+								tran.sell(name, sf.getId(name, playerecon), sf.getData(name, playerecon), amount, player);
+							}
 						} else {
 							player.sendMessage(ChatColor.BLUE + "Sorry, that item or enchantment cannot be traded at this shop.");
 							return;

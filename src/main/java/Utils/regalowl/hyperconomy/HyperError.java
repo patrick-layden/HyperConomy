@@ -49,7 +49,7 @@ public class HyperError {
 				SQLFunctions sf = hc.getSQLFunctions();
 				info = ft.getTimeStamp() + "\n\n" + "UseSQL='" + hc.useSQL() + "', DataBuilt='" + sf.dataBuilt() + "', SQLLoaded='" + sf.sqlLoaded() + "'\n\n" + info;
 				ft.writeStringToFile(info, path + File.separator + "info.txt");
-				Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred.  Check the errors folder for more info.", "hyperconomy.error");
+				Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred. [#" + errornumber + "] Check the errors folder for more info.", "hyperconomy.error");
 			}
 		}, 0L);
 	}

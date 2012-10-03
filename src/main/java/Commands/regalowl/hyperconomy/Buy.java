@@ -21,6 +21,12 @@ public class Buy {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					String name = args[0];
 					int amount = 0;
+					boolean xp = false;
+					int txpid = sf.getId(name, playerecon);
+					int txpdata = sf.getData(name, playerecon);
+					if (txpid == -1 && txpdata == -1) {
+						xp = true;
+					}
 					String teststring = hc.testiString(name);
 					int id = 0;
 					int data = 0;
@@ -35,16 +41,20 @@ public class Buy {
 							} catch (Exception e) {
 								String max = args[1];
 								if (max.equalsIgnoreCase("max")) {
-									MaterialData damagemd = new MaterialData(id, (byte) data);
-									ItemStack damagestack = damagemd.toItemStack();
-									int space = 0;
-									if (id >= 0) {
-										space = tran.getavailableSpace(id, calc.getdamageValue(damagestack), player);
-									}
-									amount = space;
-									int shopstock = (int) sf.getStock(name, playerecon);
-									if (amount > shopstock) {
-										amount = shopstock;
+									if (xp) {
+										amount = (int) sf.getStock(name, playerecon);
+									} else {
+										MaterialData damagemd = new MaterialData(id, (byte) data);
+										ItemStack damagestack = damagemd.toItemStack();
+										int space = 0;
+										if (id >= 0) {
+											space = tran.getavailableSpace(id, calc.getdamageValue(damagestack), player);
+										}
+										amount = space;
+										int shopstock = (int) sf.getStock(name, playerecon);
+										if (amount > shopstock) {
+											amount = shopstock;
+										}
 									}
 								} else {
 									player.sendMessage(BUY_INVALID);
@@ -55,7 +65,11 @@ public class Buy {
 					}
 					if (teststring != null) {
 						if (s.has(s.getShop(player), name)) {
-							tran.buy(name, amount, id, data, player);
+							if (xp) {
+								tran.buyXP(name, amount, player);
+							} else {
+								tran.buy(name, amount, id, data, player);		
+							}
 						} else {
 							player.sendMessage(CANT_BE_TRADED);
 							return;

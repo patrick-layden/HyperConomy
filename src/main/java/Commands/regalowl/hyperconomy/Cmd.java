@@ -68,12 +68,6 @@ public class Cmd {
 		} else if (cmd.getName().equalsIgnoreCase("hb") && (player != null)) {
 			new Hb(args, player, playerecon);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("buyxp") && (player != null)) {
-			new Buyxp(args, player);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("sellxp") && (player != null)) {
-			new Sellxp(args, player);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("xpinfo") && (player != null)) {
 			new Xpinfo(args, player);
 			return true;

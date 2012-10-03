@@ -87,10 +87,10 @@ public class Transaction {
 									} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
 										type = "static";
 									}
-									log.writeSQLLog(p.getName(), "purchase", name, (double) amount, price - taxpaid, taxpaid, playerecon, type);
+									log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price - taxpaid), calc.twoDecimals(taxpaid), playerecon, type);
 								} else {
 									//String logentry = p.getName() + " " + BOUGHT + " " + amount + " " + name + " " + FOR + " " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [" + STATIC_PRICE + "=" + sf.getStatic(name, playerecon) + "][" + INITIAL_PRICE + "=" + sf.getInitiation(name, playerecon) + "]";
-									String logentry = fs.formatString(LOG_BUY, amount, price, name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
+									String logentry = fs.formatString(LOG_BUY, amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 									log.setEntry(logentry);
 									log.writeBuffer();
 								}
@@ -197,10 +197,10 @@ public class Transaction {
 									} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
 										type = "static";
 									}
-									log.writeSQLLog(p.getName(), "sale", name, (double) amount, price - salestax, salestax, playerecon, type);
+									log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
 								} else {
 									//logentry = p.getName() + " " + SOLD + " " + amount + " " + name + " " + FOR + " " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [" + STATIC_PRICE + "=" + sf.getStatic(name, playerecon) + "][" + INITIAL_PRICE + "=" + sf.getInitiation(name, playerecon) + "]";
-									logentry = fs.formatString(LOG_SELL, amount, price, name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
+									logentry = fs.formatString(LOG_SELL, amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 									log.setEntry(logentry);
 									log.writeBuffer();
 								}
@@ -533,7 +533,7 @@ public class Transaction {
 							acc.setBalance(globalaccount, 0);
 						}
 						p.sendMessage(LINE_BREAK);
-						p.sendMessage(fs.formatString(PURCHASE_MESSAGE, amount, price, name, taxpaid));
+						p.sendMessage(fs.formatString(PURCHASE_MESSAGE, amount, calc.twoDecimals(price), name, calc.twoDecimals(taxpaid)));
 						//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + YOU_BOUGHT + " " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " " + FOR + " " + ChatColor.GREEN + "" + ChatColor.ITALIC + CURRENCY + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " "+OF_WHICH+" " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid
 						//		+ " " + WAS_TAX);
 						p.sendMessage(LINE_BREAK);
@@ -544,10 +544,10 @@ public class Transaction {
 							} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
 								type = "static";
 							}
-							log.writeSQLLog(p.getName(), "purchase", name, (double) amount, price, taxpaid, playerecon, type);
+							log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price), calc.twoDecimals(taxpaid), playerecon, type);
 						} else {
 							//String logentry = p.getName()+" "+BOUGHT+" "+amount+" "+name+ " "+FOR+" "+CURRENCY+price+". ["+STATIC_PRICE+"=" + sf.getStatic(name, playerecon) + "]["+INITIAL_PRICE+"="+sf.getInitiation(name, playerecon)+"]";
-							String logentry = fs.formatString(LOG_BUY, amount, price, name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
+							String logentry = fs.formatString(LOG_BUY, amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 							log.setEntry(logentry);
 							log.writeBuffer();
 						}
@@ -633,7 +633,7 @@ public class Transaction {
 								acc.setBalance(globalaccount, 0);
 							}
 							p.sendMessage(LINE_BREAK);
-							p.sendMessage(fs.formatString(SELL_MESSAGE, amount, price, name, salestax));
+							p.sendMessage(fs.formatString(SELL_MESSAGE, amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)));
 							//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol")
 							//		+ calc.twoDecimals(salestax) + ChatColor.BLUE + ChatColor.ITALIC + " went to tax!");
 							p.sendMessage(LINE_BREAK);
@@ -646,10 +646,10 @@ public class Transaction {
 								} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
 									type = "static";
 								}
-								log.writeSQLLog(p.getName(), "sale", name, (double) amount, price - salestax, salestax, playerecon, type);
+								log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
 							} else {
 								//String logentry = p.getName() + " sold " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
-								String logentry = fs.formatString(LOG_SELL, amount, price, name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
+								String logentry = fs.formatString(LOG_SELL, amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 								log.setEntry(logentry);
 								log.writeBuffer();
 							}
@@ -703,20 +703,20 @@ public class Transaction {
 					acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
 					acc.depositAccount(owner, price);
 					p.sendMessage(LINE_BREAK);
-					p.sendMessage(fs.formatString(PURCHASE_CHEST_MESSAGE, amount, price, name, owner));
+					p.sendMessage(fs.formatString(PURCHASE_CHEST_MESSAGE, amount, calc.twoDecimals(price), name, owner));
 					//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
 					p.sendMessage(LINE_BREAK);
 					if (hc.useSQL()) {
-						log.writeSQLLog(p.getName(), "purchase", name, (double) amount, price, 0.0, owner, "chestshop");
+						log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
 					} else {
 						//String logentry = p.getName() + " "+BOUGHT+" " + amount + " " + name + " "+FOR+" " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
-						String logentry = fs.formatString(LOG_BUY_CHEST, amount, price, name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
+						String logentry = fs.formatString(LOG_BUY_CHEST, amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
 						log.setEntry(logentry);
 						log.writeBuffer();
 					}
 					Player o = Bukkit.getPlayer(owner);
 					if (o != null) {
-						o.sendMessage(fs.formatString(CHEST_BUY_NOTIFICATION, amount, price, name, p));
+						o.sendMessage(fs.formatString(CHEST_BUY_NOTIFICATION, amount, calc.twoDecimals(price), name, p));
 					}
 					return true;
 				} else {
@@ -749,6 +749,7 @@ public class Transaction {
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			FormatString fs = new FormatString();
+			Calculation calc = hc.getCalculation();
 			String playerecon = sf.getPlayerEconomy(owner);
 			acc.setAccount(hc, p, economy);
 			if (acc.checkFunds(price)) {
@@ -760,21 +761,21 @@ public class Transaction {
 					acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
 					acc.depositAccount(owner, price);
 					p.sendMessage(LINE_BREAK);
-					p.sendMessage(fs.formatString(PURCHASE_CHEST_MESSAGE, amount, price, name, owner));
+					p.sendMessage(fs.formatString(PURCHASE_CHEST_MESSAGE, amount, calc.twoDecimals(price), name, owner));
 					//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought " + ChatColor.GREEN + "" + ChatColor.ITALIC + "" + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
 					p.sendMessage(LINE_BREAK);
 					if (hc.useSQL()) {
-						log.writeSQLLog(p.getName(), "purchase", name, (double) amount, price, 0.0, owner, "chestshop");
+						log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
 					} else {
 						//String logentry = p.getName() + " bought " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
-						String logentry = fs.formatString(LOG_BUY_CHEST, amount, price, name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
+						String logentry = fs.formatString(LOG_BUY_CHEST, amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
 						log.setEntry(logentry);
 						log.writeBuffer();
 					}
 					Player o = Bukkit.getPlayer(owner);
 					if (o != null) {
 						//o.sendMessage("\u00A79" + p.getName() + " bought \u00A7a" + amount + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
-						o.sendMessage(fs.formatString(CHEST_BUY_NOTIFICATION, amount, price, name, p));
+						o.sendMessage(fs.formatString(CHEST_BUY_NOTIFICATION, amount, calc.twoDecimals(price), name, p));
 					}
 					return true;
 				} else {
@@ -819,22 +820,22 @@ public class Transaction {
 				acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
 				acc.withdrawAccount(owner, price);
 				p.sendMessage(LINE_BREAK);
-				p.sendMessage(fs.formatString(SELL_CHEST_MESSAGE, amount, price, name, owner));
+				p.sendMessage(fs.formatString(SELL_CHEST_MESSAGE, amount, calc.twoDecimals(price), name, owner));
 				//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + ChatColor.ITALIC + " to " + owner + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
 				p.sendMessage(LINE_BREAK);
 				World w = p.getWorld();
 				w.playEffect(p.getLocation(), Effect.SMOKE, 4);
 				if (hc.useSQL()) {
-					log.writeSQLLog(p.getName(), "sale", name, (double) amount, price, 0.0, owner, "chestshop");
+					log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
 				} else {
 					//String logentry = p.getName() + " sold " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " to " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
-					String logentry = fs.formatString(LOG_SELL_CHEST, amount, price, name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
+					String logentry = fs.formatString(LOG_SELL_CHEST, amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
 					log.setEntry(logentry);
 					log.writeBuffer();
 				}
 				Player o = Bukkit.getPlayer(owner);
 				if (o != null) {
-					o.sendMessage(fs.formatString(CHEST_SELL_NOTIFICATION, amount, price, name, p));
+					o.sendMessage(fs.formatString(CHEST_SELL_NOTIFICATION, amount, calc.twoDecimals(price), name, p));
 					//o.sendMessage("\u00A79" + p.getName() + " sold \u00A7a" + amount + " \u00A7b" + name + " \u00A79to you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 				}
 				return true;
@@ -863,6 +864,7 @@ public class Transaction {
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			FormatString fs = new FormatString();
+			Calculation calc = hc.getCalculation();
 			String playerecon = sf.getPlayerEconomy(owner);
 			removesoldItems(id, data, amount, p);
 			addItems(id, data, amount, invent);
@@ -871,22 +873,22 @@ public class Transaction {
 			acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
 			acc.withdrawAccount(owner, price);
 			p.sendMessage(LINE_BREAK);
-			p.sendMessage(fs.formatString(SELL_CHEST_MESSAGE, amount, price, name, owner));
+			p.sendMessage(fs.formatString(SELL_CHEST_MESSAGE, amount, calc.twoDecimals(price), name, owner));
 			//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold " + ChatColor.GREEN + "" + "" + ChatColor.ITALIC + amount + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + ChatColor.ITALIC + " to " + owner + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + "!");
 			p.sendMessage(LINE_BREAK);
 			World w = p.getWorld();
 			w.playEffect(p.getLocation(), Effect.SMOKE, 4);
 			if (hc.useSQL()) {
-				log.writeSQLLog(p.getName(), "sale", name, (double) amount, price, 0.0, owner, "chestshop");
+				log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
 			} else {
 				//String logentry = p.getName() + " sold " + amount + " " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " to " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
-				String logentry = fs.formatString(LOG_SELL_CHEST, amount, price, name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
+				String logentry = fs.formatString(LOG_SELL_CHEST, amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
 				log.setEntry(logentry);
 				log.writeBuffer();
 			}
 			Player o = Bukkit.getPlayer(owner);
 			if (o != null) {
-				o.sendMessage(fs.formatString(CHEST_SELL_NOTIFICATION, amount, price, name, p));
+				o.sendMessage(fs.formatString(CHEST_SELL_NOTIFICATION, amount, calc.twoDecimals(price), name, p));
 				//o.sendMessage("\u00A79" + p.getName() + " sold \u00A7a" + amount + " \u00A7b" + name + " \u00A79to you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 			}
 			return true;

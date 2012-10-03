@@ -52,7 +52,7 @@ config:
     max-sql-threads: 20
   web-page:
     port: 8765
-    use-web-page: false
+    use-web-page: true
     web-page-economy: default
     background-color: EEEEF6
     font-color: 333333

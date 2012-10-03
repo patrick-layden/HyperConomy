@@ -39,16 +39,6 @@ commands:
       permission: hyperconomy.buy
       permission-message: You don't have permission to do this.
       aliases: [bd]
-   buyxp:
-      description: Buys experience points.
-      permission: hyperconomy.xp
-      permission-message: Unknown command. Type "help" for help.
-      aliases: [bxp]
-   sellxp:
-      description: Sells experience points.
-      permission: hyperconomy.xp
-      permission-message: Unknown command. Type "help" for help.
-      aliases: [sxp]
    xpinfo:
       description: Displays information about experience.
       permission: hyperconomy.info
