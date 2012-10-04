@@ -21,14 +21,13 @@ public class HyperConomy extends JavaPlugin {
 	private Transaction tran;
 	private Calculation calc;
 	private ETransaction ench;
-	private Message m;
 	private Log l;
 	private Shop s;
 	private Account acc;
 	private InfoSign isign;
-	private Cmd commandhandler;
+	private _Command commandhandler;
 	private History hist;
-	private Notify not;
+	private Notification not;
 	private TransactionSign tsign;
 	private SQLFunctions sf;
 	private SQLWrite sw;
@@ -87,14 +86,13 @@ public class HyperConomy extends JavaPlugin {
 				}
 			}
 			s = new Shop(this);
-			m = new Message();
 			l = new Log(this);
 			tran = new Transaction();
 			calc = new Calculation();
 			ench = new ETransaction();
 			acc = new Account();
-			commandhandler = new Cmd();
-			not = new Notify();
+			commandhandler = new _Command();
+			not = new Notification();
 			isign = new InfoSign();
 			tsign = new TransactionSign();
 			Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
@@ -486,7 +484,7 @@ public class HyperConomy extends JavaPlugin {
 		return l;
 	}
 
-	public Notify getNotify() {
+	public Notification getNotify() {
 		return not;
 	}
 
@@ -504,9 +502,5 @@ public class HyperConomy extends JavaPlugin {
 
 	public SQLEconomy getSQLEconomy() {
 		return sqe;
-	}
-
-	public Message getMessage() {
-		return m;
 	}
 }

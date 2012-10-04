@@ -22,6 +22,7 @@ public final class Messages {
 	public static final String OBJECT_NOT_AVAILABLE = formatMessage(lang.getString("OBJECT_NOT_AVAILABLE"));
 	public static final String LINE_BREAK = formatMessage(lang.getString("LINE_BREAK"));
 	public static final String INSUFFICIENT_FUNDS = formatMessage(lang.getString("INSUFFICIENT_FUNDS"));
+	public static final String ECONOMY_NOT_EXIST = formatMessage(lang.getString("ECONOMY_NOT_EXIST"));
 	
 	//Transaction
 	public static final String ONLY_ROOM_TO_BUY = formatMessage(lang.getString("ONLY_ROOM_TO_BUY"));
@@ -83,6 +84,85 @@ public final class Messages {
 	public static final String GOLD_VALUE = formatMessage(lang.getString("GOLD_VALUE"));
 	public static final String DIAMOND_VALUE = formatMessage(lang.getString("DIAMOND_VALUE"));
 	public static final String CLASSVALUES_INVALID = formatMessage(lang.getString("CLASSVALUES_INVALID"));
+	
+	//Exporttoyml command
+	public static final String ECONOMY_EXPORTED = formatMessage(lang.getString("ECONOMY_EXPORTED"));
+	public static final String EXPORT_PROCEED = formatMessage(lang.getString("EXPORT_PROCEED"));
+	public static final String EXPORTTOYML_INVALID = formatMessage(lang.getString("EXPORTTOYML_INVALID"));
+	public static final String ONLY_AVAILABLE_SQL = formatMessage(lang.getString("ONLY_AVAILABLE_SQL"));
+	
+	//Importsql command
+	public static final String IMPORTING_TABLES = formatMessage(lang.getString("IMPORTING_TABLES"));
+	public static final String IMPORTSQL_WARNING = formatMessage(lang.getString("IMPORTSQL_WARNING"));
+	public static final String IMPORTSQL_INVALID = formatMessage(lang.getString("IMPORTSQL_INVALID"));
+	
+	//Listcategories invalid
+	public static final String LISTCATEGORIES_INVALID = formatMessage(lang.getString("LISTCATEGORIES_INVALID"));
+	
+	
+	//Ymladditem command
+	public static final String ALREADY_IN_DATABASE = formatMessage(lang.getString("ALREADY_IN_DATABASE"));
+	public static final String ITEM_ADDED = formatMessage(lang.getString("ITEM_ADDED"));
+	public static final String YMLADDITEM_INVALID = formatMessage(lang.getString("YMLADDITEM_INVALID"));
+	
+	//hcbackup command
+	public static final String ALL_BACKED_UP = formatMessage(lang.getString("ALL_BACKED_UP"));
+	public static final String HCBACKUP_INVALID = formatMessage(lang.getString("HCBACKUP_INVALID"));
+	
+	//hc command
+	public static final String HC_BUY = formatMessage(lang.getString("HC_BUY"));
+	public static final String HC_SELL = formatMessage(lang.getString("HC_SELL"));
+	public static final String HC_INFO = formatMessage(lang.getString("HC_INFO"));
+	public static final String HC_PARAMS = formatMessage(lang.getString("HC_PARAMS"));
+	public static final String HC_SELL_SELL = formatMessage(lang.getString("HC_SELL_SELL"));
+	public static final String HC_SELL_HS = formatMessage(lang.getString("HC_SELL_HS"));
+	public static final String HC_SELL_ESELL = formatMessage(lang.getString("HC_SELL_ESELL"));
+	public static final String HC_SELL_SELLALL = formatMessage(lang.getString("HC_SELL_SELLALL"));
+	public static final String HC_SELL_MORE = formatMessage(lang.getString("HC_SELL_MORE"));
+	public static final String HC_BUY_BUY = formatMessage(lang.getString("HC_BUY_BUY"));
+	public static final String HC_BUY_HB = formatMessage(lang.getString("HC_BUY_HB"));
+	public static final String HC_BUY_BUYID = formatMessage(lang.getString("HC_BUY_BUYID"));
+	public static final String HC_BUY_EBUY = formatMessage(lang.getString("HC_BUY_EBUY"));
+	public static final String HC_BUY_MORE = formatMessage(lang.getString("HC_BUY_MORE"));
+	public static final String HC_INFO_VALUE = formatMessage(lang.getString("HC_INFO_VALUE"));
+	public static final String HC_INFO_HV = formatMessage(lang.getString("HC_INFO_HV"));
+	public static final String HC_INFO_II = formatMessage(lang.getString("HC_INFO_II"));
+	public static final String HC_INFO_TOPITEMS = formatMessage(lang.getString("HC_INFO_TOPITEMS"));
+	public static final String HC_INFO_TOPENCHANTS = formatMessage(lang.getString("HC_INFO_TOPENCHANTS"));
+	public static final String HC_INFO_BROWSESHOP = formatMessage(lang.getString("HC_INFO_BROWSESHOP"));
+	public static final String HC_INFO_XPINFO = formatMessage(lang.getString("HC_INFO_XPINFO"));
+	public static final String HC_INFO_EVALUE = formatMessage(lang.getString("HC_INFO_EVALUE"));
+	public static final String HC_INFO_MORE = formatMessage(lang.getString("HC_INFO_MORE"));
+	public static final String HC_PARAMS_REQUIRED = formatMessage(lang.getString("HC_PARAMS_REQUIRED"));
+	public static final String HC_PARAMS_OPTIONAL = formatMessage(lang.getString("HC_PARAMS_OPTIONAL"));
+	public static final String HC_PARAMS_ADDITIONAL = formatMessage(lang.getString("HC_PARAMS_ADDITIONAL"));
+	public static final String HC_PARAMS_NAME = formatMessage(lang.getString("HC_PARAMS_NAME"));
+	public static final String HC_PARAMS_COMMAND = formatMessage(lang.getString("HC_PARAMS_COMMAND"));
+	public static final String HC_SELL_DETAIL = formatMessage(lang.getString("HC_SELL_DETAIL"));
+	public static final String HC_HS_DETAIL = formatMessage(lang.getString("HC_HS_DETAIL"));
+	public static final String HC_ESELL_DETAIL = formatMessage(lang.getString("HC_ESELL_DETAIL"));
+	public static final String HC_SELLALL_DETAIL = formatMessage(lang.getString("HC_SELLALL_DETAIL"));
+	public static final String HC_BUY_DETAIL = formatMessage(lang.getString("HC_BUY_DETAIL"));
+	public static final String HC_HB_DETAIL = formatMessage(lang.getString("HC_HB_DETAIL"));
+	public static final String HC_BUYID_DETAIL = formatMessage(lang.getString("HC_BUYID_DETAIL"));
+	public static final String HC_EBUY_DETAIL = formatMessage(lang.getString("HC_EBUY_DETAIL"));
+	public static final String HC_VALUE_DETAIL = formatMessage(lang.getString("HC_VALUE_DETAIL"));
+	public static final String HC_HV_DETAIL = formatMessage(lang.getString("HC_HV_DETAIL"));
+	public static final String HC_II_DETAIL = formatMessage(lang.getString("HC_II_DETAIL"));
+	public static final String HC_TOPITEMS_DETAIL = formatMessage(lang.getString("HC_TOPITEMS_DETAIL"));
+	public static final String HC_TOPENCHANTS_DETAIL = formatMessage(lang.getString("HC_TOPENCHANTS_DETAIL"));
+	public static final String HC_BROWSESHOP_DETAIL = formatMessage(lang.getString("HC_BROWSESHOP_DETAIL"));
+	public static final String HC_EVALUE_DETAIL = formatMessage(lang.getString("HC_EVALUE_DETAIL"));
+	public static final String HC_XPINFO_DETAIL = formatMessage(lang.getString("HC_XPINFO_DETAIL"));
+	public static final String HC_INVALID = formatMessage(lang.getString("HC_INVALID"));
+	
+	//ebuy command
+	public static final String ENCHANTMENT_NOT_IN_DATABASE = formatMessage(lang.getString("ENCHANTMENT_NOT_IN_DATABASE"));
+	public static final String EBUY_INVALID = formatMessage(lang.getString("EBUY_INVALID"));
+	
+	//esell command
+	public static final String HAS_NO_ENCHANTMENTS = formatMessage(lang.getString("HAS_NO_ENCHANTMENTS"));
+	public static final String ESELL_INVALID = formatMessage(lang.getString("ESELL_INVALID"));
 	
 	private static String formatMessage(String message) {
 		//message = message.replace("&","\u00A7");

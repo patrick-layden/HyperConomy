@@ -50,7 +50,7 @@ public class Transaction {
 			ETransaction ench = hc.getETransaction();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
-			Notify not = hc.getNotify();
+			Notification not = hc.getNotify();
 			InfoSign isign = hc.getInfoSign();
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			FormatString fs = new FormatString();
@@ -133,7 +133,7 @@ public class Transaction {
 			ETransaction ench = hc.getETransaction();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
-			Notify not = hc.getNotify();
+			Notification not = hc.getNotify();
 			InfoSign isign = hc.getInfoSign();
 			FormatString fs = new FormatString();
 			String playerecon = sf.getPlayerEconomy(p.getName());
@@ -503,7 +503,7 @@ public class Transaction {
 			ETransaction ench = hc.getETransaction();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
-			Notify not = hc.getNotify();
+			Notification not = hc.getNotify();
 			InfoSign isign = hc.getInfoSign();
 			FormatString fs = new FormatString();
 			String playerecon = sf.getPlayerEconomy(p.getName());
@@ -584,7 +584,7 @@ public class Transaction {
 			ETransaction ench = hc.getETransaction();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
-			Notify not = hc.getNotify();
+			Notification not = hc.getNotify();
 			InfoSign isign = hc.getInfoSign();
 			FormatString fs = new FormatString();
 			String playerecon = sf.getPlayerEconomy(p.getName());

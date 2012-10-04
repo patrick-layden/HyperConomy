@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class Notify {
+public class Notification {
 	
 	private HyperConomy hc;
 	private Calculation calc;
@@ -22,7 +22,7 @@ public class Notify {
 	
 	boolean usenotify;
 	
-	Notify() {
+	Notification() {
 		previousmessage = "";
 		notifrequests = 0;
 		usenotify = false;

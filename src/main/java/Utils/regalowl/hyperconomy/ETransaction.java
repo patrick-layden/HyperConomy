@@ -59,7 +59,7 @@ public class ETransaction {
 		Account acc = hc.getAccount();
 		Economy economy = hc.getEconomy();
 		Log log = hc.getLog();
-		Notify not = hc.getNotify();
+		Notification not = hc.getNotify();
 		InfoSign isign = hc.getInfoSign();
 		// Handles sellEnchant errors.
 		try {
@@ -157,7 +157,7 @@ public class ETransaction {
 		Account acc = hc.getAccount();
 		Economy economy = hc.getEconomy();
 		Log log = hc.getLog();
-		Notify not = hc.getNotify();
+		Notification not = hc.getNotify();
 		InfoSign isign = hc.getInfoSign();
 		// Handles buyEnchant errors.
 		try {
