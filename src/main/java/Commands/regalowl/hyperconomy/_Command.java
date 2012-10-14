@@ -230,6 +230,15 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("setshop") && player != null) {
 			new Setshop(args, player);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("makedisplay") && player != null) {
+			new Makedisplay(args, player);
+			return true;
+		} else if (cmd.getName().equalsIgnoreCase("removedisplay") && player != null) {
+			new Removedisplay(player);
+			return true;
+		} else if (cmd.getName().equalsIgnoreCase("hcchunk") && player != null) {
+			new Hcchunk(args, player);
+			return true;
 		}
 		return false;
 	}

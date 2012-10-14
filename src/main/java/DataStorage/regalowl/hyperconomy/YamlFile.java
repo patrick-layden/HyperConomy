@@ -30,6 +30,7 @@ public class YamlFile {
     FileConfiguration history;
     FileConfiguration categories;
     FileConfiguration language;
+    FileConfiguration displays;
     File configFile;
     File itemsFile;      
     File enchantsFile;  
@@ -39,6 +40,7 @@ public class YamlFile {
     File historyFile;
     File categoryFile;
     File languageFile;
+    File displaysFile;
     
     private boolean brokenfile;
     
@@ -68,6 +70,7 @@ public class YamlFile {
         historyFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "history.yml");
         categoryFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "categories.yml");
         languageFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "language.yml");
+        displaysFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "displays.yml");
         
         try {
             firstRun();
@@ -85,6 +88,7 @@ public class YamlFile {
         history = new YamlConfiguration();
         categories = new YamlConfiguration();
         language = new YamlConfiguration();
+        displays = new YamlConfiguration();
         loadYamls();
 		
 	}
@@ -131,6 +135,10 @@ public class YamlFile {
         if(!languageFile.exists()){
             languageFile.getParentFile().mkdirs();
             copy(this.getClass().getResourceAsStream("/language.yml"), languageFile);
+        }
+        if(!displaysFile.exists()){
+            displaysFile.getParentFile().mkdirs();
+            copy(this.getClass().getResourceAsStream("/displays.yml"), displaysFile);
         }
     }
 
@@ -243,6 +251,15 @@ public class YamlFile {
 			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #57.  Bad language.yml file.", "hyperconomy.error");
 			failcount++;
         }
+        try {
+        	displays.load(displaysFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+	    	Logger log = Logger.getLogger("Minecraft");
+	    	log.info("HyperConomy ERROR #56 Bad displays.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #57.  Bad displays.yml file.", "hyperconomy.error");
+			failcount++;
+        }
         if (failcount != 0) {
         	brokenfile = true;
         }
@@ -269,6 +286,7 @@ public class YamlFile {
                 history.save(historyFile);
                 categories.save(categoryFile);
                 language.save(languageFile);
+                displays.save(displaysFile);
         	}
         } catch (IOException e) {
             e.printStackTrace();
@@ -377,6 +395,15 @@ public class YamlFile {
 	 */
 	public FileConfiguration getLanguage(){
 		return language;
+	}
+	
+	/**
+	 * 
+	 * This gets the displays FileConfiguration.
+	 * 
+	 */
+	public FileConfiguration getDisplays(){
+		return displays;
 	}
 
 }

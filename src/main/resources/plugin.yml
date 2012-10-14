@@ -328,6 +328,21 @@ commands:
       permission: hyperconomy.admin
       permission-message: Unknown command. Type "help" for help.
       aliases: [hl]
+   makedisplay:
+      description: Makes an item display.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [mkd]
+   removedisplay:
+      description: Removes an item display.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [rdis]
+   hcchunk:
+      description: Displays chunk information.
+      permission: hyperconomy.admin
+      permission-message: Unknown command. Type "help" for help.
+      aliases: [hcc]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

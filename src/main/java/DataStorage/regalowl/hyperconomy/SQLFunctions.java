@@ -312,8 +312,6 @@ public class SQLFunctions {
 					enchants.set(name + ".stock.stock", newstock);
 				}
 			}
-			//IllegalArgumentException ex = new IllegalArgumentException();
-			//throw ex;
 		} catch (Exception e) {
 			String info = "SQLFunctions setStock() passed values name='" + name + "', economy='" + economy + "', value='" + newstock + "'";
 			new HyperError(e, info);
@@ -493,7 +491,7 @@ public class SQLFunctions {
 		} catch (Exception e) {
 			String info = "SQLFunctions getId() passed values name='" + name + "', economy='" + economy + "'";
 			new HyperError(e, info);
-			return -11;
+			return 1;
 		}
 	}
 
@@ -505,7 +503,7 @@ public class SQLFunctions {
 		} catch (Exception e) {
 			String info = "SQLFunctions getData() passed values name='" + name + "', economy='" + economy + "'";
 			new HyperError(e, info);
-			return -11;
+			return 0;
 		}
 	}
 
@@ -517,7 +515,7 @@ public class SQLFunctions {
 		} catch (Exception e) {
 			String info = "SQLFunctions getDurability() passed values name='" + name + "', economy='" + economy + "'";
 			new HyperError(e, info);
-			return -11;
+			return 0;
 		}
 	}
 
@@ -529,7 +527,7 @@ public class SQLFunctions {
 		} catch (Exception e) {
 			String info = "SQLFunctions getValue() passed values name='" + name + "', economy='" + economy + "'";
 			new HyperError(e, info);
-			return -1;
+			return -11;
 		}
 	}
 
@@ -553,7 +551,7 @@ public class SQLFunctions {
 		} catch (Exception e) {
 			String info = "SQLFunctions getStaticPrice() passed values name='" + name + "', economy='" + economy + "'";
 			new HyperError(e, info);
-			return -1;
+			return -11;
 		}
 	}
 
@@ -565,7 +563,7 @@ public class SQLFunctions {
 		} catch (Exception e) {
 			String info = "SQLFunctions getStock() passed values name='" + name + "', economy='" + economy + "'";
 			new HyperError(e, info);
-			return -1;
+			return -11;
 		}
 	}
 
@@ -577,7 +575,7 @@ public class SQLFunctions {
 		} catch (Exception e) {
 			String info = "SQLFunctions getMedian() passed values name='" + name + "', economy='" + economy + "'";
 			new HyperError(e, info);
-			return -1;
+			return -11;
 		}
 	}
 
@@ -601,7 +599,7 @@ public class SQLFunctions {
 		} catch (Exception e) {
 			String info = "SQLFunctions getStartPrice() passed values name='" + name + "', economy='" + economy + "'";
 			new HyperError(e, info);
-			return -1;
+			return -11;
 		}
 	}
 
@@ -613,7 +611,7 @@ public class SQLFunctions {
 		} catch (Exception e) {
 			String info = "SQLFunctions getCeiling() passed values name='" + name + "', economy='" + economy + "'";
 			new HyperError(e, info);
-			return -1;
+			return -11;
 		}
 	}
 
@@ -625,7 +623,7 @@ public class SQLFunctions {
 		} catch (Exception e) {
 			String info = "SQLFunctions getFloor() passed values name='" + name + "', economy='" + economy + "'";
 			new HyperError(e, info);
-			return -1;
+			return -11;
 		}
 	}
 
@@ -817,10 +815,10 @@ public class SQLFunctions {
 						double cdata = Double.parseDouble(object.substring(0, object.indexOf(",")));
 						object = object.substring(object.indexOf(",") + 1, object.length());
 						data.add(cdata);
-						if (names.get(l).equalsIgnoreCase("ice")) {
+						//if (names.get(l).equalsIgnoreCase("ice")) {
 							// Logger log = Logger.getLogger("Minecraft");
 							// log.info(cdata + "");
-						}
+						//}
 					} else {
 						object = "";
 					}

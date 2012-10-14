@@ -270,15 +270,12 @@ public class ChestShop implements Listener{
 		    	} else {	
 		    		int count2 = 0;
 		    		while (count2 < 4) {		
-		    			//Gets the blocks around the broken block.
 		    			BlockFace cface = faces.get(count2);
 		            	Block relative = b.getRelative(cface);         	
-		            	//If a block surrounding the broken block is a sign with they chestshop keyword it continues.
 		            	if (relative.getType().equals(Material.WALL_SIGN)) {
 		            		Sign s = (Sign) relative.getState();
 		        			String line2 = s.getLine(1).trim();
 		        	    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {       	    		   			
-		        	    		//Gets the material.Sign version of the sign surrounding the broken block
 			        	    	org.bukkit.material.Sign sign = (org.bukkit.material.Sign)relative.getState().getData();
 			        	    	BlockFace attachedface = sign.getFacing();
 			        	    	if (attachedface == cface) {
@@ -330,15 +327,12 @@ public class ChestShop implements Listener{
 		    	} else {	
 		    		int count2 = 0;
 		    		while (count2 < 4) {		
-		    			//Gets the blocks around the broken block.
 		    			BlockFace cface = faces.get(count2);
 		            	Block relative = b.getRelative(cface);         	
-		            	//If a block surrounding the broken block is a sign with they chestshop keyword it continues.
 		            	if (relative.getType().equals(Material.WALL_SIGN)) {
 		            		Sign s = (Sign) relative.getState();
 		        			String line2 = s.getLine(1).trim();
 		        	    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {       	    		   			
-		        	    		//Gets the material.Sign version of the sign surrounding the broken block
 			        	    	org.bukkit.material.Sign sign = (org.bukkit.material.Sign)relative.getState().getData();
 			        	    	BlockFace attachedface = sign.getFacing();
 			        	    	if (attachedface == cface) {

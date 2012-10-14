@@ -164,6 +164,14 @@ public final class Messages {
 	public static final String HAS_NO_ENCHANTMENTS = formatMessage(lang.getString("HAS_NO_ENCHANTMENTS"));
 	public static final String ESELL_INVALID = formatMessage(lang.getString("ESELL_INVALID"));
 	
+	//HyperConomy class
+	public static final String LOG_BREAK = formatMessage(lang.getString("LOG_BREAK"));
+	public static final String DATABASE_CONNECTION_ERROR = formatMessage(lang.getString("DATABASE_CONNECTION_ERROR"));
+	public static final String VAULT_NOT_FOUND = formatMessage(lang.getString("VAULT_NOT_FOUND"));
+	public static final String HYPERCONOMY_ENABLED = formatMessage(lang.getString("HYPERCONOMY_ENABLED"));
+	public static final String HYPERCONOMY_DISABLED = formatMessage(lang.getString("HYPERCONOMY_DISABLED"));
+	public static final String BAD_YMLFILE_DETECTED = formatMessage(lang.getString("BAD_YMLFILE_DETECTED"));
+	
 	private static String formatMessage(String message) {
 		//message = message.replace("&","\u00A7");
 		//message = message.replace("_"," ");

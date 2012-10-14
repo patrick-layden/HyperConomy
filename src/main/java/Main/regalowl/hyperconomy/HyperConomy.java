@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import static regalowl.hyperconomy.Messages.*;
 
 public class HyperConomy extends JavaPlugin {
 	public static HyperConomy hc;
@@ -29,6 +30,7 @@ public class HyperConomy extends JavaPlugin {
 	private History hist;
 	private Notification not;
 	private TransactionSign tsign;
+	private ItemDisplay itdi;
 	private SQLFunctions sf;
 	private SQLWrite sw;
 	private SQLEconomy sqe;
@@ -73,13 +75,11 @@ public class HyperConomy extends JavaPlugin {
 					sw = new SQLWrite(this);
 					migrate = sqe.checkData();
 				} else {
-					log.severe("---------------------------------");
-					log.severe("---------------------------------");
-					log.severe("Database connection error!");
-					log.severe("Check your config.yml settings.");
-					log.severe("Disabling HyperConomy....");
-					log.severe("---------------------------------");
-					log.severe("---------------------------------");
+					log.severe(LOG_BREAK);
+					log.severe(LOG_BREAK);
+					log.severe(DATABASE_CONNECTION_ERROR);
+					log.severe(LOG_BREAK);
+					log.severe(LOG_BREAK);
 					getServer().getScheduler().cancelTasks(this);
 					getPluginLoader().disablePlugin(this);
 					return;
@@ -98,13 +98,11 @@ public class HyperConomy extends JavaPlugin {
 			Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
 			if (x != null & x instanceof Vault) {
 				this.setupEconomy();
-				log.info("[Vault] hooked.");
 			} else {
-				log.warning("Vault not found, shutting down...");
+				log.warning(VAULT_NOT_FOUND);
 				getPluginLoader().disablePlugin(this);
 				return;
 			}
-			log.info(String.format("[%s] Enabled Version %s", getDescription().getName(), getDescription().getVersion()));
 			buildData();
 			if (useSQL() && !migrate) {
 				sf.load();
@@ -128,13 +126,16 @@ public class HyperConomy extends JavaPlugin {
 				new SQLPlayers(this);
 			}
 			hws = new HyperWebStart();
-			log.info("HyperConomy has been successfully enabled!");
+			FormatString fs = new FormatString();
+			itdi = new ItemDisplay();
+			log.info(fs.formatString(HYPERCONOMY_ENABLED, getDescription().getVersion()));
 		}
 	}
 
 	@Override
 	public void onDisable() {
 		try {
+			itdi.clearDisplays();
 			s.stopshopCheck();
 			stopSave();
 			l.stopBuffer();
@@ -149,7 +150,7 @@ public class HyperConomy extends JavaPlugin {
 		} catch (Exception e) {
 		}
 		yaml.saveYamls();
-		log.info("HyperConomy has been disabled!");
+		log.info(HYPERCONOMY_DISABLED);
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -312,7 +313,7 @@ public class HyperConomy extends JavaPlugin {
 			brokenfile = true;
 			if (!lock) {
 				if (s == null) {
-					log.info("Bad YML files detected, disabling HyperConomy!");
+					log.info(BAD_YMLFILE_DETECTED);
 					Bukkit.getPluginManager().disablePlugin(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy"));
 					return;
 				}
@@ -502,5 +503,9 @@ public class HyperConomy extends JavaPlugin {
 
 	public SQLEconomy getSQLEconomy() {
 		return sqe;
+	}
+	
+	public ItemDisplay getItemDisplay() {
+		return itdi;
 	}
 }
