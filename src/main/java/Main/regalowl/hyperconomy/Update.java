@@ -205,6 +205,11 @@ public class Update {
 	    		yaml.getConfig().set("config.unlimited-stock-for-static-items", false);
 	    		uptodate = false;
 	    	}
+	    	String t36 = yaml.getConfig().getString("config.use-item-displays");
+	    	if (t36 == null) {
+	    		yaml.getConfig().set("config.use-item-displays", true);
+	    		uptodate = false;
+	    	}
 
 	    	
 	    	double dversion = Double.parseDouble(configversion);

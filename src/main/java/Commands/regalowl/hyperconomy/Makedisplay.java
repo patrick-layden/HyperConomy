@@ -7,6 +7,10 @@ import org.bukkit.entity.Player;
 public class Makedisplay {
 	Makedisplay(String[] args, Player player) {
 		HyperConomy hc = HyperConomy.hc;
+		if (!hc.getYaml().getConfig().getBoolean("config.use-item-displays")) {
+			player.sendMessage(ChatColor.DARK_RED + "Item displays must be enabled to use this command.");
+			return;
+		}
 		SQLFunctions sf = hc.getSQLFunctions();
 		ItemDisplay itdi = hc.getItemDisplay();
 		if (args.length == 1) {

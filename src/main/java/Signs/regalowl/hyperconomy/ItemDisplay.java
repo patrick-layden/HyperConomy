@@ -29,7 +29,6 @@ public class ItemDisplay implements Listener {
 	
 	private HyperConomy hc; 
 	private SQLFunctions sf;
-	//private int numdisplays;
 	private int refreshthreadid;
 	private ArrayList<Item> displayItems;
 	private ArrayList<Location> displayLocations;
@@ -39,19 +38,18 @@ public class ItemDisplay implements Listener {
 
 	ItemDisplay() {
 		hc = HyperConomy.hc;
-		sf = hc.getSQLFunctions();
-		//if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
+		if (hc.getYaml().getConfig().getBoolean("config.use-item-displays")) {
+			sf = hc.getSQLFunctions();
 			hc.getServer().getPluginManager().registerEvents(this, hc);
-		//}
-		
-		displayItems = new ArrayList<Item>();
-		displayLocations = new ArrayList<Location>();
-		displayNames = new ArrayList<String>();
-		displayEconomies = new ArrayList<String>();
-		protectedBlocks = new ArrayList<Block>();
-		loadProtectedBlocks();
-		loadDisplays();
-		startRefreshThread();
+			displayItems = new ArrayList<Item>();
+			displayLocations = new ArrayList<Location>();
+			displayNames = new ArrayList<String>();
+			displayEconomies = new ArrayList<String>();
+			protectedBlocks = new ArrayList<Block>();
+			loadProtectedBlocks();
+			loadDisplays();
+			startRefreshThread();
+		}
 	}
 	
 	
@@ -144,8 +142,6 @@ public class ItemDisplay implements Listener {
 	
 	
 	public void refreshDisplays() {
-		//Bukkit.broadcastMessage("Item refresh");
-		//Bukkit.broadcastMessage(displayNames.toString());
 		loadDisplays();
 	}
 	
