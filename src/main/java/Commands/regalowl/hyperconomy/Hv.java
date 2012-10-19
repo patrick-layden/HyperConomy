@@ -1,14 +1,15 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import static regalowl.hyperconomy.Messages.*;
 
 public class Hv {
 	Hv(String args[], Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
+		FormatString fs = new FormatString();
 		Transaction tran = hc.getTransaction();
 		ETransaction ench = hc.getETransaction();
 		int amount;
@@ -26,7 +27,7 @@ public class Hv {
 				String ke = itd + ":" + newdat;
 				String nam = hc.getnameData(ke);
 				if (nam == null) {
-					player.sendMessage(ChatColor.BLUE + "Sorry, that item is not currently available.");
+					player.sendMessage(OBJECT_NOT_AVAILABLE);
 				} else {
 					double val = calc.getValue(nam, amount, player);
 					if (calc.testId(itd) && amount > 1) {
@@ -38,28 +39,28 @@ public class Hv {
 					}
 					double salestax = calc.getSalesTax(player, val);
 					val = calc.twoDecimals(val - salestax);
-					player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-					player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + val);
+					player.sendMessage(LINE_BREAK);
+					//player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + val);
+					player.sendMessage(fs.formatString(CAN_BE_SOLD_FOR, amount, val, nam));
 					double cost = calc.getCost(nam, amount, playerecon);
 					double taxpaid = calc.getPurchaseTax(nam, playerecon, cost);
 					cost = calc.twoDecimals(cost + taxpaid);
-					String scost = "";
 					if (cost > Math.pow(10, 10)) {
-						scost = "INFINITY";
-					} else {
-						scost = cost + "";
+						cost = -1;
 					}
 					double stock = 0;
 					stock = sf.getStock(nam, playerecon);
-					player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + scost);
-					player.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + stock + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " available.");
-					player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+					//player.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + scost);
+					//player.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + stock + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " available.");
+					player.sendMessage(fs.formatString(CAN_BE_PURCHASED_FOR, amount, cost, nam));
+					player.sendMessage(fs.formatString(GLOBAL_SHOP_CURRENTLY_HAS, stock, nam));
+					player.sendMessage(LINE_BREAK);
 				}
 			} else {
-				player.sendMessage("You cannot buy or sell enchanted items.");
+				player.sendMessage(CANT_BUY_SELL_ENCHANTED_ITEMS);
 			}
 		} catch (Exception e) {
-			player.sendMessage(ChatColor.DARK_RED + "Use /hv (amount)");
+			player.sendMessage(HV_INVALID);
 		}
 	}
 }

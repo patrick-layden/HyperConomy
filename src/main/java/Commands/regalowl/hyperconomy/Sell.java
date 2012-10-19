@@ -1,7 +1,7 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import static regalowl.hyperconomy.Messages.*;
 
 public class Sell {
 	HyperConomy hc;
@@ -42,7 +42,7 @@ public class Sell {
 										amount = tran.countInvitems(sf.getId(name, playerecon), sf.getData(name, playerecon), player);	
 									}
 								} else {
-									player.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /sell [name] (amount or 'max').");
+									player.sendMessage(SELL_INVALID);
 									return;
 								}
 							}
@@ -56,23 +56,23 @@ public class Sell {
 								tran.sell(name, sf.getId(name, playerecon), sf.getData(name, playerecon), amount, player);
 							}
 						} else {
-							player.sendMessage(ChatColor.BLUE + "Sorry, that item or enchantment cannot be traded at this shop.");
+							player.sendMessage(CANT_BE_TRADED);
 							return;
 						}
 					} else {
-						player.sendMessage(ChatColor.DARK_RED + "Invalid item name!");
+						player.sendMessage(INVALID_ITEM_NAME);
 						return;
 					}
 				} else {
-					player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+					player.sendMessage(NO_TRADE_PERMISSION);
 					return;
 				}
 			} else {
-				player.sendMessage(ChatColor.DARK_RED + "You must be in a shop to buy or sell.");
+				player.sendMessage(MUST_BE_IN_SHOP);
 				return;
 			}
 		} catch (Exception e) {
-			player.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /sell [name] (amount or 'max').");
+			player.sendMessage(SELL_INVALID);
 			return;
 		}
 	}

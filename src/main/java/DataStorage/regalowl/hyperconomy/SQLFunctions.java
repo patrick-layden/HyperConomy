@@ -651,6 +651,7 @@ public class SQLFunctions {
 					sqlloaded = loadSQL();
 					hc.sqlunlockShop();
 					hc.getServer().getScheduler().cancelTask(sqllockthreadid);
+					hc.onDataLoad();
 				}
 			}
 		}, 0L, 10L);
@@ -745,7 +746,6 @@ public class SQLFunctions {
 		hcount.clear();
 		koec.clear();
 		ArrayList<String> names = hc.getNames();
-		// Bukkit.broadcastMessage(names.toString());
 		for (int i = 0; i < names.size(); i++) {
 			String cname = names.get(i);
 			if (hc.testiString(cname) != null) {
@@ -815,10 +815,6 @@ public class SQLFunctions {
 						double cdata = Double.parseDouble(object.substring(0, object.indexOf(",")));
 						object = object.substring(object.indexOf(",") + 1, object.length());
 						data.add(cdata);
-						//if (names.get(l).equalsIgnoreCase("ice")) {
-							// Logger log = Logger.getLogger("Minecraft");
-							// log.info(cdata + "");
-						//}
 					} else {
 						object = "";
 					}
@@ -828,11 +824,11 @@ public class SQLFunctions {
 				hobject.add(names.get(l));
 				heconomy.add("default");
 				hprice.add(data.get(m));
-				// hcount.add(m + 1);
 				koec.add(names.get(l) + ":" + "default" + ":" + (m + 1));
 			}
 		}
 		startHistoryDataCount();
+		hc.onDataLoad();
 	}
 
 	public ArrayList<String> getKeys() {

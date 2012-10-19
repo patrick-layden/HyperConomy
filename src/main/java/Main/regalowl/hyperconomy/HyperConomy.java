@@ -127,9 +127,13 @@ public class HyperConomy extends JavaPlugin {
 			}
 			hws = new HyperWebStart();
 			FormatString fs = new FormatString();
-			itdi = new ItemDisplay();
 			log.info(fs.formatString(HYPERCONOMY_ENABLED, getDescription().getVersion()));
 		}
+	}
+	
+	
+	public void onDataLoad() {
+		itdi = new ItemDisplay();
 	}
 
 	@Override

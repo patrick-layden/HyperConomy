@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import static regalowl.hyperconomy.Messages.*;
 
 public class Iteminfo {
 	Iteminfo(String args[], Player player) {
@@ -22,9 +23,9 @@ public class Iteminfo {
 				if (nam == null) {
 					nam = "Item not in database.";
 				}
-				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+				player.sendMessage(LINE_BREAK);
 				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
-				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+				player.sendMessage(LINE_BREAK);
 				return;
 			} else if (args.length == 2) {
 				int givenid = Integer.parseInt(args[0]);;
@@ -36,9 +37,9 @@ public class Iteminfo {
 				if (nam == null) {
 					nam = "Item not in database.";
 				}
-				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+				player.sendMessage(LINE_BREAK);
 				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
-				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+				player.sendMessage(LINE_BREAK);
 				return;
 			}
 			String mat = player.getItemInHand().getType().toString();
@@ -79,7 +80,7 @@ public class Iteminfo {
 			} else {
 				durp = 100;
 			}
-				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+				player.sendMessage(LINE_BREAK);
 				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
 				player.sendMessage(ChatColor.BLUE + "Material: " + ChatColor.AQUA + "" + mat);
 				player.sendMessage(ChatColor.BLUE + "ID: " + ChatColor.GREEN + "" + itemid);
@@ -87,7 +88,7 @@ public class Iteminfo {
 				player.sendMessage(ChatColor.BLUE + "Durability: " + ChatColor.GREEN + "" + (int)dura);
 				player.sendMessage(ChatColor.BLUE + "Durability Percent: " + ChatColor.GREEN + "" + durp + "%");
 				player.sendMessage(ChatColor.BLUE + "Enchantments: " + ChatColor.AQUA + "" + enchantments);
-				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+				player.sendMessage(LINE_BREAK);
 			return;
 		} catch (Exception e) {
 			player.sendMessage(ChatColor.DARK_RED + "Invalid item or parameters.  Hold an item and use /iteminfo (id) (damage value)");

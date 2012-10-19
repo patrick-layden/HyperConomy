@@ -9,8 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Topitems {
-	Topitems(String args[], Player player, CommandSender sender,
-			String playerecon) {
+	Topitems(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getShop();
 		SQLFunctions sf = hc.getSQLFunctions();
@@ -59,16 +58,12 @@ public class Topitems {
 			double maxpages = le / 10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int) maxpages + 1;
-			sender.sendMessage(ChatColor.RED + "Page " + ChatColor.WHITE + "("
-					+ ChatColor.RED + "" + page + ChatColor.WHITE + "/"
-					+ ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
+			sender.sendMessage(ChatColor.RED + "Page " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
 			try {
 				while (count < numberpage) {
 					double lk = itemstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
-						sender.sendMessage(ChatColor.WHITE + itemstocks.get(lk)
-								+ ChatColor.WHITE + ": " + ChatColor.AQUA + ""
-								+ (int) Math.floor(lk));
+						sender.sendMessage(ChatColor.WHITE + itemstocks.get(lk) + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + (int) Math.floor(lk));
 					}
 					itemstocks.remove(lk);
 					count++;

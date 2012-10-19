@@ -14,10 +14,9 @@ public class Removedisplay {
 		}
 		ItemDisplay itdi = hc.getItemDisplay();
 		int x = player.getLocation().getBlockX();
-		int y = player.getLocation().getBlockY();
 		int z = player.getLocation().getBlockZ();
 		World w = player.getLocation().getWorld();
-		boolean success = itdi.removeDisplay(x, y, z, w);
+		boolean success = itdi.removeDisplay(x, z, w);
 		if (success) {
 			player.sendMessage(ChatColor.GOLD + "Display removed!");
 		} else {

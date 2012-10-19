@@ -1,8 +1,9 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.ChatColor;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import static regalowl.hyperconomy.Messages.*;
 
 public class Value {
 	HyperConomy hc;
@@ -10,8 +11,8 @@ public class Value {
 		hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
+		FormatString fs = new FormatString();
 		Player player;
-		Account acc = hc.getAccount();
 		try {
 			String name = args[0];
 			int amount;
@@ -29,28 +30,29 @@ public class Value {
 					salestax = calc.getSalesTax(player, val);
 				}
 				val = calc.twoDecimals(val - salestax);
-				sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-				sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + val);
+				sender.sendMessage(LINE_BREAK);
+				//sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + val);
+				sender.sendMessage(fs.formatString(CAN_BE_SOLD_FOR, amount, val, name));
 				double cost = calc.getCost(name, amount, playerecon);
 				double taxpaid = calc.getPurchaseTax(name, playerecon, cost);
 				cost = calc.twoDecimals(cost + taxpaid);
-				String scost = "";
+				//String scost = "";
 				if (cost > Math.pow(10, 10)) {
-					scost = "INFINITY";
-				} else {
-					scost = cost + "";
+					cost = -1;
 				}
 				double stock = 0;
 				stock = sf.getStock(name, playerecon);
-				sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + scost);
-				sender.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + stock + ChatColor.AQUA + " " + name + ChatColor.BLUE + " available.");
-				sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+				//sender.sendMessage(ChatColor.GREEN + "" + amount + ChatColor.AQUA + " " + name + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + scost);
+				sender.sendMessage(fs.formatString(CAN_BE_PURCHASED_FOR, amount, cost, name));
+				sender.sendMessage(fs.formatString(GLOBAL_SHOP_CURRENTLY_HAS, stock, name));
+				//sender.sendMessage(ChatColor.BLUE + "The global shop currently has " + ChatColor.GREEN + "" + stock + ChatColor.AQUA + " " + name + ChatColor.BLUE + " available.");
+				sender.sendMessage(LINE_BREAK);
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid item name!");
+				sender.sendMessage(INVALID_ITEM_NAME);
 				return;
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Use /value [item name] (amount)");
+			sender.sendMessage(VALUE_INVALID);
 			return;
 		}
 	}

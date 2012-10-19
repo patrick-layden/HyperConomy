@@ -136,22 +136,12 @@ public class ItemDisplay implements Listener {
 			}
 		}
 	}
-	
-	
 
-	
-	
-	public void refreshDisplays() {
-		loadDisplays();
-	}
-	
 
-	
-	
 	public void startRefreshThread() {
 		refreshthreadid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
 			public void run() {
-				refreshDisplays();
+				loadDisplays();
 			}
 		}, 4800L, 4800L);
 	}
@@ -185,26 +175,23 @@ public class ItemDisplay implements Listener {
 	}
 	
 	
-	public boolean removeDisplay(int x, int y, int z, World w) {
+	public boolean removeDisplay(int x, int z, World w) {
 		FileConfiguration disp = hc.getYaml().getDisplays();
 		for (int i = 0; i < displayItems.size(); i++) {
 			Location il = displayLocations.get(i);
 			int tx =  il.getBlockX();
-			int ty =  il.getBlockY();
 			int tz =  il.getBlockZ();
 			World tw = il.getWorld();
-			if (tw == w && tx == x && ty == y && tz == z) {
-				//Bukkit.broadcastMessage("Item match x:" + tx + " y:" + ty + " z:" + tz);
+			if (tw == w && tx == x && tz == z) {
 				Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
 				while (it.hasNext()) {
 					String key = it.next().toString();
 					int ymlx = (int) Math.floor(disp.getDouble(key + ".x"));
-					int ymly = (int) Math.floor(disp.getDouble(key + ".y"));
 					int ymlz = (int) Math.floor(disp.getDouble(key + ".z"));
 					World ymlw = Bukkit.getWorld(disp.getString(key + ".world"));
-					if (ymlw == w && ymlx == x && ymly == y && ymlz == z) {
+					if (ymlw == w && ymlx == x && ymlz == z) {
 						disp.set(key, null);
-						refreshDisplays();
+						loadDisplays();
 						loadProtectedBlocks();
 						return true;
 					}
@@ -232,7 +219,7 @@ public class ItemDisplay implements Listener {
 			}
 		}
 		storeDisplay(x, y, z, w, name, economy);
-		refreshDisplays();
+		loadDisplays();
 		return true;
 	}
 
@@ -272,7 +259,7 @@ public class ItemDisplay implements Listener {
 			}
 		}
 		if (refresh) {
-			refreshDisplays();
+			loadDisplays();
 		}
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -289,7 +276,7 @@ public class ItemDisplay implements Listener {
 			}
 		}
 		if (refresh) {
-			refreshDisplays();
+			loadDisplays();
 		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -315,7 +302,7 @@ public class ItemDisplay implements Listener {
 		for (Block cb:protectedBlocks) {
 			if (cb.equals(bb)) {
 				event.setCancelled(true);
-				refreshDisplays();
+				loadDisplays();
 			}
 		}
 	}
@@ -352,6 +339,7 @@ public class ItemDisplay implements Listener {
 				for (Block cb:protectedBlocks) {
 					if (cb.equals(cblock)) {
 						event.setCancelled(true);
+						loadDisplays();
 					}
 				}
 			}

@@ -2,15 +2,12 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.logging.Logger;
-
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import static regalowl.hyperconomy.Messages.*;
 
 /**
  * 
@@ -57,24 +54,19 @@ public class ETransaction {
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
+		FormatString fs = new FormatString();
 		Economy economy = hc.getEconomy();
 		Log log = hc.getLog();
 		Notification not = hc.getNotify();
 		InfoSign isign = hc.getInfoSign();
-		// Handles sellEnchant errors.
 		try {
 			String nenchant = "";
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			nenchant = sf.getMaterial(name, playerecon);
 			Enchantment ench = Enchantment.getByName(nenchant);
-			// Makes sure the item being held has the correct enchantment and
-			// enchantment level.
 			int lvl = Integer.parseInt(name.substring(name.length() - 1, name.length()));
 			int truelvl = p.getItemInHand().getEnchantmentLevel(ench);
 			if (p.getItemInHand().containsEnchantment(ench) && lvl == truelvl) {
-				// Gets the actual value of the enchantment and stores it in
-				// fprice, factoring in durability, and then
-				// adds the value to the player's balance.
 				double dura = p.getItemInHand().getDurability();
 				double maxdura = p.getItemInHand().getType().getMaxDurability();
 				double duramult = (1 - dura / maxdura);
@@ -83,33 +75,23 @@ public class ETransaction {
 				double fprice = duramult * price;
 				boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
 				if (acc.checkshopBalance(fprice) || sunlimited) {
-					// Removes the sold enchantment from the item.
 					p.getItemInHand().removeEnchantment(ench);
-					// Adds the sold items to the shopstock and saves the yaml
-					// file.
 					int shopstock = 0;
 					shopstock = (int) sf.getStock(name, playerecon);
 					sf.setStock(name, playerecon, shopstock + 1);
 					double salestax = calc.getSalesTax(p, fprice);
 					acc.setAccount(hc, p, economy);
 					acc.deposit(fprice - salestax);
-					// Removes the final transaction price from the shop's
-					// account.
 					acc.withdrawShop(fprice - salestax);
-					// Reverts any changes to the global shop account if the
-					// account is set to unlimited.
 					if (sunlimited) {
 						String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 						acc.setBalance(globalaccount, 0);
 					}
-					// Formats the sale value to two digits for display.
 					fprice = calc.twoDecimals(fprice);
-					// Informs the player of their sale.
-					p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-					p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.twoDecimals(salestax)
-							+ ChatColor.BLUE + ChatColor.ITALIC + " went to tax!");
-					p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-					// Writes the transaction to the log.
+					p.sendMessage(LINE_BREAK);
+					//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.twoDecimals(salestax) + ChatColor.BLUE + ChatColor.ITALIC + " went to tax!");
+					p.sendMessage(fs.formatString(ENCHANTMENT_SELL_MESSAGE, 1, calc.twoDecimals(fprice), name, calc.twoDecimals(salestax)));
+					p.sendMessage(LINE_BREAK);
 					if (hc.useSQL()) {
 						String type = "dynamic";
 						if (Boolean.parseBoolean(sf.getInitiation(name, playerecon))) {
@@ -119,29 +101,24 @@ public class ETransaction {
 						}
 						log.writeSQLLog(p.getName(), "sale", name, 1.0, fprice - salestax, salestax, playerecon, type);
 					} else {
-						String logentry = p.getName() + " sold " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+						//String logentry = p.getName() + " sold " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+						String logentry = fs.formatString(LOG_SELL_ENCHANTMENT, 1, calc.twoDecimals(fprice), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 						log.setEntry(logentry);
 						log.writeBuffer();
 					}
-					// Updates all information signs.
 					isign.setrequestsignUpdate(true);
 					isign.checksignUpdate();
-					// Sends price update notifications.
 					not.setNotify(hc, calc, this, name, mater, playerecon);
 					not.sendNotification();
 				} else {
-					p.sendMessage(ChatColor.BLUE + "Sorry, the shop currently does not have enough money.");
+					p.sendMessage(SHOP_NOT_ENOUGH_MONEY);
 				}
-				// If the item does not have the enchantment that the player is
-				// trying to sell, this informs them.
 			} else {
-				p.sendMessage(ChatColor.BLUE + "The item you're holding doesn't have " + ChatColor.AQUA + "" + name + "!");
+				p.sendMessage(fs.formatString(ITEM_DOESNT_HAVE_ENCHANTMENT, name));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger l = Logger.getLogger("Minecraft");
-			l.info("HyperConomy ERROR #17");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #17", "hyperconomy.error");
+			String info = "ETransaction sellEnchant() passed values name='" + name + "', player='" + p.getName() + "'";
+			new HyperError(e, info);
 		}
 	}
 
@@ -154,17 +131,16 @@ public class ETransaction {
 	public void buyEnchant(String name, Player p) {
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
+		FormatString fs = new FormatString();
 		Account acc = hc.getAccount();
 		Economy economy = hc.getEconomy();
 		Log log = hc.getLog();
 		Notification not = hc.getNotify();
 		InfoSign isign = hc.getInfoSign();
-		// Handles buyEnchant errors.
 		try {
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			String nenchant = sf.getMaterial(name, playerecon);
 			Enchantment ench = Enchantment.getByName(nenchant);
-			// Makes sure the shop has the given enchantment.
 			int shopstock = 0;
 			shopstock = (int) sf.getStock(name, playerecon);
 			if (shopstock >= 1) {
@@ -210,15 +186,11 @@ public class ETransaction {
 								}
 								double taxpaid = price - (price / (1 + taxrate / 100));
 								taxpaid = calc.twoDecimals(taxpaid);
-								// Formats the price to two decimals for
-								// display.
 								price = calc.twoDecimals(price);
-								// Displays purchase information to the player.
-								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-								p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid
-										+ " was tax!");
-								p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-								// Logs the transaction.
+								p.sendMessage(LINE_BREAK);
+								//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid + " was tax!");
+								p.sendMessage(fs.formatString(ENCHANTMENT_PURCHASE_MESSAGE, 1, price, name, calc.twoDecimals(taxpaid)));
+								p.sendMessage(LINE_BREAK);
 								String logentry = "";
 								if (hc.useSQL()) {
 									String type = "dynamic";
@@ -229,36 +201,33 @@ public class ETransaction {
 									}
 									log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, taxpaid, playerecon, type);
 								} else {
-									logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+									//logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+									logentry = fs.formatString(LOG_BUY_ENCHANTMENT, 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 									log.setEntry(logentry);
 									log.writeBuffer();
 								}
-								// Updates all information signs.
 								isign.setrequestsignUpdate(true);
 								isign.checksignUpdate();
-								// Sends price update notifications.
 								not.setNotify(hc, calc, this, name, mater, playerecon);
 								not.sendNotification();
 							} else {
-								p.sendMessage(ChatColor.BLUE + "The item you're holding cannot accept that enchantment!");
+								p.sendMessage(ITEM_CANT_ACCEPT_ENCHANTMENT);
 							}
 						} else {
-							p.sendMessage(ChatColor.BLUE + "Insufficient Funds!");
+							p.sendMessage(INSUFFICIENT_FUNDS);
 						}
 					} else {
-						p.sendMessage(ChatColor.BLUE + "The item you're holding already has an enchantment of that type!");
+						p.sendMessage(ITEM_ALREADY_HAS_ENCHANTMENT);
 					}
 				} else {
-					p.sendMessage(ChatColor.BLUE + "The item you're holding cannot accept that enchantment!");
+					p.sendMessage(ITEM_CANT_ACCEPT_ENCHANTMENT);
 				}
 			} else {
-				p.sendMessage(ChatColor.BLUE + "The shop doesn't have enough " + name + "!");
+				p.sendMessage(fs.formatString(THE_SHOP_DOESNT_HAVE_ENOUGH, name));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger l = Logger.getLogger("Minecraft");
-			l.info("HyperConomy ERROR #18");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #18", "hyperconomy.error");
+			String info = "ETransaction buyEnchant() passed values name='" + name + "', player='" + p.getName() + "'";
+			new HyperError(e, info);
 		}
 	}
 
@@ -271,33 +240,20 @@ public class ETransaction {
 	public boolean buyChestEnchant(String name, Player p, ItemStack item, String owner) {
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
+		FormatString fs = new FormatString();
 		Account acc = hc.getAccount();
 		Economy economy = hc.getEconomy();
 		Log log = hc.getLog();
-		// Handles buyEnchant errors.
 		try {
-			// Gets the enchantment from the enchants.yml file and creates a new
-			// enchantment from the stored name.
 			String nenchant = "";
 			String playerecon = sf.getPlayerEconomy(owner);
 			nenchant = sf.getMaterial(name, playerecon);
 			Enchantment ench = Enchantment.getByName(nenchant);
-			// Gets the material of the item the player is holding.
 			String mater = p.getItemInHand().getType().toString();
-			// Calculates the cost to buy the given enchantment for the relevant
-			// material class
 			double price = calc.getEnchantValue(name, mater, playerecon);
-			// Checks for infinite values. (The cost returns as this number if
-			// such a value exists.)
 			if (price != 123456789) {
-				// Makes sure the item the player is holding doesn't have the
-				// enchantment they're trying to buy.
 				if (!p.getItemInHand().containsEnchantment(ench)) {
-					// Makes sure the item can accept the chosen enchantment.
-					// (Need to add new bukkit method for this when 1.2 RB comes
-					// out.)
 					boolean enchtest = ench.canEnchantItem(p.getItemInHand());
-					// add later
 					if (hasenchants(p.getItemInHand())) {
 						String allenchants = p.getItemInHand().getEnchantments().toString();
 						allenchants = allenchants.substring(0, allenchants.length() - 1) + ", E";
@@ -322,40 +278,41 @@ public class ETransaction {
 							p.getItemInHand().addEnchantment(ench, level);
 							item.removeEnchantment(ench);
 							price = calc.twoDecimals(price);
-							p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-							p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
-							p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+							p.sendMessage(LINE_BREAK);
+							//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
+							p.sendMessage(fs.formatString(PURCHASE_ENCHANTMENT_CHEST_MESSAGE, 1, calc.twoDecimals(price), name, owner));
+							p.sendMessage(LINE_BREAK);
 							String logentry = "";
 							if (hc.useSQL()) {
 								log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, 0.0, owner, "chestshop");
 							} else {
-								logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+								//logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+								logentry = fs.formatString(LOG_BUY_CHEST_ENCHANTMENT, 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
 								log.setEntry(logentry);
 								log.writeBuffer();
 							}
 							Player o = Bukkit.getPlayer(owner);
 							if (o != null) {
-								o.sendMessage("\u00A79" + p.getName() + " bought" + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
+								o.sendMessage(fs.formatString(CHEST_ENCHANTMENT_BUY_NOTIFICATION, 1, calc.twoDecimals(price), name, p));
+								//o.sendMessage("\u00A79" + p.getName() + " bought" + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 							}
 							return true;
 						} else {
-							p.sendMessage(ChatColor.BLUE + "Insufficient Funds!");
+							p.sendMessage(INSUFFICIENT_FUNDS);
 						}
 					} else {
-						p.sendMessage(ChatColor.BLUE + "The item you're holding cannot accept that enchantment!");
+						p.sendMessage(ITEM_CANT_ACCEPT_ENCHANTMENT);
 					}
 				} else {
-					p.sendMessage(ChatColor.BLUE + "The item you're holding already has an enchantment of that type!");
+					p.sendMessage(ITEM_ALREADY_HAS_ENCHANTMENT);
 				}
 			} else {
-				p.sendMessage(ChatColor.BLUE + "The item you're holding cannot accept that enchantment!");
+				p.sendMessage(ITEM_CANT_ACCEPT_ENCHANTMENT);
 			}
 			return false;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger l = Logger.getLogger("Minecraft");
-			l.info("HyperConomy ERROR #18");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #18", "hyperconomy.error");
+			String info = "ETransaction buyChestEnchant() passed values name='" + name + "', player='" + p.getName() + "', owner='" + owner + "'";
+			new HyperError(e, info);
 			return false;
 		}
 	}
@@ -371,18 +328,14 @@ public class ETransaction {
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
+		FormatString fs = new FormatString();
 		Economy economy = hc.getEconomy();
 		Log log = hc.getLog();
-		// Handles buyEnchant errors.
 		try {
-			// Gets the enchantment from the enchants.yml file and creates a new
-			// enchantment from the stored name.
 			String nenchant = "";
 			String playerecon = sf.getPlayerEconomy(owner);
 			nenchant = sf.getMaterial(name, playerecon);
 			Enchantment ench = Enchantment.getByName(nenchant);
-			// Makes sure the item the player is holding doesn't have the
-			// enchantment they're trying to buy.
 			if (!p.getItemInHand().containsEnchantment(ench)) {
 				boolean enchtest = ench.canEnchantItem(p.getItemInHand());
 				if (hasenchants(p.getItemInHand())) {
@@ -398,58 +351,49 @@ public class ETransaction {
 					}
 				}
 				if (enchtest && p.getItemInHand().getAmount() == 1) {
-					// Makes sure the player has enough money for the purchase.
 					acc.setAccount(hc, p, economy);
 					if (acc.checkFunds(price)) {
-						// Removes the cost from the player's account.
 						acc.withdraw(price);
-						// Deposits the money spent by the player into the chest
-						// owner's account.
 						acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
 						acc.depositAccount(owner, price);
-						// Gets the enchantment level from the enchantment's
-						// name.
 						int l = name.length();
 						String lev = name.substring(l - 1, l);
 						int level = Integer.parseInt(lev);
-						// Adds the enchantment to the item the player is
-						// holding.
 						p.getItemInHand().addEnchantment(ench, level);
 						item.removeEnchantment(ench);
-						// Formats the price to two decimals for display.
 						price = calc.twoDecimals(price);
-						// Displays purchase information to the player.
-						p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-						p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
-						p.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+						p.sendMessage(LINE_BREAK);
+						//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
+						p.sendMessage(fs.formatString(PURCHASE_ENCHANTMENT_CHEST_MESSAGE, 1, calc.twoDecimals(price), name, owner));
+						p.sendMessage(LINE_BREAK);
 						String logentry = "";
 						if (hc.useSQL()) {
 							log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, 0.0, owner, "chestshop");
 						} else {
-							logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+							//logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
+							logentry = fs.formatString(LOG_BUY_CHEST_ENCHANTMENT, 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
 							log.setEntry(logentry);
 							log.writeBuffer();
 						}
 						Player o = Bukkit.getPlayer(owner);
 						if (o != null) {
-							o.sendMessage("\u00A79" + p.getName() + " bought" + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
+							o.sendMessage(fs.formatString(CHEST_ENCHANTMENT_BUY_NOTIFICATION, 1, calc.twoDecimals(price), name, p));
+							//o.sendMessage("\u00A79" + p.getName() + " bought" + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 						}
 						return true;
 					} else {
-						p.sendMessage(ChatColor.BLUE + "Insufficient Funds!");
+						p.sendMessage(INSUFFICIENT_FUNDS);
 					}
 				} else {
-					p.sendMessage(ChatColor.BLUE + "The item you're holding cannot accept that enchantment!");
+					p.sendMessage(ITEM_CANT_ACCEPT_ENCHANTMENT);
 				}
 			} else {
-				p.sendMessage(ChatColor.BLUE + "The item you're holding already has an enchantment of that type!");
+				p.sendMessage(ITEM_ALREADY_HAS_ENCHANTMENT);
 			}
 			return false;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger l = Logger.getLogger("Minecraft");
-			l.info("HyperConomy ERROR #18");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #18", "hyperconomy.error");
+			String info = "ETransaction buyChestEnchant() passed values name='" + name + "', player='" + p.getName() + "', owner='" + owner + "', price='" + price + "'";
+			new HyperError(e, info);
 			return false;
 		}
 	}
@@ -467,12 +411,9 @@ public class ETransaction {
 			double duramult = (1 - dura / maxdura);
 			return duramult;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #21");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #21", "hyperconomy.error");
-			double duramult = 0;
-			return duramult;
+			String info = "ETransaction getDuramult() passed values player='" + p.getName() + "'";
+			new HyperError(e, info);
+			return 0;
 		}
 	}
 
@@ -485,20 +426,14 @@ public class ETransaction {
 	public boolean hasenchants(ItemStack stack) {
 		try {
 			boolean hasenchants = false;
-			// If the ItemStack's enchantment list is not empty, the function
-			// returns true. It makes sure that the ItemStack is not null.
 			if (stack != null) {
 				Map<Enchantment, Integer> enchants = stack.getEnchantments();
 				hasenchants = !enchants.isEmpty();
 			}
 			return hasenchants;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #22");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #22", "hyperconomy.error");
-			boolean hasenchants = false;
-			return hasenchants;
+			new HyperError(e);
+			return false;
 		}
 	}
 
@@ -533,12 +468,9 @@ public class ETransaction {
 			}
 			return value;
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger log = Logger.getLogger("Minecraft");
-			log.info("HyperConomy ERROR #23");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #23", "hyperconomy.error");
-			double value = 987654321;
-			return value;
+			String info = "ETransaction getclassValue() passed values matname='" + matname + "'";
+			new HyperError(e, info);
+			return 987654321;
 		}
 	}
 

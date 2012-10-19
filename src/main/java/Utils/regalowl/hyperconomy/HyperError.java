@@ -29,6 +29,17 @@ public class HyperError {
 	}
 	
 	
+	HyperError(Exception ex) {
+		e = ex;
+		info = "";
+		hc = HyperConomy.hc;
+		FileConfiguration conf = hc.getYaml().getConfig();
+		errornumber = conf.getInt("config.error-count");
+		conf.set("config.error-count", errornumber + 1);
+		handleError();
+	}
+	
+	
 	
 	private void handleError() {
 		hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {

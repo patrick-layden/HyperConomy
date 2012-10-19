@@ -17,6 +17,14 @@ public class FormatString {
 		return inputstring;
 	}
 	
+	public String formatString(String inputstring, double amount, double price, String name) {
+		inputstring = inputstring.replace("%a",amount+"");
+		inputstring = inputstring.replace("%n",name);
+		inputstring = inputstring.replace("%p",price+"");
+		inputstring = inputstring.replace("%c",CURRENCY);
+		return inputstring;
+	}
+	
 	public String formatString(String inputstring, String name) {
 		inputstring = inputstring.replace("%n",name);
 		return inputstring;

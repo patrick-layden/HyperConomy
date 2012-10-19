@@ -71,8 +71,7 @@ public class Log {
 	  		Date currentDate = new Date();
 	  		FileConfiguration l = hc.getYaml().getLog();
 			l.set("["+ logsize + "] " + currentDate.toString(), buffer.get(0));
-			logsize++;
-	  		//HyperConomy.yaml.saveYamls();	  		
+			logsize++;  		
 	  		buffer.remove(0);
   		} else {
   			setrequestBuffer(false);
@@ -80,7 +79,6 @@ public class Log {
   	}
   	
 
-  	//For when the server shuts down/lockshop.
   	public void saveBuffer() {
   		while (!buffer.isEmpty()) {
 	  		String entry = buffer.get(0);

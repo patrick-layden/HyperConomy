@@ -20,17 +20,19 @@ public class Buy {
 			if (s.inShop() != -1) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					String name = args[0];
-					int amount = 0;
-					boolean xp = false;
-					int txpid = sf.getId(name, playerecon);
-					int txpdata = sf.getData(name, playerecon);
-					if (txpid == -1 && txpdata == -1) {
-						xp = true;
-					}
 					String teststring = hc.testiString(name);
+					boolean xp = false;
 					int id = 0;
 					int data = 0;
+					int amount = 0;
 					if (teststring != null) {
+						int txpid = sf.getId(name, playerecon);
+						int txpdata = sf.getData(name, playerecon);
+						if (txpid == -1 && txpdata == -1) {
+							xp = true;
+						}
+
+
 						id = sf.getId(name, playerecon);
 						data = sf.getData(name, playerecon);
 						if (args.length == 1) {

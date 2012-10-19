@@ -1,8 +1,8 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import static regalowl.hyperconomy.Messages.*;
 
 public class Hs {
 	Hs(String args[], Player player) {
@@ -29,7 +29,7 @@ public class Hs {
 								int newdat = calc.newData(itmid, da);
 								amount = tran.countInvitems(itmid, newdat, player);
 							} else {
-								player.sendMessage(ChatColor.DARK_RED + "Use /hs (amount or 'max').");
+								player.sendMessage(HS_INVALID);
 								return;
 							}
 						}
@@ -40,27 +40,27 @@ public class Hs {
 					String ke = itd + ":" + newdat;
 					String nam = hc.getnameData(ke);
 					if (nam == null) {
-						player.sendMessage(ChatColor.BLUE + "Sorry, you cannot sell that item.");
+						player.sendMessage(CANT_BE_TRADED);
 					} else {
 						ItemStack iinhand = player.getItemInHand();
 						if (ench.hasenchants(iinhand) == false) {
 							if (s.has(s.getShop(player), nam)) {
 								tran.sell(nam, itd, newdat, amount, player);
 							} else {
-								player.sendMessage(ChatColor.BLUE + "Sorry, that item or enchantment cannot be traded at this shop.");
+								player.sendMessage(CANT_BE_TRADED);
 							}
 						} else {
-							player.sendMessage("You cannot buy or sell enchanted items.");
+							player.sendMessage(CANT_BUY_SELL_ENCHANTED_ITEMS);
 						}
 					}
 				} else {
-					player.sendMessage(ChatColor.BLUE + "Sorry, you don't have permission to trade here.");
+					player.sendMessage(NO_TRADE_PERMISSION);
 				}
 			} else {
-				player.sendMessage(ChatColor.DARK_RED + "You must be in a shop to buy or sell.");
+				player.sendMessage(MUST_BE_IN_SHOP);
 			}
 		} catch (Exception e) {
-			player.sendMessage(ChatColor.DARK_RED + "Use /hs (amount or 'max').");
+			player.sendMessage(HS_INVALID);
 		}
 	}
 }

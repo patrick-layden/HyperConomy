@@ -172,6 +172,42 @@ public final class Messages {
 	public static final String HYPERCONOMY_DISABLED = formatMessage(lang.getString("HYPERCONOMY_DISABLED"));
 	public static final String BAD_YMLFILE_DETECTED = formatMessage(lang.getString("BAD_YMLFILE_DETECTED"));
 	
+	//ETransaction class
+	public static final String ITEM_ALREADY_HAS_ENCHANTMENT = formatMessage(lang.getString("ITEM_ALREADY_HAS_ENCHANTMENT"));
+	public static final String ITEM_CANT_ACCEPT_ENCHANTMENT = formatMessage(lang.getString("ITEM_CANT_ACCEPT_ENCHANTMENT"));
+	public static final String ITEM_DOESNT_HAVE_ENCHANTMENT = formatMessage(lang.getString("ITEM_DOESNT_HAVE_ENCHANTMENT"));
+	public static final String ENCHANTMENT_SELL_MESSAGE = formatMessage(lang.getString("ENCHANTMENT_SELL_MESSAGE"));
+	public static final String ENCHANTMENT_PURCHASE_MESSAGE = formatMessage(lang.getString("ENCHANTMENT_PURCHASE_MESSAGE"));
+	public static final String CHEST_ENCHANTMENT_BUY_NOTIFICATION = formatMessage(lang.getString("CHEST_ENCHANTMENT_BUY_NOTIFICATION"));
+	public static final String PURCHASE_ENCHANTMENT_CHEST_MESSAGE = formatMessage(lang.getString("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"));
+	public static final String LOG_BUY_ENCHANTMENT = formatMessage(lang.getString("LOG_BUY_ENCHANTMENT"));
+	public static final String LOG_SELL_ENCHANTMENT = formatMessage(lang.getString("LOG_SELL_ENCHANTMENT"));
+	public static final String LOG_BUY_CHEST_ENCHANTMENT = formatMessage(lang.getString("LOG_BUY_CHEST_ENCHANTMENT"));
+	
+	//sell command
+	public static final String SELL_INVALID = formatMessage(lang.getString("SELL_INVALID"));
+	
+	//sellall command
+	public static final String ONE_OR_MORE_CANT_BE_TRADED = formatMessage(lang.getString("ONE_OR_MORE_CANT_BE_TRADED"));
+	public static final String CANT_BUY_SELL_ENCHANTED_ITEMS = formatMessage(lang.getString("CANT_BUY_SELL_ENCHANTED_ITEMS"));
+	public static final String SELLALL_INVALID = formatMessage(lang.getString("SELLALL_INVALID"));
+	
+	//hb command
+	public static final String HB_INVALID = formatMessage(lang.getString("HB_INVALID"));
+	
+	//hs command
+	public static final String HS_INVALID = formatMessage(lang.getString("HS_INVALID"));
+	
+	//value command
+	public static final String GLOBAL_SHOP_CURRENTLY_HAS = formatMessage(lang.getString("GLOBAL_SHOP_CURRENTLY_HAS"));
+	public static final String CAN_BE_PURCHASED_FOR = formatMessage(lang.getString("CAN_BE_PURCHASED_FOR"));
+	public static final String CAN_BE_SOLD_FOR = formatMessage(lang.getString("CAN_BE_SOLD_FOR"));
+	public static final String VALUE_INVALID = formatMessage(lang.getString("VALUE_INVALID"));
+	
+	//hv command
+	public static final String HV_INVALID = formatMessage(lang.getString("HV_INVALID"));
+	
+	
 	private static String formatMessage(String message) {
 		//message = message.replace("&","\u00A7");
 		//message = message.replace("_"," ");
