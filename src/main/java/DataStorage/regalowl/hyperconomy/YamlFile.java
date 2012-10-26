@@ -29,7 +29,6 @@ public class YamlFile {
     FileConfiguration signs;
     FileConfiguration history;
     FileConfiguration categories;
-    FileConfiguration language;
     FileConfiguration displays;
     File configFile;
     File itemsFile;      
@@ -39,7 +38,6 @@ public class YamlFile {
     File signsFile;
     File historyFile;
     File categoryFile;
-    File languageFile;
     File displaysFile;
     
     private boolean brokenfile;
@@ -69,7 +67,6 @@ public class YamlFile {
         signsFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "signs.yml");
         historyFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "history.yml");
         categoryFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "categories.yml");
-        languageFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "language.yml");
         displaysFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "displays.yml");
         
         try {
@@ -87,7 +84,6 @@ public class YamlFile {
         signs = new YamlConfiguration();
         history = new YamlConfiguration();
         categories = new YamlConfiguration();
-        language = new YamlConfiguration();
         displays = new YamlConfiguration();
         loadYamls();
 		
@@ -131,10 +127,6 @@ public class YamlFile {
         if(!categoryFile.exists()){
             categoryFile.getParentFile().mkdirs();
             copy(this.getClass().getResourceAsStream("/categories.yml"), categoryFile);
-        }
-        if(!languageFile.exists()){
-            languageFile.getParentFile().mkdirs();
-            copy(this.getClass().getResourceAsStream("/language.yml"), languageFile);
         }
         if(!displaysFile.exists()){
             displaysFile.getParentFile().mkdirs();
@@ -243,15 +235,6 @@ public class YamlFile {
 			failcount++;
         }
         try {
-        	language.load(languageFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("HyperConomy ERROR #56 Bad language.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #57.  Bad language.yml file.", "hyperconomy.error");
-			failcount++;
-        }
-        try {
         	displays.load(displaysFile);
         } catch (Exception e) {
             e.printStackTrace();
@@ -285,7 +268,6 @@ public class YamlFile {
                 signs.save(signsFile);
                 history.save(historyFile);
                 categories.save(categoryFile);
-                language.save(languageFile);
                 displays.save(displaysFile);
         	}
         } catch (IOException e) {
@@ -388,14 +370,6 @@ public class YamlFile {
 		return categories;
 	}
 	
-	/**
-	 * 
-	 * This gets the language FileConfiguration.
-	 * 
-	 */
-	public FileConfiguration getLanguage(){
-		return language;
-	}
 	
 	/**
 	 * 

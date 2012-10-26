@@ -155,6 +155,24 @@ public class FileTools {
 			return "error";
 		}
 	}
+	
+	
+	public ArrayList<String> getStringArrayFromFile(String path) {
+		ArrayList<String> text = new ArrayList<String>();
+		try {
+			BufferedReader input = new BufferedReader(new FileReader(path));
+			String string;
+			while ((string = input.readLine()) != null) {
+				text.add(string);
+			}
+			input.close();
+			return text;
+		} catch (IOException e) {
+			e.printStackTrace();
+			text.add("error");
+			return text;
+		}
+	}
 
 	public boolean fileExists(String path) {
 		File file = new File(path);

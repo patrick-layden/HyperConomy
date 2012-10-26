@@ -28,6 +28,8 @@ config:
   run-automatic-backups: true
   unlimited-stock-for-static-items: false
   error-count: 0
+  language: english
+  log-errors: false
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

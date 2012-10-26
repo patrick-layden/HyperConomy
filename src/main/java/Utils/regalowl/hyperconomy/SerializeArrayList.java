@@ -117,6 +117,5 @@ public class SerializeArrayList {
 		return string;
 	}
 	
-	
 
 }

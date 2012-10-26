@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import static regalowl.hyperconomy.Messages.*;
 
 public class Notification {
 	
@@ -12,6 +13,7 @@ public class Notification {
 	private Calculation calc;
 	private ArrayList<String> name = new ArrayList<String>();
 	private ArrayList<String> eclass = new ArrayList<String>();
+	private FormatString fs = new FormatString();
 	
 	private String econ;
 	
@@ -71,9 +73,11 @@ public class Notification {
 				
 				String message = "";
 				if (hc.useSQL()) {
-					message = "\u00A79The \u00A7f" + econ + " \u00A79economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
+					message = fs.formatString(SQL_NOTIFICATION, stock, cost, name.get(0), econ);
+					//message = "\u00A79The \u00A7f" + econ + " \u00A79economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
 				} else {
-					message = "\u00A79The economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
+					message = fs.formatString(SQL_NOTIFICATION, stock, cost, name.get(0), econ);
+					//message = "\u00A79The economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
 				}
 				
 				if (!message.equalsIgnoreCase(previousmessage)) {
@@ -87,9 +91,11 @@ public class Notification {
 				stock = (int) sf.getStock(name.get(0), econ);
 				String message = "";
 				if (hc.useSQL()) {
-					message = "\u00A79The \u00A7f" + econ + " \u00A79economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
+					message = fs.formatString(SQL_NOTIFICATION, stock, cost, name.get(0), econ);
+					//message = "\u00A79The \u00A7f" + econ + " \u00A79economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
 				} else {
-					message = "\u00A79The economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
+					message = fs.formatString(SQL_NOTIFICATION, stock, cost, name.get(0), econ);
+					//message = "\u00A79The economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
 				}
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					//Bukkit.broadcast(message, "hyperconomy.notify");
@@ -117,7 +123,6 @@ public class Notification {
 			if (notify.contains("," + name + ",")) {
 				note = true;
 			}
-			//For the first/last item.
 			if (notify.length() >= name.length() && name.equalsIgnoreCase(notify.substring(0, name.length()))) {
 				note = true;
 			}

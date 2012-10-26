@@ -9,6 +9,7 @@ public class Backup {
 		FileTools ft = new FileTools();
 		ArrayList<String> backupFiles = new ArrayList<String>();
 		backupFiles.add("config.yml");
+		backupFiles.add("displays.yml");
 		backupFiles.add("enchants.yml");
 		backupFiles.add("history.yml");
 		backupFiles.add("items.yml");
@@ -24,6 +25,19 @@ public class Backup {
 		for (int i = 0; i < backupFiles.size(); i++) {
 			ft.copyFile(spath + File.separator + backupFiles.get(i), dpath + File.separator + backupFiles.get(i));
 		}
+		
+		
+		backupFiles.clear();
+		backupFiles = ft.getFolderContents(spath + File.separator + "Languages");
+
+		spath += File.separator + "Languages";
+		dpath += File.separator + "Languages";
+		ft.makeFolder(dpath);
+		for (int i = 0; i < backupFiles.size(); i++) {
+			ft.copyFile(spath + File.separator + backupFiles.get(i), dpath + File.separator + backupFiles.get(i));
+		}
+		
+		
 		if (hc.useSQL()) {
 			new HyperPlayersBackup();
 			new HyperHistoryBackup();

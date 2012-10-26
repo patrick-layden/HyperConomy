@@ -210,6 +210,16 @@ public class Update {
 	    		yaml.getConfig().set("config.use-item-displays", true);
 	    		uptodate = false;
 	    	}
+	    	String t37 = yaml.getConfig().getString("config.language");
+	    	if (t37 == null) {
+	    		yaml.getConfig().set("config.language", "english");
+	    		uptodate = false;
+	    	}
+	    	String t38 = yaml.getConfig().getString("config.log-errors");
+	    	if (t38 == null) {
+	    		yaml.getConfig().set("config.log-errors", false);
+	    		uptodate = false;
+	    	}
 
 	    	
 	    	double dversion = Double.parseDouble(configversion);

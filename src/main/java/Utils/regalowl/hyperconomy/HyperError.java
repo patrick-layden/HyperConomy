@@ -42,28 +42,31 @@ public class HyperError {
 	
 	
 	private void handleError() {
-		hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
-			public void run() {
-				FileTools ft = new FileTools();
-				String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "errors";
-				ft.makeFolder(path);
-				path = path + File.separator + errornumber;
-				ft.makeFolder(path);
-				FileOutputStream fos;
-				try {
-					fos = new FileOutputStream(new File(path + File.separator + "stacktrace.txt"));
-					PrintStream ps = new PrintStream(fos);  
-					e.printStackTrace(ps); 
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
+		boolean logError = hc.getYaml().getConfig().getBoolean("config.log-errors");
+		if (logError) {
+			hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
+				public void run() {
+					FileTools ft = new FileTools();
+					String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "errors";
+					ft.makeFolder(path);
+					path = path + File.separator + errornumber;
+					ft.makeFolder(path);
+					FileOutputStream fos;
+					try {
+						fos = new FileOutputStream(new File(path + File.separator + "stacktrace.txt"));
+						PrintStream ps = new PrintStream(fos);  
+						e.printStackTrace(ps); 
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					}
+					SQLFunctions sf = hc.getSQLFunctions();
+					info = ft.getTimeStamp() + "\n\n" + "UseSQL='" + hc.useSQL() + "', DataBuilt='" + sf.dataBuilt() + "', SQLLoaded='" + sf.sqlLoaded() + "'\n\n" + info;
+					ft.writeStringToFile(info, path + File.separator + "info.txt");
+					Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred. [#" + errornumber + "] Check the errors folder for more info.", "hyperconomy.error");
 				}
-				SQLFunctions sf = hc.getSQLFunctions();
-				info = ft.getTimeStamp() + "\n\n" + "UseSQL='" + hc.useSQL() + "', DataBuilt='" + sf.dataBuilt() + "', SQLLoaded='" + sf.sqlLoaded() + "'\n\n" + info;
-				ft.writeStringToFile(info, path + File.separator + "info.txt");
-				Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred. [#" + errornumber + "] Check the errors folder for more info.", "hyperconomy.error");
-			}
-		}, 0L);
+			}, 0L);
+		} else {
+			Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred. [#" + errornumber + "] Enable error logging in config.yml to log future errors.", "hyperconomy.error");
+		}
 	}
-	
-	
 }

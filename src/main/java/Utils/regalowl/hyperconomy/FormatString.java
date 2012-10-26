@@ -8,6 +8,15 @@ public class FormatString {
 	
 	
 	
+	public String formatString(String inputstring, double amount, double price, String name, String economy) {
+		inputstring = inputstring.replace("%a",amount+"");
+		inputstring = inputstring.replace("%e",economy+"");
+		inputstring = inputstring.replace("%n",name);
+		inputstring = inputstring.replace("%p",price+"");
+		inputstring = inputstring.replace("%c",CURRENCY);
+		return inputstring;
+	}
+	
 	public String formatString(String inputstring, double amount, double price, String name, double tax) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%t",tax+"");
