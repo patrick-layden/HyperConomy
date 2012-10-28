@@ -2,11 +2,11 @@ package regalowl.hyperconomy;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import static regalowl.hyperconomy.Messages.*;
 public class Additem {
 	Additem(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getShop();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			String itemname = args[0];
 			String teststring2 = hc.testeString(itemname);
@@ -37,25 +37,25 @@ public class Additem {
 		    						unavailable = unavailable.substring(itemname.length() + 1, unavailable.length());
 		    					}
 		    					hc.getYaml().getShops().set(shopname + ".unavailable", unavailable);
-		    					sender.sendMessage(ChatColor.GOLD + itemname + " " + ADDED_TO + " " + shopname.replace("_", " "));
+		    					sender.sendMessage(ChatColor.GOLD + itemname + " " + L.get("ADDED_TO") + " " + shopname.replace("_", " "));
 	    					} else if (itemname.equalsIgnoreCase("all")) {
 		    					hc.getYaml().getShops().set(shopname + ".unavailable", null);
-		    					sender.sendMessage(ChatColor.GOLD + ALL_ITEMS_ADDED + " " + shopname.replace("_", " "));
+		    					sender.sendMessage(ChatColor.GOLD + L.get("ALL_ITEMS_ADDED") + " " + shopname.replace("_", " "));
 	    					}
 	    				} else {
-	    					sender.sendMessage(SHOP_ALREADY_HAS);
+	    					sender.sendMessage(L.get("SHOP_ALREADY_HAS"));
 	    				}
     				} else {
-    					sender.sendMessage(SHOP_NOT_EXIST);
+    					sender.sendMessage(L.get("SHOP_NOT_EXIST"));
     				}
     			} else {
-    				sender.sendMessage(OBJECT_NOT_IN_DATABASE);
+    				sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
     			}
 			} else {
-				sender.sendMessage(ADD_ITEM_INVALID);
+				sender.sendMessage(L.get("ADD_ITEM_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ADD_ITEM_INVALID);
+			sender.sendMessage(L.get("ADD_ITEM_INVALID"));
 		}
 	}
 }

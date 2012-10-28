@@ -1,7 +1,6 @@
 package regalowl.hyperconomy;
 
 import org.bukkit.entity.Player;
-import static regalowl.hyperconomy.Messages.*;
 
 public class Sell {
 	HyperConomy hc;
@@ -10,6 +9,7 @@ public class Sell {
 		hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		Transaction tran = hc.getTransaction();
+		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
 		Shop s = hc.getShop();
 		try {
@@ -19,15 +19,15 @@ public class Sell {
 					String name = args[0];
 					int amount = 0;
 					boolean xp = false;
-					int txpid = sf.getId(name, playerecon);
-					int txpdata = sf.getData(name, playerecon);
-					if (txpid == -1 && txpdata == -1) {
-						xp = true;
-					}
-					
-					
+
 					String teststring = hc.testiString(name);
 					if (teststring != null) {
+						int txpid = sf.getId(name, playerecon);
+						int txpdata = sf.getData(name, playerecon);
+						if (txpid == -1 && txpdata == -1) {
+							xp = true;
+						}
+						
 						if (args.length == 1) {
 							amount = 1;
 						} else {
@@ -42,7 +42,7 @@ public class Sell {
 										amount = tran.countInvitems(sf.getId(name, playerecon), sf.getData(name, playerecon), player);	
 									}
 								} else {
-									player.sendMessage(SELL_INVALID);
+									player.sendMessage(L.get("SELL_INVALID"));
 									return;
 								}
 							}
@@ -56,23 +56,23 @@ public class Sell {
 								tran.sell(name, sf.getId(name, playerecon), sf.getData(name, playerecon), amount, player);
 							}
 						} else {
-							player.sendMessage(CANT_BE_TRADED);
+							player.sendMessage(L.get("CANT_BE_TRADED"));
 							return;
 						}
 					} else {
-						player.sendMessage(INVALID_ITEM_NAME);
+						player.sendMessage(L.get("INVALID_ITEM_NAME"));
 						return;
 					}
 				} else {
-					player.sendMessage(NO_TRADE_PERMISSION);
+					player.sendMessage(L.get("NO_TRADE_PERMISSION"));
 					return;
 				}
 			} else {
-				player.sendMessage(MUST_BE_IN_SHOP);
+				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
 				return;
 			}
 		} catch (Exception e) {
-			player.sendMessage(SELL_INVALID);
+			player.sendMessage(L.get("SELL_INVALID"));
 			return;
 		}
 	}

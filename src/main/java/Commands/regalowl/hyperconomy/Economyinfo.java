@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -8,22 +7,25 @@ public class Economyinfo {
 	Economyinfo(_Command command, String args[], CommandSender sender, Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hc.useSQL()) {
     			if (args.length == 0) {
     				if (player != null) {
-    					sender.sendMessage(ChatColor.BLUE + "You are currently a part of the " + ChatColor.AQUA + "" + sf.getPlayerEconomy(player.getName()) + ChatColor.BLUE + " economy.");	
+    					//sender.sendMessage(ChatColor.BLUE + "You are currently a part of the " + ChatColor.AQUA + "" + sf.getPlayerEconomy(player.getName()) + ChatColor.BLUE + " economy.");	
+    					sender.sendMessage(L.f(L.get("PART_OF_ECONOMY"), sf.getPlayerEconomy(player.getName())));
     	    		} else {
-    	    			sender.sendMessage(ChatColor.BLUE + "You are currently a part of the " + ChatColor.AQUA + "" + command.getNonPlayerEconomy() + ChatColor.BLUE + " economy.");
+    	    			//sender.sendMessage(ChatColor.BLUE + "You are currently a part of the " + ChatColor.AQUA + "" + command.getNonPlayerEconomy() + ChatColor.BLUE + " economy.");
+    	    			sender.sendMessage(L.f(L.get("PART_OF_ECONOMY"), command.getNonPlayerEconomy()));
     	    		}
     			} else {
-    				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /economyinfo");
+    				sender.sendMessage(L.get("ECONOMYINFO_INVALID"));
     			}
 			} else {
-				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+				sender.sendMessage(L.get("ONLY_AVAILABLE_SQL"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /economyinfo");
+			sender.sendMessage(L.get("ECONOMYINFO_INVALID"));
 		}
 	}
 }

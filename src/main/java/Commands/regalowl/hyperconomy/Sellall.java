@@ -4,7 +4,6 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import static regalowl.hyperconomy.Messages.*;
 
 public class Sellall {
 	private HyperConomy hc;
@@ -21,6 +20,7 @@ public class Sellall {
 		s = hc.getShop();
 		calc = hc.getCalculation();
 		tran = hc.getTransaction();
+		LanguageFile L = hc.getLanguageFile();
 		ench = hc.getETransaction();
 		player = p;
 		try {
@@ -46,7 +46,7 @@ public class Sellall {
 								if (s.has(s.getShop(player), nam)) {
 									tran.sell(nam, itd, newdat, amount, player);
 								} else {
-									sendMessage(ONE_OR_MORE_CANT_BE_TRADED);
+									sendMessage(L.get("ONE_OR_MORE_CANT_BE_TRADED"));
 								}
 							}
 						}
@@ -69,29 +69,29 @@ public class Sellall {
 										if (s.has(s.getShop(player), nam)) {
 											tran.sell(nam, itd, newdat, amount, player);
 										} else {
-											sendMessage(ONE_OR_MORE_CANT_BE_TRADED);
+											sendMessage(L.get("ONE_OR_MORE_CANT_BE_TRADED"));
 										}
 									}
 								} else {
-									sendMessage(CANT_BUY_SELL_ENCHANTED_ITEMS);
+									sendMessage(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"));
 								}
 							}
 							slotn++;
 						}
 					} else {
-						player.sendMessage(SELLALL_INVALID);
+						player.sendMessage(L.get("SELLALL_INVALID"));
 						return;
 					}
 				} else {
-					player.sendMessage(NO_TRADE_PERMISSION);
+					player.sendMessage(L.get("NO_TRADE_PERMISSION"));
 					return;
 				}
 			} else {
-				player.sendMessage(MUST_BE_IN_SHOP);
+				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
 				return;
 			}
 		} catch (Exception e) {
-			player.sendMessage(SELLALL_INVALID);
+			player.sendMessage(L.get("SELLALL_INVALID"));
 			return;
 		}
 	}

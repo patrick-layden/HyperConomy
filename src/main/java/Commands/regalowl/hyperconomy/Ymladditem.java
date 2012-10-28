@@ -1,8 +1,5 @@
 package regalowl.hyperconomy;
 
-import static regalowl.hyperconomy.Messages.ALREADY_IN_DATABASE;
-import static regalowl.hyperconomy.Messages.ITEM_ADDED;
-import static regalowl.hyperconomy.Messages.YMLADDITEM_INVALID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -11,6 +8,7 @@ public class Ymladditem {
 	Ymladditem(Player player, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			String name = args[0];
 			double value = Double.parseDouble(args[1]);
@@ -22,7 +20,7 @@ public class Ymladditem {
 			String ke = itd + ":" + newdat;
 			String nam = hc.getnameData(ke);
 			if (nam != null) {
-				player.sendMessage(ALREADY_IN_DATABASE);
+				player.sendMessage(L.get("ALREADY_IN_DATABASE"));
 				return;
 			}
 			FileConfiguration items = hc.getYaml().getItems();
@@ -38,10 +36,10 @@ public class Ymladditem {
 			items.set(name + ".stock.median", median);
 			items.set(name + ".initiation.initiation", true);
 			items.set(name + ".initiation.startprice", startprice);
-			player.sendMessage(ITEM_ADDED);
+			player.sendMessage(L.get("ITEM_ADDED"));
 			return;
 		} catch (Exception e) {
-			player.sendMessage(YMLADDITEM_INVALID);
+			player.sendMessage(L.get("YMLADDITEM_INVALID"));
 			return;
 		}
 	}

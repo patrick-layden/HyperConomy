@@ -239,6 +239,9 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("hcchunk") && player != null) {
 			new Hcchunk(args, player);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("setlanguage")) {
+			new Setlanguage(args, sender);
+			return true;
 		}
 		return false;
 	}

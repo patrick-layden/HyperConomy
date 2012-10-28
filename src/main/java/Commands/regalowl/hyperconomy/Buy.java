@@ -4,11 +4,10 @@ package regalowl.hyperconomy;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
-import static regalowl.hyperconomy.Messages.*;
 
 public class Buy {
 	HyperConomy hc;
-
+	LanguageFile L = hc.getLanguageFile();
 	Buy(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
@@ -59,7 +58,7 @@ public class Buy {
 										}
 									}
 								} else {
-									player.sendMessage(BUY_INVALID);
+									player.sendMessage(L.get("BUY_INVALID"));
 									return;
 								}
 							}
@@ -73,23 +72,23 @@ public class Buy {
 								tran.buy(name, amount, id, data, player);		
 							}
 						} else {
-							player.sendMessage(CANT_BE_TRADED);
+							player.sendMessage(L.get("CANT_BE_TRADED"));
 							return;
 						}
 					} else {
-						player.sendMessage(INVALID_ITEM_NAME);
+						player.sendMessage(L.get("INVALID_ITEM_NAME"));
 						return;
 					}
 				} else {
-					player.sendMessage(NO_TRADE_PERMISSION);
+					player.sendMessage(L.get("NO_TRADE_PERMISSION"));
 					return;
 				}
 			} else {
-				player.sendMessage(MUST_BE_IN_SHOP);
+				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
 				return;
 			}
 		} catch (Exception e) {
-			player.sendMessage(BUY_INVALID);
+			player.sendMessage(L.get("BUY_INVALID"));
 			return;
 		}
 	}

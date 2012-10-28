@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import static regalowl.hyperconomy.Messages.LINE_BREAK;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -11,11 +10,12 @@ public class Intervals {
 		InfoSign isign = hc.getInfoSign();
 		Log l = hc.getLog();
 		Shop s = hc.getShop();
+		LanguageFile L = hc.getLanguageFile();
 		SQLFunctions sf = hc.getSQLFunctions();
 		try {
 			if (args.length == 0) {
 				SQLWrite sw = hc.getSQLWrite();
-				sender.sendMessage(LINE_BREAK);
+				sender.sendMessage(L.get("LINE_BREAK"));
 				sender.sendMessage(ChatColor.BLUE + "Shop Check Interval: " + ChatColor.GREEN + "" + s.getshopInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + s.getshopInterval() / 20 + ChatColor.BLUE + " Seconds");
 				sender.sendMessage(ChatColor.BLUE + "Save Interval: " + ChatColor.GREEN + "" + hc.getsaveInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + hc.getsaveInterval() / 20 + ChatColor.BLUE + " Seconds");
 				if (!hc.useSQL()) {
@@ -30,7 +30,7 @@ public class Intervals {
 					sender.sendMessage(ChatColor.BLUE + "The SQL buffer contains " + ChatColor.GREEN + "" + sw.getBufferSize() + ChatColor.BLUE + " statements.");
 					sender.sendMessage(ChatColor.BLUE + "There are currently " + ChatColor.GREEN + "" + sw.getActiveThreads() + ChatColor.BLUE + " active SQL threads.");
 				}
-				sender.sendMessage(LINE_BREAK);
+				sender.sendMessage(L.get("LINE_BREAK"));
 			} else {
 				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /intervals");
 			}

@@ -60,8 +60,9 @@ public class Hcchunk {
 				}
 				player.sendMessage(ChatColor.BLUE + "Loaded=" + loaded);
 				player.sendMessage(ChatColor.GREEN + "Entities in chunk=" + etypes.toString());
+			} else {
+				player.sendMessage(ChatColor.DARK_RED + "Use /hcchunk [unload/load/info] (x) (z) (world)");
 			}
-			
 		} catch (Exception e) {
 			player.sendMessage(ChatColor.DARK_RED + "Use /hcchunk [unload/load/info] (x) (z) (world)");
 		}

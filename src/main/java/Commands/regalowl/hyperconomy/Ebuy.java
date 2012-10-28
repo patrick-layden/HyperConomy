@@ -2,11 +2,11 @@ package regalowl.hyperconomy;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import static regalowl.hyperconomy.Messages.*;
 
 public class Ebuy {
 	Ebuy(Player player, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		Shop s = hc.getShop();
 		ETransaction ench =  hc.getETransaction();
 		try {
@@ -22,17 +22,17 @@ public class Ebuy {
 							player.sendMessage(ChatColor.BLUE + "Sorry, that item or enchantment cannot be traded at this shop.");
 						}
 					} else {
-						player.sendMessage(ENCHANTMENT_NOT_IN_DATABASE);
+						player.sendMessage(L.get("ENCHANTMENT_NOT_IN_DATABASE"));
 					}
 				} else {
-					player.sendMessage(NO_TRADE_PERMISSION);
+					player.sendMessage(L.get("NO_TRADE_PERMISSION"));
 				}
 			} else {
-				player.sendMessage(MUST_BE_IN_SHOP);
+				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
 			}
 			return;
 		} catch (Exception e) {
-			player.sendMessage(EBUY_INVALID);
+			player.sendMessage(L.get("EBUY_INVALID"));
 		}
 	}
 }

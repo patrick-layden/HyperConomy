@@ -2,7 +2,6 @@ package regalowl.hyperconomy;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import static regalowl.hyperconomy.Messages.*;
 
 public class Hs {
 	Hs(String args[], Player player) {
@@ -11,6 +10,7 @@ public class Hs {
 		Calculation calc = hc.getCalculation();
 		Transaction tran = hc.getTransaction();
 		ETransaction ench = hc.getETransaction();
+		LanguageFile L = hc.getLanguageFile();
 		int amount;
 		try {
 			s.setinShop(player);
@@ -29,7 +29,7 @@ public class Hs {
 								int newdat = calc.newData(itmid, da);
 								amount = tran.countInvitems(itmid, newdat, player);
 							} else {
-								player.sendMessage(HS_INVALID);
+								player.sendMessage(L.get("HS_INVALID"));
 								return;
 							}
 						}
@@ -40,27 +40,27 @@ public class Hs {
 					String ke = itd + ":" + newdat;
 					String nam = hc.getnameData(ke);
 					if (nam == null) {
-						player.sendMessage(CANT_BE_TRADED);
+						player.sendMessage(L.get("CANT_BE_TRADED"));
 					} else {
 						ItemStack iinhand = player.getItemInHand();
 						if (ench.hasenchants(iinhand) == false) {
 							if (s.has(s.getShop(player), nam)) {
 								tran.sell(nam, itd, newdat, amount, player);
 							} else {
-								player.sendMessage(CANT_BE_TRADED);
+								player.sendMessage(L.get("CANT_BE_TRADED"));
 							}
 						} else {
-							player.sendMessage(CANT_BUY_SELL_ENCHANTED_ITEMS);
+							player.sendMessage(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"));
 						}
 					}
 				} else {
-					player.sendMessage(NO_TRADE_PERMISSION);
+					player.sendMessage(L.get("NO_TRADE_PERMISSION"));
 				}
 			} else {
-				player.sendMessage(MUST_BE_IN_SHOP);
+				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
 			}
 		} catch (Exception e) {
-			player.sendMessage(HS_INVALID);
+			player.sendMessage(L.get("HS_INVALID"));
 		}
 	}
 }

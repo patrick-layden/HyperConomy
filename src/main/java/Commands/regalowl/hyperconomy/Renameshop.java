@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import static regalowl.hyperconomy.Messages.SHOP_NOT_EXIST;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -8,6 +7,7 @@ import org.bukkit.command.CommandSender;
 public class Renameshop {
 	Renameshop(CommandSender sender, String[] args, _Command cmd) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		Shop s = hc.getShop();
 		try {
 			boolean rename = cmd.getRename();
@@ -48,7 +48,7 @@ public class Renameshop {
 					cmd.setRename(false);
 					sender.sendMessage(ChatColor.GOLD + "Shop renamed successfully!");
 				} else {
-					sender.sendMessage(SHOP_NOT_EXIST);
+					sender.sendMessage(L.get("SHOP_NOT_EXIST"));
 				}
 			} else {
 				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /renameshop [name]");

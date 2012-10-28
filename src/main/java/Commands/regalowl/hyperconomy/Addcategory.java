@@ -7,14 +7,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import static regalowl.hyperconomy.Messages.*;
-
 
 public class Addcategory {
 	private HyperConomy hc;
 	private CommandSender sender;
 	private HashMap<CommandSender, String> messages = new HashMap<CommandSender, String>();
 	private boolean messageActive = false;
+	LanguageFile L = hc.getLanguageFile();
 
 	Addcategory(String args[], CommandSender se) {
 		sender = se;
@@ -25,7 +24,7 @@ public class Addcategory {
 			FileConfiguration category = hc.getYaml().getCategories();
 			String testcategory = category.getString(args[0]);
 			if (testcategory == null) {
-				sender.sendMessage(CATEGORY_NOT_EXIST);
+				sender.sendMessage(L.get("CATEGORY_NOT_EXIST"));
 				return;
 			}
 			ArrayList<String> objects = sal.stringToArray(testcategory);
@@ -58,18 +57,18 @@ public class Addcategory {
 									unavailable = unavailable.substring(itemname.length() + 1, unavailable.length());
 								}
 								hc.getYaml().getShops().set(shopname + ".unavailable", unavailable);
-								sendMessage(ChatColor.GOLD + args[0] + " " + ADDED_TO + " " + shopname.replace("_", " "));
+								sendMessage(ChatColor.GOLD + args[0] + " " + L.get("ADDED_TO") + " " + shopname.replace("_", " "));
 							}
 						}
 					}
 				} else {
-					sender.sendMessage(SHOP_NOT_EXIST);
+					sender.sendMessage(L.get("SHOP_NOT_EXIST"));
 				}
 			} else {
-				sender.sendMessage(ADD_CATEGORY_INVALID);
+				sender.sendMessage(L.get("ADD_CATEGORY_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ADD_CATEGORY_INVALID);
+			sender.sendMessage(L.get("ADD_CATEGORY_INVALID"));
 		}
 	}
 

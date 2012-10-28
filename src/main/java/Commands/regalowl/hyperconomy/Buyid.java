@@ -1,11 +1,11 @@
 package regalowl.hyperconomy;
 
 import org.bukkit.entity.Player;
-import static regalowl.hyperconomy.Messages.*;
 
 public class Buyid {
 	Buyid(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		Shop s = hc.getShop();
 		Transaction tran = hc.getTransaction();
 		int amount;
@@ -23,28 +23,28 @@ public class Buyid {
 						itd = Integer.parseInt(args[1]);
 						da = Integer.parseInt(args[2]);
 					} else {
-						player.sendMessage(BUYID_INVALID);
+						player.sendMessage(L.get("BUYID_INVALID"));
 						return;
 					}
 					String ke = itd + ":" + da;
 					String nam = hc.getnameData(ke);
 					if (nam == null) {
-						player.sendMessage(OBJECT_NOT_AVAILABLE);
+						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
 						if (s.has(s.getShop(player), nam)) {
 							tran.buy(nam, amount, itd, da, player);
 						} else {
-							player.sendMessage(CANT_BE_TRADED);
+							player.sendMessage(L.get("CANT_BE_TRADED"));
 						}
 					}
 				} else {
-					player.sendMessage(NO_TRADE_PERMISSION);
+					player.sendMessage(L.get("NO_TRADE_PERMISSION"));
 				}
 			} else {
-				player.sendMessage(MUST_BE_IN_SHOP);
+				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
 			}
 		} catch (Exception e) {
-			player.sendMessage(BUYID_INVALID);
+			player.sendMessage(L.get("BUYID_INVALID"));
 		}
 	}
 }

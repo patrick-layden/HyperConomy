@@ -290,7 +290,6 @@ public class InfoSign implements Listener {
 							if (item) {
 								line23 = "\u00A7fTax: " + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.twoDecimals(calc.getPurchaseTax(itemn, economy, calc.getCost(itemn, 1, economy)));
 							} else if (enchant) {
-								//String line3 = ChatColor.stripColor(s.getLine(3).replace(" ", "")).toLowerCase().replaceAll("[0-9]", "");
 								if (sns.getString(signkey + ".enchantclass") == null) {
 									sns.set(signkey + ".enchantclass", "diamond");
 								}
@@ -367,20 +366,15 @@ public class InfoSign implements Listener {
 		String itemn = sns.getString(signkey + ".itemname");
 		String type = sns.getString(signkey + ".type").replace(" ", "").toLowerCase();
 		String types = ChatColor.stripColor(s.getLine(2).replace(hc.getYaml().getConfig().getString("config.currency-symbol"), "").replace(":", "").replace(".", "").replaceAll("[0-9]", "")).trim();
-		//Bukkit.broadcastMessage(s.getLine(2));
-		//Bukkit.broadcastMessage(types);
 		String line12 = ChatColor.stripColor(s.getLine(0) + s.getLine(1)).trim();
 		line12 = hc.fixName(line12);
 		types = types.toLowerCase();
-		//Bukkit.broadcastMessage("[" + types + "]");
 		if (types.equalsIgnoreCase("s") || types.equalsIgnoreCase("se")) {
 			types = "sb";
 		}
 		
 		if (!line12.equalsIgnoreCase(itemn) || !type.equalsIgnoreCase(types)) {
 			resetsign = true;
-			//sns.set(signkey + ".itemname", line12);
-			//sns.set(signkey + ".type", types);
 			sns.set(signkey, null);
 		}
 		return resetsign;
@@ -476,10 +470,7 @@ public class InfoSign implements Listener {
 					try {
 						updatesignsThread();
 					} catch (Exception e) {
-						e.printStackTrace();
-						Logger log = Logger.getLogger("Minecraft");
-						log.info("HyperConomy ERROR #31--Sign update issue.");
-						Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #31--Sign update issue.", "hyperconomy.error");
+						new HyperError(e);
 					}
 				}
 			}

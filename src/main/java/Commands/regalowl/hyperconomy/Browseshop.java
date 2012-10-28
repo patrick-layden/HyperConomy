@@ -5,7 +5,6 @@ import java.util.Collections;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import static regalowl.hyperconomy.Messages.*;
 
 public class Browseshop {
 	
@@ -14,13 +13,14 @@ public class Browseshop {
 		Shop s = hc.getShop();
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
+		LanguageFile L = hc.getLanguageFile();
 		ArrayList<String> aargs = new ArrayList<String>();
 		for (int i = 0; i < args.length; i++) {
 			aargs.add(args[i]);
 		}
 		try {
 			if (aargs.size() > 3) {
-				sender.sendMessage(BROWSE_SHOP_INVALID);
+				sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
 				return;
 			}
 			boolean alphabetic = false;
@@ -42,14 +42,14 @@ public class Browseshop {
 					}
 				}
 			} else {
-				sender.sendMessage(BROWSE_SHOP_INVALID);
+				sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
 				return;
 			}
 			String input = "";
 			if (aargs.size() == 1) {
 				input = aargs.get(0);
 			} else {
-				sender.sendMessage(BROWSE_SHOP_INVALID);
+				sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
 				return;
 			}
 
@@ -89,7 +89,7 @@ public class Browseshop {
 			double maxpages = rsize/10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int)maxpages + 1;
-			sender.sendMessage(ChatColor.RED + PAGE + " " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
+			sender.sendMessage(ChatColor.RED + L.get("PAGE") + " " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
 			while (count < numberpage) {
 				if (count > ((page * 10) - 11)) {
 					if (count < rsize) {
@@ -110,16 +110,16 @@ public class Browseshop {
 							cost = cost + calc.getEnchantTax(iname, playerecon, cost);
 							stock = sf.getStock(iname, playerecon);
 						}
-						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + AVAILABLE + ": \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79" + EACH + ".]");
+						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + L.get("AVAILABLE") + ": \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79" + L.get("EACH") + ".]");
 					} else {
-						sender.sendMessage(REACHED_END);
+						sender.sendMessage(L.get("REACHED_END"));
 						break;
 					}			
 				}
 				count++;
 			}
 		} catch (Exception e) {
-			sender.sendMessage(BROWSE_SHOP_INVALID);
+			sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
 		}
 	}
 }

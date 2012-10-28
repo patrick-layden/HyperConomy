@@ -81,6 +81,7 @@ public class TransactionSign implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteractEvent(PlayerInteractEvent ievent) {
+		LanguageFile L = hc.getLanguageFile();
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
 			Player p = ievent.getPlayer();
 			playerecon = sf.getPlayerEconomy(p.getName());
@@ -130,27 +131,27 @@ public class TransactionSign implements Listener {
 												if (!hc.isLocked()) {
 													tran.buy(line12, amount, id, sf.getData(line12, playerecon), p);
 												} else {
-													p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 												}
 											} else if (id == -1) {
 												if (!hc.isLocked()) {
 													tran.buyXP(line12, amount, p);
 												} else {
-													p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 												}
 											}
 										} else if (hc.enchantTest(line12)) {
 											if (!hc.isLocked()) {
 												ench.buyEnchant(line12, p);
 											} else {
-												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 											}
 										}
 									} else {
-										p.sendMessage("You must be in a shop to use transaction signs!");
+										p.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
 									}
 								} else {
-									p.sendMessage("You don't have permission to do this.");
+									p.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
 								}
 								ievent.setCancelled(true);
 								s.setLine(0, l1);
@@ -173,27 +174,27 @@ public class TransactionSign implements Listener {
 												if (!hc.isLocked()) {
 													tran.sell(line12, id, sf.getData(line12, playerecon), amount, p);
 												} else {
-													p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 												}
 											} else if (id == -1) {
 												if (!hc.isLocked()) {
 													tran.sellXP(line12, amount, p);
 												} else {
-													p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 												}
 											}
 										} else if (hc.enchantTest(line12)) {
 											if (!hc.isLocked()) {
 												ench.sellEnchant(line12, p);
 											} else {
-												p.sendMessage(ChatColor.RED + "The global shop is currently locked!");
+												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 											}
 										}
 									} else {
-										p.sendMessage("You must be in a shop to use transaction signs!");
+										p.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
 									}
 								} else {
-									p.sendMessage("You don't have permission to do this.");
+									p.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
 								}
 								ievent.setCancelled(true);
 								s.setLine(0, l1);

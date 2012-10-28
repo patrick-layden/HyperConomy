@@ -1,17 +1,17 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Deleteeconomy {
 	Deleteeconomy(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hc.useSQL()) {
     			if (args.length == 1) {
     				String economy = args[0];
     				if (economy.equalsIgnoreCase("default")) {
-    					sender.sendMessage(ChatColor.RED + "You can't delete the default economy!");
+    					sender.sendMessage(L.get("CANT_DELETE_DEFAULT_ECONOMY"));
     					return;
     				}
     				if (hc.getSQLFunctions().testEconomy(economy)) {
@@ -19,18 +19,18 @@ public class Deleteeconomy {
     						new Backup();
     					}
     					hc.getSQLEconomy().deleteEconomy(economy);
-    					sender.sendMessage(ChatColor.GOLD + "Economy deleted!");
+    					sender.sendMessage(L.get("ECONOMY_DELETED"));
     				} else {
-    					sender.sendMessage(ChatColor.RED + "That economy doesn't exist!");
+    					sender.sendMessage(L.get("ECONOMY_DOESNT_EXIST"));
     				}
 				} else {
-					sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /deleteeconomy [name]");
+					sender.sendMessage(L.get("DELETEECONOMY_INVALID"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+				sender.sendMessage(L.get("ONLY_AVAILABLE_SQL"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /deleteeconomy [name]");
+			sender.sendMessage(L.get("DELETEECONOMY_INVALID"));
 		}
 	}
 }

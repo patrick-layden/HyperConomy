@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.951
+version: 0.952
 author: RegalOwl
 softdepend: [Vault, Buycraft, HeroStronghold]
 commands:
@@ -338,11 +338,11 @@ commands:
       permission: hyperconomy.admin
       permission-message: Unknown command. Type "help" for help.
       aliases: [rdis]
-   hcchunk:
-      description: Displays chunk information.
+   setlanguage:
+      description: Switches language files.
       permission: hyperconomy.admin
       permission-message: Unknown command. Type "help" for help.
-      aliases: [hcc]
+      aliases: [sela]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

@@ -1,145 +1,164 @@
-ADD_CATEGORY_INVALID: "&4Invalid Parameters.  Use /addcategory [name] [shop]"
-SHOP_NOT_EXIST: "&4That shop doesn't exist!"
-CATEGORY_NOT_EXIST: "&4That category does not exist!"
-ADDED_TO: "&6added to"
-SHOP_ALREADY_HAS: "&4The shop already has that item."
-OBJECT_NOT_IN_DATABASE: "&9Sorry, that item or enchantment is not in the database."
-ADD_ITEM_INVALID: "&4Invalid Parameters.  Use /additem [name/'all'] [shop]"
-ALL_ITEMS_ADDED: "&6All items have been added to"
-BROWSE_SHOP_INVALID: "&4Invalid Parameters.  Use /browseshop [Search string] (page) ('-a')"
-REACHED_END: "You have reached the end."
-AVAILABLE: "available"
-EACH: "each"
-PAGE: "Page"
-BUY_INVALID: "&4Invalid Parameters. Use /buy [name] (amount or 'max')"
-CANT_BE_TRADED: "&9Sorry, that item or enchantment can't be traded at this shop."
-INVALID_ITEM_NAME: "&4Invalid item name!"
-NO_TRADE_PERMISSION: "&9Sorry, you don't have permission to trade here."
-MUST_BE_IN_SHOP: "&4You must be in a shop to buy or sell."
-BUYID_INVALID: "&4Invalid parameters. Use /buyid [amount] [id] (damage value)."
-OBJECT_NOT_AVAILABLE: "&9Sorry, that item or enchantment is not currently available."
-BUYXP_INVALID: "&4Invalid Parameters.  Use /buyxp (amount)"
-LINE_BREAK: "&0-----------------------------------------------------"
-ONLY_ROOM_TO_BUY: "&9You only have room to buy %a %n."
-INSUFFICIENT_FUNDS: "&9Insufficient Funds!"
-CANNOT_BE_PURCHASED_WITH: "&9%n cannot be purchased with this command."
-THE_SHOP_DOESNT_HAVE_ENOUGH: "&9The shop doesn't have enough %n"
-CANT_BUY_LESS_THAN_ONE: "&9You can't buy less than 1 %n"
-LOG_BUY: "%y bought %a %n for %c%p. [Static Price=%za][Initial Price=%zb]"
-LOG_SELL: "%y sold %a %n for %c%p. [Static Price=%za][Initial Price=%zb]"
-LOG_BUY_CHEST: "%y bought %a %n from %zc for %c%p. [Static Price=%za][Initial Price=%zb]"
-LOG_SELL_CHEST: "%y sold %a %n to %zc for %c%p. [Static Price=%za][Initial Price=%zb]"
-STATIC_PRICE: "Static Price"
-INITIAL_PRICE: "Initial Price"
-CANNOT_BE_SOLD_WITH: "&9%n cannot be sold with this command."
-SHOP_NOT_ENOUGH_MONEY: "&9Sorry, the shop currently does not have enough money."
-YOU_DONT_HAVE_ENOUGH: "&9You don't have enough %n!"
-CANT_SELL_LESS_THAN_ONE: "&9You can't sell less than 1 %n."
-CURRENTLY_CANT_SELL_MORE_THAN: "&9Currently, you can't sell more than %a %n"
-PURCHASE_MESSAGE: "&9&oYou bought &a&o%a &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owas tax."
-SELL_MESSAGE: "&9&oYou sold &a&o%a &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owent to tax."
-PURCHASE_CHEST_MESSAGE: "&9&oYou bought &a&o%a &b&o%n &9&ofor &a&o%c%p &9&ofrom %zc."
-SELL_CHEST_MESSAGE: "&9&oYou sold &a&o%a &b&o%n &9&ofor &a&o%c%p &9&oto %zc."
-CHEST_BUY_NOTIFICATION: "&9&o%y bought &a&o%a &b&o%n &9&ofrom you for &a&o%c%p &9&o."
-CHEST_SELL_NOTIFICATION: "&9&o%y sold &a&o%a &b&o%n &9&oto you for &a&o%c%p &9&o."
-BOW_VALUE: "&9Bow Value: &a%v"
-WOOD_VALUE: "&9Wood Value: &a%v"
-LEATHER_VALUE: "&9Leather Value: &a%v"
-STONE_VALUE: "&9Stone Value: &a%v"
-CHAINMAIL_VALUE: "&9Chainmail Value: &a%v"
-IRON_VALUE: "&9Iron Value: &a%v"
-GOLD_VALUE: "&9Gold Value: &a%v"
-DIAMOND_VALUE: "&9Diamond Value: &a%v"
-CLASSVALUES_INVALID: "&4Invalid Parameters. Use /classvalues"
-ECONOMY_EXPORTED: "&6Economy exported to YML!"
-EXPORT_PROCEED: "&cThe will erase all data in your items.yml and enchants.yml, type /exporttoyml [economy] ['confirm'] to proceed!"
-ECONOMY_NOT_EXIST: "&4That economy doesn't exist!"
-EXPORTTOYML_INVALID: "&4Invalid Parameters.  Use /exporttoyml [economy] ['confirm']"
-ONLY_AVAILABLE_SQL: "&cThis command is only available when SQL is enabled!"
-IMPORTING_TABLES: "&9Importing tables..."
-IMPORTSQL_WARNING: "&cThe will erase all of your HyperConomy SQL tables, type /importsql ['confirm'] to proceed!"
-IMPORTSQL_INVALID: "&4Invalid Parameters.  Use /importsql"
-LISTCATEGORIES_INVALID: "&4Invalid Parameters.  Use /listcategories"
-ALREADY_IN_DATABASE: "&9That item is already in the database."
-ITEM_ADDED: "&6Item added to items.yml.  Restart your server for it to become active."
-YMLADDITEM_INVALID: "&4Hold the item you'd like to add and type /ymladditem [name] [value] [median] [start price]"
-ALL_BACKED_UP: "&6All files have been backed up!"
-HCBACKUP_INVALID: "&4Invalid Parameters.  Use /hcbackup"
-HC_BUY: "&bType &a/hc buy &bfor buy commands."
-HC_SELL: "&bType &a/hc sell &bfor sell commands."
-HC_INFO: "&bType &a/hc info &bfor informational commands."
-HC_PARAMS: "&bType &a/hc params &bfor parameter help."
-HC_SELL_SELL: "&a/sell &c[name] &e(amount/'max')"
-HC_SELL_HS: "&a/hs &e(amount/'max')"
-HC_SELL_ESELL: "&a/esell &c[name/'max']"
-HC_SELL_SELLALL: "&a/sellall"
-HC_SELL_MORE: "&bFor more help type &a/hc sell &c[command]"
-HC_BUY_BUY: "&a/buy &c[name] &e(amount/'max')"
-HC_BUY_HB: "&a/hb &e(amount/'max')"
-HC_BUY_BUYID: "&a/buyid &c[amount] [id] &e(damage value)"
-HC_BUY_EBUY: "&a/ebuy &c[name]"
-HC_BUY_MORE: "&bFor more help type &a/hc buy &c[command]"
-HC_INFO_VALUE: "&a/value &c[name] &e(amount)"
-HC_INFO_HV: "&a/hv &e(amount)"
-HC_INFO_II: "&a/ii &e(id) (damage value)"
-HC_INFO_TOPITEMS: "&a/topitems &e(page)"
-HC_INFO_TOPENCHANTS: "&a/topenchants &e(page)"
-HC_INFO_BROWSESHOP: "&a/browseshop &c[name] &e(page)"
-HC_INFO_XPINFO: "&a/xpinfo"
-HC_INFO_EVALUE: "&a/evalue &d{enchantment name} {'b'/'s'/'a'}"
-HC_INFO_MORE: "&bFor more help type &a/hc info [command]"
-HC_PARAMS_REQUIRED: "&c[something] = required parameter"
-HC_PARAMS_OPTIONAL: "&e[something] = optional parameter"
-HC_PARAMS_ADDITIONAL: "&d{something} = optional but requires an additional parameter if used"
-HC_PARAMS_NAME: "&b[name] = item name"
-HC_PARAMS_COMMAND: "&a[command] = commmand name such as 'buy' or 'topitems'"
-HC_SELL_DETAIL: "&bSells 1 of the specified item if no parameters are given, an amount of the item, or all of the item in your inventory if the given parameter is 'max'."
-HC_HS_DETAIL: "&bSells 1 of the item you're holding if no parameters are given, an amount of the item, or all of the item in your inventory if the given parameter is 'max'."
-HC_ESELL_DETAIL: "&bSells the specified enchantment on the item you're holding or all of the item's enchantments if the given parameter is 'max'."
-HC_SELLALL_DETAIL: "&bBe careful, this sells all the items in your inventory. This does not include armor slots, however."
-HC_BUY_DETAIL: "&bBuys 1 of the specified item if no parameters are given, an amount of the item, or as many as your inventory can hold if the given parameter is 'max'."
-HC_HB_DETAIL: "&bBuys 1 of the item you're holding if no parameters are given, an amount of the item, or as many as your inventory can hold if the given parameter is 'max'."
-HC_BUYID_DETAIL: "&bBuys an amount of the item with the given id and damage value. (Useful if you don't know the item name.)"
-HC_EBUY_DETAIL: "&bBuys the given enchantment and puts it on the item you're holding."
-HC_VALUE_DETAIL: "&bDisplays the value of the given item(s) name.  This value is theoretical and does not factor in item damage."
-HC_HV_DETAIL: "&bDisplays the value of the item(s) you're holding. This factors in damage.  However, if you specify more of the item than you have in your inventory, the additional items will use a theoretical value."
-HC_II_DETAIL: "&bDisplays information about the item you're holding.  If an id and damage value is specified it returns the name of the item, even if you're not holding it."
-HC_TOPITEMS_DETAIL: "&bDisplays all of the items available in the global shop is not in a shop, or in the shop that the player is currently in. Items with the highest stock are shown first.  If no page is specified it shows the first page."
-HC_TOPENCHANTS_DETAIL: "&bDisplays all of the enchantments available in all shops, if the player isn't in a shop, or in the shop that the player is currently in. Enchantments with the highest stock are shown first.  If no page is specified it shows the first page."
-HC_BROWSESHOP_DETAIL: "&bSearches for items or enchantments that begin with the specified name.  It will display the items/enchantments in alphabetical order with their stock and purchase price.  If the player is in a shop it will only display items available in that shop."
-HC_EVALUE_DETAIL: "&bIf no parameters are given, displays the sell value, purchase price, and shopstock of all the enchantments on the item you're holding. If given an enchantment name, you must also specify 'b' for buy, 's' for sell, or 'a' for amount. If 'b' for instance, it will display the purchase price for all the enchantment on all item classes. (gold, diamond, iron, etc.)"
-HC_INVALID: "&4Invalid Usage.  Use /hc"
-HC_XPINFO_DETAIL: "&bDisplays information about how much experience you have, how much experience is needed to level up, and how much experience is needed to reach level 30."
-ENCHANTMENT_NOT_IN_DATABASE: "&9Sorry, that enchantment is not in the enchantment database."
-EBUY_INVALID: "&4 Invalid Parameters. Use /ebuy [name]"
-HAS_NO_ENCHANTMENTS: "&4The item you're holding has no enchantments!"
-ESELL_INVALID: "&4Invalid Parameters. Use /esell [name/'max']"
-LOG_BREAK: "---------------------------------"
-DATABASE_CONNECTION_ERROR: "Database connection error!  Check your config.yml settings.  Disabling HyperConomy...."
-VAULT_NOT_FOUND: "Vault not found, shutting down..."
-HYPERCONOMY_ENABLED: "HyperConomy version %n has been successfully enabled!"
-HYPERCONOMY_DISABLED: "HyperConomy has been disabled!"
-BAD_YMLFILE_DETECTED: "Bad YML files detected, disabling HyperConomy!"
-ITEM_ALREADY_HAS_ENCHANTMENT: "&9The item you're holding already has an enchantment of that type!"
-ITEM_CANT_ACCEPT_ENCHANTMENT: "&9The item you're holding cannot accept that enchantment!"
-ITEM_DOESNT_HAVE_ENCHANTMENT: "&9The item you're holding doesn't have &b%n!"
-ENCHANTMENT_SELL_MESSAGE: "&9&oYou sold &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owent to tax."
-ENCHANTMENT_PURCHASE_MESSAGE: "&9&oYou bought &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owas tax."
-CHEST_ENCHANTMENT_BUY_NOTIFICATION: "&9&o%y bought &b&o%n &9&ofrom you for &a&o%c%p &9&o."
-PURCHASE_ENCHANTMENT_CHEST_MESSAGE: "&9&oYou bought &b&o%n &9&ofor &a&o%c%p &9&ofrom %zc."
-LOG_BUY_ENCHANTMENT: "%y bought %n for %c%p. [Static Price=%za][Initial Price=%zb]"
-LOG_SELL_ENCHANTMENT: "%y sold %n for %c%p. [Static Price=%za][Initial Price=%zb]"
-LOG_BUY_CHEST_ENCHANTMENT: "%y bought %n from %zc for %c%p. [Static Price=%za][Initial Price=%zb]"
-SELL_INVALID: "&4Invalid parameters. Use /sell [name] (amount or 'max')."
-ONE_OR_MORE_CANT_BE_TRADED: "&9Sorry, one or more of those items cannot be traded at this shop."
-CANT_BUY_SELL_ENCHANTED_ITEMS: "&9You cannot buy or sell enchanted items!"
-SELLALL_INVALID: "&4Invalid Parameters. Use /sellall"
-HB_INVALID: "&4Invalid parameters. Use /hb (amount or 'max')"
-HS_INVALID: "&4Use /hs (amount or 'max')"
-GLOBAL_SHOP_CURRENTLY_HAS: "&9The global shop currently has &a%a &b%n &9available."
-CAN_BE_PURCHASED_FOR: "&a%a &b%n &9can be purchased for: &a%c%p"
-CAN_BE_SOLD_FOR: "&a%a &b%n &9can be sold for: &a%c%p"
-VALUE_INVALID: "&4Use /value [item name] (amount)"
-HV_INVALID: "&4Use /hv (amount)"
-SQL_NOTIFICATION: "&9The &f%e &9economy now has &a%a &b%n &9priced at &a%c%p &9each."
-NOTIFICATION: "&9The &9economy now has &a%a &b%n &9priced at &a%c%p &9each."
+ADD_CATEGORY_INVALID: &4Invalid Parameters.  Use /addcategory [name] [shop]
+SHOP_NOT_EXIST: &4That shop doesn't exist!
+CATEGORY_NOT_EXIST: &4That category does not exist!
+ADDED_TO: &6added to
+SHOP_ALREADY_HAS: &4The shop already has that item.
+OBJECT_NOT_IN_DATABASE: &9Sorry, that item or enchantment is not in the database.
+ADD_ITEM_INVALID: &4Invalid Parameters.  Use /additem [name/'all'] [shop]
+ALL_ITEMS_ADDED: &6All items have been added to
+BROWSE_SHOP_INVALID: &4Invalid Parameters.  Use /browseshop [Search string] (page) ('-a')
+REACHED_END: You have reached the end.
+AVAILABLE: available
+EACH: each
+PAGE: Page
+BUY_INVALID: &4Invalid Parameters. Use /buy [name] (amount or 'max')
+CANT_BE_TRADED: &9Sorry, that item or enchantment can't be traded at this shop.
+INVALID_ITEM_NAME: &4Invalid item name!
+NO_TRADE_PERMISSION: &9Sorry, you don't have permission to trade here.
+MUST_BE_IN_SHOP: &4You must be in a shop to buy or sell.
+BUYID_INVALID: &4Invalid parameters. Use /buyid [amount] [id] (damage value).
+OBJECT_NOT_AVAILABLE: &9Sorry, that item or enchantment is not currently available.
+BUYXP_INVALID: &4Invalid Parameters.  Use /buyxp (amount)
+LINE_BREAK: &8-----------------------------------------------------
+ONLY_ROOM_TO_BUY: &9You only have room to buy %a %n.
+INSUFFICIENT_FUNDS: &9Insufficient Funds!
+CANNOT_BE_PURCHASED_WITH: &9%n cannot be purchased with this command.
+THE_SHOP_DOESNT_HAVE_ENOUGH: &9The shop doesn't have enough %n
+CANT_BUY_LESS_THAN_ONE: &9You can't buy less than 1 %n
+LOG_BUY: %y bought %a %n for %c%p. [Static Price=%za][Initial Price=%zb]
+LOG_SELL: %y sold %a %n for %c%p. [Static Price=%za][Initial Price=%zb]
+LOG_BUY_CHEST: %y bought %a %n from %zc for %c%p. [Static Price=%za][Initial Price=%zb]
+LOG_SELL_CHEST: %y sold %a %n to %zc for %c%p. [Static Price=%za][Initial Price=%zb]
+STATIC_PRICE: Static Price
+INITIAL_PRICE: Initial Price
+CANNOT_BE_SOLD_WITH: &9%n cannot be sold with this command.
+SHOP_NOT_ENOUGH_MONEY: &9Sorry, the shop currently does not have enough money.
+YOU_DONT_HAVE_ENOUGH: &9You don't have enough %n!
+CANT_SELL_LESS_THAN_ONE: &9You can't sell less than 1 %n.
+CURRENTLY_CANT_SELL_MORE_THAN: &9Currently, you can't sell more than %a %n
+PURCHASE_MESSAGE: &9&oYou bought &a&o%a &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owas tax.
+SELL_MESSAGE: &9&oYou sold &a&o%a &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owent to tax.
+PURCHASE_CHEST_MESSAGE: &9&oYou bought &a&o%a &b&o%n &9&ofor &a&o%c%p &9&ofrom %zc.
+SELL_CHEST_MESSAGE: &9&oYou sold &a&o%a &b&o%n &9&ofor &a&o%c%p &9&oto %zc.
+CHEST_BUY_NOTIFICATION: &9&o%y bought &a&o%a &b&o%n &9&ofrom you for &a&o%c%p &9&o.
+CHEST_SELL_NOTIFICATION: &9&o%y sold &a&o%a &b&o%n &9&oto you for &a&o%c%p &9&o.
+BOW_VALUE: &9Bow Value: &a%v
+WOOD_VALUE: &9Wood Value: &a%v
+LEATHER_VALUE: &9Leather Value: &a%v
+STONE_VALUE: &9Stone Value: &a%v
+CHAINMAIL_VALUE: &9Chainmail Value: &a%v
+IRON_VALUE: &9Iron Value: &a%v
+GOLD_VALUE: &9Gold Value: &a%v
+DIAMOND_VALUE: &9Diamond Value: &a%v
+CLASSVALUES_INVALID: &4Invalid Parameters. Use /classvalues
+ECONOMY_EXPORTED: &6Economy exported to YML!
+EXPORT_PROCEED: &cThe will erase all data in your items.yml and enchants.yml, type /exporttoyml [economy] ['confirm'] to proceed!
+ECONOMY_NOT_EXIST: &4That economy doesn't exist!
+EXPORTTOYML_INVALID: &4Invalid Parameters.  Use /exporttoyml [economy] ['confirm']
+ONLY_AVAILABLE_SQL: &cThis command is only available when SQL is enabled!
+IMPORTING_TABLES: &9Importing tables...
+IMPORTSQL_WARNING: &cThe will erase all of your HyperConomy SQL tables, type /importsql ['confirm'] to proceed!
+IMPORTSQL_INVALID: &4Invalid Parameters.  Use /importsql
+LISTCATEGORIES_INVALID: &4Invalid Parameters.  Use /listcategories
+ALREADY_IN_DATABASE: &9That item is already in the database.
+ITEM_ADDED: &6Item added to items.yml.  Restart your server for it to become active.
+YMLADDITEM_INVALID: &4Hold the item you'd like to add and type /ymladditem [name] [value] [median] [start price]
+ALL_BACKED_UP: &6All files have been backed up!
+HCBACKUP_INVALID: &4Invalid Parameters.  Use /hcbackup
+HC_BUY: &bType &a/hc buy &bfor buy commands.
+HC_SELL: &bType &a/hc sell &bfor sell commands.
+HC_INFO: &bType &a/hc info &bfor informational commands.
+HC_PARAMS: &bType &a/hc params &bfor parameter help.
+HC_SELL_SELL: &a/sell &c[name] &e(amount/'max')
+HC_SELL_HS: &a/hs &e(amount/'max')
+HC_SELL_ESELL: &a/esell &c[name/'max']
+HC_SELL_SELLALL: &a/sellall
+HC_SELL_MORE: &bFor more help type &a/hc sell &c[command]
+HC_BUY_BUY: &a/buy &c[name] &e(amount/'max')
+HC_BUY_HB: &a/hb &e(amount/'max')
+HC_BUY_BUYID: &a/buyid &c[amount] [id] &e(damage value)
+HC_BUY_EBUY: &a/ebuy &c[name]
+HC_BUY_MORE: &bFor more help type &a/hc buy &c[command]
+HC_INFO_VALUE: &a/value &c[name] &e(amount)
+HC_INFO_HV: &a/hv &e(amount)
+HC_INFO_II: &a/ii &e(id) (damage value)
+HC_INFO_TOPITEMS: &a/topitems &e(page)
+HC_INFO_TOPENCHANTS: &a/topenchants &e(page)
+HC_INFO_BROWSESHOP: &a/browseshop &c[name] &e(page)
+HC_INFO_XPINFO: &a/xpinfo
+HC_INFO_EVALUE: &a/evalue &d{enchantment name} {'b'/'s'/'a'}
+HC_INFO_MORE: &bFor more help type &a/hc info [command]
+HC_PARAMS_REQUIRED: &c[something] = required parameter
+HC_PARAMS_OPTIONAL: &e[something] = optional parameter
+HC_PARAMS_ADDITIONAL: &d{something} = optional but requires an additional parameter if used
+HC_PARAMS_NAME: &b[name] = item name
+HC_PARAMS_COMMAND: &a[command] = commmand name such as 'buy' or 'topitems'
+HC_SELL_DETAIL: &bSells 1 of the specified item if no parameters are given, an amount of the item, or all of the item in your inventory if the given parameter is 'max'.
+HC_HS_DETAIL: &bSells 1 of the item you're holding if no parameters are given, an amount of the item, or all of the item in your inventory if the given parameter is 'max'.
+HC_ESELL_DETAIL: &bSells the specified enchantment on the item you're holding or all of the item's enchantments if the given parameter is 'max'.
+HC_SELLALL_DETAIL: &bBe careful, this sells all the items in your inventory. This does not include armor slots, however.
+HC_BUY_DETAIL: &bBuys 1 of the specified item if no parameters are given, an amount of the item, or as many as your inventory can hold if the given parameter is 'max'.
+HC_HB_DETAIL: &bBuys 1 of the item you're holding if no parameters are given, an amount of the item, or as many as your inventory can hold if the given parameter is 'max'.
+HC_BUYID_DETAIL: &bBuys an amount of the item with the given id and damage value. (Useful if you don't know the item name.)
+HC_EBUY_DETAIL: &bBuys the given enchantment and puts it on the item you're holding.
+HC_VALUE_DETAIL: &bDisplays the value of the given item(s) name.  This value is theoretical and does not factor in item damage.
+HC_HV_DETAIL: &bDisplays the value of the item(s) you're holding. This factors in damage.  However, if you specify more of the item than you have in your inventory, the additional items will use a theoretical value.
+HC_II_DETAIL: &bDisplays information about the item you're holding.  If an id and damage value is specified it returns the name of the item, even if you're not holding it.
+HC_TOPITEMS_DETAIL: &bDisplays all of the items available in the global shop is not in a shop, or in the shop that the player is currently in. Items with the highest stock are shown first.  If no page is specified it shows the first page.
+HC_TOPENCHANTS_DETAIL: &bDisplays all of the enchantments available in all shops, if the player isn't in a shop, or in the shop that the player is currently in. Enchantments with the highest stock are shown first.  If no page is specified it shows the first page.
+HC_BROWSESHOP_DETAIL: &bSearches for items or enchantments that begin with the specified name.  It will display the items/enchantments in alphabetical order with their stock and purchase price.  If the player is in a shop it will only display items available in that shop.
+HC_EVALUE_DETAIL: &bIf no parameters are given, displays the sell value, purchase price, and shopstock of all the enchantments on the item you're holding. If given an enchantment name, you must also specify 'b' for buy, 's' for sell, or 'a' for amount. If 'b' for instance, it will display the purchase price for all the enchantment on all item classes. (gold, diamond, iron, etc.)
+HC_INVALID: &4Invalid Usage.  Use /hc
+HC_XPINFO_DETAIL: &bDisplays information about how much experience you have, how much experience is needed to level up, and how much experience is needed to reach level 30.
+ENCHANTMENT_NOT_IN_DATABASE: &9Sorry, that enchantment is not in the enchantment database.
+EBUY_INVALID: &4 Invalid Parameters. Use /ebuy [name]
+HAS_NO_ENCHANTMENTS: &4The item you're holding has no enchantments!
+ESELL_INVALID: &4Invalid Parameters. Use /esell [name/'max']
+LOG_BREAK: ---------------------------------
+DATABASE_CONNECTION_ERROR: Database connection error!  Check your config.yml settings.  Disabling HyperConomy....
+VAULT_NOT_FOUND: Vault not found, shutting down...
+HYPERCONOMY_ENABLED: HyperConomy version %n has been successfully enabled!
+HYPERCONOMY_DISABLED: HyperConomy has been disabled!
+BAD_YMLFILE_DETECTED: Bad YML files detected, disabling HyperConomy!
+ITEM_ALREADY_HAS_ENCHANTMENT: &9The item you're holding already has an enchantment of that type!
+ITEM_CANT_ACCEPT_ENCHANTMENT: &9The item you're holding cannot accept that enchantment!
+ITEM_DOESNT_HAVE_ENCHANTMENT: &9The item you're holding doesn't have &b%n!
+ENCHANTMENT_SELL_MESSAGE: &9&oYou sold &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owent to tax.
+ENCHANTMENT_PURCHASE_MESSAGE: &9&oYou bought &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owas tax.
+CHEST_ENCHANTMENT_BUY_NOTIFICATION: &9&o%y bought &b&o%n &9&ofrom you for &a&o%c%p &9&o.
+PURCHASE_ENCHANTMENT_CHEST_MESSAGE: &9&oYou bought &b&o%n &9&ofor &a&o%c%p &9&ofrom %zc.
+LOG_BUY_ENCHANTMENT: %y bought %n for %c%p. [Static Price=%za][Initial Price=%zb]
+LOG_SELL_ENCHANTMENT: %y sold %n for %c%p. [Static Price=%za][Initial Price=%zb]
+LOG_BUY_CHEST_ENCHANTMENT: %y bought %n from %zc for %c%p. [Static Price=%za][Initial Price=%zb]
+SELL_INVALID: &4Invalid parameters. Use /sell [name] (amount or 'max').
+ONE_OR_MORE_CANT_BE_TRADED: &9Sorry, one or more of those items cannot be traded at this shop.
+CANT_BUY_SELL_ENCHANTED_ITEMS: &9You cannot buy or sell enchanted items!
+SELLALL_INVALID: &4Invalid Parameters. Use /sellall
+HB_INVALID: &4Invalid parameters. Use /hb (amount or 'max')
+HS_INVALID: &4Use /hs (amount or 'max')
+GLOBAL_SHOP_CURRENTLY_HAS: &9The global shop currently has &a%a &b%n &9available.
+CAN_BE_PURCHASED_FOR: &a%a &b%n &9can be purchased for: &a%c%p
+CAN_BE_SOLD_FOR: &a%a &b%n &9can be sold for: &a%c%p
+VALUE_INVALID: &4Use /value [item name] (amount)
+HV_INVALID: &4Use /hv (amount)
+SQL_NOTIFICATION: &9The &f%e &9economy now has &a%a &b%n &9priced at &a%c%p &9each.
+NOTIFICATION: &9The &9economy now has &a%a &b%n &9priced at &a%c%p &9each.
+YOU_DONT_HAVE_PERMISSION: &4You don't have permission to do this.
+TRANSACTION_SIGN_MUST_BE_IN_SHOP: &4You must be in a shop to use transaction signs!
+GLOBAL_SHOP_LOCKED: &cThe global shop is currently locked!
+SHOP_UNLOCKED: &6The global shop has been unlocked!
+SHOP_LOCKED: &6The global shop has been locked!
+FIX_YML_FILE: &4You must first fix your bad yml file!
+LOCKSHOP_INVALID: &4Invalid parameters.  Use /lockshop
+FILES_RELOADED: &6All files have been reloaded.
+FIRST_LOCK_SHOP: &4You must first lock the shop!
+RELOADFILES_INVALID: Invalid Parameters.  Use /reloadfiles.
+NEW_ECONOMY_CREATED: &6New economy created!
+ECONOMY_ALREADY_EXISTS: &4That economy already exists!
+CREATEECONOMY_INVALID: &4Invalid Parameters.  Use /createeconomy [name]
+CANT_DELETE_DEFAULT_ECONOMY: &4You can't delete the default economy!
+ECONOMY_DELETED: &6Economy deleted!
+ECONOMY_DOESNT_EXIST: &4That economy doesn't exist!
+DELETEECONOMY_INVALID: &4Invalid Parameters.  Use /deleteeconomy [name]
+ECONOMYINFO_INVALID: &4Invalid Parameters.  Use /economyinfo.
+PART_OF_ECONOMY: &9You are currently a part of the &b%n &9economy."
