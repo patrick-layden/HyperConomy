@@ -4,8 +4,8 @@ package regalowl.hyperconomy;
 import org.bukkit.command.CommandSender;
 
 public class Hcbackup {
-	LanguageFile L = HyperConomy.hc.getLanguageFile();
 	Hcbackup(CommandSender sender) {
+		LanguageFile L = HyperConomy.hc.getLanguageFile();
 		try {
 			new Backup();
 			sender.sendMessage(L.get("ALL_BACKED_UP"));

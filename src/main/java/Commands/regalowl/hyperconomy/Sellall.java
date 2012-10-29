@@ -37,14 +37,13 @@ public class Sellall {
 							itd = invent.getItem(heldslot).getTypeId();
 						}
 						if (itd != 0) {
-							int da = calc.getpotionDV(invent.getItem(heldslot));
-							int newdat = calc.newData(itd, da);
-							String ke = itd + ":" + newdat;
+							int da = calc.getDamageValue(invent.getItem(heldslot));
+							String ke = itd + ":" + da;
 							String nam = hc.getnameData(ke);
-							int amount = tran.countInvitems(itd, newdat, player);
+							int amount = tran.countInvitems(itd, da, player);
 							if (nam != null) {
 								if (s.has(s.getShop(player), nam)) {
-									tran.sell(nam, itd, newdat, amount, player);
+									tran.sell(nam, itd, da, amount, player);
 								} else {
 									sendMessage(L.get("ONE_OR_MORE_CANT_BE_TRADED"));
 								}
@@ -60,14 +59,13 @@ public class Sellall {
 							if (itd != 0) {
 								ItemStack itemn = invent.getItem(slotn);
 								if (ench.hasenchants(itemn) == false) {
-									int da = calc.getpotionDV(invent.getItem(slotn));
-									int newdat = calc.newData(itd, da);
-									String ke = itd + ":" + newdat;
+									int da = calc.getDamageValue(invent.getItem(slotn));
+									String ke = itd + ":" + da;
 									String nam = hc.getnameData(ke);
 									if (nam != null) {
-										int amount = tran.countInvitems(itd, newdat, player);
+										int amount = tran.countInvitems(itd, da, player);
 										if (s.has(s.getShop(player), nam)) {
-											tran.sell(nam, itd, newdat, amount, player);
+											tran.sell(nam, itd, da, amount, player);
 										} else {
 											sendMessage(L.get("ONE_OR_MORE_CANT_BE_TRADED"));
 										}

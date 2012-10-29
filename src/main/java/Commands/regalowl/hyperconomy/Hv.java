@@ -21,9 +21,8 @@ public class Hv {
 					amount = Integer.parseInt(args[0]);
 				}
 				int itd = player.getItemInHand().getTypeId();
-				int da = calc.getpotionDV(player.getItemInHand());
-				int newdat = calc.newData(itd, da);
-				String ke = itd + ":" + newdat;
+				int da = calc.getDamageValue(player.getItemInHand());
+				String ke = itd + ":" + da;
 				String nam = hc.getnameData(ke);
 				if (nam == null) {
 					player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));

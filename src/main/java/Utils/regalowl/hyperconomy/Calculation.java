@@ -574,7 +574,7 @@ public class Calculation {
 		return twodecimals;
 	}
 
-	public int getdamageValue(ItemStack item) {
+	public int getDamageValue(ItemStack item) {
 		int itd = item.getTypeId();
 		int da = getpotionDV(item);
 		int newdat = newData(itd, da);

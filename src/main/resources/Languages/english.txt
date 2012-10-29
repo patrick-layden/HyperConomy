@@ -61,7 +61,7 @@ IMPORTSQL_WARNING: &cThe will erase all of your HyperConomy SQL tables, type /im
 IMPORTSQL_INVALID: &4Invalid Parameters.  Use /importsql
 LISTCATEGORIES_INVALID: &4Invalid Parameters.  Use /listcategories
 ALREADY_IN_DATABASE: &9That item is already in the database.
-ITEM_ADDED: &6Item added to items.yml.  Restart your server for it to become active.
+ITEM_ADDED: &6Item added to items.yml.  Use /reloadfiles or restart your server for it to become active.
 YMLADDITEM_INVALID: &4Hold the item you'd like to add and type /ymladditem [name] [value] [median] [start price]
 ALL_BACKED_UP: &6All files have been backed up!
 HCBACKUP_INVALID: &4Invalid Parameters.  Use /hcbackup
@@ -161,4 +161,4 @@ ECONOMY_DELETED: &6Economy deleted!
 ECONOMY_DOESNT_EXIST: &4That economy doesn't exist!
 DELETEECONOMY_INVALID: &4Invalid Parameters.  Use /deleteeconomy [name]
 ECONOMYINFO_INVALID: &4Invalid Parameters.  Use /economyinfo.
-PART_OF_ECONOMY: &9You are currently a part of the &b%n &9economy."
+PART_OF_ECONOMY: &9You are currently a part of the &b%n &9economy.

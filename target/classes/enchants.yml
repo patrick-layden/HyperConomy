@@ -2,937 +2,937 @@ protection1:
   information:
     name: PROTECTION_ENVIRONMENTAL
     id: 0
-  value: 250
+  value: 100.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 200.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 500
+    startprice: 200.0
 protection2:
   information:
     name: PROTECTION_ENVIRONMENTAL
     id: 0
-  value: 1000
+  value: 400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 800.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 2000
+    startprice: 800.0
 protection3:
   information:
     name: PROTECTION_ENVIRONMENTAL
     id: 0
-  value: 18000
+  value: 7200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 14400.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 36000
+    startprice: 14400.0
 protection4:
   information:
     name: PROTECTION_ENVIRONMENTAL
     id: 0
-  value: 50000
+  value: 20000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 40000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 100000
+    startprice: 40000.0
 blastprotection1:
   information:
     name: PROTECTION_EXPLOSIONS
     id: 3
-  value: 500
+  value: 200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 400.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 1000
+    startprice: 400.0
 blastprotection2:
   information:
     name: PROTECTION_EXPLOSIONS
     id: 3
-  value: 2000
+  value: 800.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 1600.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 4000
+    startprice: 1600.0
 blastprotection3:
   information:
     name: PROTECTION_EXPLOSIONS
     id: 3
-  value: 10000
+  value: 4000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 8000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 20000
+    startprice: 8000.0
 blastprotection4:
   information:
     name: PROTECTION_EXPLOSIONS
     id: 3
-  value: 25000
+  value: 10000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 20000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 50000
+    startprice: 20000.0
 projectileprotection1:
   information:
     name: PROTECTION_PROJECTILE
     id: 4
-  value: 500
+  value: 200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 400.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 1000
+    startprice: 400.0
 projectileprotection2:
   information:
     name: PROTECTION_PROJECTILE
     id: 4
-  value: 2000
+  value: 800.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 1600.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 4000
+    startprice: 1600.0
 projectileprotection3:
   information:
     name: PROTECTION_PROJECTILE
     id: 4
-  value: 10000
+  value: 4000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 8000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 20000
+    startprice: 8000.0
 projectileprotection4:
   information:
     name: PROTECTION_PROJECTILE
     id: 4
-  value: 25000
+  value: 10000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 20000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 50000
+    startprice: 20000.0
 fireprotection1:
   information:
     name: PROTECTION_FIRE
     id: 1
-  value: 1000
+  value: 400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 800.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 2000
+    startprice: 800.0
 fireprotection2:
   information:
     name: PROTECTION_FIRE
     id: 1
-  value: 5000
+  value: 2000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 4000.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 10000
+    startprice: 4000.0
 fireprotection3:
   information:
     name: PROTECTION_FIRE
     id: 1
-  value: 12000
+  value: 4800.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 9600.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 24000
+    startprice: 9600.0
 fireprotection4:
   information:
     name: PROTECTION_FIRE
     id: 1
-  value: 28000
+  value: 11200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 22400.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 56000
+    startprice: 22400.0
 featherfalling1:
   information:
     name: PROTECTION_FALL
     id: 2
-  value: 1000
+  value: 400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 800.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 2000
+    startprice: 800.0
 featherfalling2:
   information:
     name: PROTECTION_FALL
     id: 2
-  value: 3000
+  value: 1200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 2400.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 6000
+    startprice: 2400.0
 featherfalling3:
   information:
     name: PROTECTION_FALL
     id: 2
-  value: 8000
+  value: 3200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 6400.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 16000
+    startprice: 6400.0
 featherfalling4:
   information:
     name: PROTECTION_FALL
     id: 2
-  value: 20000
+  value: 8000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 16000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 40000
+    startprice: 16000.0
 respiration1:
   information:
     name: OXYGEN
     id: 5
-  value: 1000
+  value: 400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 800.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 2000
+    startprice: 800.0
 respiration2:
   information:
     name: OXYGEN
     id: 5
-  value: 4000
+  value: 1600.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 3200.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 8000
+    startprice: 3200.0
 respiration3:
   information:
     name: OXYGEN
     id: 5
-  value: 16000
+  value: 6400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 12800.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 32000
+    startprice: 12800.0
 aquaaffinity1:
   information:
     name: WATER_WORKER
     id: 6
-  value: 4000
+  value: 1600.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 3200.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 8000
+    startprice: 3200.0
 sharpness1:
   information:
     name: DAMAGE_ALL
     id: 16
-  value: 250
+  value: 100.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 200.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 500
+    startprice: 200.0
 sharpness2:
   information:
     name: DAMAGE_ALL
     id: 16
-  value: 1000
+  value: 400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 800.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 2000
+    startprice: 800.0
 sharpness3:
   information:
     name: DAMAGE_ALL
     id: 16
-  value: 10000
+  value: 4000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 8000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 20000
+    startprice: 8000.0
 sharpness4:
   information:
     name: DAMAGE_ALL
     id: 16
-  value: 20000
+  value: 8000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 16000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 40000
+    startprice: 16000.0
 sharpness5:
   information:
     name: DAMAGE_ALL
     id: 16
-  value: 50000
+  value: 20000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 40000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 100000
+    startprice: 40000.0
 smite1:
   information:
     name: DAMAGE_UNDEAD
     id: 17
-  value: 250
+  value: 100.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 200.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 500
+    startprice: 200.0
 smite2:
   information:
     name: DAMAGE_UNDEAD
     id: 17
-  value: 1000
+  value: 400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 800.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 2000
+    startprice: 800.0
 smite3:
   information:
     name: DAMAGE_UNDEAD
     id: 17
-  value: 8000
+  value: 3200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 6400.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 16000
+    startprice: 6400.0
 smite4:
   information:
     name: DAMAGE_UNDEAD
     id: 17
-  value: 16000
+  value: 6400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 12800.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 32000
+    startprice: 12800.0
 smite5:
   information:
     name: DAMAGE_UNDEAD
     id: 17
-  value: 28000
+  value: 11200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 22400.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 56000
+    startprice: 22400.0
 baneofarthropods1:
   information:
     name: DAMAGE_ARTHROPODS
     id: 18
-  value: 250
+  value: 100.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 200.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 500
+    startprice: 200.0
 baneofarthropods2:
   information:
     name: DAMAGE_ARTHROPODS
     id: 18
-  value: 1000
+  value: 400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 800.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 2000
+    startprice: 800.0
 baneofarthropods3:
   information:
     name: DAMAGE_ARTHROPODS
     id: 18
-  value: 5000
+  value: 2000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 4000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 10000
+    startprice: 4000.0
 baneofarthropods4:
   information:
     name: DAMAGE_ARTHROPODS
     id: 18
-  value: 10000
+  value: 4000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 8000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 20000
+    startprice: 8000.0
 baneofarthropods5:
   information:
     name: DAMAGE_ARTHROPODS
     id: 18
-  value: 20000
+  value: 8000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 16000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 40000
+    startprice: 16000.0
 knockback1:
   information:
     name: KNOCKBACK
     id: 19
-  value: 2000
+  value: 800.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 1600.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 4000
+    startprice: 1600.0
 knockback2:
   information:
     name: KNOCKBACK
     id: 19
-  value: 15000
+  value: 6000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 12000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 30000
+    startprice: 12000.0
 fireaspect1:
   information:
     name: FIRE_ASPECT
     id: 20
-  value: 5000
+  value: 2000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 4000.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 10000
+    startprice: 4000.0
 fireaspect2:
   information:
     name: FIRE_ASPECT
     id: 20
-  value: 20000
+  value: 8000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 16000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 40000
+    startprice: 16000.0
 looting1:
   information:
     name: LOOT_BONUS_MOBS
     id: 21
-  value: 6000
+  value: 2400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 4800.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 12000
+    startprice: 4800.0
 looting2:
   information:
     name: LOOT_BONUS_MOBS
     id: 21
-  value: 18000
+  value: 7200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 14400.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 36000
+    startprice: 14400.0
 looting3:
   information:
     name: LOOT_BONUS_MOBS
     id: 21
-  value: 40000
+  value: 16000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 32000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 80000
+    startprice: 32000.0
 power1:
   information:
     name: ARROW_DAMAGE
     id: 48
-  value: 500
+  value: 200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 400.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 1000
+    startprice: 400.0
 power2:
   information:
     name: ARROW_DAMAGE
     id: 48
-  value: 4000
+  value: 1600.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 3200.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 8000
+    startprice: 3200.0
 power3:
   information:
     name: ARROW_DAMAGE
     id: 48
-  value: 8000
+  value: 3200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 6400.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 16000
+    startprice: 6400.0
 power4:
   information:
     name: ARROW_DAMAGE
     id: 48
-  value: 16000
+  value: 6400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 12800.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 32000
+    startprice: 12800.0
 power5:
   information:
     name: ARROW_DAMAGE
     id: 48
-  value: 28000
+  value: 11200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 22400.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 56000
+    startprice: 22400.0
 punch1:
   information:
     name: ARROW_KNOCKBACK
     id: 49
-  value: 4000
+  value: 1600.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 3200.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 8000
+    startprice: 3200.0
 punch2:
   information:
     name: ARROW_KNOCKBACK
     id: 49
-  value: 16000
+  value: 6400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 12800.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 32000
+    startprice: 12800.0
 flame1:
   information:
     name: ARROW_FIRE
     id: 50
-  value: 8000
+  value: 3200.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 6400.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 16000
+    startprice: 6400.0
 infinity1:
   information:
     name: ARROW_INFINITE
     id: 51
-  value: 10000
+  value: 4000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 8000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 20000
+    startprice: 8000.0
 efficiency1:
   information:
     name: DIG_SPEED
     id: 32
-  value: 250
+  value: 100.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 200.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 500
+    startprice: 200.0
 efficiency2:
   information:
     name: DIG_SPEED
     id: 32
-  value: 1000
+  value: 400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 800.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 2000
+    startprice: 800.0
 efficiency3:
   information:
     name: DIG_SPEED
     id: 32
-  value: 10000
+  value: 4000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 8000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 20000
+    startprice: 8000.0
 efficiency4:
   information:
     name: DIG_SPEED
     id: 32
-  value: 15000
+  value: 6000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 12000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 30000
+    startprice: 12000.0
 efficiency5:
   information:
     name: DIG_SPEED
     id: 32
-  value: 35000
+  value: 14000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 28000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 70000
+    startprice: 28000.0
 silktouch1:
   information:
     name: SILK_TOUCH
     id: 33
-  value: 32000
+  value: 12800.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 25600.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 64000
+    startprice: 25600.0
 unbreaking1:
   information:
     name: DURABILITY
     id: 34
-  value: 1000
+  value: 400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 800.0
   stock:
     stock: 0
     median: 100
   initiation:
     initiation: true
-    startprice: 2000
+    startprice: 800.0
 unbreaking2:
   information:
     name: DURABILITY
     id: 34
-  value: 10000
+  value: 4000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 8000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 20000
+    startprice: 8000.0
 unbreaking3:
   information:
     name: DURABILITY
     id: 34
-  value: 35000
+  value: 14000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 28000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 70000
+    startprice: 28000.0
 fortune1:
   information:
     name: LOOT_BONUS_BLOCKS
     id: 35
-  value: 6000
+  value: 2400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 4800.0
   stock:
     stock: 0
     median: 75
   initiation:
     initiation: true
-    startprice: 12000
+    startprice: 4800.0
 fortune2:
   information:
     name: LOOT_BONUS_BLOCKS
     id: 35
-  value: 16000
+  value: 6400.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 12800.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 32000
+    startprice: 12800.0
 fortune3:
   information:
     name: LOOT_BONUS_BLOCKS
     id: 35
-  value: 40000
+  value: 16000.0
   price:
     static: false
-    staticprice: 1
+    staticprice: 32000.0
   stock:
     stock: 0
     median: 50
   initiation:
     initiation: true
-    startprice: 80000
+    startprice: 32000.0

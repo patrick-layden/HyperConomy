@@ -12,7 +12,17 @@ public class Scalebypercent {
 			SQLFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			InfoSign isign = hc.getInfoSign();
-			if (args.length == 2) {
+			ArrayList<String> names = new ArrayList<String>();;
+			if (args.length == 2 || args.length == 3) {
+				if (args.length == 3) {
+					if (args[2].contains("item")) {
+						names = hc.getInames();
+					} else if (args[2].contains("enchantment")) {
+						names = hc.getEnames();
+					}
+				} else {
+					names = hc.getNames();
+				}
 				String type = args[0];
 				Double percent = Double.parseDouble(args[1]);
 				percent = percent / 100;
@@ -21,7 +31,6 @@ public class Scalebypercent {
 						if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 							new Backup();
 						}
-						ArrayList<String> names = hc.getNames();
 						for (int c = 0; c < names.size(); c++) {
 							String cname = names.get(c);
 							if (type.equalsIgnoreCase("value")) {
@@ -37,7 +46,6 @@ public class Scalebypercent {
 							}
 						}
 						sender.sendMessage(ChatColor.GOLD + "Adjustment successful!");
-						// Updates all information signs.
 						isign.setrequestsignUpdate(true);
 						isign.checksignUpdate();
 					} else {
@@ -47,10 +55,10 @@ public class Scalebypercent {
 					sender.sendMessage(ChatColor.DARK_RED + "Percent must be greater than 0!");
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /scalebypercent [setting] [percent]");
+				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /scalebypercent [setting] [percent] ('item' or 'enchantment')");
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /scalebypercent [setting] [percent]");
+			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /scalebypercent [setting] [percent] ('item' or 'enchantment')");
 		}
 	}
 }

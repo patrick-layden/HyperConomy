@@ -43,7 +43,9 @@ public class SQLWriteThread {
 					    savecomplete = true;
 					}
 				} catch (SQLException e) {
-					//e.printStackTrace();
+					if (hc.getYaml().getConfig().getBoolean("config.log-errors")) {
+						new HyperError(e, "Statement=[" + statement + "]");
+					}
 					cp.returnConnection(connection);
 					sw.writeFailed(statement);
 					savecomplete = true;

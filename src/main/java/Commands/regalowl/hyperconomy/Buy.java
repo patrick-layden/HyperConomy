@@ -7,12 +7,12 @@ import org.bukkit.material.MaterialData;
 
 public class Buy {
 	HyperConomy hc;
-	LanguageFile L = hc.getLanguageFile();
 	Buy(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		Transaction tran = hc.getTransaction();
 		Calculation calc = hc.getCalculation();
+		LanguageFile L = hc.getLanguageFile();
 		Shop s = hc.getShop();
 		try {
 			s.setinShop(player);
@@ -49,7 +49,7 @@ public class Buy {
 										ItemStack damagestack = damagemd.toItemStack();
 										int space = 0;
 										if (id >= 0) {
-											space = tran.getavailableSpace(id, calc.getdamageValue(damagestack), player);
+											space = tran.getavailableSpace(id, calc.getDamageValue(damagestack), player);
 										}
 										amount = space;
 										int shopstock = (int) sf.getStock(name, playerecon);

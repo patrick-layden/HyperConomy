@@ -175,7 +175,10 @@ public class Update {
 	    	if (t38 == null) {
 	    		yaml.getConfig().set("config.log-errors", false);
 	    	}
-
+	    	String t39 = yaml.getConfig().getString("config.log-sqlwrite-errors");
+	    	if (t39 == null) {
+	    		yaml.getConfig().set("config.log-sqlwrite-errors", false);
+	    	}
 	    	/*
 	    	double dversion = Double.parseDouble(configversion);
 

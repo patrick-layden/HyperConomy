@@ -1,9 +1,9 @@
 version: 0.952
 config:
-  shopcheckinterval: 20
-  logwriteinterval: 15
-  saveinterval: 700
-  signupdateinterval: 13
+  shopcheckinterval: 6
+  logwriteinterval: 4
+  saveinterval: 6000
+  signupdateinterval: 5
   purchasetaxpercent: 3
   initialpurchasetaxpercent: 100
   statictaxpercent: 300
@@ -30,6 +30,7 @@ config:
   error-count: 0
   language: english
   log-errors: false
+  log-sqlwrite-errors: false
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

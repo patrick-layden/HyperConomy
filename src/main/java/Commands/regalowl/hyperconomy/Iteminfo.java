@@ -44,9 +44,8 @@ public class Iteminfo {
 			}
 			String mat = player.getItemInHand().getType().toString();
 			int itemid = player.getItemInHand().getTypeId();
-			int dv = calc.getpotionDV(player.getItemInHand());
-			int newdat = calc.newData(itemid, dv);
-			String ke = itemid + ":" + newdat;
+			int dv = calc.getDamageValue(player.getItemInHand());
+			String ke = itemid + ":" + dv;
 			String nam = hc.getnameData(ke);
 
 			if (nam == null) {

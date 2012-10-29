@@ -79,6 +79,7 @@ public class HyperConomy extends JavaPlugin {
 		yaml = yam;
 		L = new LanguageFile();
 		if (!brokenfile) {
+			new Update();
 			saveinterval = yaml.getConfig().getLong("config.saveinterval");
 			usesql = yaml.getConfig().getBoolean("config.sql-connection.use-sql");
 			currency = hc.getYaml().getConfig().getString("config.currency-symbol");

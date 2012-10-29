@@ -25,6 +25,9 @@ public class LanguageFile {
 	public String buildLanguageFile(boolean overwrite) {
 		ft = new FileTools();
 		String lang = HyperConomy.hc.getYaml().getConfig().getString("config.language");
+		if (lang == null) {
+			lang = "english";
+		}
 		lang = lang.toLowerCase().replace(" ", "").replace("\"", "").replace("'", "");
 		boolean validLanguage = false;
 		for (int i = 0; i < supportedLanguages.size(); i++) {

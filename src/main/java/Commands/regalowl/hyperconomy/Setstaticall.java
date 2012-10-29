@@ -12,7 +12,7 @@ public class Setstaticall {
 		SQLFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
 		if (!(args.length == 1)) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /setstaticall ['true' or 'false']");
+			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /setstaticall ['true', 'false', or 'copy']");
 			return;
 		}
 		String setting = "";
@@ -23,7 +23,7 @@ public class Setstaticall {
 		} else if (args[0].equalsIgnoreCase("copy")) {
 			setting = "copy";
 		} else {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /setstaticall ['true' or 'false']");
+			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /setstaticall ['true', 'false', or 'copy']");
 			return;
 		}
 		new Backup();

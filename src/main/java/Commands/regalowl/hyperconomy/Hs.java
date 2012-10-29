@@ -25,9 +25,8 @@ public class Hs {
 							String max = args[0];
 							if (max.equalsIgnoreCase("max")) {
 								int itmid = player.getItemInHand().getTypeId();
-								int da = calc.getpotionDV(player.getItemInHand());
-								int newdat = calc.newData(itmid, da);
-								amount = tran.countInvitems(itmid, newdat, player);
+								int da = calc.getDamageValue(player.getItemInHand());
+								amount = tran.countInvitems(itmid, da, player);
 							} else {
 								player.sendMessage(L.get("HS_INVALID"));
 								return;
@@ -35,9 +34,8 @@ public class Hs {
 						}
 					}
 					int itd = player.getItemInHand().getTypeId();
-					int da = calc.getpotionDV(player.getItemInHand());
-					int newdat = calc.newData(itd, da);
-					String ke = itd + ":" + newdat;
+					int da = calc.getDamageValue(player.getItemInHand());
+					String ke = itd + ":" + da;
 					String nam = hc.getnameData(ke);
 					if (nam == null) {
 						player.sendMessage(L.get("CANT_BE_TRADED"));
@@ -45,7 +43,7 @@ public class Hs {
 						ItemStack iinhand = player.getItemInHand();
 						if (ench.hasenchants(iinhand) == false) {
 							if (s.has(s.getShop(player), nam)) {
-								tran.sell(nam, itd, newdat, amount, player);
+								tran.sell(nam, itd, da, amount, player);
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));
 							}

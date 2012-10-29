@@ -12,9 +12,8 @@ public class Itemsettings {
 		try {
 			if (args.length == 0 && player != null) {
 				int itd = player.getItemInHand().getTypeId();
-				int da = calc.getpotionDV(player.getItemInHand());
-				int newdat = calc.newData(itd, da);
-				String ke = itd + ":" + newdat;
+				int da = calc.getDamageValue(player.getItemInHand());
+				String ke = itd + ":" + da;
 				String nam = hc.getnameData(ke);
 				if (nam == null) {
 					sender.sendMessage(ChatColor.BLUE + "Sorry, that item or enchantment is not in the database.");

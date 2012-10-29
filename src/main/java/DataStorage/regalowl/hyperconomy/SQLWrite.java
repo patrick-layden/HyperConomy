@@ -32,9 +32,6 @@ public class SQLWrite {
 			initialWrite = true;
 			hc.sqllockShop();
 			writeData(sstatements);
-			
-			//SQLFunctions sf = hc.getSQLFunctions();
-			//sf.load();
 		}
 		
 	}
@@ -113,10 +110,9 @@ public class SQLWrite {
     }
     
     public void writeFailed(String statement) {
-    	workingBuffer.add(statement);
     	activethreads--;
-		//Logger l = Logger.getLogger("Minecraft");
-		//l.severe("Failed: " + statement);
+    	workingBuffer.add(statement);
+    	startWrite();
     }
 
 

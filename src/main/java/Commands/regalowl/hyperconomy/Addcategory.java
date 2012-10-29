@@ -13,12 +13,12 @@ public class Addcategory {
 	private CommandSender sender;
 	private HashMap<CommandSender, String> messages = new HashMap<CommandSender, String>();
 	private boolean messageActive = false;
-	LanguageFile L = hc.getLanguageFile();
 
 	Addcategory(String args[], CommandSender se) {
 		sender = se;
 		hc = HyperConomy.hc;
 		Shop s = hc.getShop();
+		LanguageFile L = hc.getLanguageFile();
 		SerializeArrayList sal = new SerializeArrayList();
 		try {
 			FileConfiguration category = hc.getYaml().getCategories();

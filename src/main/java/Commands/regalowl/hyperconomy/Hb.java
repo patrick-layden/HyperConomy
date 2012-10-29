@@ -32,7 +32,7 @@ public class Hb {
 								String max = args[0];
 								if (max.equalsIgnoreCase("max")) {
 									ma = true;
-									int space = tran.getavailableSpace(player.getItemInHand().getTypeId(), calc.getdamageValue(player.getItemInHand()), player);
+									int space = tran.getavailableSpace(player.getItemInHand().getTypeId(), calc.getDamageValue(player.getItemInHand()), player);
 									amount = space;
 								} else {
 									player.sendMessage(L.get("HB_INVALID"));
@@ -41,9 +41,8 @@ public class Hb {
 							}
 						}
 						int itd = player.getItemInHand().getTypeId();
-						int da = calc.getpotionDV(player.getItemInHand());
-						int newdat = calc.newData(itd, da);
-						String ke = itd + ":" + newdat;
+						int da = calc.getDamageValue(player.getItemInHand());
+						String ke = itd + ":" + da;
 						String nam = hc.getnameData(ke);
 						if (nam == null) {
 							player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
@@ -56,7 +55,7 @@ public class Hb {
 								amount = shopstock;
 							}
 							if (s.has(s.getShop(player), nam)) {
-								tran.buy(nam, (int) Math.rint(amount), itd, newdat, player);
+								tran.buy(nam, (int) Math.rint(amount), itd, da, player);
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));
 							}

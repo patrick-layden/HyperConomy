@@ -250,7 +250,7 @@ public class Transaction {
 					int a = allstacks.indexOf(" x ") + 3;
 					int b = allstacks.indexOf("}", a);
 					slot = Integer.parseInt(allstacks.substring(2, allstacks.indexOf("=")));
-					int da = calc.getpotionDV(stacks1.get(slot));
+					int da = calc.getDamageValue(stacks1.get(slot));
 					boolean hasenchants = ench.hasenchants(stacks1.get(slot));
 					if (stacks1.get(slot) != null && calc.newData(id, da) == newdata && hasenchants == false) {
 						int num = Integer.parseInt(allstacks.substring(a, b));
@@ -290,7 +290,7 @@ public class Transaction {
 				ItemStack citem = p.getInventory().getItem(slot);
 				if (p.getInventory().getItem(slot) == null) {
 					availablespace = availablespace + maxstack;
-				} else if (citem != null && citem.getTypeId() == id && idata == calc.getdamageValue(citem)) {
+				} else if (citem != null && citem.getTypeId() == id && idata == calc.getDamageValue(citem)) {
 					availablespace = availablespace + (maxstack - citem.getAmount());
 				}
 				slot++;
@@ -324,7 +324,7 @@ public class Transaction {
 				ItemStack citem = inv.getItem(slot);
 				if (inv.getItem(slot) == null) {
 					availablespace = availablespace + maxstack;
-				} else if (citem != null && citem.getTypeId() == id && idata == calc.getdamageValue(citem)) {
+				} else if (citem != null && citem.getTypeId() == id && idata == calc.getDamageValue(citem)) {
 					availablespace = availablespace + (maxstack - citem.getAmount());
 				}
 				slot++;
@@ -358,7 +358,7 @@ public class Transaction {
 			while (ramount > 0) {
 				int pamount = 0;
 				ItemStack citem = p.getInventory().getItem(slot);
-				if (citem != null && citem.getTypeId() == id && data == calc.getdamageValue(citem)) {
+				if (citem != null && citem.getTypeId() == id && data == calc.getDamageValue(citem)) {
 					int currentamount = citem.getAmount();
 					if ((maxstack - currentamount) >= ramount) {
 						pamount = ramount;
@@ -412,7 +412,7 @@ public class Transaction {
 				String stringstacks = stacks1.toString();
 				int maxstack = stacks1.get(Integer.parseInt(stringstacks.substring(1, stringstacks.indexOf("=")))).getMaxStackSize();
 				ItemStack inhand = p.getItemInHand();
-				int dv = calc.getpotionDV(inhand);
+				int dv = calc.getDamageValue(inhand);
 				boolean hasenchants = ench.hasenchants(inhand);
 				int ritems = amount;
 				if (inhand != null && calc.newData(id, dv) == newdata && inhand.getTypeId() == id && hasenchants == false) {
@@ -433,7 +433,7 @@ public class Transaction {
 					int a = allstacks.indexOf(" x ") + 3;
 					int b = allstacks.indexOf("}", a);
 					slot = Integer.parseInt(allstacks.substring(2, allstacks.indexOf("=")));
-					int damv = calc.getpotionDV(pinv.getItem(slot));
+					int damv = calc.getDamageValue(pinv.getItem(slot));
 					boolean hasenchants2 = ench.hasenchants(stacks1.get(slot));
 					if (pinv.getItem(slot) != null && calc.newData(id, damv) == newdata && pinv.getItem(slot).getTypeId() == id && hasenchants2 == false) {
 						if (ritems > 0) {
@@ -922,7 +922,7 @@ public class Transaction {
 					int a = allstacks.indexOf(" x ") + 3;
 					int b = allstacks.indexOf("}", a);
 					slot = Integer.parseInt(allstacks.substring(2, allstacks.indexOf("=")));
-					int damv = calc.getpotionDV(invent.getItem(slot));
+					int damv = calc.getDamageValue(invent.getItem(slot));
 					boolean hasenchants2 = ench.hasenchants(stacks1.get(slot));
 					if (invent.getItem(slot) != null && calc.newData(id, damv) == newdata && invent.getItem(slot).getTypeId() == id && hasenchants2 == false) {
 						if (ritems > 0) {
@@ -974,7 +974,7 @@ public class Transaction {
 				ItemStack citem = invent.getItem(slot);
 				if (invent.getItem(slot) == null) {
 					availablespace = availablespace + maxstack;
-				} else if (citem != null && citem.getTypeId() == id && data == calc.getdamageValue(citem)) {
+				} else if (citem != null && citem.getTypeId() == id && data == calc.getDamageValue(citem)) {
 					availablespace = availablespace + (maxstack - citem.getAmount());
 				}
 				slot++;
@@ -1005,7 +1005,7 @@ public class Transaction {
 			while (ramount > 0) {
 				int pamount = 0;
 				ItemStack citem = invent.getItem(slot);
-				if (citem != null && citem.getTypeId() == id && data == calc.getdamageValue(citem)) {
+				if (citem != null && citem.getTypeId() == id && data == calc.getDamageValue(citem)) {
 					int currentamount = citem.getAmount();
 					if ((maxstack - currentamount) >= ramount) {
 						pamount = ramount;
@@ -1060,7 +1060,7 @@ public class Transaction {
 					int a = allstacks.indexOf(" x ") + 3;
 					int b = allstacks.indexOf("}", a);
 					slot = Integer.parseInt(allstacks.substring(2, allstacks.indexOf("=")));
-					int da = calc.getpotionDV(stacks1.get(slot));
+					int da = calc.getDamageValue(stacks1.get(slot));
 					boolean hasenchants = ench.hasenchants(stacks1.get(slot));
 					if (stacks1.get(slot) != null && calc.newData(id, da) == newdata && hasenchants == false) {
 						int num = Integer.parseInt(allstacks.substring(a, b));
