@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -44,6 +43,7 @@ public class Shop {
 	
 	private Player p;
 	private HyperConomy hc;
+	private LanguageFile L;
 
 	
 	public int getshopdataSize() {
@@ -134,6 +134,7 @@ public class Shop {
 		sp = new HashMap<Player, Boolean>();	
 		shopinterval = hc.getYaml().getConfig().getLong("config.shopcheckinterval");
 		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
+		L = hc.getLanguageFile();
 		buildShopData();
 	}
 	
@@ -212,10 +213,10 @@ public class Shop {
 				//If the player is now in the shop it sends the welcome message to them.
 				} else {
 					
-					p.sendMessage(ChatColor.BLACK + "------------------------");
+					p.sendMessage(L.get("SHOP_LINE_BREAK"));
 					p.sendMessage(shopmessage1.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")).replace("&","\u00A7"));
 					p.sendMessage(shopmessage2.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")).replace("&","\u00A7"));
-					p.sendMessage(ChatColor.BLACK + "------------------------");
+					p.sendMessage(L.get("SHOP_LINE_BREAK"));
 					
 					//Sets the player to being in the shop in the inshop.txt file.
 	    			//sp.setData(p.getName(), "true");
@@ -245,7 +246,7 @@ public class Shop {
 					//sp.setData(p.getName(), "false");
 					sp.put(p, false);
 					if (useshopexitmessage) {
-						p.sendMessage(ChatColor.BLUE + "You have left the shop.");
+						p.sendMessage(L.get("SHOP_EXIT_MESSAGE"));
 					}		
 				}
 			}

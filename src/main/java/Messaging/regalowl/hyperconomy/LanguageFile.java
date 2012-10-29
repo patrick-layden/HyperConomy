@@ -128,9 +128,10 @@ public class LanguageFile {
 	
 	
 	
-	public String f(String inputstring, double amount, double price, String name, String economy) {
+	public String f(String inputstring, double amount, double price, String name, String extra) {
 		inputstring = inputstring.replace("%a",amount+"");
-		inputstring = inputstring.replace("%e",economy+"");
+		inputstring = inputstring.replace("%e",extra+"");
+		inputstring = inputstring.replace("%zc",extra);
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%p",price+"");
 		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
@@ -173,9 +174,11 @@ public class LanguageFile {
 	public String f(String inputstring, double amount, String name) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%n",name);
+		inputstring = inputstring.replace("%zc",name);
+		inputstring = inputstring.replace("%p",amount+"");
 		return inputstring;
 	}
-	
+	/*
 	public String f(String inputstring, int amount, double price, String name, String owner) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%zc",owner);
@@ -185,7 +188,7 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%e",owner+"");
 		return inputstring;
 	}
-	
+	*/
 	public String f(String inputstring, int amount, double price, String name, Player player) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%y",player.getName());

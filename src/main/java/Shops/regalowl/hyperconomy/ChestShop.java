@@ -35,6 +35,7 @@ public class ChestShop implements Listener{
 	private ETransaction ench;
 	private Account acc;
 	private Shop s;
+	private LanguageFile L;
 	
 	private ArrayList<BlockFace> faces = new ArrayList<BlockFace>();
 	
@@ -47,6 +48,7 @@ public class ChestShop implements Listener{
 		ench = hc.getETransaction();
 		acc = hc.getAccount();
 		s = hc.getShop();
+		L = hc.getLanguageFile();
 		
 		faces.add(BlockFace.EAST);
 		faces.add(BlockFace.WEST);
@@ -483,7 +485,7 @@ public class ChestShop implements Listener{
 								    				tran.buyChest(name, id, data, line34, p, camount, icevent.getView().getTopInventory());
 								    			}
 						    				} else {
-						    					p.sendMessage(ChatColor.BLUE + "You cannot purchase items from this chest.");
+						    					p.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
 						    				}
 
 						    			} else if (slot >= 27 && name != null){
@@ -507,18 +509,19 @@ public class ChestShop implements Listener{
 											    				tran.sellChest(name, id, data, camount, line34, p, icevent.getView().getTopInventory());
 											    			}
 							    						} else {
-							    							p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
+							    							//p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
+							    							L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), line34);
 							    						}
 								    				} else {
-								    					p.sendMessage(ChatColor.BLUE + "The chestshop doesn't have enough space.");
+								    					p.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
 								    				}
 						    					} else {
-						    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
+						    						p.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
 						    					}
 			
 							    				
 						    				} else {
-						    					p.sendMessage(ChatColor.BLUE + "You cannot sell items to this chest.");
+						    					p.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
 						    				}
 						    				
 						    				
@@ -544,11 +547,12 @@ public class ChestShop implements Listener{
 						    					if (setprice) {
 						    						price = staticprice;
 						    					}
-								    			p.sendMessage("\u00A70-----------------------------------------------------");
-								    			p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
-								    			p.sendMessage("\u00A70-----------------------------------------------------");
+								    			p.sendMessage(L.get("LINE_BREAK"));
+								    			p.sendMessage(L.f(L.get("CHEST_SHOP_BUY_VALUE"), 1, price, name, line34));
+								    			//p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
+								    			p.sendMessage(L.get("LINE_BREAK"));
 						    				} else {
-						    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
+						    					p.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
 						    				}
 			
 							    			
@@ -562,14 +566,15 @@ public class ChestShop implements Listener{
 							    					if (setprice) {
 							    						price = staticprice;
 							    					}
-								    				p.sendMessage("\u00A70-----------------------------------------------------");
-								    				p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 "  + ChatColor.AQUA + ""  + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be sold to " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
-								    				p.sendMessage("\u00A70-----------------------------------------------------");	
+								    				p.sendMessage(L.get("LINE_BREAK"));
+								    				//p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 "  + ChatColor.AQUA + ""  + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be sold to " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
+								    				p.sendMessage(L.f(L.get("CHEST_SHOP_SELL_VALUE"), 1, price, name, line34));
+								    				p.sendMessage(L.get("LINE_BREAK"));	
 						    					} else {
-						    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
+						    						p.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
 						    					}
 						    				} else {
-						    					p.sendMessage(ChatColor.BLUE + "You cannot sell items to this chest.");
+						    					p.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
 						    				}
 			
 						    			}
@@ -599,22 +604,23 @@ public class ChestShop implements Listener{
 								        				}
 								        				price = calc.twoDecimals(price);
 								        			if (ench.isEnchantable(p.getItemInHand())) {
-										    			p.sendMessage("\u00A70-----------------------------------------------------");
-										    			p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
-										    			p.sendMessage("\u00A70-----------------------------------------------------");
+										    			p.sendMessage(L.get("LINE_BREAK"));
+										    			//p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
+										    			p.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, line34));
+										    			p.sendMessage(L.get("LINE_BREAK"));
 							    					} else {
-							    						p.sendMessage(ChatColor.BLUE + "That item cannot accept enchantments.");
+							    						p.sendMessage(L.get("ITEM_CANNOT_ACCEPT_ENCHANTMENTS"));
 							    					}
 							    					
 
 							    				} else {
-							    					p.sendMessage(ChatColor.BLUE + "You cannot purchase enchantments from this chest.");
+							    					p.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
 							    				}
 				
 							    				
 							    			} else if (slot >= 27 && name != null) {
 							    				
-							    				p.sendMessage(ChatColor.BLUE + "You cannot sell enchantments here.");
+							    				p.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
 							    				
 							    			}
 					    			}
@@ -639,7 +645,7 @@ public class ChestShop implements Listener{
 						    					}
 								    			
 						    				} else {
-						    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
+						    					p.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
 						    				}
 			
 						    				
@@ -663,16 +669,17 @@ public class ChestShop implements Listener{
 							    								tran.sellChest(name, id, data, 1, line34, p, icevent.getView().getTopInventory());
 							    							}
 							    						} else {
-							    							p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
+							    							//p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
+							    							p.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), line34));
 							    						}
 							    					} else {
-							    						p.sendMessage(ChatColor.BLUE + "The chest shop doesn't have enough space.");
+							    						p.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
 							    					}
 						    					} else {
-						    						p.sendMessage(ChatColor.BLUE + "This chest will not accept that item.");
+						    						p.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
 						    					}
 						    				} else {
-						    					p.sendMessage(ChatColor.BLUE + "You cannot sell items to this chest.");
+						    					p.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
 						    				}
 			
 			
@@ -702,11 +709,11 @@ public class ChestShop implements Listener{
 							        				}
 
 							    				} else {
-							    					p.sendMessage(ChatColor.BLUE + "You cannot buy items from this chest.");
+							    					p.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
 							    				}
 							    			} else if (slot >= 27 && name != null) {
 							    				
-							    				p.sendMessage(ChatColor.BLUE + "You cannot sell enchantments here.");
+							    				p.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
 							    				
 							    			}
 					    			}
@@ -721,7 +728,7 @@ public class ChestShop implements Listener{
 					}
 				}	
 			} else {
-				Bukkit.getPlayer(icevent.getWhoClicked().getName()).sendMessage(ChatColor.RED + "The global shop is currently locked!");
+				Bukkit.getPlayer(icevent.getWhoClicked().getName()).sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 			}
 		}		
 	}

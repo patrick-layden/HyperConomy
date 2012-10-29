@@ -12,11 +12,11 @@ public class HyperWebStart {
 	private Logger log = Logger.getLogger("Minecraft");
 	private HyperConomy hc;
 	private Calculation calc;
-	//private ArrayList<String> dependencies = new ArrayList<String>();
 	private HyperWebStart hws;
 	private int serverid;
 	private Server server;
 	private int port;
+	private LanguageFile L;
 	
 	
 	
@@ -24,13 +24,7 @@ public class HyperWebStart {
 		hc = HyperConomy.hc;
 		calc = hc.getCalculation();
 		hws = this;
-		
-		//dependencies.add("jetty-continuation-8.1.4.v20120524.jar");
-		//dependencies.add("jetty-http-8.1.4.v20120524.jar");
-		//dependencies.add("jetty-io-8.1.4.v20120524.jar");
-		//dependencies.add("jetty-server-8.1.4.v20120524.jar");
-		//dependencies.add("jetty-util-8.1.4.v20120524.jar");
-		//dependencies.add("servlet-api-3.0.jar");
+		L = hc.getLanguageFile();
 		
 		FileConfiguration conf = hc.getYaml().getConfig();
 		useWebPage = conf.getBoolean("config.web-page.use-web-page");
@@ -52,30 +46,9 @@ public class HyperWebStart {
 		useHistory = conf.getBoolean("config.store-price-history");
 		pageEconomy = conf.getString("config.web-page.web-page-economy");
 		
-		
-
-		//FileTools ft = new FileTools();
 		if (useWebPage) {
 			startServer();
-	    	log.info("[HyperConomy] web page enabled.");
-			/*
-			String serverpath = ft.getJarPath();
-			String jettypath = serverpath + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "lib" + File.separator + "jetty";
-			ArrayList<String> jettyContents = ft.getFolderContents(jettypath);
-		    boolean hasDependencies = checkDependencies(jettyContents);
-		    if (hasDependencies) {
-		    	startServer();
-		    	log.info("[HyperConomy] web page enabled.");
-		    } else {
-		    	ft.makeFolder(serverpath + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "lib");
-		    	ft.makeFolder(jettypath);
-		    	ft.copyFileFromJar("lib/Jetty.zip", jettypath + File.separator + "Jetty.zip");
-		    	ft.unZipFile(jettypath + File.separator + "Jetty.zip", jettypath);
-		    	ft.deleteFile(jettypath + File.separator + "Jetty.zip");
-		    	log.warning("[HyperConomy] You must restart your server to enable the HyperConomy web page.");
-		  
-		    }
-		    */
+	    	log.info(L.get("WEB_PAGE_ENABLED"));
 		}
 	}
 	
@@ -111,17 +84,6 @@ public class HyperWebStart {
 		hc.getServer().getScheduler().cancelTask(serverid);
 	}
 
-	/*
-	private boolean checkDependencies(ArrayList<String> libfiles) {
-		boolean hasdependencies = true;
-		for (int i = 0; i < dependencies.size(); i++) {
-			if (!libfiles.contains(dependencies.get(i))) {
-				hasdependencies = false;
-			}
-		}
-		return hasdependencies;
-	}
-	*/
 
 	private boolean useWebPage;
 	private String backgroundColor;
