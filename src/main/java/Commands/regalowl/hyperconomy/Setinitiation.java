@@ -1,14 +1,13 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Setinitiation {
-
 	Setinitiation(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
+		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
 			if (args.length == 1) {
@@ -16,24 +15,20 @@ public class Setinitiation {
 				String teststring = hc.testiString(name);
 				if (teststring != null) {
 					boolean nstatus;
-					boolean istatus = Boolean.parseBoolean(sf.getInitiation(
-							name, playerecon));
+					boolean istatus = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
 					if (istatus) {
 						nstatus = false;
-						sender.sendMessage(ChatColor.GOLD
-								+ "Initiation price is set to false for "
-								+ name);
+						sender.sendMessage(L.f(L.get("INITIATION_FALSE"), name));
 					} else {
 						nstatus = true;
-						sender.sendMessage(ChatColor.GOLD
-								+ "Initiation price is set to true for " + name);
+						//sender.sendMessage(ChatColor.GOLD + "Initiation price is set to true for " + name);
+						sender.sendMessage(L.f(L.get("INITIATION_TRUE"), name));
 					}
 					sf.setInitiation(name, playerecon, nstatus + "");
 					isign.setrequestsignUpdate(true);
 					isign.checksignUpdate();
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED
-							+ "Invalid item name!");
+					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
 				}
 			} else if (args.length == 2) {
 				String ench = args[1];
@@ -42,37 +37,28 @@ public class Setinitiation {
 					String teststring = hc.testeString(name);
 					if (teststring != null) {
 						boolean nstatus;
-						boolean istatus = Boolean.parseBoolean(sf
-								.getInitiation(name, playerecon));
+						boolean istatus = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
 						if (istatus) {
 							nstatus = false;
-							sender.sendMessage(ChatColor.GOLD
-									+ "Initiation price is set to false for "
-									+ name);
+							sender.sendMessage(L.f(L.get("INITIATION_FALSE"), name));
 						} else {
 							nstatus = true;
-							sender.sendMessage(ChatColor.GOLD
-									+ "Initiation price is set to true for "
-									+ name);
+							sender.sendMessage(L.f(L.get("INITIATION_TRUE"), name));
 						}
 						sf.setInitiation(name, playerecon, nstatus + "");
 						isign.setrequestsignUpdate(true);
 						isign.checksignUpdate();
 					} else {
-						sender.sendMessage(ChatColor.DARK_RED
-								+ "Invalid enchantment name");
+						sender.sendMessage(L.get("INVALID_ENCHANTMENT_NAME"));
 					}
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED
-							+ "Invalid parameters. Use /setinitiation [item/enchantment name] ('e')");
+					sender.sendMessage(L.get("INITIATION_INVALID"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED
-						+ "Invalid parameters. Use /setinitiation [item/enchantment name] ('e')");
+				sender.sendMessage(L.get("INITIATION_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED
-					+ "Invalid parameters. Use /setinitiation [item/enchantment name] ('e')");
+			sender.sendMessage(L.get("INITIATION_INVALID"));
 		}
 	}
 }

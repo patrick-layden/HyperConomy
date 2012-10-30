@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 public class Loaditems {
 	Loaditems(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hc.useSQL()) {
     			if (args.length == 1) {
@@ -18,18 +19,18 @@ public class Loaditems {
     					}
         				SQLEconomy se = hc.getSQLEconomy();
         				ArrayList<String> added = se.loadItems(economy);
-        				sender.sendMessage(ChatColor.GOLD + added.toString() + " loaded into economy!");
+        				sender.sendMessage(ChatColor.GOLD + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
     				} else {
-    					sender.sendMessage(ChatColor.RED + "That economy doesn't exist!");
+    					sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
     				}
     			} else {
-    				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /loaditems [economy]");
+    				sender.sendMessage(L.get("LOADITEMS_INVALID"));
     			}
 			} else {
-				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+				sender.sendMessage(L.get("ONLY_AVAILABLE_SQL"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /loaditems [economy]");
+			sender.sendMessage(L.get("LOADITEMS_INVALID"));
 		}
 	}
 }

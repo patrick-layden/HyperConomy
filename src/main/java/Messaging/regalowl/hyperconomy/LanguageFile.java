@@ -125,8 +125,18 @@ public class LanguageFile {
 	
 	
 	
+	public String f(String inputstring, int value, int value2) {
+		inputstring = inputstring.replace("%v",value+"");
+		inputstring = inputstring.replace("%w",value2+"");
+		return inputstring;
+	}
 	
 	
+	public String f(String inputstring, String name, String extra) {
+		inputstring = inputstring.replace("%e",extra+"");
+		inputstring = inputstring.replace("%n",name);
+		return inputstring;
+	}
 	
 	public String f(String inputstring, double amount, double price, String name, String extra) {
 		inputstring = inputstring.replace("%a",amount+"");
@@ -176,6 +186,12 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%zc",name);
 		inputstring = inputstring.replace("%p",amount+"");
+		return inputstring;
+	}
+	
+	public String f(String inputstring, double value, boolean status) {
+		inputstring = inputstring.replace("%s",status+"");
+		inputstring = inputstring.replace("%v",value+"");
 		return inputstring;
 	}
 	/*

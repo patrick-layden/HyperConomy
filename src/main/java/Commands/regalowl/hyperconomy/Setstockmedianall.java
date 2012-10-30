@@ -10,12 +10,10 @@ public class Setstockmedianall {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0) {
-				sender.sendMessage(ChatColor.RED + "Are you sure you wish to do this?");
-				sender.sendMessage(ChatColor.RED + "All item and enchantment stocks will be set to their median.");
-				sender.sendMessage(ChatColor.RED + "All item and enchantments will have initial pricing disabled.");
-				sender.sendMessage(ChatColor.RED + "Type /setstockmedianall confirm to proceed.");
+				sender.sendMessage(L.get("SETSTOCKMEDIANALL_WARNING"));
 			} else if (args[0].equalsIgnoreCase("confirm")) {
 				if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 					new Backup();
@@ -25,14 +23,14 @@ public class Setstockmedianall {
 					sf.setStock(names.get(c), playerecon, sf.getMedian(names.get(c), playerecon));
 					sf.setInitiation(names.get(c), playerecon, "false");
 				}
-				sender.sendMessage(ChatColor.GOLD + "Shop stocks of all items/enchantments have been set to their medians and initial pricing has been disabled.");
+				sender.sendMessage(L.get("SETSTOCKMEDIANALL_SUCCESS"));
 				isign.setrequestsignUpdate(true);
 				isign.checksignUpdate();
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /setstockmedianall");
+				sender.sendMessage(L.get("SETSTOCKMEDIANALL_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /setstockmedianall");
+			sender.sendMessage(L.get("SETSTOCKMEDIANALL_INVALID"));
 		}
 	}
 }

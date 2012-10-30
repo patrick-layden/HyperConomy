@@ -11,9 +11,10 @@ public class Setinitiationall {
 		ArrayList<String> names = hc.getNames();
 		SQLFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
+		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		if (!(args.length == 1)) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /setinitiationall ['true' or 'false']");
+			sender.sendMessage(L.get("SETINITIATIONALL_FALSE"));
 			return;
 		}
 		String setting = "";
@@ -22,7 +23,7 @@ public class Setinitiationall {
 		} else if (args[0].equalsIgnoreCase("false")) {
 			setting = "false";
 		} else {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /setinitiationall ['true' or 'false']");
+			sender.sendMessage(L.get("SETINITIATIONALL_FALSE"));
 			return;
 		}
 		new Backup();
@@ -32,6 +33,7 @@ public class Setinitiationall {
 		}
 		isign.setrequestsignUpdate(true);
 		isign.checksignUpdate();
-		sender.sendMessage(ChatColor.GOLD + "All objects set to initial pricing: " + setting + ".");
+		//sender.sendMessage(ChatColor.GOLD + "All objects set to initial pricing: " + setting + ".");
+		sender.sendMessage(L.f(L.get("ALL_OBJECTS_SET_TO"), setting));
 	}
 }

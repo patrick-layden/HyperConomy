@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 public class Notify {
 	Notify(String[] args, CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			String itemname = hc.fixName(args[0]);
 			if (args.length == 1) {
@@ -30,11 +31,13 @@ public class Notify {
 									notify = notify.substring(itemname.length() + 1, notify.length());
 								}
 								hc.getYaml().getConfig().set("config.notify-for", notify);
-								sender.sendMessage(ChatColor.GOLD + "You will no longer receive notifications for " + itemname);
+								//sender.sendMessage(ChatColor.GOLD + "You will no longer receive notifications for " + itemname);
+								sender.sendMessage(L.f(L.get("NOT_RECEIVE_NOTIFICATIONS_S"), itemname));
 							} else {
 								notify = notify + itemname + ",";
 								hc.getYaml().getConfig().set("config.notify-for", notify);
-								sender.sendMessage(ChatColor.GOLD + "You will now receive notifications for " + itemname);
+								//sender.sendMessage(ChatColor.GOLD + "You will now receive notifications for " + itemname);
+								sender.sendMessage(L.f(L.get("RECEIVE_NOTIFICATIONS_S"), itemname));
 							}
 						} else {
 							ArrayList<String> items = hc.getNames();
@@ -47,23 +50,23 @@ public class Notify {
 							String notify = hc.getYaml().getConfig().getString("config.notify-for");
 							if (notify.equalsIgnoreCase(namelist)) {
 								hc.getYaml().getConfig().set("config.notify-for", "");
-								sender.sendMessage(ChatColor.GOLD + "You will no longer receive notifications for any item or enchantment.");
+								sender.sendMessage(L.get("NOT_RECEIVE_NOTIFICATIONS"));
 							} else {
 								hc.getYaml().getConfig().set("config.notify-for", namelist);
-								sender.sendMessage(ChatColor.GOLD + "You will now receive notifications for all items and enchantments.");
+								sender.sendMessage(L.get("RECEIVE_NOTIFICATIONS"));
 							}
 						}
 					} else {
-						sender.sendMessage(ChatColor.DARK_RED + "That item or enchantment is not in the database!");
+						sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 					}
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED + "Notifications are currently disabled!");
+					sender.sendMessage(L.get("NOTIFICATIONS_DISABLED"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /notify [name/'all']");
+				sender.sendMessage(L.get("NOTIFY_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /notify [name/'all']");
+			sender.sendMessage(L.get("NOTIFY_INVALID"));
 		}
 	}
 }

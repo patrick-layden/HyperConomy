@@ -2,8 +2,6 @@ package regalowl.hyperconomy;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class RestoreSQL {
@@ -24,6 +22,7 @@ public class RestoreSQL {
 	private void restoreSQL(CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLEconomy sqe = hc.getSQLEconomy();
+		LanguageFile L = hc.getLanguageFile();
 		FileTools ft = new FileTools();
 		SerializeArrayList sal = new SerializeArrayList();
 		ArrayList<String> statements = new ArrayList<String>();
@@ -34,7 +33,7 @@ public class RestoreSQL {
 		
 		String hyperobjects = ft.getStringFromFile(path + File.separator + "HyperObjects.txt");
 		if (hyperobjects.equalsIgnoreCase("error") || hyperobjects.equalsIgnoreCase("") || hyperobjects == null) {
-			sender.sendMessage(ChatColor.DARK_RED + "SQL backup not found.  Place your backup in the HyperConomy folder.");
+			sender.sendMessage(L.get("SQL_BACKUP_NOT_FOUND"));
 			return;
 		}
 		ArrayList<String> names = sal.stringToArray(hyperobjects.substring(0, hyperobjects.indexOf(";")));
@@ -159,6 +158,6 @@ public class RestoreSQL {
 		SQLWrite sw = hc.getSQLWrite();
 		sw.writeData(statements);
 		hc.getSQLFunctions().load();
-		sender.sendMessage(ChatColor.GOLD + "SQL tables imported from file!");
+		sender.sendMessage(L.get("SQL_TABLES_IMPORTED"));
 	}
 }

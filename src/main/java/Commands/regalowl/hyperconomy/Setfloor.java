@@ -8,6 +8,7 @@ public class Setfloor {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
+		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
 			if (args.length == 2) {
@@ -17,21 +18,18 @@ public class Setfloor {
 				String teststring2 = hc.testeString(name);
 				if (teststring1 != null || teststring2 != null) {
 					sf.setFloor(name, playerecon, floor);
-					sender.sendMessage(ChatColor.GOLD + "" + name
-							+ " floor set!");
+					//sender.sendMessage(ChatColor.GOLD + "" + name + " floor set!");
+					L.f(L.get("FLOOR_SET"), name);
 					isign.setrequestsignUpdate(true);
 					isign.checksignUpdate();
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED
-							+ "Invalid name!");
+					sender.sendMessage(L.get("INVALID_NAME"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED
-						+ "Invalid parameters. Use /setfloor [item/enchantment name] [floor]");
+				sender.sendMessage(L.get("SETFLOOR_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED
-					+ "Invalid parameters. Use /setfloor [item/enchantment name] [floor]");
+			sender.sendMessage(L.get("SETFLOOR_INVALID"));
 		}
 	}
 }

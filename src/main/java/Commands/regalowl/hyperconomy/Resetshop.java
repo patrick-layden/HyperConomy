@@ -11,13 +11,10 @@ public class Resetshop {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0) {
-				sender.sendMessage(ChatColor.RED + "Are you sure you wish to do this?");
-				sender.sendMessage(ChatColor.RED + "All item and enchantment stocks will be set to 0.");
-				sender.sendMessage(ChatColor.RED + "All items and enchantments will return to initial pricing.");
-				sender.sendMessage(ChatColor.RED + "Static pricing will be disabled for all items and enchantments.");
-				sender.sendMessage(ChatColor.RED + "Type /resetshop confirm to proceed.");
+				sender.sendMessage(L.get("RESETSHOP_CONFIRM"));
 			} else if (args[0].equalsIgnoreCase("confirm")) {
 				if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 					new Backup();
@@ -29,14 +26,14 @@ public class Resetshop {
 					sf.setStatic(cname, playerecon, "false");
 					sf.setInitiation(cname, playerecon, "true");
 				}
-				sender.sendMessage(ChatColor.GOLD + "Shop stock, initiation, and static pricing have been reset!");
+				sender.sendMessage(L.get("RESETSHOP_SUCCESS"));
 				isign.setrequestsignUpdate(true);
 				isign.checksignUpdate();
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /resetshop");
+				sender.sendMessage(L.get("RESETSHOP_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /resetshop");
+			sender.sendMessage(L.get("RESETSHOP_INVALID"));
 		}
 	}
 }

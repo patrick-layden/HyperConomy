@@ -9,16 +9,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Topenchants {
-
-	Topenchants(String args[], Player player, CommandSender sender,
-			String playerecon) {
+	Topenchants(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getShop();
 		SQLFunctions sf = hc.getSQLFunctions();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length > 1) {
-				sender.sendMessage(ChatColor.DARK_RED
-						+ "Use /topenchants (page)");
+				sender.sendMessage(L.get("TOPENCHANTS_INVALID"));
 				return;
 			}
 			String nameshop = "";
@@ -60,26 +58,22 @@ public class Topenchants {
 			double maxpages = le / 10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int) maxpages + 1;
-			sender.sendMessage(ChatColor.RED + "Page " + ChatColor.WHITE + "("
-					+ ChatColor.RED + "" + page + ChatColor.WHITE + "/"
-					+ ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
+			//sender.sendMessage(ChatColor.RED + "Page " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
+			sender.sendMessage(L.f(L.get("PAGE_NUMBER"), page, maxpi));
 			try {
 				while (count < numberpage) {
 					double lk = enchantstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
-						sender.sendMessage(ChatColor.WHITE
-								+ enchantstocks.get(lk) + ChatColor.WHITE
-								+ ": " + ChatColor.AQUA + ""
-								+ (int) Math.floor(lk));
+						sender.sendMessage(ChatColor.WHITE + enchantstocks.get(lk) + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + (int) Math.floor(lk));
 					}
 					enchantstocks.remove(lk);
 					count++;
 				}
 			} catch (Exception e) {
-				sender.sendMessage("You have reached the end.");
+				sender.sendMessage(L.get("YOU_HAVE_REACHED_THE_END"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Use /topenchants (page)");
+			sender.sendMessage(L.get("TOPENCHANTS_INVALID"));
 		}
 	}
 }

@@ -8,6 +8,7 @@ public class Seteconomy {
 	Seteconomy(_Command command, String args[], CommandSender sender, Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hc.useSQL()) {
 				if (args.length == 1) {
@@ -15,23 +16,23 @@ public class Seteconomy {
     				if (hc.getSQLFunctions().testEconomy(economy)) {
     		    		if (player != null) {
         					sf.setPlayerEconomy(player.getName(), economy);
-        					sender.sendMessage(ChatColor.GOLD + "Economy set!");
+        					sender.sendMessage(L.get("ECONOMY_SET"));
     		    		} else {
     		    			command.setNonPlayerEconomy(economy);
-    		    			sender.sendMessage(ChatColor.GOLD + "Economy set!");
+    		    			sender.sendMessage(L.get("ECONOMY_SET"));
     		    		}
     				} else {
-    					sender.sendMessage(ChatColor.RED + "That economy doesn't exist!");
+    					sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
     				}
     				
     			} else {
-    				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /seteconomy [name]");
+    				sender.sendMessage(L.get("SETECONOMY_INVALID"));
     			}
 			} else {
-				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+				sender.sendMessage(L.get("ONLY_AVAILABLE_SQL"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /seteconomy [name]");
+			sender.sendMessage(L.get("SETECONOMY_INVALID"));
 		}
 	}
 }

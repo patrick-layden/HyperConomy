@@ -8,19 +8,20 @@ public class Listeconomies {
 	Listeconomies(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hc.useSQL()) {
 				if (args.length == 0) {
     				ArrayList<String> economies = sf.getEconomyList();
     				sender.sendMessage(ChatColor.AQUA + economies.toString());
     			} else {
-    				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /listeconomies");
+    				sender.sendMessage(L.get("LISTECONOMIES_INVALID"));
     			}
 			} else {
-				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+				sender.sendMessage(L.get("ONLY_AVAILABLE_SQL"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /listeconomies");
+			sender.sendMessage(L.get("LISTECONOMIES_INVALID"));
 		}
 	}
 }

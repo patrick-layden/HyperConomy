@@ -7,6 +7,7 @@ public class Renameeconomyaccount {
 	Renameeconomyaccount(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		Account acc = hc.getAccount();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 1) {
 				String newaccount = args[0];
@@ -15,12 +16,12 @@ public class Renameeconomyaccount {
 				acc.setBalance(newaccount, acc.getBalance(oldaccount));
 				acc.setBalance(oldaccount, 0);
 				hc.getYaml().getConfig().set("config.global-shop-account", newaccount);
-				sender.sendMessage(ChatColor.GOLD + "The global shop account has been successfully renamed!");
+				sender.sendMessage(L.get("GLOBAL_SHOP_RENAMED"));
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /renameeconomyaccount [new name]");
+				sender.sendMessage(L.get("RENAMEECONOMYACCOUNT_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /renameeconomyaccount [new name]");
+			sender.sendMessage(L.get("RENAMEECONOMYACCOUNT_INVALID"));
 		}
 	}
 }

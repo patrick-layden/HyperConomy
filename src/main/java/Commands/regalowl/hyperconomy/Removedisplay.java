@@ -8,8 +8,9 @@ import org.bukkit.entity.Player;
 public class Removedisplay {
 	Removedisplay(Player player) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		if (!hc.getYaml().getConfig().getBoolean("config.use-item-displays")) {
-			player.sendMessage(ChatColor.DARK_RED + "Item displays must be enabled to use this command.");
+			player.sendMessage(L.get("ITEMDISPLAYS_MUST_BE_ENABLED"));
 			return;
 		}
 		ItemDisplay itdi = hc.getItemDisplay();
@@ -18,9 +19,9 @@ public class Removedisplay {
 		World w = player.getLocation().getWorld();
 		boolean success = itdi.removeDisplay(x, z, w);
 		if (success) {
-			player.sendMessage(ChatColor.GOLD + "Display removed!");
+			player.sendMessage(L.get("DISPLAY_REMOVED"));
 		} else {
-			player.sendMessage(ChatColor.DARK_RED + "There was no display detected where you're standing.");
+			player.sendMessage(L.get("NO_DISPLAY_DETECTED"));
 		}
 	}
 }

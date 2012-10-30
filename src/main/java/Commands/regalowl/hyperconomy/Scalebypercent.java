@@ -2,13 +2,13 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Scalebypercent {
 	Scalebypercent(CommandSender sender, String[] args, String playerecon) {
+		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		try {
-			HyperConomy hc = HyperConomy.hc;
 			SQLFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			InfoSign isign = hc.getInfoSign();
@@ -45,20 +45,20 @@ public class Scalebypercent {
 								sf.setStartPrice(cname, playerecon, calc.twoDecimals(sf.getStartPrice(cname, playerecon) * percent));
 							}
 						}
-						sender.sendMessage(ChatColor.GOLD + "Adjustment successful!");
+						sender.sendMessage(L.get("ADJUSTMENT_SUCCESSFUL"));
 						isign.setrequestsignUpdate(true);
 						isign.checksignUpdate();
 					} else {
-						sender.sendMessage(ChatColor.DARK_RED + "The setting must be either value, staticprice, stock, median, or startprice!");
+						sender.sendMessage(L.get("SCALEBYPERCENT_TYPES"));
 					}
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED + "Percent must be greater than 0!");
+					sender.sendMessage(L.get("PERCENT_GREATER_THAN_0"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /scalebypercent [setting] [percent] ('item' or 'enchantment')");
+				sender.sendMessage(L.get("SCALEBYPERCENT_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /scalebypercent [setting] [percent] ('item' or 'enchantment')");
+			sender.sendMessage(L.get("SCALEBYPERCENT_INVALID"));
 		}
 	}
 }

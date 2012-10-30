@@ -9,6 +9,7 @@ public class Removeitem {
 	Removeitem(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getShop();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			String itemname = args[0];
 			String teststring2 = hc.testeString(itemname);
@@ -39,7 +40,8 @@ public class Removeitem {
 	    						}
 		    					unavailable = unavailable + itemname + ",";
 		    					hc.getYaml().getShops().set(shopname + ".unavailable", unavailable);
-		    					sender.sendMessage(ChatColor.GOLD + itemname + " removed from " + shopname.replace("_", " "));
+		    					//sender.sendMessage(ChatColor.GOLD + itemname + " removed from " + shopname.replace("_", " "));
+		    					sender.sendMessage(L.f(L.get("REMOVED_FROM"), itemname, shopname.replace("_", " ")));
 	    					} else if (itemname.equalsIgnoreCase("all")) {
 	    						String itemlist = "";
 	    						String enchantlist = "";
@@ -54,22 +56,23 @@ public class Removeitem {
 		    	    				enchantlist = enchantlist + elst2 + ",";    	    						
 	    	        	        }
 		    					hc.getYaml().getShops().set(shopname + ".unavailable", itemlist + enchantlist);
-		    					sender.sendMessage(ChatColor.GOLD + "All items and enchantments have been removed from " + shopname.replace("_", " "));
+		    					//sender.sendMessage(ChatColor.GOLD + "All items and enchantments have been removed from " + shopname.replace("_", " "));
+		    					sender.sendMessage(L.f(L.get("ALL_REMOVED_FROM"), shopname.replace("_", " ")));
 	    					}
 	    				} else {
-	    					sender.sendMessage(ChatColor.DARK_RED + "That item has already been removed from the shop.");
+	    					sender.sendMessage(L.get("ALREADY_BEEN_REMOVED"));
 	    				}
     				} else {
-    					sender.sendMessage(ChatColor.DARK_RED + "That shop doesn't exist!");
+    					sender.sendMessage(L.get("SHOP_NOT_EXIST"));
     				}
     			} else {
-    				sender.sendMessage(ChatColor.BLUE + "Sorry, that item or enchantment is not in the database.");
+    				sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
     			}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /removeitem [name/'all'] [shop] ");
+				sender.sendMessage(L.get("REMOVEITEM_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /removeitem [name/'all'] [shop]");
+			sender.sendMessage(L.get("REMOVEITEM_INVALID"));
 		}
 	}
 }

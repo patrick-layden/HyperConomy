@@ -12,18 +12,18 @@ public class Removecategory {
 	private CommandSender sender;
 	private HashMap<CommandSender, String> messages = new HashMap<CommandSender, String>();
 	private boolean messageActive = false;
-	
+
 	Removecategory(String args[], CommandSender se) {
 		sender = se;
 		hc = HyperConomy.hc;
 		Shop s = hc.getShop();
+		LanguageFile L = hc.getLanguageFile();
 		SerializeArrayList sal = new SerializeArrayList();
 		try {
 			FileConfiguration category = hc.getYaml().getCategories();
 			String testcategory = category.getString(args[0]);
 			if (testcategory == null) {
-				sender.sendMessage(ChatColor.DARK_RED
-						+ "That category does not exist.");
+				sender.sendMessage(L.get("CATEGORY_NOT_EXIST"));
 				return;
 			}
 			ArrayList<String> objects = sal.stringToArray(testcategory);
@@ -38,8 +38,7 @@ public class Removecategory {
 					}
 					counter++;
 				}
-				String teststring3 = hc.getYaml().getShops()
-						.getString(shopname);
+				String teststring3 = hc.getYaml().getShops().getString(shopname);
 				if (teststring3 == null) {
 					shopname = hc.fixsName(shopname);
 					teststring3 = hc.getYaml().getShops().getString(shopname);
@@ -50,38 +49,29 @@ public class Removecategory {
 						String teststring2 = hc.testeString(itemname);
 						String teststring = hc.testiString(itemname);
 						if (teststring != null || teststring2 != null) {
-							String unavailable = hc.getYaml().getShops()
-									.getString(shopname + ".unavailable");
+							String unavailable = hc.getYaml().getShops().getString(shopname + ".unavailable");
 							if (s.has(shopname, itemname)) {
 								if (unavailable == null) {
 									unavailable = "";
 								}
 								unavailable = unavailable + itemname + ",";
-								hc.getYaml()
-										.getShops()
-										.set(shopname + ".unavailable",
-												unavailable);
-								sendMessage(ChatColor.GOLD + args[0]
-										+ " removed from "
-										+ shopname.replace("_", " "));
+								hc.getYaml().getShops().set(shopname + ".unavailable", unavailable);
+								//sendMessage(ChatColor.GOLD + args[0] + " removed from " + shopname.replace("_", " "));
+								sendMessage(L.f(L.get("REMOVED_FROM"), args[0], shopname.replace("_", " ")));
 							}
 						}
 					}
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED
-							+ "That shop doesn't exist!");
+					sender.sendMessage(L.get("SHOP_NOT_EXIST"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED
-						+ "Invalid Parameters.  Use /removecategory [name] [shop]");
+				sender.sendMessage(L.get("REMOVECATEGORY_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED
-					+ "Invalid Parameters.  Use /removecategory [name] [shop]");
+			sender.sendMessage(L.get("REMOVECATEGORY_INVALID"));
 		}
 	}
-	
-	
+
 	/**
 	 * 
 	 * Limits messages sent to player to 1 per second.
@@ -90,15 +80,13 @@ public class Removecategory {
 		messages.put(sender, message);
 		if (!messageActive) {
 			messageActive = true;
-			hc.getServer().getScheduler()
-					.scheduleSyncDelayedTask(hc, new Runnable() {
-						public void run() {
-							sender.sendMessage(messages.get(sender));
-							messages.remove(sender);
-							messageActive = false;
-						}
-					}, 20L);
+			hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+				public void run() {
+					sender.sendMessage(messages.get(sender));
+					messages.remove(sender);
+					messageActive = false;
+				}
+			}, 20L);
 		}
-
 	}
 }

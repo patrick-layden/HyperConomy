@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class HyperError {
@@ -43,6 +42,7 @@ public class HyperError {
 	
 	private void handleError() {
 		boolean logError = hc.getYaml().getConfig().getBoolean("config.log-errors");
+		LanguageFile L = hc.getLanguageFile();
 		if (logError) {
 			hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
 				public void run() {
@@ -62,11 +62,14 @@ public class HyperError {
 					SQLFunctions sf = hc.getSQLFunctions();
 					info = ft.getTimeStamp() + "\n\n" + "UseSQL='" + hc.useSQL() + "', DataBuilt='" + sf.dataBuilt() + "', SQLLoaded='" + sf.sqlLoaded() + "'\n\n" + info;
 					ft.writeStringToFile(info, path + File.separator + "info.txt");
-					Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred. [#" + errornumber + "] Check the errors folder for more info.", "hyperconomy.error");
+					LanguageFile L = hc.getLanguageFile();
+					Bukkit.broadcast(L.f(L.get("ERROR_HAS_OCCURRED"), errornumber), "hyperconomy.error");
+					//Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred. [#" + errornumber + "] Check the errors folder for more info.", "hyperconomy.error");
 				}
 			}, 0L);
 		} else {
-			Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred. [#" + errornumber + "] Enable error logging in config.yml to log future errors.", "hyperconomy.error");
+			Bukkit.broadcast(L.f(L.get("HYPERERROR_LOG"), errornumber), "hyperconomy.error");
+			//Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred. [#" + errornumber + "] Enable error logging in config.yml to log future errors.", "hyperconomy.error");
 		}
 	}
 }

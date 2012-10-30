@@ -22,9 +22,10 @@ public class Setlanguage {
 				if (sl.contains(language) || ft.fileExists(filepath)) {
 					hc.getYaml().getConfig().set("config.language", language);
 					language = L.buildLanguageFile(false);
-					sender.sendMessage(ChatColor.GOLD + language + " loaded.");
+					//sender.sendMessage(ChatColor.GOLD + language + " loaded.");
+					sender.sendMessage(L.f(L.get("LANGUAGE_LOADED"), language));
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED + "The specified language file was not found.");
+					sender.sendMessage(L.get("LANGUAGE_NOT_FOUND"));
 				}
 			} else if (args.length == 2 && args[1].equalsIgnoreCase("o")) {
 				String language = args[0].toLowerCase();
@@ -32,15 +33,16 @@ public class Setlanguage {
 				if (sl.contains(language)) {
 					hc.getYaml().getConfig().set("config.language", language);
 					language = L.buildLanguageFile(true);
-					sender.sendMessage(ChatColor.GOLD + language + " loaded.");
+					//sender.sendMessage(ChatColor.GOLD + language + " loaded.");
+					sender.sendMessage(L.f(L.get("LANGUAGE_LOADED"), language));
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED + "The specified language file was not found or cannot be overwritten.");
+					sender.sendMessage(L.get("LANGUAGE_NOT_FOUND"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Use /setlanguage [language] ('o')");
+				sender.sendMessage(L.get("SETLANGUAGE_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Use /setlanguage [language] ('o')");
+			sender.sendMessage(L.get("SETLANGUAGE_INVALID"));
 		}
 	}
 	

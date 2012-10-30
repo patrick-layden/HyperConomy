@@ -7,8 +7,9 @@ import org.bukkit.entity.Player;
 public class Makedisplay {
 	Makedisplay(String[] args, Player player) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		if (!hc.getYaml().getConfig().getBoolean("config.use-item-displays")) {
-			player.sendMessage(ChatColor.DARK_RED + "Item displays must be enabled to use this command.");
+			player.sendMessage(L.get("ENABLE_ITEM_DISPLAYS"));
 			return;
 		}
 		SQLFunctions sf = hc.getSQLFunctions();
@@ -23,10 +24,10 @@ public class Makedisplay {
 				World w = player.getLocation().getWorld();
 				itdi.testDisplay(x, y, z, w, name, economy);
 			} else {
-				player.sendMessage(ChatColor.DARK_RED + "Invalid item name.");
+				player.sendMessage(L.get("INVALID_ITEM_NAME"));
 			}
 		} else {
-			player.sendMessage(ChatColor.DARK_RED + "Invalid Parameters. Use /makedisplay [name]");
+			player.sendMessage(L.get("MAKEDISPLAY_INVALID"));
 		}
 	}
 }

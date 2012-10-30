@@ -180,3 +180,137 @@ XP_FOR_NEXT_LVL: &9Experience Needed For The Next Level: &a%v
 XP_FOR_LVL_30: &9Experience Needed For Level 30: &a%v
 XPINFO_INVALID: &4Invalid Parameters.  Use /xpinfo
 SHOP_LINE_BREAK: &8--------------------
+ENCHANTMENT_NOT_IN_DATABASE: &9Sorry, that enchantment is not in the enchantment database.
+SETTINGS_INVALID: &4Invalid parameters. Use /enchantsettings [enchantment] or /es [enchantment]
+SETTINGS_NAME: &9Name: &b%n
+SETTINGS_VALUE: &9Value: &b%v
+SETTINGS_STARTPRICE: &9Use Start Price: &b%s&9, &a%v
+SETTINGS_STATICPRICE: &9Static price: &b%s&9, &a%v
+SETTINGS_STOCK: &9Stock: &b%v
+SETTINGS_MEDIAN: &9Median stock: &b%v
+SETTINGS_CEILING: &9Ceiling: &b%v
+SETTINGS_FLOOR: &9Floor: &b%v
+SETTINGS_REACH_HYPERBOLIC: &9Items Needed To Reach Hyperbolic Curve: &b%v
+EVALUE_INVALID: &4Invalid Parameters. Use /evalue (name) ('b'/'s'/'a')
+EVALUE_STOCK: &9The global shop has &a%a &b%n &9available.
+EVALUE_CLASS_PURCHASE: &b%n &9on a &b%e &9item can be bought for: &a%c%p
+EVALUE_CLASS_SALE: &b%n &9on a &b%e &9item can be sold for: &a%c%p
+EVALUE_SALE: &b%n &9can be sold for: &a%c%p
+EVALUE_PURCHASE: &b%n &9can be purchased for: &a%c%p
+HYPERLOG_INVALID: &4Invalid Parameters.  Use /hyperlog [Please read about this command's arguments on bukkit.]
+HYPERLOG_INVALID_INCREMENT: &4Invalid increment.  Valid time increments are 'm', 'h', and 'd' such as '3d' or '1h'
+ITEMSETTINGS_INVALID: &4Invalid parameters. Hold an item and use /itemsettings (id) (damage value)
+LISTECONOMIES_INVALID: &4Invalid Parameters.  Use /listeconomies
+LISTSHOPS_INVALID: &4Invalid Parameters.  Use /listshops
+LOADED_INTO_ECONOMY: loaded into economy!
+LOADITEMS_INVALID: &4Invalid Parameters.  Use /loaditems [economy]
+ENABLE_ITEM_DISPLAYS: &4Item displays must be enabled to use this command.
+MAKEDISPLAY_INVALID: &4Invalid Parameters. Use /makedisplay [name]
+NOTIFY_INVALID: &4Invalid Parameters.  Use /notify [name/'all']
+NOTIFICATIONS_DISABLED: &4Notifications are currently disabled!
+RECEIVE_NOTIFICATIONS: &6You will now receive notifications for all items and enchantments.
+NOT_RECEIVE_NOTIFICATIONS: &6You will no longer receive notifications for any item or enchantment.
+RECEIVE_NOTIFICATIONS_S: &6You will now receive notifications for %n.
+NOT_RECEIVE_NOTIFICATIONS_S: &6You will no longer receive notifications for %n.
+CATEGORY_NOT_EXIST: &4That category does not exist.
+REMOVECATEGORY_INVALID: &4Invalid Parameters.  Use /removecategory [name] [shop]
+REMOVED_FROM: &6%n removed from %e
+ITEMDISPLAYS_MUST_BE_ENABLED: &4Item displays must be enabled to use this command.
+DISPLAY_REMOVED: &6Display removed!
+NO_DISPLAY_DETECTED: &4There was no display detected where you're standing.
+ALL_REMOVED_FROM: &6All items and enchantments have been removed from %n.
+ALREADY_BEEN_REMOVED: &4That item has already been removed from the shop.
+REMOVEITEM_INVALID: &4Invalid Parameters.  Use /removeitem [name/'all'] [shop]
+HAS_BEEN_REMOVED: &6%n has been removed!
+REMOVE_SHOP_INVALID: &4Invalid Parameters.  Use /removeshop [name]
+GLOBAL_SHOP_RENAMED: &6The global shop account has been successfully renamed!
+RENAMEECONOMYACCOUNT_INVALID: &4Invalid Parameters.  Use /renameeconomyaccount [new name]
+RESETSHOP_CONFIRM: &cAre you sure you wish to do this? All item and enchantments will be set to 0 stock and return to initial pricing. Type '/resetshop confirm' to proceed.
+RESETSHOP_SUCCESS: &6Shop stock, initiation, and static pricing have been reset!
+RESETSHOP_INVALID: &4Invalid Parameters.  Use /resetshop
+ADJUSTMENT_SUCCESSFUL: &6Adjustment successful!
+SCALEBYPERCENT_TYPES: &4The setting must be either value, staticprice, stock, median, or startprice!
+PERCENT_GREATER_THAN_0: &4Percent must be greater than 0!
+SCALEBYPERCENT_INVALID: &4Invalid Parameters.  Use /scalebypercent [setting] [percent] ('item' or 'enchantment')
+BALANCE_SET: &6Balance set!
+ACCOUNT_NOT_EXIST: &4That account doesn't exist!
+SETBALANCE_INVALID: &4Invalid Parameters.  Use /setbalance [account] [balance]
+CEILING_SET: &6%n ceiling set!
+INVALID_NAME: &4Invalid name!
+SETCEILING_INVALID: &4Invalid parameters. Use /setceiling [item/enchantment name] [ceiling]
+SETCLASSVALUE_INVALID: &4Invalid Parameters. Use /setclassvalue [item class] [value]
+INVALID_ITEM_CLASS: &4Invalid item class.
+CLASSVALUE_SET: &6The classvalue for &b%n &6has been set.
+ECONOMY_SET: &6Economy set!
+SETECONOMY_INVALID: &4Invalid Parameters.  Use /seteconomy [name]
+FLOOR_SET: &6%n floor set!
+SETFLOOR_INVALID: &4Invalid parameters. Use /setfloor [item/enchantment name] [floor]
+SETINITIATION_INVALID: &4Invalid parameters. Use /setinitiation [item/enchantment name] ('e')
+INVALID_ENCHANTMENT_NAME: &4Invalid enchantment name!
+INVALID_ITEM_NAME: &4Invalid item name!
+INITIATION_TRUE: &6Initiation price is set to true for %n.
+INITIATION_FALSE: &6Initiation price is set to false for %n.
+ALL_OBJECTS_SET_TO: &6All objects set to initial pricing: %n
+SETINITIATIONALL_FALSE: &4Invalid parameters. Use /setinitiationall ['true' or 'false']
+SETINTERVAL_INVALID: &4Invalid Parameters.  Use /setinterval ['shop'/'log'/'save'/'sign'] [interval]
+SIGN_INTERVAL_SET: &6Sign update interval set!
+SAVE_INTERVAL_SET: &6Save interval set!
+LOG_INTERVAL_SET: &6Log write interval set!
+SHOP_INTERVAL_SET: &6Shop check interval set!
+SETLANGUAGE_INVALID: &4Use /setlanguage [language] ('o')
+LANGUAGE_NOT_FOUND: &4The specified language file was not found or cannot be overwritten.
+LANGUAGE_LOADED: &6%n loaded.
+SETMEDIAN_INVALID: &4Invalid parameters. Use /setmedian [item/enchantment name] [median] ('e')
+MEDIAN_SET: &6%n median set!
+SETMESSAGE_INVALID: &4Invalid Parameters.  Use /setmessage ['1'/'2'] [message] [shop]
+MESSAGE1_SET: &6Message 1 set!
+MESSAGE2_SET: &6Message 2 set!
+P1_SET: Shop location p1 has been set!
+P2_SET: Shop location p2 has been set!
+SETSHOP_INVALID: &4Invalid Parameters. Use /setshop ['p1'/'p2'] [name]
+SETSHOPECONOMY_INVALID: &4Invalid Parameters.  Use /setshopeconomy [shop name] [economy]
+SHOP_ECONOMY_SET: &6Shop economy set!
+SETSTARTPRICE_INVALID: &4Invalid parameters. Use /setstartprice [item/enchantment name] [startprice] ('e')
+START_PRICE_SET: &6%n start price set!"
+SETSTATIC_INVALID: &4Invalid parameters. Use /setstatic [item/enchantment name] ('e')
+USE_DYNAMIC_PRICE: &6%n will now use a dynamic price.
+USE_STATIC_PRICE: &6%n will now use a static price.
+SETSTATICALL_INVALID: &4Invalid parameters. Use /setstaticall ['true', 'false', or 'copy']
+ALL_OBJECTS_SET_TO_STATIC: &6All objects set to static pricing: %n.
+SETSTATICPRICE_INVALID: &4Invalid parameters. Use /setstaticprice [item/enchantment name] [staticprice] ('e')
+STATIC_PRICE_SET: &6%n static price set!
+SETSTOCK_INVALID: &4Invalid parameters. Use /setstock [item/enchantment name] [stock] ('e')
+STOCK_SET: &6%n stock set!"
+SETSTOCKALL_INVALID: &4Invalid parameters. Use /setstockall [stock]
+ALL_STOCKS_SET: &6All stocks set!
+SETSTOCKMEDIANALL_WARNING: &cAre you sure you wish to do this? All item and enchantment stocks will be set to their median with initial pricing disabled. Type '/setstockmedianall' confirm to proceed.
+SETSTOCKMEDIANALL_SUCCESS: &6Shop stocks of all items/enchantments have been set to their medians and initial pricing has been disabled.
+SETSTOCKMEDIANALL_INVALID: &4Invalid Parameters.  Use /setstockmedianall
+SETTAX_INVALID: &4Use /settax [puchase/sales/static/initial/enchant] [percent]
+ENCHANT_TAX_SET: &6The enchantment tax rate has been set!
+INITIAL_TAX_SET: &6The initial tax rate has been set!
+STATIC_TAX_SET: &6The static tax rate has been set!
+SALES_TAX_SET: &6The sales tax rate has been set!
+PURCHASE_TAX_SET: &6The purchase tax rate has been set!
+SETVALUE_INVALID: &4Invalid parameters. Use /setvalue [item/enchantment name] [value] ('e')
+VALUE_SET: &6%n value set!
+TAXSETTINGS_INVALID: &4Invalid parameters. Use /taxsettings
+PURCHASE_TAX_PERCENT: &9Purchase Tax Percent: &a%v
+INITIAL_TAX_PERCENT: &9Initial Tax Percent: &a%v
+STATIC_TAX_PERCENT: &9Static Tax Percent: &a%v
+ENCHANTMENT_TAX_PERCENT: &9Enchantment Tax Percent: &a%v
+SALES_TAX_PERCENT: &9Sales Tax Percent: &a%v
+TOPENCHANTS_INVALID: &4Use /topenchants (page)
+YOU_HAVE_REACHED_THE_END: You have reached the end.
+PAGE_NUMBER: &cPage &f(&c%v&f/&c%w&f)
+TOPITEMS_INVALID: &4Use /topitems (page)
+WRITEITEMS_INVALID: &4Invalid parameters. Use /writeitems ['row'/'column'] ('e')
+ITEM_NAMES_WRITTEN: &6Item names written to items.txt
+ENCHANT_NAMES_WRITTEN: &6Enchantment names written to enchants.txt
+LOG_NO_ECON_PLUGIN: No economy plugin detected! No money can be gained or lost. Please read the installation guide here: http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/
+NO_ECON_PLUGIN: &4No economy plugin detected! No money can be gained or lost.
+HYPERERROR_LOG: &4An error has occurred. [#%v] Enable error logging in config.yml to log future errors.
+ERROR_HAS_OCCURRED: &4An error has occurred. [#%v] Check the errors folder for more info.
+SQL_BACKUP_NOT_FOUND: &4SQL backup not found.  Place your backup in the HyperConomy folder.
+SQL_TABLES_IMPORTED: &6SQL tables imported from file!
+ENCHANTSETTINGS_INVALID: &4Invalid parameters. Use /enchantsettings [enchantment] or /es [enchantment]

@@ -11,8 +11,9 @@ public class Setstaticall {
 		ArrayList<String> names = hc.getNames();
 		SQLFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
+		LanguageFile L = hc.getLanguageFile();
 		if (!(args.length == 1)) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /setstaticall ['true', 'false', or 'copy']");
+			sender.sendMessage(L.get("SETSTATICALL_INVALID"));
 			return;
 		}
 		String setting = "";
@@ -23,7 +24,7 @@ public class Setstaticall {
 		} else if (args[0].equalsIgnoreCase("copy")) {
 			setting = "copy";
 		} else {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Use /setstaticall ['true', 'false', or 'copy']");
+			sender.sendMessage(L.get("SETSTATICALL_INVALID"));
 			return;
 		}
 		new Backup();
@@ -44,6 +45,7 @@ public class Setstaticall {
 		
 		isign.setrequestsignUpdate(true);
 		isign.checksignUpdate();
-		sender.sendMessage(ChatColor.GOLD + "All objects set to static pricing: " + setting + ".");
+		//sender.sendMessage(ChatColor.GOLD + "All objects set to static pricing: " + setting + ".");
+		sender.sendMessage(L.f(L.get("ALL_OBJECTS_SET_TO_STATIC"), setting));
 	}
 }

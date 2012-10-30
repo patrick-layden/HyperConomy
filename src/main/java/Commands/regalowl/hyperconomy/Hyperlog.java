@@ -9,10 +9,11 @@ public class Hyperlog {
 	
 	Hyperlog(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hc.useSQL()) {
 				if (args.length % 2 != 0 || args.length == 0) {
-					sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /hyperlog [Please read about this command's arguments on bukkit.]");
+					sender.sendMessage(L.get("HYPERLOG_INVALID"));
 					return;
 				}
 				
@@ -38,7 +39,7 @@ public class Hyperlog {
 						} else if (increment.equalsIgnoreCase("d")) {
 							quantity = quantity * 60 * 24;
 						} else {
-							sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Valid time increments are 'm', 'h', and 'd' such as '3d' or '1h'");
+							sender.sendMessage(L.get("HYPERLOG_INVALID_INCREMENT"));
 							return;
 						}
 						statement += " TIME > DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
@@ -52,7 +53,7 @@ public class Hyperlog {
 						} else if (increment.equalsIgnoreCase("d")) {
 							quantity = quantity * 60 * 24;
 						} else {
-							sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Valid time increments are 'm', 'h', and 'd' such as '3d' or '1h'");
+							sender.sendMessage(L.get("HYPERLOG_INVALID_INCREMENT"));
 							return;
 						}
 						statement += " TIME < DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
@@ -81,7 +82,7 @@ public class Hyperlog {
 					} else if (type.equalsIgnoreCase("<id")) {
 						statement += " ID < '" + value + "'";
 					} else {
-						sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /hyperlog [Please read about this command's arguments on bukkit.]");
+						sender.sendMessage(L.get("HYPERLOG_INVALID"));
 						return;
 					}
 
@@ -101,10 +102,10 @@ public class Hyperlog {
 				}
 
 			} else {
-				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+				sender.sendMessage(L.get("ONLY_AVAILABLE_SQL"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /hyperlog [Please read about this command's arguments on bukkit.]");
+			sender.sendMessage(L.get("HYPERLOG_INVALID"));
 		}
 	}
 	

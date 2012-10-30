@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 public class Removeshop {
 	Removeshop(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		Shop s = hc.getShop();
 		try {
 			if (args.length > 0) {
@@ -25,12 +26,13 @@ public class Removeshop {
 				}
 				s.setrShop(name);
 				s.removeShop();
-				sender.sendMessage(ChatColor.GOLD + name.replace("_", " ") + " has been removed!");
+				//sender.sendMessage(ChatColor.GOLD + name.replace("_", " ") + " has been removed!");
+				sender.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), name.replace("_", " ")));
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /removeshop [name]");
+				sender.sendMessage(L.get("REMOVE_SHOP_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "That shop doesn't exist.");
+			sender.sendMessage(L.get("SHOP_NOT_EXIST"));
 		}
 	}
 }

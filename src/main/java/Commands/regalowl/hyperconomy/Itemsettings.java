@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -9,6 +8,7 @@ public class Itemsettings {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		SQLFunctions sf = hc.getSQLFunctions();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0 && player != null) {
 				int itd = player.getItemInHand().getTypeId();
@@ -16,7 +16,7 @@ public class Itemsettings {
 				String ke = itd + ":" + da;
 				String nam = hc.getnameData(ke);
 				if (nam == null) {
-					sender.sendMessage(ChatColor.BLUE + "Sorry, that item or enchantment is not in the database.");
+					sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 				} else {
 					double val = 0;
 					boolean stat = false;
@@ -38,7 +38,18 @@ public class Itemsettings {
 					maxinitialitems = (int) (roundedtotalstock - sto);
 					double ceiling = sf.getCeiling(nam, playerecon);
 					double floor = sf.getFloor(nam, playerecon);
-					player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+					sender.sendMessage(L.get("LINE_BREAK"));
+					sender.sendMessage(L.f(L.get("SETTINGS_NAME"), nam));
+					sender.sendMessage(L.f(L.get("SETTINGS_VALUE"), val));
+					sender.sendMessage(L.f(L.get("SETTINGS_STARTPRICE"), starprice, init));
+					sender.sendMessage(L.f(L.get("SETTINGS_STATICPRICE"), statprice, stat));
+					sender.sendMessage(L.f(L.get("SETTINGS_STOCK"), sto));
+					sender.sendMessage(L.f(L.get("SETTINGS_MEDIAN"), med));
+					sender.sendMessage(L.f(L.get("SETTINGS_CEILING"), ceiling));
+					sender.sendMessage(L.f(L.get("SETTINGS_FLOOR"), floor));
+					sender.sendMessage(L.f(L.get("SETTINGS_REACH_HYPERBOLIC"), maxinitialitems));
+    				sender.sendMessage(L.get("LINE_BREAK"));
+					/*
 					player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
     				player.sendMessage(ChatColor.BLUE + "Value: " + ChatColor.AQUA + "" + val);
     				player.sendMessage(ChatColor.BLUE + "Use Start Price: " + ChatColor.AQUA + "" + init + ChatColor.BLUE + ", " + ChatColor.GREEN + starprice);
@@ -48,7 +59,7 @@ public class Itemsettings {
     				player.sendMessage(ChatColor.BLUE + "Ceiling: " + ChatColor.GREEN + "" + ceiling);	
     				player.sendMessage(ChatColor.BLUE + "Floor: " + ChatColor.GREEN + "" + floor);	
     				player.sendMessage(ChatColor.BLUE + "Items Needed To Reach Hyperbolic Curve: " + ChatColor.GREEN + "" + maxinitialitems);
-    				player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+					 */
 				}
 			} else if (args.length == 1) {
 				String nam = args[0];
@@ -74,25 +85,25 @@ public class Itemsettings {
 					maxinitialitems = (int) (roundedtotalstock - sto);
 					double ceiling = sf.getCeiling(nam, playerecon);
 					double floor = sf.getFloor(nam, playerecon);
-					sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-					sender.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
-    				sender.sendMessage(ChatColor.BLUE + "Value: " + ChatColor.AQUA + "" + val);
-    				sender.sendMessage(ChatColor.BLUE + "Use Start Price: " + ChatColor.AQUA + "" + init + ChatColor.BLUE + ", " + ChatColor.GREEN + starprice);
-    				sender.sendMessage(ChatColor.BLUE + "Static price: " + ChatColor.AQUA + "" + stat + ChatColor.BLUE + ", " + ChatColor.GREEN + "" + statprice);
-    				sender.sendMessage(ChatColor.BLUE + "Stock: " + ChatColor.GREEN + "" + sto);
-    				sender.sendMessage(ChatColor.BLUE + "Median stock: " + ChatColor.GREEN + "" + med);		
-    				sender.sendMessage(ChatColor.BLUE + "Ceiling: " + ChatColor.GREEN + "" + ceiling);	
-    				sender.sendMessage(ChatColor.BLUE + "Floor: " + ChatColor.GREEN + "" + floor);
-    				sender.sendMessage(ChatColor.BLUE + "Items Needed To Reach Hyperbolic Curve: " + ChatColor.GREEN + "" + maxinitialitems);
-    				sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+					sender.sendMessage(L.get("LINE_BREAK"));
+					sender.sendMessage(L.f(L.get("SETTINGS_NAME"), nam));
+					sender.sendMessage(L.f(L.get("SETTINGS_VALUE"), val));
+					sender.sendMessage(L.f(L.get("SETTINGS_STARTPRICE"), starprice, init));
+					sender.sendMessage(L.f(L.get("SETTINGS_STATICPRICE"), statprice, stat));
+					sender.sendMessage(L.f(L.get("SETTINGS_STOCK"), sto));
+					sender.sendMessage(L.f(L.get("SETTINGS_MEDIAN"), med));
+					sender.sendMessage(L.f(L.get("SETTINGS_CEILING"), ceiling));
+					sender.sendMessage(L.f(L.get("SETTINGS_FLOOR"), floor));
+					sender.sendMessage(L.f(L.get("SETTINGS_REACH_HYPERBOLIC"), maxinitialitems));
+    				sender.sendMessage(L.get("LINE_BREAK"));
 				} else {
-	    			sender.sendMessage(ChatColor.DARK_RED + "Invalid item name!");
+	    			sender.sendMessage(L.get("INVALID_ITEM_NAME"));
 	    		}  
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Hold an item and use /itemsettings (id) (damage value)");
+				sender.sendMessage(L.get("ITEMSETTINGS_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid parameters. Hold an item and use /itemsettings (id) (damage value)");
+			sender.sendMessage(L.get("ITEMSETTINGS_INVALID"));
 		}
 	}
 }

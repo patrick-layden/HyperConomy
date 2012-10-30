@@ -2,7 +2,6 @@ package regalowl.hyperconomy;
 
 import java.util.Iterator;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -14,6 +13,7 @@ public class Evalue {
 		Account acc = hc.getAccount();
 		SQLFunctions sf = hc.getSQLFunctions();
 		ETransaction ench = hc.getETransaction();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 2) {
 				String nam = args[0];
@@ -31,15 +31,16 @@ public class Evalue {
 						classtype[6] = "diamond";
 						classtype[7] = "bow";
 						int n = 0;
-						sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+						sender.sendMessage(L.get("LINE_BREAK"));
 						while (n < 8) {
 							double value = calc.getEnchantValue(nam, classtype[n], playerecon);
 							double salestax = calc.getSalesTax(player, value);
 							value = calc.twoDecimals(value - salestax);
-							sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + value);
+							//sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + value);
+							sender.sendMessage(L.f(L.get("EVALUE_CLASS_SALE"), 1,  value, nam, classtype[n]));
 							n++;
 						}
-						sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+						sender.sendMessage(L.get("LINE_BREAK"));
 					} else if (type.equalsIgnoreCase("b")) {
 						String[] classtype = new String[8];
 						classtype[0] = "leather";
@@ -51,29 +52,31 @@ public class Evalue {
 						classtype[6] = "diamond";
 						classtype[7] = "bow";
 						int n = 0;
-						sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+						sender.sendMessage(L.get("LINE_BREAK"));
 						while (n < 8) {
 							double cost = calc.getEnchantCost(nam, classtype[n], playerecon);
 							cost = cost + calc.getEnchantTax(nam, playerecon, cost);
-							sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be bought for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + cost);
+							//sender.sendMessage(ChatColor.AQUA + "" + nam + ChatColor.BLUE + " on a " + ChatColor.AQUA + "" + classtype[n] + ChatColor.BLUE + " item can be bought for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + cost);
+							sender.sendMessage(L.f(L.get("EVALUE_CLASS_PURCHASE"), 1,  cost, nam, classtype[n]));
 							n++;
 						}
-						sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+						sender.sendMessage(L.get("LINE_BREAK"));
 					} else if (type.equalsIgnoreCase("a")) {
-						sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
-						sender.sendMessage(ChatColor.BLUE + "The global shop has " + ChatColor.GREEN + "" + sf.getStock(nam, playerecon) + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " available.");
-						sender.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+						sender.sendMessage(L.get("LINE_BREAK"));
+						//sender.sendMessage(ChatColor.BLUE + "The global shop has " + ChatColor.GREEN + "" + sf.getStock(nam, playerecon) + ChatColor.AQUA + " " + nam + ChatColor.BLUE + " available.");
+						sender.sendMessage(L.f(L.get("EVALUE_STOCK"), sf.getStock(nam, playerecon), nam));
+						sender.sendMessage(L.get("LINE_BREAK"));
 					} else {
-						sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters. Use /evalue (name) ('b'/'s'/'a')");
+						sender.sendMessage(L.get("EVALUE_INVALID"));
 					}
 				} else {
-					sender.sendMessage(ChatColor.BLUE + "Sorry, that enchantment is not in the enchantment database.");
+					sender.sendMessage(L.get("ENCHANTMENT_NOT_IN_DATABASE"));
 				}
 			} else if (args.length == 0 && player != null) {
 				if (ench.hasenchants(player.getItemInHand())) {
 					player.getItemInHand().getEnchantments().keySet().toArray();
 					Iterator<Enchantment> ite = player.getItemInHand().getEnchantments().keySet().iterator();
-					player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+					player.sendMessage(L.get("LINE_BREAK"));
 					double duramult = ench.getDuramult(player);
 					while (ite.hasNext()) {
 						String rawstring = ite.next().toString();
@@ -103,19 +106,22 @@ public class Evalue {
 							salestax = (salestaxpercent / 100) * value;
 						}
 						value = calc.twoDecimals(value - salestax);
-						player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + value);
-						player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + cost);
-						player.sendMessage(ChatColor.BLUE + "The global shop currently has" + ChatColor.GREEN + " " + sf.getStock(fnam, playerecon) + ChatColor.AQUA + " " + fnam + ChatColor.BLUE + " available.");
+						//player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be sold for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + value);
+						sender.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
+						sender.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
+						//player.sendMessage(ChatColor.AQUA + "" + fnam + ChatColor.BLUE + " can be purchased for: " + ChatColor.GREEN + hc.getYaml().getConfig().getString("config.currency-symbol") + cost);
+						sender.sendMessage(L.f(L.get("EVALUE_STOCK"), sf.getStock(fnam, playerecon), fnam));
+						//player.sendMessage(ChatColor.BLUE + "The global shop currently has" + ChatColor.GREEN + " " + sf.getStock(fnam, playerecon) + ChatColor.AQUA + " " + fnam + ChatColor.BLUE + " available.");
 					}
-					player.sendMessage(ChatColor.BLACK + "-----------------------------------------------------");
+					player.sendMessage(L.get("LINE_BREAK"));
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED + "The item you're holding has no enchantments!");
+					sender.sendMessage(L.get("HAS_NO_ENCHANTMENTS"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters. Use /evalue (name) ('b'/'s'/'a')");
+				sender.sendMessage(L.get("EVALUE_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters. Use /evalue (name) ('b'/'s'/'a')");
+			sender.sendMessage(L.get("EVALUE_INVALID"));
 		}
 	}
 }

@@ -8,6 +8,7 @@ public class Setceiling {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
+		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
 			if (args.length == 2) {
@@ -17,21 +18,18 @@ public class Setceiling {
 				String teststring2 = hc.testeString(name);
 				if (teststring1 != null || teststring2 != null) {
 					sf.setCeiling(name, playerecon, ceiling);
-					sender.sendMessage(ChatColor.GOLD + "" + name
-							+ " ceiling set!");
+					//sender.sendMessage(ChatColor.GOLD + "" + name + " ceiling set!");
+					L.f(L.get("CEILING_SET"), name);
 					isign.setrequestsignUpdate(true);
 					isign.checksignUpdate();
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED
-							+ "Invalid name!");
+					sender.sendMessage(L.get("INVALID_NAME"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED
-						+ "Invalid parameters. Use /setceiling [item/enchantment name] [ceiling]");
+				sender.sendMessage(L.get("SETCEILING_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED
-					+ "Invalid parameters. Use /setceiling [item/enchantment name] [ceiling]");
+			sender.sendMessage(L.get("SETCEILING_INVALID"));
 		}
 	}
 }

@@ -8,6 +8,7 @@ public class Setstaticprice {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
+		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
 			if (args.length == 2) {
@@ -16,13 +17,12 @@ public class Setstaticprice {
 				String teststring = hc.testiString(name);
 				if (teststring != null) {
 					sf.setStaticPrice(name, playerecon, staticprice);
-					sender.sendMessage(ChatColor.GOLD + "" + name
-							+ " static price set!");
+					//sender.sendMessage(ChatColor.GOLD + "" + name + " static price set!");
+					sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), name));
 					isign.setrequestsignUpdate(true);
 					isign.checksignUpdate();
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED
-							+ "Invalid item name!");
+					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
 				}
 			} else if (args.length == 3) {
 				String ench = args[2];
@@ -32,25 +32,21 @@ public class Setstaticprice {
 					String teststring = hc.testeString(name);
 					if (teststring != null) {
 						sf.setStaticPrice(name, playerecon, staticprice);
-						sender.sendMessage(ChatColor.GOLD + "" + name
-								+ " static price set!");
+						//sender.sendMessage(ChatColor.GOLD + "" + name + " static price set!");
+						sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), name));
 						isign.setrequestsignUpdate(true);
 						isign.checksignUpdate();
 					} else {
-						sender.sendMessage(ChatColor.DARK_RED
-								+ "Invalid enchantment name");
+						sender.sendMessage(L.get("INVALID_ENCHANTMENT_NAME"));
 					}
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED
-							+ "Invalid parameters. Use /setstaticprice [item/enchantment name] [staticprice] ('e')");
+					sender.sendMessage(L.get("SETSTATICPRICE_INVALID"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED
-						+ "Invalid parameters. Use /setstaticprice [item/enchantment name] [staticprice] ('e')");
+				sender.sendMessage(L.get("SETSTATICPRICE_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED
-					+ "Invalid parameters. Use /setstaticprice [item/enchantment name] [staticprice] ('e')");
+			sender.sendMessage(L.get("SETSTATICPRICE_INVALID"));
 		}
 	}
 }

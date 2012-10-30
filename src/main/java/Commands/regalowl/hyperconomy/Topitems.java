@@ -11,11 +11,12 @@ import org.bukkit.entity.Player;
 public class Topitems {
 	Topitems(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		Shop s = hc.getShop();
 		SQLFunctions sf = hc.getSQLFunctions();
 		try {
 			if (args.length > 1) {
-				sender.sendMessage(ChatColor.DARK_RED + "Use /topitems (page)");
+				sender.sendMessage(L.get("TOPITEMS_INVALID"));
 				return;
 			}
 			// Gets the shop name if the player is in a shop.
@@ -58,7 +59,8 @@ public class Topitems {
 			double maxpages = le / 10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int) maxpages + 1;
-			sender.sendMessage(ChatColor.RED + "Page " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
+			sender.sendMessage(L.f(L.get("PAGE_NUMBER"), page, maxpi));
+			//sender.sendMessage(ChatColor.RED + "Page " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
 			try {
 				while (count < numberpage) {
 					double lk = itemstocks.lastKey();
@@ -69,10 +71,10 @@ public class Topitems {
 					count++;
 				}
 			} catch (Exception e) {
-				sender.sendMessage("You have reached the end.");
+				sender.sendMessage(L.get("YOU_HAVE_REACHED_THE_END"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Use /topitems (page)");
+			sender.sendMessage(L.get("TOPITEMS_INVALID"));
 		}
 	}
 }

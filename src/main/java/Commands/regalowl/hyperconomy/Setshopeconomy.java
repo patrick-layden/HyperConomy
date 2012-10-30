@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 public class Setshopeconomy {
 	Setshopeconomy(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hc.useSQL()) {
 				if (args.length == 2) {
@@ -16,24 +17,24 @@ public class Setshopeconomy {
     					name = hc.fixsName(name);
     				}
     				if (name == null) {
-    					sender.sendMessage(ChatColor.RED + "That shop doesn't exist!");
+    					sender.sendMessage(L.get("SHOP_NOT_EXIST"));
     					return;
     				}
     				String economy = args[1];
     				if (hc.getSQLFunctions().testEconomy(economy)) {
     					hc.getYaml().getShops().set(name + ".economy", economy);
-    					sender.sendMessage(ChatColor.GOLD + "Shop economy set!");
+    					sender.sendMessage(L.get("SHOP_ECONOMY_SET"));
     				} else {
-    					sender.sendMessage(ChatColor.RED + "That economy doesn't exist!");
+    					sender.sendMessage(L.get("ECONOMY_DOESNT_EXIST"));
     				}
     			} else {
-    				sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /setshopeconomy [shop name] [economy]");
+    				sender.sendMessage(L.get("SETSHOPECONOMY_INVALID"));
     			}
 			} else {
-				sender.sendMessage(ChatColor.RED + "This command is only available when SQL is enabled!");
+				sender.sendMessage(L.get("ONLY_AVAILABLE_SQL"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.RED + "Invalid Parameters.  Use /setshopeconomy [shop name] [economy]");
+			sender.sendMessage(L.get("SETSHOPECONOMY_INVALID"));
 		}
 	}
 }
