@@ -575,10 +575,20 @@ public class Calculation {
 	}
 
 	public int getDamageValue(ItemStack item) {
-		int itd = item.getTypeId();
-		int da = getpotionDV(item);
-		int newdat = newData(itd, da);
-		return newdat;
+		try {
+			if (item == null) {
+				return 0;
+			}
+			int itd = item.getTypeId();
+			int da = getpotionDV(item);
+			int newdat = newData(itd, da);
+			return newdat;
+		} catch (Exception e) {
+			String info = "Calculation getDamageValue() passed values ItemStack='" + item.getType() + "'";
+			new HyperError(e, info);
+			int da = 0;
+			return da;
+		}
 	}
 
 	public double getSalesTax(Player p, Double fprice) {

@@ -170,6 +170,7 @@ CHEST_WILL_NOT_ACCEPT_ITEM: &9This chest will not accept that item.
 CHEST_SHOP_NOT_ENOUGH_SPACE: &9The chest shop doesn't have enough space.
 PLAYER_DOESNT_HAVE_ENOUGH_MONEY: &9%n doesn't have enough money for this transaction.
 CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST: &9You cannot purchase enchantments from this chest.
+CANNOT_PURCHASE_ITEMS_FROM_CHEST: &9You cannot purchase items from this chest.
 ITEM_CANNOT_ACCEPT_ENCHANTMENTS: &9That item cannot accept enchantments.
 CHEST_SHOP_BUY_VALUE: &a&o%a &b&o%n &9&ocan be purchased from %zc for &a&o%c%p.
 CHEST_SHOP_SELL_VALUE: &a&o%a &b&o%n &9&ocan be sold to %zc for &a&o%c%p.

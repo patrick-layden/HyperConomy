@@ -44,6 +44,7 @@ public class HyperError {
 		boolean logError = hc.getYaml().getConfig().getBoolean("config.log-errors");
 		LanguageFile L = hc.getLanguageFile();
 		if (logError) {
+			hc.incrementErrorCount();
 			hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
 				public void run() {
 					FileTools ft = new FileTools();

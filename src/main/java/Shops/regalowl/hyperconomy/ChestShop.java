@@ -552,7 +552,7 @@ public class ChestShop implements Listener{
 								    			//p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
 								    			p.sendMessage(L.get("LINE_BREAK"));
 						    				} else {
-						    					p.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
+						    					p.sendMessage(L.get("CANNOT_PURCHASE_ITEMS_FROM_CHEST"));
 						    				}
 			
 							    			
@@ -728,7 +728,24 @@ public class ChestShop implements Listener{
 					}
 				}	
 			} else {
-				Bukkit.getPlayer(icevent.getWhoClicked().getName()).sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+				if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
+					if (icevent.getInventory().getHolder() instanceof Chest) {
+						Chest invchest = (Chest) icevent.getInventory().getHolder();
+						int x = invchest.getX();
+						int y = invchest.getY() + 1;
+						int z = invchest.getZ();
+						String world = invchest.getBlock().getWorld().getName();
+						BlockState signblock = Bukkit.getWorld(world).getBlockAt(x, y, z).getState();
+						if (signblock instanceof Sign) {
+							Sign s = (Sign) signblock;
+							String line2 = ChatColor.stripColor(s.getLine(1)).trim();
+					    	if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
+					    		Bukkit.getPlayer(icevent.getWhoClicked().getName()).sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+					    		icevent.setCancelled(true);
+					    	}
+						}
+					}
+				}
 			}
 		}		
 	}

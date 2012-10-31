@@ -217,6 +217,10 @@ public class Update {
 	    	}
 	    	
 	    	*/
+	    	double dversion = Double.parseDouble(configversion);
+	    	if (dversion < .952) {
+	    		yaml.getConfig().set("config.log-errors", false);
+	    	}
 		}
 		Double newversion = Double.parseDouble(hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion());
 		yaml.getConfig().set("version", newversion);

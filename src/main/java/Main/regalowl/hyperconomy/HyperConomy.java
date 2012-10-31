@@ -48,7 +48,9 @@ public class HyperConomy extends JavaPlugin {
 	private ArrayList<String> names = new ArrayList<String>();
 	private ArrayList<String> inames = new ArrayList<String>();
 	private ArrayList<String> enames = new ArrayList<String>();
-
+	private int errorCount;
+	private boolean errorResetActive;
+	private boolean shuttingDown;
 
 	@Override
 	public void onEnable() {
@@ -77,6 +79,9 @@ public class HyperConomy extends JavaPlugin {
 		YamlFile yam = new YamlFile(this);
 		yam.YamlEnable();
 		yaml = yam;
+		errorCount = 0;
+		errorResetActive = false;
+		shuttingDown = true;
 		L = new LanguageFile();
 		if (!brokenfile) {
 			new Update();
@@ -143,26 +148,37 @@ public class HyperConomy extends JavaPlugin {
 				new SQLPlayers(this);
 			}
 			hws = new HyperWebStart();
-			log.info(L.f(L.get("HYPERCONOMY_ENABLED"), getDescription().getVersion()));
+			log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 		}
 	}
 
 	public void shutDown() {
-		itdi.cancelRefreshThread();
-		itdi.clearDisplays();
-		s.stopshopCheck();
-		stopSave();
-		l.stopBuffer();
-		hist.stophistoryLog();
-		l.saveBuffer();
+		if (itdi != null) {
+			itdi.cancelRefreshThread();
+			itdi.clearDisplays();
+		}
+		if (s != null) {
+			s.stopshopCheck();
+			stopSave();
+		}
+		if (l != null) {
+			l.stopBuffer();
+			l.saveBuffer();
+		}
+		if (hist != null) {
+			hist.stophistoryLog();
+		}
 		getServer().getScheduler().cancelTasks(this);
-		hws.endServer();
-		if (useSQL()) {
+		if (hws != null) {
+			hws.endServer();
+		}
+		if (useSQL() && sw != null) {
 			sw.closeConnections();
 			new SQLShutdown(this, sw);
 		}
-		yaml.saveYamls();
-		log.info(L.get("HYPERCONOMY_DISABLED"));
+		if (yaml != null) {
+			yaml.saveYamls();
+		}
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -396,6 +412,28 @@ public class HyperConomy extends JavaPlugin {
 			}
 		}
 		return teststring;
+	}
+	
+	public void incrementErrorCount() {
+		errorCount++;
+		if (errorCount > 20) {
+			getServer().getScheduler().cancelTasks(this);
+			if (!shuttingDown) {
+				shuttingDown = true;
+				log.severe("HyperConomy is experiencing a massive amount of errors...shutting down....");
+				shutDown();
+				getPluginLoader().disablePlugin(this);
+			}
+		}
+		if (!errorResetActive) {
+			errorResetActive = true;
+			getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+			    public void run() {
+			    	errorCount = 0;
+	    		    errorResetActive = false;
+			    }
+			}, 20L);
+		}
 	}
 
 	public ArrayList<String> getNames() {
