@@ -2,7 +2,6 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Setinitiationall {

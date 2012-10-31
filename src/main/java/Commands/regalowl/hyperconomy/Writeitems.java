@@ -3,8 +3,6 @@ package regalowl.hyperconomy;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Writeitems {

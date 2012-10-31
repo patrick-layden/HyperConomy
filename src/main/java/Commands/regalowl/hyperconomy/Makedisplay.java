@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
