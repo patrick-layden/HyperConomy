@@ -315,3 +315,5 @@ ERROR_HAS_OCCURRED: &4An error has occurred. [#%v] Check the errors folder for m
 SQL_BACKUP_NOT_FOUND: &4SQL backup not found.  Place your backup in the HyperConomy folder.
 SQL_TABLES_IMPORTED: &6SQL tables imported from file!
 ENCHANTSETTINGS_INVALID: &4Invalid parameters. Use /enchantsettings [enchantment] or /es [enchantment]
+IMPORTPRICES_INVALID: &4Invalid parameters. Use /importprices [economy]
+PRICES_IMPORTED: &6Prices have been imported from YML.

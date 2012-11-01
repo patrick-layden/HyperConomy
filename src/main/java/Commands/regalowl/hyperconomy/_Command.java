@@ -242,7 +242,11 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("setlanguage")) {
 			new Setlanguage(args, sender);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("importprices")) {
+			new Importprices(args, sender);
+			return true;
 		}
+		
 		return false;
 	}
 

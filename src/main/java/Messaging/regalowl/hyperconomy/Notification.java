@@ -117,7 +117,7 @@ public class Notification {
 	public boolean checkNotify(String name) {
 		boolean note = false;
 		String notify = hc.getYaml().getConfig().getString("config.notify-for");
-		if (notify != null) {		
+		if (notify != null && name != null) {		
 			//For everything but the first.  (Which lacks a comma.)
 			if (notify.contains("," + name + ",")) {
 				note = true;

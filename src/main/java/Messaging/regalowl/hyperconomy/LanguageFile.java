@@ -12,6 +12,7 @@ public class LanguageFile {
 	
 	private FileTools ft;
 	private HashMap<String, String> language = new HashMap<String, String>();
+	private HashMap<String, String> languageBackup = new HashMap<String, String>();
 	private ArrayList<String> supportedLanguages = new ArrayList<String>();
 	//private Logger log = Logger.getLogger("Minecraft");
 	
@@ -40,6 +41,13 @@ public class LanguageFile {
 		
 		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
 		String filepath = folderpath + File.separator + lang + ".txt";
+		String backuppath = folderpath + File.separator + "english_backup.txt";
+		if (!ft.fileExists(backuppath)) {
+			ft.copyFileFromJar("Languages/english.txt", backuppath);
+		}
+		
+		buildBackupHashMap(backuppath);
+		
 		if (ft.fileExists(filepath) && !overwrite) {
 			buildHashMap(filepath);
 		} else {
@@ -61,6 +69,13 @@ public class LanguageFile {
 	}
 	
 	
+	public void updateBackup() {
+		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
+		String backuppath = folderpath + File.separator + "english_backup.txt";
+		ft.copyFileFromJar("Languages/english.txt", backuppath);
+	}
+	
+	
 	
 	
 	private void buildHashMap(String filepath) {
@@ -78,12 +93,33 @@ public class LanguageFile {
 		language.put("CURRENCY", formatMessage(HyperConomy.hc.getYaml().getConfig().getString("config.currency-symbol")));
 	}
 	
+	
+	private void buildBackupHashMap(String filepath) {
+		ArrayList<String> lines = ft.getStringArrayFromFile(filepath);
+		for (int i = 0; i < lines.size(); i++) {
+			String name = lines.get(i).substring(0, lines.get(i).indexOf(":"));
+			String text = lines.get(i).substring(lines.get(i).indexOf(":") + 1, lines.get(i).length());
+			if (text.startsWith(" ")) {
+				text = text.substring(1, text.length());
+			}
+			text = formatMessage(text);
+			languageBackup.put(name, text);
+		}
+		languageBackup.put("CC", "\u00A7");
+		languageBackup.put("CURRENCY", formatMessage(HyperConomy.hc.getYaml().getConfig().getString("config.currency-symbol")));
+	}
+	
+
 	public String get(String key) {
 		String message = "";
 		if (language.containsKey(key)) {
 			message = language.get(key);
 		} else {
-			message = "!!LANGUAGE FILE ENTRY NOT FOUND!!";
+			if (languageBackup.containsKey(key)) {
+				message = languageBackup.get(key);
+			} else {
+				message = "[" + key + "] NOT FOUND";
+			}
 		}
 		return message;
 	}

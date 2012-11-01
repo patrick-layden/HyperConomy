@@ -12,6 +12,8 @@ public class Update {
 		String configversion = yaml.getConfig().getString("version");
 		
 		if (configversion == null || !configversion.equalsIgnoreCase(version)) {
+			LanguageFile L = hc.getLanguageFile();
+			L.updateBackup();
 			if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 				new Backup();
 			}

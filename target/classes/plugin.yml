@@ -42,7 +42,7 @@ commands:
    xpinfo:
       description: Displays information about experience.
       permission: hyperconomy.info
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [xpi]
    sellall:
       description: Sells all of the items in your inventory.
@@ -71,104 +71,104 @@ commands:
    setshop:
       description: Sets the shop location.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [ss]
    removeshop:
       description: Removes a shop.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [rs]
    additem:
       description: Adds an item to a shop.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [ai]
    removeitem:
       description: Removes an item from a shop.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [ri]
    renameshop:
       description: Renames a shop to the given name.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    listshops:
       description: Lists all shop names.
       permission: hyperconomy.list
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    settax:
       description: Sets the sales tax for normal purchases.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [stax]
    setclassvalue:
       description: Sets the enchantment tax.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [scvalue]
    classvalues:
       description: Sets the enchantment tax.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [cvalues, cv]
    setvalue:
       description: Sets the value of an item.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [svalue]
    setstock:
       description: Sets the shop's stock of an item.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [sstock, stock]
    setmedian:
       description: Sets an item's median stock quantity.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [smedian, median]
    setstatic:
       description: Toggles whether or not an item uses a static price.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [sstatic, static]
    setinitiation:
       description: Toggles whether or not an item uses an initiation price.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [sinitial, initial]
    setstaticprice:
       description: Sets the static price for an item.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [staticprice]
    setstartprice:
       description: Sets the initial price for an item.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [startprice]
    setceiling:
       description: Sets the ceiling for an object.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [ceiling]
    setfloor:
       description: Sets the floor for an object.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [floor]
    writeitems:
       description: Creates a list of all item names or enchantment names in the plugin's folder.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    itemsettings:
       description: Displays the current shop settings for the item you're holding. Also works as /is
       permission: hyperconomy.settings
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [is]
    taxsettings:
       description: Displays the current tax values.
       permission: hyperconomy.settings
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [tsettings, ts]
    ebuy:
       description: Purchases the chosen enchantment.
@@ -192,157 +192,161 @@ commands:
    enchantsettings:
       description: Displays enchantment settings.
       permission: hyperconomy.settings
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [ens, eset]
    setinterval:
       description: Sets the interval at which shops check for players.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [sint]
    reloadfiles:
       description: Reloads all yml files.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    lockshop:
       description: Locks down the shop and most commands.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [ls]
    intervals:
       description: Displays secondary thread repeat intervals.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [ints]
    setmessage:
       description: Sets the shop messages.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [sm]
    resetshop:
       description: Resets the shop stock, initiation, and static pricing.
       permission: hyperconomy.resetshop
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    setstockmedianall:
       description: Sets the stock of everything in the shop to its median value.
       permission: hyperconomy.setstockmedianall
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    setbalance:
       description: Sets an account's balance.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [sb]
    scalebypercent:
       description: Scales the selected value the the given percent.
       permission: hyperconomy.scalebypercent
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    notify:
       description: Toggles the chosen item or enchantments notifications.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [not]
    renameeconomyaccount:
       description: Renames the account used by the global shop.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    seteconomy:
       description: Sets your economy to the specified one.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [se]
    setshopeconomy:
       description: Sets a shop to use the specified economy.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [sse]
    createeconomy:
       description: Creates a new economy.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [cre]
    deleteeconomy:
       description: Deletes an economy.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    listeconomies:
       description: Lists all economies.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [lec]
    economyinfo:
       description: Tells you what economy you are a part of.
       permission: hyperconomy.use
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [ei]
    loaditems:
       description: Loads new items into the specified economy.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    exporttoyml:
       description: Exports the selected economy to the items and enchants yml files.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    hcbackup:
       description: Backs up all HyperConomy data.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    ymladditem:
       description: Adds the item you're holding to the yml item database.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    importsql:
       description: Imports HyperConomy SQL backup files.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
    addcategory:
       description: Adds a category to a shop.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [acat]
    removecategory:
       description: Removes a category from a shop.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [rcat]
    listcategories:
       description: Lists all categories.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [lcat]
    setstockall:
       description: Sets the stock of all items to the specified amount.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [ssa]
    setinitiationall:
       description: Toggles initial pricing.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [sia]
    setstaticall:
       description: Toggles static pricing.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [ssta]
    hyperlog:
       description: Displays HyperConomy log information.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [hl]
    makedisplay:
       description: Makes an item display.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [mkd]
    removedisplay:
       description: Removes an item display.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [rdis]
    setlanguage:
       description: Switches language files.
       permission: hyperconomy.admin
-      permission-message: Unknown command. Type "help" for help.
+      permission-message: You do not have permission.
       aliases: [sela]
+   importprices:
+      description: Imports all prices from items.yml and enchants.yml.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.
