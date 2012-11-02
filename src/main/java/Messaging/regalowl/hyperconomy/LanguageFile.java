@@ -40,6 +40,7 @@ public class LanguageFile {
 		}
 		
 		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
+		ft.makeFolder(folderpath);
 		String filepath = folderpath + File.separator + lang + ".txt";
 		String backuppath = folderpath + File.separator + "english_backup.txt";
 		if (!ft.fileExists(backuppath)) {

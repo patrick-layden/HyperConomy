@@ -13,6 +13,7 @@ public class Setlanguage {
 		LanguageFile L = hc.getLanguageFile();
 		FileTools ft = new FileTools();
 		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
+		ft.makeFolder(folderpath);
 		try {
 			if (args.length == 1) {
 				String language = args[0].toLowerCase();
