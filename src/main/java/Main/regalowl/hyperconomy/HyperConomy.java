@@ -38,6 +38,7 @@ public class HyperConomy extends JavaPlugin {
 	private int savetaskid;
 	private YamlFile yaml;
 	private boolean lock;
+	private boolean mlock;
 	private boolean sqllock;
 	private boolean brokenfile;
 	private LanguageFile L;
@@ -69,6 +70,7 @@ public class HyperConomy extends JavaPlugin {
 	public void initialize() {
 		hc = this;
 		lock = false;
+		mlock = false;
 		brokenfile = false;
 		enames.clear();
 		inames.clear();
@@ -182,28 +184,28 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("lockshop")) {
+		if (cmd.getName().equalsIgnoreCase("lockshop") && !mlock) {
 			try {
 				if (args.length == 0) {
 					if (lock && !brokenfile) {
 						lock = false;
-						l.checkBuffer();
-						isign.checksignUpdate();
-						s.startshopCheck();
-						hist.starthistoryLog();
-						startSave();
+						//l.checkBuffer();
+						//isign.checksignUpdate();
+						//s.startshopCheck();
+						//hist.starthistoryLog();
+						//startSave();
 						sender.sendMessage(L.get("SHOP_UNLOCKED"));
 						return true;
 					} else if (!lock) {
 						lock = true;
-						s.stopshopCheck();
-						l.stopBuffer();
-						hist.stophistoryLog();
-						isign.stopsignUpdate();
-						isign.resetAll();
-						l.saveBuffer();
-						stopSave();
-						yaml.saveYamls();
+						//s.stopshopCheck();
+						//l.stopBuffer();
+						//hist.stophistoryLog();
+						//isign.stopsignUpdate();
+						//isign.resetAll();
+						//l.saveBuffer();
+						//stopSave();
+						//yaml.saveYamls();
 						sender.sendMessage(L.get("SHOP_LOCKED"));
 						return true;
 					} else {
@@ -218,7 +220,30 @@ public class HyperConomy extends JavaPlugin {
 				sender.sendMessage(L.get("LOCKSHOP_INVALID"));
 				return true;
 			}
-		} else if (cmd.getName().equalsIgnoreCase("reloadfiles")) {
+		} else if (cmd.getName().equalsIgnoreCase("hc")) {
+			if ((args.length == 0 || args[0].equalsIgnoreCase("help")) && !lock && !sqllock && !mlock) {
+				new Hc(sender, args);
+				return true;
+			} else {
+				if (sender.hasPermission("hyperconomy.admin")) {
+					if (args[0].equalsIgnoreCase("enable") && mlock) {
+						initialize();
+						sqllock = false;
+						sender.sendMessage(L.get("HC_HYPERCONOMY_ENABLED"));
+						sender.sendMessage(L.get("FILES_RELOADED"));
+						sender.sendMessage(L.get("SHOP_UNLOCKED"));
+					} else if (args[0].equalsIgnoreCase("disable") && !mlock) {
+						lock = true;
+						mlock = true;
+						shutDown(true);
+						sender.sendMessage(L.get("HC_HYPERCONOMY_DISABLED"));
+						sender.sendMessage(L.get("SHOP_LOCKED"));
+					}
+				}
+			}
+		} 
+		/*
+		else if (cmd.getName().equalsIgnoreCase("reloadfiles") && !mlock) {
 			try {
 				if (lock) {
 					shutDown(true);
@@ -235,7 +260,8 @@ public class HyperConomy extends JavaPlugin {
 				return true;
 			}
 		}
-		if (!lock && !sqllock) {
+		*/
+		if (((!lock && !sqllock) || sender.hasPermission("hyperconomy.admin")) && !mlock) {
 			boolean result = commandhandler.handleCommand(sender, cmd, label, args);
 			l.checkBuffer();
 			return result;

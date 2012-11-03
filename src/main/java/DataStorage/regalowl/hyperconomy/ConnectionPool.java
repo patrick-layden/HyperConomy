@@ -47,12 +47,14 @@ public class ConnectionPool {
 	
 	public Connection getConnection() {
 		int i = 0;
-		while (i < maxConnections) {
-			if (!inUse.get(i)) {
-				inUse.set(i, true);
-				return connections.get(i);
+		if (inUse != null && connections != null) {
+			while (i < maxConnections) {
+				if (!inUse.get(i)) {
+					inUse.set(i, true);
+					return connections.get(i);
+				}
+				i++;
 			}
-			i++;
 		}
 		return null;
 	}

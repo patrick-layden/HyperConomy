@@ -74,6 +74,8 @@ public class LanguageFile {
 		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
 		String backuppath = folderpath + File.separator + "english_backup.txt";
 		ft.copyFileFromJar("Languages/english.txt", backuppath);
+		languageBackup.clear();
+		buildBackupHashMap(backuppath);
 	}
 	
 	

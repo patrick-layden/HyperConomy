@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.953
+version: 0.954
 author: RegalOwl
 softdepend: [Vault, Buycraft, HeroStronghold]
 commands:
@@ -199,10 +199,6 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [sint]
-   reloadfiles:
-      description: Reloads all yml files.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
    lockshop:
       description: Locks down the shop and most commands.
       permission: hyperconomy.admin

@@ -1,4 +1,4 @@
-version: 0.953
+version: 0.954
 config:
   shopcheckinterval: 6
   logwriteinterval: 4
@@ -56,7 +56,7 @@ config:
     max-sql-threads: 20
   web-page:
     port: 8765
-    use-web-page: true
+    use-web-page: false
     web-page-economy: default
     background-color: EEEEF6
     font-color: 333333

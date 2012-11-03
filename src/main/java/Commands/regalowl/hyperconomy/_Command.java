@@ -170,9 +170,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("hcbackup")) {
 			new Hcbackup(sender);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("hc")) {
-			new Hc(sender, args);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("ebuy") && player != null) {
 			new Ebuy(player, args);
 			return true;
