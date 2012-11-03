@@ -8,7 +8,6 @@ public class Setinterval {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getShop();
 		YamlFile yaml = hc.getYaml();
-		//Log l = hc.getLog();
 		InfoSign isign = hc.getInfoSign();
 		LanguageFile L = hc.getLanguageFile();
 		try {
@@ -19,14 +18,6 @@ public class Setinterval {
 	    			s.stopshopCheck();
 	    			s.startshopCheck();
 	    			sender.sendMessage(L.get("SHOP_INTERVAL_SET"));
-	    			/*
-    			} else if (args[0].equalsIgnoreCase("log")) {
-    				l.setlogInterval(Long.parseLong(args[1]));
-	    			yaml.getConfig().set("config.logwriteinterval", l.getlogInterval());		    		
-	    			l.stopBuffer();
-	    			l.checkBuffer();	
-	    			sender.sendMessage(L.get("LOG_INTERVAL_SET"));
-	    			*/
     			} else if (args[0].equalsIgnoreCase("save")) {
     				long saveinterval = Long.parseLong(args[1]);
 	    			yaml.getConfig().set("config.saveinterval", saveinterval);	

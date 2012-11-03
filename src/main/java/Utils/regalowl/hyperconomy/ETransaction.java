@@ -89,7 +89,6 @@ public class ETransaction {
 					}
 					fprice = calc.twoDecimals(fprice);
 					p.sendMessage(L.get("LINE_BREAK"));
-					//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You sold" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.twoDecimals(salestax) + ChatColor.BLUE + ChatColor.ITALIC + " went to tax!");
 					p.sendMessage(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, calc.twoDecimals(fprice), name, calc.twoDecimals(salestax)));
 					p.sendMessage(L.get("LINE_BREAK"));
 					if (hc.useSQL()) {
@@ -101,10 +100,7 @@ public class ETransaction {
 						}
 						log.writeSQLLog(p.getName(), "sale", name, 1.0, fprice - salestax, salestax, playerecon, type);
 					} else {
-						//String logentry = p.getName() + " sold " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
 						String logentry = L.f(L.get("LOG_SELL_ENCHANTMENT"), 1, calc.twoDecimals(fprice), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
-						//log.setEntry(logentry);
-						//log.writeBuffer();
 						log.writeLog(logentry);
 					}
 					isign.setrequestsignUpdate(true);
@@ -188,7 +184,6 @@ public class ETransaction {
 								taxpaid = calc.twoDecimals(taxpaid);
 								price = calc.twoDecimals(price);
 								p.sendMessage(L.get("LINE_BREAK"));
-								//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " of which " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid + " was tax!");
 								p.sendMessage(L.f(L.get("ENCHANTMENT_PURCHASE_MESSAGE"), 1, price, name, calc.twoDecimals(taxpaid)));
 								p.sendMessage(L.get("LINE_BREAK"));
 								String logentry = "";
@@ -201,10 +196,7 @@ public class ETransaction {
 									}
 									log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, taxpaid, playerecon, type);
 								} else {
-									//logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
 									logentry = L.f(L.get("LOG_BUY_ENCHANTMENT"), 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
-									//log.setEntry(logentry);
-									//log.writeBuffer();
 									log.writeLog(logentry);
 								}
 								isign.setrequestsignUpdate(true);
@@ -279,23 +271,18 @@ public class ETransaction {
 							item.removeEnchantment(ench);
 							price = calc.twoDecimals(price);
 							p.sendMessage(L.get("LINE_BREAK"));
-							//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
 							p.sendMessage(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, calc.twoDecimals(price), name, owner));
 							p.sendMessage(L.get("LINE_BREAK"));
 							String logentry = "";
 							if (hc.useSQL()) {
 								log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, 0.0, owner, "chestshop");
 							} else {
-								//logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
 								logentry = L.f(L.get("LOG_BUY_CHEST_ENCHANTMENT"), 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
-								//log.setEntry(logentry);
-								//log.writeBuffer();
 								log.writeLog(logentry);
 							}
 							Player o = Bukkit.getPlayer(owner);
 							if (o != null) {
 								o.sendMessage(L.f(L.get("CHEST_ENCHANTMENT_BUY_NOTIFICATION"), 1, calc.twoDecimals(price), name, p));
-								//o.sendMessage("\u00A79" + p.getName() + " bought" + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 							}
 							return true;
 						} else {
@@ -363,23 +350,18 @@ public class ETransaction {
 						item.removeEnchantment(ench);
 						price = calc.twoDecimals(price);
 						p.sendMessage(L.get("LINE_BREAK"));
-						//p.sendMessage(ChatColor.BLUE + "" + ChatColor.ITALIC + "You bought" + ChatColor.AQUA + "" + ChatColor.ITALIC + " " + name + ChatColor.BLUE + "" + ChatColor.ITALIC + " for " + ChatColor.GREEN + "" + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ChatColor.BLUE + "" + ChatColor.ITALIC + " from " + owner);
 						p.sendMessage(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, calc.twoDecimals(price), name, owner));
 						p.sendMessage(L.get("LINE_BREAK"));
 						String logentry = "";
 						if (hc.useSQL()) {
 							log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, 0.0, owner, "chestshop");
 						} else {
-							//logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
 							logentry = L.f(L.get("LOG_BUY_CHEST_ENCHANTMENT"), 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
-							//log.setEntry(logentry);
-							//log.writeBuffer();
 							log.writeLog(logentry);
 						}
 						Player o = Bukkit.getPlayer(owner);
 						if (o != null) {
 							o.sendMessage(L.f(L.get("CHEST_ENCHANTMENT_BUY_NOTIFICATION"), 1, calc.twoDecimals(price), name, p));
-							//o.sendMessage("\u00A79" + p.getName() + " bought" + " \u00A7b" + name + " \u00A79from you for \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + price + "\u00A79.");
 						}
 						return true;
 					} else {

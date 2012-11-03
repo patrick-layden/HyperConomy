@@ -163,10 +163,6 @@ public class HyperConomy extends JavaPlugin {
 			s.stopshopCheck();
 			stopSave();
 		}
-		//if (l != null && !reload) {
-			//l.stopBuffer();
-			//l.saveBuffer();
-		//}
 		if (hist != null) {
 			hist.stophistoryLog();
 		}
@@ -189,23 +185,10 @@ public class HyperConomy extends JavaPlugin {
 				if (args.length == 0) {
 					if (lock && !brokenfile) {
 						lock = false;
-						//l.checkBuffer();
-						//isign.checksignUpdate();
-						//s.startshopCheck();
-						//hist.starthistoryLog();
-						//startSave();
 						sender.sendMessage(L.get("SHOP_UNLOCKED"));
 						return true;
 					} else if (!lock) {
 						lock = true;
-						//s.stopshopCheck();
-						//l.stopBuffer();
-						//hist.stophistoryLog();
-						//isign.stopsignUpdate();
-						//isign.resetAll();
-						//l.saveBuffer();
-						//stopSave();
-						//yaml.saveYamls();
 						sender.sendMessage(L.get("SHOP_LOCKED"));
 						return true;
 					} else {
@@ -242,28 +225,8 @@ public class HyperConomy extends JavaPlugin {
 				}
 			}
 		} 
-		/*
-		else if (cmd.getName().equalsIgnoreCase("reloadfiles") && !mlock) {
-			try {
-				if (lock) {
-					shutDown(true);
-					initialize();
-					sqllock = false;
-					sender.sendMessage(L.get("FILES_RELOADED"));
-					sender.sendMessage(L.get("SHOP_UNLOCKED"));
-				} else {
-					sender.sendMessage(L.get("FIRST_LOCK_SHOP"));
-				}
-				return true;
-			} catch (Exception e) {
-				sender.sendMessage(L.get("RELOADFILES_INVALID"));
-				return true;
-			}
-		}
-		*/
 		if (((!lock && !sqllock) || sender.hasPermission("hyperconomy.admin")) && !mlock) {
 			boolean result = commandhandler.handleCommand(sender, cmd, label, args);
-			//l.checkBuffer();
 			return result;
 		} else {
 			sender.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
