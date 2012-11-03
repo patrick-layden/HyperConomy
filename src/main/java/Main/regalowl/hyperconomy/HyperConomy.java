@@ -63,7 +63,7 @@ public class HyperConomy extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		shutDown();
+		shutDown(false);
 	}
 
 	public void initialize() {
@@ -152,7 +152,7 @@ public class HyperConomy extends JavaPlugin {
 		}
 	}
 
-	public void shutDown() {
+	public void shutDown(boolean reload) {
 		if (itdi != null) {
 			itdi.cancelRefreshThread();
 			itdi.clearDisplays();
@@ -161,7 +161,7 @@ public class HyperConomy extends JavaPlugin {
 			s.stopshopCheck();
 			stopSave();
 		}
-		if (l != null) {
+		if (l != null && !reload) {
 			l.stopBuffer();
 			l.saveBuffer();
 		}
@@ -176,7 +176,7 @@ public class HyperConomy extends JavaPlugin {
 			sw.closeConnections();
 			new SQLShutdown(this, sw);
 		}
-		if (yaml != null) {
+		if (yaml != null && !reload) {
 			yaml.saveYamls();
 		}
 	}
@@ -221,7 +221,7 @@ public class HyperConomy extends JavaPlugin {
 		} else if (cmd.getName().equalsIgnoreCase("reloadfiles")) {
 			try {
 				if (lock) {
-					shutDown();
+					shutDown(true);
 					initialize();
 					sqllock = false;
 					sender.sendMessage(L.get("FILES_RELOADED"));
@@ -421,7 +421,7 @@ public class HyperConomy extends JavaPlugin {
 			if (!shuttingDown) {
 				shuttingDown = true;
 				log.severe("HyperConomy is experiencing a massive amount of errors...shutting down....");
-				shutDown();
+				shutDown(false);
 				getPluginLoader().disablePlugin(this);
 			}
 		}
