@@ -64,7 +64,7 @@ public class HyperConomy extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		shutDown(false);
+		shutDown();
 	}
 
 	public void initialize() {
@@ -154,7 +154,7 @@ public class HyperConomy extends JavaPlugin {
 		}
 	}
 
-	public void shutDown(boolean reload) {
+	public void shutDown() {
 		if (itdi != null) {
 			itdi.cancelRefreshThread();
 			itdi.clearDisplays();
@@ -163,10 +163,10 @@ public class HyperConomy extends JavaPlugin {
 			s.stopshopCheck();
 			stopSave();
 		}
-		if (l != null && !reload) {
-			l.stopBuffer();
-			l.saveBuffer();
-		}
+		//if (l != null && !reload) {
+			//l.stopBuffer();
+			//l.saveBuffer();
+		//}
 		if (hist != null) {
 			hist.stophistoryLog();
 		}
@@ -178,7 +178,7 @@ public class HyperConomy extends JavaPlugin {
 			sw.closeConnections();
 			new SQLShutdown(this, sw);
 		}
-		if (yaml != null && !reload) {
+		if (yaml != null) {
 			yaml.saveYamls();
 		}
 	}
@@ -235,7 +235,7 @@ public class HyperConomy extends JavaPlugin {
 					} else if (args[0].equalsIgnoreCase("disable") && !mlock) {
 						lock = true;
 						mlock = true;
-						shutDown(true);
+						shutDown();
 						sender.sendMessage(L.get("HC_HYPERCONOMY_DISABLED"));
 						sender.sendMessage(L.get("SHOP_LOCKED"));
 					}
@@ -263,7 +263,7 @@ public class HyperConomy extends JavaPlugin {
 		*/
 		if (((!lock && !sqllock) || sender.hasPermission("hyperconomy.admin")) && !mlock) {
 			boolean result = commandhandler.handleCommand(sender, cmd, label, args);
-			l.checkBuffer();
+			//l.checkBuffer();
 			return result;
 		} else {
 			sender.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
@@ -354,11 +354,11 @@ public class HyperConomy extends JavaPlugin {
 				}
 				lock = true;
 				s.stopshopCheck();
-				l.stopBuffer();
+				//l.stopBuffer();
 				hist.stophistoryLog();
 				isign.stopsignUpdate();
 				isign.resetAll();
-				l.saveBuffer();
+				//l.saveBuffer();
 				stopSave();
 			}
 		}
@@ -447,7 +447,7 @@ public class HyperConomy extends JavaPlugin {
 			if (!shuttingDown) {
 				shuttingDown = true;
 				log.severe("HyperConomy is experiencing a massive amount of errors...shutting down....");
-				shutDown(false);
+				shutDown();
 				getPluginLoader().disablePlugin(this);
 			}
 		}

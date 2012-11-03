@@ -103,8 +103,9 @@ public class ETransaction {
 					} else {
 						//String logentry = p.getName() + " sold " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + fprice + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
 						String logentry = L.f(L.get("LOG_SELL_ENCHANTMENT"), 1, calc.twoDecimals(fprice), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
-						log.setEntry(logentry);
-						log.writeBuffer();
+						//log.setEntry(logentry);
+						//log.writeBuffer();
+						log.writeLog(logentry);
 					}
 					isign.setrequestsignUpdate(true);
 					isign.checksignUpdate();
@@ -202,8 +203,9 @@ public class ETransaction {
 								} else {
 									//logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
 									logentry = L.f(L.get("LOG_BUY_ENCHANTMENT"), 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
-									log.setEntry(logentry);
-									log.writeBuffer();
+									//log.setEntry(logentry);
+									//log.writeBuffer();
+									log.writeLog(logentry);
 								}
 								isign.setrequestsignUpdate(true);
 								isign.checksignUpdate();
@@ -286,8 +288,9 @@ public class ETransaction {
 							} else {
 								//logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
 								logentry = L.f(L.get("LOG_BUY_CHEST_ENCHANTMENT"), 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
-								log.setEntry(logentry);
-								log.writeBuffer();
+								//log.setEntry(logentry);
+								//log.writeBuffer();
+								log.writeLog(logentry);
 							}
 							Player o = Bukkit.getPlayer(owner);
 							if (o != null) {
@@ -369,8 +372,9 @@ public class ETransaction {
 						} else {
 							//logentry = p.getName() + " bought " + name + " for " + hc.getYaml().getConfig().getString("config.currency-symbol") + price + " from " + owner + ". [Static Price=" + sf.getStatic(name, playerecon) + "][Initial Price=" + sf.getInitiation(name, playerecon) + "]";
 							logentry = L.f(L.get("LOG_BUY_CHEST_ENCHANTMENT"), 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
-							log.setEntry(logentry);
-							log.writeBuffer();
+							//log.setEntry(logentry);
+							//log.writeBuffer();
+							log.writeLog(logentry);
 						}
 						Player o = Bukkit.getPlayer(owner);
 						if (o != null) {

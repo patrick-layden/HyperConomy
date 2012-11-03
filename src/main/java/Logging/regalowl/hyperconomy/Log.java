@@ -1,12 +1,9 @@
 package regalowl.hyperconomy;
 
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import org.bukkit.configuration.file.FileConfiguration;
-
-
-
 
 
 /**
@@ -17,11 +14,12 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class Log {
 	
-	private ArrayList<String> buffer;	
+	
 	private HyperConomy hc;
+	private int logsize;
+	//private ArrayList<String> buffer;	
+	/*
 	private String entry;
-	
-	
 	private boolean requestbuffer;
 	private boolean bufferactive;
 	private int logsize;
@@ -32,11 +30,10 @@ public class Log {
 	public void setEntry(String ent) {
 		entry = ent;
 	}
-	
 	public int getbufferSize() {
 		return buffer.size();
 	}
-	
+	*/
 	
 	
 	public void writeSQLLog(String playername, String action, String object, Double amount, Double money, Double tax, String store, String type) {
@@ -50,22 +47,31 @@ public class Log {
 	//For server start.
 	Log(HyperConomy hyperc) {
 		hc = hyperc;
-		buffer = new ArrayList<String>();	
-		
-    	requestbuffer = false;
-    	bufferactive = false;
-    	logsize = hc.getYaml().getLog().getKeys(true).size();
-    	loginterval = hc.getYaml().getConfig().getLong("config.logwriteinterval");
+    	logsize = hc.getYaml().getLog().getKeys(false).size();
+		//buffer = new ArrayList<String>();	
+    	//requestbuffer = false;
+    	//bufferactive = false;
+    	//loginterval = hc.getYaml().getConfig().getLong("config.logwriteinterval");
 	}
 	
+
+  	public void writeLog(String entry) {
+  		Date currentDate = new Date();
+  		FileConfiguration l = hc.getYaml().getLog();
+		l.set("["+ logsize + "] " + currentDate.toString(), entry);
+		logsize++;  		
+  	}
+  	
+    public int getlogSize() {
+    	return logsize;
+    }
+  	
+  	/*
+
   	public void writeBuffer() {
   		buffer.add(entry);
   		setrequestBuffer(true);
   	}
-  	
-  	
-  	
-  	
   	public void writelogThread() {
   		if (!buffer.isEmpty()) {
 	  		Date currentDate = new Date();
@@ -106,11 +112,11 @@ public class Log {
     public void setlogSize(int size) {
     	logsize = size;
     }
+  	*/
+    
+
   	
-    public int getlogSize() {
-    	return logsize;
-    }
-  	
+    /*
     public long getlogInterval() {
     	return loginterval;
     }
@@ -143,5 +149,5 @@ public class Log {
     		startBuffer();
     	}
     }
-
+	*/
 }
