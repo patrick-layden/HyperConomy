@@ -348,6 +348,18 @@ public class ItemDisplay implements Listener {
 				loadDisplays();
 			}
 		}
+		if (bb.getType().equals(Material.GRAVEL) || bb.getType().equals(Material.SAND)) {
+			Block below = bb.getRelative(BlockFace.DOWN);
+			while (below.getType().equals(Material.AIR)) {
+				below = below.getRelative(BlockFace.DOWN);
+			}
+			for (Block cb:protectedBlocks) {
+				if (cb.equals(below)) {
+					event.setCancelled(true);
+					loadDisplays();
+				}
+			}
+		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonRetractEvent(BlockPistonRetractEvent event) {
