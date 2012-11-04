@@ -6,8 +6,10 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -19,6 +21,7 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -35,9 +38,11 @@ public class ItemDisplay implements Listener {
 	private ArrayList<String> displayNames;
 	private ArrayList<String> displayEconomies;
 	private ArrayList<Block> protectedBlocks;
+	private Calculation calc;
 
 	ItemDisplay() {
 		hc = HyperConomy.hc;
+		calc = hc.getCalculation();
 		if (hc.getYaml().getConfig().getBoolean("config.use-item-displays")) {
 			sf = hc.getSQLFunctions();
 			hc.getServer().getPluginManager().registerEvents(this, hc);
@@ -120,18 +125,22 @@ public class ItemDisplay implements Listener {
 	
 	
 	public void clearNearbyItems(Item item) {
-		List<Entity> nearbyEntities = item.getNearbyEntities(1, 1, 1);
+		List<Entity> nearbyEntities = item.getNearbyEntities(10, 10, 10);
 		for (Entity entity : nearbyEntities) {
 			if (entity instanceof Item) {
 				Item citem = (Item) entity;
-				boolean remove = true;
-				for (Item titem : displayItems) {
-					if (titem.equals(citem)) {
-						remove = false;
+				int id = citem.getItemStack().getType().getId();
+				int da = calc.getDamageValue(citem.getItemStack());
+				for (int i = 0; i < displayItems.size(); i++) {
+					Item titem = displayItems.get(i);
+					if (!titem.equals(citem)) {
+						if (id == titem.getItemStack().getType().getId()) {
+							if (da == calc.getDamageValue(titem.getItemStack())) {
+								entity.remove();
+								continue;
+							}
+						}
 					}
-				}
-				if (remove) {
-					entity.remove();
 				}
 			}
 		}
@@ -231,14 +240,48 @@ public class ItemDisplay implements Listener {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
 
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
+		Item droppedItem = event.getItemDrop();
+		Location l = droppedItem.getLocation();
+		int did = droppedItem.getItemStack().getType().getId();
+		int dda = calc.getDamageValue(droppedItem.getItemStack());
+		double dx = l.getX();
+		double dy = l.getY();
+		double dz = l.getZ();
+		World w = l.getWorld();
+		
+		for (int i = 0; i < displayLocations.size(); i++) {
+			Location dl = displayLocations.get(i);
+			int id = displayItems.get(i).getItemStack().getType().getId();
+			int da = calc.getDamageValue(displayItems.get(i).getItemStack());
+			if (id == did) {
+				if (dda == da) {
+					if (w.equals(dl.getWorld())) {
+						if (Math.abs(dx - dl.getX()) < 10) {
+							if (Math.abs(dz - dl.getZ()) < 10) {
+								if (Math.abs(dy - dl.getY()) < 30) {
+									event.setCancelled(true);
+								} else {
+									droppedItem.setVelocity(new Vector(0,0,0));
+									Block dblock = droppedItem.getLocation().getBlock();
+									while (dblock.getType().equals(Material.AIR)) {
+										dblock = dblock.getRelative(BlockFace.DOWN);
+									}
+									if (dblock.getLocation().getY() <= (dl.getBlockY() + 10)) {
+										event.setCancelled(true);
+									}
+									clearNearbyItems(displayItems.get(i));
+								}
+							}
+						}
+					}
+				}
+			}
+
+		}
+	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChunkLoad(ChunkLoadEvent event) {
 		boolean refresh = false;
