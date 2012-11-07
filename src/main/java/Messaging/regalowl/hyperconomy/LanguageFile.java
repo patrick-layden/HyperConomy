@@ -43,10 +43,7 @@ public class LanguageFile {
 		ft.makeFolder(folderpath);
 		String filepath = folderpath + File.separator + lang + ".txt";
 		String backuppath = folderpath + File.separator + "english_backup.txt";
-		if (!ft.fileExists(backuppath)) {
-			ft.copyFileFromJar("Languages/english.txt", backuppath);
-		}
-		
+		ft.copyFileFromJar("Languages/english.txt", backuppath);
 		buildBackupHashMap(backuppath);
 		
 		if (ft.fileExists(filepath) && !overwrite) {
@@ -214,6 +211,11 @@ public class LanguageFile {
 		return inputstring;
 	}
 	
+	public String f(String inputstring, int value) {
+		inputstring = inputstring.replace("%v",value+"");
+		return inputstring;
+	}
+	
 	public String f(String inputstring, int amount, String name) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%n",name);
@@ -233,17 +235,7 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%v",value+"");
 		return inputstring;
 	}
-	/*
-	public String f(String inputstring, int amount, double price, String name, String owner) {
-		inputstring = inputstring.replace("%a",amount+"");
-		inputstring = inputstring.replace("%zc",owner);
-		inputstring = inputstring.replace("%n",name);
-		inputstring = inputstring.replace("%p",price+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
-		inputstring = inputstring.replace("%e",owner+"");
-		return inputstring;
-	}
-	*/
+
 	public String f(String inputstring, int amount, double price, String name, Player player) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%y",player.getName());

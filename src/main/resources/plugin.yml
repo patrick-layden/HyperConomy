@@ -343,6 +343,10 @@ commands:
       description: Imports all prices from items.yml and enchants.yml.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+   repairsigns:
+      description: Repairs InfoSigns within the given radii.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

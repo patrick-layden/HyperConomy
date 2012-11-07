@@ -319,3 +319,7 @@ IMPORTPRICES_INVALID: &4Invalid parameters. Use /importprices [economy]
 PRICES_IMPORTED: &6Prices have been imported from YML.
 HC_HYPERCONOMY_ENABLED: &6HyperConomy Enabled!
 HC_HYPERCONOMY_DISABLED: &6HyperConomy Disabled!
+REPAIRSIGNS_INVALID: &4Invalid Parameters.  Use /repairsigns [x radius/radius] (y radius) (z radius)
+NO_SIGNS_FOUND: &9No signs were found.
+X_SIGNS_REPAIRED: &a%v &9signs were detected and repaired!
+VOLUME_TOO_LARGE: &4You can't scan more than %v blocks at a time!

@@ -242,6 +242,9 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("importprices")) {
 			new Importprices(args, sender);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("repairsigns") && player != null) {
+			new Repairsigns(args, player);
+			return true;
 		}
 		
 		return false;
