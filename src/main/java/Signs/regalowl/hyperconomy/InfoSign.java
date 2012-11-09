@@ -299,10 +299,10 @@ public class InfoSign implements Listener {
 						if (!s.getLine(0).startsWith("\u00A7")) {
 							s.setLine(0, "\u00A71" + s.getLine(0));
 						}
-						if (!s.getLine(1).startsWith("\u00A7") && !s.getLine(1).isEmpty()) {
+						if (!s.getLine(1).startsWith("\u00A7") && !s.getLine(1).isEmpty() && line23.contains(":")) {
 							s.setLine(1, "\u00A71" + s.getLine(1));
 						}
-						if (line23 != null) {
+						if (line23 != null && !line23.equalsIgnoreCase("")) {
 							s.setLine(2, line23.substring(0, line23.indexOf(":") + 1));
 							s.setLine(3, line23.substring(line23.indexOf(":") + 1, line23.length()));
 						} else {
