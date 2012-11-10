@@ -215,12 +215,14 @@ public class HyperConomy extends JavaPlugin {
 						sender.sendMessage(L.get("HC_HYPERCONOMY_ENABLED"));
 						sender.sendMessage(L.get("FILES_RELOADED"));
 						sender.sendMessage(L.get("SHOP_UNLOCKED"));
+						return true;
 					} else if (args[0].equalsIgnoreCase("disable") && !mlock) {
 						lock = true;
 						mlock = true;
 						shutDown();
 						sender.sendMessage(L.get("HC_HYPERCONOMY_DISABLED"));
 						sender.sendMessage(L.get("SHOP_LOCKED"));
+						return true;
 					}
 				}
 			}
