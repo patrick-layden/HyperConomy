@@ -11,7 +11,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -92,7 +91,7 @@ public class ItemDisplay implements Listener {
 			Chunk locChunk = l.getChunk();
 			if (locChunk.isLoaded()) {
 				Item newitem = makeDisplay(x, y, z, w, name, economy);
-				clearNearbyItems(newitem);
+				//clearNearbyItems(newitem);
 				displayItems.add(newitem);
 				displayLocations.add(l);
 				displayNames.add(name);
@@ -123,7 +122,7 @@ public class ItemDisplay implements Listener {
 		return item;
 	}
 	
-	
+	/*
 	public void clearNearbyItems(Item item) {
 		List<Entity> nearbyEntities = item.getNearbyEntities(10, 10, 10);
 		for (Entity entity : nearbyEntities) {
@@ -145,7 +144,7 @@ public class ItemDisplay implements Listener {
 			}
 		}
 	}
-
+	 */
 
 	public void startRefreshThread() {
 		refreshthreadid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
@@ -272,7 +271,7 @@ public class ItemDisplay implements Listener {
 									if (dblock.getLocation().getY() <= (dl.getBlockY() + 10)) {
 										event.setCancelled(true);
 									}
-									clearNearbyItems(displayItems.get(i));
+									//clearNearbyItems(displayItems.get(i));
 								}
 							}
 						}
