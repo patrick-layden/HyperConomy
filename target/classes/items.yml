@@ -226,16 +226,16 @@ stickypiston:
     material: PISTON_STICKY_BASE
     id: 29
     data: 7
-  value: 150.0
+  value: 100.0
   price:
     static: false
-    staticprice: 300.0
+    staticprice: 200.0
   stock:
     stock: 0.0
     median: 4000.0
   initiation:
     initiation: true
-    startprice: 300.0
+    startprice: 200.0
 web:
   information:
     type: item
@@ -3592,16 +3592,16 @@ slimeball:
     material: SLIME_BALL
     id: 341
     data: 0
-  value: 100.0
+  value: 50.0
   price:
     static: false
-    staticprice: 200.0
+    staticprice: 100.0
   stock:
     stock: 0.0
     median: 10000.0
   initiation:
     initiation: true
-    startprice: 200.0
+    startprice: 100.0
 minecartwithchest:
   information:
     type: item
@@ -4374,16 +4374,16 @@ netherwarts:
     material: NETHER_STALK
     id: 372
     data: 0
-  value: 10.0
+  value: 20.0
   price:
     static: false
-    staticprice: 20.0
+    staticprice: 40.0
   stock:
     stock: 0.0
-    median: 1000.0
+    median: 10000.0
   initiation:
     initiation: true
-    startprice: 20.0
+    startprice: 40.0
 waterbottle:
   information:
     type: item
@@ -4408,16 +4408,16 @@ potionofregen:
     material: POTION
     id: 373
     data: 1
-  value: 700.0
+  value: 440.0
   price:
     static: false
-    staticprice: 1400.0
+    staticprice: 880.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1400.0
+    startprice: 880.0
 potionofregen2:
   information:
     type: item
@@ -4425,16 +4425,16 @@ potionofregen2:
     material: POTION
     id: 373
     data: 33
-  value: 720.0
+  value: 460.0
   price:
     static: false
-    staticprice: 1440.0
+    staticprice: 920.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1440.0
+    startprice: 920.0
 potionofregenext:
   information:
     type: item
@@ -4442,16 +4442,16 @@ potionofregenext:
     material: POTION
     id: 373
     data: 65
-  value: 710.0
+  value: 450.0
   price:
     static: false
-    staticprice: 1420.0
+    staticprice: 900.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1420.0
+    startprice: 900.0
 potionofregen2ext:
   information:
     type: item
@@ -4459,16 +4459,16 @@ potionofregen2ext:
     material: POTION
     id: 373
     data: 97
-  value: 730.0
+  value: 470.0
   price:
     static: false
-    staticprice: 1460.0
+    staticprice: 940.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1460.0
+    startprice: 940.0
 spotionofregen:
   information:
     type: item
@@ -4476,16 +4476,16 @@ spotionofregen:
     material: POTION
     id: 373
     data: 16385
-  value: 750.0
+  value: 490.0
   price:
     static: false
-    staticprice: 1500.0
+    staticprice: 980.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1500.0
+    startprice: 980.0
 spotionofregenext:
   information:
     type: item
@@ -4493,16 +4493,16 @@ spotionofregenext:
     material: POTION
     id: 373
     data: 16449
-  value: 760.0
+  value: 500.0
   price:
     static: false
-    staticprice: 1520.0
+    staticprice: 1000.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1520.0
+    startprice: 1000.0
 spotionofregen2:
   information:
     type: item
@@ -4510,16 +4510,16 @@ spotionofregen2:
     material: POTION
     id: 373
     data: 16417
-  value: 770.0
+  value: 510.0
   price:
     static: false
-    staticprice: 1540.0
+    staticprice: 1020.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1540.0
+    startprice: 1020.0
 spotionofregen2ext:
   information:
     type: item
@@ -4527,16 +4527,16 @@ spotionofregen2ext:
     material: POTION
     id: 373
     data: 16481
-  value: 780.0
+  value: 520.0
   price:
     static: false
-    staticprice: 1560.0
+    staticprice: 1040.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1560.0
+    startprice: 1040.0
 potionofspeed:
   information:
     type: item
@@ -4544,16 +4544,16 @@ potionofspeed:
     material: POTION
     id: 373
     data: 2
-  value: 310.0
+  value: 45.0
   price:
     static: false
-    staticprice: 620.0
+    staticprice: 90.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 620.0
+    startprice: 90.0
 potionofspeed2:
   information:
     type: item
@@ -4561,16 +4561,16 @@ potionofspeed2:
     material: POTION
     id: 373
     data: 34
-  value: 340.0
+  value: 65.0
   price:
     static: false
-    staticprice: 680.0
+    staticprice: 130.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 680.0
+    startprice: 130.0
 potionofspeedext:
   information:
     type: item
@@ -4578,16 +4578,16 @@ potionofspeedext:
     material: POTION
     id: 373
     data: 66
-  value: 320.0
+  value: 55.0
   price:
     static: false
-    staticprice: 640.0
+    staticprice: 110.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 640.0
+    startprice: 110.0
 potionofspeed2ext:
   information:
     type: item
@@ -4595,16 +4595,16 @@ potionofspeed2ext:
     material: POTION
     id: 373
     data: 98
-  value: 340.0
+  value: 75.0
   price:
     static: false
-    staticprice: 680.0
+    staticprice: 150.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 680.0
+    startprice: 150.0
 spotionofspeed:
   information:
     type: item
@@ -4612,16 +4612,16 @@ spotionofspeed:
     material: POTION
     id: 373
     data: 16386
-  value: 410.0
+  value: 95.0
   price:
     static: false
-    staticprice: 820.0
+    staticprice: 180.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 820.0
+    startprice: 180.0
 spotionofspeedext:
   information:
     type: item
@@ -4629,16 +4629,16 @@ spotionofspeedext:
     material: POTION
     id: 373
     data: 16450
-  value: 420.0
+  value: 105.0
   price:
     static: false
-    staticprice: 840.0
+    staticprice: 210.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 840.0
+    startprice: 210.0
 spotionofspeed2:
   information:
     type: item
@@ -4646,16 +4646,16 @@ spotionofspeed2:
     material: POTION
     id: 373
     data: 16418
-  value: 420.0
+  value: 115.0
   price:
     static: false
-    staticprice: 840.0
+    staticprice: 230.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 840.0
+    startprice: 230.0
 spotionofspeed2ext:
   information:
     type: item
@@ -4663,16 +4663,16 @@ spotionofspeed2ext:
     material: POTION
     id: 373
     data: 16482
-  value: 430.0
+  value: 125.0
   price:
     static: false
-    staticprice: 860.0
+    staticprice: 250.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 860.0
+    startprice: 250.0
 potionoffireresist:
   information:
     type: item
@@ -4680,16 +4680,16 @@ potionoffireresist:
     material: POTION
     id: 373
     data: 3
-  value: 625.0
+  value: 153.0
   price:
     static: false
-    staticprice: 1250.0
+    staticprice: 306.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1250.0
+    startprice: 306.0
 potionoffireresist2:
   information:
     type: item
@@ -4697,16 +4697,16 @@ potionoffireresist2:
     material: POTION
     id: 373
     data: 35
-  value: 645.0
+  value: 173.0
   price:
     static: false
-    staticprice: 1290.0
+    staticprice: 346.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1290.0
+    startprice: 346.0
 potionoffireresistext:
   information:
     type: item
@@ -4714,16 +4714,16 @@ potionoffireresistext:
     material: POTION
     id: 373
     data: 67
-  value: 635.0
+  value: 163.0
   price:
     static: false
-    staticprice: 1270.0
+    staticprice: 326.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1270.0
+    startprice: 326.0
 potionoffireresist2ext:
   information:
     type: item
@@ -4731,16 +4731,16 @@ potionoffireresist2ext:
     material: POTION
     id: 373
     data: 99
-  value: 655.0
+  value: 183.0
   price:
     static: false
-    staticprice: 1310.0
+    staticprice: 366.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1310.0
+    startprice: 366.0
 spotionoffireresist:
   information:
     type: item
@@ -4748,16 +4748,16 @@ spotionoffireresist:
     material: POTION
     id: 373
     data: 16387
-  value: 725.0
+  value: 203.0
   price:
     static: false
-    staticprice: 1450.0
+    staticprice: 406.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1450.0
+    startprice: 406.0
 spotionoffireresistext:
   information:
     type: item
@@ -4765,16 +4765,16 @@ spotionoffireresistext:
     material: POTION
     id: 373
     data: 16451
-  value: 735.0
+  value: 213.0
   price:
     static: false
-    staticprice: 1470.0
+    staticprice: 426.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1470.0
+    startprice: 426.0
 spotionoffireresist2:
   information:
     type: item
@@ -4782,16 +4782,16 @@ spotionoffireresist2:
     material: POTION
     id: 373
     data: 16419
-  value: 745.0
+  value: 223.0
   price:
     static: false
-    staticprice: 1490.0
+    staticprice: 446.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1490.0
+    startprice: 446.0
 spotionoffireresist2ext:
   information:
     type: item
@@ -4799,16 +4799,16 @@ spotionoffireresist2ext:
     material: POTION
     id: 373
     data: 16483
-  value: 755.0
+  value: 233.0
   price:
     static: false
-    staticprice: 1510.0
+    staticprice: 266.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1510.0
+    startprice: 266.0
 potionofpoison:
   information:
     type: item
@@ -4816,16 +4816,16 @@ potionofpoison:
     material: POTION
     id: 373
     data: 4
-  value: 320.0
+  value: 55.0
   price:
     static: false
-    staticprice: 640.0
+    staticprice: 110.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 640.0
+    startprice: 110.0
 potionofpoison2:
   information:
     type: item
@@ -4833,16 +4833,16 @@ potionofpoison2:
     material: POTION
     id: 373
     data: 36
-  value: 340.0
+  value: 75.0
   price:
     static: false
-    staticprice: 680.0
+    staticprice: 150.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 680.0
+    startprice: 150.0
 potionofpoisonext:
   information:
     type: item
@@ -4850,16 +4850,16 @@ potionofpoisonext:
     material: POTION
     id: 373
     data: 68
-  value: 330.0
+  value: 65.0
   price:
     static: false
-    staticprice: 660.0
+    staticprice: 130.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 660.0
+    startprice: 130.0
 potionofpoison2ext:
   information:
     type: item
@@ -4867,16 +4867,16 @@ potionofpoison2ext:
     material: POTION
     id: 373
     data: 100
-  value: 350.0
+  value: 85.0
   price:
     static: false
-    staticprice: 700.0
+    staticprice: 170.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 700.0
+    startprice: 170.0
 spotionofpoison:
   information:
     type: item
@@ -4884,16 +4884,16 @@ spotionofpoison:
     material: POTION
     id: 373
     data: 16388
-  value: 420.0
+  value: 105.0
   price:
     static: false
-    staticprice: 840.0
+    staticprice: 210.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 840.0
+    startprice: 210.0
 spotionofpoisonext:
   information:
     type: item
@@ -4901,16 +4901,16 @@ spotionofpoisonext:
     material: POTION
     id: 373
     data: 16452
-  value: 430.0
+  value: 115.0
   price:
     static: false
-    staticprice: 860.0
+    staticprice: 230.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 860.0
+    startprice: 230.0
 spotionofpoison2:
   information:
     type: item
@@ -4918,16 +4918,16 @@ spotionofpoison2:
     material: POTION
     id: 373
     data: 16420
-  value: 440.0
+  value: 125.0
   price:
     static: false
-    staticprice: 880.0
+    staticprice: 250.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 880.0
+    startprice: 250.0
 spotionofpoison2ext:
   information:
     type: item
@@ -4935,16 +4935,16 @@ spotionofpoison2ext:
     material: POTION
     id: 373
     data: 16484
-  value: 450.0
+  value: 135.0
   price:
     static: false
-    staticprice: 900.0
+    staticprice: 270.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 900.0
+    startprice: 270.0
 potionofhealing:
   information:
     type: item
@@ -4952,16 +4952,16 @@ potionofhealing:
     material: POTION
     id: 373
     data: 5
-  value: 325.0
+  value: 30.0
   price:
     static: false
-    staticprice: 650.0
+    staticprice: 60.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 650.0
+    startprice: 60.0
 potionofhealing2:
   information:
     type: item
@@ -4969,16 +4969,16 @@ potionofhealing2:
     material: POTION
     id: 373
     data: 37
-  value: 345.0
+  value: 50.0
   price:
     static: false
-    staticprice: 690.0
+    staticprice: 100.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 690.0
+    startprice: 100.0
 potionofhealingext:
   information:
     type: item
@@ -4986,16 +4986,16 @@ potionofhealingext:
     material: POTION
     id: 373
     data: 69
-  value: 335.0
+  value: 40.0
   price:
     static: false
-    staticprice: 670.0
+    staticprice: 80.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 670.0
+    startprice: 80.0
 potionofhealing2ext:
   information:
     type: item
@@ -5003,16 +5003,16 @@ potionofhealing2ext:
     material: POTION
     id: 373
     data: 101
-  value: 355.0
+  value: 60.0
   price:
     static: false
-    staticprice: 710.0
+    staticprice: 120.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 710.0
+    startprice: 120.0
 spotionofhealing:
   information:
     type: item
@@ -5020,16 +5020,16 @@ spotionofhealing:
     material: POTION
     id: 373
     data: 16389
-  value: 425.0
+  value: 80.0
   price:
     static: false
-    staticprice: 850.0
+    staticprice: 160.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 850.0
+    startprice: 160.0
 spotionofhealingext:
   information:
     type: item
@@ -5037,16 +5037,16 @@ spotionofhealingext:
     material: POTION
     id: 373
     data: 16453
-  value: 435.0
+  value: 90.0
   price:
     static: false
-    staticprice: 870.0
+    staticprice: 180.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 870.0
+    startprice: 180.0
 spotionofhealing2:
   information:
     type: item
@@ -5054,16 +5054,16 @@ spotionofhealing2:
     material: POTION
     id: 373
     data: 16421
-  value: 445.0
+  value: 100.0
   price:
     static: false
-    staticprice: 890.0
+    staticprice: 200.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 890.0
+    startprice: 200.0
 spotionofhealing2ext:
   information:
     type: item
@@ -5071,16 +5071,16 @@ spotionofhealing2ext:
     material: POTION
     id: 373
     data: 16485
-  value: 455.0
+  value: 110.0
   price:
     static: false
-    staticprice: 910.0
+    staticprice: 220.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 910.0
+    startprice: 220.0
 potionofweakness:
   information:
     type: item
@@ -5088,16 +5088,16 @@ potionofweakness:
     material: POTION
     id: 373
     data: 8
-  value: 330.0
+  value: 85.0
   price:
     static: false
-    staticprice: 660.0
+    staticprice: 170.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 660.0
+    startprice: 170.0
 potionofweakness2:
   information:
     type: item
@@ -5105,16 +5105,16 @@ potionofweakness2:
     material: POTION
     id: 373
     data: 40
-  value: 350.0
+  value: 105.0
   price:
     static: false
-    staticprice: 700.0
+    staticprice: 210.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 700.0
+    startprice: 210.0
 potionofweaknessext:
   information:
     type: item
@@ -5122,16 +5122,16 @@ potionofweaknessext:
     material: POTION
     id: 373
     data: 72
-  value: 340.0
+  value: 95.0
   price:
     static: false
-    staticprice: 680.0
+    staticprice: 190.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 680.0
+    startprice: 190.0
 potionofweakness2ext:
   information:
     type: item
@@ -5139,16 +5139,16 @@ potionofweakness2ext:
     material: POTION
     id: 373
     data: 104
-  value: 360.0
+  value: 115.0
   price:
     static: false
-    staticprice: 720.0
+    staticprice: 230.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 720.0
+    startprice: 230.0
 spotionofweakness:
   information:
     type: item
@@ -5156,16 +5156,16 @@ spotionofweakness:
     material: POTION
     id: 373
     data: 16392
-  value: 430.0
+  value: 135.0
   price:
     static: false
-    staticprice: 860.0
+    staticprice: 270.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 860.0
+    startprice: 270.0
 spotionofweaknessext:
   information:
     type: item
@@ -5173,16 +5173,16 @@ spotionofweaknessext:
     material: POTION
     id: 373
     data: 16456
-  value: 440.0
+  value: 145.0
   price:
     static: false
-    staticprice: 880.0
+    staticprice: 290.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 880.0
+    startprice: 290.0
 spotionofweakness2:
   information:
     type: item
@@ -5190,16 +5190,16 @@ spotionofweakness2:
     material: POTION
     id: 373
     data: 16424
-  value: 450.0
+  value: 155.0
   price:
     static: false
-    staticprice: 900.0
+    staticprice: 310.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 900.0
+    startprice: 310.0
 spotionofweakness2ext:
   information:
     type: item
@@ -5207,16 +5207,16 @@ spotionofweakness2ext:
     material: POTION
     id: 373
     data: 16488
-  value: 460.0
+  value: 165.0
   price:
     static: false
-    staticprice: 920.0
+    staticprice: 330.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 920.0
+    startprice: 330.0
 potionofstrength:
   information:
     type: item
@@ -5224,16 +5224,16 @@ potionofstrength:
     material: POTION
     id: 373
     data: 9
-  value: 430.0
+  value: 165.0
   price:
     static: false
-    staticprice: 860.0
+    staticprice: 330.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 860.0
+    startprice: 330.0
 potionofstrength2:
   information:
     type: item
@@ -5241,16 +5241,16 @@ potionofstrength2:
     material: POTION
     id: 373
     data: 41
-  value: 450.0
+  value: 185.0
   price:
     static: false
-    staticprice: 900.0
+    staticprice: 370.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 900.0
+    startprice: 370.0
 potionofstrengthext:
   information:
     type: item
@@ -5258,16 +5258,16 @@ potionofstrengthext:
     material: POTION
     id: 373
     data: 73
-  value: 440.0
+  value: 175.0
   price:
     static: false
-    staticprice: 880.0
+    staticprice: 350.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 880.0
+    startprice: 350.0
 potionofstrength2ext:
   information:
     type: item
@@ -5275,16 +5275,16 @@ potionofstrength2ext:
     material: POTION
     id: 373
     data: 105
-  value: 460.0
+  value: 195.0
   price:
     static: false
-    staticprice: 920.0
+    staticprice: 390.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 920.0
+    startprice: 390.0
 spotionofstrength:
   information:
     type: item
@@ -5292,16 +5292,16 @@ spotionofstrength:
     material: POTION
     id: 373
     data: 16393
-  value: 530.0
+  value: 215.0
   price:
     static: false
-    staticprice: 1060.0
+    staticprice: 430.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1060.0
+    startprice: 430.0
 spotionofstrengthext:
   information:
     type: item
@@ -5309,16 +5309,16 @@ spotionofstrengthext:
     material: POTION
     id: 373
     data: 16457
-  value: 540.0
+  value: 225.0
   price:
     static: false
-    staticprice: 1080.0
+    staticprice: 450.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1080.0
+    startprice: 450.0
 spotionofstrength2:
   information:
     type: item
@@ -5326,16 +5326,16 @@ spotionofstrength2:
     material: POTION
     id: 373
     data: 16425
-  value: 550.0
+  value: 235.0
   price:
     static: false
-    staticprice: 1100.0
+    staticprice: 470.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1100.0
+    startprice: 470.0
 spotionofstrength2ext:
   information:
     type: item
@@ -5343,16 +5343,16 @@ spotionofstrength2ext:
     material: POTION
     id: 373
     data: 16489
-  value: 560.0
+  value: 245.0
   price:
     static: false
-    staticprice: 1120.0
+    staticprice: 490.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 1120.0
+    startprice: 490.0
 potionofslowness:
   information:
     type: item
@@ -5360,16 +5360,16 @@ potionofslowness:
     material: POTION
     id: 373
     data: 10
-  value: 340.0
+  value: 90.0
   price:
     static: false
-    staticprice: 680.0
+    staticprice: 180.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 680.0
+    startprice: 180.0
 potionofslowness2:
   information:
     type: item
@@ -5377,16 +5377,16 @@ potionofslowness2:
     material: POTION
     id: 373
     data: 42
-  value: 360.0
+  value: 110.0
   price:
     static: false
-    staticprice: 720.0
+    staticprice: 220.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 720.0
+    startprice: 220.0
 potionofslownessext:
   information:
     type: item
@@ -5394,16 +5394,16 @@ potionofslownessext:
     material: POTION
     id: 373
     data: 74
-  value: 350.0
+  value: 100.0
   price:
     static: false
-    staticprice: 700.0
+    staticprice: 200.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 700.0
+    startprice: 200.0
 potionofslowness2ext:
   information:
     type: item
@@ -5411,16 +5411,16 @@ potionofslowness2ext:
     material: POTION
     id: 373
     data: 106
-  value: 360.0
+  value: 120.0
   price:
     static: false
-    staticprice: 720.0
+    staticprice: 240.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 720.0
+    startprice: 240.0
 spotionofslowness:
   information:
     type: item
@@ -5428,16 +5428,16 @@ spotionofslowness:
     material: POTION
     id: 373
     data: 16394
-  value: 440.0
+  value: 140.0
   price:
     static: false
-    staticprice: 880.0
+    staticprice: 280.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 880.0
+    startprice: 280.0
 spotionofslownessext:
   information:
     type: item
@@ -5445,16 +5445,16 @@ spotionofslownessext:
     material: POTION
     id: 373
     data: 16458
-  value: 450.0
+  value: 150.0
   price:
     static: false
-    staticprice: 900.0
+    staticprice: 300.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 900.0
+    startprice: 300.0
 spotionofslowness2:
   information:
     type: item
@@ -5462,16 +5462,16 @@ spotionofslowness2:
     material: POTION
     id: 373
     data: 16426
-  value: 460.0
+  value: 160.0
   price:
     static: false
-    staticprice: 920.0
+    staticprice: 320.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 920.0
+    startprice: 320.0
 spotionofslowness2ext:
   information:
     type: item
@@ -5479,16 +5479,16 @@ spotionofslowness2ext:
     material: POTION
     id: 373
     data: 16490
-  value: 470.0
+  value: 170.0
   price:
     static: false
-    staticprice: 940.0
+    staticprice: 340.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 940.0
+    startprice: 340.0
 potionofharming:
   information:
     type: item
@@ -5496,16 +5496,16 @@ potionofharming:
     material: POTION
     id: 373
     data: 12
-  value: 350.0
+  value: 100.0
   price:
     static: false
-    staticprice: 700.0
+    staticprice: 200.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 700.0
+    startprice: 200.0
 potionofharming2:
   information:
     type: item
@@ -5513,16 +5513,16 @@ potionofharming2:
     material: POTION
     id: 373
     data: 44
-  value: 370.0
+  value: 120.0
   price:
     static: false
-    staticprice: 740.0
+    staticprice: 240.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 740.0
+    startprice: 240.0
 potionofharmingext:
   information:
     type: item
@@ -5530,16 +5530,16 @@ potionofharmingext:
     material: POTION
     id: 373
     data: 76
-  value: 360.0
+  value: 110.0
   price:
     static: false
-    staticprice: 720.0
+    staticprice: 220.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 720.0
+    startprice: 220.0
 potionofharming2ext:
   information:
     type: item
@@ -5547,16 +5547,16 @@ potionofharming2ext:
     material: POTION
     id: 373
     data: 108
-  value: 380.0
+  value: 130.0
   price:
     static: false
-    staticprice: 760.0
+    staticprice: 260.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 760.0
+    startprice: 260.0
 spotionofharming:
   information:
     type: item
@@ -5564,16 +5564,16 @@ spotionofharming:
     material: POTION
     id: 373
     data: 16396
-  value: 450.0
+  value: 150.0
   price:
     static: false
-    staticprice: 900.0
+    staticprice: 300.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 900.0
+    startprice: 300.0
 spotionofharmingext:
   information:
     type: item
@@ -5581,16 +5581,16 @@ spotionofharmingext:
     material: POTION
     id: 373
     data: 16460
-  value: 460.0
+  value: 160.0
   price:
     static: false
-    staticprice: 920.0
+    staticprice: 320.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 920.0
+    startprice: 320.0
 spotionofharming2:
   information:
     type: item
@@ -5598,16 +5598,16 @@ spotionofharming2:
     material: POTION
     id: 373
     data: 16428
-  value: 470.0
+  value: 170.0
   price:
     static: false
-    staticprice: 940.0
+    staticprice: 340.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 940.0
+    startprice: 340.0
 spotionofharming2ext:
   information:
     type: item
@@ -5615,16 +5615,16 @@ spotionofharming2ext:
     material: POTION
     id: 373
     data: 16492
-  value: 480.0
+  value: 180.0
   price:
     static: false
-    staticprice: 960.0
+    staticprice: 360.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 960.0
+    startprice: 360.0
 potionofnightvision:
   information:
     type: item
@@ -5632,16 +5632,16 @@ potionofnightvision:
     material: POTION
     id: 373
     data: 6
-  value: 310.0
+  value: 175.0
   price:
     static: false
-    staticprice: 620.0
+    staticprice: 350.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 620.0
+    startprice: 350.0
 potionofnightvision2:
   information:
     type: item
@@ -5649,16 +5649,16 @@ potionofnightvision2:
     material: POTION
     id: 373
     data: 38
-  value: 340.0
+  value: 195.0
   price:
     static: false
-    staticprice: 680.0
+    staticprice: 390.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 680.0
+    startprice: 390.0
 potionofnightvisionext:
   information:
     type: item
@@ -5666,16 +5666,16 @@ potionofnightvisionext:
     material: POTION
     id: 373
     data: 70
-  value: 320.0
+  value: 185.0
   price:
     static: false
-    staticprice: 640.0
+    staticprice: 370.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 640.0
+    startprice: 370.0
 potionofnightvision2ext:
   information:
     type: item
@@ -5683,16 +5683,16 @@ potionofnightvision2ext:
     material: POTION
     id: 373
     data: 102
-  value: 340.0
+  value: 205.0
   price:
     static: false
-    staticprice: 680.0
+    staticprice: 410.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 680.0
+    startprice: 410.0
 spotionofnightvision:
   information:
     type: item
@@ -5700,16 +5700,16 @@ spotionofnightvision:
     material: POTION
     id: 373
     data: 16390
-  value: 410.0
+  value: 225.0
   price:
     static: false
-    staticprice: 820.0
+    staticprice: 450.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 820.0
+    startprice: 450.0
 spotionofnightvisionext:
   information:
     type: item
@@ -5717,16 +5717,16 @@ spotionofnightvisionext:
     material: POTION
     id: 373
     data: 16454
-  value: 420.0
+  value: 235.0
   price:
     static: false
-    staticprice: 840.0
+    staticprice: 470.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 840.0
+    startprice: 470.0
 spotionofnightvision2:
   information:
     type: item
@@ -5734,16 +5734,16 @@ spotionofnightvision2:
     material: POTION
     id: 373
     data: 16422
-  value: 420.0
+  value: 245.0
   price:
     static: false
-    staticprice: 840.0
+    staticprice: 490.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 840.0
+    startprice: 490.0
 spotionofnightvision2ext:
   information:
     type: item
@@ -5751,16 +5751,16 @@ spotionofnightvision2ext:
     material: POTION
     id: 373
     data: 16486
-  value: 430.0
+  value: 255.0
   price:
     static: false
-    staticprice: 860.0
+    staticprice: 510.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 860.0
+    startprice: 510.0
 potionofinvisibility:
   information:
     type: item
@@ -5768,16 +5768,16 @@ potionofinvisibility:
     material: POTION
     id: 373
     data: 14
-  value: 310.0
+  value: 220.0
   price:
     static: false
-    staticprice: 620.0
+    staticprice: 440.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 620.0
+    startprice: 440.0
 potionofinvisibility2:
   information:
     type: item
@@ -5785,16 +5785,16 @@ potionofinvisibility2:
     material: POTION
     id: 373
     data: 46
-  value: 340.0
+  value: 240.0
   price:
     static: false
-    staticprice: 680.0
+    staticprice: 480.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 680.0
+    startprice: 480.0
 potionofinvisibilityext:
   information:
     type: item
@@ -5802,16 +5802,16 @@ potionofinvisibilityext:
     material: POTION
     id: 373
     data: 78
-  value: 320.0
+  value: 230.0
   price:
     static: false
-    staticprice: 640.0
+    staticprice: 460.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 640.0
+    startprice: 460.0
 potionofinvisibility2ext:
   information:
     type: item
@@ -5819,16 +5819,16 @@ potionofinvisibility2ext:
     material: POTION
     id: 373
     data: 110
-  value: 340.0
+  value: 250.0
   price:
     static: false
-    staticprice: 680.0
+    staticprice: 500.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 680.0
+    startprice: 500.0
 spotionofinvisibility:
   information:
     type: item
@@ -5836,16 +5836,16 @@ spotionofinvisibility:
     material: POTION
     id: 373
     data: 16398
-  value: 410.0
+  value: 270.0
   price:
     static: false
-    staticprice: 820.0
+    staticprice: 540.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 820.0
+    startprice: 540.0
 spotionofinvisibilityext:
   information:
     type: item
@@ -5853,16 +5853,16 @@ spotionofinvisibilityext:
     material: POTION
     id: 373
     data: 16462
-  value: 420.0
+  value: 280.0
   price:
     static: false
-    staticprice: 840.0
+    staticprice: 560.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 840.0
+    startprice: 560.0
 spotionofinvisibility2:
   information:
     type: item
@@ -5870,16 +5870,16 @@ spotionofinvisibility2:
     material: POTION
     id: 373
     data: 16430
-  value: 420.0
+  value: 290.0
   price:
     static: false
-    staticprice: 840.0
+    staticprice: 580.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 840.0
+    startprice: 580.0
 spotionofinvisibility2ext:
   information:
     type: item
@@ -5887,40 +5887,6 @@ spotionofinvisibility2ext:
     material: POTION
     id: 373
     data: 16494
-  value: 430.0
-  price:
-    static: false
-    staticprice: 860.0
-  stock:
-    stock: 0.0
-    median: 500.0
-  initiation:
-    initiation: true
-    startprice: 860.0
-thickpotion:
-  information:
-    type: item
-    category: unknown
-    material: POTION
-    id: 373
-    data: 32
-  value: 320.0
-  price:
-    static: false
-    staticprice: 640.0
-  stock:
-    stock: 0.0
-    median: 500.0
-  initiation:
-    initiation: true
-    startprice: 640.0
-mundanepotion:
-  information:
-    type: item
-    category: unknown
-    material: POTION
-    id: 373
-    data: 8192
   value: 300.0
   price:
     static: false
@@ -5931,6 +5897,40 @@ mundanepotion:
   initiation:
     initiation: true
     startprice: 600.0
+thickpotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 32
+  value: 32.0
+  price:
+    static: false
+    staticprice: 64.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 64.0
+mundanepotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 8192
+  value: 30.0
+  price:
+    static: false
+    staticprice: 60.0
+  stock:
+    stock: 0.0
+    median: 500.0
+  initiation:
+    initiation: true
+    startprice: 60.0
 smundanepotion:
   information:
     type: item
@@ -5938,7 +5938,7 @@ smundanepotion:
     material: POTION
     id: 373
     data: 24576
-  value: 300.0
+  value: 30.0
   price:
     static: false
     staticprice: 600.0
@@ -5955,16 +5955,16 @@ mundanepotionext:
     material: POTION
     id: 373
     data: 64
-  value: 300.0
+  value: 30.0
   price:
     static: false
-    staticprice: 600.0
+    staticprice: 60.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 600.0
+    startprice: 60.0
 awkwardpotion:
   information:
     type: item
@@ -5972,16 +5972,16 @@ awkwardpotion:
     material: POTION
     id: 373
     data: 16
-  value: 300.0
+  value: 40.0
   price:
     static: false
-    staticprice: 600.0
+    staticprice: 80.0
   stock:
     stock: 0.0
     median: 500.0
   initiation:
     initiation: true
-    startprice: 600.0
+    startprice: 80.0
 glassbottle:
   information:
     type: item
@@ -5989,16 +5989,16 @@ glassbottle:
     material: GLASS_BOTTLE
     id: 374
     data: 0
-  value: 30.0
+  value: 15.0
   price:
     static: false
-    staticprice: 60.0
+    staticprice: 30.0
   stock:
     stock: 0.0
     median: 10000.0
   initiation:
     initiation: true
-    startprice: 60.0
+    startprice: 30.0
 spidereye:
   information:
     type: item
@@ -6057,7 +6057,7 @@ magmacream:
     material: MAGMA_CREAM
     id: 378
     data: 0
-  value: 163.0
+  value: 112.5
   price:
     static: false
     staticprice: 326.0
