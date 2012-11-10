@@ -1,4 +1,4 @@
-version: 0.954
+version: 0.955
 config:
   shopcheckinterval: 6
   logwriteinterval: 4
@@ -31,6 +31,7 @@ config:
   language: english
   log-errors: false
   log-sqlwrite-errors: false
+  tekkit: false
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

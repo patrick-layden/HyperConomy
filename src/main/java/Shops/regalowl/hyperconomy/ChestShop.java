@@ -38,7 +38,7 @@ public class ChestShop implements Listener{
 	private LanguageFile L;
 	
 	private ArrayList<BlockFace> faces = new ArrayList<BlockFace>();
-	
+	private ArrayList<BlockFace> allfaces = new ArrayList<BlockFace>();
 	
 	ChestShop() {
 		
@@ -54,6 +54,14 @@ public class ChestShop implements Listener{
 		faces.add(BlockFace.WEST);
 		faces.add(BlockFace.NORTH);
 		faces.add(BlockFace.SOUTH);
+		
+		
+		allfaces.add(BlockFace.EAST);
+		allfaces.add(BlockFace.WEST);
+		allfaces.add(BlockFace.NORTH);
+		allfaces.add(BlockFace.SOUTH);
+		allfaces.add(BlockFace.DOWN);
+		allfaces.add(BlockFace.UP);
 		
 		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
@@ -405,6 +413,34 @@ public class ChestShop implements Listener{
 	    		}	 
 			}	
 		}  	
+	}
+	
+	
+	
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onBlockPlaceEventTekkit(BlockPlaceEvent bpevent) {
+		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops") && hc.getYaml().getConfig().getBoolean("config.tekkit")) {
+			Player p = bpevent.getPlayer();
+			Block block = bpevent.getBlock();
+			for (BlockFace bf:allfaces) {
+				Block b = block.getRelative(bf);
+				if (b.getState() instanceof Chest) {
+		    		Chest c = (Chest) b.getState();
+					Block signblock = Bukkit.getWorld(c.getBlock().getWorld().getName()).getBlockAt(c.getX(), c.getY() + 1, c.getZ());
+					if (signblock != null && signblock.getType().equals(Material.WALL_SIGN)) {
+			    		Sign s = (Sign) signblock.getState();
+						String line2 = s.getLine(1).trim();
+				    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
+				    		String line34 = ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim();
+				    		if (!line34.equalsIgnoreCase(p.getName())) {
+					    		bpevent.setCancelled(true);
+				    		}
+				    	}
+			    	}
+		    	}
+			}
+		}
 	}
 	
 	
