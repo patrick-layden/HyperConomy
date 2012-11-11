@@ -53,36 +53,6 @@ public class HyperConomy extends JavaPlugin {
 	private boolean errorResetActive;
 	private boolean shuttingDown;
 
-	
-	public void clearData() {
-		if (sf != null) {
-			sf.clearData();
-		}
-		tran= null;
-		calc= null;
-		ench= null;
-		l= null;
-		s= null;
-		acc= null;
-		isign= null;
-		commandhandler= null;
-		hist= null;
-		not= null;
-		tsign= null;
-		itdi= null;
-		sf= null;
-		sw= null;
-		sqe= null;
-		hws= null;
-		yaml= null;
-		L= null;
-		economy= null;
-		namedata.clear();
-		enchantdata.clear();
-		names.clear();
-		inames.clear();
-		enames.clear();
-	}
 	@Override
 	public void onEnable() {
 		initialize();
@@ -208,6 +178,46 @@ public class HyperConomy extends JavaPlugin {
 			yaml.saveYamls();
 		}
 		clearData();
+	}
+	
+	public void clearData() {
+		if (sf != null) {
+			sf.clearData();
+		}
+		tran= null;
+		calc= null;
+		ench= null;
+		l= null;
+		s= null;
+		acc= null;
+		isign= null;
+		commandhandler= null;
+		hist= null;
+		not= null;
+		tsign= null;
+		itdi= null;
+		sf= null;
+		sw= null;
+		sqe= null;
+		hws= null;
+		yaml= null;
+		L= null;
+		economy= null;
+		namedata.clear();
+		enchantdata.clear();
+		names.clear();
+		inames.clear();
+		enames.clear();
+	}
+	
+	public void disableWebPage() {
+		hws.endServer();
+		hws = null;
+	}
+	
+	public void enableWebPage() {
+		hws = null;
+		hws = new HyperWebStart();	
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

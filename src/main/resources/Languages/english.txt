@@ -175,7 +175,8 @@ ITEM_CANNOT_ACCEPT_ENCHANTMENTS: &9That item cannot accept enchantments.
 CHEST_SHOP_BUY_VALUE: &a&o%a &b&o%n &9&ocan be purchased from %zc for &a&o%c%p.
 CHEST_SHOP_SELL_VALUE: &a&o%a &b&o%n &9&ocan be sold to %zc for &a&o%c%p.
 CHEST_SHOP_ENCHANTMENT_VALUE: &9The selected item's enchantments can be purchased from %zc for: %c%p;
-WEB_PAGE_ENABLED: [HyperConomy] web page enabled.
+WEB_PAGE_ENABLED: HyperConomy web page enabled.
+WEB_PAGE_DISABLED: HyperConomy web page disabled.
 TOTAL_XP_POINTS: &9Total Experience Points: &a%v
 XP_FOR_NEXT_LVL: &9Experience Needed For The Next Level: &a%v
 XP_FOR_LVL_30: &9Experience Needed For Level 30: &a%v
@@ -323,3 +324,5 @@ REPAIRSIGNS_INVALID: &4Invalid Parameters.  Use /repairsigns [x radius/radius] (
 NO_SIGNS_FOUND: &9No signs were found.
 X_SIGNS_REPAIRED: &a%v &9signs were detected and repaired!
 VOLUME_TOO_LARGE: &4You can't scan more than %v blocks at a time!
+HCWEB_INVALID: &4Invalid parameters.  Use /hcweb ['enable', 'disable', 'background'] [setting]
+WEB_PAGE_SET: &6Web page set!
