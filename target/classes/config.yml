@@ -8,7 +8,7 @@ config:
   initialpurchasetaxpercent: 100
   statictaxpercent: 300
   enchanttaxpercent: 100
-  daystosavehistory: 30
+  daystosavehistory: 7
   initialshopbalance: 20000000
   shop-has-unlimited-money: false
   global-shop-account: hyperconomy
@@ -59,7 +59,7 @@ config:
     port: 8765
     use-web-page: false
     web-page-economy: default
-    background-color: EEEEF6
+    background-color: EEEEEE
     font-color: 333333
     border-color: D8DFE4
     increase-value-color: A0FFB0

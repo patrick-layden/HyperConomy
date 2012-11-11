@@ -56,6 +56,45 @@ public class SQLFunctions {
 	private FileConfiguration enchants;
 	private ArrayList<String> economies = new ArrayList<String>();
 
+	
+	
+	public void clearData() {
+		statement = null;
+		username = null;
+		password = null;
+		host = null;
+		database = null;
+		tne.clear();
+		tname.clear();
+		teconomy.clear();
+		ttype.clear();
+		tcategory.clear();
+		tmaterial.clear();
+		tid.clear();
+		tdata.clear();
+		tdurability.clear();
+		tvalue.clear();
+		tstatic.clear();
+		tstaticprice.clear();
+		tstock.clear();
+		tmedian.clear();
+		tinitiation.clear();
+		tstartprice.clear();
+		tceiling.clear();
+		tfloor.clear();
+		econplayer.clear();
+		playerecon.clear();
+		koec.clear();
+		hobject.clear();
+		heconomy.clear();
+		hprice.clear();
+		hcount.clear();
+		historyDataCount.clear();
+		items = null;
+		enchants = null;
+		economies.clear();
+	}
+	
 	SQLFunctions() {
 		hc = HyperConomy.hc;
 		if (hc.useSQL()) {
