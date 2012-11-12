@@ -351,6 +351,10 @@ commands:
       description: Allows adjusting the web page from in-game.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+   hcclearhistory:
+      description: Clears the hyperhistory table.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.
