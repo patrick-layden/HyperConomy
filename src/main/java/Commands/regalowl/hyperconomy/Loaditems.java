@@ -18,6 +18,9 @@ public class Loaditems {
     						new Backup();
     					}
         				SQLEconomy se = hc.getSQLEconomy();
+        				if (!economy.equalsIgnoreCase("default")) {
+        					se.loadItems("default");
+        				}
         				ArrayList<String> added = se.loadItems(economy);
         				sender.sendMessage(ChatColor.GOLD + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
     				} else {
