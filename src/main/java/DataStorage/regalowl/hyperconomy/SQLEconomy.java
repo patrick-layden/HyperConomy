@@ -46,7 +46,7 @@ public class SQLEconomy {
 			state.close();
 			connect.close();		
     		SQLUtils su = new SQLUtils();
-    		boolean exists = su.tableExists(host, port, database, username, password, "hyperobjects", "ceiling");
+    		boolean exists = su.fieldExists(host, port, database, username, password, "hyperobjects", "ceiling");
     		if (!exists) {
     			String statement = "ALTER TABLE hyperobjects ADD CEILING DOUBLE AFTER STARTPRICE";
     			su.executeSQL(host, port, database, username, password, statement);

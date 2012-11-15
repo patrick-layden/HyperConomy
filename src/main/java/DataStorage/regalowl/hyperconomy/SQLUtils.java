@@ -11,7 +11,7 @@ import org.bukkit.ChatColor;
 
 public class SQLUtils {
 	
-	public boolean tableExists(String host, int port, String database, String username, String password, String table, String field) {
+	public boolean fieldExists(String host, int port, String database, String username, String password, String table, String field) {
 		
 		try {
 			Connection connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
@@ -21,9 +21,8 @@ public class SQLUtils {
 			
 			ResultSetMetaData meta = result.getMetaData();
 			int nCols = meta.getColumnCount();
-	
 			for (int i = 1; i < nCols + 1; i++) {
-			    if(meta.getColumnName(i).equals(field)) {
+			    if (meta.getColumnName(i).equalsIgnoreCase(field)) {
 			        result.close();
 			        state.close();
 			        connect.close();
