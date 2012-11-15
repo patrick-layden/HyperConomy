@@ -44,7 +44,15 @@ public class SQLEconomy {
 			}
 			state.execute("CREATE TABLE IF NOT EXISTS hyperhistory (ID INT NOT NULL AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, COUNT INT, PRIMARY KEY (ID))");
 			state.close();
-			connect.close();
+			connect.close();		
+    		SQLUtils su = new SQLUtils();
+    		boolean exists = su.tableExists(host, port, database, username, password, "hyperobjects", "ceiling");
+    		if (!exists) {
+    			String statement = "ALTER TABLE hyperobjects ADD CEILING DOUBLE AFTER STARTPRICE";
+    			su.executeSQL(host, port, database, username, password, statement);
+    			statement = "ALTER TABLE hyperobjects ADD FLOOR DOUBLE AFTER CEILING";
+    			su.executeSQL(host, port, database, username, password, statement);
+    		}			
 			return true;
 		} catch (SQLException e) {
 			return false;
