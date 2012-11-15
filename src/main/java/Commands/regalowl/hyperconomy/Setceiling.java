@@ -17,8 +17,7 @@ public class Setceiling {
 				String teststring2 = hc.testeString(name);
 				if (teststring1 != null || teststring2 != null) {
 					sf.setCeiling(name, playerecon, ceiling);
-					//sender.sendMessage(ChatColor.GOLD + "" + name + " ceiling set!");
-					L.f(L.get("CEILING_SET"), name);
+					sender.sendMessage(L.f(L.get("CEILING_SET"), name));
 					isign.setrequestsignUpdate(true);
 					isign.checksignUpdate();
 				} else {

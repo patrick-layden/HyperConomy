@@ -17,8 +17,7 @@ public class Setfloor {
 				String teststring2 = hc.testeString(name);
 				if (teststring1 != null || teststring2 != null) {
 					sf.setFloor(name, playerecon, floor);
-					//sender.sendMessage(ChatColor.GOLD + "" + name + " floor set!");
-					L.f(L.get("FLOOR_SET"), name);
+					sender.sendMessage(L.f(L.get("FLOOR_SET"), name));
 					isign.setrequestsignUpdate(true);
 					isign.checksignUpdate();
 				} else {
