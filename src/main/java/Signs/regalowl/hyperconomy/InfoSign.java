@@ -299,7 +299,7 @@ public class InfoSign implements Listener {
 						if (!s.getLine(0).startsWith("\u00A7")) {
 							s.setLine(0, "\u00A71" + s.getLine(0));
 						}
-						if (!s.getLine(1).startsWith("\u00A7") && !s.getLine(1).isEmpty() && line23.contains(":")) {
+						if (!s.getLine(1).startsWith("\u00A7") && !s.getLine(1).isEmpty()) {
 							s.setLine(1, "\u00A71" + s.getLine(1));
 						}
 						if (line23 != null && !line23.equalsIgnoreCase("")) {
@@ -351,7 +351,7 @@ public class InfoSign implements Listener {
 		while (counter < signtypes.size()) {
 			if (line3.equalsIgnoreCase(signtypes.get(counter))) {
 				type = signtypes.get(counter);
-				break;
+				return type;
 			}
 			counter++;
 		}

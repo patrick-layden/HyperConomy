@@ -309,7 +309,7 @@ TOPITEMS_INVALID: &4Use /topitems (page)
 WRITEITEMS_INVALID: &4Invalid parameters. Use /writeitems ['row'/'column'] ('e')
 ITEM_NAMES_WRITTEN: &6Item names written to items.txt
 ENCHANT_NAMES_WRITTEN: &6Enchantment names written to enchants.txt
-LOG_NO_ECON_PLUGIN: No economy plugin detected! No money can be gained or lost. Please read the installation guide here: http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/
+LOG_NO_ECON_PLUGIN: [HyperConomy] No economy plugin detected! No money can be gained or lost. Please read the installation guide here: http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/
 NO_ECON_PLUGIN: &4No economy plugin detected! No money can be gained or lost.
 HYPERERROR_LOG: &4An error has occurred. [#%v] Enable error logging in config.yml to log future errors.
 ERROR_HAS_OCCURRED: &4An error has occurred. [#%v] Check the errors folder for more info.
