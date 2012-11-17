@@ -47,9 +47,9 @@ public class Topitems {
 					double samount = sf.getStock(elst, playerecon);
 					if (samount > 0) {
 						while (itemstocks.containsKey(samount)) {
-							samount = samount + .00001;
+							samount = samount + .0000001;
 						}
-						itemstocks.put(samount, elst);
+						itemstocks.put(samount * 100, elst);
 					}
 				}
 			}
@@ -65,7 +65,7 @@ public class Topitems {
 				while (count < numberpage) {
 					double lk = itemstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
-						sender.sendMessage(ChatColor.WHITE + itemstocks.get(lk) + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + (int) Math.floor(lk));
+						sender.sendMessage(ChatColor.WHITE + itemstocks.get(lk) + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + Math.floor(lk)/100);
 					}
 					itemstocks.remove(lk);
 					count++;
