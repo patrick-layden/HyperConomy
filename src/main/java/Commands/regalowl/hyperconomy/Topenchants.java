@@ -46,9 +46,9 @@ public class Topenchants {
 					double samount = sf.getStock(elst, playerecon);
 					if (samount > 0) {
 						while (enchantstocks.containsKey(samount)) {
-							samount = samount + .00001;
+							samount = samount + .0000001;
 						}
-						enchantstocks.put(samount, elst);
+						enchantstocks.put(samount * 100, elst);
 					}
 				}
 			}
@@ -64,7 +64,7 @@ public class Topenchants {
 				while (count < numberpage) {
 					double lk = enchantstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
-						sender.sendMessage(ChatColor.WHITE + enchantstocks.get(lk) + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + (int) Math.floor(lk));
+						sender.sendMessage(ChatColor.WHITE + enchantstocks.get(lk) + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + Math.floor(lk)/100);
 					}
 					enchantstocks.remove(lk);
 					count++;
