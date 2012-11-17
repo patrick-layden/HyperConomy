@@ -104,7 +104,7 @@ public class Calculation {
 				value = sf.getValue(name, playerecon);
 				median = sf.getMedian(name, playerecon);
 				icost = sf.getStartPrice(name, playerecon);
-				if (icost >= ((median * value) / shopstock) && shopstock > 0) {
+				if (icost >= ((median * value) / shopstock) && shopstock > 1) {
 					sf.setInitiation(name, playerecon, "false");
 				}
 				int counter = 0;
@@ -175,7 +175,7 @@ public class Calculation {
 				if (initial == true) {
 					double icost = 0;
 					icost = sf.getStartPrice(name, playerecon);
-					if (cost < (icost * amount) && oshopstock > 0) {
+					if (cost < (icost * amount) && oshopstock > 1) {
 						sf.setInitiation(name, playerecon, "false");
 					} else {
 						double price = applyCeilingFloor(name, playerecon, icost);
@@ -226,7 +226,7 @@ public class Calculation {
 				value = sf.getValue(name, playerecon);
 				median = sf.getMedian(name, playerecon);
 				icost = sf.getStartPrice(name, playerecon);
-				if (icost >= ((median * value) / shopstock) && shopstock > 0) {
+				if (icost >= ((median * value) / shopstock) && shopstock > 1) {
 					sf.setInitiation(name, playerecon, "false");
 				}
 				double price = (median * value) / shopstock;
@@ -292,7 +292,7 @@ public class Calculation {
 					if (initial == true) {
 						double icost;
 						icost = sf.getStartPrice(name, playerecon);
-						if (price < icost && oshopstock > 0) {
+						if (price < icost && oshopstock > 1) {
 							sf.setInitiation(name, playerecon, "false");
 						} else {
 							cost = icost * classvalue;
