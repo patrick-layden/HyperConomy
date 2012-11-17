@@ -76,9 +76,8 @@ public class ETransaction {
 				boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
 				if (acc.checkshopBalance(fprice) || sunlimited) {
 					p.getItemInHand().removeEnchantment(ench);
-					int shopstock = 0;
-					shopstock = (int) sf.getStock(name, playerecon);
-					sf.setStock(name, playerecon, shopstock + 1);
+					double shopstock = sf.getStock(name, playerecon);
+					sf.setStock(name, playerecon, shopstock + duramult);
 					double salestax = calc.getSalesTax(p, fprice);
 					acc.setAccount(hc, p, economy);
 					acc.deposit(fprice - salestax);
