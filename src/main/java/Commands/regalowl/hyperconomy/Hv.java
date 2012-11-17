@@ -28,7 +28,7 @@ public class Hv {
 					player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 				} else {
 					double val = calc.getValue(nam, amount, player);
-					if (calc.testId(itd) && amount > 1) {
+					if (calc.isDurable(itd) && amount > 1) {
 						int numberofitem = tran.countInvitems(itd, player.getItemInHand().getData().getData(), player);
 						if (amount - numberofitem > 0) {
 							int addamount = amount - numberofitem;

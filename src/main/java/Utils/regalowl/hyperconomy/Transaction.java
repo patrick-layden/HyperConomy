@@ -159,11 +159,11 @@ public class Transaction {
 								if (maxi == 0) {
 									price = calc.getValue(name, amount, p);
 								}
-								removesoldItems(id, data, amount, p);
+								double trueAmount = removesoldItems(id, data, amount, p);
 								double shopstock = 0;
 								shopstock = sf.getStock(name, playerecon);
 								if (!Boolean.parseBoolean(sf.getStatic(name, playerecon)) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-									sf.setStock(name, playerecon, (shopstock + amount));
+									sf.setStock(name, playerecon, (shopstock + trueAmount));
 								}
 								int maxi2 = getmaxInitial(name, p);
 								if (maxi2 == 0) {
@@ -393,9 +393,13 @@ public class Transaction {
 	 * player and the item's id and data.
 	 * 
 	 */
-	private void removesoldItems(int id, int data, int amount, Player p) {
+	private double removesoldItems(int id, int data, int amount, Player p) {
 		Calculation calc = hc.getCalculation();
 		ETransaction ench = hc.getETransaction();
+		double trueAmount = 0;
+		if (!calc.isDurable(id)) {
+			trueAmount = amount;
+		}
 		try {
 			int newdata = calc.newData(id, data);
 			Inventory pinv = p.getInventory();
@@ -410,11 +414,17 @@ public class Transaction {
 				if (inhand != null && calc.newData(id, dv) == newdata && inhand.getTypeId() == id && hasenchants == false) {
 					int amountinhand = inhand.getAmount();
 					if (amountinhand > ritems) {
+						if (calc.isDurable(inhand.getTypeId())) {
+							trueAmount += calc.getdurabilityPercent(inhand);
+						}
 						inhand.setAmount(amountinhand - ritems);
 						ritems = 0;
 					} else if (amountinhand <= ritems) {
 						Inventory invent = p.getInventory();
 						int heldslot = p.getInventory().getHeldItemSlot();
+						if (calc.isDurable(pinv.getItem(heldslot).getTypeId())) {
+							trueAmount += calc.getdurabilityPercent(pinv.getItem(heldslot));
+						}
 						invent.clear(heldslot);
 						ritems = ritems - amountinhand;
 					}
@@ -430,14 +440,23 @@ public class Transaction {
 					if (pinv.getItem(slot) != null && calc.newData(id, damv) == newdata && pinv.getItem(slot).getTypeId() == id && hasenchants2 == false) {
 						if (ritems > 0) {
 							if (ritems >= maxstack && pinv.getItem(slot).getAmount() == maxstack) {
+								if (calc.isDurable(pinv.getItem(slot).getTypeId())) {
+									trueAmount += calc.getdurabilityPercent(pinv.getItem(slot));
+								}
 								pinv.clear(slot);
 								ritems = ritems - maxstack;
 							} else {
 								int stackamount = pinv.getItem(slot).getAmount();
 								if (stackamount <= ritems) {
+									if (calc.isDurable(pinv.getItem(slot).getTypeId())) {
+										trueAmount += calc.getdurabilityPercent(pinv.getItem(slot));
+									}
 									pinv.clear(slot);
 									ritems = ritems - stackamount;
 								} else {
+									if (calc.isDurable(pinv.getItem(slot).getTypeId())) {
+										trueAmount += calc.getdurabilityPercent(pinv.getItem(slot));
+									}
 									pinv.getItem(slot).setAmount(stackamount - ritems);
 									ritems = 0;
 								}
@@ -447,9 +466,11 @@ public class Transaction {
 					allstacks = allstacks.substring(b + 1, allstacks.length());
 				}
 			}
+			return trueAmount;
 		} catch (Exception e) {
 			String info = "Transaction removeSoldItems() passed values player='" + p.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
 			new HyperError(e, info);
+			return amount;
 		}
 	}
 

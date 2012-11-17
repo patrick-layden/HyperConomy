@@ -300,6 +300,8 @@ public class SQLFunctions {
 	public void setStock(String name, String economy, double newstock) {
 		name = hc.fixName(name);
 		try {
+			Calculation calc = hc.getCalculation();
+			newstock = calc.round(newstock, 2);
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tstock.set(keyloc, newstock);
 			if (hc.useSQL()) {

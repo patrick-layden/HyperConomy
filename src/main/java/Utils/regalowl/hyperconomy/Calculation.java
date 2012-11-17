@@ -333,7 +333,7 @@ public class Calculation {
 		try {
 			ETransaction ench = hc.getETransaction();
 			double damage = 0;
-			if (testId(itemid)) {
+			if (isDurable(itemid)) {
 				Inventory pinv = p.getInventory();
 				HashMap<Integer, ? extends ItemStack> stacks = pinv.all(itemid);
 				int heldslot = p.getInventory().getHeldItemSlot();
@@ -406,7 +406,7 @@ public class Calculation {
 	public int newData(int id, int data) {
 		try {
 			int newData;
-			if (testId(id)) {
+			if (isDurable(id)) {
 				newData = 0;
 			} else {
 				newData = data;
@@ -427,7 +427,7 @@ public class Calculation {
 	 * item can be damaged. If it can be damaged it returns true, false if not.
 	 * 
 	 */
-	public boolean testId(int id) {
+	public boolean isDurable(int id) {
 		try {
 			boolean datatest = false;
 			if (durableIds.contains(id)) {

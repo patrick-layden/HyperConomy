@@ -45,7 +45,7 @@ public class APIBridge implements HyperAPI
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		double durabilityPercent = 1.0;
-		if (calc.testId(id))
+		if (calc.isDurable(id))
 		{
 			ItemStack item = new ItemStack(id, durability);
 			durabilityPercent = 1.0 - ((double) durability / item.getType().getMaxDurability());
@@ -65,7 +65,7 @@ public class APIBridge implements HyperAPI
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		double durabilityPercent = 1.0;
-		if (calc.testId(id))
+		if (calc.isDurable(id))
 		{
 			ItemStack item = new ItemStack(id, durability);
 			durabilityPercent = 1.0 - ((double) durability / item.getType().getMaxDurability());
