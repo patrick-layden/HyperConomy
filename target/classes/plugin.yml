@@ -355,6 +355,10 @@ commands:
       description: Clears the hyperhistory table.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+   hcerror:
+      description: Toggles HyperConomy error logging.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

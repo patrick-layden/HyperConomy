@@ -328,3 +328,6 @@ HCWEB_INVALID: &4Invalid parameters.  Use /hcweb ['enable', 'disable', 'backgrou
 WEB_PAGE_SET: &6Web page set!
 HCCLEARHISTORY_CLEARED: &6History table cleared!
 HCCLEARHISTORY_INVALID: &4Invalid parameters.  Use /hcclearhistory.
+HCERROR_INVALID: &4Invalid parameters.  Use /hcerror
+HCERROR_ENABLED: &6Errors will now be logged.
+HCERROR_DISABLED: &6Errors will no longer be logged.
