@@ -282,7 +282,7 @@ ALL_OBJECTS_SET_TO_STATIC: &6All objects set to static pricing: %n.
 SETSTATICPRICE_INVALID: &4Invalid parameters. Use /setstaticprice [item/enchantment name] [staticprice] ('e')
 STATIC_PRICE_SET: &6%n static price set!
 SETSTOCK_INVALID: &4Invalid parameters. Use /setstock [item/enchantment name] [stock] ('e')
-STOCK_SET: &6%n stock set!"
+STOCK_SET: &6%n stock set!
 SETSTOCKALL_INVALID: &4Invalid parameters. Use /setstockall [stock]
 ALL_STOCKS_SET: &6All stocks set!
 SETSTOCKMEDIANALL_WARNING: &cAre you sure you wish to do this? All item and enchantment stocks will be set to their median with initial pricing disabled. Type '/setstockmedianall' confirm to proceed.
