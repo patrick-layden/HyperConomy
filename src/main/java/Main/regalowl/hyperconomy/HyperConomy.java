@@ -10,6 +10,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -155,6 +156,7 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public void shutDown() {
+		HandlerList.unregisterAll(this);
 		if (itdi != null) {
 			itdi.shutDown();
 		}
