@@ -26,6 +26,8 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.Vector;
 
 public class ItemDisplay implements Listener {
@@ -101,6 +103,15 @@ public class ItemDisplay implements Listener {
 		}
 	}
 	
+	
+	public void shutDown() {
+		cancelRefreshThread();
+		for (Item citem:displayItems) {
+			clearNearbyItems(citem);
+		}
+		clearDisplays();
+	}
+	
 	public void clearDisplays() {
 		for (int i = 0; i < displayItems.size(); i++) {
 			Item item = displayItems.get(i);
@@ -120,6 +131,7 @@ public class ItemDisplay implements Listener {
 		Item item = w.dropItem(l, dropstack);
 		item.setPickupDelay(200);
 		item.setVelocity(new Vector(0, .1, 0));
+		item.setMetadata("HyperConomy", new FixedMetadataValue(hc, "item_display"));
 		return item;
 	}
 	
@@ -129,16 +141,17 @@ public class ItemDisplay implements Listener {
 		for (Entity entity : nearbyEntities) {
 			if (entity instanceof Item) {
 				Item citem = (Item) entity;
-				int id = citem.getItemStack().getType().getId();
-				int da = calc.getDamageValue(citem.getItemStack());
-				for (int i = 0; i < displayItems.size(); i++) {
-					Item titem = displayItems.get(i);
-					if (!titem.equals(citem)) {
-						if (id == titem.getItemStack().getType().getId()) {
-							if (da == calc.getDamageValue(titem.getItemStack())) {
-								entity.remove();
-								continue;
-							}
+				boolean display = false;
+				for (Item ditem:displayItems) {
+					if (citem.equals(ditem)) {
+						display = true;
+						break;
+					}
+				}
+				if (!display) {
+					if (citem.getItemStack().getType().getId() == item.getItemStack().getType().getId()) {
+						if (calc.getDamageValue(citem.getItemStack()) == calc.getDamageValue(item.getItemStack())) {
+							entity.remove();
 						}
 					}
 				}
@@ -326,6 +339,13 @@ public class ItemDisplay implements Listener {
 		Item item = event.getItem();
 		if (displayItems.contains(item)) {
 			event.setCancelled(true);
+			return;
+		}
+		List<MetadataValue> meta = item.getMetadata("HyperConomy");
+		for (MetadataValue cmeta: meta) {
+			if (cmeta.asString().equalsIgnoreCase("item_display")) {
+				event.setCancelled(true);
+			}
 		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)

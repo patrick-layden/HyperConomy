@@ -156,8 +156,7 @@ public class HyperConomy extends JavaPlugin {
 
 	public void shutDown() {
 		if (itdi != null) {
-			itdi.cancelRefreshThread();
-			itdi.clearDisplays();
+			itdi.shutDown();
 		}
 		if (s != null) {
 			s.stopshopCheck();
