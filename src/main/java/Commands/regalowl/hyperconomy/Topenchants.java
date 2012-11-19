@@ -45,7 +45,7 @@ public class Topenchants {
 				if (!unavailable) {
 					double samount = sf.getStock(elst, playerecon);
 					if (samount > 0) {
-						while (enchantstocks.containsKey(samount)) {
+						while (enchantstocks.containsKey(samount * 100)) {
 							samount = samount + .0000001;
 						}
 						enchantstocks.put(samount * 100, elst);

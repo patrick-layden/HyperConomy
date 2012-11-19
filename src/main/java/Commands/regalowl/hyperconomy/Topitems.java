@@ -46,7 +46,7 @@ public class Topitems {
 				if (!unavailable) {
 					double samount = sf.getStock(elst, playerecon);
 					if (samount > 0) {
-						while (itemstocks.containsKey(samount)) {
+						while (itemstocks.containsKey(samount * 100)) {
 							samount = samount + .0000001;
 						}
 						itemstocks.put(samount * 100, elst);
