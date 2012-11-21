@@ -75,7 +75,7 @@ public class Notification {
 					message = L.f(L.get("SQL_NOTIFICATION"), (double)stock, cost, name.get(0), econ);
 					//message = "\u00A79The \u00A7f" + econ + " \u00A79economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
 				} else {
-					message = L.f(L.get("SQL_NOTIFICATION"), (double)stock, cost, name.get(0), econ);
+					message = L.f(L.get("NOTIFICATION"), (double)stock, cost, name.get(0), econ);
 					//message = "\u00A79The economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
 				}
 				
