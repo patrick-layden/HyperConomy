@@ -2,9 +2,6 @@ package regalowl.hyperconomy;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
-
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -45,7 +42,6 @@ public class Transaction {
 		try {
 			SQLFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
-			Economy economy = hc.getEconomy();
 			ETransaction ench = hc.getETransaction();
 			LanguageFile L = hc.getLanguageFile();
 			Account acc = hc.getAccount();
@@ -60,15 +56,14 @@ public class Transaction {
 						double price = calc.getCost(name, amount, playerecon);
 						double taxpaid = calc.getPurchaseTax(name, playerecon, price);
 						price = calc.twoDecimals(price + taxpaid);
-						acc.setAccount(hc, p, economy);
-						if (acc.checkFunds(price)) {
+						if (acc.checkFunds(price, p)) {
 							int space = getavailableSpace(id, data, p);
 							if (space >= amount) {
 								addboughtItems(amount, id, data, p);
 								if (!Boolean.parseBoolean(sf.getStatic(name, playerecon)) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
 									sf.setStock(name, playerecon, shopstock - amount);
 								}
-								acc.withdraw(price);
+								acc.withdraw(price, p);
 								acc.depositShop(price);
 								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
 									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -124,7 +119,6 @@ public class Transaction {
 		try {
 			SQLFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
-			Economy economy = hc.getEconomy();
 			ETransaction ench = hc.getETransaction();
 			Account acc = hc.getAccount();
 			LanguageFile L = hc.getLanguageFile();
@@ -170,8 +164,7 @@ public class Transaction {
 									sf.setInitiation(name, playerecon, "false");
 								}
 								double salestax = calc.getSalesTax(p, price);
-								acc.setAccount(hc, p, economy);
-								acc.deposit(price - salestax);
+								acc.deposit(price - salestax, p);
 								acc.withdrawShop(price - salestax);
 								if (sunlimited) {
 									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -511,7 +504,6 @@ public class Transaction {
 		try {
 			SQLFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
-			Economy economy = hc.getEconomy();
 			ETransaction ench = hc.getETransaction();
 			Account acc = hc.getAccount();
 			LanguageFile L = hc.getLanguageFile();
@@ -526,8 +518,7 @@ public class Transaction {
 					double price = calc.getCost(name, amount, playerecon);
 					double taxpaid = calc.getPurchaseTax(name, playerecon, price);
 					price = calc.twoDecimals(price + taxpaid);
-					acc.setAccount(hc, p, economy);
-					if (acc.checkFunds(price)) {
+					if (acc.checkFunds(price, p)) {
 						int totalxp = calc.gettotalxpPoints(p);
 						int newxp = totalxp + amount;
 						int newlvl = calc.getlvlfromXP(newxp);
@@ -538,7 +529,7 @@ public class Transaction {
 						if (!Boolean.parseBoolean(sf.getStatic(name, playerecon)) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
 							sf.setStock(name, playerecon, (shopstock - amount));
 						}
-						acc.withdraw(price);
+						acc.withdraw(price, p);
 						acc.depositShop(price);
 						if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
 							String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -588,7 +579,6 @@ public class Transaction {
 		try {
 			SQLFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
-			Economy economy = hc.getEconomy();
 			ETransaction ench = hc.getETransaction();
 			Account acc = hc.getAccount();
 			LanguageFile L = hc.getLanguageFile();
@@ -633,8 +623,7 @@ public class Transaction {
 								sf.setInitiation(name, playerecon, "false");
 							}
 							double salestax = calc.getSalesTax(p, price);
-							acc.setAccount(hc, p, economy);
-							acc.deposit(price - salestax);
+							acc.deposit(price - salestax, p);
 							acc.withdrawShop(price - salestax);
 							if (sunlimited) {
 								String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -691,20 +680,17 @@ public class Transaction {
 		try {
 			SQLFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
-			Economy economy = hc.getEconomy();
 			Account acc = hc.getAccount();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
 			String playerecon = sf.getPlayerEconomy(owner);
 			double price = calc.getTvalue(name, amount, playerecon);
-			acc.setAccount(hc, p, economy);
-			if (acc.checkFunds(price)) {
+			if (acc.checkFunds(price, p)) {
 				int space = getavailableSpace(id, data, p);
 				if (space >= amount) {
 					addboughtItems(amount, id, data, p);
 					removeItems(id, data, amount, invent);
-					acc.withdraw(price);
-					acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
+					acc.withdraw(price, p);
 					acc.depositAccount(owner, price);
 					p.sendMessage(L.get("LINE_BREAK"));
 					p.sendMessage(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, calc.twoDecimals(price), name, owner));
@@ -746,20 +732,17 @@ public class Transaction {
 	public boolean buyChest(String name, int id, int data, String owner, Player p, int amount, Inventory invent, double price) {
 		try {
 			SQLFunctions sf = hc.getSQLFunctions();
-			Economy economy = hc.getEconomy();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();
 			Calculation calc = hc.getCalculation();
 			String playerecon = sf.getPlayerEconomy(owner);
-			acc.setAccount(hc, p, economy);
-			if (acc.checkFunds(price)) {
+			if (acc.checkFunds(price, p)) {
 				int space = getavailableSpace(id, data, p);
 				if (space >= amount) {
 					addboughtItems(amount, id, data, p);
 					removeItems(id, data, amount, invent);
-					acc.withdraw(price);
-					acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
+					acc.withdraw(price, p);
 					acc.depositAccount(owner, price);
 					p.sendMessage(L.get("LINE_BREAK"));
 					p.sendMessage(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, calc.twoDecimals(price), name, owner));
@@ -799,7 +782,6 @@ public class Transaction {
 		try {
 			SQLFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
-			Economy economy = hc.getEconomy();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();
@@ -812,9 +794,7 @@ public class Transaction {
 			if (!toomuch) {
 				removesoldItems(id, data, amount, p);
 				addItems(id, data, amount, invent);
-				acc.setAccount(hc, p, economy);
-				acc.deposit(price);
-				acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
+				acc.deposit(price, p);
 				acc.withdrawAccount(owner, price);
 				p.sendMessage(L.get("LINE_BREAK"));
 				p.sendMessage(L.f(L.get("SELL_CHEST_MESSAGE"), amount, calc.twoDecimals(price), name, owner));
@@ -853,7 +833,6 @@ public class Transaction {
 	public boolean sellChest(String name, int id, int data, int amount, String owner, Player p, Inventory invent, double price) {
 		try {
 			SQLFunctions sf = hc.getSQLFunctions();
-			Economy economy = hc.getEconomy();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();
@@ -861,9 +840,7 @@ public class Transaction {
 			String playerecon = sf.getPlayerEconomy(owner);
 			removesoldItems(id, data, amount, p);
 			addItems(id, data, amount, invent);
-			acc.setAccount(hc, p, economy);
-			acc.deposit(price);
-			acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
+			acc.deposit(price, p);
 			acc.withdrawAccount(owner, price);
 			p.sendMessage(L.get("LINE_BREAK"));
 			p.sendMessage(L.f(L.get("SELL_CHEST_MESSAGE"), amount, calc.twoDecimals(price), name, owner));

@@ -2,7 +2,6 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.Map;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -55,7 +54,6 @@ public class ETransaction {
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
-		Economy economy = hc.getEconomy();
 		Log log = hc.getLog();
 		Notification not = hc.getNotify();
 		InfoSign isign = hc.getInfoSign();
@@ -79,8 +77,7 @@ public class ETransaction {
 					double shopstock = sf.getStock(name, playerecon);
 					sf.setStock(name, playerecon, shopstock + duramult);
 					double salestax = calc.getSalesTax(p, fprice);
-					acc.setAccount(hc, p, economy);
-					acc.deposit(fprice - salestax);
+					acc.deposit(fprice - salestax, p);
 					acc.withdrawShop(fprice - salestax);
 					if (sunlimited) {
 						String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -128,7 +125,6 @@ public class ETransaction {
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
-		Economy economy = hc.getEconomy();
 		Log log = hc.getLog();
 		Notification not = hc.getNotify();
 		InfoSign isign = hc.getInfoSign();
@@ -144,8 +140,7 @@ public class ETransaction {
 				price = price + calc.getEnchantTax(name, playerecon, price);
 				if (price != 123456789) {
 					if (!p.getItemInHand().containsEnchantment(ench)) {
-						acc.setAccount(hc, p, economy);
-						if (acc.checkFunds(price)) {
+						if (acc.checkFunds(price, p)) {
 							boolean enchtest = ench.canEnchantItem(p.getItemInHand());
 							if (hasenchants(p.getItemInHand())) {
 								String allenchants = p.getItemInHand().getEnchantments().toString();
@@ -161,7 +156,7 @@ public class ETransaction {
 							}
 							if (enchtest && p.getItemInHand().getAmount() == 1) {
 								sf.setStock(name, playerecon, shopstock - 1);
-								acc.withdraw(price);
+								acc.withdraw(price, p);
 								acc.depositShop(price);
 								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
 									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -233,7 +228,6 @@ public class ETransaction {
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
-		Economy economy = hc.getEconomy();
 		Log log = hc.getLog();
 		try {
 			String nenchant = "";
@@ -258,10 +252,8 @@ public class ETransaction {
 						}
 					}
 					if (enchtest && p.getItemInHand().getAmount() == 1) {
-						acc.setAccount(hc, p, economy);
-						if (acc.checkFunds(price)) {
-							acc.withdraw(price);
-							acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
+						if (acc.checkFunds(price, p)) {
+							acc.withdraw(price, p);
 							acc.depositAccount(owner, price);
 							int l = name.length();
 							String lev = name.substring(l - 1, l);
@@ -315,7 +307,6 @@ public class ETransaction {
 		SQLFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
-		Economy economy = hc.getEconomy();
 		Log log = hc.getLog();
 		try {
 			String nenchant = "";
@@ -337,10 +328,8 @@ public class ETransaction {
 					}
 				}
 				if (enchtest && p.getItemInHand().getAmount() == 1) {
-					acc.setAccount(hc, p, economy);
-					if (acc.checkFunds(price)) {
-						acc.withdraw(price);
-						acc.setAccount(hc, Bukkit.getPlayer(owner), economy);
+					if (acc.checkFunds(price, p)) {
+						acc.withdraw(price, p);
 						acc.depositAccount(owner, price);
 						int l = name.length();
 						String lev = name.substring(l - 1, l);

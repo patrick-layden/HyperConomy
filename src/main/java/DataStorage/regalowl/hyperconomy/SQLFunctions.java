@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 
 public class SQLFunctions {
 	private HyperConomy hc;
-	private String statement;
 	private String username;
 	private String password;
 	private int port;
@@ -45,6 +44,7 @@ public class SQLFunctions {
 	private ArrayList<Double> tfloor = new ArrayList<Double>();
 	private ArrayList<String> econplayer = new ArrayList<String>();
 	private ArrayList<String> playerecon = new ArrayList<String>();
+	private ArrayList<Double> playerbalance = new ArrayList<Double>();
 	private ArrayList<String> koec = new ArrayList<String>();
 	private ArrayList<String> hobject = new ArrayList<String>();
 	private ArrayList<String> heconomy = new ArrayList<String>();
@@ -78,8 +78,8 @@ public class SQLFunctions {
 		name = hc.fixName(name);
 		try {
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET NAME='" + newname + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET NAME='" + newname + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 				int keyloc = tne.indexOf(name + ":" + economy);
 				tname.set(keyloc, newname);
 			} else {
@@ -95,8 +95,8 @@ public class SQLFunctions {
 		name = hc.fixName(name);
 		try {
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET ECONOMY='" + neweconomy + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET ECONOMY='" + neweconomy + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 				int keyloc = tne.indexOf(name + ":" + economy);
 				teconomy.set(keyloc, neweconomy);
 			} else {
@@ -114,8 +114,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			ttype.set(keyloc, newtype);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET TYPE='" + newtype + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET TYPE='" + newtype + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".information.type", newtype);
@@ -135,8 +135,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tcategory.set(keyloc, newcategory);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET CATEGORY='" + newcategory + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET CATEGORY='" + newcategory + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".information.category", newcategory);
@@ -156,8 +156,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tmaterial.set(keyloc, newmaterial);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET MATERIAL='" + newmaterial + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET MATERIAL='" + newmaterial + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".information.material", newmaterial);
@@ -177,8 +177,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tid.set(keyloc, newid);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET ID='" + newid + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET ID='" + newid + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".information.id", newid);
@@ -198,8 +198,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tdata.set(keyloc, newdata);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET DATA='" + newdata + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET DATA='" + newdata + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".information.data", newdata);
@@ -219,8 +219,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tdurability.set(keyloc, newdurability);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET DURABILITY='" + newdurability + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET DURABILITY='" + newdurability + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".information.data", newdurability);
@@ -240,8 +240,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tvalue.set(keyloc, newvalue);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET VALUE='" + newvalue + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET VALUE='" + newvalue + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".value", newvalue);
@@ -261,8 +261,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tstatic.set(keyloc, newstatic);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET STATIC='" + newstatic + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET STATIC='" + newstatic + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".price.static", Boolean.parseBoolean(newstatic));
@@ -282,8 +282,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tstaticprice.set(keyloc, newstaticprice);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET STATICPRICE='" + newstaticprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET STATICPRICE='" + newstaticprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".price.staticprice", newstaticprice);
@@ -305,8 +305,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tstock.set(keyloc, newstock);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET STOCK='" + newstock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET STOCK='" + newstock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".stock.stock", newstock);
@@ -326,8 +326,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tmedian.set(keyloc, newmedian);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET MEDIAN='" + newmedian + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET MEDIAN='" + newmedian + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".stock.median", newmedian);
@@ -347,8 +347,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tinitiation.set(keyloc, newinitiation);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET INITIATION='" + newinitiation + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET INITIATION='" + newinitiation + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
@@ -368,8 +368,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tstartprice.set(keyloc, newstartprice);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET STARTPRICE='" + newstartprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET STARTPRICE='" + newstartprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".initiation.startprice", newstartprice);
@@ -389,8 +389,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tceiling.set(keyloc, newceiling);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET CEILING='" + newceiling + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET CEILING='" + newceiling + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".price.ceiling", newceiling);
@@ -410,8 +410,8 @@ public class SQLFunctions {
 			int keyloc = tne.indexOf(name + ":" + economy);
 			tfloor.set(keyloc, newfloor);
 			if (hc.useSQL()) {
-				statement = "UPDATE hyperobjects SET FLOOR='" + newfloor + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-				write();
+				String statement = "UPDATE hyperobjects SET FLOOR='" + newfloor + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+				hc.getSQLWrite().writeData(statement);
 			} else {
 				if (hc.itemTest(name)) {
 					items.set(name + ".price.floor", newfloor);
@@ -637,11 +637,6 @@ public class SQLFunctions {
 		}
 	}
 
-	private void write() {
-		SQLWrite sw = hc.getSQLWrite();
-		sw.writeData(statement);
-	}
-
 	public void load() {
 		reset();
 		hc.sqllockShop();
@@ -679,6 +674,7 @@ public class SQLFunctions {
 		tceiling.clear();
 		tfloor.clear();
 		playerecon.clear();
+		playerbalance.clear();
 		econplayer.clear();
 		hobject.clear();
 		heconomy.clear();
@@ -703,6 +699,7 @@ public class SQLFunctions {
 		tfloor = getDoubleColumn("SELECT FLOOR FROM hyperobjects");
 		playerecon = getStringColumn("SELECT ECONOMY FROM hyperplayers");
 		econplayer = getStringColumn("SELECT PLAYER FROM hyperplayers");
+		playerbalance = getDoubleColumn("SELECT BALANCE FROM hyperplayers");
 		economies = getStringColumn("SELECT ECONOMY FROM hyperobjects");
 		for (int c = 0; c < tname.size(); c++) {
 			tne.add(tname.get(c) + ":" + teconomy.get(c));
@@ -742,6 +739,7 @@ public class SQLFunctions {
 		tfloor.clear();
 		playerecon.clear();
 		econplayer.clear();
+		playerbalance.clear();
 		hobject.clear();
 		heconomy.clear();
 		hprice.clear();
@@ -778,6 +776,7 @@ public class SQLFunctions {
 				tceiling.add(items.getDouble(cname + ".price.ceiling"));
 				tfloor.add(items.getDouble(cname + ".price.floor"));
 				playerecon.add("default");
+				playerbalance.add(0.0);
 			} else {
 				tname.add(cname);
 				teconomy.add("default");
@@ -802,6 +801,7 @@ public class SQLFunctions {
 				tceiling.add(enchants.getDouble(cname + ".price.ceiling"));
 				tfloor.add(enchants.getDouble(cname + ".price.floor"));
 				playerecon.add("default");
+				playerbalance.add(0.0);
 			}
 		}
 		for (int c = 0; c < tname.size(); c++) {
@@ -983,22 +983,89 @@ public class SQLFunctions {
 			return "default";
 		}
 	}
+	
+	public Double getPlayerBalance(Player p) {
+		try {
+			if (p == null) {
+				return 0.0;
+			}
+			String player = p.getName();
+			player = player.toLowerCase();
+			if (playerbalance.indexOf(player) != -1) {
+				return playerbalance.get(econplayer.indexOf(player));
+			}
+			return 0.0;
+		} catch (Exception e) {
+			new HyperError(e, "Passed player: " + p.getDisplayName());
+			return 0.0;
+		}
+	}
+	
+	public Double getPlayerBalance(String player) {
+		try {
+			if (playerbalance.indexOf(player) != -1) {
+				return playerbalance.get(econplayer.indexOf(player));
+			}
+			return 0.0;
+		} catch (Exception e) {
+			new HyperError(e, "Passed player: " + player);
+			return 0.0;
+		}
+	}
 
 	public void addPlayerEconomy(String player, String economy) {
 		if (!econplayer.contains(player)) {
 			playerecon.add(economy);
 			econplayer.add(player);
+			playerbalance.add(0.0);
 		}
+	}
+	
+	public boolean hasAccount(String name) {
+		boolean ha = false;
+		if (econplayer.contains(name)) {
+			ha = true;
+		}
+		return ha;
 	}
 
 	public void setPlayerEconomy(String player, String econ) {
-		statement = "UPDATE hyperplayers SET ECONOMY='" + econ + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
-		write();
+		String statement = "UPDATE hyperplayers SET ECONOMY='" + econ + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
+		hc.getSQLWrite().writeData(statement);
 		try {
 			playerecon.set(econplayer.indexOf(player.toLowerCase()), econ);
 		} catch (Exception e) {
 			SQLRetry sqr = new SQLRetry();
 			sqr.retrySetEconomy(hc, player, econ);
+		}
+	}
+	
+	public void setPlayerBalance(String player, Double balance) {
+		String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
+		hc.getSQLWrite().writeData(statement);
+		try {
+			playerbalance.set(econplayer.indexOf(player.toLowerCase()), balance);
+		} catch (Exception e) {
+			//TODO
+		}
+	}
+	
+	public void setPlayerBalance(Player p, Double balance) {
+		String player = p.getName();
+		String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
+		hc.getSQLWrite().writeData(statement);
+		try {
+			playerbalance.set(econplayer.indexOf(player.toLowerCase()), balance);
+		} catch (Exception e) {
+			//TODO
+		}
+	}
+	
+	public void createPlayerAccount(String player) {
+		if (!hasAccount(player)) {
+			String statement = "INSERT INTO hyperplayers (PLAYER, ECONOMY, BALANCE) VALUES ('" + player + "', 'default', '0.0')";
+			hc.getSQLWrite().writeData(statement);
+			addPlayerEconomy(player, "default");
 		}
 	}
 
@@ -1195,7 +1262,6 @@ public class SQLFunctions {
 		databuilt = false;
 	}
 	public void clearData() {
-		statement = null;
 		username = null;
 		password = null;
 		host = null;
@@ -1232,7 +1298,7 @@ public class SQLFunctions {
 	}
 	
 	public void clearHistory() {
-		statement = "TRUNCATE TABLE hyperhistory";
+		String statement = "TRUNCATE TABLE hyperhistory";
 		hc.getSQLWrite().writeData(statement);
 		koec.clear();
 		hobject.clear();

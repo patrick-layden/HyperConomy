@@ -18,23 +18,6 @@ import org.bukkit.entity.Player;
  * 
  */
 public class Account {	
-	private HyperConomy hc;
-	private Player player;
-	private Economy economy;
-	private LanguageFile L;
-	
-	/**
-	 * 
-	 * 
-	 * This function sets up an account for a player.
-	 * 
-	 */
-	public void setAccount(HyperConomy hyperc, Player p, Economy e){		
-		hc = hyperc;
-		player = p;
-		economy = e;
-		L = hc.getLanguageFile();
-	}
 	
 	/**
 	 * 
@@ -42,19 +25,33 @@ public class Account {
 	 * This function determines if a players balance is greater than the given amount of money.
 	 * 
 	 */
-	public boolean checkFunds(double money) {
-		if (economy != null) {
+	public boolean checkFunds(double money, Player player) {
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		
+		if (useExternalEconomy) {
+			if (economy != null) {
+				boolean result = false;
+				String name = player.getName();
+				if ((economy.getBalance(name) - money) >= 0) {
+					result = true;
+				}
+				return result;
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+				return false;
+			}
+		} else {
 			boolean result = false;
-			String name = player.getName();
-			if ((economy.getBalance(name) - money) >= 0) {
+			if ((sf.getPlayerBalance(player) - money) >= 0) {
 				result = true;
 			}
 			return result;
-		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
-			return false;
 		}
 	}
 	
@@ -64,14 +61,23 @@ public class Account {
 	 * This function withdraws money from a player's account.
 	 * 
 	 */
-	public void withdraw(double money){
-		if (economy != null) {
-			String name = player.getName();
-			economy.withdrawPlayer(name, money);
+	public void withdraw(double money, Player player){
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+				String name = player.getName();
+				economy.withdrawPlayer(name, money);
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			}
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			sf.setPlayerBalance(player, sf.getPlayerBalance(player) - money);
 		}
 	}
 	
@@ -83,12 +89,21 @@ public class Account {
 	 * 
 	 */
 	public void withdrawAccount(String name, double money){
-		if (economy != null) {
-			economy.withdrawPlayer(name, money);
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+				economy.withdrawPlayer(name, money);
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			}
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			sf.setPlayerBalance(name, sf.getPlayerBalance(name) - money);
 		}
 	}
 	
@@ -98,14 +113,23 @@ public class Account {
 	 * This function deposits money into a player's account.
 	 * 
 	 */
-	public void deposit(double money){		
-		if (economy != null) {
-			String name = player.getName();
-			economy.depositPlayer(name, money);
+	public void deposit(double money, Player player){		
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+				String name = player.getName();
+				economy.depositPlayer(name, money);
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			}
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			sf.setPlayerBalance(player, sf.getPlayerBalance(player) + money);
 		}
 	}
 	
@@ -117,12 +141,21 @@ public class Account {
 	 * 
 	 */
 	public void depositAccount(String name, double money){		
-		if (economy != null) {
-			economy.depositPlayer(name, money);
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+				economy.depositPlayer(name, money);
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			}
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			sf.setPlayerBalance(name, sf.getPlayerBalance(name) + money);
 		}
 	}
 	
@@ -135,13 +168,23 @@ public class Account {
 	 * 
 	 */
 	public void withdrawShop(double money){
-		if (economy != null) {
-			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-			economy.withdrawPlayer(globalaccount, money);
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+				economy.withdrawPlayer(globalaccount, money);
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			}
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+			sf.setPlayerBalance(globalaccount, sf.getPlayerBalance(globalaccount) - money);
 		}
 	}
 	
@@ -153,13 +196,23 @@ public class Account {
 	 * 
 	 */
 	public void depositShop(double money){		
-		if (economy != null) {
-			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-			economy.depositPlayer(globalaccount, money);
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+				economy.depositPlayer(globalaccount, money);
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			}
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+			sf.setPlayerBalance(globalaccount, sf.getPlayerBalance(globalaccount) + money);
 		}
 	}
 	
@@ -172,20 +225,29 @@ public class Account {
 	 * This function sets an account's balance.
 	 * 
 	 */
-	public void setBalance(String name, double balance){		
-		if (economy != null) {
-			if (economy.hasAccount(name)) {
-				economy.withdrawPlayer(name, economy.getBalance(name));
-				economy.depositPlayer(name, balance);
+	public void setBalance(String name, double balance){	
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+				if (economy.hasAccount(name)) {
+					economy.withdrawPlayer(name, economy.getBalance(name));
+					economy.depositPlayer(name, balance);
+				} else {
+					economy.createPlayerAccount(name);
+					economy.depositPlayer(name, balance);
+				}
+				
 			} else {
-				economy.createPlayerAccount(name);
-				economy.depositPlayer(name, balance);
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
-			
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			sf.setPlayerBalance(name, balance);
 		}
 	}
 	
@@ -198,17 +260,26 @@ public class Account {
 	 * 
 	 */
 	public boolean checkAccount(String name){
-		boolean hasaccount = false;
-		if (economy != null) {
-			if (economy.hasAccount(name)) {
-				hasaccount = true;
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			boolean hasaccount = false;
+			if (economy != null) {
+				if (economy.hasAccount(name)) {
+					hasaccount = true;
+				}
+				return hasaccount;
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+		    	return false;
 			}
-			return hasaccount;
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
-	    	return false;
+			return sf.hasAccount(name);
 		}
 	}
 	
@@ -221,20 +292,34 @@ public class Account {
 	 * 
 	 */
 	public boolean checkshopBalance(double money){		
-		if (economy != null) {
-			
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+				
+				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+				boolean result = false;
+				if ((economy.getBalance(globalaccount) - money) >= 0) {
+					result = true;
+				}
+				return result;
+				
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+		    	return false;
+			}
+		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 			boolean result = false;
-			if ((economy.getBalance(globalaccount) - money) >= 0) {
+			if ((sf.getPlayerBalance(globalaccount) - money) >= 0) {
 				result = true;
 			}
 			return result;
-			
-		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
-	    	return false;
 		}
 	}
 	
@@ -246,16 +331,28 @@ public class Account {
 	 * 
 	 */
 	public void checkshopAccount(){		
-		if (economy != null) {
-			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-			if (!economy.hasAccount(globalaccount)) {
-				setBalance(globalaccount, hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+				if (!economy.hasAccount(globalaccount)) {
+					setBalance(globalaccount, hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
+				}
+				
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
-			
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+			if (!sf.hasAccount(globalaccount)) {
+				sf.createPlayerAccount(globalaccount);
+			}
 		}
 	}
 	
@@ -268,15 +365,25 @@ public class Account {
 	 * 
 	 */
 	public double getBalance(String account){		
-		if (economy != null) {
-			
-			return economy.getBalance(account);
-			
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+
+			if (economy != null) {
+				
+				return economy.getBalance(account);
+				
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+		    	return 0;
+			}
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
-	    	return 0;
+			return sf.getPlayerBalance(account);
 		}
 	}
 	
@@ -291,16 +398,25 @@ public class Account {
 	 * 
 	 */
 	public void createAccount(String account){		
-		if (economy != null) {
-
-			if (!economy.hasAccount(account)) {
-				setBalance(account, 0);
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		SQLFunctions sf = hc.getSQLFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+	
+				if (!economy.hasAccount(account)) {
+					setBalance(account, 0);
+				}
+				
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
-			
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			sf.createPlayerAccount(account);
 		}
 	}
 	
@@ -312,16 +428,24 @@ public class Account {
 	 * 
 	 */
 	public void deleteAccount(String account){		
-		if (economy != null) {
-
-			if (economy.hasAccount(account)) {
-				//TODO  Currently don't know how.
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		if (useExternalEconomy) {
+			if (economy != null) {
+	
+				if (economy.hasAccount(account)) {
+					//TODO  Currently don't know how.
+				}
+				
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
-			
 		} else {
-			Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			
 		}
 	}
 	

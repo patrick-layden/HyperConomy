@@ -32,6 +32,7 @@ config:
   log-errors: false
   log-sqlwrite-errors: false
   tekkit: false
+  use-vault: true
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

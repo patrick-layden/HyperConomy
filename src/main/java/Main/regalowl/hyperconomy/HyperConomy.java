@@ -53,6 +53,7 @@ public class HyperConomy extends JavaPlugin {
 	private int errorCount;
 	private boolean errorResetActive;
 	private boolean shuttingDown;
+	private boolean useExternalEconomy;
 
 	@Override
 	public void onEnable() {
@@ -90,7 +91,8 @@ public class HyperConomy extends JavaPlugin {
 			new Update();
 			saveinterval = yaml.getConfig().getLong("config.saveinterval");
 			usesql = yaml.getConfig().getBoolean("config.sql-connection.use-sql");
-			currency = hc.getYaml().getConfig().getString("config.currency-symbol");
+			currency = yaml.getConfig().getString("config.currency-symbol");
+			useExternalEconomy = yaml.getConfig().getBoolean("config.use-vault");
 			sf = new SQLFunctions();
 			new Update();
 			if (usesql) {
@@ -136,7 +138,6 @@ public class HyperConomy extends JavaPlugin {
 			}
 			s.startshopCheck();
 			startSave();
-			acc.setAccount(this, null, economy);
 			this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 				public void run() {
 					acc.checkshopAccount();
@@ -575,5 +576,9 @@ public class HyperConomy extends JavaPlugin {
 
 	public LanguageFile getLanguageFile() {
 		return L;
+	}
+	
+	public boolean useExternalEconomy() {
+		return useExternalEconomy;
 	}
 }
