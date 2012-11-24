@@ -452,7 +452,7 @@ public class Shop {
 	
 	public boolean has(String nameshop, String item) {
 		boolean has = true;
-
+		item = hc.fixName(item);
 		FileConfiguration sh = hc.getYaml().getShops();
 		String unavailable = sh.getString(nameshop + ".unavailable");
 		if (unavailable != null) {
