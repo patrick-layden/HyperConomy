@@ -13,8 +13,7 @@ public class Setvalue {
 			if (args.length == 2) {
 				name = args[0];
 				double value = Double.parseDouble(args[1]);
-				String teststring = hc.testiString(name);
-				if (teststring != null) {
+				if (hc.itemTest(name)) {
 					sf.setValue(name, playerecon, value);
 					//sender.sendMessage(ChatColor.GOLD + "" + name + " value set!");
 					sender.sendMessage(L.f(L.get("VALUE_SET"), name));
@@ -28,8 +27,7 @@ public class Setvalue {
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
 					double value = Double.parseDouble(args[1]);
-					String teststring = hc.testeString(name);
-					if (teststring != null) {
+					if (hc.enchantTest(name)) {
 						sf.setValue(name, playerecon, value);
 						//sender.sendMessage(ChatColor.GOLD + "" + name + " value set!");
 						sender.sendMessage(L.f(L.get("VALUE_SET"), name));

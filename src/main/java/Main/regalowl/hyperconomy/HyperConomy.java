@@ -411,7 +411,7 @@ public class HyperConomy extends JavaPlugin {
 		}
 		return enchant;
 	}
-
+/*
 	public String testiString(String name) {
 		String teststring = null;
 		if (inames.contains(name)) {
@@ -447,7 +447,7 @@ public class HyperConomy extends JavaPlugin {
 		}
 		return teststring;
 	}
-	
+*/	
 	public void incrementErrorCount() {
 		errorCount++;
 		if (errorCount > 20) {

@@ -36,8 +36,7 @@ public class Esell {
 							}
 						}
 					} else {
-						String teststring = hc.testeString(name);
-						if (teststring != null) {
+						if (hc.enchantTest(name)) {
 							if (s.has(s.getShop(player), name)) {
 								ench.sellEnchant(name, player);
 							} else {

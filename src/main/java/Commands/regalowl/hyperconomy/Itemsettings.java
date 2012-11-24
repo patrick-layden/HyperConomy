@@ -63,8 +63,7 @@ public class Itemsettings {
 				}
 			} else if (args.length == 1) {
 				String nam = args[0];
-				String teststring = hc.testiString(nam);
-				if (teststring != null) {
+				if (hc.itemTest(nam)) {
 					double val = 0;
 					boolean stat = false;
 					double statprice = 0;

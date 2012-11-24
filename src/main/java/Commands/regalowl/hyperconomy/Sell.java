@@ -20,8 +20,7 @@ public class Sell {
 					int amount = 0;
 					boolean xp = false;
 
-					String teststring = hc.testiString(name);
-					if (teststring != null) {
+					if (hc.itemTest(name)) {
 						int txpid = sf.getId(name, playerecon);
 						int txpdata = sf.getData(name, playerecon);
 						if (txpid == -1 && txpdata == -1) {
@@ -48,7 +47,7 @@ public class Sell {
 							}
 						}
 					}
-					if (teststring != null) {
+					if (hc.itemTest(name)) {
 						if (s.has(s.getShop(player), name)) {
 							if (xp) {
 								tran.sellXP(name, amount, player);

@@ -11,10 +11,8 @@ public class Removeitem {
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			String itemname = args[0];
-			String teststring2 = hc.testeString(itemname);
-			String teststring = hc.testiString(itemname);
 			if (args.length >= 2) {
-				if (teststring != null || teststring2 != null || itemname.equalsIgnoreCase("all")) {
+				if (hc.itemTest(itemname) || hc.enchantTest(itemname) || itemname.equalsIgnoreCase("all")) {
     				int counter = 1;
     				String shopname = "";
     				while (counter < args.length) {
