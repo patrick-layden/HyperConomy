@@ -20,8 +20,7 @@ public class Value {
 			} else {
 				amount = 1;
 			}
-			String teststring = hc.testiString(name);
-			if (teststring != null) {
+			if (hc.itemTest(name)) {
 				double val = calc.getTvalue(name, amount, playerecon);
 				double salestax = 0;
 				if (sender instanceof Player) {

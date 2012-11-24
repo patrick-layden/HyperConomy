@@ -94,18 +94,14 @@ public class Browseshop {
 				if (count > ((page * 10) - 11)) {
 					if (count < rsize) {
 						String iname = rnames.get(count);
-						String t = "";
-						String t2 = "";
-						t = hc.testiString(iname);
-						t2 = hc.testeString(iname);
 			            Double cost = 0.0;
 			            double stock = 0;
-			            if (t != null) {
+			            if (hc.itemTest(iname)) {
 							cost = calc.getCost(iname, 1, playerecon);
 							double taxpaid = calc.getPurchaseTax(iname, playerecon, cost);
 							cost = calc.twoDecimals(cost + taxpaid);
 							stock = sf.getStock(iname, playerecon);
-						} else if (t2 != null) {
+						} else if (hc.enchantTest(iname)) {
 							cost = calc.getEnchantCost(iname, "diamond", playerecon);
 							cost = cost + calc.getEnchantTax(iname, playerecon, cost);
 							stock = sf.getStock(iname, playerecon);

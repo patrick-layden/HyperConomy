@@ -19,12 +19,11 @@ public class Buy {
 			if (s.inShop() != -1) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					String name = args[0];
-					String teststring = hc.testiString(name);
 					boolean xp = false;
 					int id = 0;
 					int data = 0;
 					int amount = 0;
-					if (teststring != null) {
+					if (hc.itemTest(name)) {
 						int txpid = sf.getId(name, playerecon);
 						int txpdata = sf.getData(name, playerecon);
 						if (txpid == -1 && txpdata == -1) {
@@ -64,7 +63,7 @@ public class Buy {
 							}
 						}
 					}
-					if (teststring != null) {
+					if (hc.itemTest(name)) {
 						if (s.has(s.getShop(player), name)) {
 							if (xp) {
 								tran.buyXP(name, amount, player);

@@ -12,8 +12,7 @@ public class Setinitiation {
 		try {
 			if (args.length == 1) {
 				name = args[0];
-				String teststring = hc.testiString(name);
-				if (teststring != null) {
+				if (hc.itemTest(name)) {
 					boolean nstatus;
 					boolean istatus = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
 					if (istatus) {
@@ -34,8 +33,7 @@ public class Setinitiation {
 				String ench = args[1];
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
-					String teststring = hc.testeString(name);
-					if (teststring != null) {
+					if (hc.enchantTest(name)) {
 						boolean nstatus;
 						boolean istatus = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
 						if (istatus) {

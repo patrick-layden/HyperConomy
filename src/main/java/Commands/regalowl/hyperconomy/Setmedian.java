@@ -13,8 +13,7 @@ public class Setmedian {
 			if (args.length == 2) {
 				name = args[0];
 				int median = Integer.parseInt(args[1]);
-				String teststring = hc.testiString(name);
-				if (teststring != null) {
+				if (hc.itemTest(name)) {
 					sf.setMedian(name, playerecon, median);
 					//sender.sendMessage(ChatColor.GOLD + "" + name + " median set!");
 					sender.sendMessage(L.f(L.get("MEDIAN_SET"), name));
@@ -28,8 +27,7 @@ public class Setmedian {
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
 					int median = Integer.parseInt(args[1]);
-					String teststring = hc.testeString(name);
-					if (teststring != null) {
+					if (hc.enchantTest(name)) {
 						sf.setMedian(name, playerecon, median);
 						//sender.sendMessage(ChatColor.GOLD + "" + name + " median set!");
 						sender.sendMessage(L.f(L.get("MEDIAN_SET"), name));

@@ -17,8 +17,7 @@ public class Evalue {
 		try {
 			if (args.length == 2) {
 				String nam = args[0];
-				String teststring = hc.testeString(nam);
-				if (teststring != null) {
+				if (hc.enchantTest(nam)) {
 					String type = args[1];
 					if (type.equalsIgnoreCase("s")) {
 						String[] classtype = new String[8];

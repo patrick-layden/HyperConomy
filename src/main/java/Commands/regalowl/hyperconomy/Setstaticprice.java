@@ -13,8 +13,7 @@ public class Setstaticprice {
 			if (args.length == 2) {
 				name = args[0];
 				Double staticprice = Double.parseDouble(args[1]);
-				String teststring = hc.testiString(name);
-				if (teststring != null) {
+				if (hc.itemTest(name)) {
 					sf.setStaticPrice(name, playerecon, staticprice);
 					//sender.sendMessage(ChatColor.GOLD + "" + name + " static price set!");
 					sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), name));
@@ -28,8 +27,7 @@ public class Setstaticprice {
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
 					Double staticprice = Double.parseDouble(args[1]);
-					String teststring = hc.testeString(name);
-					if (teststring != null) {
+					if (hc.enchantTest(name)) {
 						sf.setStaticPrice(name, playerecon, staticprice);
 						//sender.sendMessage(ChatColor.GOLD + "" + name + " static price set!");
 						sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), name));

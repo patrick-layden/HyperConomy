@@ -12,8 +12,7 @@ public class Setstatic {
 		try {
 			if (args.length == 1) {
 				name = args[0];
-				String teststring = hc.testiString(name);
-				if (teststring != null) {
+				if (hc.itemTest(name)) {
 					boolean nstatus;
 					boolean sstatus = false;
 					sstatus = Boolean.parseBoolean(sf.getStatic(name, playerecon));
@@ -36,8 +35,7 @@ public class Setstatic {
 				String ench = args[1];
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
-					String teststring = hc.testeString(name);
-					if (teststring != null) {
+					if (hc.enchantTest(name)) {
 						boolean nstatus;
 						boolean sstatus = Boolean.parseBoolean(sf.getStatic(name, playerecon));
 						if (sstatus) {

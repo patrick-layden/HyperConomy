@@ -47,9 +47,7 @@ public class Addcategory {
 				if (teststring3 != null) {
 					for (int i = 0; i < objects.size(); i++) {
 						String itemname = objects.get(i);
-						String teststring2 = hc.testeString(itemname);
-						String teststring = hc.testiString(itemname);
-						if (teststring != null || teststring2 != null) {
+						if (hc.itemTest(itemname) || hc.enchantTest(itemname)) {
 							String unavailable = hc.getYaml().getShops().getString(shopname + ".unavailable");
 							if (!s.has(shopname, itemname)) {
 								unavailable = unavailable.replace("," + itemname + ",", ",");
