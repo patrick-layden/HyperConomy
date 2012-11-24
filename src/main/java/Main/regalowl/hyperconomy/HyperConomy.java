@@ -92,7 +92,7 @@ public class HyperConomy extends JavaPlugin {
 			saveinterval = yaml.getConfig().getLong("config.saveinterval");
 			usesql = yaml.getConfig().getBoolean("config.sql-connection.use-sql");
 			currency = yaml.getConfig().getString("config.currency-symbol");
-			useExternalEconomy = yaml.getConfig().getBoolean("config.use-vault");
+			useExternalEconomy = yaml.getConfig().getBoolean("config.use-external-economy-plugin");
 			sf = new SQLFunctions();
 			new Update();
 			if (usesql) {

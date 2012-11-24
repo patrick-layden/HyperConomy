@@ -185,7 +185,10 @@ public class Update {
 	    	if (t40 == null) {
 	    		yaml.getConfig().set("config.tekkit", false);
 	    	}
-
+	    	String t41 = yaml.getConfig().getString("config.use-external-economy-plugin");
+	    	if (t41 == null) {
+	    		yaml.getConfig().set("config.use-external-economy-plugin", false);
+	    	}
 	    	
 	    	
 	    	
