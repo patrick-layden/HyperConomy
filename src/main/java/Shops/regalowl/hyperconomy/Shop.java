@@ -451,23 +451,23 @@ public class Shop {
 	}
 	
 	public boolean has(String nameshop, String item) {
-		boolean has = true;
-		item = hc.fixName(item);
+		item = hc.fixNameTest(item);
+		if (item == null) {
+			return false;
+		}
 		FileConfiguration sh = hc.getYaml().getShops();
 		String unavailable = sh.getString(nameshop + ".unavailable");
 		if (unavailable != null) {
 			
 			if (unavailable.contains("," + item + ",")) {
-				has = false;
+				return false;
 			}
 
 			if (unavailable.length() >= item.length() && item.equalsIgnoreCase(unavailable.substring(0, item.length()))) {
-				has = false;
+				return false;
 			}
 		}
-		
-		
-		return has;
+		return true;
 	}
 	
 	public String getShop(Player player) {
