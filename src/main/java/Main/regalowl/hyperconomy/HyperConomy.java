@@ -379,6 +379,15 @@ public class HyperConomy extends JavaPlugin {
 		}
 		return nam;
 	}
+	
+	public String fixNameTest(String nam) {
+		for (int i = 0; i < names.size(); i++) {
+			if (names.get(i).equalsIgnoreCase(nam)) {
+				return names.get(i);
+			}
+		}
+		return null;
+	}
 
 	public String fixsName(String nam) {
 		String name = nam;
@@ -396,19 +405,25 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public boolean itemTest(String name) {
-		boolean item = false;
 		if (inames.contains(name)) {
-			item = true;
+			return true;
 		}
-		return item;
+		name = fixName(name);
+		if (inames.contains(name)) {
+			return true;
+		}
+		return false;
 	}
 
 	public boolean enchantTest(String name) {
-		boolean enchant = false;
 		if (enames.contains(name)) {
-			enchant = true;
+			return true;
 		}
-		return enchant;
+		name = fixName(name);
+		if (enames.contains(name)) {
+			return true;
+		}
+		return false;
 	}
 /*
 	public String testiString(String name) {
