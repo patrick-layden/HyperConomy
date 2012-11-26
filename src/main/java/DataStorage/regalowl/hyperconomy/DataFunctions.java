@@ -15,7 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class SQLFunctions {
+public class DataFunctions {
 	private HyperConomy hc;
 	private String username;
 	private String password;
@@ -56,7 +56,7 @@ public class SQLFunctions {
 	private FileConfiguration enchants;
 	private ArrayList<String> economies = new ArrayList<String>();
 	
-	SQLFunctions() {
+	DataFunctions() {
 		hc = HyperConomy.hc;
 		if (hc.useSQL()) {
 			FileConfiguration config = hc.getYaml().getConfig();
@@ -719,6 +719,7 @@ public class SQLFunctions {
 	public void loadYML() {
 		items = hc.getYaml().getItems();
 		enchants = hc.getYaml().getEnchants();
+		FileConfiguration players = hc.getYaml().getPlayers();
 		tne.clear();
 		tname.clear();
 		teconomy.clear();
@@ -745,6 +746,13 @@ public class SQLFunctions {
 		hprice.clear();
 		hcount.clear();
 		koec.clear();
+		Iterator<String> it = hc.getYaml().getPlayers().getKeys(false).iterator();
+		while (it.hasNext()) {
+			String player = it.next().toString();
+			econplayer.add(player);
+			playerbalance.add(hc.getYaml().getPlayers().getDouble(player + ".balance"));
+			playerecon.add("default");
+		}
 		ArrayList<String> names = hc.getNames();
 		for (int i = 0; i < names.size(); i++) {
 			String cname = names.get(i);
@@ -775,8 +783,6 @@ public class SQLFunctions {
 				tstartprice.add(items.getDouble(cname + ".initiation.startprice"));
 				tceiling.add(items.getDouble(cname + ".price.ceiling"));
 				tfloor.add(items.getDouble(cname + ".price.floor"));
-				playerecon.add("default");
-				playerbalance.add(0.0);
 			} else {
 				tname.add(cname);
 				teconomy.add("default");
@@ -799,9 +805,7 @@ public class SQLFunctions {
 				tinitiation.add(enchants.getString(cname + ".initiation.initiation"));
 				tstartprice.add(enchants.getDouble(cname + ".initiation.startprice"));
 				tceiling.add(enchants.getDouble(cname + ".price.ceiling"));
-				tfloor.add(enchants.getDouble(cname + ".price.floor"));
-				playerecon.add("default");
-				playerbalance.add(0.0);
+				tfloor.add(enchants.getDouble(cname + ".price.floor")); 
 			}
 		}
 		for (int c = 0; c < tname.size(); c++) {
@@ -1030,9 +1034,9 @@ public class SQLFunctions {
 	}
 
 	public void setPlayerEconomy(String player, String econ) {
-		String statement = "UPDATE hyperplayers SET ECONOMY='" + econ + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
-		hc.getSQLWrite().writeData(statement);
 		try {
+			String statement = "UPDATE hyperplayers SET ECONOMY='" + econ + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
+			hc.getSQLWrite().writeData(statement);
 			playerecon.set(econplayer.indexOf(player.toLowerCase()), econ);
 		} catch (Exception e) {
 			SQLRetry sqr = new SQLRetry();
@@ -1041,9 +1045,14 @@ public class SQLFunctions {
 	}
 	
 	public void setPlayerBalance(String player, Double balance) {
-		String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
-		hc.getSQLWrite().writeData(statement);
+
 		try {
+			if (hc.useSQL()) {
+				String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
+				hc.getSQLWrite().writeData(statement);
+			} else {
+				hc.getYaml().getPlayers().set(player + ".balance", balance);
+			}
 			playerbalance.set(econplayer.indexOf(player.toLowerCase()), balance);
 		} catch (Exception e) {
 			//TODO
@@ -1052,9 +1061,13 @@ public class SQLFunctions {
 	
 	public void setPlayerBalance(Player p, Double balance) {
 		String player = p.getName();
-		String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
-		hc.getSQLWrite().writeData(statement);
 		try {
+			if (hc.useSQL()) {
+				String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
+				hc.getSQLWrite().writeData(statement);
+			} else {
+				hc.getYaml().getPlayers().set(player + ".balance", balance);
+			}
 			playerbalance.set(econplayer.indexOf(player.toLowerCase()), balance);
 		} catch (Exception e) {
 			//TODO
@@ -1063,8 +1076,12 @@ public class SQLFunctions {
 	
 	public void createPlayerAccount(String player) {
 		if (!hasAccount(player)) {
-			String statement = "INSERT INTO hyperplayers (PLAYER, ECONOMY, BALANCE) VALUES ('" + player + "', 'default', '0.0')";
-			hc.getSQLWrite().writeData(statement);
+			if (hc.useSQL()) {
+				String statement = "INSERT INTO hyperplayers (PLAYER, ECONOMY, BALANCE) VALUES ('" + player + "', 'default', '0.0')";
+				hc.getSQLWrite().writeData(statement);		
+			} else {
+				hc.getYaml().getPlayers().set(player + ".balance", 0);
+			}
 			addPlayerEconomy(player, "default");
 		}
 	}

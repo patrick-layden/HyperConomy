@@ -88,7 +88,7 @@ public class Hyperlog {
 				}
 				
 				statement += " ORDER BY TIME DESC";
-				SQLFunctions sf = hc.getSQLFunctions();
+				DataFunctions sf = hc.getSQLFunctions();
 				ArrayList<String> result = sf.getHyperLog(statement);
 				//sender.sendMessage(ChatColor.RED + statement);
 				

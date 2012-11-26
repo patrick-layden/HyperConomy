@@ -30,6 +30,7 @@ public class YamlFile {
     FileConfiguration history;
     FileConfiguration categories;
     FileConfiguration displays;
+    FileConfiguration players;
     File configFile;
     File itemsFile;      
     File enchantsFile;  
@@ -39,6 +40,7 @@ public class YamlFile {
     File historyFile;
     File categoryFile;
     File displaysFile;
+    File playersFile;
     
     private boolean brokenfile;
     
@@ -68,6 +70,7 @@ public class YamlFile {
         historyFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "history.yml");
         categoryFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "categories.yml");
         displaysFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "displays.yml");
+        playersFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "players.yml");
         
         try {
             firstRun();
@@ -85,6 +88,7 @@ public class YamlFile {
         history = new YamlConfiguration();
         categories = new YamlConfiguration();
         displays = new YamlConfiguration();
+        players = new YamlConfiguration();
         loadYamls();
 		
 	}
@@ -132,6 +136,10 @@ public class YamlFile {
             displaysFile.getParentFile().mkdirs();
             copy(this.getClass().getResourceAsStream("/displays.yml"), displaysFile);
         }
+        if(!playersFile.exists()){
+        	playersFile.getParentFile().mkdirs();
+            copy(this.getClass().getResourceAsStream("/players.yml"), playersFile);
+        }
     }
 
 
@@ -167,8 +175,8 @@ public class YamlFile {
         } catch (Exception e) {
             e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("HyperConomy ERROR #24 Bad config.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #24.  Bad config.yml file.", "hyperconomy.error");
+	    	log.info("Bad config.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad config.yml file.", "hyperconomy.error");
 			failcount++;
         }
         try {
@@ -176,8 +184,8 @@ public class YamlFile {
         } catch (Exception e) {
             e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("HyperConomy ERROR #25 Bad items.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #25.  Bad items.yml file.", "hyperconomy.error");
+	    	log.info("Bad items.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad items.yml file.", "hyperconomy.error");
 			failcount++;
         }
         try {
@@ -185,8 +193,8 @@ public class YamlFile {
         } catch (Exception e) {
             e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("HyperConomy ERROR #26 Bad enchants.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #26.  Bad enchants.yml file.", "hyperconomy.error");
+	    	log.info("Bad enchants.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad enchants.yml file.", "hyperconomy.error");
 			failcount++;
         }
         try {
@@ -194,8 +202,8 @@ public class YamlFile {
         } catch (Exception e) {
             e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("HyperConomy ERROR #27 Bad shops.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #27.  Bad shops.yml file.", "hyperconomy.error");
+	    	log.info("Bad shops.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad shops.yml file.", "hyperconomy.error");
 			failcount++;
         }
         try {
@@ -203,8 +211,8 @@ public class YamlFile {
         } catch (Exception e) {
             e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("HyperConomy ERROR #28 Bad log.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #28.  Bad log.yml file.", "hyperconomy.error");
+	    	log.info("Bad log.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad log.yml file.", "hyperconomy.error");
 			failcount++;
         }
         try {
@@ -212,8 +220,8 @@ public class YamlFile {
         } catch (Exception e) {
             e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("HyperConomy ERROR #29 Bad signs.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #29.  Bad signs.yml file.", "hyperconomy.error");
+	    	log.info("Bad signs.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad signs.yml file.", "hyperconomy.error");
 			failcount++;
         }
         try {
@@ -221,8 +229,8 @@ public class YamlFile {
         } catch (Exception e) {
             e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("HyperConomy ERROR #30 Bad history.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #30.  Bad history.yml file.", "hyperconomy.error");
+	    	log.info("Bad history.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad history.yml file.", "hyperconomy.error");
 			failcount++;
         }
         try {
@@ -230,8 +238,8 @@ public class YamlFile {
         } catch (Exception e) {
             e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("HyperConomy ERROR #56 Bad categories.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #56.  Bad categories.yml file.", "hyperconomy.error");
+	    	log.info("Bad categories.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad categories.yml file.", "hyperconomy.error");
 			failcount++;
         }
         try {
@@ -239,8 +247,17 @@ public class YamlFile {
         } catch (Exception e) {
             e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("HyperConomy ERROR #56 Bad displays.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #57.  Bad displays.yml file.", "hyperconomy.error");
+	    	log.info("Bad displays.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad displays.yml file.", "hyperconomy.error");
+			failcount++;
+        }
+        try {
+        	players.load(playersFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+	    	Logger log = Logger.getLogger("Minecraft");
+	    	log.info("Bad players.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad players.yml file.", "hyperconomy.error");
 			failcount++;
         }
         if (failcount != 0) {
@@ -258,8 +275,6 @@ public class YamlFile {
     public void saveYamls() {
         try {
         	if (!brokenfile) {
-            	//Logger logger = Logger.getLogger("Minecraft");
-            	//logger.info("---------------HyperConomy Files Saved----------------");
                 config.save(configFile); 
                 items.save(itemsFile);
                 enchants.save(enchantsFile);
@@ -269,6 +284,7 @@ public class YamlFile {
                 history.save(historyFile);
                 categories.save(categoryFile);
                 displays.save(displaysFile);
+                players.save(playersFile);
         	}
         } catch (IOException e) {
             e.printStackTrace();
@@ -378,6 +394,15 @@ public class YamlFile {
 	 */
 	public FileConfiguration getDisplays(){
 		return displays;
+	}
+	
+	/**
+	 * 
+	 * This gets the displays FileConfiguration.
+	 * 
+	 */
+	public FileConfiguration getPlayers(){
+		return players;
 	}
 
 }

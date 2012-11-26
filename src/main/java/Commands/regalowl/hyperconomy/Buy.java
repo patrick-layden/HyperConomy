@@ -9,7 +9,7 @@ public class Buy {
 	HyperConomy hc;
 	Buy(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		Transaction tran = hc.getTransaction();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();

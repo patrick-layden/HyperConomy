@@ -8,7 +8,7 @@ public class Resetshop {
 	
 	Resetshop(CommandSender sender, String[] args, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
 		LanguageFile L = hc.getLanguageFile();
 		try {

@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 public class Hv {
 	Hv(String args[], Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		Transaction tran = hc.getTransaction();

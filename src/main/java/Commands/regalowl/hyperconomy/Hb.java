@@ -9,7 +9,7 @@ public class Hb {
 
 	Hb(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		Transaction tran = hc.getTransaction();
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();

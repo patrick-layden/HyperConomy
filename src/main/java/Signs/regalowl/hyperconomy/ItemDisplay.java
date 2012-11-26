@@ -33,7 +33,7 @@ import org.bukkit.util.Vector;
 public class ItemDisplay implements Listener {
 	
 	private HyperConomy hc; 
-	private SQLFunctions sf;
+	private DataFunctions sf;
 	private int refreshthreadid;
 	private ArrayList<Item> displayItems;
 	private ArrayList<Location> displayLocations;

@@ -11,7 +11,7 @@ public class Intervals {
 		Log l = hc.getLog();
 		Shop s = hc.getShop();
 		LanguageFile L = hc.getLanguageFile();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		try {
 			if (args.length == 0) {
 				SQLWrite sw = hc.getSQLWrite();

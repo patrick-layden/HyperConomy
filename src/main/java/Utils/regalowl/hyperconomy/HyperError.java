@@ -60,7 +60,7 @@ public class HyperError {
 					} catch (FileNotFoundException e1) {
 						e1.printStackTrace();
 					}
-					SQLFunctions sf = hc.getSQLFunctions();
+					DataFunctions sf = hc.getSQLFunctions();
 					info = ft.getTimeStamp() + "\n\n" + "UseSQL='" + hc.useSQL() + "', DataBuilt='" + sf.dataBuilt() + "', SQLLoaded='" + sf.sqlLoaded() + "'\n\n" + info;
 					ft.writeStringToFile(info, path + File.separator + "info.txt");
 					LanguageFile L = hc.getLanguageFile();

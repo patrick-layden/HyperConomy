@@ -29,7 +29,7 @@ public class HyperObjectsBackup {
 		HyperConomy hc = HyperConomy.hc;
 		FileTools ft = new FileTools();
 		ft.makeFolder(dpath);
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		SerializeArrayList sal = new SerializeArrayList();
 		String hyperobjects = "";
 		ArrayList<String> names = sf.getStringColumn("SELECT NAME FROM hyperobjects");

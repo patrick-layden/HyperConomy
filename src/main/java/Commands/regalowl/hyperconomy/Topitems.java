@@ -13,7 +13,7 @@ public class Topitems {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		Shop s = hc.getShop();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		try {
 			if (args.length > 1) {
 				sender.sendMessage(L.get("TOPITEMS_INVALID"));

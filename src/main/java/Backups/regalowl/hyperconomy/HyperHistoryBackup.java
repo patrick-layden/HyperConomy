@@ -82,7 +82,7 @@ public class HyperHistoryBackup {
 		HyperConomy hc = HyperConomy.hc;
 		FileTools ft = new FileTools();
 		ft.makeFolder(dpath);
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		SerializeArrayList sal = new SerializeArrayList();
 		String hyperhistory = "";
 		ArrayList<Integer> hid = sf.getIntColumn("SELECT ID FROM hyperhistory");

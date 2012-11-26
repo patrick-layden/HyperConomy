@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 
 
-public class SQLPlayers implements Listener {
+public class HyperPlayers implements Listener {
 	
 	private HyperConomy hc;
 	private String username;
@@ -25,7 +25,7 @@ public class SQLPlayers implements Listener {
 	private String host;
 	private String database;
 	
-	public SQLPlayers(HyperConomy hyc){
+	public HyperPlayers(HyperConomy hyc){
 		hc = hyc;
     	hc.getServer().getPluginManager().registerEvents(this, hc);
 		FileConfiguration config = hc.getYaml().getConfig();
@@ -39,10 +39,19 @@ public class SQLPlayers implements Listener {
     
 	@EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
-		if (!inDatabase(event.getPlayer())) {
-			SQLWrite sw = hc.getSQLWrite();
-			sw.writeData("Insert Into hyperplayers (PLAYER, ECONOMY)" + " Values ('" + event.getPlayer().getName().toLowerCase() + "','" + "default" + "')");
-			hc.getSQLFunctions().addPlayerEconomy(event.getPlayer().getName().toLowerCase(), "default");
+		if (hc.useSQL()) {
+			if (!inDatabase(event.getPlayer())) {
+				SQLWrite sw = hc.getSQLWrite();
+				sw.writeData("Insert Into hyperplayers (PLAYER, ECONOMY)" + " Values ('" + event.getPlayer().getName().toLowerCase() + "','" + "default" + "')");
+				hc.getSQLFunctions().addPlayerEconomy(event.getPlayer().getName().toLowerCase(), "default");
+			}
+		} else {
+			String player = event.getPlayer().getName();
+			FileConfiguration players = hc.getYaml().getPlayers();
+			String test = players.getString(player);
+			if (test == null) {
+				players.set(player + ".balance", 0);
+			}
 		}
 	}
 

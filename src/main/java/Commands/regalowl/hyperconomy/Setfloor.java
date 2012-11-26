@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 public class Setfloor {
 	Setfloor(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";

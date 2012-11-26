@@ -20,7 +20,7 @@ public class History {
 	
 	private long historyloginterval;
 	private int historylogtaskid;
-	private SQLFunctions sf;
+	private DataFunctions sf;
 	
 	//For server start.
 	History(HyperConomy hyperc, Calculation cal, ETransaction enchant, InfoSign infosign) {

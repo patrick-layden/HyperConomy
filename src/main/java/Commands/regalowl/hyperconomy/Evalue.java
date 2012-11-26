@@ -11,7 +11,7 @@ public class Evalue {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
 		try {

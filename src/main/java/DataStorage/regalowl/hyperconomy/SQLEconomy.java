@@ -127,7 +127,7 @@ public class SQLEconomy {
 		hc.getSQLFunctions().load();
 	}
 	public void createNewEconomy(String economy) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		ArrayList<String> items = hc.getInames();
 		ArrayList<String> enchants = hc.getEnames();
 		ArrayList<String> statements = new ArrayList<String>();
@@ -150,7 +150,7 @@ public class SQLEconomy {
 		sw.writeData(statements);
 		hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
 			public void run() {
-				SQLFunctions sf = hc.getSQLFunctions();
+				DataFunctions sf = hc.getSQLFunctions();
 				sf.load();
 			}
 		}, 100L);
@@ -164,7 +164,7 @@ public class SQLEconomy {
 		ArrayList<String> statements = new ArrayList<String>();
 		ArrayList<String> objectsAdded = new ArrayList<String>();
 		Iterator<String> it = itemsyaml.getKeys(false).iterator();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		ArrayList<String> keys = sf.getKeys();
 		while (it.hasNext()) {
 			String itemname = it.next().toString();
@@ -201,7 +201,7 @@ public class SQLEconomy {
 	public void exportToYml(String economy) {
 		FileConfiguration items = hc.getYaml().getItems();
 		FileConfiguration enchants = hc.getYaml().getEnchants();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		ArrayList<String> names = new ArrayList<String>();
 		Iterator<String> it = items.getKeys(false).iterator();
 		while (it.hasNext()) {

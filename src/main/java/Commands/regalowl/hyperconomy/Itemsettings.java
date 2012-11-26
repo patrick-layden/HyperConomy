@@ -7,7 +7,7 @@ public class Itemsettings {
 	Itemsettings(String args[], CommandSender sender, Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0 && player != null) {

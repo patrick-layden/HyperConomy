@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 public class _Command {
 	private Player player;
 	private HyperConomy hc;
-	private SQLFunctions sf;
+	private DataFunctions sf;
 	private boolean rename;
 	private String renameshopname;
 	private String playerecon;

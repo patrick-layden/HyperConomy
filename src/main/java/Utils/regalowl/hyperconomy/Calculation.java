@@ -86,7 +86,7 @@ public class Calculation {
 	 */
 	public double getValue(String name, int amount, Player p) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			double totalvalue = 0;
 			int itemid = 0;
@@ -150,7 +150,7 @@ public class Calculation {
 	 */
 	public double getCost(String name, int amount, String playerecon) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			double cost = 0;
 			boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
 			if (isstatic == false) {
@@ -210,7 +210,7 @@ public class Calculation {
 	 */
 	public double getEnchantValue(String name, String mater, String playerecon) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction etran = hc.getETransaction();
 			double cost = 0;
@@ -267,7 +267,7 @@ public class Calculation {
 	 */
 	public double getEnchantCost(String name, String mater, String playerecon) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction etran = hc.getETransaction();
 			double cost = 0;
@@ -450,7 +450,7 @@ public class Calculation {
 	 * 
 	 */
 	public double getTvalue(String name, int amount, String playerecon) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		try {
 			double cost = 0;
 			int counter = 0;
@@ -621,7 +621,7 @@ public class Calculation {
 	}
 
 	public double getPurchaseTax(String name, String economy, double cost) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		boolean isinitial = Boolean.parseBoolean(sf.getInitiation(name, economy));
 		boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, economy));
 		double tax = 0.0;
@@ -636,7 +636,7 @@ public class Calculation {
 	}
 
 	public double getEnchantTax(String name, String economy, double cost) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, economy));
 		double tax = 0.0;
 		if (isstatic) {
@@ -648,7 +648,7 @@ public class Calculation {
 	}
 
 	public double getCeiling(String name, String economy) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		double ceiling = sf.getCeiling(name, economy);
 		double floor = sf.getFloor(name, economy);
 		if (ceiling <= 0 || floor > ceiling) {
@@ -658,7 +658,7 @@ public class Calculation {
 	}
 
 	public double getFloor(String name, String economy) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		double floor = sf.getFloor(name, economy);
 		double ceiling = sf.getCeiling(name, economy);
 		if (floor < 0 || ceiling < floor) {

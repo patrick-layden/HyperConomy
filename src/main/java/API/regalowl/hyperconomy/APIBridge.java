@@ -83,56 +83,56 @@ public class APIBridge implements HyperAPI
 	public String getName(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getName(name, economy);
 	}
 
 	public String getEconomy(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getEconomy(name, economy);
 	}
 
 	public String getType(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getType(name, economy);
 	}
 
 	public String getCategory(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getCategory(name, economy);
 	}
 
 	public String getMaterial(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getMaterial(name, economy);
 	}
 
 	public int getId(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getId(name, economy);
 	}
 
 	public int getData(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getData(name, economy);
 	}
 
 	public int getDurability(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getDurability(name, economy);
 	}
 
@@ -140,7 +140,7 @@ public class APIBridge implements HyperAPI
 	public double getValue(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getValue(name, economy);
 	}
 
@@ -148,7 +148,7 @@ public class APIBridge implements HyperAPI
 	public String getStatic(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getStatic(name, economy);
 	}
 
@@ -156,7 +156,7 @@ public class APIBridge implements HyperAPI
 	public double getStaticPrice(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getStaticPrice(name, economy);
 	}
 
@@ -164,7 +164,7 @@ public class APIBridge implements HyperAPI
 	public double getStock(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getStock(name, economy);
 	}
 
@@ -172,7 +172,7 @@ public class APIBridge implements HyperAPI
 	public double getMedian(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getMedian(name, economy);
 	}
 
@@ -180,7 +180,7 @@ public class APIBridge implements HyperAPI
 	public String getInitiation(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getInitiation(name, economy);
 	}
 
@@ -188,7 +188,7 @@ public class APIBridge implements HyperAPI
 	public double getStartPrice(String name, String economy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		return sf.getStartPrice(name, economy);
 	}
 
@@ -196,7 +196,7 @@ public class APIBridge implements HyperAPI
 	public void setName(String name, String economy, String newname)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setName(name, economy, newname);
 	}
 
@@ -204,7 +204,7 @@ public class APIBridge implements HyperAPI
 	public void setEconomy(String name, String economy, String neweconomy)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setEconomy(name, economy, neweconomy);
 	}
 
@@ -212,7 +212,7 @@ public class APIBridge implements HyperAPI
 	public void setType(String name, String economy, String newtype)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setType(name, economy, newtype);
 	}
 
@@ -220,7 +220,7 @@ public class APIBridge implements HyperAPI
 	public void setCategory(String name, String economy, String newcategory)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setCategory(name, economy, newcategory);
 	}
 
@@ -228,7 +228,7 @@ public class APIBridge implements HyperAPI
 	public void setMaterial(String name, String economy, String newmaterial)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setMaterial(name, economy, newmaterial);
 	}
 
@@ -236,7 +236,7 @@ public class APIBridge implements HyperAPI
 	public void setId(String name, String economy, int newid)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setId(name, economy, newid);
 	}
 
@@ -244,7 +244,7 @@ public class APIBridge implements HyperAPI
 	public void setData(String name, String economy, int newdata)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setData(name, economy, newdata);
 	}
 
@@ -252,7 +252,7 @@ public class APIBridge implements HyperAPI
 	public void setDurability(String name, String economy, int newdurability)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setDurability(name, economy, newdurability);
 	}
 
@@ -260,7 +260,7 @@ public class APIBridge implements HyperAPI
 	public void setValue(String name, String economy, double newvalue)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setValue(name, economy, newvalue);
 	}
 
@@ -268,7 +268,7 @@ public class APIBridge implements HyperAPI
 	public void setStatic(String name, String economy, String newstatic)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setStatic(name, economy, newstatic);
 	}
 
@@ -276,7 +276,7 @@ public class APIBridge implements HyperAPI
 	public void setStaticPrice(String name, String economy, double newstaticprice)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setStaticPrice(name, economy, newstaticprice);
 	}
 
@@ -284,7 +284,7 @@ public class APIBridge implements HyperAPI
 	public void setStock(String name, String economy, double newstock)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setStock(name, economy, newstock);
 	}
 
@@ -292,7 +292,7 @@ public class APIBridge implements HyperAPI
 	public void setMedian(String name, String economy, double newmedian)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setMedian(name, economy, newmedian);
 	}
 
@@ -300,7 +300,7 @@ public class APIBridge implements HyperAPI
 	public void setInitiation(String name, String economy, String newinitiation)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setInitiation(name, economy, newinitiation);
 	}
 
@@ -308,7 +308,7 @@ public class APIBridge implements HyperAPI
 	public void setStartPrice(String name, String economy, double newstartprice)
 	{
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		sf.setStartPrice(name, economy, newstartprice);
 	}
 

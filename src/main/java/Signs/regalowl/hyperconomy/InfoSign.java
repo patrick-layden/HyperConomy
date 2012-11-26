@@ -399,7 +399,7 @@ public class InfoSign implements Listener {
 
 	private String getpercentChange(String itemn, int timevalue, String economy) {
 		String percentchange = "";
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		double percentc = 0.0;
 		double historicvalue = sf.getHistoryData(itemn, economy, timevalue);
 		if (historicvalue == -1.0) {

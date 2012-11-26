@@ -12,7 +12,7 @@ public class Topenchants {
 	Topenchants(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getShop();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length > 1) {

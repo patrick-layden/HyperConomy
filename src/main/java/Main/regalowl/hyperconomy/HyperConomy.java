@@ -30,7 +30,7 @@ public class HyperConomy extends JavaPlugin {
 	private Notification not;
 	private TransactionSign tsign;
 	private ItemDisplay itdi;
-	private SQLFunctions sf;
+	private DataFunctions sf;
 	private SQLWrite sw;
 	private SQLEconomy sqe;
 	private HyperWebStart hws;
@@ -93,7 +93,7 @@ public class HyperConomy extends JavaPlugin {
 			usesql = yaml.getConfig().getBoolean("config.sql-connection.use-sql");
 			currency = yaml.getConfig().getString("config.currency-symbol");
 			useExternalEconomy = yaml.getConfig().getBoolean("config.use-external-economy-plugin");
-			sf = new SQLFunctions();
+			sf = new DataFunctions();
 			new Update();
 			if (usesql) {
 				sqe = new SQLEconomy(this);
@@ -148,9 +148,7 @@ public class HyperConomy extends JavaPlugin {
 			hist.starthistoryLog();
 			tsign.setTransactionSign(this, tran, calc, ench, l, acc, isign, not);
 			new ChestShop();
-			if (usesql) {
-				new SQLPlayers(this);
-			}
+			new HyperPlayers(this);
 			hws = new HyperWebStart();
 			log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 		}
@@ -537,7 +535,7 @@ public class HyperConomy extends JavaPlugin {
 		return enchantdata.get(key);
 	}
 
-	public SQLFunctions getSQLFunctions() {
+	public DataFunctions getSQLFunctions() {
 		return sf;
 	}
 

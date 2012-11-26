@@ -31,7 +31,7 @@ public class HyperLogBackup {
 		HyperConomy hc = HyperConomy.hc;
 		FileTools ft = new FileTools();
 		ft.makeFolder(dpath);
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		SerializeArrayList sal = new SerializeArrayList();
 		String hyperlog = "";
 		ArrayList<Integer> lid = sf.getIntColumn("SELECT ID FROM hyperlog");

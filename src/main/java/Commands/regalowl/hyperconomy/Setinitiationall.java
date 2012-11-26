@@ -8,7 +8,7 @@ public class Setinitiationall {
 	Setinitiationall(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		ArrayList<String> names = hc.getNames();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		InfoSign isign = hc.getInfoSign();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";

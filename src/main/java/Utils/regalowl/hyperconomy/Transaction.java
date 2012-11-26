@@ -40,7 +40,7 @@ public class Transaction {
 	
 	public void buy(String name, int amount, int id, int data, Player p) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction ench = hc.getETransaction();
 			LanguageFile L = hc.getLanguageFile();
@@ -117,7 +117,7 @@ public class Transaction {
 	 */
 	public void sell(String name, int id, int data, int amount, Player p) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction ench = hc.getETransaction();
 			Account acc = hc.getAccount();
@@ -475,7 +475,7 @@ public class Transaction {
 	 * 
 	 */
 	private int getmaxInitial(String name, Player p) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		String playerecon = sf.getPlayerEconomy(p.getName());
 		try {
 			int maxinitialitems = 0;
@@ -502,7 +502,7 @@ public class Transaction {
 	 */
 	public void buyXP(String name, int amount, Player p) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction ench = hc.getETransaction();
 			Account acc = hc.getAccount();
@@ -577,7 +577,7 @@ public class Transaction {
 	 */
 	public void sellXP(String name, int amount, Player p) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction ench = hc.getETransaction();
 			Account acc = hc.getAccount();
@@ -678,7 +678,7 @@ public class Transaction {
 	 */
 	public boolean buyChest(String name, int id, int data, String owner, Player p, int amount, Inventory invent) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			Account acc = hc.getAccount();
 			LanguageFile L = hc.getLanguageFile();
@@ -731,7 +731,7 @@ public class Transaction {
 	 */
 	public boolean buyChest(String name, int id, int data, String owner, Player p, int amount, Inventory invent, double price) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();
@@ -780,7 +780,7 @@ public class Transaction {
 	 */
 	public boolean sellChest(String name, int id, int data, int amount, String owner, Player p, Inventory invent) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
@@ -832,7 +832,7 @@ public class Transaction {
 	 */
 	public boolean sellChest(String name, int id, int data, int amount, String owner, Player p, Inventory invent, double price) {
 		try {
-			SQLFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getSQLFunctions();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();

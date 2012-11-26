@@ -18,7 +18,7 @@ public class TransactionSign implements Listener {
 	private HyperConomy hc;
 	private Transaction tran;
 	private ETransaction ench;
-	private SQLFunctions sf;
+	private DataFunctions sf;
 	private Set<String> names;
 	private String playerecon;
 	private Shop shop;

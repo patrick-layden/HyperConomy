@@ -30,7 +30,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -66,7 +66,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String name = player.getName();
@@ -93,7 +93,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				economy.withdrawPlayer(name, money);
@@ -118,7 +118,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String name = player.getName();
@@ -145,7 +145,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				economy.depositPlayer(name, money);
@@ -172,7 +172,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -200,7 +200,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -230,7 +230,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				if (economy.hasAccount(name)) {
@@ -264,7 +264,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			boolean hasaccount = false;
 			if (economy != null) {
@@ -296,7 +296,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				
@@ -335,7 +335,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -369,7 +369,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 
 			if (economy != null) {
@@ -402,7 +402,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 	
@@ -417,35 +417,6 @@ public class Account {
 			}
 		} else {
 			sf.createPlayerAccount(account);
-		}
-	}
-	
-	
-	/**
-	 * 
-	 * 
-	 * This function deletes an account.
-	 * 
-	 */
-	public void deleteAccount(String account){		
-		HyperConomy hc = HyperConomy.hc;
-		Economy economy = hc.getEconomy();
-		LanguageFile L = hc.getLanguageFile();
-		boolean useExternalEconomy = hc.useExternalEconomy();
-		if (useExternalEconomy) {
-			if (economy != null) {
-	
-				if (economy.hasAccount(account)) {
-					//TODO  Currently don't know how.
-				}
-				
-			} else {
-				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-		    	Logger log = Logger.getLogger("Minecraft");
-		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
-			}
-		} else {
-			
 		}
 	}
 	

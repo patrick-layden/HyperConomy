@@ -51,7 +51,7 @@ public class ETransaction {
 	 * 
 	 */
 	public void sellEnchant(String name, Player p) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
 		Log log = hc.getLog();
@@ -122,7 +122,7 @@ public class ETransaction {
 	 * 
 	 */
 	public void buyEnchant(String name, Player p) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
 		Log log = hc.getLog();
@@ -225,7 +225,7 @@ public class ETransaction {
 	 * 
 	 */
 	public boolean buyChestEnchant(String name, Player p, ItemStack item, String owner) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
 		Log log = hc.getLog();
@@ -304,7 +304,7 @@ public class ETransaction {
 	 * 
 	 */
 	public boolean buyChestEnchant(String name, Player p, ItemStack item, String owner, double price) {
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
 		Log log = hc.getLog();

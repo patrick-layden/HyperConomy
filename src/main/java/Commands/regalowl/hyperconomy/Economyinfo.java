@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 public class Economyinfo {
 	Economyinfo(_Command command, String args[], CommandSender sender, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hc.useSQL()) {

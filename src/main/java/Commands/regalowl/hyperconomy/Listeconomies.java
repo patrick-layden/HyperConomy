@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class Listeconomies {
 	Listeconomies(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hc.useSQL()) {

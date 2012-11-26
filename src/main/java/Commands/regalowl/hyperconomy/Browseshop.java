@@ -11,7 +11,7 @@ public class Browseshop {
 	Browseshop(String args[], CommandSender sender, Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getShop();
-		SQLFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getSQLFunctions();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		ArrayList<String> aargs = new ArrayList<String>();

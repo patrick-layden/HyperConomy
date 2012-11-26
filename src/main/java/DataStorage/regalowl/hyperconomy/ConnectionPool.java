@@ -10,7 +10,7 @@ public class ConnectionPool {
 	private int maxConnections;
 	private HyperConomy hc;
 	private SQLWrite sw;
-	private SQLFunctions sf;
+	private DataFunctions sf;
 	
 	private ArrayList<Connection> connections = new ArrayList<Connection>();
 	private ArrayList<Boolean> inUse = new ArrayList<Boolean>();
