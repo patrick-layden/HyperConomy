@@ -359,6 +359,11 @@ commands:
       description: Toggles HyperConomy error logging.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+   hcbalance:
+      description: Displays player balances.
+      permission: hyperconomy.use
+      permission-message: You do not have permission.
+      aliases: [hcb]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.
@@ -374,6 +379,7 @@ permissions:
             hyperconomy.createsign: true
             hyperconomy.notify: true
             hyperconomy.shop.*: true
+            hyperconomy.balanceall: true
     hyperconomy.use:
         description: Allows general use of HyperConomy.
         default: true
@@ -447,4 +453,7 @@ permissions:
         default: false
     hyperconomy.sellsign:
         description: Allows selling to transaction signs.
+        default: false
+    hyperconomy.balanceall:
+        description: Allows other players' balances to be displayed.
         default: false

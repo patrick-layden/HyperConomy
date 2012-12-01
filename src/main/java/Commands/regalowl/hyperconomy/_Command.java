@@ -254,6 +254,9 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("hcerror")) {
 			new Hcerror(sender);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("hcbalance")) {
+			new Hcbalance(args, sender, player);
+			return true;
 		}
 		
 		return false;

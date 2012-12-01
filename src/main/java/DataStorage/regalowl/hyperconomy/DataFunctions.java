@@ -990,6 +990,7 @@ public class DataFunctions {
 	
 	public Double getPlayerBalance(Player p) {
 		try {
+			Bukkit.broadcastMessage(playerbalance.toString());
 			if (p == null) {
 				return 0.0;
 			}
@@ -998,22 +999,23 @@ public class DataFunctions {
 			if (playerbalance.indexOf(player) != -1) {
 				return playerbalance.get(econplayer.indexOf(player));
 			}
-			return 0.0;
+			return -9999999.0;
 		} catch (Exception e) {
 			new HyperError(e, "Passed player: " + p.getDisplayName());
-			return 0.0;
+			return -9999999.0;
 		}
 	}
 	
 	public Double getPlayerBalance(String player) {
 		try {
-			if (playerbalance.indexOf(player) != -1) {
-				return playerbalance.get(econplayer.indexOf(player));
+			Bukkit.broadcastMessage(playerbalance.toString());
+			if (playerbalance.indexOf(player.toLowerCase()) != -1) {
+				return playerbalance.get(econplayer.indexOf(player.toLowerCase()));
 			}
-			return 0.0;
+			return -9999999.0;
 		} catch (Exception e) {
 			new HyperError(e, "Passed player: " + player);
-			return 0.0;
+			return -9999999.0;
 		}
 	}
 

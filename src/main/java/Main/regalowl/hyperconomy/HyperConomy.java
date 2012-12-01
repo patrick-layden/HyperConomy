@@ -125,7 +125,7 @@ public class HyperConomy extends JavaPlugin {
 			Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
 			if (x != null & x instanceof Vault) {
 				this.setupEconomy();
-			} else {
+			} else if (useExternalEconomy) {
 				log.warning(L.get("VAULT_NOT_FOUND"));
 				getPluginLoader().disablePlugin(this);
 				return;

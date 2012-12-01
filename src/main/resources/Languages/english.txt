@@ -116,7 +116,7 @@ HAS_NO_ENCHANTMENTS: &4The item you're holding has no enchantments!
 ESELL_INVALID: &4Invalid Parameters. Use /esell [name/'max']
 LOG_BREAK: ---------------------------------
 DATABASE_CONNECTION_ERROR: Database connection error!  Check your config.yml settings.  Disabling HyperConomy....
-VAULT_NOT_FOUND: Vault not found, shutting down...
+VAULT_NOT_FOUND: [HyperConomy] Vault not found, shutting down...
 HYPERCONOMY_ENABLED: HyperConomy version %n has been successfully enabled!
 HYPERCONOMY_DISABLED: HyperConomy has been disabled!
 BAD_YMLFILE_DETECTED: Bad YML files detected, disabling HyperConomy!
@@ -267,8 +267,8 @@ MEDIAN_SET: &6%n median set!
 SETMESSAGE_INVALID: &4Invalid Parameters.  Use /setmessage ['1'/'2'] [message] [shop]
 MESSAGE1_SET: &6Message 1 set!
 MESSAGE2_SET: &6Message 2 set!
-P1_SET: Shop location p1 has been set!
-P2_SET: Shop location p2 has been set!
+P1_SET: &6Shop location p1 has been set!
+P2_SET: &6Shop location p2 has been set!
 SETSHOP_INVALID: &4Invalid Parameters. Use /setshop ['p1'/'p2'] [name]
 SETSHOPECONOMY_INVALID: &4Invalid Parameters.  Use /setshopeconomy [shop name] [economy]
 SHOP_ECONOMY_SET: &6Shop economy set!
