@@ -81,6 +81,7 @@ public class ConnectionPool {
 				connections.add(connect);
 				inUse.add(false);
 			} catch (SQLException e) {
+				new HyperError(e);
 				refreshConnections();
 				return;
 			}
