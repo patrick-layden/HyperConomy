@@ -750,7 +750,7 @@ public class SQLFunctions {
 		ArrayList<String> names = hc.getNames();
 		for (int i = 0; i < names.size(); i++) {
 			String cname = names.get(i);
-			if (hc.testiString(cname) != null) {
+			if (hc.itemTest(cname)) {
 				tname.add(cname);
 				teconomy.add("default");
 				if (cname != "xp") {

@@ -13,9 +13,7 @@ public class Setceiling {
 			if (args.length == 2) {
 				name = args[0];
 				double ceiling = Double.parseDouble(args[1]);
-				String teststring1 = hc.testiString(name);
-				String teststring2 = hc.testeString(name);
-				if (teststring1 != null || teststring2 != null) {
+				if (hc.itemTest(name) || hc.enchantTest(name)) {
 					sf.setCeiling(name, playerecon, ceiling);
 					sender.sendMessage(L.f(L.get("CEILING_SET"), name));
 					isign.setrequestsignUpdate(true);

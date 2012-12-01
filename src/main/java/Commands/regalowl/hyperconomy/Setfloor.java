@@ -13,9 +13,7 @@ public class Setfloor {
 			if (args.length == 2) {
 				name = args[0];
 				double floor = Double.parseDouble(args[1]);
-				String teststring1 = hc.testiString(name);
-				String teststring2 = hc.testeString(name);
-				if (teststring1 != null || teststring2 != null) {
+				if (hc.itemTest(name) || hc.enchantTest(name)) {
 					sf.setFloor(name, playerecon, floor);
 					sender.sendMessage(L.f(L.get("FLOOR_SET"), name));
 					isign.setrequestsignUpdate(true);

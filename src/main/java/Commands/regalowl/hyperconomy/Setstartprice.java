@@ -13,8 +13,7 @@ public class Setstartprice {
 			if (args.length == 2) {
 				name = args[0];
 				double startprice = Double.parseDouble(args[1]);
-				String teststring = hc.testiString(name);
-				if (teststring != null) {
+				if (hc.itemTest(name)) {
 					sf.setStartPrice(name, playerecon, startprice);
 					//sender.sendMessage(ChatColor.GOLD + "" + name + " start price set!");
 					sender.sendMessage(L.f(L.get("START_PRICE_SET"), name));
@@ -28,8 +27,7 @@ public class Setstartprice {
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
 					double startprice = Double.parseDouble(args[1]);
-					String teststring = hc.testeString(name);
-					if (teststring != null) {
+					if (hc.enchantTest(name)) {
 						sf.setStartPrice(name, playerecon, startprice);
 						//sender.sendMessage(ChatColor.GOLD + "" + name + " start price set!");
 						sender.sendMessage(L.f(L.get("START_PRICE_SET"), name));

@@ -14,8 +14,7 @@ public class Setstock {
 			if (args.length == 2) {
 				name = args[0];
 				double stock = calc.round(Double.parseDouble(args[1]), 2);
-				String teststring = hc.testiString(name);
-				if (teststring != null) {
+				if (hc.itemTest(name)) {
 					sf.setStock(name, playerecon, stock);
 					sender.sendMessage(L.f(L.get("STOCK_SET"), name));
 					isign.setrequestsignUpdate(true);
@@ -28,8 +27,7 @@ public class Setstock {
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
 					double stock = calc.round(Double.parseDouble(args[1]), 2);
-					String teststring = hc.testeString(name);
-					if (teststring != null) {
+					if (hc.enchantTest(name)) {
 						sf.setStock(name, playerecon, stock);
 						sender.sendMessage(L.f(L.get("STOCK_SET"), name));
 						isign.setrequestsignUpdate(true);

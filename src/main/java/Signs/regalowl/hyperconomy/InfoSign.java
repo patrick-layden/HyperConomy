@@ -401,17 +401,15 @@ public class InfoSign implements Listener {
 		String percentchange = "";
 		SQLFunctions sf = hc.getSQLFunctions();
 		double percentc = 0.0;
-		String teststring = hc.testiString(itemn);
-		String teststring2 = hc.testeString(itemn);
 		double historicvalue = sf.getHistoryData(itemn, economy, timevalue);
 		if (historicvalue == -1.0) {
 			return "?";
 		}
-		if (teststring != null) {
+		if (hc.itemTest(itemn)) {
 			Double currentvalue = calc.getTvalue(itemn, 1, economy);
 			percentc = ((currentvalue - historicvalue) / historicvalue) * 100;
 			percentc = calc.round(percentc, 3);
-		} else if (teststring2 != null) {
+		} else if (hc.enchantTest(itemn)) {
 			Double currentvalue = calc.getEnchantValue(itemn, "diamond", economy);
 			percentc = ((currentvalue - historicvalue) / historicvalue) * 100;
 			percentc = calc.round(percentc, 3);
