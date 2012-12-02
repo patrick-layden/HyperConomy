@@ -4068,10 +4068,10 @@ cake:
     material: CAKE
     id: 354
     data: 0
-  value: 200.0
+  value: 40.0
   price:
     static: false
-    staticprice: 400.0
+    staticprice: 80.0
   stock:
     stock: 0.0
     median: 1000.0
