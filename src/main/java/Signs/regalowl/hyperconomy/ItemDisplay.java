@@ -130,7 +130,7 @@ public class ItemDisplay implements Listener {
 		dropstack.setDurability((short) sf.getDurability(name, economy));
 		Item item = w.dropItem(l, dropstack);
 		item.setPickupDelay(200);
-		item.setVelocity(new Vector(0, .1, 0));
+		item.setVelocity(new Vector(0, 0, 0));
 		item.setMetadata("HyperConomy", new FixedMetadataValue(hc, "item_display"));
 		return item;
 	}

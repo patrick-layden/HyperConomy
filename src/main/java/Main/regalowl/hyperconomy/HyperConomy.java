@@ -60,6 +60,14 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public void onDataLoad() {
+		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+			public void run() {
+				onLateStart();
+			}
+		}, 60L);
+	}
+	
+	public void onLateStart() {
 		itdi = new ItemDisplay();
 	}
 
