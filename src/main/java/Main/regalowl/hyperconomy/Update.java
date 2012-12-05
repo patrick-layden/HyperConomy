@@ -196,6 +196,9 @@ public class Update {
 	    	if (dversion < .952) {
 	    		yaml.getConfig().set("config.log-errors", false);
 	    	}
+	    	if (dversion < .957) {
+	    		yaml.getConfig().set("config.sql-connection.max-sql-threads", 5);
+	    	}
 		}
 		Double newversion = Double.parseDouble(hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion());
 		yaml.getConfig().set("version", newversion);

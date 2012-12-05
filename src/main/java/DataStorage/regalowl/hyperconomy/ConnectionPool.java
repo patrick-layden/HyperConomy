@@ -81,7 +81,9 @@ public class ConnectionPool {
 				connections.add(connect);
 				inUse.add(false);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				new HyperError(e);
+				refreshConnections();
+				return;
 			}
 		}
 	}
@@ -92,7 +94,8 @@ public class ConnectionPool {
 			try {
 				connections.get(i).close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				new HyperError(e);
+				//e.printStackTrace();
 			}
 		}
 		connections.clear();

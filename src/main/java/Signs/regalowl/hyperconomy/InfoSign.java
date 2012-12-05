@@ -73,12 +73,19 @@ public class InfoSign implements Listener {
 		if (p.hasPermission("hyperconomy.createsign")) {
 			String line12 = scevent.getLine(0).trim() + scevent.getLine(1).trim();
 			line12 = hc.fixName(line12);
+			int multiplier = 1;
+			try {
+				multiplier = Integer.parseInt(scevent.getLine(3));
+			} catch (Exception e) {
+				multiplier = 1;
+			}
 			if (names.contains(line12.toLowerCase())) {
 				String type = getsignType(scevent.getLine(2));
 				if (type != null) {
 					String locat = scevent.getBlock().getWorld().getName() + "|" + scevent.getBlock().getX() + "|" + scevent.getBlock().getY() + "|" + scevent.getBlock().getZ();
 						sns.set(locat + ".itemname", line12);
 						sns.set(locat + ".type", type);
+						sns.set(locat + ".multiplier", multiplier);
 						if (hc.useSQL()) {
 							sns.set(locat + ".economy", hc.getSQLFunctions().getPlayerEconomy(p.getName()));
 						} else {
@@ -108,6 +115,10 @@ public class InfoSign implements Listener {
 					itemn = sns.getString(signkey + ".itemname");
 					type = sns.getString(signkey + ".type");
 					economy = sns.getString(signkey + ".economy");
+					int multiplier = sns.getInt(signkey + ".multiplier");
+					if (multiplier < 1) {
+						multiplier = 1;
+					}
 					if (hc.useSQL()) {
 						if (!hc.getSQLFunctions().testEconomy(economy)) {
 							sns.set(signkey + ".economy", "default");
@@ -141,36 +152,36 @@ public class InfoSign implements Listener {
 						if (type.equalsIgnoreCase("sell")) {
 							if (item) {
 								double value = calc.getTvalue(itemn, 1, economy);
-								value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+								value = calc.twoDecimals((value - calc.getSalesTax(null, value)) * multiplier);
 								line23 = "\u00A7fSell: " + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 							} else if (enchant) {
 								if (sns.getString(signkey + ".enchantclass") == null) {
 									sns.set(signkey + ".enchantclass", "diamond");
 								}
 								double value = calc.getEnchantValue(itemn, sns.getString(signkey + ".enchantclass"), economy);
-								value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+								value = calc.twoDecimals((value - calc.getSalesTax(null, value)) * multiplier);
 								line23 = "\u00A7fSell: " + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 								
 							}
 						} else if (type.equalsIgnoreCase("buy")) {
 							if (item) {
 								double pcost = calc.getCost(itemn, 1, economy);
-								line23 = "\u00A7fBuy: " + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + (calc.twoDecimals(pcost + calc.getPurchaseTax(itemn, economy, pcost)));
+								line23 = "\u00A7fBuy: " + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + (calc.twoDecimals((pcost + calc.getPurchaseTax(itemn, economy, pcost)) * multiplier));
 							} else if (enchant) {
 								if (sns.getString(signkey + ".enchantclass") == null) {
 									sns.set(signkey + ".enchantclass", "diamond");
 								}
 								double cost = calc.getEnchantCost(itemn, sns.getString(signkey + ".enchantclass"), economy);
-								cost = calc.twoDecimals(cost + calc.getEnchantTax(itemn, economy, cost));
+								cost = calc.twoDecimals((cost + calc.getEnchantTax(itemn, economy, cost)) * multiplier);
 								line23 = "\u00A7fBuy: " + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost;
 							}
 						} else if (type.equalsIgnoreCase("sb")) {
 							if (item) {
 								line23 = null;
 								double pcost = calc.getCost(itemn, 1, economy);
-								SB4 = "\u00A7fB:" + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + (calc.twoDecimals(pcost + calc.getPurchaseTax(itemn, economy, pcost)));
+								SB4 = "\u00A7fB:" + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + (calc.twoDecimals((pcost + calc.getPurchaseTax(itemn, economy, pcost)) * multiplier));
 								double value = calc.getTvalue(itemn, 1, economy);
-								value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+								value = calc.twoDecimals((value - calc.getSalesTax(null, value)) * multiplier);
 								SB3 = "\u00A7fS:" + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 							} else if (enchant) {
 								if (sns.getString(signkey + ".enchantclass") == null) {
@@ -178,10 +189,10 @@ public class InfoSign implements Listener {
 								}
 								line23 = null;
 								double cost = calc.getEnchantCost(itemn, sns.getString(signkey + ".enchantclass"), economy);
-								cost = calc.twoDecimals(cost + calc.getEnchantTax(itemn, economy, cost));
+								cost = calc.twoDecimals((cost + calc.getEnchantTax(itemn, economy, cost)) * multiplier);
 								SB4 = "\u00A7fB:" + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost;
 								double value = calc.getEnchantValue(itemn, sns.getString(signkey + ".enchantclass"), economy);
-								value = calc.twoDecimals(value - calc.getSalesTax(null, value));
+								value = calc.twoDecimals((value - calc.getSalesTax(null, value)) * multiplier);
 								SB3 = "\u00A7fS:" + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + value;
 							}
 						} else if (type.equalsIgnoreCase("stock")) {
@@ -222,22 +233,22 @@ public class InfoSign implements Listener {
 							}
 						} else if (type.equalsIgnoreCase("value")) {
 							if (item) {
-								line23 = "\u00A7fValue: " + "\u00A7a" + hc.getSQLFunctions().getValue(itemn, economy);
+								line23 = "\u00A7fValue: " + "\u00A7a" + hc.getSQLFunctions().getValue(itemn, economy) * multiplier;
 							} else if (enchant) {
-								line23 = "\u00A7fValue: " + "\u00A7a" + hc.getSQLFunctions().getValue(itemn, economy);
+								line23 = "\u00A7fValue: " + "\u00A7a" + hc.getSQLFunctions().getValue(itemn, economy) * multiplier;
 								;
 							}
 						} else if (type.equalsIgnoreCase("static price")) {
 							if (item) {
-								line23 = "\u00A7fStatic Price: " + "\u00A7a" + hc.getSQLFunctions().getStaticPrice(itemn, economy);
+								line23 = "\u00A7fStatic Price: " + "\u00A7a" + hc.getSQLFunctions().getStaticPrice(itemn, economy) * multiplier;
 							} else if (enchant) {
-								line23 = "\u00A7fStatic Price: " + "\u00A7a" + hc.getSQLFunctions().getStaticPrice(itemn, economy);
+								line23 = "\u00A7fStatic Price: " + "\u00A7a" + hc.getSQLFunctions().getStaticPrice(itemn, economy) * multiplier;
 							}
 						} else if (type.equalsIgnoreCase("start price")) {
 							if (item) {
-								line23 = "\u00A7fStart Price: " + "\u00A7a" + hc.getSQLFunctions().getStartPrice(itemn, economy);
+								line23 = "\u00A7fStart Price: " + "\u00A7a" + hc.getSQLFunctions().getStartPrice(itemn, economy) * multiplier;
 							} else if (enchant) {
-								line23 = "\u00A7fStart Price: " + "\u00A7a" + hc.getSQLFunctions().getStartPrice(itemn, economy);
+								line23 = "\u00A7fStart Price: " + "\u00A7a" + hc.getSQLFunctions().getStartPrice(itemn, economy) * multiplier;
 							}
 						} else if (type.equalsIgnoreCase("median")) {
 							if (item) {
@@ -286,13 +297,13 @@ public class InfoSign implements Listener {
 							line23 = line2 + line3;
 						} else if (type.equalsIgnoreCase("Tax")) {
 							if (item) {
-								line23 = "\u00A7fTax: " + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.twoDecimals(calc.getPurchaseTax(itemn, economy, calc.getCost(itemn, 1, economy)));
+								line23 = "\u00A7fTax: " + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + calc.twoDecimals(calc.getPurchaseTax(itemn, economy, calc.getCost(itemn, 1, economy) * multiplier));
 							} else if (enchant) {
 								if (sns.getString(signkey + ".enchantclass") == null) {
 									sns.set(signkey + ".enchantclass", "diamond");
 								}
 								double price = calc.getEnchantCost(itemn, sns.getString(signkey + ".enchantclass"), economy);
-								double taxpaid = calc.twoDecimals(calc.getEnchantTax(itemn, economy, price));
+								double taxpaid = calc.twoDecimals(calc.getEnchantTax(itemn, economy, price) * multiplier);
 								line23 = "\u00A7fTax: " + "\u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + taxpaid;
 							}
 						}
