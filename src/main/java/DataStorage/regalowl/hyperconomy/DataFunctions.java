@@ -987,37 +987,6 @@ public class DataFunctions {
 			return "default";
 		}
 	}
-	
-	public Double getPlayerBalance(Player p) {
-		try {
-			Bukkit.broadcastMessage(playerbalance.toString());
-			if (p == null) {
-				return 0.0;
-			}
-			String player = p.getName();
-			player = player.toLowerCase();
-			if (playerbalance.indexOf(player) != -1) {
-				return playerbalance.get(econplayer.indexOf(player));
-			}
-			return -9999999.0;
-		} catch (Exception e) {
-			new HyperError(e, "Passed player: " + p.getDisplayName());
-			return -9999999.0;
-		}
-	}
-	
-	public Double getPlayerBalance(String player) {
-		try {
-			Bukkit.broadcastMessage(playerbalance.toString());
-			if (playerbalance.indexOf(player.toLowerCase()) != -1) {
-				return playerbalance.get(econplayer.indexOf(player.toLowerCase()));
-			}
-			return -9999999.0;
-		} catch (Exception e) {
-			new HyperError(e, "Passed player: " + player);
-			return -9999999.0;
-		}
-	}
 
 	public void addPlayerEconomy(String player, String economy) {
 		if (!econplayer.contains(player)) {
@@ -1043,6 +1012,35 @@ public class DataFunctions {
 		} catch (Exception e) {
 			SQLRetry sqr = new SQLRetry();
 			sqr.retrySetEconomy(hc, player, econ);
+		}
+	}
+	
+	public Double getPlayerBalance(Player p) {
+		try {
+			if (p == null) {
+				return 0.0;
+			}
+			String player = p.getName();
+			player = player.toLowerCase();
+			if (econplayer.indexOf(player) != -1) {
+				return playerbalance.get(econplayer.indexOf(player));
+			}
+			return -9999999.0;
+		} catch (Exception e) {
+			new HyperError(e, "Passed player: " + p.getDisplayName());
+			return -9999999.0;
+		}
+	}
+	
+	public Double getPlayerBalance(String player) {
+		try {
+			if (econplayer.indexOf(player.toLowerCase()) != -1) {
+				return playerbalance.get(econplayer.indexOf(player.toLowerCase()));
+			}
+			return -9999999.0;
+		} catch (Exception e) {
+			new HyperError(e, "Passed player: " + player);
+			return -9999999.0;
 		}
 	}
 	
@@ -1075,6 +1073,10 @@ public class DataFunctions {
 			//TODO
 		}
 	}
+	
+	
+	
+	
 	
 	public void createPlayerAccount(String player) {
 		if (!hasAccount(player)) {
