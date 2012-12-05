@@ -719,7 +719,6 @@ public class DataFunctions {
 	public void loadYML() {
 		items = hc.getYaml().getItems();
 		enchants = hc.getYaml().getEnchants();
-		FileConfiguration players = hc.getYaml().getPlayers();
 		tne.clear();
 		tname.clear();
 		teconomy.clear();
