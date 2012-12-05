@@ -354,6 +354,7 @@ public class ItemDisplay implements Listener {
 		for (Block cb:protectedBlocks) {
 			if (cb.equals(bb)) {
 				event.setCancelled(true);
+				loadDisplays();
 			}
 		}
 
