@@ -602,4 +602,8 @@ public class HyperConomy extends JavaPlugin {
 	public boolean useExternalEconomy() {
 		return useExternalEconomy;
 	}
+	
+	public void setUseExternalEconomy(boolean state) {
+		useExternalEconomy = state;
+	}
 }

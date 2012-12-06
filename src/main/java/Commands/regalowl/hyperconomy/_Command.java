@@ -263,8 +263,10 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("hcpay") && player != null) {
 			new Hcpay(args, player);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("toggleeconomy")) {
+			new Toggleeconomy(sender);
+			return true;
 		}
-		
 		
 		return false;
 	}

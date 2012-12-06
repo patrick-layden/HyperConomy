@@ -5,14 +5,13 @@ import org.bukkit.entity.Player;
 public class Hcpay {
 	Hcpay(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions sf = hc.getSQLFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		Account acc = hc.getAccount();
 		try {
 			if (args.length == 2) {
 				String recipient = args[0];
 				Double amount = Double.parseDouble(args[1]);
-				if (sf.hasAccount(recipient)) {
+				if (acc.checkAccount(recipient)) {
 					if (acc.checkFunds(amount, player)) {
 						acc.withdraw(amount, player);
 						acc.depositAccount(recipient, amount);

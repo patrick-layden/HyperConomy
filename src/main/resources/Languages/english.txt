@@ -337,3 +337,7 @@ HCBALANCE_INVALID: &4Invalid parameters. Use /hcbalance (account)
 HCTOP_INVALID: &4Invalid parameters. Use /hctop (page)
 HCPAY_INVALID: &4Invalid parameters. Use /hcpay [account] [amount]
 MONEY_PAYED: &9You payed &b%n &a%c%a.
+ONLY_AVAILABLE_INTERNAL: &4This command is disabled.  To enable it set HyperConomy as your economy plugin.
+TOGGLEECONOMY_INVALID: &4Invalid parameters.  Use /toggleeconomy
+TOGGLEECONOMY_ENABLED: &6HyperConomy will now use an external economy plugin via Vault.
+TOGGLEECONOMY_DISABLED: &6HyperConomy will now function as your economy plugin.

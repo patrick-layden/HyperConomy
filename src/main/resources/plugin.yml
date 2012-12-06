@@ -374,6 +374,10 @@ commands:
       permission: hyperconomy.use
       permission-message: You do not have permission.
       aliases: [hcp]
+   toggleeconomy:
+      description: Switches between an external economy plugin and the internal HyperConomy economy plugin.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

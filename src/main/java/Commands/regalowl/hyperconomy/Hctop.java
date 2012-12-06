@@ -11,6 +11,10 @@ public class Hctop {
 		DataFunctions sf = hc.getSQLFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
+			if (hc.useExternalEconomy()) {
+				sender.sendMessage(L.get("ONLY_AVAILABLE_INTERNAL"));
+				return;
+			}
 			int pe;
 			if (args.length == 1) {
 				pe = Integer.parseInt(args[0]);
@@ -58,7 +62,7 @@ public class Hctop {
 			}
 			Calculation calc = hc.getCalculation();
 			sender.sendMessage(ChatColor.WHITE + "----- Top Balances -----");
-			sender.sendMessage(ChatColor.WHITE + "------ Page (" + pe + "/" + (int)Math.ceil(sbalances.size()/10.0) + " )------");
+			sender.sendMessage(ChatColor.WHITE + "------ Page (" + pe + "/" + (int)Math.ceil(sbalances.size()/10.0) + ") ------");
 			sender.sendMessage(ChatColor.WHITE + "Server Total: " + L.get("CURRENCY") + calc.twoDecimals(serverTotal));
 			int ps = pe - 1;
 			ps *= 10;

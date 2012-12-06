@@ -958,7 +958,7 @@ public class DataFunctions {
 					setPlayerEconomy(player, "default");
 				}
 			}
-			String econ = playerecon.get(econplayer.indexOf(player.toLowerCase()));
+			String econ = playerecon.get(econplayer.indexOf(player));
 			return econ;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -979,7 +979,7 @@ public class DataFunctions {
 					setPlayerEconomy(player, "default");
 				}
 			}
-			String econ = playerecon.get(econplayer.indexOf(player.toLowerCase()));
+			String econ = playerecon.get(econplayer.indexOf(player));
 			return econ;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -988,9 +988,10 @@ public class DataFunctions {
 	}
 
 	public void addPlayerEconomy(String player, String economy) {
-		if (!econplayer.contains(player.toLowerCase())) {
+		player = player.toLowerCase();
+		if (!econplayer.contains(player)) {
 			playerecon.add(economy);
-			econplayer.add(player.toLowerCase());
+			econplayer.add(player);
 			playerbalance.add(0.0);
 		}
 	}
@@ -1005,9 +1006,10 @@ public class DataFunctions {
 
 	public void setPlayerEconomy(String player, String econ) {
 		try {
-			String statement = "UPDATE hyperplayers SET ECONOMY='" + econ + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
+			player = player.toLowerCase();
+			String statement = "UPDATE hyperplayers SET ECONOMY='" + econ + "' WHERE PLAYER = '" + player + "'";
 			hc.getSQLWrite().writeData(statement);
-			playerecon.set(econplayer.indexOf(player.toLowerCase()), econ);
+			playerecon.set(econplayer.indexOf(player), econ);
 		} catch (Exception e) {
 			SQLRetry sqr = new SQLRetry();
 			sqr.retrySetEconomy(hc, player, econ);
@@ -1032,9 +1034,10 @@ public class DataFunctions {
 	}
 	
 	public Double getPlayerBalance(String player) {
+		player = player.toLowerCase();
 		try {
-			if (econplayer.indexOf(player.toLowerCase()) != -1) {
-				return playerbalance.get(econplayer.indexOf(player.toLowerCase()));
+			if (econplayer.indexOf(player) != -1) {
+				return playerbalance.get(econplayer.indexOf(player));
 			}
 			return -9999999.0;
 		} catch (Exception e) {
@@ -1046,14 +1049,15 @@ public class DataFunctions {
 	public void setPlayerBalance(String player, Double balance) {
 		Calculation calc = hc.getCalculation();
 		balance = calc.twoDecimals(balance);
+		player = player.toLowerCase();
 		try {
 			if (hc.useSQL()) {
-				String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
+				String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player + "'";
 				hc.getSQLWrite().writeData(statement);
 			} else {
-				hc.getYaml().getPlayers().set(player.toLowerCase() + ".balance", balance);
+				hc.getYaml().getPlayers().set(player + ".balance", balance);
 			}
-			playerbalance.set(econplayer.indexOf(player.toLowerCase()), balance);
+			playerbalance.set(econplayer.indexOf(player), balance);
 		} catch (Exception e) {
 			//TODO
 		}
@@ -1062,15 +1066,15 @@ public class DataFunctions {
 	public void setPlayerBalance(Player p, Double balance) {
 		Calculation calc = hc.getCalculation();
 		balance = calc.twoDecimals(balance);
-		String player = p.getName();
+		String player = p.getName().toLowerCase();
 		try {
 			if (hc.useSQL()) {
-				String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
+				String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player + "'";
 				hc.getSQLWrite().writeData(statement);
 			} else {
-				hc.getYaml().getPlayers().set(player.toLowerCase() + ".balance", balance);
+				hc.getYaml().getPlayers().set(player + ".balance", balance);
 			}
-			playerbalance.set(econplayer.indexOf(player.toLowerCase()), balance);
+			playerbalance.set(econplayer.indexOf(player), balance);
 		} catch (Exception e) {
 			//TODO
 		}
@@ -1089,6 +1093,7 @@ public class DataFunctions {
 	
 	
 	public void createPlayerAccount(String player) {
+		player = player.toLowerCase();
 		if (!hasAccount(player)) {
 			if (hc.useSQL()) {
 				String statement = "INSERT INTO hyperplayers (PLAYER, ECONOMY, BALANCE) VALUES ('" + player + "', 'default', '0.0')";

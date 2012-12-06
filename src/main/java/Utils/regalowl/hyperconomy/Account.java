@@ -369,22 +369,23 @@ public class Account {
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
+		Calculation calc = hc.getCalculation();
 		boolean useExternalEconomy = hc.useExternalEconomy();
 		DataFunctions sf = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 
 			if (economy != null) {
 				
-				return economy.getBalance(account);
+				return calc.twoDecimals(economy.getBalance(account));
 				
 			} else {
 				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
 		    	Logger log = Logger.getLogger("Minecraft");
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
-		    	return 0;
+		    	return 0.0;
 			}
 		} else {
-			return sf.getPlayerBalance(account);
+			return calc.twoDecimals(sf.getPlayerBalance(account));
 		}
 	}
 	
