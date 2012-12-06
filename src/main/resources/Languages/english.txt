@@ -331,3 +331,9 @@ HCCLEARHISTORY_INVALID: &4Invalid parameters.  Use /hcclearhistory.
 HCERROR_INVALID: &4Invalid parameters.  Use /hcerror
 HCERROR_ENABLED: &6Errors will now be logged.
 HCERROR_DISABLED: &6Errors will no longer be logged.
+PLAYER_NOT_FOUND: &4Player not found!
+BALANCE_MESSAGE: &9%n has &a%c%e
+HCBALANCE_INVALID: &4Invalid parameters. Use /hcbalance (account)
+HCTOP_INVALID: &4Invalid parameters. Use /hctop (page)
+HCPAY_INVALID: &4Invalid parameters. Use /hcpay [account] [amount]
+MONEY_PAYED: &9You payed &b%n &a%c%a.

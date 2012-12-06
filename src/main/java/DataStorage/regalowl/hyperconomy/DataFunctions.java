@@ -747,7 +747,7 @@ public class DataFunctions {
 		koec.clear();
 		Iterator<String> it = hc.getYaml().getPlayers().getKeys(false).iterator();
 		while (it.hasNext()) {
-			String player = it.next().toString();
+			String player = it.next().toString().toLowerCase();
 			econplayer.add(player);
 			playerbalance.add(hc.getYaml().getPlayers().getDouble(player + ".balance"));
 			playerecon.add("default");
@@ -988,9 +988,9 @@ public class DataFunctions {
 	}
 
 	public void addPlayerEconomy(String player, String economy) {
-		if (!econplayer.contains(player)) {
+		if (!econplayer.contains(player.toLowerCase())) {
 			playerecon.add(economy);
-			econplayer.add(player);
+			econplayer.add(player.toLowerCase());
 			playerbalance.add(0.0);
 		}
 	}
@@ -1044,13 +1044,14 @@ public class DataFunctions {
 	}
 	
 	public void setPlayerBalance(String player, Double balance) {
-
+		Calculation calc = hc.getCalculation();
+		balance = calc.twoDecimals(balance);
 		try {
 			if (hc.useSQL()) {
 				String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
 				hc.getSQLWrite().writeData(statement);
 			} else {
-				hc.getYaml().getPlayers().set(player + ".balance", balance);
+				hc.getYaml().getPlayers().set(player.toLowerCase() + ".balance", balance);
 			}
 			playerbalance.set(econplayer.indexOf(player.toLowerCase()), balance);
 		} catch (Exception e) {
@@ -1059,13 +1060,15 @@ public class DataFunctions {
 	}
 	
 	public void setPlayerBalance(Player p, Double balance) {
+		Calculation calc = hc.getCalculation();
+		balance = calc.twoDecimals(balance);
 		String player = p.getName();
 		try {
 			if (hc.useSQL()) {
 				String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player.toLowerCase() + "'";
 				hc.getSQLWrite().writeData(statement);
 			} else {
-				hc.getYaml().getPlayers().set(player + ".balance", balance);
+				hc.getYaml().getPlayers().set(player.toLowerCase() + ".balance", balance);
 			}
 			playerbalance.set(econplayer.indexOf(player.toLowerCase()), balance);
 		} catch (Exception e) {
@@ -1074,6 +1077,14 @@ public class DataFunctions {
 	}
 	
 	
+	
+	public ArrayList<String> getEconPlayers() {
+		return econplayer;
+	}
+	
+	public ArrayList<Double> getPlayerBalances() {
+		return playerbalance;
+	}
 	
 	
 	
@@ -1106,6 +1117,8 @@ public class DataFunctions {
 			return 0;
 		}
 	}
+	
+
 
 	private void startHistoryDataCount() {
 		if (hc.useSQL()) {

@@ -364,6 +364,16 @@ commands:
       permission: hyperconomy.use
       permission-message: You do not have permission.
       aliases: [hcb]
+   hctop:
+      description: Displays the top player balances.
+      permission: hyperconomy.use
+      permission-message: You do not have permission.
+      aliases: [hct]
+   hcpay:
+      description: Pays the specified account the specified amount.
+      permission: hyperconomy.use
+      permission-message: You do not have permission.
+      aliases: [hcp]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

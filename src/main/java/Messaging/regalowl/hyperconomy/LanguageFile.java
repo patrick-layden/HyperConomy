@@ -169,8 +169,9 @@ public class LanguageFile {
 	
 	
 	public String f(String inputstring, String name, String extra) {
-		inputstring = inputstring.replace("%e",extra+"");
+		inputstring = inputstring.replace("%e",extra);
 		inputstring = inputstring.replace("%n",name);
+		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -227,6 +228,7 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%zc",name);
 		inputstring = inputstring.replace("%p",amount+"");
+		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -267,7 +269,6 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%zc",owner);
 		return inputstring;
 	}
-	
 	
 	
 }

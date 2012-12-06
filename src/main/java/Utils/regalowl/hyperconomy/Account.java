@@ -352,6 +352,7 @@ public class Account {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 			if (!sf.hasAccount(globalaccount)) {
 				sf.createPlayerAccount(globalaccount);
+				sf.setPlayerBalance(globalaccount, hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -11,20 +10,24 @@ public class Hcbalance {
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0 && player != null) {
-				double balance = sf.getPlayerBalance(player);
-				sender.sendMessage(ChatColor.AQUA + "" + player.getName() + ChatColor.BLUE + " has " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + balance);
+				Double balance = sf.getPlayerBalance(player);
+				sender.sendMessage(L.get("LINE_BREAK"));
+				sender.sendMessage(L.f(L.get("BALANCE_MESSAGE"), player.getName(), balance.toString()));
+				sender.sendMessage(L.get("LINE_BREAK"));
     		} else if (args.length == 1 && sender.hasPermission("hyperconomy.balanceall")){
-    			double balance = sf.getPlayerBalance(args[0]);
+    			Double balance = sf.getPlayerBalance(args[0]);
     			if (balance == -9999999.0) {
-        			sender.sendMessage(ChatColor.DARK_RED + "Player not found!");
+        			sender.sendMessage(L.get("PLAYER_NOT_FOUND"));
     			} else {
-        			sender.sendMessage(ChatColor.AQUA + "" + player.getName() + ChatColor.BLUE + " has " + ChatColor.GREEN + "" + hc.getYaml().getConfig().getString("config.currency-symbol") + balance);
+    				sender.sendMessage(L.get("LINE_BREAK"));
+        			sender.sendMessage(L.f(L.get("BALANCE_MESSAGE"), args[0], balance.toString()));
+    				sender.sendMessage(L.get("LINE_BREAK"));
     			}
     		} else {
-    			sender.sendMessage(L.get("LISTECONOMIES_INVALID"));
+    			sender.sendMessage(L.get("HCBALANCE_INVALID"));
     		}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("LISTECONOMIES_INVALID"));
+			sender.sendMessage(L.get("HCBALANCE_INVALID"));
 		}
 	}
 }

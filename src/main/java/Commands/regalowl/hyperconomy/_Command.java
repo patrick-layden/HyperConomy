@@ -257,7 +257,14 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("hcbalance")) {
 			new Hcbalance(args, sender, player);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("hctop")) {
+			new Hctop(args, sender);
+			return true;
+		} else if (cmd.getName().equalsIgnoreCase("hcpay") && player != null) {
+			new Hcpay(args, player);
+			return true;
 		}
+		
 		
 		return false;
 	}
