@@ -82,6 +82,7 @@ public class TransactionSign implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteractEvent(PlayerInteractEvent ievent) {
 		LanguageFile L = hc.getLanguageFile();
+		boolean requireShop = hc.getYaml().getConfig().getBoolean("config.require-transaction-signs-to-be-in-shop");
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
 			Player p = ievent.getPlayer();
 			playerecon = sf.getPlayerEconomy(p.getName());
@@ -124,7 +125,7 @@ public class TransactionSign implements Listener {
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.buysign")) {
 									shop.setinShop(p);
-									if (shop.inShop() != -1 || !hc.getYaml().getConfig().getBoolean("config.require-transaction-signs-to-be-in-shop")) {
+									if ((shop.inShop() != -1 && requireShop) || !requireShop) {
 										if (hc.itemTest(line12)) {
 											int id = sf.getId(line12, playerecon);
 											if (id >= 0) {
@@ -167,7 +168,7 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
-									if (shop.inShop() != -1 || !hc.getYaml().getConfig().getBoolean("config.require-transaction-signs-to-be-in-shop")) {
+									if ((shop.inShop() != -1 && requireShop) || !requireShop) {
 										if (hc.itemTest(line12)) {
 											int id = sf.getId(line12, playerecon);
 											if (id >= 0) {
