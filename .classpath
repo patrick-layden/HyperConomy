@@ -1,42 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**" kind="src" output="target/classes"
-		path="src/main/resources">
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
 		<attributes>
-			<attribute name="maven.pomderived" value="true" />
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" output="target/test-classes"
-		path="src/test/java">
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
-			<attribute name="optional" value="true" />
-			<attribute name="maven.pomderived" value="true" />
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**" kind="src"
-		output="target/test-classes" path="src/test/resources">
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
 		<attributes>
-			<attribute name="maven.pomderived" value="true" />
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="src/main/java/Main" />
-	<classpathentry kind="src" path="src/main/java/Signs" />
-	<classpathentry kind="src" path="src/main/java/Logging" />
-	<classpathentry kind="src" path="src/main/java/Utils" />
-	<classpathentry kind="src" path="src/main/java/Messaging" />
-	<classpathentry kind="src" path="src/main/java/DataStorage" />
-	<classpathentry kind="src" path="src/main/java/Commands" />
-	<classpathentry kind="src" path="src/main/java/Web" />
-	<classpathentry kind="src" path="src/main/java/API" />
-	<classpathentry kind="src" path="src/main/java/Shops" />
-	<classpathentry kind="src" path="src/main/java/Backups" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6" />
-	<classpathentry kind="con"
-		path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+	<classpathentry kind="src" path="src/main/java/Main"/>
+	<classpathentry kind="src" path="src/main/java/Signs"/>
+	<classpathentry kind="src" path="src/main/java/Logging"/>
+	<classpathentry kind="src" path="src/main/java/Utils"/>
+	<classpathentry kind="src" path="src/main/java/Messaging"/>
+	<classpathentry kind="src" path="src/main/java/DataStorage"/>
+	<classpathentry kind="src" path="src/main/java/Commands"/>
+	<classpathentry kind="src" path="src/main/java/Web"/>
+	<classpathentry kind="src" path="src/main/java/API"/>
+	<classpathentry kind="src" path="src/main/java/Shops"/>
+	<classpathentry kind="src" path="src/main/java/Backups"/>
+	<classpathentry kind="src" path="SQL"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
-			<attribute name="maven.pomderived" value="true" />
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="output" path="target/classes" />
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

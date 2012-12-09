@@ -67,7 +67,7 @@ public class Transaction {
 								acc.depositShop(price);
 								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
 									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-									acc.setBalance(globalaccount, 0);
+									acc.setBalance(0, globalaccount);
 								}
 								p.sendMessage(L.get("LINE_BREAK"));
 								p.sendMessage(L.f(L.get("PURCHASE_MESSAGE"), amount, price, name, calc.twoDecimals(taxpaid)));
@@ -168,7 +168,7 @@ public class Transaction {
 								acc.withdrawShop(price - salestax);
 								if (sunlimited) {
 									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-									acc.setBalance(globalaccount, 0);
+									acc.setBalance(0, globalaccount);
 								}
 								p.sendMessage(L.get("LINE_BREAK"));
 								p.sendMessage(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)));
@@ -533,7 +533,7 @@ public class Transaction {
 						acc.depositShop(price);
 						if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
 							String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-							acc.setBalance(globalaccount, 0);
+							acc.setBalance(0, globalaccount);
 						}
 						p.sendMessage(L.get("LINE_BREAK"));
 						p.sendMessage(L.f(L.get("PURCHASE_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(taxpaid)));
@@ -627,7 +627,7 @@ public class Transaction {
 							acc.withdrawShop(price - salestax);
 							if (sunlimited) {
 								String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-								acc.setBalance(globalaccount, 0);
+								acc.setBalance(0, globalaccount);
 							}
 							p.sendMessage(L.get("LINE_BREAK"));
 							p.sendMessage(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)));
@@ -691,7 +691,7 @@ public class Transaction {
 					addboughtItems(amount, id, data, p);
 					removeItems(id, data, amount, invent);
 					acc.withdraw(price, p);
-					acc.depositAccount(owner, price);
+					acc.depositAccount(price, owner);
 					p.sendMessage(L.get("LINE_BREAK"));
 					p.sendMessage(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, calc.twoDecimals(price), name, owner));
 					p.sendMessage(L.get("LINE_BREAK"));
@@ -743,7 +743,7 @@ public class Transaction {
 					addboughtItems(amount, id, data, p);
 					removeItems(id, data, amount, invent);
 					acc.withdraw(price, p);
-					acc.depositAccount(owner, price);
+					acc.depositAccount(price, owner);
 					p.sendMessage(L.get("LINE_BREAK"));
 					p.sendMessage(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, calc.twoDecimals(price), name, owner));
 					p.sendMessage(L.get("LINE_BREAK"));
@@ -795,7 +795,7 @@ public class Transaction {
 				removesoldItems(id, data, amount, p);
 				addItems(id, data, amount, invent);
 				acc.deposit(price, p);
-				acc.withdrawAccount(owner, price);
+				acc.withdrawAccount(price, owner);
 				p.sendMessage(L.get("LINE_BREAK"));
 				p.sendMessage(L.f(L.get("SELL_CHEST_MESSAGE"), amount, calc.twoDecimals(price), name, owner));
 				p.sendMessage(L.get("LINE_BREAK"));
@@ -841,7 +841,7 @@ public class Transaction {
 			removesoldItems(id, data, amount, p);
 			addItems(id, data, amount, invent);
 			acc.deposit(price, p);
-			acc.withdrawAccount(owner, price);
+			acc.withdrawAccount(price, owner);
 			p.sendMessage(L.get("LINE_BREAK"));
 			p.sendMessage(L.f(L.get("SELL_CHEST_MESSAGE"), amount, calc.twoDecimals(price), name, owner));
 			p.sendMessage(L.get("LINE_BREAK"));

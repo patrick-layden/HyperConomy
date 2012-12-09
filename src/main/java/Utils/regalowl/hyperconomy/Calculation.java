@@ -1,5 +1,7 @@
 package regalowl.hyperconomy;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.bukkit.entity.Player;
@@ -677,4 +679,16 @@ public class Calculation {
 		}
 		return price;
 	}
+
+	public String formatMoney(double money) {
+		LanguageFile L = hc.getLanguageFile();
+		BigDecimal bd = new BigDecimal(money);
+		BigDecimal rounded = bd.setScale(2, RoundingMode.HALF_DOWN);
+		String currency = L.get("CURRENCY");
+		if (currency.length() > 1 || currency == null) {
+			currency = "";
+		}
+		return currency + rounded.toPlainString();
+	}
+	
 }

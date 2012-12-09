@@ -266,6 +266,9 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("toggleeconomy")) {
 			new Toggleeconomy(sender);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("makeaccount")) {
+			new Makeaccount(args, sender);
+			return true;
 		}
 		
 		return false;

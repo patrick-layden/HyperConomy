@@ -3,7 +3,7 @@ package regalowl.hyperconomy;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class APIBridge implements HyperAPI {
+public class HyperObjectAPI implements HyperObject {
 	public double getTheoreticalPurchasePrice(int id, int durability, int amount, String economy) {
 		if (economy == null) {
 			economy = "default";
@@ -247,84 +247,6 @@ public class APIBridge implements HyperAPI {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getSQLFunctions();
 		sf.setStartPrice(name, economy, newstartprice);
-	}
-
-	public boolean checkFunds(double money, Player player) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		return acc.checkFunds(money, player);
-	}
-
-	public void withdraw(double money, Player player) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.withdraw(money, player);
-	}
-
-	public void withdrawAccount(String name, double money) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.withdrawAccount(name, money);
-	}
-
-	public void deposit(double money, Player player) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.deposit(money, player);
-	}
-
-	public void depositAccount(String name, double money) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.depositAccount(name, money);
-	}
-
-	public void withdrawShop(double money) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.withdrawShop(money);
-	}
-
-	public void depositShop(double money) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.depositShop(money);
-	}
-
-	public void setBalance(String name, double balance) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.setBalance(name, balance);
-	}
-
-	public boolean checkAccount(String name) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		return acc.checkAccount(name);
-	}
-
-	public boolean checkshopBalance(double money) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		return acc.checkshopBalance(money);
-	}
-
-	public void checkshopAccount() {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.checkshopAccount();
-	}
-
-	public double getBalance(String account) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		return acc.getBalance(account);
-	}
-
-	public void createAccount(String account) {
-		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.createAccount(account);
 	}
 
 	public double getItemPurchasePrice(int id, int data, int amount) {

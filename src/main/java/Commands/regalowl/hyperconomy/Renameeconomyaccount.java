@@ -12,8 +12,8 @@ public class Renameeconomyaccount {
 				String newaccount = args[0];
 				String oldaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 				acc.createAccount(newaccount);
-				acc.setBalance(newaccount, acc.getBalance(oldaccount));
-				acc.setBalance(oldaccount, 0);
+				acc.setBalance(acc.getBalance(oldaccount), newaccount);
+				acc.setBalance(0, oldaccount);
 				hc.getYaml().getConfig().set("config.global-shop-account", newaccount);
 				sender.sendMessage(L.get("GLOBAL_SHOP_RENAMED"));
 			} else {

@@ -1,7 +1,14 @@
 package regalowl.hyperconomy;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Hyperlog {
@@ -88,8 +95,7 @@ public class Hyperlog {
 				}
 				
 				statement += " ORDER BY TIME DESC";
-				DataFunctions sf = hc.getSQLFunctions();
-				ArrayList<String> result = sf.getHyperLog(statement);
+				ArrayList<String> result = getHyperLog(statement);
 				//sender.sendMessage(ChatColor.RED + statement);
 				
 				int m = result.size();
@@ -110,6 +116,44 @@ public class Hyperlog {
 	
 	
 	
-	
+	public ArrayList<String> getHyperLog(String statement) {
+		HyperConomy hc = HyperConomy.hc;
+		DataFunctions df = hc.getSQLFunctions();
+		ArrayList<String> entries = new ArrayList<String>();
+		try {
+			Connection connect = DriverManager.getConnection("jdbc:mysql://" + df.getHost() + ":" + df.getPort() + "/" + df.getDatabase(), df.getUserName(), df.getPassword());
+			Statement state = connect.createStatement();
+			ResultSet result = state.executeQuery(statement);
+			while (result.next()) {
+				//int id = result.getInt(1);
+				String time = result.getString(2);
+				String customer = result.getString(3);
+				String action = result.getString(4);
+				String object = result.getString(5);
+				String amount = result.getString(6);
+				double money = result.getDouble(7);
+				//double tax = result.getDouble(8);
+				String store = result.getString(9);
+				//String type = result.getString(10);
+				String entry = "";
+				time = time.substring(0, time.indexOf(" "));
+				time = time.substring(time.indexOf("-") + 1, time.length());
+				if (action.equalsIgnoreCase("purchase")) {
+					entry = "[" + ChatColor.RED + time + ChatColor.WHITE + "]" + ChatColor.YELLOW + store + ChatColor.WHITE + "->" + ChatColor.AQUA + customer + ChatColor.WHITE + "[" + ChatColor.BLUE + amount + " " + ChatColor.BLUE + object + ChatColor.WHITE + "]" + "[" + ChatColor.GREEN + HyperConomy.currency + money + ChatColor.WHITE + "]";
+				} else if (action.equalsIgnoreCase("sale")) {
+					entry = "[" + ChatColor.RED + time + ChatColor.WHITE + "]" + ChatColor.AQUA + customer + ChatColor.WHITE + "->" + ChatColor.YELLOW + store + ChatColor.WHITE + "[" + ChatColor.BLUE + amount + " " + ChatColor.BLUE + object + ChatColor.WHITE + "]" + "[" + ChatColor.GREEN + HyperConomy.currency + money + ChatColor.WHITE + "]";
+				}
+				entries.add(entry);
+			}
+			result.close();
+			state.close();
+			connect.close();
+			return entries;
+		} catch (SQLException e) {
+			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "hyperconomy.error");
+			e.printStackTrace();
+			return entries;
+		}
+	}
 	
 }

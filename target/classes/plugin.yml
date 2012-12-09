@@ -2,7 +2,8 @@ name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
 version: 0.957
 author: RegalOwl
-softdepend: [Vault, Buycraft, HeroStronghold]
+website: http://dev.bukkit.org/server-mods/hyperconomy/
+softdepend: [Buycraft, HeroStronghold]
 commands:
    buy:
       description: Buys items.
@@ -376,6 +377,10 @@ commands:
       aliases: [hcp]
    toggleeconomy:
       description: Switches between an external economy plugin and the internal HyperConomy economy plugin.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
+   makeaccount:
+      description: Creates a new economy account.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
 permissions:

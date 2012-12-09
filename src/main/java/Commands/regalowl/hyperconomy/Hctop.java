@@ -1,15 +1,14 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Hctop {
 	Hctop(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		LanguageFile L = hc.getLanguageFile();
+		Calculation calc = hc.getCalculation();
 		try {
 			if (hc.useExternalEconomy()) {
 				sender.sendMessage(L.get("ONLY_AVAILABLE_INTERNAL"));
@@ -24,8 +23,8 @@ public class Hctop {
 				sender.sendMessage(L.get("HCTOP_INVALID"));
 				return;
 			}
-			ArrayList<String> p = sf.getEconPlayers();
-			ArrayList<Double> b = sf.getPlayerBalances();
+			ArrayList<String> p = df.getEconPlayers();
+			ArrayList<Double> b = df.getPlayerBalances();
 			
 			ArrayList<String> players = new ArrayList<String>();
 			ArrayList<Double> balances = new ArrayList<Double>();
@@ -56,14 +55,13 @@ public class Hctop {
 				players.remove(topBalanceIndex);
 			}
 			
-			Double serverTotal = 0.0;
+			double serverTotal = 0.0;
 			for (int i = 0; i < sbalances.size(); i++) {
 				serverTotal += sbalances.get(i);
 			}
-			Calculation calc = hc.getCalculation();
-			sender.sendMessage(ChatColor.WHITE + "----- Top Balances -----");
-			sender.sendMessage(ChatColor.WHITE + "------ Page (" + pe + "/" + (int)Math.ceil(sbalances.size()/10.0) + ") ------");
-			sender.sendMessage(ChatColor.WHITE + "Server Total: " + L.get("CURRENCY") + calc.twoDecimals(serverTotal));
+			sender.sendMessage(L.get("TOP_BALANCE"));
+			sender.sendMessage(L.f(L.get("TOP_BALANCE_PAGE"), pe, (int)Math.ceil(sbalances.size()/10.0)));
+			sender.sendMessage(L.f(L.get("TOP_BALANCE_TOTAL"), calc.formatMoney(serverTotal)));
 			int ps = pe - 1;
 			ps *= 10;
 			pe *= 10;
@@ -72,7 +70,8 @@ public class Hctop {
 					sender.sendMessage(L.get("REACHED_END"));
 					return;
 				}
-				sender.sendMessage(ChatColor.WHITE + "" + (i + 1) + ". " + ChatColor.AQUA + splayers.get(i) + ChatColor.BLUE + ": " + ChatColor.GREEN + L.get("CURRENCY") + sbalances.get(i).toString());
+				sender.sendMessage(L.f(L.get("TOP_BALANCE_BALANCE"), splayers.get(i), calc.formatMoney(sbalances.get(i)), (i + 1)));
+				//sender.sendMessage(ChatColor.WHITE + "" + (i + 1) + ". " + ChatColor.AQUA + splayers.get(i) + ChatColor.BLUE + ": " + ChatColor.GREEN + L.get("CURRENCY") + calc.formatMoney(sbalances.get(i)));
 			}
 		} catch (Exception e) {
 			sender.sendMessage(L.get("HCTOP_INVALID"));

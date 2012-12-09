@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 //UNDER CONSTRUCTION
 
-public interface HyperAPI
+public interface HyperObject
 {
 
 	/**
@@ -77,23 +77,6 @@ public interface HyperAPI
 	double getTrueSaleValue(int id, int durability, int amount, Player player);
 
 	
-	
-	
-	
-	
-	boolean checkFunds(double money, Player player);
-	void withdraw(double money, Player player);
-	void withdrawAccount(String name, double money);
-	void deposit(double money, Player player);
-	void depositAccount(String name, double money);
-	void withdrawShop(double money);
-	void depositShop(double money);
-	void setBalance(String name, double balance);
-	boolean checkAccount(String name);
-	boolean checkshopBalance(double money);
-	void checkshopAccount();
-	double getBalance(String account);
-	void createAccount(String account);
 	
 	
 	public String getName(String name, String economy);

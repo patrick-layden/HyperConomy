@@ -12,7 +12,7 @@ public class Setbalance {
 				String accountname = args[0];
 				if (acc.checkAccount(accountname)) {
 					Double balance = Double.parseDouble(args[1]);
-					acc.setBalance(accountname, balance);
+					acc.setBalance(balance, accountname);
 					sender.sendMessage(L.get("BALANCE_SET"));
 				} else {
 					sender.sendMessage(L.get("ACCOUNT_NOT_EXIST"));

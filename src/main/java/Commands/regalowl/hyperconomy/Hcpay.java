@@ -14,7 +14,7 @@ public class Hcpay {
 				if (acc.checkAccount(recipient)) {
 					if (acc.checkFunds(amount, player)) {
 						acc.withdraw(amount, player);
-						acc.depositAccount(recipient, amount);
+						acc.depositAccount(amount, recipient);
 						player.sendMessage(L.f(L.get("MONEY_PAYED"), amount, recipient));
 					} else {
 						player.sendMessage(L.get("INSUFFICIENT_FUNDS"));

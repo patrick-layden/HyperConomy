@@ -175,6 +175,14 @@ public class LanguageFile {
 		return inputstring;
 	}
 	
+	public String f(String inputstring, String name, String extra, int i) {
+		inputstring = inputstring.replace("%e",extra);
+		inputstring = inputstring.replace("%n",name);
+		inputstring = inputstring.replace("%i",i+"");
+		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		return inputstring;
+	}
+	
 	public String f(String inputstring, double amount, double price, String name, String extra) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%e",extra+"");

@@ -332,7 +332,6 @@ HCERROR_INVALID: &4Invalid parameters.  Use /hcerror
 HCERROR_ENABLED: &6Errors will now be logged.
 HCERROR_DISABLED: &6Errors will no longer be logged.
 PLAYER_NOT_FOUND: &4Player not found!
-BALANCE_MESSAGE: &9%n has &a%c%e
 HCBALANCE_INVALID: &4Invalid parameters. Use /hcbalance (account)
 HCTOP_INVALID: &4Invalid parameters. Use /hctop (page)
 HCPAY_INVALID: &4Invalid parameters. Use /hcpay [account] [amount]
@@ -341,3 +340,14 @@ ONLY_AVAILABLE_INTERNAL: &4This command is disabled.  To enable it set HyperCono
 TOGGLEECONOMY_INVALID: &4Invalid parameters.  Use /toggleeconomy
 TOGGLEECONOMY_ENABLED: &6HyperConomy will now use an external economy plugin via Vault.
 TOGGLEECONOMY_DISABLED: &6HyperConomy will now function as your economy plugin.
+TOGGLEECONOMY_HYPERCONOMY: &4Vault has registered HyperConomy as your economy plugin; you must use the internal economy.
+MAKEACCOUNT_INVALID: &4Invalid parameters.  Use /makeaccount [name]
+MAKEACCOUNT_SUCCESS: &6Account created successfully.
+MAKEACCOUNT_FAILED: &4Account creation failed.
+ACCOUNT_ALREADY_EXISTS: &4That account already exists.
+TOP_BALANCE: &f----- &cTop Balances &f-----
+TOP_BALANCE_PAGE: &f------ &cPage &f(&c%v&f/&c%w&f) &f------
+TOP_BALANCE_TOTAL: &fServer Total: %n
+TOP_BALANCE_BALANCE: &f%i &b%n&9: &a%e
+BALANCE_MESSAGE: &9%n has &a%e
+PLAYER_BALANCE_MESSAGE: &9You have &a%e

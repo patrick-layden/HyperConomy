@@ -81,7 +81,7 @@ public class ETransaction {
 					acc.withdrawShop(fprice - salestax);
 					if (sunlimited) {
 						String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-						acc.setBalance(globalaccount, 0);
+						acc.setBalance(0, globalaccount);
 					}
 					fprice = calc.twoDecimals(fprice);
 					p.sendMessage(L.get("LINE_BREAK"));
@@ -160,7 +160,7 @@ public class ETransaction {
 								acc.depositShop(price);
 								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
 									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-									acc.setBalance(globalaccount, 0);
+									acc.setBalance(0, globalaccount);
 								}
 								int l = name.length();
 								String lev = name.substring(l - 1, l);
@@ -254,7 +254,7 @@ public class ETransaction {
 					if (enchtest && p.getItemInHand().getAmount() == 1) {
 						if (acc.checkFunds(price, p)) {
 							acc.withdraw(price, p);
-							acc.depositAccount(owner, price);
+							acc.depositAccount(price, owner);
 							int l = name.length();
 							String lev = name.substring(l - 1, l);
 							int level = Integer.parseInt(lev);
@@ -330,7 +330,7 @@ public class ETransaction {
 				if (enchtest && p.getItemInHand().getAmount() == 1) {
 					if (acc.checkFunds(price, p)) {
 						acc.withdraw(price, p);
-						acc.depositAccount(owner, price);
+						acc.depositAccount(price, owner);
 						int l = name.length();
 						String lev = name.substring(l - 1, l);
 						int level = Integer.parseInt(lev);

@@ -30,7 +30,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -48,12 +48,52 @@ public class Account {
 			}
 		} else {
 			boolean result = false;
-			if ((sf.getPlayerBalance(player) - money) >= 0) {
+			if ((df.getPlayerBalance(player) - money) >= 0) {
 				result = true;
 			}
 			return result;
 		}
 	}
+	
+	
+	
+	/**
+	 * 
+	 * 
+	 * This function determines if an account's balance is greater than the given amount of money.
+	 * 
+	 */
+	public boolean checkFunds(double money, String name) {
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		boolean useExternalEconomy = hc.useExternalEconomy();
+		DataFunctions df = hc.getSQLFunctions();
+		
+		if (useExternalEconomy) {
+			if (economy != null) {
+				boolean result = false;
+				if ((economy.getBalance(name) - money) >= 0) {
+					result = true;
+				}
+				return result;
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+				return false;
+			}
+		} else {
+			boolean result = false;
+			if ((df.getPlayerBalance(name) - money) >= 0) {
+				result = true;
+			}
+			return result;
+		}
+	}
+	
+	
+	
 	
 	/**
 	 * 
@@ -66,7 +106,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String name = player.getName();
@@ -77,7 +117,7 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
-			sf.setPlayerBalance(player, sf.getPlayerBalance(player) - money);
+			df.setPlayerBalance(player, df.getPlayerBalance(player) - money);
 		}
 	}
 	
@@ -88,12 +128,12 @@ public class Account {
 	 * This function withdraws money from a player's account.
 	 * 
 	 */
-	public void withdrawAccount(String name, double money){
+	public void withdrawAccount(double money, String name){
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				economy.withdrawPlayer(name, money);
@@ -103,7 +143,7 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
-			sf.setPlayerBalance(name, sf.getPlayerBalance(name) - money);
+			df.setPlayerBalance(name, df.getPlayerBalance(name) - money);
 		}
 	}
 	
@@ -118,7 +158,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String name = player.getName();
@@ -129,7 +169,7 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
-			sf.setPlayerBalance(player, sf.getPlayerBalance(player) + money);
+			df.setPlayerBalance(player, df.getPlayerBalance(player) + money);
 		}
 	}
 	
@@ -140,12 +180,12 @@ public class Account {
 	 * This function deposits money into a player's account.
 	 * 
 	 */
-	public void depositAccount(String name, double money){		
+	public void depositAccount(double money, String name){		
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				economy.depositPlayer(name, money);
@@ -155,7 +195,7 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
-			sf.setPlayerBalance(name, sf.getPlayerBalance(name) + money);
+			df.setPlayerBalance(name, df.getPlayerBalance(name) + money);
 		}
 	}
 	
@@ -172,7 +212,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -184,7 +224,7 @@ public class Account {
 			}
 		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-			sf.setPlayerBalance(globalaccount, sf.getPlayerBalance(globalaccount) - money);
+			df.setPlayerBalance(globalaccount, df.getPlayerBalance(globalaccount) - money);
 		}
 	}
 	
@@ -200,7 +240,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -212,7 +252,7 @@ public class Account {
 			}
 		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-			sf.setPlayerBalance(globalaccount, sf.getPlayerBalance(globalaccount) + money);
+			df.setPlayerBalance(globalaccount, df.getPlayerBalance(globalaccount) + money);
 		}
 	}
 	
@@ -225,12 +265,12 @@ public class Account {
 	 * This function sets an account's balance.
 	 * 
 	 */
-	public void setBalance(String name, double balance){	
+	public void setBalance(double balance, String name){	
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				if (economy.hasAccount(name)) {
@@ -247,7 +287,7 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
-			sf.setPlayerBalance(name, balance);
+			df.setPlayerBalance(name, balance);
 		}
 	}
 	
@@ -264,7 +304,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			boolean hasaccount = false;
 			if (economy != null) {
@@ -279,7 +319,7 @@ public class Account {
 		    	return false;
 			}
 		} else {
-			return sf.hasAccount(name);
+			return df.hasAccount(name);
 		}
 	}
 	
@@ -296,7 +336,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				
@@ -316,7 +356,7 @@ public class Account {
 		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 			boolean result = false;
-			if ((sf.getPlayerBalance(globalaccount) - money) >= 0) {
+			if ((df.getPlayerBalance(globalaccount) - money) >= 0) {
 				result = true;
 			}
 			return result;
@@ -335,12 +375,12 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 				if (!economy.hasAccount(globalaccount)) {
-					setBalance(globalaccount, hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
+					setBalance(hc.getYaml().getConfig().getDouble("config.initialshopbalance"), globalaccount);
 				}
 				
 			} else {
@@ -350,9 +390,9 @@ public class Account {
 			}
 		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-			if (!sf.hasAccount(globalaccount)) {
-				sf.createPlayerAccount(globalaccount);
-				sf.setPlayerBalance(globalaccount, hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
+			if (!df.hasAccount(globalaccount)) {
+				df.createPlayerAccount(globalaccount);
+				df.setPlayerBalance(globalaccount, hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
 			}
 		}
 	}
@@ -371,7 +411,7 @@ public class Account {
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 
 			if (economy != null) {
@@ -385,7 +425,7 @@ public class Account {
 		    	return 0.0;
 			}
 		} else {
-			return calc.twoDecimals(sf.getPlayerBalance(account));
+			return calc.twoDecimals(df.getPlayerBalance(account));
 		}
 	}
 	
@@ -399,26 +439,28 @@ public class Account {
 	 * This function creates a new account if it doesn't already exist.
 	 * 
 	 */
-	public void createAccount(String account){		
+	public boolean createAccount(String account){		
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions df = hc.getSQLFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
-	
 				if (!economy.hasAccount(account)) {
-					setBalance(account, 0);
+					setBalance(0, account);
+					return true;
+				} else {
+					return false;
 				}
-				
 			} else {
 				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
 		    	Logger log = Logger.getLogger("Minecraft");
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+		    	return false;
 			}
 		} else {
-			sf.createPlayerAccount(account);
+			return df.createPlayerAccount(account);
 		}
 	}
 	

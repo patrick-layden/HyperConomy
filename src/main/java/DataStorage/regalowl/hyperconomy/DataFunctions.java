@@ -9,52 +9,51 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class DataFunctions {
-	private HyperConomy hc;
-	private String username;
-	private String password;
-	private int port;
-	private String host;
-	private String database;
-	private boolean sqlloaded;
-	private boolean databuilt;
-	private ArrayList<String> tne = new ArrayList<String>();
-	private ArrayList<String> tname = new ArrayList<String>();
-	private ArrayList<String> teconomy = new ArrayList<String>();
-	private ArrayList<String> ttype = new ArrayList<String>();
-	private ArrayList<String> tcategory = new ArrayList<String>();
-	private ArrayList<String> tmaterial = new ArrayList<String>();
-	private ArrayList<Integer> tid = new ArrayList<Integer>();
-	private ArrayList<Integer> tdata = new ArrayList<Integer>();
-	private ArrayList<Integer> tdurability = new ArrayList<Integer>();
-	private ArrayList<Double> tvalue = new ArrayList<Double>();
-	private ArrayList<String> tstatic = new ArrayList<String>();
-	private ArrayList<Double> tstaticprice = new ArrayList<Double>();
-	private ArrayList<Double> tstock = new ArrayList<Double>();
-	private ArrayList<Double> tmedian = new ArrayList<Double>();
-	private ArrayList<String> tinitiation = new ArrayList<String>();
-	private ArrayList<Double> tstartprice = new ArrayList<Double>();
-	private ArrayList<Double> tceiling = new ArrayList<Double>();
-	private ArrayList<Double> tfloor = new ArrayList<Double>();
-	private ArrayList<String> econplayer = new ArrayList<String>();
-	private ArrayList<String> playerecon = new ArrayList<String>();
-	private ArrayList<Double> playerbalance = new ArrayList<Double>();
-	private ArrayList<String> koec = new ArrayList<String>();
-	private ArrayList<String> hobject = new ArrayList<String>();
-	private ArrayList<String> heconomy = new ArrayList<String>();
-	private ArrayList<Double> hprice = new ArrayList<Double>();
-	private ArrayList<Integer> hcount = new ArrayList<Integer>();
-	private HashMap<String, Integer> historyDataCount = new HashMap<String, Integer>();
-	private int sqllockthreadid;
-	private FileConfiguration items;
-	private FileConfiguration enchants;
-	private ArrayList<String> economies = new ArrayList<String>();
+	protected HyperConomy hc;
+	protected String username;
+	protected String password;
+	protected int port;
+	protected String host;
+	protected String database;
+	protected boolean sqlloaded;
+	protected boolean databuilt;
+	protected ArrayList<String> tne = new ArrayList<String>();
+	protected ArrayList<String> tname = new ArrayList<String>();
+	protected ArrayList<String> teconomy = new ArrayList<String>();
+	protected ArrayList<String> ttype = new ArrayList<String>();
+	protected ArrayList<String> tcategory = new ArrayList<String>();
+	protected ArrayList<String> tmaterial = new ArrayList<String>();
+	protected ArrayList<Integer> tid = new ArrayList<Integer>();
+	protected ArrayList<Integer> tdata = new ArrayList<Integer>();
+	protected ArrayList<Integer> tdurability = new ArrayList<Integer>();
+	protected ArrayList<Double> tvalue = new ArrayList<Double>();
+	protected ArrayList<String> tstatic = new ArrayList<String>();
+	protected ArrayList<Double> tstaticprice = new ArrayList<Double>();
+	protected ArrayList<Double> tstock = new ArrayList<Double>();
+	protected ArrayList<Double> tmedian = new ArrayList<Double>();
+	protected ArrayList<String> tinitiation = new ArrayList<String>();
+	protected ArrayList<Double> tstartprice = new ArrayList<Double>();
+	protected ArrayList<Double> tceiling = new ArrayList<Double>();
+	protected ArrayList<Double> tfloor = new ArrayList<Double>();
+	protected ArrayList<String> econplayer = new ArrayList<String>();
+	protected ArrayList<String> playerecon = new ArrayList<String>();
+	protected ArrayList<Double> playerbalance = new ArrayList<Double>();
+	protected ArrayList<String> koec = new ArrayList<String>();
+	protected ArrayList<String> hobject = new ArrayList<String>();
+	protected ArrayList<String> heconomy = new ArrayList<String>();
+	protected ArrayList<Double> hprice = new ArrayList<Double>();
+	protected ArrayList<Integer> hcount = new ArrayList<Integer>();
+	protected HashMap<String, Integer> historyDataCount = new HashMap<String, Integer>();
+	protected int sqllockthreadid;
+	protected FileConfiguration items;
+	protected FileConfiguration enchants;
+	protected ArrayList<String> economies = new ArrayList<String>();
 	
 	DataFunctions() {
 		hc = HyperConomy.hc;
@@ -747,7 +746,7 @@ public class DataFunctions {
 		koec.clear();
 		Iterator<String> it = hc.getYaml().getPlayers().getKeys(false).iterator();
 		while (it.hasNext()) {
-			String player = it.next().toString().toLowerCase();
+			String player = it.next().toString();
 			econplayer.add(player);
 			playerbalance.add(hc.getYaml().getPlayers().getDouble(player + ".balance"));
 			playerecon.add("default");
@@ -842,48 +841,7 @@ public class DataFunctions {
 
 	// make next 3 private again later
 	
-	
-	
-	
-	public ArrayList<String> getHyperLog(String statement) {
-		ArrayList<String> entries = new ArrayList<String>();
-		try {
-			Connection connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
-			Statement state = connect.createStatement();
-			ResultSet result = state.executeQuery(statement);
-			while (result.next()) {
-				//int id = result.getInt(1);
-				String time = result.getString(2);
-				String customer = result.getString(3);
-				String action = result.getString(4);
-				String object = result.getString(5);
-				String amount = result.getString(6);
-				double money = result.getDouble(7);
-				//double tax = result.getDouble(8);
-				String store = result.getString(9);
-				//String type = result.getString(10);
-				String entry = "";
-				time = time.substring(0, time.indexOf(" "));
-				time = time.substring(time.indexOf("-") + 1, time.length());
-				if (action.equalsIgnoreCase("purchase")) {
-					entry = "[" + ChatColor.RED + time + ChatColor.WHITE + "]" + ChatColor.YELLOW + store + ChatColor.WHITE + "->" + ChatColor.AQUA + customer + ChatColor.WHITE + "[" + ChatColor.BLUE + amount + " " + ChatColor.BLUE + object + ChatColor.WHITE + "]" + "[" + ChatColor.GREEN + HyperConomy.currency + money + ChatColor.WHITE + "]";
-				} else if (action.equalsIgnoreCase("sale")) {
-					entry = "[" + ChatColor.RED + time + ChatColor.WHITE + "]" + ChatColor.AQUA + customer + ChatColor.WHITE + "->" + ChatColor.YELLOW + store + ChatColor.WHITE + "[" + ChatColor.BLUE + amount + " " + ChatColor.BLUE + object + ChatColor.WHITE + "]" + "[" + ChatColor.GREEN + HyperConomy.currency + money + ChatColor.WHITE + "]";
-				}
-				entries.add(entry);
-			}
-			result.close();
-			state.close();
-			connect.close();
-			return entries;
-		} catch (SQLException e) {
-			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "hyperconomy.error");
-			e.printStackTrace();
-			return entries;
-		}
-	}
-	
-	
+
 	
 	
 	public ArrayList<String> getStringColumn(String statement) {
@@ -947,16 +905,13 @@ public class DataFunctions {
 	}
 
 	public String getPlayerEconomy(String player) {
+		player = fixpN(player);
 		try {
 			if (player == null) {
 				return "default";
 			}
-			player = player.toLowerCase();
 			if (econplayer.indexOf(player) == -1) {
-				addPlayerEconomy(player, "default");
-				if (hc.useSQL()) {
-					setPlayerEconomy(player, "default");
-				}
+				addPlayer(player);
 			}
 			String econ = playerecon.get(econplayer.indexOf(player));
 			return econ;
@@ -972,12 +927,9 @@ public class DataFunctions {
 				return "default";
 			}
 			String player = p.getName();
-			player = player.toLowerCase();
+			player = fixpN(player);
 			if (econplayer.indexOf(player) == -1) {
-				addPlayerEconomy(player, "default");
-				if (hc.useSQL()) {
-					setPlayerEconomy(player, "default");
-				}
+				addPlayer(player);
 			}
 			String econ = playerecon.get(econplayer.indexOf(player));
 			return econ;
@@ -987,26 +939,18 @@ public class DataFunctions {
 		}
 	}
 
-	public void addPlayerEconomy(String player, String economy) {
-		player = player.toLowerCase();
+	public void addPlayer(String player) {
+		player = fixpN(player);
 		if (!econplayer.contains(player)) {
-			playerecon.add(economy);
+			playerecon.add("default");
 			econplayer.add(player);
 			playerbalance.add(0.0);
 		}
 	}
 	
-	public boolean hasAccount(String name) {
-		boolean ha = false;
-		if (econplayer.contains(name)) {
-			ha = true;
-		}
-		return ha;
-	}
-
 	public void setPlayerEconomy(String player, String econ) {
+		player = fixpN(player);
 		try {
-			player = player.toLowerCase();
 			String statement = "UPDATE hyperplayers SET ECONOMY='" + econ + "' WHERE PLAYER = '" + player + "'";
 			hc.getSQLWrite().writeData(statement);
 			playerecon.set(econplayer.indexOf(player), econ);
@@ -1016,13 +960,28 @@ public class DataFunctions {
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+	public boolean hasAccount(String name) {
+		name = fixpN(name);
+		boolean ha = false;
+		if (econplayer.contains(name)) {
+			ha = true;
+		}
+		return ha;
+	}
+	
 	public Double getPlayerBalance(Player p) {
 		try {
 			if (p == null) {
 				return 0.0;
 			}
 			String player = p.getName();
-			player = player.toLowerCase();
+			player = fixpN(player);
 			if (econplayer.indexOf(player) != -1) {
 				return playerbalance.get(econplayer.indexOf(player));
 			}
@@ -1034,7 +993,7 @@ public class DataFunctions {
 	}
 	
 	public Double getPlayerBalance(String player) {
-		player = player.toLowerCase();
+		player = fixpN(player);
 		try {
 			if (econplayer.indexOf(player) != -1) {
 				return playerbalance.get(econplayer.indexOf(player));
@@ -1047,9 +1006,9 @@ public class DataFunctions {
 	}
 	
 	public void setPlayerBalance(String player, Double balance) {
+		player = fixpN(player);
 		Calculation calc = hc.getCalculation();
 		balance = calc.twoDecimals(balance);
-		player = player.toLowerCase();
 		try {
 			if (hc.useSQL()) {
 				String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player + "'";
@@ -1066,7 +1025,8 @@ public class DataFunctions {
 	public void setPlayerBalance(Player p, Double balance) {
 		Calculation calc = hc.getCalculation();
 		balance = calc.twoDecimals(balance);
-		String player = p.getName().toLowerCase();
+		String player = p.getName();
+		player = fixpN(player);
 		try {
 			if (hc.useSQL()) {
 				String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player + "'";
@@ -1081,19 +1041,8 @@ public class DataFunctions {
 	}
 	
 	
-	
-	public ArrayList<String> getEconPlayers() {
-		return econplayer;
-	}
-	
-	public ArrayList<Double> getPlayerBalances() {
-		return playerbalance;
-	}
-	
-	
-	
-	public void createPlayerAccount(String player) {
-		player = player.toLowerCase();
+	public boolean createPlayerAccount(String player) {
+		player = fixpN(player);
 		if (!hasAccount(player)) {
 			if (hc.useSQL()) {
 				String statement = "INSERT INTO hyperplayers (PLAYER, ECONOMY, BALANCE) VALUES ('" + player + "', 'default', '0.0')";
@@ -1101,9 +1050,31 @@ public class DataFunctions {
 			} else {
 				hc.getYaml().getPlayers().set(player + ".balance", 0);
 			}
-			addPlayerEconomy(player, "default");
+			addPlayer(player);
+			return true;
+		} else {
+			return false;
 		}
 	}
+	
+	
+	public ArrayList<String> getEconPlayers() {
+		return econplayer;
+	}
+	
+	public ArrayList<Double> getPlayerBalances() {
+		return playerbalance;
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 
 	public int countTableEntries(String table) {
 		try {
@@ -1344,5 +1315,15 @@ public class DataFunctions {
 		hprice.clear();
 		hcount.clear();
 		historyDataCount.clear();
+	}
+	
+	
+	public String fixpN(String player) {
+		for (int i = 0; i < econplayer.size(); i++) {
+			if (econplayer.get(i).equalsIgnoreCase(player)) {
+				return econplayer.get(i);
+			}
+		}
+		return player;
 	}
 }

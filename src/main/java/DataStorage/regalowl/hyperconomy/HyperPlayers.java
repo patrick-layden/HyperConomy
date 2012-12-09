@@ -42,15 +42,16 @@ public class HyperPlayers implements Listener {
 		if (hc.useSQL()) {
 			if (!inDatabase(event.getPlayer())) {
 				SQLWrite sw = hc.getSQLWrite();
-				sw.writeData("Insert Into hyperplayers (PLAYER, ECONOMY)" + " Values ('" + event.getPlayer().getName().toLowerCase() + "','" + "default" + "')");
-				hc.getSQLFunctions().addPlayerEconomy(event.getPlayer().getName().toLowerCase(), "default");
+				sw.writeData("Insert Into hyperplayers (PLAYER, ECONOMY)" + " Values ('" + event.getPlayer().getName() + "','" + "default" + "')");
+				hc.getSQLFunctions().addPlayer(event.getPlayer().getName());
 			}
 		} else {
 			String player = event.getPlayer().getName();
 			FileConfiguration players = hc.getYaml().getPlayers();
-			String test = players.getString(player);
+			String test = players.getString(player + ".balance");
 			if (test == null) {
 				players.set(player + ".balance", 0);
+				hc.getSQLFunctions().addPlayer(player);
 			}
 		}
 	}

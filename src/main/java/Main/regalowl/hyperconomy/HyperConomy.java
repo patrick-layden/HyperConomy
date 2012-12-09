@@ -68,7 +68,17 @@ public class HyperConomy extends JavaPlugin {
 		}, 60L);
 	}
 	
-	public void onLateStart() {
+	private void onLateStart() {
+		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
+		if (x != null & x instanceof Vault && useExternalEconomy) {
+			this.setupEconomy();
+		} else if (useExternalEconomy) {
+			log.warning(L.get("VAULT_NOT_FOUND"));
+			//getPluginLoader().disablePlugin(this);
+			//return;
+			useExternalEconomy = false;
+		}
+		
 		itdi = new ItemDisplay();
 	}
 
@@ -130,14 +140,6 @@ public class HyperConomy extends JavaPlugin {
 			not = new Notification();
 			isign = new InfoSign();
 			tsign = new TransactionSign();
-			Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
-			if (x != null & x instanceof Vault) {
-				this.setupEconomy();
-			} else if (useExternalEconomy) {
-				log.warning(L.get("VAULT_NOT_FOUND"));
-				getPluginLoader().disablePlugin(this);
-				return;
-			}
 			buildData();
 			if (useSQL() && !migrate) {
 				sf.load();
@@ -289,6 +291,10 @@ public class HyperConomy extends JavaPlugin {
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
+			if (economy.getName().equalsIgnoreCase("HyperConomy")) {
+				//hc.getYaml().getConfig().set("config.use-external-economy-plugin", false);
+				hc.setUseExternalEconomy(false);
+			}
 		}
 		return (economy != null);
 	}
@@ -606,4 +612,5 @@ public class HyperConomy extends JavaPlugin {
 	public void setUseExternalEconomy(boolean state) {
 		useExternalEconomy = state;
 	}
+
 }
