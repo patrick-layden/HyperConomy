@@ -10,7 +10,6 @@ public class Toggleeconomy {
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hc.getEconomy().getName().equalsIgnoreCase("HyperConomy")) {
-				hc.getYaml().getConfig().set("config.use-external-economy-plugin", false);
 				hc.setUseExternalEconomy(false);
 				sender.sendMessage(L.get("TOGGLEECONOMY_HYPERCONOMY"));
 				return;

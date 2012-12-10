@@ -942,10 +942,26 @@ public class DataFunctions {
 	public void addPlayer(String player) {
 		player = fixpN(player);
 		if (!econplayer.contains(player)) {
+			if (hc.useSQL()) {
+				if (!inDatabase(player)) {
+					SQLWrite sw = hc.getSQLWrite();
+					sw.writeData("Insert Into hyperplayers (PLAYER, ECONOMY, BALANCE)" + " Values ('" + player + "','" + "default" + "','" + 0.0 + "')");
+				}
+			} else {
+				FileConfiguration players = hc.getYaml().getPlayers();
+				String test = players.getString(player + ".balance");
+				if (test == null) {
+					players.set(player + ".balance", 0);
+				}
+			}
 			playerecon.add("default");
 			econplayer.add(player);
 			playerbalance.add(0.0);
 		}
+		
+		
+		
+		
 	}
 	
 	public void setPlayerEconomy(String player, String econ) {
@@ -1044,12 +1060,6 @@ public class DataFunctions {
 	public boolean createPlayerAccount(String player) {
 		player = fixpN(player);
 		if (!hasAccount(player)) {
-			if (hc.useSQL()) {
-				String statement = "INSERT INTO hyperplayers (PLAYER, ECONOMY, BALANCE) VALUES ('" + player + "', 'default', '0.0')";
-				hc.getSQLWrite().writeData(statement);		
-			} else {
-				hc.getYaml().getPlayers().set(player + ".balance", 0);
-			}
 			addPlayer(player);
 			return true;
 		} else {
@@ -1325,5 +1335,26 @@ public class DataFunctions {
 			}
 		}
 		return player;
+	}
+	
+	public boolean inDatabase(String player) {
+		player = fixpN(player);
+		boolean indatabase = true;
+		try {
+			Connection connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+			Statement state = connect.createStatement();	
+			ResultSet result = state.executeQuery("SELECT PLAYER FROM hyperplayers WHERE PLAYER = " + "'" + player + "'");
+			if (!result.next()) {
+				indatabase = false;
+			}
+            result.close();
+            state.close();
+            connect.close();
+            return indatabase;
+		} catch (SQLException e) {
+			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "hyperconomy.admin");
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

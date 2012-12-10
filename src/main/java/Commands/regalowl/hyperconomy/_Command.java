@@ -269,6 +269,9 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("makeaccount")) {
 			new Makeaccount(args, sender);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("importbalance")) {
+			new Importbalance(args, sender);
+			return true;
 		}
 		
 		return false;

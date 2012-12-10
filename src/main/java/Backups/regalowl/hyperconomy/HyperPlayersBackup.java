@@ -33,8 +33,10 @@ public class HyperPlayersBackup {
 		String hyperplayers = "";
 		ArrayList<String> pplayer = sf.getStringColumn("SELECT PLAYER FROM hyperplayers");
 		ArrayList<String> peconomy = sf.getStringColumn("SELECT ECONOMY FROM hyperplayers");
+		ArrayList<String> pbalance = sf.getStringColumn("SELECT BALANCE FROM hyperplayers");
 		hyperplayers += sal.stringArrayToString(pplayer) + ";";
 		hyperplayers += sal.stringArrayToString(peconomy) + ";";
+		hyperplayers += sal.stringArrayToString(pbalance) + ";";
 		ft.writeStringToFile(hyperplayers, dpath + File.separator + "HyperPlayers.txt");
 	}
 }

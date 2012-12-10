@@ -351,3 +351,7 @@ TOP_BALANCE_TOTAL: &fServer Total: %n
 TOP_BALANCE_BALANCE: &f%i &b%n&9: &a%e
 BALANCE_MESSAGE: &9%n has &a%e
 PLAYER_BALANCE_MESSAGE: &9You have &a%e
+MUST_USE_EXTERNAL_ECONOMY: &4You must be using an external economy plugin in order to use this command.
+IMPORTBALANCES_INVALID:  &4Invalid parameters. Use /importbalances (player)
+PLAYER_NOT_FOUND: &4The specified player does not have an economy account.
+PLAYERS_IMPORTED: &6The specified player or specified player accounts have been imported into HyperConomy.
