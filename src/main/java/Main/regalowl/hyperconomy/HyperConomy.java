@@ -80,6 +80,7 @@ public class HyperConomy extends JavaPlugin {
 		hc = this;
 		lock = false;
 		mlock = false;
+		sqllock = false;
 		brokenfile = false;
 		enames.clear();
 		inames.clear();
