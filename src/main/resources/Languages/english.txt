@@ -69,6 +69,7 @@ HC_BUY: &bType &a/hc buy &bfor buy commands.
 HC_SELL: &bType &a/hc sell &bfor sell commands.
 HC_INFO: &bType &a/hc info &bfor informational commands.
 HC_PARAMS: &bType &a/hc params &bfor parameter help.
+HC_ECON: &bType &a/hc econ &bfor economy commands.
 HC_SELL_SELL: &a/sell &c[name] &e(amount/'max')
 HC_SELL_HS: &a/hs &e(amount/'max')
 HC_SELL_ESELL: &a/esell &c[name/'max']
@@ -79,6 +80,10 @@ HC_BUY_HB: &a/hb &e(amount/'max')
 HC_BUY_BUYID: &a/buyid &c[amount] [id] &e(damage value)
 HC_BUY_EBUY: &a/ebuy &c[name]
 HC_BUY_MORE: &bFor more help type &a/hc buy &c[command]
+HC_ECON_HCB: &a/hcb &e(account)
+HC_ECON_HCP: &a/hcp &c[player] [amount]
+HC_ECON_HCT: &a/hct &e(page)
+HC_ECON_MORE: &bFor more help type &a/hc econ &c[command]
 HC_INFO_VALUE: &a/value &c[name] &e(amount)
 HC_INFO_HV: &a/hv &e(amount)
 HC_INFO_II: &a/ii &e(id) (damage value)
@@ -108,6 +113,9 @@ HC_TOPITEMS_DETAIL: &bDisplays all of the items available in the global shop is 
 HC_TOPENCHANTS_DETAIL: &bDisplays all of the enchantments available in all shops, if the player isn't in a shop, or in the shop that the player is currently in. Enchantments with the highest stock are shown first.  If no page is specified it shows the first page.
 HC_BROWSESHOP_DETAIL: &bSearches for items or enchantments that begin with the specified name.  It will display the items/enchantments in alphabetical order with their stock and purchase price.  If the player is in a shop it will only display items available in that shop.
 HC_EVALUE_DETAIL: &bIf no parameters are given, displays the sell value, purchase price, and shopstock of all the enchantments on the item you're holding. If given an enchantment name, you must also specify 'b' for buy, 's' for sell, or 'a' for amount. If 'b' for instance, it will display the purchase price for all the enchantment on all item classes. (gold, diamond, iron, etc.)
+HC_HCB_DETAIL: &bDisplays your balance if no parameter is given; displays the specified account balance if an account is given.
+HC_HCP_DETAIL: &bPays the specified account the amount specified.
+HC_HCT_DETAIL: &bDisplays the total balance of all server accounts as well as the top server balances in order.  If no page is given it defaults to the first page.  Subsequent pages can be viewed by specifying the page number.
 HC_INVALID: &4Invalid Usage.  Use /hc
 HC_XPINFO_DETAIL: &bDisplays information about how much experience you have, how much experience is needed to level up, and how much experience is needed to reach level 30.
 ENCHANTMENT_NOT_IN_DATABASE: &9Sorry, that enchantment is not in the enchantment database.

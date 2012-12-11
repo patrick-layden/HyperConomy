@@ -368,12 +368,12 @@ commands:
       aliases: [hcb]
    hctop:
       description: Displays the top player balances.
-      permission: hyperconomy.use
+      permission: hyperconomy.topbalance
       permission-message: You do not have permission.
       aliases: [hct]
    hcpay:
       description: Pays the specified account the specified amount.
-      permission: hyperconomy.use
+      permission: hyperconomy.pay
       permission-message: You do not have permission.
       aliases: [hcp]
    toggleeconomy:
@@ -404,6 +404,7 @@ permissions:
             hyperconomy.notify: true
             hyperconomy.shop.*: true
             hyperconomy.balanceall: true
+            hyperconomy.topbalance: true
     hyperconomy.use:
         description: Allows general use of HyperConomy.
         default: true
@@ -418,6 +419,14 @@ permissions:
             hyperconomy.chestshop: true
             hyperconomy.buysign: true
             hyperconomy.sellsign: true
+            hyperconomy.pay: true
+    hyperconomy.econ:
+        description: Allows use of all basic economy commands.
+        default: op
+        children:
+            hyperconomy.balanceall: true
+            hyperconomy.pay: true
+            hyperconomy.topbalance: true
     hyperconomy.admin:
         description: Allows use of shop management commands.
         default: false
@@ -480,4 +489,10 @@ permissions:
         default: false
     hyperconomy.balanceall:
         description: Allows other players' balances to be displayed.
+        default: false
+    hyperconomy.topbalance:
+        description: Allows display of top server balances.
+        default: false
+    hyperconomy.pay:
+        description: Allows sending payment to other players.
         default: false

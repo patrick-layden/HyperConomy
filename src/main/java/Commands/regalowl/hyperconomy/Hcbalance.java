@@ -19,7 +19,7 @@ public class Hcbalance {
 				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
 				sender.sendMessage(L.f(L.get("PLAYER_BALANCE_MESSAGE"), "", calc.formatMoney(balance)));
 				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
-    		} else if (args.length == 1 && sender.hasPermission("hyperconomy.balanceall")){
+    		} else if (args.length == 1 && sender.hasPermission("hyperconomy.balanceall")) {
     			Double balance = acc.getBalance(args[0]);
     			if (balance == -9999999.0) {
         			sender.sendMessage(L.get("PLAYER_NOT_FOUND"));
@@ -28,6 +28,8 @@ public class Hcbalance {
         			sender.sendMessage(L.f(L.get("BALANCE_MESSAGE"), args[0], calc.formatMoney(balance)));
     				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
     			}
+    		} else if (!sender.hasPermission("hyperconomy.balanceall")) {
+    			sender.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
     		} else {
     			sender.sendMessage(L.get("HCBALANCE_INVALID"));
     		}

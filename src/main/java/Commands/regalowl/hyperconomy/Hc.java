@@ -13,6 +13,7 @@ public class Hc {
 				sender.sendMessage(L.get("HC_BUY"));
 				sender.sendMessage(L.get("HC_SELL"));
 				sender.sendMessage(L.get("HC_INFO"));
+				sender.sendMessage(L.get("HC_ECON"));
 				sender.sendMessage(L.get("HC_PARAMS"));
 				sender.sendMessage(L.get("LINE_BREAK"));
 			} else if (args.length == 1) {
@@ -51,6 +52,13 @@ public class Hc {
 					sender.sendMessage(L.get("HC_PARAMS_ADDITIONAL"));
 					sender.sendMessage(L.get("HC_PARAMS_NAME"));
 					sender.sendMessage(L.get("HC_PARAMS_COMMAND"));
+					sender.sendMessage(L.get("LINE_BREAK"));
+				} else if (type.equalsIgnoreCase("econ")) {
+					sender.sendMessage(L.get("LINE_BREAK"));
+					sender.sendMessage(L.get("HC_ECON_HCB"));
+					sender.sendMessage(L.get("HC_ECON_HCP"));
+					sender.sendMessage(L.get("HC_ECON_HCT"));
+					sender.sendMessage(L.get("HC_ECON_MORE"));
 					sender.sendMessage(L.get("LINE_BREAK"));
 				}
 			} else if (args.length == 2) {
@@ -98,6 +106,23 @@ public class Hc {
 						sender.sendMessage(L.get("LINE_BREAK"));
 						sender.sendMessage(L.get("HC_BUY_EBUY"));
 						sender.sendMessage(L.get("HC_EBUY_DETAIL"));
+						sender.sendMessage(L.get("LINE_BREAK"));
+					}
+				} else if (type.equalsIgnoreCase("econ")) {
+					if (subtype.equalsIgnoreCase("hcb")) {
+						sender.sendMessage(L.get("LINE_BREAK"));
+						sender.sendMessage(L.get("HC_ECON_HCB"));
+						sender.sendMessage(L.get("HC_HCB_DETAIL"));
+						sender.sendMessage(L.get("LINE_BREAK"));
+					} else if (subtype.equalsIgnoreCase("hcp")) {
+						sender.sendMessage(L.get("LINE_BREAK"));
+						sender.sendMessage(L.get("HC_ECON_HCP"));
+						sender.sendMessage(L.get("HC_HCP_DETAIL"));
+						sender.sendMessage(L.get("LINE_BREAK"));
+					} else if (subtype.equalsIgnoreCase("hct")) {
+						sender.sendMessage(L.get("LINE_BREAK"));
+						sender.sendMessage(L.get("HC_ECON_HCT"));
+						sender.sendMessage(L.get("HC_HCT_DETAIL"));
 						sender.sendMessage(L.get("LINE_BREAK"));
 					}
 				} else if (type.equalsIgnoreCase("info")) {
