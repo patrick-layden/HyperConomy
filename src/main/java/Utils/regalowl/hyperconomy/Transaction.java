@@ -228,27 +228,20 @@ public class Transaction {
 	 * 
 	 */
 	public int countInvitems(int id, int data, Player p) {
-		Calculation calc = hc.getCalculation();
-		ETransaction ench = hc.getETransaction();
 		try {
-			Inventory pinv = p.getInventory();
-			HashMap<Integer, ? extends ItemStack> stacks1 = pinv.all(id);
-			int newdata = calc.newData(id, data);
-			int slot = 0;
 			int totalitems = 0;
-			if (p.getInventory().contains(id)) {
-				String allstacks = "{" + stacks1.toString();
-				while (allstacks.contains(" x ")) {
-					int a = allstacks.indexOf(" x ") + 3;
-					int b = allstacks.indexOf("}", a);
-					slot = Integer.parseInt(allstacks.substring(2, allstacks.indexOf("=")));
-					int da = calc.getDamageValue(stacks1.get(slot));
-					boolean hasenchants = ench.hasenchants(stacks1.get(slot));
-					if (stacks1.get(slot) != null && calc.newData(id, da) == newdata && hasenchants == false) {
-						int num = Integer.parseInt(allstacks.substring(a, b));
-						totalitems = num + totalitems;
+			Calculation calc = hc.getCalculation();
+			ETransaction ench = hc.getETransaction();
+			data = calc.newData(id, data);
+			Inventory pinv = p.getInventory();
+			ItemStack[] stacks = pinv.getContents();
+			for (ItemStack stack:stacks) {
+				if (stack != null && !ench.hasenchants(stack)) {
+					int stackid = stack.getTypeId();
+					int stackdata = calc.getDamageValue(stack);
+					if (stackid == id && stackdata == data) {
+						totalitems += stack.getAmount();
 					}
-					allstacks = allstacks.substring(b + 1, allstacks.length());
 				}
 			}
 			return totalitems;
@@ -1037,26 +1030,19 @@ public class Transaction {
 	 * 
 	 */
 	public int countItems(int id, int data, Inventory invent) {
-		try {
+		try {	
+			int totalitems = 0;
 			Calculation calc = hc.getCalculation();
 			ETransaction ench = hc.getETransaction();
-			HashMap<Integer, ? extends ItemStack> stacks1 = invent.all(id);
-			int newdata = calc.newData(id, data);
-			int slot = 0;
-			int totalitems = 0;
-			if (invent.contains(id)) {
-				String allstacks = "{" + stacks1.toString();
-				while (allstacks.contains(" x ")) {
-					int a = allstacks.indexOf(" x ") + 3;
-					int b = allstacks.indexOf("}", a);
-					slot = Integer.parseInt(allstacks.substring(2, allstacks.indexOf("=")));
-					int da = calc.getDamageValue(stacks1.get(slot));
-					boolean hasenchants = ench.hasenchants(stacks1.get(slot));
-					if (stacks1.get(slot) != null && calc.newData(id, da) == newdata && hasenchants == false) {
-						int num = Integer.parseInt(allstacks.substring(a, b));
-						totalitems = num + totalitems;
+			data = calc.newData(id, data);
+			ItemStack[] stacks = invent.getContents();
+			for (ItemStack stack:stacks) {
+				if (stack != null && !ench.hasenchants(stack)) {
+					int stackid = stack.getTypeId();
+					int stackdata = calc.getDamageValue(stack);
+					if (stackid == id && stackdata == data) {
+						totalitems += stack.getAmount();
 					}
-					allstacks = allstacks.substring(b + 1, allstacks.length());
 				}
 			}
 			return totalitems;
