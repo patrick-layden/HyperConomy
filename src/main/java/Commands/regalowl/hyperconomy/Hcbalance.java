@@ -11,17 +11,19 @@ public class Hcbalance {
 		Calculation calc = hc.getCalculation();
 		try {
 			if (args.length == 0 && player != null) {
-				Double balance = acc.getBalance(player.getName());
-    			if (balance == -9999999.0) {
+				double balance = 0;
+				if (acc.checkAccount(player.getName())) {
+					balance = acc.getBalance(player.getName());
+				} else {
         			sender.sendMessage(L.get("PLAYER_NOT_FOUND"));
         			return;
-    			}
+				}
 				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
 				sender.sendMessage(L.f(L.get("PLAYER_BALANCE_MESSAGE"), "", calc.formatMoney(balance)));
 				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
     		} else if (args.length == 1 && sender.hasPermission("hyperconomy.balanceall")) {
     			Double balance = acc.getBalance(args[0]);
-    			if (balance == -9999999.0) {
+    			if (!acc.checkAccount(args[0])) {
         			sender.sendMessage(L.get("PLAYER_NOT_FOUND"));
     			} else {
     				sender.sendMessage(L.get("SHOP_LINE_BREAK"));

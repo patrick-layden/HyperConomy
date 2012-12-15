@@ -1,6 +1,7 @@
 package regalowl.hyperconomy;
 
 
+import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.command.CommandSender;
 
@@ -8,8 +9,9 @@ public class Toggleeconomy {
 	Toggleeconomy(CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
+		Economy economy = hc.getEconomy();
 		try {
-			if (hc.getEconomy().getName().equalsIgnoreCase("HyperConomy")) {
+			if (economy != null && economy.getName().equalsIgnoreCase("HyperConomy")) {
 				hc.setUseExternalEconomy(false);
 				sender.sendMessage(L.get("TOGGLEECONOMY_HYPERCONOMY"));
 				return;

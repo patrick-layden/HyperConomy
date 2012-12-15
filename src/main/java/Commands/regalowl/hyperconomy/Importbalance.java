@@ -23,20 +23,18 @@ public class Importbalance {
 						}
 					}
 					sender.sendMessage(L.get("PLAYERS_IMPORTED"));
-				} else if (args.length == 1) {
-					String player = df.fixpN(args[0]);
-					if (econ.hasAccount(player)) {
-						if (players.contains(player)) {
-							df.setPlayerBalance(player, econ.getBalance(player));
-						} else {
-							df.addPlayer(player);
+				} else if (args.length > 0) {
+					for (int i = 0; i < args.length; i++) {
+						String player = df.fixpN(args[i]);
+						if (econ.hasAccount(player)) {
+							if (players.contains(player)) {
+								df.setPlayerBalance(player, econ.getBalance(player));
+							} else {
+								df.addPlayer(player);
+								df.setPlayerBalance(player, econ.getBalance(player));
+							}
 						}
-						sender.sendMessage(L.get("PLAYERS_IMPORTED"));
-					} else {
-						sender.sendMessage(L.get("PLAYER_NOT_FOUND"));
 					}
-				} else {
-					sender.sendMessage(L.get("IMPORTBALANCES_INVALID"));
 				}
 			} else {
 				sender.sendMessage(L.get("MUST_USE_EXTERNAL_ECONOMY"));

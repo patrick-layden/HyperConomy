@@ -70,7 +70,7 @@ public class HyperConomy extends JavaPlugin {
 	
 	private void onLateStart() {
 		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
-		if (x != null & x instanceof Vault && useExternalEconomy) {
+		if (x != null & x instanceof Vault) {
 			this.setupEconomy();
 		} else if (useExternalEconomy) {
 			log.warning(L.get("VAULT_NOT_FOUND"));
@@ -292,7 +292,6 @@ public class HyperConomy extends JavaPlugin {
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
 			if (economy.getName().equalsIgnoreCase("HyperConomy")) {
-				//hc.getYaml().getConfig().set("config.use-external-economy-plugin", false);
 				hc.setUseExternalEconomy(false);
 			}
 		}

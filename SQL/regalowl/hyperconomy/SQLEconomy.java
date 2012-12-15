@@ -47,9 +47,8 @@ public class SQLEconomy {
 			rs = state.executeQuery("SELECT * FROM hyperplayers");
 			rsmd = rs.getMetaData();
 			numcolumns = rsmd.getColumnCount();
-			if (numcolumns != 3) {
-				state.execute("DROP TABLE hyperplayers");
-				state.execute("CREATE TABLE IF NOT EXISTS hyperplayers (PLAYER TINYTEXT, ECONOMY TINYTEXT, BALANCE DOUBLE)");
+			if (numcolumns == 2) {
+				state.execute("ALTER TABLE hyperplayers ADD BALANCE DOUBLE NOT NULL DEFAULT '0' AFTER ECONOMY");
 			}
 			state.close();
 			connect.close();		
