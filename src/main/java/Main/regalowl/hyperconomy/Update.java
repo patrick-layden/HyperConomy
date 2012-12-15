@@ -185,7 +185,10 @@ public class Update {
 	    	if (t40 == null) {
 	    		yaml.getConfig().set("config.tekkit", false);
 	    	}
-
+	    	String t41 = yaml.getConfig().getString("config.limit-info-commands-to-shops");
+	    	if (t41 == null) {
+	    		yaml.getConfig().set("config.limit-info-commands-to-shops", false);
+	    	}
 	    	
 	    	
 	    	

@@ -61,16 +61,19 @@ public class HyperError {
 						e1.printStackTrace();
 					}
 					SQLFunctions sf = hc.getSQLFunctions();
-					info = ft.getTimeStamp() + "\n\n" + "UseSQL='" + hc.useSQL() + "', DataBuilt='" + sf.dataBuilt() + "', SQLLoaded='" + sf.sqlLoaded() + "'\n\n" + info;
+					String version = hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
+					info = ft.getTimeStamp() + "\r\n"
+					+ "HyperConomy version: " + version + "\r\n"
+					+ Bukkit.getName() + " version " + Bukkit.getVersion() + "\r\n"
+					+ "UseSQL='" + hc.useSQL() + "', DataBuilt='" + sf.dataBuilt() + "', SQLLoaded='" + sf.sqlLoaded()
+					+ "'\r\n" + info;
 					ft.writeStringToFile(info, path + File.separator + "info.txt");
 					LanguageFile L = hc.getLanguageFile();
 					Bukkit.broadcast(L.f(L.get("ERROR_HAS_OCCURRED"), errornumber), "hyperconomy.error");
-					//Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred. [#" + errornumber + "] Check the errors folder for more info.", "hyperconomy.error");
 				}
 			}, 0L);
 		} else {
 			Bukkit.broadcast(L.f(L.get("HYPERERROR_LOG"), errornumber), "hyperconomy.error");
-			//Bukkit.broadcast(ChatColor.DARK_RED + "An error has occurred. [#" + errornumber + "] Enable error logging in config.yml to log future errors.", "hyperconomy.error");
 		}
 	}
 }

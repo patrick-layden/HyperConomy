@@ -22,6 +22,7 @@ config:
   use-shop-permissions: false
   require-chest-shops-to-be-in-shop: false
   require-transaction-signs-to-be-in-shop: false
+  limit-info-commands-to-shops: false
   currency-symbol: $
   notify-for: diamond,diamondblock,
   sales-tax-percent: 0

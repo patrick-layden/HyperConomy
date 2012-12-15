@@ -15,6 +15,7 @@ public class Topitems {
 		Shop s = hc.getShop();
 		SQLFunctions sf = hc.getSQLFunctions();
 		try {
+			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			if (args.length > 1) {
 				sender.sendMessage(L.get("TOPITEMS_INVALID"));
 				return;
@@ -25,6 +26,9 @@ public class Topitems {
 				s.setinShop(player);
 				if (s.inShop() != -1) {
 					nameshop = s.getShop(player);
+				} else if (requireShop) {
+					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
+					return;
 				}
 			}
 			int page;

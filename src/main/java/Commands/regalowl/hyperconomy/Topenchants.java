@@ -15,6 +15,7 @@ public class Topenchants {
 		SQLFunctions sf = hc.getSQLFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
+			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			if (args.length > 1) {
 				sender.sendMessage(L.get("TOPENCHANTS_INVALID"));
 				return;
@@ -24,6 +25,9 @@ public class Topenchants {
 				s.setinShop(player);
 				if (s.inShop() != -1) {
 					nameshop = s.getShop(player);
+				} else if (requireShop) {
+					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
+					return;
 				}
 			}
 			int page;
