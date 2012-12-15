@@ -9,7 +9,7 @@ public class Setstockall {
 		HyperConomy hc = HyperConomy.hc;
 		ArrayList<String> names = hc.getNames();
 		SQLFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		double stock = 0;
@@ -27,8 +27,7 @@ public class Setstockall {
 			name = names.get(i);
 			sf.setStock(name, playerecon, stock);
 		}
-		isign.setrequestsignUpdate(true);
-		isign.checksignUpdate();
+		isign.updateSigns();
 		sender.sendMessage(L.get("ALL_STOCKS_SET"));
 	}
 }

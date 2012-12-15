@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class Intervals {
 	Intervals(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		Log l = hc.getLog();
 		Shop s = hc.getShop();
 		LanguageFile L = hc.getLanguageFile();
@@ -23,8 +23,8 @@ public class Intervals {
 					//sender.sendMessage(ChatColor.BLUE + "The log buffer currently holds " + ChatColor.GREEN + "" + l.getbufferSize() + ChatColor.BLUE + " entries.");
 					sender.sendMessage(ChatColor.BLUE + "The log has " + ChatColor.GREEN + "" + l.getlogSize() + ChatColor.BLUE + " entries.");
 				}
-				sender.sendMessage(ChatColor.BLUE + "Sign Update Interval: " + ChatColor.GREEN + "" + isign.getsignupdateInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + isign.getsignupdateInterval() / 20 + ChatColor.BLUE + " Seconds");
-				sender.sendMessage(ChatColor.BLUE + "There are " + ChatColor.GREEN + "" + isign.getremainingSigns() + ChatColor.BLUE + " signs waiting to update.");
+				sender.sendMessage(ChatColor.BLUE + "Sign Update Interval: " + ChatColor.GREEN + "" + isign.getUpdateInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + isign.getUpdateInterval() / 20 + ChatColor.BLUE + " Seconds");
+				sender.sendMessage(ChatColor.BLUE + "There are " + ChatColor.GREEN + "" + isign.getUpdateInterval() + ChatColor.BLUE + " signs waiting to update.");
 				if (hc.useSQL()) {
 					sender.sendMessage(ChatColor.BLUE + "The log has " + ChatColor.GREEN + "" + sf.countTableEntries("hyperlog") + ChatColor.BLUE + " entries.");
 					sender.sendMessage(ChatColor.BLUE + "The SQL buffer contains " + ChatColor.GREEN + "" + sw.getBufferSize() + ChatColor.BLUE + " statements.");

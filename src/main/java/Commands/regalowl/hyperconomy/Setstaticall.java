@@ -9,7 +9,7 @@ public class Setstaticall {
 		HyperConomy hc = HyperConomy.hc;
 		ArrayList<String> names = hc.getNames();
 		SQLFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		if (!(args.length == 1)) {
 			sender.sendMessage(L.get("SETSTATICALL_INVALID"));
@@ -40,11 +40,7 @@ public class Setstaticall {
 				sf.setStatic(names.get(i), playerecon, setting);
 			}
 		}
-		
-		
-		isign.setrequestsignUpdate(true);
-		isign.checksignUpdate();
-		//sender.sendMessage(ChatColor.GOLD + "All objects set to static pricing: " + setting + ".");
+		isign.updateSigns();
 		sender.sendMessage(L.f(L.get("ALL_OBJECTS_SET_TO_STATIC"), setting));
 	}
 }

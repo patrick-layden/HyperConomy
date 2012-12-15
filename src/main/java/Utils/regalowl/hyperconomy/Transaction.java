@@ -51,7 +51,7 @@ public class Transaction {
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			Notification not = hc.getNotify();
-			InfoSign isign = hc.getInfoSign();
+			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			if (amount > 0) {
 				double shopstock = sf.getStock(name, playerecon);
@@ -89,8 +89,7 @@ public class Transaction {
 									String logentry = L.f(L.get("LOG_BUY"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 									log.writeLog(logentry);
 								}
-								isign.setrequestsignUpdate(true);
-								isign.checksignUpdate();
+								isign.updateSigns();
 								not.setNotify(hc, calc, ench, name, null, playerecon);
 								not.sendNotification();
 							} else {
@@ -130,7 +129,7 @@ public class Transaction {
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
 			Notification not = hc.getNotify();
-			InfoSign isign = hc.getInfoSign();
+			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			if (amount > 0) {
 				if (id >= 0) {
@@ -195,8 +194,7 @@ public class Transaction {
 									logentry = L.f(L.get("LOG_SELL"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 									log.writeLog(logentry);
 								}
-								isign.setrequestsignUpdate(true);
-								isign.checksignUpdate();
+								isign.updateSigns();
 								not.setNotify(hc, calc, ench, name, null, playerecon);
 								not.sendNotification();
 							} else {
@@ -510,7 +508,7 @@ public class Transaction {
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
 			Notification not = hc.getNotify();
-			InfoSign isign = hc.getInfoSign();
+			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			if (amount > 0) {
 				int shopstock = 0;
@@ -552,8 +550,7 @@ public class Transaction {
 							String logentry = L.f(L.get("LOG_BUY"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 							log.writeLog(logentry);
 						}
-						isign.setrequestsignUpdate(true);
-						isign.checksignUpdate();
+						isign.updateSigns();
 						not.setNotify(hc, calc, ench, name, null, playerecon);
 						not.sendNotification();
 					} else {
@@ -587,7 +584,7 @@ public class Transaction {
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
 			Notification not = hc.getNotify();
-			InfoSign isign = hc.getInfoSign();
+			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			if (amount > 0) {
 				int totalxp = calc.gettotalxpPoints(p);
@@ -650,8 +647,7 @@ public class Transaction {
 								String logentry = L.f(L.get("LOG_SELL"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 								log.writeLog(logentry);
 							}
-							isign.setrequestsignUpdate(true);
-							isign.checksignUpdate();
+							isign.updateSigns();
 							not.setNotify(hc, calc, ench, name, null, playerecon);
 							not.sendNotification();
 						} else {

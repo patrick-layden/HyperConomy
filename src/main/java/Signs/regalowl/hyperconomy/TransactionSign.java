@@ -22,7 +22,7 @@ public class TransactionSign implements Listener {
 	private Set<String> names;
 	private String playerecon;
 
-	public void setTransactionSign(HyperConomy hyperc, Transaction trans, Calculation cal, ETransaction enchant, Log lo, Account account, InfoSign infosign, Notification notify) {
+	public void setTransactionSign(HyperConomy hyperc, Transaction trans, Calculation cal, ETransaction enchant, Log lo, Account account, Notification notify) {
 		hc = hyperc;
 		tran = trans;
 		ench = enchant;

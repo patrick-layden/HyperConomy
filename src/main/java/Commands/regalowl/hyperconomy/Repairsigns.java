@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -14,7 +13,7 @@ import org.bukkit.entity.Player;
 public class Repairsigns {
 	
 	
-	private ArrayList<String> signtypes = new ArrayList<String>();
+
 	
 	Repairsigns(String[] args, Player player) {
 		HyperConomy hc = HyperConomy.hc;
@@ -22,18 +21,6 @@ public class Repairsigns {
 		
 		FileConfiguration sns = hc.getYaml().getSigns();
 		
-		ArrayList<String> names = hc.getNames();
-		signtypes.add("buy");
-		signtypes.add("sell");
-		signtypes.add("stock");
-		signtypes.add("value");
-		signtypes.add("status");
-		signtypes.add("static price");
-		signtypes.add("start price");
-		signtypes.add("median");
-		signtypes.add("history");
-		signtypes.add("tax");
-		signtypes.add("sb");
 		if (args.length == 3 || args.length == 1) {
 			int xrad = Math.abs(Integer.parseInt(args[0]));
 			int yrad = xrad;
@@ -69,22 +56,32 @@ public class Repairsigns {
 							
 							if (cb != null && cb.getType().equals(Material.SIGN_POST) || cb != null && cb.getType().equals(Material.WALL_SIGN)) {
 								Sign s = (Sign) cb.getState();
-								String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
-								line12 = hc.fixName(line12);
-								if (names.contains(line12.toLowerCase())) {
-									String ttype = ChatColor.stripColor(s.getLine(2)).toLowerCase();
+								String objectName = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
+								objectName = hc.fixName(objectName);
+								if (hc.objectTest(objectName)) {
+									String ttype = ChatColor.stripColor(s.getLine(2).trim().replace(":", ""));
 									if (ttype.contains("S:") || ttype.contains("s:")) {
-										ttype = "sb";
+										ttype = "SB";
 									}
-									String type = getsignType(ttype.replace(":", ""));
+									SignType stype = SignType.fromString(ttype);
+									String type = null;
+									if (stype != null) {
+										type = stype.toString();
+									}
 									if (type != null) {
-										String locat = s.getBlock().getWorld().getName() + "|" + s.getBlock().getX() + "|" + s.getBlock().getY() + "|" + s.getBlock().getZ();
-											sns.set(locat + ".itemname", line12);
-											sns.set(locat + ".type", type);
-											if (hc.useSQL()) {
-												sns.set(locat + ".economy", hc.getSQLFunctions().getPlayerEconomy(player.getName()));
+										String signKey = s.getBlock().getWorld().getName() + "|" + s.getBlock().getX() + "|" + s.getBlock().getY() + "|" + s.getBlock().getZ();
+											sns.set(signKey + ".itemname", objectName);
+											if (hc.enchantTest(objectName)) {
+												sns.set(signKey + ".enchantclass", EnchantmentClass.DIAMOND.toString());
 											} else {
-												sns.set(locat + ".economy", "default");
+												sns.set(signKey + ".enchantclass", EnchantmentClass.NONE.toString());
+											}
+											sns.set(signKey + ".multiplier", 1.0);
+											sns.set(signKey + ".type", type);
+											if (hc.useSQL()) {
+												sns.set(signKey + ".economy", hc.getSQLFunctions().getPlayerEconomy(player.getName()));
+											} else {
+												sns.set(signKey + ".economy", "default");
 											}
 											signsRepaired++;
 									}
@@ -95,10 +92,8 @@ public class Repairsigns {
 				}
 			}
 			if (signsRepaired > 0) {
-				InfoSign is = hc.getInfoSign();
-				is.resetAll();
-				is.setrequestsignUpdate(true);
-				is.checksignUpdate();
+				InfoSignHandler is = hc.getInfoSignHandler();
+				is.reloadSigns();
 				player.sendMessage(L.f(L.get("X_SIGNS_REPAIRED"), signsRepaired));
 			} else {
 				player.sendMessage(L.get("NO_SIGNS_FOUND"));
@@ -110,18 +105,5 @@ public class Repairsigns {
 	}
 	
 	
-	
-	private String getsignType(String line3) {
-		String type = null;
-		int counter = 0;
-		while (counter < signtypes.size()) {
-			if (line3.equalsIgnoreCase(signtypes.get(counter))) {
-				type = signtypes.get(counter);
-				break;
-			}
-			counter++;
-		}
-		return type;
-	}
 
 }

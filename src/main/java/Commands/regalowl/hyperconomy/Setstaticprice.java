@@ -6,7 +6,7 @@ public class Setstaticprice {
 	Setstaticprice(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
@@ -15,10 +15,8 @@ public class Setstaticprice {
 				Double staticprice = Double.parseDouble(args[1]);
 				if (hc.itemTest(name)) {
 					sf.setStaticPrice(name, playerecon, staticprice);
-					//sender.sendMessage(ChatColor.GOLD + "" + name + " static price set!");
 					sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), name));
-					isign.setrequestsignUpdate(true);
-					isign.checksignUpdate();
+					isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
 				}
@@ -29,10 +27,8 @@ public class Setstaticprice {
 					Double staticprice = Double.parseDouble(args[1]);
 					if (hc.enchantTest(name)) {
 						sf.setStaticPrice(name, playerecon, staticprice);
-						//sender.sendMessage(ChatColor.GOLD + "" + name + " static price set!");
 						sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), name));
-						isign.setrequestsignUpdate(true);
-						isign.checksignUpdate();
+						isign.updateSigns();
 					} else {
 						sender.sendMessage(L.get("INVALID_ENCHANTMENT_NAME"));
 					}

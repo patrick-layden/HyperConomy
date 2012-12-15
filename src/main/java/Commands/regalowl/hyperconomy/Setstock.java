@@ -6,7 +6,7 @@ public class Setstock {
 	Setstock(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
 		String name = "";
@@ -17,8 +17,7 @@ public class Setstock {
 				if (hc.itemTest(name)) {
 					sf.setStock(name, playerecon, stock);
 					sender.sendMessage(L.f(L.get("STOCK_SET"), name));
-					isign.setrequestsignUpdate(true);
-					isign.checksignUpdate();
+					isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
 				}
@@ -30,8 +29,7 @@ public class Setstock {
 					if (hc.enchantTest(name)) {
 						sf.setStock(name, playerecon, stock);
 						sender.sendMessage(L.f(L.get("STOCK_SET"), name));
-						isign.setrequestsignUpdate(true);
-						isign.checksignUpdate();
+						isign.updateSigns();
 					} else {
 						sender.sendMessage(L.get("INVALID_ENCHANTMENT_NAME"));
 					}

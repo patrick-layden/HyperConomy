@@ -6,7 +6,7 @@ public class Setfloor {
 	Setfloor(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
@@ -16,8 +16,7 @@ public class Setfloor {
 				if (hc.itemTest(name) || hc.enchantTest(name)) {
 					sf.setFloor(name, playerecon, floor);
 					sender.sendMessage(L.f(L.get("FLOOR_SET"), name));
-					isign.setrequestsignUpdate(true);
-					isign.checksignUpdate();
+					isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_NAME"));
 				}

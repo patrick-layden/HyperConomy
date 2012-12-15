@@ -6,7 +6,7 @@ public class Setvalue {
 	Setvalue(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
@@ -15,10 +15,8 @@ public class Setvalue {
 				double value = Double.parseDouble(args[1]);
 				if (hc.itemTest(name)) {
 					sf.setValue(name, playerecon, value);
-					//sender.sendMessage(ChatColor.GOLD + "" + name + " value set!");
 					sender.sendMessage(L.f(L.get("VALUE_SET"), name));
-					isign.setrequestsignUpdate(true);
-					isign.checksignUpdate();
+					isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
 				}
@@ -29,10 +27,8 @@ public class Setvalue {
 					double value = Double.parseDouble(args[1]);
 					if (hc.enchantTest(name)) {
 						sf.setValue(name, playerecon, value);
-						//sender.sendMessage(ChatColor.GOLD + "" + name + " value set!");
 						sender.sendMessage(L.f(L.get("VALUE_SET"), name));
-						isign.setrequestsignUpdate(true);
-						isign.checksignUpdate();
+						isign.updateSigns();
 					} else {
 						sender.sendMessage(L.get("INVALID_ENCHANTMENT_NAME"));
 					}

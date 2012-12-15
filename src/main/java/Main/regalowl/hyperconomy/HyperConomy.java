@@ -24,7 +24,7 @@ public class HyperConomy extends JavaPlugin {
 	private Log l;
 	private Shop s;
 	private Account acc;
-	private InfoSign isign;
+	private InfoSignHandler isign;
 	private _Command commandhandler;
 	private History hist;
 	private Notification not;
@@ -127,7 +127,7 @@ public class HyperConomy extends JavaPlugin {
 			acc = new Account();
 			commandhandler = new _Command();
 			not = new Notification();
-			isign = new InfoSign();
+			isign = new InfoSignHandler();
 			tsign = new TransactionSign();
 			Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
 			if (x != null & x instanceof Vault) {
@@ -151,10 +151,9 @@ public class HyperConomy extends JavaPlugin {
 					acc.checkshopAccount();
 				}
 			}, 300L);
-			isign.setinfoSign(this, calc, ench, tran);
 			hist = new History(this, calc, ench, isign);
 			hist.starthistoryLog();
-			tsign.setTransactionSign(this, tran, calc, ench, l, acc, isign, not);
+			tsign.setTransactionSign(this, tran, calc, ench, l, acc, not);
 			new ChestShop();
 			if (usesql) {
 				new SQLPlayers(this);
@@ -372,8 +371,8 @@ public class HyperConomy extends JavaPlugin {
 				s.stopshopCheck();
 				//l.stopBuffer();
 				hist.stophistoryLog();
-				isign.stopsignUpdate();
-				isign.resetAll();
+				isign.stopSignUpdate();
+				isign.reloadSigns();
 				//l.saveBuffer();
 				stopSave();
 			}
@@ -413,6 +412,18 @@ public class HyperConomy extends JavaPlugin {
 		return name;
 	}
 
+	
+	public boolean objectTest(String name) {
+		if (names.contains(name)) {
+			return true;
+		}
+		name = fixName(name);
+		if (names.contains(name)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean itemTest(String name) {
 		if (inames.contains(name)) {
 			return true;
@@ -581,7 +592,7 @@ public class HyperConomy extends JavaPlugin {
 		return acc;
 	}
 
-	public InfoSign getInfoSign() {
+	public InfoSignHandler getInfoSignHandler() {
 		return isign;
 	}
 
