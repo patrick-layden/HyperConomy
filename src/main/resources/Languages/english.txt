@@ -363,3 +363,4 @@ MUST_USE_EXTERNAL_ECONOMY: &4You must be using an external economy plugin in ord
 IMPORTBALANCES_INVALID:  &4Invalid parameters. Use /importbalances (player)
 PLAYER_NOT_FOUND: &4The specified player does not have an economy account.
 PLAYERS_IMPORTED: &6The specified player or specified player accounts have been imported into HyperConomy.
+REQUIRE_SHOP_FOR_INFO: &4You must enter a shop to recieve information.

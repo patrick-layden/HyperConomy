@@ -6,7 +6,7 @@ public class Setmedian {
 	Setmedian(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
@@ -15,10 +15,8 @@ public class Setmedian {
 				int median = Integer.parseInt(args[1]);
 				if (hc.itemTest(name)) {
 					sf.setMedian(name, playerecon, median);
-					//sender.sendMessage(ChatColor.GOLD + "" + name + " median set!");
 					sender.sendMessage(L.f(L.get("MEDIAN_SET"), name));
-					isign.setrequestsignUpdate(true);
-					isign.checksignUpdate();
+					isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
 				}
@@ -29,10 +27,8 @@ public class Setmedian {
 					int median = Integer.parseInt(args[1]);
 					if (hc.enchantTest(name)) {
 						sf.setMedian(name, playerecon, median);
-						//sender.sendMessage(ChatColor.GOLD + "" + name + " median set!");
 						sender.sendMessage(L.f(L.get("MEDIAN_SET"), name));
-						isign.setrequestsignUpdate(true);
-						isign.checksignUpdate();
+						isign.updateSigns();
 					} else {
 						sender.sendMessage(L.get("INVALID_ENCHANTMENT_NAME"));
 					}

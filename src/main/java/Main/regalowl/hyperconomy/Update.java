@@ -189,6 +189,10 @@ public class Update {
 	    	if (t41 == null) {
 	    		yaml.getConfig().set("config.use-external-economy-plugin", false);
 	    	}
+	    	String t42 = yaml.getConfig().getString("config.limit-info-commands-to-shops");
+	    	if (t42 == null) {
+	    		yaml.getConfig().set("config.limit-info-commands-to-shops", false);
+	    	}
 	    	
 	    	
 	    	

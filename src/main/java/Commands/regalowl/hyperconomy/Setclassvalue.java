@@ -6,7 +6,7 @@ public class Setclassvalue {
 
 	Setclassvalue(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length != 2) {
@@ -16,10 +16,8 @@ public class Setclassvalue {
 				if (hc.getYaml().getConfig().get("config.enchantment.classvalue." + classtype) != null) {
 				double value = Double.parseDouble(args[1]);
 				hc.getYaml().getConfig().set("config.enchantment.classvalue." + classtype, value);
-				//sender.sendMessage(ChatColor.BLUE + "The classvalue for " + ChatColor.AQUA + "" + classtype + ChatColor.BLUE + " has been set.");
 				sender.sendMessage(L.f(L.get("CLASSVALUE_SET"), classtype));
-				isign.setrequestsignUpdate(true);
-				isign.checksignUpdate();
+				isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_CLASS"));
 				}

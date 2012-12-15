@@ -11,7 +11,7 @@ public class Scalebypercent {
 		try {
 			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
-			InfoSign isign = hc.getInfoSign();
+			InfoSignHandler isign = hc.getInfoSignHandler();
 			ArrayList<String> names = new ArrayList<String>();;
 			if (args.length == 2 || args.length == 3) {
 				if (args.length == 3) {
@@ -46,8 +46,7 @@ public class Scalebypercent {
 							}
 						}
 						sender.sendMessage(L.get("ADJUSTMENT_SUCCESSFUL"));
-						isign.setrequestsignUpdate(true);
-						isign.checksignUpdate();
+						isign.updateSigns();
 					} else {
 						sender.sendMessage(L.get("SCALEBYPERCENT_TYPES"));
 					}

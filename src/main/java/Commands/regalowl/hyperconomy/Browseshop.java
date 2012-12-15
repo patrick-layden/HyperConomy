@@ -19,6 +19,14 @@ public class Browseshop {
 			aargs.add(args[i]);
 		}
 		try {
+			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
+    		if (player != null) {
+    			s.setinShop(player);
+    			if (requireShop && s.inShop() == -1) {
+    				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
+    				return;
+    			}			
+    		}
 			if (aargs.size() > 3) {
 				sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
 				return;
@@ -52,13 +60,12 @@ public class Browseshop {
 				sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
 				return;
 			}
-
     		String nameshop = null;
     		if (player != null) {
     			s.setinShop(player);
     			if (s.inShop() != -1) {
     				nameshop = s.getShop(player);
-    			}	    			
+    			}    			
     		}
 			ArrayList<String> names = hc.getNames();
 			ArrayList<String> rnames = new ArrayList<String>();

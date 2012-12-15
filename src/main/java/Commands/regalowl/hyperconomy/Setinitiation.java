@@ -6,7 +6,7 @@ public class Setinitiation {
 	Setinitiation(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
@@ -24,8 +24,7 @@ public class Setinitiation {
 						sender.sendMessage(L.f(L.get("INITIATION_TRUE"), name));
 					}
 					sf.setInitiation(name, playerecon, nstatus + "");
-					isign.setrequestsignUpdate(true);
-					isign.checksignUpdate();
+					isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
 				}
@@ -44,8 +43,7 @@ public class Setinitiation {
 							sender.sendMessage(L.f(L.get("INITIATION_TRUE"), name));
 						}
 						sf.setInitiation(name, playerecon, nstatus + "");
-						isign.setrequestsignUpdate(true);
-						isign.checksignUpdate();
+						isign.updateSigns();
 					} else {
 						sender.sendMessage(L.get("INVALID_ENCHANTMENT_NAME"));
 					}

@@ -56,7 +56,7 @@ public class ETransaction {
 		Account acc = hc.getAccount();
 		Log log = hc.getLog();
 		Notification not = hc.getNotify();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
 			String nenchant = "";
 			String playerecon = sf.getPlayerEconomy(p.getName());
@@ -99,8 +99,7 @@ public class ETransaction {
 						String logentry = L.f(L.get("LOG_SELL_ENCHANTMENT"), 1, calc.twoDecimals(fprice), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 						log.writeLog(logentry);
 					}
-					isign.setrequestsignUpdate(true);
-					isign.checksignUpdate();
+					isign.updateSigns();
 					not.setNotify(hc, calc, this, name, mater, playerecon);
 					not.sendNotification();
 				} else {
@@ -127,7 +126,7 @@ public class ETransaction {
 		Account acc = hc.getAccount();
 		Log log = hc.getLog();
 		Notification not = hc.getNotify();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			String nenchant = sf.getMaterial(name, playerecon);
@@ -193,8 +192,7 @@ public class ETransaction {
 									logentry = L.f(L.get("LOG_BUY_ENCHANTMENT"), 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
 									log.writeLog(logentry);
 								}
-								isign.setrequestsignUpdate(true);
-								isign.checksignUpdate();
+								isign.updateSigns();
 								not.setNotify(hc, calc, this, name, mater, playerecon);
 								not.sendNotification();
 							} else {

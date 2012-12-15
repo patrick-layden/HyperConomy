@@ -6,7 +6,7 @@ public class Setstatic {
 	Setstatic(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
@@ -18,16 +18,13 @@ public class Setstatic {
 					sstatus = Boolean.parseBoolean(sf.getStatic(name, playerecon));
 					if (sstatus) {
 						nstatus = false;
-						//sender.sendMessage(ChatColor.GOLD + "" + name + " will now use a dynamic price.");
 						sender.sendMessage(L.f(L.get("USE_DYNAMIC_PRICE"), name));
 					} else {
 						nstatus = true;
-						//sender.sendMessage(ChatColor.GOLD + "" + name + " will now use a static price.");
 						sender.sendMessage(L.f(L.get("USE_STATIC_PRICE"), name));
 					}
 					sf.setStatic(name, playerecon, nstatus + "");
-					isign.setrequestsignUpdate(true);
-					isign.checksignUpdate();
+					isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
 				}
@@ -41,15 +38,12 @@ public class Setstatic {
 						if (sstatus) {
 							nstatus = false;
 							sender.sendMessage(L.f(L.get("USE_DYNAMIC_PRICE"), name));
-							//sender.sendMessage(ChatColor.GOLD + "" + name + " will now use a dynamic price.");
 						} else {
 							nstatus = true;
-							//sender.sendMessage(ChatColor.GOLD + "" + name + " will now use a static price.");
 							sender.sendMessage(L.f(L.get("USE_STATIC_PRICE"), name));
 						}
 						sf.setStatic(name, playerecon, nstatus + "");
-						isign.setrequestsignUpdate(true);
-						isign.checksignUpdate();
+						isign.updateSigns();
 					} else {
 						sender.sendMessage(L.get("INVALID_ENCHANTMENT_NAME"));
 					}

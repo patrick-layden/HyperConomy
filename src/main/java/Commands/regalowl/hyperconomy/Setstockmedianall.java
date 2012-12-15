@@ -8,7 +8,7 @@ public class Setstockmedianall {
 	Setstockmedianall(CommandSender sender, String[] args, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0) {
@@ -23,8 +23,7 @@ public class Setstockmedianall {
 					sf.setInitiation(names.get(c), playerecon, "false");
 				}
 				sender.sendMessage(L.get("SETSTOCKMEDIANALL_SUCCESS"));
-				isign.setrequestsignUpdate(true);
-				isign.checksignUpdate();
+				isign.updateSigns();
 			} else {
 				sender.sendMessage(L.get("SETSTOCKMEDIANALL_INVALID"));
 			}

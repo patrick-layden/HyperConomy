@@ -13,7 +13,7 @@ public class History {
 	
 	private HyperConomy hc;
 	private Calculation calc;
-	private InfoSign isign;
+	private InfoSignHandler isign;
 	
 	private ArrayList<String> historykeys = new ArrayList<String>();
 
@@ -23,7 +23,7 @@ public class History {
 	private DataFunctions sf;
 	
 	//For server start.
-	History(HyperConomy hyperc, Calculation cal, ETransaction enchant, InfoSign infosign) {
+	History(HyperConomy hyperc, Calculation cal, ETransaction enchant, InfoSignHandler infosign) {
 		hc = hyperc;
 		calc = cal;
 		isign = infosign;
@@ -68,8 +68,7 @@ public class History {
 					//Updates all information signs.
 					historylogtaskid = hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
 					    public void run() {
-					    	isign.setrequestsignUpdate(true);
-					    	isign.checksignUpdate();
+					    	isign.updateSigns();
 					    }
 					}, 200L);
 			    }

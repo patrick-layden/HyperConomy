@@ -21,15 +21,13 @@ public class TransactionSign implements Listener {
 	private DataFunctions sf;
 	private Set<String> names;
 	private String playerecon;
-	private Shop shop;
 
-	public void setTransactionSign(HyperConomy hyperc, Transaction trans, Calculation cal, ETransaction enchant, Log lo, Account account, InfoSign infosign, Notification notify) {
+	public void setTransactionSign(HyperConomy hyperc, Transaction trans, Calculation cal, ETransaction enchant, Log lo, Account account, Notification notify) {
 		hc = hyperc;
 		tran = trans;
 		ench = enchant;
 		sf = hc.getSQLFunctions();
 		names = new HashSet<String>();
-		shop = hc.getShop();
 		ArrayList<String> anames = hc.getNames();
 		for (int i = 0; i < anames.size(); i++) {
 			names.add(anames.get(i));
@@ -82,7 +80,9 @@ public class TransactionSign implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteractEvent(PlayerInteractEvent ievent) {
 		LanguageFile L = hc.getLanguageFile();
+		Shop shop = hc.getShop();
 		boolean requireShop = hc.getYaml().getConfig().getBoolean("config.require-transaction-signs-to-be-in-shop");
+		boolean shopPerms = hc.getYaml().getConfig().getBoolean("config.use-shop-permissions");
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
 			Player p = ievent.getPlayer();
 			playerecon = sf.getPlayerEconomy(p.getName());
@@ -126,27 +126,31 @@ public class TransactionSign implements Listener {
 								if (p.hasPermission("hyperconomy.buysign")) {
 									shop.setinShop(p);
 									if ((shop.inShop() != -1 && requireShop) || !requireShop) {
-										if (hc.itemTest(line12)) {
-											int id = sf.getId(line12, playerecon);
-											if (id >= 0) {
-												if (!hc.isLocked()) {
-													tran.buy(line12, amount, id, sf.getData(line12, playerecon), p);
-												} else {
-													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".buy")) {
+											if (hc.itemTest(line12)) {
+												int id = sf.getId(line12, playerecon);
+												if (id >= 0) {
+													if (!hc.isLocked()) {
+														tran.buy(line12, amount, id, sf.getData(line12, playerecon), p);
+													} else {
+														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+													}
+												} else if (id == -1) {
+													if (!hc.isLocked()) {
+														tran.buyXP(line12, amount, p);
+													} else {
+														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+													}
 												}
-											} else if (id == -1) {
+											} else if (hc.enchantTest(line12)) {
 												if (!hc.isLocked()) {
-													tran.buyXP(line12, amount, p);
+													ench.buyEnchant(line12, p);
 												} else {
 													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 												}
 											}
-										} else if (hc.enchantTest(line12)) {
-											if (!hc.isLocked()) {
-												ench.buyEnchant(line12, p);
-											} else {
-												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-											}
+										} else {
+											p.sendMessage(L.get("NO_TRADE_PERMISSION"));
 										}
 									} else {
 										p.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
@@ -169,27 +173,31 @@ public class TransactionSign implements Listener {
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
 									if ((shop.inShop() != -1 && requireShop) || !requireShop) {
-										if (hc.itemTest(line12)) {
-											int id = sf.getId(line12, playerecon);
-											if (id >= 0) {
-												if (!hc.isLocked()) {
-													tran.sell(line12, id, sf.getData(line12, playerecon), amount, p);
-												} else {
-													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".sell")) {
+											if (hc.itemTest(line12)) {
+												int id = sf.getId(line12, playerecon);
+												if (id >= 0) {
+													if (!hc.isLocked()) {
+														tran.sell(line12, id, sf.getData(line12, playerecon), amount, p);
+													} else {
+														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+													}
+												} else if (id == -1) {
+													if (!hc.isLocked()) {
+														tran.sellXP(line12, amount, p);
+													} else {
+														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+													}
 												}
-											} else if (id == -1) {
+											} else if (hc.enchantTest(line12)) {
 												if (!hc.isLocked()) {
-													tran.sellXP(line12, amount, p);
+													ench.sellEnchant(line12, p);
 												} else {
 													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 												}
 											}
-										} else if (hc.enchantTest(line12)) {
-											if (!hc.isLocked()) {
-												ench.sellEnchant(line12, p);
-											} else {
-												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-											}
+										} else {
+											p.sendMessage(L.get("NO_TRADE_PERMISSION"));
 										}
 									} else {
 										p.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));

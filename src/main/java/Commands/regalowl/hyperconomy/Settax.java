@@ -6,7 +6,7 @@ public class Settax {
 
 	Settax(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		double taxrate = 0.0;
 		try {
@@ -39,8 +39,7 @@ public class Settax {
 					sender.sendMessage(L.get("SETTAX_INVALID"));
 					return;
 				}
-				isign.setrequestsignUpdate(true);
-				isign.checksignUpdate();
+				isign.updateSigns();
 			}
 		} catch (Exception e) {
 			sender.sendMessage(L.get("SETTAX_INVALID"));

@@ -9,7 +9,7 @@ public class Setinitiationall {
 		HyperConomy hc = HyperConomy.hc;
 		ArrayList<String> names = hc.getNames();
 		DataFunctions sf = hc.getSQLFunctions();
-		InfoSign isign = hc.getInfoSign();
+		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		if (!(args.length == 1)) {
@@ -30,8 +30,7 @@ public class Setinitiationall {
 			name = names.get(i);
 			sf.setInitiation(name, playerecon, setting);
 		}
-		isign.setrequestsignUpdate(true);
-		isign.checksignUpdate();
+		isign.updateSigns();
 		//sender.sendMessage(ChatColor.GOLD + "All objects set to initial pricing: " + setting + ".");
 		sender.sendMessage(L.f(L.get("ALL_OBJECTS_SET_TO"), setting));
 	}
