@@ -33,7 +33,7 @@ public class SQLEconomy {
 			Connection connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 			Statement state = connect.createStatement();
 			state.execute("CREATE TABLE IF NOT EXISTS hyperobjects (NAME TINYTEXT, ECONOMY TINYTEXT, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, " + "DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE)");
-			state.execute("CREATE TABLE IF NOT EXISTS hyperplayers (PLAYER TINYTEXT, ECONOMY TINYTEXT, BALANCE DOUBLE)");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperplayers (PLAYER TINYTEXT, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0')");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperlog (ID INT NOT NULL AUTO_INCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT, PRIMARY KEY (ID))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperhistory (ID INT NOT NULL AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, COUNT INT, PRIMARY KEY (ID))");
 			ResultSet rs = state.executeQuery("SELECT * FROM hyperhistory");
@@ -47,8 +47,9 @@ public class SQLEconomy {
 			rs = state.executeQuery("SELECT * FROM hyperplayers");
 			rsmd = rs.getMetaData();
 			numcolumns = rsmd.getColumnCount();
-			if (numcolumns == 2) {
-				state.execute("ALTER TABLE hyperplayers ADD BALANCE DOUBLE NOT NULL DEFAULT '0' AFTER ECONOMY");
+			if (numcolumns != 3) {
+				state.execute("DROP TABLE hyperplayers");
+				state.execute("CREATE TABLE IF NOT EXISTS hyperplayers (PLAYER TINYTEXT, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0')");
 			}
 			state.close();
 			connect.close();		
