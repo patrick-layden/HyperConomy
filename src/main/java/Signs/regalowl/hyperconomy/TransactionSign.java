@@ -91,7 +91,6 @@ public class TransactionSign implements Listener {
 				sneak = true;
 			}
 			if (sneak && p.hasPermission("hyperconomy.admin")) {
-				ievent.setCancelled(false);
 				return;
 			}
 			Block b = ievent.getClickedBlock();
