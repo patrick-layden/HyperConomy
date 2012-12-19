@@ -9,40 +9,12 @@ public class Setshop {
 		LanguageFile L = hc.getLanguageFile();
 		if (args.length >= 2) {
 			if (args[0].equalsIgnoreCase("p1")) {
-				int counter = 1;
-				String name = "";
-				while (counter < args.length) {
-					if (counter == 1) {
-						name = args[1];
-					} else {
-						name = name + "_" + args[counter];
-					}
-					counter++;
-				}
-				String teststring = hc.getYaml().getShops().getString(name);
-				if (teststring == null) {
-					name = hc.fixsName(name);
-				}
-				name = name.replace(".", "").replace(":", "");
+				String name = args[1].replace(".", "").replace(":", "").replace("_", " ");
 				s.setsShop(name, player);
 				s.setShop1();
 				player.sendMessage(L.get("P1_SET"));
 			} else if (args[0].equalsIgnoreCase("p2")) {
-				int counter = 1;
-				String name = "";
-				while (counter < args.length) {
-					if (counter == 1) {
-						name = args[1];
-					} else {
-						name = name + "_" + args[counter];
-					}
-					counter++;
-				}
-				name = name.replace(".", "").replace(":", "");
-				String teststring = hc.getYaml().getShops().getString(name);
-				if (teststring == null) {
-					name = hc.fixsName(name);
-				}
+				String name = args[1].replace(".", "").replace(":", "").replace("_", " ");
 				s.setsShop(name, player);
 				s.setShop2();
 				player.sendMessage(L.get("P2_SET"));

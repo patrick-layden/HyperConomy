@@ -23,7 +23,6 @@ public class SerializeArrayList {
 			return array;
 		} catch (Exception e) {
 			ArrayList<String> array = new ArrayList<String>();
-			array.add("Bad Data!");
 			return array;
 		}
 	}
