@@ -25,7 +25,8 @@ public class Topenchants {
 				s.setinShop(player);
 				if (s.inShop() != -1) {
 					nameshop = s.getShop(player);
-				} else if (requireShop) {
+				} 				
+				if (requireShop && s.inShop() == -1 && !player.hasPermission("hyperconomy.admin")) {
 					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
 					return;
 				}

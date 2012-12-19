@@ -16,7 +16,7 @@ public class Hv {
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			s.setinShop(player);
-			if (requireShop && s.inShop() != -1) {
+			if ((requireShop && s.inShop() != -1) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				ItemStack iinhand = player.getItemInHand();
 				if (ench.hasenchants(iinhand) == false) {
 					if (args.length == 0) {
