@@ -227,6 +227,7 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%zc",name);
 		inputstring = inputstring.replace("%p",amount+"");
+		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
 		return inputstring;
 	}
 	
