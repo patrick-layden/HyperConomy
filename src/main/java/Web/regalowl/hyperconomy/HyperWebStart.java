@@ -52,6 +52,7 @@ public class HyperWebStart {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void startServer() {
 		try {
     		serverid = hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {

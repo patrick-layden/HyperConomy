@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class HyperPlayersBackup {
+	@SuppressWarnings("deprecation")
 	HyperPlayersBackup() {
 		HyperConomy hc = HyperConomy.hc;
 		hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {

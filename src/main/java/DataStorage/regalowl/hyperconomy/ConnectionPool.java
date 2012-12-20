@@ -16,6 +16,7 @@ public class ConnectionPool {
 	private ArrayList<Boolean> inUse = new ArrayList<Boolean>();
 	
 	
+	@SuppressWarnings("deprecation")
 	ConnectionPool(HyperConomy hyc, SQLWrite sqw, int maxconnections) {
 		
 		sw = sqw;
@@ -33,6 +34,7 @@ public class ConnectionPool {
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	private void refreshConnections() {
 		sw.pauseWrite(1200L);
 		hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {

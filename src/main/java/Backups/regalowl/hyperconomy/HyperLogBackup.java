@@ -9,6 +9,7 @@ import java.util.Calendar;
 public class HyperLogBackup {
 	
 	
+	@SuppressWarnings("deprecation")
 	HyperLogBackup() {
 		HyperConomy hc = HyperConomy.hc;
 		hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
