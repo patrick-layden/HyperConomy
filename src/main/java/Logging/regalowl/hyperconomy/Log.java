@@ -32,12 +32,12 @@ public class Log {
 		hc.getSQLWrite().writeData(statement);
 	}
 	
-	public void writeAuditLog(String account, String action, Double amount, String type) {
+	public void writeAuditLog(String account, String action, Double amount, String economy) {
 		if (hc.useSQL()) {
-			String statement = "Insert Into hyperauditlog (TIME, ACCOUNT, ACTION, AMOUNT, TYPE) Values (NOW(),'" + account + "','" + action + "','" + amount + "','" + type + "')";
+			String statement = "Insert Into hyperauditlog (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) Values (NOW(),'" + account + "','" + action + "','" + amount + "','" + economy + "')";
 			hc.getSQLWrite().writeData(statement);
 		} else {
-			String entry = "[Audit] " + "Account = " + account + " Action = " + action + " Amount = " + amount + " Type = " + type;
+			String entry = "[Audit] " + "Account = " + account + " Action = " + action + " Amount = " + amount + " Type = " + economy;
 			writeLog(entry);
 		}
 	}
