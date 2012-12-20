@@ -903,6 +903,14 @@ public class DataFunctions {
 			return data;
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public String getPlayerEconomy(String player) {
 		player = fixpN(player);
@@ -921,6 +929,7 @@ public class DataFunctions {
 		}
 	}
 
+	
 	public String getPlayerEconomy(Player p) {
 		try {
 			if (p == null) {
@@ -958,10 +967,6 @@ public class DataFunctions {
 			econplayer.add(player);
 			playerbalance.add(0.0);
 		}
-		
-		
-		
-		
 	}
 	
 	public void setPlayerEconomy(String player, String econ) {
@@ -977,11 +982,6 @@ public class DataFunctions {
 	}
 	
 	
-	
-	
-	
-	
-	
 	public boolean hasAccount(String name) {
 		name = fixpN(name);
 		boolean ha = false;
@@ -994,17 +994,18 @@ public class DataFunctions {
 	public Double getPlayerBalance(Player p) {
 		try {
 			if (p == null) {
-				return 0.0;
+				throw new PlayerNotFoundException("Function passed player that cannot be found");
 			}
 			String player = p.getName();
 			player = fixpN(player);
 			if (econplayer.indexOf(player) != -1) {
 				return playerbalance.get(econplayer.indexOf(player));
+			} else {
+				throw new PlayerNotFoundException("Function passed player that cannot be found");
 			}
-			return -9999999.0;
 		} catch (Exception e) {
 			new HyperError(e, "Passed player: " + p.getDisplayName());
-			return -9999999.0;
+			return 0.0;
 		}
 	}
 	
@@ -1013,11 +1014,12 @@ public class DataFunctions {
 		try {
 			if (econplayer.indexOf(player) != -1) {
 				return playerbalance.get(econplayer.indexOf(player));
+			} else {
+				throw new PlayerNotFoundException("Function passed player that cannot be found");
 			}
-			return -9999999.0;
 		} catch (Exception e) {
 			new HyperError(e, "Passed player: " + player);
-			return -9999999.0;
+			return 0.0;
 		}
 	}
 	
@@ -1034,7 +1036,7 @@ public class DataFunctions {
 			}
 			playerbalance.set(econplayer.indexOf(player), balance);
 		} catch (Exception e) {
-			//TODO
+			new HyperError(e, "Passed player: " + player + ", balance: " + balance);
 		}
 	}
 	
@@ -1052,7 +1054,7 @@ public class DataFunctions {
 			}
 			playerbalance.set(econplayer.indexOf(player), balance);
 		} catch (Exception e) {
-			//TODO
+			new HyperError(e, "Passed player: " + player + ", balance: " + balance);
 		}
 	}
 	

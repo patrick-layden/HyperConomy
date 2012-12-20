@@ -31,6 +31,16 @@ public class Log {
 	        "','" + type + "')";
 		hc.getSQLWrite().writeData(statement);
 	}
+	
+	public void writeAuditLog(String account, String action, Double amount, String type) {
+		if (hc.useSQL()) {
+			String statement = "Insert Into hyperauditlog (TIME, ACCOUNT, ACTION, AMOUNT, TYPE) Values (NOW(),'" + account + "','" + action + "','" + amount + "','" + type + "')";
+			hc.getSQLWrite().writeData(statement);
+		} else {
+			String entry = "[Audit] " + "Account = " + account + " Action = " + action + " Amount = " + amount + " Type = " + type;
+			writeLog(entry);
+		}
+	}
 
   	public void writeLog(String entry) {
   		Date currentDate = new Date();
