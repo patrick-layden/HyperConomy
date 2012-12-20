@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class HyperHistoryBackup {
+	@SuppressWarnings("deprecation")
 	HyperHistoryBackup() {
 		HyperConomy hc = HyperConomy.hc;
 		hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {

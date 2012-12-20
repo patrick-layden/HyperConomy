@@ -40,6 +40,7 @@ public class HyperError {
 	
 	
 	
+	@SuppressWarnings("deprecation")
 	private void handleError() {
 		boolean logError = hc.getYaml().getConfig().getBoolean("config.log-errors");
 		LanguageFile L = hc.getLanguageFile();

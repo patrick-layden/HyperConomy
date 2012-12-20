@@ -1,5 +1,8 @@
 package regalowl.hyperconomy;
 
+import java.util.Iterator;
+
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,9 +19,8 @@ public class Hv {
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			s.setinShop(player);
-			if (requireShop && s.inShop() != -1) {
+			if ((requireShop && s.inShop() != -1) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				ItemStack iinhand = player.getItemInHand();
-				if (ench.hasenchants(iinhand) == false) {
 					if (args.length == 0) {
 						amount = 1;
 					} else {
@@ -55,8 +57,45 @@ public class Hv {
 						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, nam));
 						player.sendMessage(L.get("LINE_BREAK"));
 					}
-				} else {
-					player.sendMessage(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"));
+				if (ench.hasenchants(iinhand)) {
+					Account acc = hc.getAccount();
+					player.getItemInHand().getEnchantments().keySet().toArray();
+					Iterator<Enchantment> ite = player.getItemInHand().getEnchantments().keySet().iterator();
+					player.sendMessage(L.get("LINE_BREAK"));
+					double duramult = ench.getDuramult(player);
+					while (ite.hasNext()) {
+						String rawstring = ite.next().toString();
+						String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
+						Enchantment en = null;
+						en = Enchantment.getByName(enchname);
+						int lvl = player.getItemInHand().getEnchantmentLevel(en);
+						String enam = hc.getenchantData(enchname);
+						String fnam = enam + lvl;
+						String mater = player.getItemInHand().getType().name();
+						double value = calc.getEnchantValue(fnam, mater, playerecon) * duramult;
+						double cost = calc.getEnchantCost(fnam, mater, playerecon);
+						cost = cost + calc.getEnchantTax(fnam, playerecon, cost);
+						value = calc.twoDecimals(value);
+						cost = calc.twoDecimals(cost);
+						double salestax = 0;
+						if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+							double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
+							double cbal = acc.getBalance(player.getName());
+							if (cbal >= moneycap) {
+								salestax = value * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent") / 100);
+							} else {
+								salestax = value * (cbal / moneycap);
+							}
+						} else {
+							double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
+							salestax = (salestaxpercent / 100) * value;
+						}
+						value = calc.twoDecimals(value - salestax);
+						player.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
+						player.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
+						player.sendMessage(L.f(L.get("EVALUE_STOCK"), sf.getStock(fnam, playerecon), fnam));
+					}
+					player.sendMessage(L.get("LINE_BREAK"));
 				}
 			} else {
 				player.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));

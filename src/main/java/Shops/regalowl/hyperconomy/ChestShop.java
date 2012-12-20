@@ -449,7 +449,7 @@ public class ChestShop implements Listener{
 	
 	
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOW)
 	public void onInventoryClickEvent(InventoryClickEvent icevent) {
 		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
 			if (!hc.isLocked()) { 
@@ -563,7 +563,6 @@ public class ChestShop implements Listener{
 						    				
 						    			}
 					    			}
-
 					    			icevent.setCancelled(true);
 					    			return;
 					    			

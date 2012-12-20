@@ -16,6 +16,7 @@ public class Timer {
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	public void startTimer() {
 		timerID = hc.getServer().getScheduler().scheduleAsyncRepeatingTask(hc, new Runnable() {
 		    public void run() {

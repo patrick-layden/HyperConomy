@@ -1,40 +1,31 @@
 package regalowl.hyperconomy;
 
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 public class Additem {
 	Additem(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getShop();
+		SerializeArrayList sal = new SerializeArrayList();
 		LanguageFile L = hc.getLanguageFile();
 		try {
-			String itemname = args[0];
+			String itemname = hc.fixName(args[0]);
 			if (args.length >= 2) {
-				if (hc.itemTest(itemname) || hc.enchantTest(itemname) || itemname.equalsIgnoreCase("all")) {
-    				int counter = 1;
-    				String shopname = "";
-    				while (counter < args.length) {
-    					if (counter == 1) {
-    						shopname = args[1];
-    					} else {
-    						shopname = shopname + "_" + args[counter];
-    					}
-    					counter++;
-    				}
+				if (hc.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
+					String shopname = args[1].replace("_", " ");
     				String teststring3 = hc.getYaml().getShops().getString(shopname);
     				if (teststring3 == null) {
     					shopname = hc.fixsName(shopname);
     					teststring3 = hc.getYaml().getShops().getString(shopname);
     				}
     				if (teststring3 != null) {
-	    				String unavailable = hc.getYaml().getShops().getString(shopname + ".unavailable");
+	    				ArrayList<String> unavailable = sal.stringToArray(hc.getYaml().getShops().getString(shopname + ".unavailable"));
 	    				if (!s.has(shopname, itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
-		    					unavailable = unavailable.replace("," + itemname + ",", ",");
-		    					if (itemname.equalsIgnoreCase(unavailable.substring(0, itemname.length()))) {
-		    						unavailable = unavailable.substring(itemname.length() + 1, unavailable.length());
-		    					}
-		    					hc.getYaml().getShops().set(shopname + ".unavailable", unavailable);
+	    						unavailable.remove(itemname);
+		    					hc.getYaml().getShops().set(shopname + ".unavailable", sal.stringArrayToString(unavailable));
 		    					sender.sendMessage(ChatColor.GOLD + itemname + " " + L.get("ADDED_TO") + " " + shopname.replace("_", " "));
 	    					} else if (itemname.equalsIgnoreCase("all")) {
 		    					hc.getYaml().getShops().set(shopname + ".unavailable", null);

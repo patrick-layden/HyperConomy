@@ -22,7 +22,7 @@ public class Browseshop {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
     		if (player != null) {
     			s.setinShop(player);
-    			if (requireShop && s.inShop() == -1) {
+    			if ((requireShop && s.inShop() == -1) && !player.hasPermission("hyperconomy.admin")) {
     				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
     				return;
     			}			

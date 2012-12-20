@@ -455,16 +455,14 @@ public class Shop {
 		if (item == null) {
 			return false;
 		}
+		SerializeArrayList sal = new SerializeArrayList();
 		FileConfiguration sh = hc.getYaml().getShops();
-		String unavailable = sh.getString(nameshop + ".unavailable");
+		ArrayList<String> unavailable = sal.stringToArray(sh.getString(nameshop + ".unavailable"));
 		if (unavailable != null) {
-			
-			if (unavailable.contains("," + item + ",")) {
-				return false;
-			}
-
-			if (unavailable.length() >= item.length() && item.equalsIgnoreCase(unavailable.substring(0, item.length()))) {
-				return false;
+			for (int i = 0; i < unavailable.size(); i++) {
+				if (unavailable.get(i).equalsIgnoreCase(item)) {
+					return false;
+				}
 			}
 		}
 		return true;

@@ -17,6 +17,7 @@ public class HyperWebPrices extends AbstractHandler {
 	private HyperWebStart hws;
 	private String page = "Please wait, the price page is loading...  Refresh your page in a few seconds.";
 	
+	@SuppressWarnings("deprecation")
 	public HyperWebPrices(HyperConomy hyc, Calculation c, HyperWebStart hyws) {
 		hc = hyc;
 		calc = c;
