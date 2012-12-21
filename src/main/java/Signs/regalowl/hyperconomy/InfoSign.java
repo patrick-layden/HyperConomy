@@ -40,10 +40,12 @@ public class InfoSign {
 			this.enchantClass = enchantClass;
 		}
 		setData(signKey, type, objectName, economy);
-		line1 = ChatColor.DARK_BLUE + ChatColor.stripColor(s.getLine(0).trim());
-		line2 = ChatColor.DARK_BLUE + ChatColor.stripColor(s.getLine(1).trim());
-		line3 = s.getLine(2);
-		line4 = s.getLine(3);
+		if (s != null) {
+			line1 = ChatColor.DARK_BLUE + ChatColor.stripColor(s.getLine(0).trim());
+			line2 = ChatColor.DARK_BLUE + ChatColor.stripColor(s.getLine(1).trim());
+			line3 = s.getLine(2);
+			line4 = s.getLine(3);
+		}
 	}
 	
 	InfoSign(String signKey, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass, String[] lines) {
@@ -54,10 +56,12 @@ public class InfoSign {
 			this.enchantClass = enchantClass;
 		}
 		setData(signKey, type, objectName, economy);
-		line1 = ChatColor.DARK_BLUE + ChatColor.stripColor(lines[0].trim());
-		line2 = ChatColor.DARK_BLUE + ChatColor.stripColor(lines[1].trim());
-		line3 = lines[2];
-		line4 = lines[3];
+		if (s != null) {
+			line1 = ChatColor.DARK_BLUE + ChatColor.stripColor(lines[0].trim());
+			line2 = ChatColor.DARK_BLUE + ChatColor.stripColor(lines[1].trim());
+			line3 = lines[2];
+			line4 = lines[3];
+		}
 	}
 
 	

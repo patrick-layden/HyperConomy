@@ -92,12 +92,11 @@ public class ConnectionPool {
 
 	
 	public void closeConnections() {
-		for (int i = 0; i < connections.size(); i++) {
+		for (Connection connect:connections) {
 			try {
-				connections.get(i).close();
+				connect.close();
 			} catch (SQLException e) {
 				new HyperError(e);
-				//e.printStackTrace();
 			}
 		}
 		connections.clear();

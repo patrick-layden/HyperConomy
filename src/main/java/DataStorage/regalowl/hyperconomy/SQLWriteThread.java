@@ -20,8 +20,8 @@ public class SQLWriteThread {
 
 		
 	@SuppressWarnings("deprecation")
-	public void writeThread(HyperConomy hyc, SQLWrite sqw, ConnectionPool cop, String state) {
-		hc = hyc;
+	public void writeThread(SQLWrite sqw, ConnectionPool cop, String state) {
+		hc = HyperConomy.hc;
 		sw = sqw;
 		cp = cop;
 		statement = state;

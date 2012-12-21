@@ -87,7 +87,7 @@ public class SQLWrite {
     		String statement = workingBuffer.get(index);
     		workingBuffer.remove(index);
     		SQLWriteThread swt = new SQLWriteThread();
-    		swt.writeThread(hc, sqw, cp, statement);
+    		swt.writeThread(sqw, cp, statement);
     	}
     }
 

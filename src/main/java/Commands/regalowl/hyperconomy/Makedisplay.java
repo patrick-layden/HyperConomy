@@ -12,7 +12,7 @@ public class Makedisplay {
 			return;
 		}
 		SQLFunctions sf = hc.getSQLFunctions();
-		ItemDisplay itdi = hc.getItemDisplay();
+		ItemDisplayFactory itdi = hc.getItemDisplay();
 		if (args.length == 1) {
 			String name = hc.fixName(args[0]);
 			if (hc.itemTest(name)) {
