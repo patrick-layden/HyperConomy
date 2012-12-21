@@ -12,7 +12,7 @@ public class Removedisplay {
 			player.sendMessage(L.get("ITEMDISPLAYS_MUST_BE_ENABLED"));
 			return;
 		}
-		ItemDisplay itdi = hc.getItemDisplay();
+		ItemDisplayFactory itdi = hc.getItemDisplay();
 		int x = player.getLocation().getBlockX();
 		int z = player.getLocation().getBlockZ();
 		World w = player.getLocation().getWorld();

@@ -29,7 +29,7 @@ public class HyperConomy extends JavaPlugin {
 	private History hist;
 	private Notification not;
 	private TransactionSign tsign;
-	private ItemDisplay itdi;
+	private ItemDisplayFactory itdi;
 	private DataFunctions sf;
 	private SQLWrite sw;
 	private SQLEconomy sqe;
@@ -59,6 +59,11 @@ public class HyperConomy extends JavaPlugin {
 	public void onEnable() {
 		initialize();
 	}
+	
+	@Override
+	public void onDisable() {
+		shutDown();
+	}
 
 	public void onDataLoad() {
 		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
@@ -79,12 +84,7 @@ public class HyperConomy extends JavaPlugin {
 			useExternalEconomy = false;
 		}
 		
-		itdi = new ItemDisplay();
-	}
-
-	@Override
-	public void onDisable() {
-		shutDown();
+		itdi = new ItemDisplayFactory();
 	}
 
 	public void initialize() {
@@ -167,7 +167,7 @@ public class HyperConomy extends JavaPlugin {
 	public void shutDown() {
 		HandlerList.unregisterAll(this);
 		if (itdi != null) {
-			itdi.shutDown();
+			itdi.unloadDisplays();
 		}
 		if (s != null) {
 			s.stopshopCheck();
@@ -176,7 +176,6 @@ public class HyperConomy extends JavaPlugin {
 		if (hist != null) {
 			hist.stophistoryLog();
 		}
-		getServer().getScheduler().cancelTasks(this);
 		if (hws != null) {
 			hws.endServer();
 		}
@@ -187,6 +186,7 @@ public class HyperConomy extends JavaPlugin {
 		if (yaml != null) {
 			yaml.saveYamls();
 		}
+		getServer().getScheduler().cancelTasks(this);
 		clearData();
 	}
 	
@@ -211,7 +211,6 @@ public class HyperConomy extends JavaPlugin {
 		sqe= null;
 		hws= null;
 		yaml= null;
-		L= null;
 		economy= null;
 		namedata.clear();
 		enchantdata.clear();
@@ -608,7 +607,7 @@ public class HyperConomy extends JavaPlugin {
 		return sqe;
 	}
 
-	public ItemDisplay getItemDisplay() {
+	public ItemDisplayFactory getItemDisplay() {
 		return itdi;
 	}
 
