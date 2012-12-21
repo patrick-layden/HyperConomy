@@ -210,7 +210,6 @@ public class HyperConomy extends JavaPlugin {
 		sqe= null;
 		hws= null;
 		yaml= null;
-		L= null;
 		economy= null;
 		namedata.clear();
 		enchantdata.clear();
