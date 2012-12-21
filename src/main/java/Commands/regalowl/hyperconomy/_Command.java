@@ -272,6 +272,9 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("importbalance")) {
 			new Importbalance(args, sender);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("audit")) {
+			new Audit(args, sender);
+			return true;
 		}
 		
 		return false;
