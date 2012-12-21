@@ -104,10 +104,9 @@ public class InfoSignHandler implements Listener {
 				for (int i = 0; i < 4; i++) {
 					if (currentSign < infoSigns.size()) {
 						InfoSign infoSign = infoSigns.get(currentSign);
-						if (infoSign.getBlockSign() != null) {
+						if (infoSign.testData()) {
 							infoSign.update();
 						} else {
-							sns.set(infoSign.getKey(), null);
 							infoSigns.remove(infoSign);
 						}
 						currentSign++;
