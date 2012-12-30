@@ -41,7 +41,7 @@ public class SQLPlayers implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
 		if (!inDatabase(event.getPlayer())) {
 			SQLWrite sw = hc.getSQLWrite();
-			sw.writeData("Insert Into hyperplayers (PLAYER, ECONOMY)" + " Values ('" + event.getPlayer().getName().toLowerCase() + "','" + "default" + "')");
+			sw.writeData("INSERT INTO hyperplayers (PLAYER, ECONOMY)" + " VALUES ('" + event.getPlayer().getName().toLowerCase() + "','" + "default" + "')");
 			hc.getSQLFunctions().addPlayerEconomy(event.getPlayer().getName().toLowerCase(), "default");
 		}
 	}
@@ -68,7 +68,7 @@ public class SQLPlayers implements Listener {
             connect.close();
             return indatabase;
 		} catch (SQLException e) {
-			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "actionzones.admin");
+			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "hyperconomy.error");
 			e.printStackTrace();
 			return false;
 		}

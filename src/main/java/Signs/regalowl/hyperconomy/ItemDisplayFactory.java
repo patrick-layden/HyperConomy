@@ -238,7 +238,7 @@ public class ItemDisplayFactory implements Listener {
 
 		}
 	}
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChunkLoad(ChunkLoadEvent event) {
 		try {
 			boolean refresh = false;
@@ -255,7 +255,7 @@ public class ItemDisplayFactory implements Listener {
 			new HyperError(e);
 		}
 	}
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChunkUnload(ChunkUnloadEvent event) {
 		try {
 			Chunk unloadchunk = event.getChunk();
