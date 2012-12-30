@@ -65,8 +65,8 @@ public class HyperError {
 					String version = hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
 					info = ft.getTimeStamp() + "\r\n"
 					+ "HyperConomy version: " + version + "\r\n"
-					+ Bukkit.getName() + " version " + Bukkit.getVersion() + "\r\n"
-					+ "UseSQL='" + hc.useSQL() + "', DataBuilt='" + sf.dataBuilt() + "', SQLLoaded='" + sf.sqlLoaded()
+					+ Bukkit.getName() + " version: " + Bukkit.getServer().getBukkitVersion() + "\r\n"
+					+ "UseSQL='" + hc.useSQL() + "'\r\nDataBuilt='" + sf.dataBuilt() + "'\r\nSQLLoaded='" + sf.sqlLoaded()
 					+ "'\r\n" + info;
 					ft.writeStringToFile(info, path + File.separator + "info.txt");
 					LanguageFile L = hc.getLanguageFile();

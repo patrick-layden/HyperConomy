@@ -60,32 +60,37 @@ public class InfoSign {
 	}
 
 	public boolean setData(String signKey, SignType type, String objectName, String economy) {
-		hc = HyperConomy.hc;
-		L = hc.getLanguageFile();
-		if (signKey == null || type == null || objectName == null) {
+		try {
+			hc = HyperConomy.hc;
+			L = hc.getLanguageFile();
+			if (signKey == null || type == null || objectName == null) {
+				return false;
+			}
+			this.economy = "default";
+			this.signKey = signKey;
+			this.world = signKey.substring(0, signKey.indexOf("|"));
+			signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
+			this.x = Integer.parseInt(signKey.substring(0, signKey.indexOf("|")));
+			signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
+			this.y = Integer.parseInt(signKey.substring(0, signKey.indexOf("|")));
+			signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
+			this.z = Integer.parseInt(signKey);
+			this.type = type;
+			this.objectName = objectName;
+			if (economy != null) {
+				this.economy = economy;
+			}
+			isEnchantment = hc.enchantTest(this.objectName);
+			Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
+			if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
+				s = (Sign) signblock.getState();
+				return true;
+			}
+			return false;
+		} catch (Exception e) {
+			new HyperError(e, "InfoSign setData() passed signKey='" + signKey + "', SignType='" + type.toString() + "', objectName='" + objectName + "', economy='" + economy + "'");
 			return false;
 		}
-		this.economy = "default";
-		this.signKey = signKey;
-		this.world = signKey.substring(0, signKey.indexOf("|"));
-		signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
-		this.x = Integer.parseInt(signKey.substring(0, signKey.indexOf("|")));
-		signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
-		this.y = Integer.parseInt(signKey.substring(0, signKey.indexOf("|")));
-		signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
-		this.z = Integer.parseInt(signKey);
-		this.type = type;
-		this.objectName = objectName;
-		if (economy != null) {
-			this.economy = economy;
-		}
-		isEnchantment = hc.enchantTest(this.objectName);
-		Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
-		if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
-			s = (Sign) signblock.getState();
-			return true;
-		}
-		return false;
 	}
 
 	public int getX() {

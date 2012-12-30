@@ -238,31 +238,39 @@ public class ItemDisplayFactory implements Listener {
 
 		}
 	}
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChunkLoad(ChunkLoadEvent event) {
-		boolean refresh = false;
-		Chunk chunk = event.getChunk();
-		for (ItemDisplay display:displays) {
-			if (chunk.equals(display.getLocation().getChunk())) {
-				refresh = true;
+		try {
+			boolean refresh = false;
+			Chunk chunk = event.getChunk();
+			for (ItemDisplay display:displays) {
+				if (chunk.equals(display.getLocation().getChunk())) {
+					refresh = true;
+				}
 			}
-		}
-		if (refresh) {
-			loadDisplays();
+			if (refresh) {
+				loadDisplays();
+			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChunkUnload(ChunkUnloadEvent event) {
-		Chunk unloadchunk = event.getChunk();
-		boolean refresh = false;
-		for (ItemDisplay display:displays) {
-			Chunk displaychunk = display.getLocation().getChunk();
-			if (displaychunk.equals(unloadchunk)) {
-				refresh = true;
+		try {
+			Chunk unloadchunk = event.getChunk();
+			boolean refresh = false;
+			for (ItemDisplay display:displays) {
+				Chunk displaychunk = display.getLocation().getChunk();
+				if (displaychunk.equals(unloadchunk)) {
+					refresh = true;
+				}
 			}
-		}
-		if (refresh) {
-			loadDisplays();
+			if (refresh) {
+				loadDisplays();
+			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
