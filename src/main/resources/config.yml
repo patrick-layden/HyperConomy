@@ -1,4 +1,4 @@
-version: 0.957
+version: 0.958
 config:
   shopcheckinterval: 6
   logwriteinterval: 4
