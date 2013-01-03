@@ -69,24 +69,29 @@ public class ItemDisplayFactory implements Listener {
 	
 	
 	public void loadDisplays() {
-		unloadDisplays();
-		FileConfiguration disp = hc.getYaml().getDisplays();
-		Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
-		while (it.hasNext()) {
-			String key = it.next().toString();
-			String name = disp.getString(key + ".name");
-			String economy = disp.getString(key + ".economy");
-			double x = disp.getDouble(key + ".x");
-			double y = disp.getDouble(key + ".y");
-			double z = disp.getDouble(key + ".z");
-			World w = Bukkit.getWorld(disp.getString(key + ".world"));
-			Location l = new Location(w, x, y, z);
-			Chunk locChunk = l.getChunk();
-			if (locChunk.isLoaded()) {
-				ItemDisplay display = new ItemDisplay(l, name, economy);
-				displays.add(display);
-				display.clearNearbyItems();
+		try {
+			hc = HyperConomy.hc;
+			unloadDisplays();
+			FileConfiguration disp = hc.getYaml().getDisplays();
+			Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
+			while (it.hasNext()) {
+				String key = it.next().toString();
+				String name = disp.getString(key + ".name");
+				String economy = disp.getString(key + ".economy");
+				double x = disp.getDouble(key + ".x");
+				double y = disp.getDouble(key + ".y");
+				double z = disp.getDouble(key + ".z");
+				World w = Bukkit.getWorld(disp.getString(key + ".world"));
+				Location l = new Location(w, x, y, z);
+				Chunk locChunk = l.getChunk();
+				if (locChunk.isLoaded()) {
+					ItemDisplay display = new ItemDisplay(l, name, economy);
+					displays.add(display);
+					display.clearNearbyItems();
+				}
 			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
 	
