@@ -3,7 +3,7 @@ package regalowl.hyperconomy;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class HyperObjectAPI implements HyperObject {
+public class HyperObjectAPI implements HyperObjectInterface {
 	public double getTheoreticalPurchasePrice(int id, int durability, int amount, String economy) {
 		if (economy == null) {
 			economy = "default";

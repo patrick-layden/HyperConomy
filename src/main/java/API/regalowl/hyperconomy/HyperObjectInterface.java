@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 //UNDER CONSTRUCTION
 
-public interface HyperObject
+public interface HyperObjectInterface
 {
 
 	/**
