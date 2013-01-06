@@ -17,6 +17,17 @@ public class HyperError {
 	
 	
 	
+	HyperError(String infor) {
+		e = null;
+		info = infor;
+		hc = HyperConomy.hc;
+		FileConfiguration conf = hc.getYaml().getConfig();
+		errornumber = conf.getInt("config.error-count");
+		conf.set("config.error-count", errornumber + 1);
+		handleError();
+	}
+	
+	
 	HyperError(Exception ex, String infor) {
 		e = ex;
 		info = infor;
@@ -55,9 +66,11 @@ public class HyperError {
 					ft.makeFolder(path);
 					FileOutputStream fos;
 					try {
-						fos = new FileOutputStream(new File(path + File.separator + "stacktrace.txt"));
-						PrintStream ps = new PrintStream(fos);  
-						e.printStackTrace(ps); 
+						if (e != null) {
+							fos = new FileOutputStream(new File(path + File.separator + "stacktrace.txt"));
+							PrintStream ps = new PrintStream(fos);  
+							e.printStackTrace(ps); 
+						}
 					} catch (FileNotFoundException e1) {
 						e1.printStackTrace();
 					}

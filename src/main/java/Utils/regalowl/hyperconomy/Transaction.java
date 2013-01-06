@@ -1,9 +1,8 @@
 package regalowl.hyperconomy;
 
-import java.util.HashMap;
-import java.util.logging.Logger;
+
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -152,11 +151,11 @@ public class Transaction {
 								if (maxi == 0) {
 									price = calc.getValue(name, amount, p);
 								}
-								double trueAmount = removesoldItems(id, data, amount, p);
+								removesoldItems(id, data, amount, p);
 								double shopstock = 0;
 								shopstock = sf.getStock(name, playerecon);
 								if (!Boolean.parseBoolean(sf.getStatic(name, playerecon)) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-									sf.setStock(name, playerecon, (shopstock + trueAmount));
+									sf.setStock(name, playerecon, (shopstock + amount));
 								}
 								int maxi2 = getmaxInitial(name, p);
 								if (maxi2 == 0) {
@@ -377,84 +376,53 @@ public class Transaction {
 	 * player and the item's id and data.
 	 * 
 	 */
-	private double removesoldItems(int id, int data, int amount, Player p) {
-		Calculation calc = hc.getCalculation();
-		ETransaction ench = hc.getETransaction();
-		double trueAmount = 0;
-		if (!calc.isDurable(id)) {
-			trueAmount = amount;
-		}
+	private boolean removesoldItems(int id, int data, int amount, Player p) {
 		try {
-			int newdata = calc.newData(id, data);
+			int oamount = amount;
+			Calculation calc = hc.getCalculation();
+			ETransaction ench = hc.getETransaction();
+			data = calc.newData(id, data);
 			Inventory pinv = p.getInventory();
-			HashMap<Integer, ? extends ItemStack> stacks1 = pinv.all(id);
-			if (p.getInventory().contains(id)) {
-				String stringstacks = stacks1.toString();
-				int maxstack = stacks1.get(Integer.parseInt(stringstacks.substring(1, stringstacks.indexOf("=")))).getMaxStackSize();
-				ItemStack inhand = p.getItemInHand();
-				int dv = calc.getDamageValue(inhand);
-				boolean hasenchants = ench.hasenchants(inhand);
-				int ritems = amount;
-				if (inhand != null && calc.newData(id, dv) == newdata && inhand.getTypeId() == id && hasenchants == false) {
-					int amountinhand = inhand.getAmount();
-					if (amountinhand > ritems) {
-						if (calc.isDurable(inhand.getTypeId())) {
-							trueAmount += calc.getdurabilityPercent(inhand);
-						}
-						inhand.setAmount(amountinhand - ritems);
-						ritems = 0;
-					} else if (amountinhand <= ritems) {
-						Inventory invent = p.getInventory();
-						int heldslot = p.getInventory().getHeldItemSlot();
-						if (calc.isDurable(pinv.getItem(heldslot).getTypeId())) {
-							trueAmount += calc.getdurabilityPercent(pinv.getItem(heldslot));
-						}
-						invent.clear(heldslot);
-						ritems = ritems - amountinhand;
+			ItemStack hstack = p.getItemInHand();
+			if (hstack != null && !ench.hasenchants(hstack)) {
+				int stackid = hstack.getTypeId();
+				int stackdata = calc.getDamageValue(hstack);
+				if (stackid == id && stackdata == data) {
+					if (amount >= hstack.getAmount()) {
+						amount -= hstack.getAmount();
+						pinv.clear(p.getInventory().getHeldItemSlot());
+					} else {
+						hstack.setAmount(hstack.getAmount() - amount);
+						return true;
 					}
-				}
-				int slot;
-				String allstacks = "{" + stringstacks;
-				while (allstacks.contains(" x ")) {
-					int a = allstacks.indexOf(" x ") + 3;
-					int b = allstacks.indexOf("}", a);
-					slot = Integer.parseInt(allstacks.substring(2, allstacks.indexOf("=")));
-					int damv = calc.getDamageValue(pinv.getItem(slot));
-					boolean hasenchants2 = ench.hasenchants(stacks1.get(slot));
-					if (pinv.getItem(slot) != null && calc.newData(id, damv) == newdata && pinv.getItem(slot).getTypeId() == id && hasenchants2 == false) {
-						if (ritems > 0) {
-							if (ritems >= maxstack && pinv.getItem(slot).getAmount() == maxstack) {
-								if (calc.isDurable(pinv.getItem(slot).getTypeId())) {
-									trueAmount += calc.getdurabilityPercent(pinv.getItem(slot));
-								}
-								pinv.clear(slot);
-								ritems = ritems - maxstack;
-							} else {
-								int stackamount = pinv.getItem(slot).getAmount();
-								if (stackamount <= ritems) {
-									if (calc.isDurable(pinv.getItem(slot).getTypeId())) {
-										trueAmount += calc.getdurabilityPercent(pinv.getItem(slot));
-									}
-									pinv.clear(slot);
-									ritems = ritems - stackamount;
-								} else {
-									if (calc.isDurable(pinv.getItem(slot).getTypeId())) {
-										trueAmount += calc.getdurabilityPercent(pinv.getItem(slot));
-									}
-									pinv.getItem(slot).setAmount(stackamount - ritems);
-									ritems = 0;
-								}
-							}
-						}
-					}
-					allstacks = allstacks.substring(b + 1, allstacks.length());
 				}
 			}
-			return trueAmount;
+			for (int i = 0; i < pinv.getSize(); i++) {
+				ItemStack stack = pinv.getItem(i);
+				if (stack != null && !ench.hasenchants(stack)) {
+					int stackid = stack.getTypeId();
+					int stackdata = calc.getDamageValue(stack);
+					if (stackid == id && stackdata == data) {
+						if (amount >= stack.getAmount()) {
+							amount -= stack.getAmount();
+							pinv.clear(i);
+						} else {
+							stack.setAmount(stack.getAmount() - amount);
+							return true;
+						}
+					}
+				}
+			}
+			if (amount != 0) {
+				new HyperError("removesoldItems() failure.  Items not successfully removed.  Passed id = '" + id + "', data = '" + data + "', amount = '" + oamount + "'");
+				return false;	
+			} else {
+				return true;
+			}
 		} catch (Exception e) {
 			String info = "Transaction removeSoldItems() passed values player='" + p.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
 			new HyperError(e, info);
-			return amount;
+			return false;
 		}
 	}
 
@@ -862,51 +830,38 @@ public class Transaction {
 	 * player and the item's id and data.
 	 * 
 	 */
-	public void removeItems(int id, int data, int amount, Inventory invent) {
+	public boolean removeItems(int id, int data, int amount, Inventory invent) {
 		try {
+			int oamount = amount;
 			Calculation calc = hc.getCalculation();
 			ETransaction ench = hc.getETransaction();
-			int newdata = calc.newData(id, data);
-			HashMap<Integer, ? extends ItemStack> stacks1 = invent.all(id);
-			if (invent.contains(id)) {
-				String stringstacks = stacks1.toString();
-				int maxstack = stacks1.get(Integer.parseInt(stringstacks.substring(1, stringstacks.indexOf("=")))).getMaxStackSize();
-				int ritems = amount;
-				int slot;
-				String allstacks = "{" + stringstacks;
-				while (allstacks.contains(" x ")) {
-					int a = allstacks.indexOf(" x ") + 3;
-					int b = allstacks.indexOf("}", a);
-					slot = Integer.parseInt(allstacks.substring(2, allstacks.indexOf("=")));
-					int damv = calc.getDamageValue(invent.getItem(slot));
-					boolean hasenchants2 = ench.hasenchants(stacks1.get(slot));
-					if (invent.getItem(slot) != null && calc.newData(id, damv) == newdata && invent.getItem(slot).getTypeId() == id && hasenchants2 == false) {
-						if (ritems > 0) {
-							if (ritems >= maxstack && invent.getItem(slot).getAmount() == maxstack) {
-								invent.clear(slot);
-								ritems = ritems - maxstack;
-							} else {
-								int stackamount = invent.getItem(slot).getAmount();
-								if (stackamount <= ritems) {
-									invent.clear(slot);
-									ritems = ritems - stackamount;
-								} else {
-									invent.getItem(slot).setAmount(stackamount - ritems);
-									ritems = 0;
-								}
-							}
+			data = calc.newData(id, data);
+			for (int i = 0; i < invent.getSize(); i++) {
+				ItemStack stack = invent.getItem(i);
+				if (stack != null && !ench.hasenchants(stack)) {
+					int stackid = stack.getTypeId();
+					int stackdata = calc.getDamageValue(stack);
+					if (stackid == id && stackdata == data) {
+						if (amount >= stack.getAmount()) {
+							amount -= stack.getAmount();
+							invent.clear(i);
+						} else {
+							stack.setAmount(stack.getAmount() - amount);
+							return true;
 						}
 					}
-					allstacks = allstacks.substring(b + 1, allstacks.length());
 				}
+			}
+			if (amount != 0) {
+				new HyperError("removesoldItems() failure.  Items not successfully removed.  Passed id = '" + id + "', data = '" + data + "', amount = '" + oamount + "'");
+				return false;	
 			} else {
-				Logger log = Logger.getLogger("Minecraft");
-				log.info("HyperConomy ERROR #39");
-				Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #39", "hyperconomy.error");
+				return true;
 			}
 		} catch (Exception e) {
-			String info = "Transaction removeItems() passed values id='" + id + "', data='" + data + "', amount='" + amount + "'";
+			String info = "Transaction removeSoldItems() passed values id='" + id + "', data='" + data + "', amount='" + amount + "'";
 			new HyperError(e, info);
+			return false;
 		}
 	}
 
