@@ -1,0 +1,334 @@
+ADD_CATEGORY_INVALID: &4Paramètre invalide. Utiliser /addcategory [nom] [magasin]
+SHOP_NOT_EXIST: &4Magasin inexistant !
+CATEGORY_NOT_EXIST: &4Catégorie inexistante!
+ADDED_TO: &6ajouté à
+SHOP_ALREADY_HAS: &4Le magasin possède déjà cet objet.
+OBJECT_NOT_IN_DATABASE: &9Cet objet ou enchantement n'est pas dans la base de données.
+ADD_ITEM_INVALID: &4Paramètres invalides. Utiliser /additem [nom/'all'] [magasin]
+ALL_ITEMS_ADDED: &6Tous les objets ont été ajoutés à
+BROWSE_SHOP_INVALID: &4Paramètres invalides. Utiliser /browseshop [recherche] (page) ('-a')
+REACHED_END: Vous êtes à la fin.
+AVAILABLE: disponible
+EACH: chaque
+PAGE: Page
+BUY_INVALID: &4Paramètres invalides. Utiliser /buy [nom] (quantité ou 'max')
+CANT_BE_TRADED: &9Cet objet/enchantement ne peut être échangé dans ce magasin.
+INVALID_ITEM_NAME: &4Nom d'objet invalide !
+NO_TRADE_PERMISSION: &9Vous n'avez pas la permission d'échanger ici !
+MUST_BE_IN_SHOP: &4Vous devez être dans un magasin pour acheter ou vendre !
+BUYID_INVALID: &4Paramètres invalides. Utiliser /buyid [quantité] [id] (valeur de dommage).
+OBJECT_NOT_AVAILABLE: &9Cet objet/enchantement est actuellement indisponible.
+BUYXP_INVALID: &4Paramètres invalides. Utiliser /buyxp (quantité)
+LINE_BREAK: &8-----------------------------------------------------
+ONLY_ROOM_TO_BUY: &9Vous n'avez de place que pour acheter %a %n.
+INSUFFICIENT_FUNDS: &9Pas assez d'argent !
+CANNOT_BE_PURCHASED_WITH: &9%n ne peut être acheté avec cette commande.
+THE_SHOP_DOESNT_HAVE_ENOUGH: &9La quantité de %n disponible dans ce magasin est insuffisante.
+CANT_BUY_LESS_THAN_ONE: &9Vous ne pouvez acheter moins de 1 %n
+LOG_BUY: %y a acheté %a %n pour %c%p. [Prix fixe=%za][Prix initial=%zb]
+LOG_SELL: %y a vendu %a %n pour %c%p. [Prix fixe=%za][Prix initial=%zb]
+LOG_BUY_CHEST: %y a acheté %a %n à %zc pour %c%p. [Prix fixe=%za][Prix initial=%zb]
+LOG_SELL_CHEST: %y a vendu %a %n à %zc pour %c%p. [Prix fixe=%za][Prix initial=%zb]
+STATIC_PRICE: Prix fixe
+INITIAL_PRICE: Prix initial
+CANNOT_BE_SOLD_WITH: &9%n ne peut être vendu avec cette commande.
+SHOP_NOT_ENOUGH_MONEY: &9Le magasin n'a pas assez d'argent.
+YOU_DONT_HAVE_ENOUGH: &9Vous n'avez pas assez de %n !
+CANT_SELL_LESS_THAN_ONE: &9Vous ne pouvez pas vendre moins de 1 %n.
+CURRENTLY_CANT_SELL_MORE_THAN: &9Vous ne pouvez vendre plus de %a %n actuellement.
+PURCHASE_MESSAGE: &9&oVous avez acheté &a&o%a &b&o%n &9&opour &a&o%c%p &9&odont &a&o%c%t &9&o de taxe.
+SELL_MESSAGE: &9&oVous avez vendu &a&o%a &b&o%n &9&opour &a&o%c%p &9&odont &a&o%c%t &9&ode taxe.
+PURCHASE_CHEST_MESSAGE: &9&oVous avez acheté &a&o%a &b&o%n &9&opour &a&o%c%p &9&oà %zc.
+SELL_CHEST_MESSAGE: &9&oVous avez vendu &a&o%a &b&o%n &9&opour &a&o%c%p &9&oà %zc.
+CHEST_BUY_NOTIFICATION: &9&o%y vous a acheté &a&o%a &b&o%n &9&o pour &a&o%c%p &9&o.
+CHEST_SELL_NOTIFICATION: &9&o%y vous a vendu &a&o%a &b&o%n &9&o pour &a&o%c%p &9&o.
+BOW_VALUE: &9Valeur pour l'arc : &a%v
+WOOD_VALUE: &9Valeur pour le bois : &a%v
+LEATHER_VALUE: &9Valeur pour le cuir : &a%v
+STONE_VALUE: &9Valeur pour la pierre : &a%v
+CHAINMAIL_VALUE: &9Valeur pour la maille : &a%v
+IRON_VALUE: &9Valeur pour le fer : &a%v
+GOLD_VALUE: &9Valeur pour l'or : &a%v
+DIAMOND_VALUE: &9Valeur pour le diamant : &a%v
+CLASSVALUES_INVALID: &4Paramètres invalides. Utiliser /classvalues
+ECONOMY_EXPORTED: &6Economie exportée en YML!
+EXPORT_PROCEED: &cCela écrasera les données de items.yml et enchants.yml, tapez /exporttoyml [économie] ['confirm'] pour continuer !
+ECONOMY_NOT_EXIST: &4Cette économie n'existe pas !
+EXPORTTOYML_INVALID: &4Paramètres invalides. Utiliser /exporttoyml [économie] ['confirm']
+ONLY_AVAILABLE_SQL: &cCette commande n'est disponible que lorsque SQL est utilisé !
+IMPORTING_TABLES: &9Importation des tables ...
+IMPORTSQL_WARNING: &cCeci écrasera toutes les tables SQL de HyperConomy, tapez /importsql ['confirm'] pour continuer !
+IMPORTSQL_INVALID: &4Paramètres invalides. Utiliser /importsql
+LISTCATEGORIES_INVALID: &4Paramètres invalides. Utiliser /listcategories
+ALREADY_IN_DATABASE: &9Cet objet est déjà dans la base de données.
+ITEM_ADDED: &6Objet ajouté à items.yml. Utiliser /reloadfiles ou redémarrer le serveur pour qu'il soit pris en compte.
+YMLADDITEM_INVALID: &4Tenir l'objet à ajouter et tapez /ymladditem [nom] [valeur] [stock moyen] [prix de départ]
+ALL_BACKED_UP: &6Tous les fichiers ont été sauvegardés !
+HCBACKUP_INVALID: &4Paramètres invalides. Utiliser /hcbackup
+HC_BUY: &bTaper &a/hc buy &bpour les commandes d'achat.
+HC_SELL: &bTaper &a/hc sell &bpour les commandes de vente.
+HC_INFO: &bTaper &a/hc info &bpour les commandes d'information.
+HC_PARAMS: &bTaper &a/hc params &bpour l'aide des paramètres.
+HC_SELL_SELL: &a/sell &c[nom] &e(quantité/'max')
+HC_SELL_HS: &a/hs &e(quantité/'max')
+HC_SELL_ESELL: &a/esell &c[nom/'max']
+HC_SELL_SELLALL: &a/sellall
+HC_SELL_MORE: &bPour d'avantage d'aide, taper &a/hc sell &c[commande]
+HC_BUY_BUY: &a/buy &c[nom] &e(quantité/'max')
+HC_BUY_HB: &a/hb &e(quantité/'max')
+HC_BUY_BUYID: &a/buyid &c[quantité] [id] &e(valeur de dommage)
+HC_BUY_EBUY: &a/ebuy &c[nom]
+HC_BUY_MORE: &bPour d'avantage d'aide, taper &a/hc buy &c[commande]
+HC_INFO_VALUE: &a/value &c[nom] &e(quantité)
+HC_INFO_HV: &a/hv &e(quantité)
+HC_INFO_II: &a/ii &e(id) (valeur de dommage)
+HC_INFO_TOPITEMS: &a/topitems &e(page)
+HC_INFO_TOPENCHANTS: &a/topenchants &e(page)
+HC_INFO_BROWSESHOP: &a/browseshop &c[nom] &e(page)
+HC_INFO_XPINFO: &a/xpinfo
+HC_INFO_EVALUE: &a/evalue &d{nom de l'enchantement} {'b'/'s'/'a'}
+HC_INFO_MORE: &bPour d'aventage d'aide, taper &a/hc info [commande]
+HC_PARAMS_REQUIRED: &c[quelquechose] = paramètre indispensable
+HC_PARAMS_OPTIONAL: &e[quelquechose] = paramètre facultatif
+HC_PARAMS_ADDITIONAL: &d{quelquechose} = facultatif mais nécessite un paramètre supplémentaire quant utilisé
+HC_PARAMS_NAME: &b[nom] = nom de l'objet
+HC_PARAMS_COMMAND: &a[commande] = nom de la commande comme 'buy' ou 'topitems'
+HC_SELL_DETAIL: &bVend 1 de l'objet spécifié si aucun paramètre n'est entré, une quantité de l'objet, ou tous les objets de ce type dans votre inventaire si le paramètre est 'max'.
+HC_HS_DETAIL: &bVend 1 de l'objet tenu en main si aucun paramètre spécifié, une quantité de l'objet, ou tous les objets de ce type dans votre inventaire si le paramètre est 'max'.
+HC_ESELL_DETAIL: &bVend l'enchantement indiqué de l'objet tenu ou tous les enchantements de l'objet tenu si le paramètre est 'max'.
+HC_SELLALL_DETAIL: &bAttention, cela vend tous les objets de votre inventaire, sauf les emplacements d'armure.
+HC_BUY_DETAIL: &bAchète 1 de l'objet spécifié si aucun paramètre n'est entré, une quantité de l'objet, ou autant que votre inventaire peut contenir si le paramètre est 'max'.
+HC_HB_DETAIL: &bAchète 1 de l'objet tenu en main si aucun paramètre spécifié, une quantité de l'objet, ou autant que votre inventaire peut contenir si le paramètre est 'max'.
+HC_BUYID_DETAIL: &bAchète une quantité de l'objet avec l'id et la valeur de dommage spécifiés. (Pratique si vous ne connaissez-pas le nom de l'objet.)
+HC_EBUY_DETAIL: &bAchète l'enchantement spécifié et l'applique à l'objet tenu en main.
+HC_VALUE_DETAIL: &bAffiche la valeur de l'objet spécifié. Cette valeur est théorique et ne tient pas compte de l'usure éventuelle.
+HC_HV_DETAIL: &bAffiche la valeur des objets tenus en main. L'usure est pris en compte. Cependant si vous spécifiez une quantité supérieure à celle disponible dans votre inventaire, les objets excédents auront une valeur théorique.
+HC_II_DETAIL: &bAffiche des informations sur l'objet tenu en main. Si un id et valeur de dommage sont indiqués, le nom de l'objet sera affiché, même si vous n'en tenez pas.
+HC_TOPITEMS_DETAIL: &bAffiche tous les objets disponibles dans le magasin global lorsque vous êtes hors d'un magasin, ou ceux du magasin où vous-vous trouvez. Les objets dont le stock est le plus important sont affichés en premier. Si aucune page n'est spécifiée, la première est affichée.
+HC_TOPENCHANTS_DETAIL: &bAffiche tous les enchantements disponibles dans l'ensemble des magasins si vous êtes hors d'un magasin, ou ce qui est disponible dans le magasin où vous-vous trouvez. Les enchantements dont le stock est le plus important sont affichés en premier. Si aucune page n'est spécifiée, la première est affichée.
+HC_BROWSESHOP_DETAIL: &bRecherche des objets ou enchantements selon de début du nom. Les objets et enchantements sont listés par ordre alphabétique avec leur stock et prix d'achat. Si le joueur est dans un magasin, seuls les objets et enchantements de ce magasin seront affichés.
+HC_EVALUE_DETAIL: &bSi aucun paramètre n'est spécifié, affiche la valeur à la vente, valeur à l'achat et le stock en magasin de tous les enchantements de l'objet tenu. Si un nom d'enchantement est indiqué, vous devez aussi ajouter 'b' pour achat, 's' pour vente, ou 'a' pour quantité. Ainsi pour 'b', le prix d'achat sera affiché pour tous les enchantements sur toutes les classes d'objet. (or, diamant, fer, etc.)
+HC_INVALID: &4Utilisation invalide. Utiliser /hc
+HC_XPINFO_DETAIL: &bVous indique votre expérience, combien est nécessaire pour le niveau suivant et pour atteindre le niveau 30.
+ENCHANTMENT_NOT_IN_DATABASE: &9Cet enchantement n'est pas dans la base de données.
+EBUY_INVALID: &4 Paramètres invalides. Utiliser /ebuy [nom]
+HAS_NO_ENCHANTMENTS: &4L'objet que vous tenez n'a aucun enchantement !
+ESELL_INVALID: &4Paramètres invalides. Utiliser /esell [nom/'max']
+LOG_BREAK: ---------------------------------
+DATABASE_CONNECTION_ERROR: Erreur de connexion à la base de données ! Vérifier config.yml. HyperConomy est désactivé ...
+VAULT_NOT_FOUND: Vault non trouvé, désactivation ...
+HYPERCONOMY_ENABLED: HyperConomy version %n a été activé !
+HYPERCONOMY_DISABLED: HyperConomy a été désactivé !
+BAD_YMLFILE_DETECTED: Des fichiers YML erronés ont été détectés, désactivation de HyperConomy !
+ITEM_ALREADY_HAS_ENCHANTMENT: &9L'objet que vous tenez possède déjà un enchantement de ce type !
+ITEM_CANT_ACCEPT_ENCHANTMENT: &9L'objet que vous tenez est incompatible avec cet enchantement !
+ITEM_DOESNT_HAVE_ENCHANTMENT: &9L'objet que vous tenez n'a pas l'enchantement &b%n!
+ENCHANTMENT_SELL_MESSAGE: &9&oVous avez vendu &b&o%n &9&opour &a&o%c%p &9&odont &a&o%c%t &9&ode taxes.
+ENCHANTMENT_PURCHASE_MESSAGE: &9&oVous avez acheté &b&o%n &9&opour &a&o%c%p &9&odont &a&o%c%t &9&de taxes.
+CHEST_ENCHANTMENT_BUY_NOTIFICATION: &9&o%y vous a acheté &b&o%n &9&opour &a&o%c%p &9&o.
+PURCHASE_ENCHANTMENT_CHEST_MESSAGE: &9&oVous avez acheté &b&o%n &9&opour &a&o%c%p &9&oà %zc.
+LOG_BUY_ENCHANTMENT: %y a acheté %n pour %c%p. [Prix fixe=%za][Prix initial=%zb]
+LOG_SELL_ENCHANTMENT: %y a vendu %n pour %c%p. [Prix fixe=%za][Prix initial=%zb]
+LOG_BUY_CHEST_ENCHANTMENT: %y a acheté %n à %zc pour %c%p. [Prix fixe=%za][Prix initial=%zb]
+SELL_INVALID: &4Paramètres invalides. Utiliser /sell [nom] (quantité ou 'max').
+ONE_OR_MORE_CANT_BE_TRADED: &9Certains de ces objets ne peuvent être vendus dans ce magasin.
+CANT_BUY_SELL_ENCHANTED_ITEMS: &9Vous ne pouvez acheter ou vendre d'objets enchantés !
+SELLALL_INVALID: &4Paramètres invalides. Utiliser /sellall
+HB_INVALID: &4Paramètres invalides. Utiliser /hb (quantité ou 'max')
+HS_INVALID: &4Utiliser /hs (quantité ou 'max')
+GLOBAL_SHOP_CURRENTLY_HAS: &9Le magasin global possède actuellement &a%a &b%n &9 en stock.
+CAN_BE_PURCHASED_FOR: &a%a &b%n &9peut être acheté pour : &a%c%p
+CAN_BE_SOLD_FOR: &a%a &b%n &9peut être vendu pour : &a%c%p
+VALUE_INVALID: &4Utiliser /value [nom d'objet] (quantité)
+HV_INVALID: &4Utiliser /hv (quantité)
+SQL_NOTIFICATION: &9L'économie &f%e &9a maintenant &a%a &b%n &9évalués à &a%c%p &9pièce.
+NOTIFICATION: &9L'économie a maintenant &a%a &b%n &9évalués à &a%c%p &9pièce.
+YOU_DONT_HAVE_PERMISSION: &4Vous n'avez pas la permission.
+TRANSACTION_SIGN_MUST_BE_IN_SHOP: &4Vous devez être dans un magasin pour placer des pancartes de transactions !
+GLOBAL_SHOP_LOCKED: &cLe magasin global d'HyperConomy est verrouillé !
+SHOP_UNLOCKED: &6Magasin global déverrouillé !
+SHOP_LOCKED: &6Magasin global verrouillé !
+FIX_YML_FILE: &4Vous devez corriger le YML défectueux !
+LOCKSHOP_INVALID: &4Paramètres invalides. Utiliser /lockshop
+FILES_RELOADED: &6Tous les fichiers ont été rechargés.
+FIRST_LOCK_SHOP: &4Vous devez d'abord verrouiller le magasin global !
+RELOADFILES_INVALID: Paramètres invalides. Utiliser /reloadfiles.
+NEW_ECONOMY_CREATED: &6Nouvelle économie créée !
+ECONOMY_ALREADY_EXISTS: &4Cette économie existe déjà !
+CREATEECONOMY_INVALID: &4Paramètres invalides. Utiliser /createeconomy [nom]
+CANT_DELETE_DEFAULT_ECONOMY: &4Vous ne pouvez supprimer l'économie par défaut !
+ECONOMY_DELETED: &6Economie supprimée !
+ECONOMY_DOESNT_EXIST: &4Cette économie n'existe pas !
+DELETEECONOMY_INVALID: &4Paramètres invalides. Utiliser /deleteeconomy [nom]
+ECONOMYINFO_INVALID: &4Paramètres invalides. Utiliser /economyinfo.
+PART_OF_ECONOMY: &9Vous faites partie de l'&9économie &b%n.
+SHOP_EXIT_MESSAGE: &9Vous quittez le magasin.
+CANNOT_SELL_ENCHANTMENTS_HERE: &9Vous ne pouvez vendre d'enchantement ici.
+CANNOT_BUY_ITEMS_FROM_CHEST: &9Vous ne pouvez pas acheter d'objets avec ce coffre.
+CANNOT_SELL_ITEMS_TO_CHEST: &9Vous ne pouvez pas vendre d'objets avec ce coffre.
+CHEST_WILL_NOT_ACCEPT_ITEM: &9Ce coffre n'acceptera pas cet objet.
+CHEST_SHOP_NOT_ENOUGH_SPACE: &9Ce coffre n'a plus de place.
+PLAYER_DOESNT_HAVE_ENOUGH_MONEY: &9%n n'a pas assez d'argent pour la transaction.
+CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST: &9Vous ne pouvez pas acheter d'enchantements avec ce coffre.
+CANNOT_PURCHASE_ITEMS_FROM_CHEST: &9Vous ne pouvez pas acheter d'objets avec ce coffre.
+ITEM_CANNOT_ACCEPT_ENCHANTMENTS: &9Cet objet ne peut être enchanté.
+CHEST_SHOP_BUY_VALUE: &a&o%a &b&o%n &9&opeut être acheté à %zc pour &a&o%c%p.
+CHEST_SHOP_SELL_VALUE: &a&o%a &b&o%n &9&opeut être vendu à %zc pour &a&o%c%p.
+CHEST_SHOP_ENCHANTMENT_VALUE: &9les enchantements de l'objet sélectionné peuvent être achetés à %zc pour %c%p;
+WEB_PAGE_ENABLED: Page web HyperConomy activée.
+WEB_PAGE_DISABLED: Page web HyperConomy désactivée.
+TOTAL_XP_POINTS: &9Total de points d'expérience : &a%v
+XP_FOR_NEXT_LVL: &9Expérience requise pour le prochain niveau : &a%v
+XP_FOR_LVL_30: &9Expérience requise pour le niveau 30 : &a%v
+XPINFO_INVALID: &4Paramètres invalides. Utiliser /xpinfo
+SHOP_LINE_BREAK: &8--------------------
+ENCHANTMENT_NOT_IN_DATABASE: &9Cet enchantement ne figure pas dans la base de données.
+SETTINGS_INVALID: &4Paramètres invalides. Utiliser /enchantsettings [enchantement] ou /es [enchantement]
+SETTINGS_NAME: &9Nom : &b%n
+SETTINGS_VALUE: &9Valeur : &b%v
+SETTINGS_STARTPRICE: &9Prix de départ : &b%s&9, &a%v
+SETTINGS_STATICPRICE: &9Prix fixe : &b%s&9, &a%v
+SETTINGS_STOCK: &9Stock : &b%v
+SETTINGS_MEDIAN: &9moyen : &b%v
+SETTINGS_CEILING: &9plafond : &b%v
+SETTINGS_FLOOR: &9plancher : &b%v
+SETTINGS_REACH_HYPERBOLIC: &9Objets nécessaires pour atteindre la courbe hyperbolique : &b%v
+EVALUE_INVALID: &4Paramètres invalides. Utiliser /evalue (nom) ('b'/'s'/'a')
+EVALUE_STOCK: &9Le magasin global a &a%a &b%n &9disponibles.
+EVALUE_CLASS_PURCHASE: &b%n &9sur &b%e &9s'achète : &a%c%p
+EVALUE_CLASS_SALE: &b%n &9sur &b%e &9se vend : &a%c%p
+EVALUE_SALE: &b%n &9se vend : &a%c%p
+EVALUE_PURCHASE: &b%n &9s'achète : &a%c%p
+HYPERLOG_INVALID: &4Paramètres invalides. Utiliser /hyperlog [voir les arguments sur bukkit.]
+HYPERLOG_INVALID_INCREMENT: &4Incrément invalide. Les incréments de temps valides sont 'm', 'h', et 'd' comme '3d' ou '1h'
+ITEMSETTINGS_INVALID: &4Paramètres invalides. Sélectionner un objet et Utiliser /itemsettings (id) (valeur de dommage)
+LISTECONOMIES_INVALID: &4Paramètres invalides. Utiliser /listeconomies
+LISTSHOPS_INVALID: &4Paramètres invalides. Utiliser /listshops
+LOADED_INTO_ECONOMY: chargés dans l'économie !
+LOADITEMS_INVALID: &4Paramètres invalides. Utiliser /loaditems [économie]
+ENABLE_ITEM_DISPLAYS: &4Les vitrines doivent être activées pour utiliser cette commande.
+MAKEDISPLAY_INVALID: &4Paramètres invalides. Utiliser /makedisplay [nom]
+NOTIFY_INVALID: &4Paramètres invalides. Utiliser /notify [nom/'all']
+NOTIFICATIONS_DISABLED: &4Les notifications sont désactivées !
+RECEIVE_NOTIFICATIONS: &6Vous recevrez les notifications pour les objets et enchantements.
+NOT_RECEIVE_NOTIFICATIONS: &6Vous ne recevrez-plus les notifications pour les objets et enchantements.
+RECEIVE_NOTIFICATIONS_S: &6Vous recevrez les notifications pour %n.
+NOT_RECEIVE_NOTIFICATIONS_S: &6Vous ne recevrez-plus les notifications pour %n.
+CATEGORY_NOT_EXIST: &4Cette catégorie n'existe pas.
+REMOVECATEGORY_INVALID: &4Paramètres invalides. Utiliser /removecategory [nom] [magasin]
+REMOVED_FROM: &6%n retiré de %e
+ITEMDISPLAYS_MUST_BE_ENABLED: &4Les vitrines doivent être activées pour utiliser cette commande.
+DISPLAY_REMOVED: &6Vitrine retirée !
+NO_DISPLAY_DETECTED: &4Aucune vitrine trouvée là où vous êtes.
+ALL_REMOVED_FROM: &6Tous les objets et enchantements retirés de %n.
+ALREADY_BEEN_REMOVED: &4Cet objet a déjà été retiré du magasin.
+REMOVEITEM_INVALID: &4Paramètres invalides. Utiliser /removeitem [nom/'all'] [magasin]
+HAS_BEEN_REMOVED: &6%n ont été retirés !
+REMOVE_SHOP_INVALID: &4Paramètres invalides. Utiliser /removeshop [nom]
+GLOBAL_SHOP_RENAMED: &6Le nom du compte global a été changé !
+RENAMEECONOMYACCOUNT_INVALID: &4Paramètres invalides. Utiliser /renameeconomyaccount [nouveau nom]
+RESETSHOP_CONFIRM: &cEtes-vous certain de vouloir faire ça ?  Le stock de tous les objets et enchantements sera remis à 0 et le prix initial chargé. Utiliser '/resetshop confirm' pour continuer.
+RESETSHOP_SUCCESS: &6Stock du magasin et prix fixes réinitialisés !
+RESETSHOP_INVALID: &4Paramètres invalides. Utiliser /resetshop
+ADJUSTMENT_SUCCESSFUL: &6Réajustement effectué !
+SCALEBYPERCENT_TYPES: &4Le réglage doit être l'une des valeurs, staticprice, stock, median, ou startprice !
+PERCENT_GREATER_THAN_0: &4Le pourcentage doit être supérieur à 0 !
+SCALEBYPERCENT_INVALID: &4Paramètres invalides. Utiliser /scalebypercent [réglage] [pourcentage] ('objet' ou 'enchantement')
+BALANCE_SET: &6Balance fixée !
+ACCOUNT_NOT_EXIST: &4Ce compte n'existe pas !
+SETBALANCE_INVALID: &4Paramètres invalides. Utiliser /setbalance [compte] [balance]
+CEILING_SET: &6Stock plafond de %n réglé !
+INVALID_NAME: &4Nom invalide !
+SETCEILING_INVALID: &4Paramètres invalides. Utiliser /setceiling [objet/enchantement] [stock plafond]
+SETCLASSVALUE_INVALID: &4Paramètres invalides. Utiliser /setclassvalue [classe d'objet] [valeur]
+INVALID_ITEM_CLASS: &4Classe d'objet invalide.
+CLASSVALUE_SET: &6La valeur de classe pour &b%n &6a été réglée.
+ECONOMY_SET: &6Economie réglée !
+SETECONOMY_INVALID: &4Paramètres invalides. Utiliser /seteconomy [nom]
+FLOOR_SET: &6Stock plancher de %n réglé !
+SETFLOOR_INVALID: &4Paramètres invalides. Utiliser /setfloor [objet/enchantement] [stock plancher]
+SETINITIATION_INVALID: &4Paramètres invalides. Utiliser /setinitiation [objet/enchantement] ('e')
+INVALID_ENCHANTMENT_NAME: &4Nom d'enchantement invalide !
+INVALID_ITEM_NAME: &4Nom d'objet invalide !
+INITIATION_TRUE: &6Prix d'Initiation de %n réglé sur vrai.
+INITIATION_FALSE: &6Prix d'Initiation de %n réglé sur faux.
+ALL_OBJECTS_SET_TO: &6Tous les objets ont été réglés en prix d'Initiation : %n
+SETINITIATIONALL_FALSE: &4Paramètres invalides. Utiliser /setinitiationall ['true' ou 'false']
+SETINTERVAL_INVALID: &4Paramètres invalides. Utiliser /setinterval ['shop'/'log'/'save'/'sign'] [intervalle]
+SIGN_INTERVAL_SET: &6Interval de rafraîchissement des pancartes réglé !
+SAVE_INTERVAL_SET: &6Interval d'enregistrement réglé !
+LOG_INTERVAL_SET: &6Interval de journalisation réglé !
+SHOP_INTERVAL_SET: &6Interval de vérification de magasins réglé !
+SETLANGUAGE_INVALID: &4Utiliser /setlanguage [langage] ('o')
+LANGUAGE_NOT_FOUND: &4Le fichier de langage spécifié n'a pas été trouvé ou n'est pas accessible.
+LANGUAGE_LOADED: &6%n chargé.
+SETMEDIAN_INVALID: &4Paramètres invalides. Utiliser /setmedian [objet/enchantement] [stock moyen] ('e')
+MEDIAN_SET: &6Stock moyen de %n réglé !
+SETMESSAGE_INVALID: &4Paramètres invalides. Utiliser /setmessage ['1'/'2'] [message] [magasin]
+MESSAGE1_SET: &6Message 1 configuré !
+MESSAGE2_SET: &6Message 2 configuré !
+P1_SET: Position p1 du magasin enregistrée !
+P2_SET: Position p2 du magasin enregistrée !
+SETSHOP_INVALID: &4Paramètres invalides. Utiliser /setshop ['p1'/'p2'] [nom]
+SETSHOPECONOMY_INVALID: &4Paramètres invalides. Utiliser /setshopeconomy [magasin] [économie]
+SHOP_ECONOMY_SET: &6Economie du magasin configurée !
+SETSTARTPRICE_INVALID: &4Paramètres invalides. Utiliser /setstartprice [objet/enchantement] [prix de départ] ('e')
+START_PRICE_SET: &6Prix de départ enregistré pour %n !"
+SETSTATIC_INVALID: &4Paramètres invalides. Utiliser /setstatic [objet/enchantement] ('e')
+USE_DYNAMIC_PRICE: &6%n aura un prix dynamique.
+USE_STATIC_PRICE: &6%n aura un prix fixe.
+SETSTATICALL_INVALID: &4Paramètres invalides. Utiliser /setstaticall ['true', 'false', ou 'copy']
+ALL_OBJECTS_SET_TO_STATIC: &6Tous les objets configurés en prix statique : %n.
+SETSTATICPRICE_INVALID: &4Paramètres invalides. Utiliser /setstaticprice [objet/enchantement] [prix de départ] ('e')
+STATIC_PRICE_SET: &6%n prix statique configuré !
+SETSTOCK_INVALID: &4Paramètres invalides. Utiliser /setstock [objet/enchantement] [stock] ('e')
+STOCK_SET: &6stock configuré pour %n!"
+SETSTOCKALL_INVALID: &4Paramètres invalides. Utiliser /setstockall [stock]
+ALL_STOCKS_SET: &6Tous les stocks sont configurés !
+SETSTOCKMEDIANALL_WARNING: &cEtes-vous certain de souhaiter faire ça ? Tous les stocks d'objets et enchantements seront réinitialisés au stock moyen avec prix initial désactivé. Entrer '/setstockmedianall' confirm pour continuer.
+SETSTOCKMEDIANALL_SUCCESS: &6Tous les stocks d'objets et enchantements ont été réinitialisés à leur stock moyen avec prix initial désactivé.
+SETSTOCKMEDIANALL_INVALID: &4Paramètres invalides. Utiliser /setstockmedianall
+SETTAX_INVALID: &4Utiliser /settax [puchase/sales/static/initial/enchant] [pourcentage]
+ENCHANT_TAX_SET: &6La taxe sur les enchantements a été réglée !
+INITIAL_TAX_SET: &6La taxe initial a été réglée !
+STATIC_TAX_SET: &6La taxe sur les prix statiques a été réglée !
+SALES_TAX_SET: &6La taxe sur les ventes a été réglée !
+PURCHASE_TAX_SET: &6La taxe sur les achats a été réglée !
+SETVALUE_INVALID: &4Paramètres invalides. Utiliser /setvalue [objet/enchantement] [valeur] ('e')
+VALUE_SET: &6Valeur de %n réglée !
+TAXSETTINGS_INVALID: &4Paramètres invalides. Utiliser /taxsettings
+PURCHASE_TAX_PERCENT: &9Taxes sur les achats : &a%v
+INITIAL_TAX_PERCENT: &9Taxes initiales : &a%v
+STATIC_TAX_PERCENT: &9Taxe sur prix statique : &a%v
+ENCHANTMENT_TAX_PERCENT: &9Taxe sur les enchantements : &a%v
+SALES_TAX_PERCENT: &9Taxe sur les ventes : &a%v
+TOPENCHANTS_INVALID: &4Utiliser /topenchants (page)
+YOU_HAVE_REACHED_THE_END: Vous êtes à la fin.
+PAGE_NUMBER: &cPage &f(&c%v&f/&c%w&f)
+TOPITEMS_INVALID: &4Utiliser /topitems (page)
+WRITEITEMS_INVALID: &4Paramètres invalides. Utiliser /writeitems ['row'/'column'] ('e')
+ITEM_NAMES_WRITTEN: &6Noms des objets enregistrés dans items.txt
+ENCHANT_NAMES_WRITTEN: &6Noms des enchantements enregistrés dans enchants.txt
+LOG_NO_ECON_PLUGIN: Aucun module d'économie détecté ! L'argent ne peut être gagné ou dépensé. Merci de lire le guide d'installation ici : http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/
+NO_ECON_PLUGIN: &4Aucun module d'économie détecté ! L'argent ne peut être gagné ou dépensé.
+HYPERERROR_LOG: &4une erreur s'est produite. [#%v] Activer la journalisation des erreurs dans config.yml pour les tracer.
+ERROR_HAS_OCCURRED: &4Une erreur s'est produite. [#%v] Vérifier le dossier error pour plus d'info.
+SQL_BACKUP_NOT_FOUND: &4Sauvegarde SQL non trouvée. Placez votre sauvegarde dans le dossier d'HyperConomy.
+SQL_TABLES_IMPORTED: &6Tables SQL importées depuis le fichier !
+ENCHANTSETTINGS_INVALID: &4Paramètres invalides. Utiliser /enchantsettings [enchantement] ou /es [enchantement]
+IMPORTPRICES_INVALID: &4Paramètres invalides. Utiliser /importprices [économie]
+PRICES_IMPORTED: &6Les prix ont été importés depuis YML.
+HC_HYPERCONOMY_ENABLED: &6HyperConomy activé !
+HC_HYPERCONOMY_DISABLED: &6HyperConomy désactivé !
+REPAIRSIGNS_INVALID: &4Paramètres invalides. Utiliser /repairsigns [x rayon/rayon] (y rayon) (z rayon)
+NO_SIGNS_FOUND: &9Aucune pancarte trouvée.
+X_SIGNS_REPAIRED: &a%v &9pancartes détectées et réparées !
+VOLUME_TOO_LARGE: &4Vous ne pouvez scanner plus de %v blocks à la fois !
+HCWEB_INVALID: &4Paramètres invalides. Utiliser /hcweb ['enable', 'disable', 'background'] [réglage]
+WEB_PAGE_SET: &6Page web réglée !
+HCCLEARHISTORY_CLEARED: &6Tableau d'historique vidé !
+HCCLEARHISTORY_INVALID: &4Paramètres invalides. Utiliser /hcclearhistory.
+HCERROR_INVALID: &4Paramètres invalides. Utiliser /hcerror
+HCERROR_ENABLED: &6Les erreurs seront journalisées.
+HCERROR_DISABLED: &6Les erreurs ne seront plus journalisées.
+REQUIRE_SHOP_FOR_INFO: &4Vous devez indiquer un magasin pour recevoir des informations.
