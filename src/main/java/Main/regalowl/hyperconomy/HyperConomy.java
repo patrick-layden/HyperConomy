@@ -53,6 +53,8 @@ public class HyperConomy extends JavaPlugin {
 	private int errorCount;
 	private boolean errorResetActive;
 	private boolean shuttingDown;
+	private boolean logerrors;
+	private String serverVersion;
 
 	@Override
 	public void onEnable() {
@@ -99,7 +101,9 @@ public class HyperConomy extends JavaPlugin {
 			new Update();
 			saveinterval = yaml.getConfig().getLong("config.saveinterval");
 			usesql = yaml.getConfig().getBoolean("config.sql-connection.use-sql");
-			currency = hc.getYaml().getConfig().getString("config.currency-symbol");
+			currency = this.getYaml().getConfig().getString("config.currency-symbol");
+			logerrors = this.getYaml().getConfig().getBoolean("config.log-errors");
+			serverVersion = this.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
 			sf = new SQLFunctions();
 			new Update();
 			if (usesql) {
@@ -609,5 +613,13 @@ public class HyperConomy extends JavaPlugin {
 
 	public LanguageFile getLanguageFile() {
 		return L;
+	}
+	
+	public boolean logErrors() {
+		return logerrors;
+	}
+	
+	public String getServerVersion() {
+		return serverVersion;
 	}
 }

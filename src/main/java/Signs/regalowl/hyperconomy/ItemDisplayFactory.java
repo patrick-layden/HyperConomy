@@ -70,7 +70,6 @@ public class ItemDisplayFactory implements Listener {
 	
 	public void loadDisplays() {
 		try {
-			hc = HyperConomy.hc;
 			unloadDisplays();
 			FileConfiguration disp = hc.getYaml().getDisplays();
 			Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
@@ -291,7 +290,6 @@ public class ItemDisplayFactory implements Listener {
 			List<MetadataValue> meta = item.getMetadata("HyperConomy");
 			for (MetadataValue cmeta: meta) {
 				if (cmeta.asString().equalsIgnoreCase("item_display")) {
-					Bukkit.broadcastMessage("cancelled meta");
 					event.setCancelled(true);
 					break;
 				}
