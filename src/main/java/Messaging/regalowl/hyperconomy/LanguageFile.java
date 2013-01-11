@@ -39,7 +39,7 @@ public class LanguageFile {
 		if (lang == null) {
 			lang = "en_US";
 		}
-		lang = lang.toLowerCase().replace(" ", "").replace("\"", "").replace("'", "");
+		lang = lang.replace(" ", "").replace("\"", "").replace("'", "");
 		boolean validLanguage = false;
 		for (int i = 0; i < supportedLanguages.size(); i++) {
 			if (supportedLanguages.get(i).contains(lang)) {
@@ -146,13 +146,16 @@ public class LanguageFile {
 	}
 	
 	public String fixLanguage(String language) {
-		if (languageConversions.containsKey(language.toLowerCase())) {
+		language = language.toLowerCase();
+		if (languageConversions.containsKey(language)) {
 			return languageConversions.get(language);
-		} else if (supportedLanguages.contains(language.toLowerCase())) {
-			return supportedLanguages.get(supportedLanguages.indexOf(language.toLowerCase()));
-		} else {
-			return language;
+		} 
+		for (String lang : supportedLanguages) {
+			if (lang.equalsIgnoreCase(language)) {
+				return lang;
+			}
 		}
+		return language;
 	}
 	
 	
