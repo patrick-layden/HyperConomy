@@ -130,7 +130,13 @@ public class Transaction {
 				if (id >= 0) {
 					int totalitems = countInvitems(id, data, p);
 					if (totalitems < amount) {
-						amount = totalitems;
+						boolean sellRemaining = hc.getYaml().getConfig().getBoolean("config.sell-remaining-if-less-than-requested-amount");
+						if (sellRemaining) {
+							amount = totalitems;
+						} else {
+							p.sendMessage(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name));
+							return;
+						}
 					}
 					if (amount > 0) {
 						double price = calc.getValue(name, amount, p);

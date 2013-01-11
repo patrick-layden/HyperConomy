@@ -189,6 +189,10 @@ public class Update {
 	    	if (t41 == null) {
 	    		yaml.getConfig().set("config.limit-info-commands-to-shops", false);
 	    	}
+	    	String t42 = yaml.getConfig().getString("config.sell-remaining-if-less-than-requested-amount");
+	    	if (t42 == null) {
+	    		yaml.getConfig().set("config.sell-remaining-if-less-than-requested-amount", true);
+	    	}
 	    	
 	    	
 	    	

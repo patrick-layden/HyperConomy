@@ -28,6 +28,7 @@ config:
   run-automatic-backups: true
   unlimited-stock-for-static-items: false
   error-count: 0
+  sell-remaining-if-less-than-requested-amount: true
   language: english
   log-errors: false
   log-sqlwrite-errors: false
