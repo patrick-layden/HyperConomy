@@ -1,4 +1,4 @@
-version: 0.958
+version: 0.959
 config:
   shopcheckinterval: 6
   saveinterval: 24000

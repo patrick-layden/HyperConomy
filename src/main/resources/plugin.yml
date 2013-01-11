@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.958
+version: 0.959
 author: RegalOwl
 softdepend: [Vault, Buycraft, HeroStronghold]
 commands:
