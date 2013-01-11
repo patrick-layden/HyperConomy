@@ -1,7 +1,6 @@
 version: 0.958
 config:
   shopcheckinterval: 6
-  logwriteinterval: 4
   saveinterval: 24000
   signupdateinterval: 5
   purchasetaxpercent: 3
