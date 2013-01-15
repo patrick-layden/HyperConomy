@@ -36,15 +36,19 @@ public class ItemDisplayFactory implements Listener {
 	private Calculation calc;
 
 	ItemDisplayFactory() {
-		hc = HyperConomy.hc;
-		calc = hc.getCalculation();
-		if (hc.getYaml().getConfig().getBoolean("config.use-item-displays")) {
-			hc.getServer().getPluginManager().registerEvents(this, hc);
-			displays = new ArrayList<ItemDisplay>();
-			protectedBlocks = new ArrayList<Block>();
-			loadProtectedBlocks();
-			loadDisplays();
-			startRefreshThread();
+		try {
+			hc = HyperConomy.hc;
+			calc = hc.getCalculation();
+			if (hc.getYaml().getConfig().getBoolean("config.use-item-displays")) {
+				hc.getServer().getPluginManager().registerEvents(this, hc);
+				displays = new ArrayList<ItemDisplay>();
+				protectedBlocks = new ArrayList<Block>();
+				loadProtectedBlocks();
+				loadDisplays();
+				startRefreshThread();
+			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
 	

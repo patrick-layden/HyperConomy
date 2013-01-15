@@ -53,7 +53,11 @@ public class LanguageFile {
 		ft.makeFolder(folderpath);
 		String filepath = folderpath + File.separator + lang + ".txt";
 		String backuppath = folderpath + File.separator + "en_US_b.txt";
+		try {
 		ft.copyFileFromJar("Languages/en_US.txt", backuppath);
+		} catch (Exception e) {
+			new HyperError(e);
+		}
 		buildBackupHashMap(backuppath);
 		
 		if (ft.fileExists(filepath) && !overwrite) {
