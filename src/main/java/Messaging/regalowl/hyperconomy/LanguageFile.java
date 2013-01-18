@@ -14,12 +14,22 @@ public class LanguageFile {
 	private HashMap<String, String> language = new HashMap<String, String>();
 	private HashMap<String, String> languageBackup = new HashMap<String, String>();
 	private ArrayList<String> supportedLanguages = new ArrayList<String>();
-	//private Logger log = Logger.getLogger("Minecraft");
+	private HashMap<String, String> languageConversions = new HashMap<String, String>();
+
 	
 	LanguageFile() {		
-		supportedLanguages.add("english");
+		languageConversions.put("french", "fr_FR");
+		languageConversions.put("français", "fr_FR");
+		languageConversions.put("le français", "fr_FR");
+		languageConversions.put("english", "en_US");
+		
+		supportedLanguages.add("en_US");
+		supportedLanguages.add("fr_FR");
 		buildLanguageFile(false);
 	}
+	
+	
+	
 	
 	
 	
@@ -27,9 +37,9 @@ public class LanguageFile {
 		ft = new FileTools();
 		String lang = HyperConomy.hc.getYaml().getConfig().getString("config.language");
 		if (lang == null) {
-			lang = "english";
+			lang = "en_US";
 		}
-		lang = lang.toLowerCase().replace(" ", "").replace("\"", "").replace("'", "");
+		lang = lang.replace(" ", "").replace("\"", "").replace("'", "");
 		boolean validLanguage = false;
 		for (int i = 0; i < supportedLanguages.size(); i++) {
 			if (supportedLanguages.get(i).contains(lang)) {
@@ -42,15 +52,19 @@ public class LanguageFile {
 		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
 		ft.makeFolder(folderpath);
 		String filepath = folderpath + File.separator + lang + ".txt";
-		String backuppath = folderpath + File.separator + "english_backup.txt";
-		ft.copyFileFromJar("Languages/english.txt", backuppath);
+		String backuppath = folderpath + File.separator + "en_US_b.txt";
+		try {
+		ft.copyFileFromJar("Languages/en_US.txt", backuppath);
+		} catch (Exception e) {
+			new HyperError(e);
+		}
 		buildBackupHashMap(backuppath);
 		
 		if (ft.fileExists(filepath) && !overwrite) {
 			buildHashMap(filepath);
 		} else {
 			if (!validLanguage) {
-				lang = "english";
+				lang = "en_US";
 			}
 			filepath = folderpath + File.separator + lang + ".txt";
 			ft.makeFolder(folderpath);
@@ -69,8 +83,8 @@ public class LanguageFile {
 	
 	public void updateBackup() {
 		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
-		String backuppath = folderpath + File.separator + "english_backup.txt";
-		ft.copyFileFromJar("Languages/english.txt", backuppath);
+		String backuppath = folderpath + File.separator + "en_US_b.txt";
+		ft.copyFileFromJar("Languages/en_US.txt", backuppath);
 		languageBackup.clear();
 		buildBackupHashMap(backuppath);
 	}
@@ -125,8 +139,27 @@ public class LanguageFile {
 	}
 	
 	
-	public ArrayList<String> getSupportedLanguages() {
-		return supportedLanguages;
+	public boolean languageSupported(String language) {
+		if (languageConversions.containsKey(language.toLowerCase())) {
+			return true;
+		}
+		if (supportedLanguages.contains(language.toLowerCase())) {
+			return true;
+		}
+		return false;
+	}
+	
+	public String fixLanguage(String language) {
+		language = language.toLowerCase();
+		if (languageConversions.containsKey(language)) {
+			return languageConversions.get(language);
+		} 
+		for (String lang : supportedLanguages) {
+			if (lang.equalsIgnoreCase(language)) {
+				return lang;
+			}
+		}
+		return language;
 	}
 	
 	

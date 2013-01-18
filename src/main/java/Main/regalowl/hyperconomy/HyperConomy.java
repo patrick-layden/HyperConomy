@@ -54,6 +54,8 @@ public class HyperConomy extends JavaPlugin {
 	private boolean errorResetActive;
 	private boolean shuttingDown;
 	private boolean useExternalEconomy;
+	private boolean logerrors;
+	private String serverVersion;
 
 	@Override
 	public void onEnable() {
@@ -113,6 +115,9 @@ public class HyperConomy extends JavaPlugin {
 			currency = yaml.getConfig().getString("config.currency-symbol");
 			useExternalEconomy = yaml.getConfig().getBoolean("config.use-external-economy-plugin");
 			sf = new DataFunctions();
+			currency = this.getYaml().getConfig().getString("config.currency-symbol");
+			logerrors = this.getYaml().getConfig().getBoolean("config.log-errors");
+			serverVersion = this.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
 			new Update();
 			if (usesql) {
 				sqe = new SQLEconomy(this);
@@ -621,6 +626,14 @@ public class HyperConomy extends JavaPlugin {
 	
 	public void setUseExternalEconomy(boolean state) {
 		useExternalEconomy = state;
+	}
+	
+	public boolean logErrors() {
+		return logerrors;
+	}
+	
+	public String getServerVersion() {
+		return serverVersion;
 	}
 
 }

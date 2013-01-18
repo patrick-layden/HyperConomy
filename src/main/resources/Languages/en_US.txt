@@ -69,7 +69,6 @@ HC_BUY: &bType &a/hc buy &bfor buy commands.
 HC_SELL: &bType &a/hc sell &bfor sell commands.
 HC_INFO: &bType &a/hc info &bfor informational commands.
 HC_PARAMS: &bType &a/hc params &bfor parameter help.
-HC_ECON: &bType &a/hc econ &bfor economy commands.
 HC_SELL_SELL: &a/sell &c[name] &e(amount/'max')
 HC_SELL_HS: &a/hs &e(amount/'max')
 HC_SELL_ESELL: &a/esell &c[name/'max']
@@ -80,10 +79,6 @@ HC_BUY_HB: &a/hb &e(amount/'max')
 HC_BUY_BUYID: &a/buyid &c[amount] [id] &e(damage value)
 HC_BUY_EBUY: &a/ebuy &c[name]
 HC_BUY_MORE: &bFor more help type &a/hc buy &c[command]
-HC_ECON_HCB: &a/hcb &e(account)
-HC_ECON_HCP: &a/hcp &c[player] [amount]
-HC_ECON_HCT: &a/hct &e(page)
-HC_ECON_MORE: &bFor more help type &a/hc econ &c[command]
 HC_INFO_VALUE: &a/value &c[name] &e(amount)
 HC_INFO_HV: &a/hv &e(amount)
 HC_INFO_II: &a/ii &e(id) (damage value)
@@ -113,9 +108,6 @@ HC_TOPITEMS_DETAIL: &bDisplays all of the items available in the global shop is 
 HC_TOPENCHANTS_DETAIL: &bDisplays all of the enchantments available in all shops, if the player isn't in a shop, or in the shop that the player is currently in. Enchantments with the highest stock are shown first.  If no page is specified it shows the first page.
 HC_BROWSESHOP_DETAIL: &bSearches for items or enchantments that begin with the specified name.  It will display the items/enchantments in alphabetical order with their stock and purchase price.  If the player is in a shop it will only display items available in that shop.
 HC_EVALUE_DETAIL: &bIf no parameters are given, displays the sell value, purchase price, and shopstock of all the enchantments on the item you're holding. If given an enchantment name, you must also specify 'b' for buy, 's' for sell, or 'a' for amount. If 'b' for instance, it will display the purchase price for all the enchantment on all item classes. (gold, diamond, iron, etc.)
-HC_HCB_DETAIL: &bDisplays your balance if no parameter is given; displays the specified account balance if an account is given.
-HC_HCP_DETAIL: &bPays the specified account the amount specified.
-HC_HCT_DETAIL: &bDisplays the total balance of all server accounts as well as the top server balances in order.  If no page is given it defaults to the first page.  Subsequent pages can be viewed by specifying the page number.
 HC_INVALID: &4Invalid Usage.  Use /hc
 HC_XPINFO_DETAIL: &bDisplays information about how much experience you have, how much experience is needed to level up, and how much experience is needed to reach level 30.
 ENCHANTMENT_NOT_IN_DATABASE: &9Sorry, that enchantment is not in the enchantment database.
@@ -124,7 +116,7 @@ HAS_NO_ENCHANTMENTS: &4The item you're holding has no enchantments!
 ESELL_INVALID: &4Invalid Parameters. Use /esell [name/'max']
 LOG_BREAK: ---------------------------------
 DATABASE_CONNECTION_ERROR: Database connection error!  Check your config.yml settings.  Disabling HyperConomy....
-VAULT_NOT_FOUND: [HyperConomy] Vault not found, shutting down...
+VAULT_NOT_FOUND: Vault not found, shutting down...
 HYPERCONOMY_ENABLED: HyperConomy version %n has been successfully enabled!
 HYPERCONOMY_DISABLED: HyperConomy has been disabled!
 BAD_YMLFILE_DETECTED: Bad YML files detected, disabling HyperConomy!
@@ -275,8 +267,8 @@ MEDIAN_SET: &6%n median set!
 SETMESSAGE_INVALID: &4Invalid Parameters.  Use /setmessage ['1'/'2'] [message] [shop]
 MESSAGE1_SET: &6Message 1 set!
 MESSAGE2_SET: &6Message 2 set!
-P1_SET: &6Shop location p1 has been set!
-P2_SET: &6Shop location p2 has been set!
+P1_SET: Shop location p1 has been set!
+P2_SET: Shop location p2 has been set!
 SETSHOP_INVALID: &4Invalid Parameters. Use /setshop ['p1'/'p2'] [name]
 SETSHOPECONOMY_INVALID: &4Invalid Parameters.  Use /setshopeconomy [shop name] [economy]
 SHOP_ECONOMY_SET: &6Shop economy set!
@@ -339,6 +331,7 @@ HCCLEARHISTORY_INVALID: &4Invalid parameters.  Use /hcclearhistory.
 HCERROR_INVALID: &4Invalid parameters.  Use /hcerror
 HCERROR_ENABLED: &6Errors will now be logged.
 HCERROR_DISABLED: &6Errors will no longer be logged.
+REQUIRE_SHOP_FOR_INFO: &4You must enter a shop to recieve information.
 PLAYER_NOT_FOUND: &4Player not found!
 HCBALANCE_INVALID: &4Invalid parameters. Use /hcbalance (account)
 HCTOP_INVALID: &4Invalid parameters. Use /hctop (page)
