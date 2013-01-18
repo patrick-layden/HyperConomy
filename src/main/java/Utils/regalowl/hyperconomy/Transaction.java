@@ -1,7 +1,6 @@
 package regalowl.hyperconomy;
 
 
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.World;
