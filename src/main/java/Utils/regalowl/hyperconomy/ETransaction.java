@@ -1,6 +1,7 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
@@ -454,5 +455,19 @@ public class ETransaction {
 			count++;
 		}
 		return enchantable;
+	}
+	
+	
+	public ArrayList<String> convertEnchantmentMapToNames(Map<Enchantment, Integer> enchants) {
+		ArrayList<String> enchantments = new ArrayList<String>();
+		if (enchants.isEmpty()) {
+			return enchantments;
+		}
+		Iterator<Enchantment> ite = enchants.keySet().iterator();
+		while (ite.hasNext()) {
+			Enchantment e = ite.next();
+			enchantments.add(hc.getEnchantData(e.getName()) + enchants.get(e));
+		}
+		return enchantments;
 	}
 }

@@ -1,10 +1,15 @@
 package regalowl.hyperconomy;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 public class Iteminfo {
 	Iteminfo(String args[], Player player) {
@@ -51,26 +56,37 @@ public class Iteminfo {
 			if (nam == null) {
 				nam = "Item not in database.";
 			}
+			
 			String enchantments = "";
-			if (ench.hasenchants(player.getItemInHand())) {
-			Iterator<Enchantment> ite = player.getItemInHand().getEnchantments().keySet().iterator();
-			while (ite.hasNext()) {
-				String rawstring = ite.next().toString();
-				String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
-				Enchantment en = null;
-				en = Enchantment.getByName(enchname);
-				int lvl = player.getItemInHand().getEnchantmentLevel(en);
-				String na = hc.getenchantData(enchname);
-				String fnam = na + lvl;
-				if (enchantments.length() == 0) {
-					enchantments = fnam;
+			ItemStack inhand = player.getItemInHand();
+			SerializeArrayList sal = new SerializeArrayList();
+			if (inhand.getType().equals(Material.ENCHANTED_BOOK)) {
+				player.sendMessage("ebook");
+				EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)inhand.getItemMeta();
+				ArrayList<String> enchants = ench.convertEnchantmentMapToNames(emeta.getEnchants());
+				if (enchants.size() == 0) {
+					enchantments = "None";
 				} else {
-					enchantments = enchantments + ", " + fnam;
+					enchantments = sal.stringArrayToString(enchants);
+				}
+			} else {
+				if (ench.hasenchants(inhand)) {
+					ArrayList<String> enchants = ench.convertEnchantmentMapToNames(inhand.getEnchantments());
+					enchantments = sal.stringArrayToString(enchants);
+				} else {
+					enchantments = "None";
 				}
 			}
-			} else {
-				enchantments = "None";
+			
+			
+			if (player.getItemInHand().getType().equals(Material.FIREWORK)) {
+				FireworkMeta meta = (FireworkMeta)inhand.getItemMeta();
+				meta.getEffects();
+				meta.getPower();
+				meta.getEffectsSize();
 			}
+			
+
 			double dura = player.getItemInHand().getDurability();
 			double maxdura = player.getItemInHand().getType().getMaxDurability();
 			double durp = (1 - dura/maxdura) * 100;
@@ -79,6 +95,9 @@ public class Iteminfo {
 			} else {
 				durp = 100;
 			}
+				
+
+			
 				player.sendMessage(L.get("LINE_BREAK"));
 				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
 				player.sendMessage(ChatColor.BLUE + "Material: " + ChatColor.AQUA + "" + mat);

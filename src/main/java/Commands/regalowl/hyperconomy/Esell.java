@@ -27,7 +27,7 @@ public class Esell {
 							Enchantment en = null;
 							en = Enchantment.getByName(enchname);
 							int lvl = player.getItemInHand().getEnchantmentLevel(en);
-							String nam = hc.getenchantData(enchname);
+							String nam = hc.getEnchantData(enchname);
 							String fnam = nam + lvl;
 							if (s.has(s.getShop(player), fnam)) {
 								ench.sellEnchant(fnam, player);

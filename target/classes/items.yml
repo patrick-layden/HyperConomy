@@ -6754,16 +6754,33 @@ warddisk:
     material: RECORD_11
     id: 2266
     data: 0
-  value: 50000.0
+  value: 200.0
   price:
     static: false
-    staticprice: 50000.0
+    staticprice: 400.0
   stock:
     stock: 0.0
-    median: 20.0
+    median: 250.0
   initiation:
     initiation: true
-    startprice: 50000.0
+    startprice: 400.0
+waitdisk:
+  information:
+    type: item
+    category: unknown
+    material: RECORD_12
+    id: 2267
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 400.0
+  stock:
+    stock: 0
+    median: 250
+  initiation:
+    initiation: true
+    startprice: 400.0
 enderportalframe:
   information:
     type: item

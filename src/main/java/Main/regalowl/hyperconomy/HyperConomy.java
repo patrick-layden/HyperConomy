@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,6 +57,7 @@ public class HyperConomy extends JavaPlugin {
 	private boolean useExternalEconomy;
 	private boolean logerrors;
 	private String serverVersion;
+	private int errorcount;
 
 	@Override
 	public void onEnable() {
@@ -104,7 +106,7 @@ public class HyperConomy extends JavaPlugin {
 		YamlFile yam = new YamlFile(this);
 		yam.YamlEnable();
 		yaml = yam;
-		errorCount = 0;
+		loadErrorCount();
 		errorResetActive = false;
 		shuttingDown = true;
 		L = new LanguageFile();
@@ -560,7 +562,7 @@ public class HyperConomy extends JavaPlugin {
 		return namedata.get(key);
 	}
 
-	public String getenchantData(String key) {
+	public String getEnchantData(String key) {
 		return enchantdata.get(key);
 	}
 
@@ -634,6 +636,37 @@ public class HyperConomy extends JavaPlugin {
 	
 	public String getServerVersion() {
 		return serverVersion;
+	}
+	
+	public int getErrorCount() {
+		return errorcount;
+	}
+	
+	public void raiseErrorCount() {
+		errorcount++;
+	}
+	
+	public void loadErrorCount() {
+		FileTools ft = new FileTools();
+		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "errors";
+		ft.makeFolder(path);
+		ArrayList<String> contents = ft.getFolderContents(path);
+		if (contents.size() == 0) {
+			errorcount = 0;
+		} else {
+			int max = 0;
+			for (String folder:contents) {
+				try {
+					int cnum = Integer.parseInt(folder);
+					if (cnum > max) {
+						max = cnum;
+					}
+				} catch (Exception e) {
+					continue;
+				}
+			}
+			errorcount = max + 1;
+		}
 	}
 
 }

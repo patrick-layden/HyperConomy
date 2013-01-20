@@ -69,7 +69,7 @@ public class Hv {
 						Enchantment en = null;
 						en = Enchantment.getByName(enchname);
 						int lvl = player.getItemInHand().getEnchantmentLevel(en);
-						String enam = hc.getenchantData(enchname);
+						String enam = hc.getEnchantData(enchname);
 						String fnam = enam + lvl;
 						String mater = player.getItemInHand().getType().name();
 						double value = calc.getEnchantValue(fnam, mater, playerecon) * duramult;

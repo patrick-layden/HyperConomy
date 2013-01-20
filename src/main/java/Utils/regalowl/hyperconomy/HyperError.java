@@ -20,8 +20,8 @@ public class HyperError {
 		hc = HyperConomy.hc;
 		e = null;
 		info = infor;
-		errornumber = getErrorCount();
-		setErrorCount(errornumber + 1);
+		errornumber = hc.getErrorCount();
+		hc.raiseErrorCount();
 		handleError();
 	}
 	
@@ -30,8 +30,8 @@ public class HyperError {
 		hc = HyperConomy.hc;
 		e = ex;
 		info = infor;
-		errornumber = getErrorCount();
-		setErrorCount(errornumber + 1);
+		errornumber = hc.getErrorCount();
+		hc.raiseErrorCount();
 		handleError();
 	}
 	
@@ -40,41 +40,11 @@ public class HyperError {
 		hc = HyperConomy.hc;
 		e = ex;
 		info = "";
-		errornumber = getErrorCount();
-		setErrorCount(errornumber + 1);
+		errornumber = hc.getErrorCount();
+		hc.raiseErrorCount();
 		handleError();
 	}
-	
-	
-	private int getErrorCount() {
-		FileTools ft = new FileTools();
-		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "errors";
-		ft.makeFolder(path);
-		path += File.separator + "counter.txt";
-		if (ft.fileExists(path)) {
-			try {
-				return Integer.parseInt(ft.getStringFromFile(path));
-			} catch (Exception e) {
-				ft.deleteFile(path);
-				ft.writeStringToFile("0", path);
-				return 0;
-			}
-		} else {
-			ft.writeStringToFile("0", path);
-			return 0;
-		}
-	}
-	
-	private void setErrorCount(int count) {
-		FileTools ft = new FileTools();
-		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "errors";
-		ft.makeFolder(path);
-		path += File.separator + "counter.txt";
-		ft.deleteFile(path);
-		ft.writeStringToFile(count + "", path);
-	}
-	
-	
+
 	
 	@SuppressWarnings("deprecation")
 	private void handleError() {
@@ -88,7 +58,7 @@ public class HyperError {
 					FileTools ft = new FileTools();
 					String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "errors";
 					ft.makeFolder(path);
-					path = path + File.separator + "e" + errornumber;
+					path = path + File.separator + errornumber;
 					ft.makeFolder(path);
 					FileOutputStream fos;
 					try {

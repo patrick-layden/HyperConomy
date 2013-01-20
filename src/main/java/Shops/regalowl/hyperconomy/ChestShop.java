@@ -630,7 +630,7 @@ public class ChestShop implements Listener{
 								        					Enchantment en = null;
 								        					en = Enchantment.getByName(enchname);
 								        					int lvl = icevent.getCurrentItem().getEnchantmentLevel(en);
-								        					String nam = hc.getenchantData(enchname);
+								        					String nam = hc.getEnchantData(enchname);
 								        					String fnam = nam + lvl;
 								        					price = price + calc.getEnchantValue(fnam, p.getItemInHand().getType().toString(), hc.getSQLFunctions().getPlayerEconomy(line34));
 									    					if (setprice) {
@@ -734,7 +734,7 @@ public class ChestShop implements Listener{
 							        					Enchantment en = null;
 							        					en = Enchantment.getByName(enchname);
 							        					int lvl = icevent.getCurrentItem().getEnchantmentLevel(en);
-							        					String nam = hc.getenchantData(enchname);
+							        					String nam = hc.getEnchantData(enchname);
 							        					String fnam = nam + lvl;
 							        					if (setprice) {
 							        						ench.buyChestEnchant(fnam, p, icevent.getCurrentItem(), line34, staticprice);
