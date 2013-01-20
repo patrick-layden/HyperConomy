@@ -61,9 +61,9 @@ public class Iteminfo {
 			ItemStack inhand = player.getItemInHand();
 			SerializeArrayList sal = new SerializeArrayList();
 			if (inhand.getType().equals(Material.ENCHANTED_BOOK)) {
-				player.sendMessage("ebook");
+				
 				EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)inhand.getItemMeta();
-				ArrayList<String> enchants = ench.convertEnchantmentMapToNames(emeta.getEnchants());
+				ArrayList<String> enchants = ench.convertEnchantmentMapToNames(emeta.getStoredEnchants());
 				if (enchants.size() == 0) {
 					enchantments = "None";
 				} else {
