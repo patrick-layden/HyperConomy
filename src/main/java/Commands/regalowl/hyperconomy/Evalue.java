@@ -74,8 +74,7 @@ public class Evalue {
 					}
 				} else if (args.length == 0 && player != null) {
 					if (ench.hasenchants(player.getItemInHand())) {
-						player.getItemInHand().getEnchantments().keySet().toArray();
-						Iterator<Enchantment> ite = player.getItemInHand().getEnchantments().keySet().iterator();
+						Iterator<Enchantment> ite = ench.getHeldEnchantments(player.getItemInHand()).keySet().iterator();
 						player.sendMessage(L.get("LINE_BREAK"));
 						double duramult = ench.getDuramult(player);
 						while (ite.hasNext()) {
@@ -83,7 +82,7 @@ public class Evalue {
 							String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
 							Enchantment en = null;
 							en = Enchantment.getByName(enchname);
-							int lvl = player.getItemInHand().getEnchantmentLevel(en);
+							int lvl = ench.getEnchantmentLevel(player.getItemInHand(), en);
 							String nam = hc.getEnchantData(enchname);
 							String fnam = nam + lvl;
 							String mater = player.getItemInHand().getType().name();

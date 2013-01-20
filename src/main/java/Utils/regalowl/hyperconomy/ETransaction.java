@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
 /**
  * 
@@ -397,8 +399,12 @@ public class ETransaction {
 		try {
 			boolean hasenchants = false;
 			if (stack != null) {
-				Map<Enchantment, Integer> enchants = stack.getEnchantments();
-				hasenchants = !enchants.isEmpty();
+				if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
+					EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)stack.getItemMeta();
+					hasenchants = emeta.hasStoredEnchants();
+				} else {
+					hasenchants = stack.getItemMeta().hasEnchants();
+				}
 			}
 			return hasenchants;
 		} catch (Exception e) {
@@ -429,7 +435,7 @@ public class ETransaction {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.iron"));
 			} else if (matname.toLowerCase().indexOf("gold") != -1) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.gold"));
-			} else if (matname.toLowerCase().indexOf("diamond") != -1) {
+			} else if (matname.toLowerCase().indexOf("diamond") != -1 || matname.toLowerCase().indexOf("enchanted_book") != -1) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.diamond"));
 			} else if (matname.toLowerCase().indexOf("bow") != -1) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.bow"));
@@ -469,5 +475,30 @@ public class ETransaction {
 			enchantments.add(hc.getEnchantData(e.getName()) + enchants.get(e));
 		}
 		return enchantments;
+	}
+	
+	public Map<Enchantment, Integer> getHeldEnchantments(ItemStack heldstack) {
+		if (heldstack != null) {
+			if (heldstack.getType().equals(Material.ENCHANTED_BOOK)) {
+				EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)heldstack.getItemMeta();
+				return emeta.getStoredEnchants();
+			} else {
+				return heldstack.getEnchantments();
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	public int getEnchantmentLevel(ItemStack stack, Enchantment e) {
+		if (e == null || stack == null) {
+			return 0;
+		}
+		if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
+			EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)stack.getItemMeta();
+			return emeta.getStoredEnchantLevel(e);
+		} else {
+			return stack.getEnchantmentLevel(e);
+		}
 	}
 }
