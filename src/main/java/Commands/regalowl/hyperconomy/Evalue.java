@@ -74,7 +74,7 @@ public class Evalue {
 					}
 				} else if (args.length == 0 && player != null) {
 					if (ench.hasenchants(player.getItemInHand())) {
-						Iterator<Enchantment> ite = ench.getHeldEnchantments(player.getItemInHand()).keySet().iterator();
+						Iterator<Enchantment> ite = ench.getEnchantmentMap(player.getItemInHand()).keySet().iterator();
 						player.sendMessage(L.get("LINE_BREAK"));
 						double duramult = ench.getDuramult(player);
 						while (ite.hasNext()) {

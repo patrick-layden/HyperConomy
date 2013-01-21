@@ -1,8 +1,6 @@
 package regalowl.hyperconomy;
 
-import java.util.Iterator;
-
-import org.bukkit.enchantments.Enchantment;
+import java.util.ArrayList;
 import org.bukkit.entity.Player;
 
 public class Esell {
@@ -20,21 +18,15 @@ public class Esell {
 						if (!ench.hasenchants(player.getItemInHand())) {
 							player.sendMessage(L.get("HAS_NO_ENCHANTMENTS"));
 						}
-						Iterator<Enchantment> ite = player.getItemInHand().getEnchantments().keySet().iterator();
-						while (ite.hasNext()) {
-							String rawstring = ite.next().toString();
-							String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
-							Enchantment en = null;
-							en = Enchantment.getByName(enchname);
-							int lvl = player.getItemInHand().getEnchantmentLevel(en);
-							String nam = hc.getEnchantData(enchname);
-							String fnam = nam + lvl;
-							if (s.has(s.getShop(player), fnam)) {
-								ench.sellEnchant(fnam, player);
+						ArrayList<String> enchants = ench.getEnchantments(player.getItemInHand());
+						for (String e:enchants) {
+							if (s.has(s.getShop(player), e)) {
+								ench.sellEnchant(e, player);
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));
 							}
 						}
+
 					} else {
 						if (hc.enchantTest(name)) {
 							if (s.has(s.getShop(player), name)) {

@@ -66,17 +66,20 @@ public class ETransaction {
 			nenchant = sf.getMaterial(name, playerecon);
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int lvl = Integer.parseInt(name.substring(name.length() - 1, name.length()));
-			int truelvl = p.getItemInHand().getEnchantmentLevel(ench);
-			if (p.getItemInHand().containsEnchantment(ench) && lvl == truelvl) {
+			int truelvl = getEnchantmentLevel(p.getItemInHand(), ench);
+			if (containsEnchantment(p.getItemInHand(), ench) && lvl == truelvl) {
 				double dura = p.getItemInHand().getDurability();
 				double maxdura = p.getItemInHand().getType().getMaxDurability();
 				double duramult = (1 - dura / maxdura);
+				if (p.getItemInHand().getType().equals(Material.ENCHANTED_BOOK)) {
+					duramult = 1;
+				}
 				String mater = p.getItemInHand().getType().toString();
 				double price = calc.getEnchantValue(name, mater, playerecon);
 				double fprice = duramult * price;
 				boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
 				if (acc.checkshopBalance(fprice) || sunlimited) {
-					p.getItemInHand().removeEnchantment(ench);
+					removeEnchantment(p.getItemInHand(), ench);
 					double shopstock = sf.getStock(name, playerecon);
 					sf.setStock(name, playerecon, shopstock + duramult);
 					double salestax = calc.getSalesTax(p, fprice);
@@ -463,6 +466,9 @@ public class ETransaction {
 		return enchantable;
 	}
 	
+	public ArrayList<String> getEnchantments (ItemStack stack) {
+		return convertEnchantmentMapToNames(getEnchantmentMap(stack));
+	}
 	
 	public ArrayList<String> convertEnchantmentMapToNames(Map<Enchantment, Integer> enchants) {
 		ArrayList<String> enchantments = new ArrayList<String>();
@@ -477,13 +483,13 @@ public class ETransaction {
 		return enchantments;
 	}
 	
-	public Map<Enchantment, Integer> getHeldEnchantments(ItemStack heldstack) {
-		if (heldstack != null) {
-			if (heldstack.getType().equals(Material.ENCHANTED_BOOK)) {
-				EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)heldstack.getItemMeta();
+	public Map<Enchantment, Integer> getEnchantmentMap(ItemStack stack) {
+		if (stack != null) {
+			if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
+				EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)stack.getItemMeta();
 				return emeta.getStoredEnchants();
 			} else {
-				return heldstack.getEnchantments();
+				return stack.getEnchantments();
 			}
 		} else {
 			return null;
@@ -499,6 +505,31 @@ public class ETransaction {
 			return emeta.getStoredEnchantLevel(e);
 		} else {
 			return stack.getEnchantmentLevel(e);
+		}
+	}
+	
+	
+	public boolean containsEnchantment(ItemStack stack, Enchantment e) {
+		if (e == null || stack == null) {
+			return false;
+		}
+		if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
+			EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)stack.getItemMeta();
+			return emeta.hasStoredEnchant(e);
+		} else {
+			return stack.containsEnchantment(e);
+		}
+	}
+	
+	public void removeEnchantment(ItemStack stack, Enchantment e) {
+		if (e == null || stack == null) {
+			return;
+		}
+		if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
+			EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)stack.getItemMeta();
+			stack.setType(Material.BOOK);
+		} else {
+			stack.removeEnchantment(e);
 		}
 	}
 }
