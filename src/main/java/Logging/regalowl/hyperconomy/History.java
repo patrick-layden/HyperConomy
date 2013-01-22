@@ -50,7 +50,7 @@ public class History {
   				if (inames.contains(name)) {
   					price = calc.getTvalue(name, 1, economy);
   				} else if (enames.contains(name)) {
-  					price = calc.getEnchantValue(name, "diamond", economy);
+  					price = calc.getEnchantValue(name, EnchantmentClass.DIAMOND, economy);
   				}
   				sf.writeHistoryData(name, economy, price);
   			}

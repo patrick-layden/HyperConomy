@@ -632,13 +632,13 @@ public class ChestShop implements Listener{
 								        					int lvl = icevent.getCurrentItem().getEnchantmentLevel(en);
 								        					String nam = hc.getEnchantData(enchname);
 								        					String fnam = nam + lvl;
-								        					price = price + calc.getEnchantValue(fnam, p.getItemInHand().getType().toString(), hc.getSQLFunctions().getPlayerEconomy(line34));
+								        					price = price + calc.getEnchantValue(fnam, EnchantmentClass.fromString(p.getItemInHand().getType().toString()), hc.getSQLFunctions().getPlayerEconomy(line34));
 									    					if (setprice) {
 									    						price = staticprice;
 									    					}
 								        				}
 								        				price = calc.twoDecimals(price);
-								        			if (ench.isEnchantable(p.getItemInHand())) {
+								        			if (ench.canEnchantItem(p.getItemInHand())) {
 										    			p.sendMessage(L.get("LINE_BREAK"));
 										    			//p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
 										    			p.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, line34));

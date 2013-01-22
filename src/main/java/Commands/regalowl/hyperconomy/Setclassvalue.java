@@ -14,10 +14,10 @@ public class Setclassvalue {
 			} else {
 				String classtype = args[0];
 				if (hc.getYaml().getConfig().get("config.enchantment.classvalue." + classtype) != null) {
-				double value = Double.parseDouble(args[1]);
-				hc.getYaml().getConfig().set("config.enchantment.classvalue." + classtype, value);
-				sender.sendMessage(L.f(L.get("CLASSVALUE_SET"), classtype));
-				isign.updateSigns();
+					double value = Double.parseDouble(args[1]);
+					hc.getYaml().getConfig().set("config.enchantment.classvalue." + classtype, value);
+					sender.sendMessage(L.f(L.get("CLASSVALUE_SET"), classtype));
+					isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_CLASS"));
 				}

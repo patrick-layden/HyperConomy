@@ -1,27 +1,30 @@
 package regalowl.hyperconomy;
 
 public enum EnchantmentClass {
-	WOOD, LEATHER, STONE, CHAINMAIL, IRON, GOLD, DIAMOND, BOW, NONE;
+	WOOD, LEATHER, STONE, CHAINMAIL, IRON, GOLD, DIAMOND, BOW, BOOK, NONE;
 	
 	public static EnchantmentClass fromString(String type) {
+		type = type.toLowerCase();
 		if (type == null) {
 			return EnchantmentClass.NONE;
-		} else if (type.equalsIgnoreCase("wood")) {
+		} else if (type.contains("wood")) {
 			return EnchantmentClass.WOOD;
-		} else if (type.equalsIgnoreCase("leather")) {
+		} else if (type.contains("leather")) {
 			return EnchantmentClass.LEATHER;
-		} else if (type.equalsIgnoreCase("stone")) {
+		} else if (type.contains("stone")) {
 			return EnchantmentClass.STONE;
-		} else if (type.equalsIgnoreCase("chainmail")) {
+		} else if (type.contains("chainmail")) {
 			return EnchantmentClass.CHAINMAIL;
-		} else if (type.equalsIgnoreCase("iron")) {
+		} else if (type.contains("iron")) {
 			return EnchantmentClass.IRON;
-		} else if (type.equalsIgnoreCase("gold")) {
+		} else if (type.contains("gold")) {
 			return EnchantmentClass.GOLD;
-		} else if (type.equalsIgnoreCase("diamond")) {
+		} else if (type.contains("diamond")) {
 			return EnchantmentClass.DIAMOND;
-		} else if (type.equalsIgnoreCase("bow")) {
+		} else if (type.contains("bow")) {
 			return EnchantmentClass.BOW;
+		} else if (type.contains("book")) {
+			return EnchantmentClass.BOOK;
 		} else {
 			return EnchantmentClass.NONE;
 		}

@@ -16,6 +16,7 @@ public class Classvalues {
 			sender.sendMessage(L.f(L.get("IRON_VALUE"), hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.iron")));
 			sender.sendMessage(L.f(L.get("GOLD_VALUE"), hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.gold")));
 			sender.sendMessage(L.f(L.get("DIAMOND_VALUE"), hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.diamond")));
+			sender.sendMessage(L.f(L.get("BOOK_VALUE"), hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.book")));
 			sender.sendMessage(L.get("LINE_BREAK"));
 		} catch (Exception e) {
 			sender.sendMessage(L.get("CLASSVALUES_INVALID"));

@@ -2,6 +2,7 @@ package regalowl.hyperconomy;
 
 import java.util.Iterator;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -24,7 +25,7 @@ public class Evalue {
 					if (hc.enchantTest(nam)) {
 						String type = args[1];
 						if (type.equalsIgnoreCase("s")) {
-							String[] classtype = new String[8];
+							String[] classtype = new String[9];
 							classtype[0] = "leather";
 							classtype[1] = "wood";
 							classtype[2] = "iron";
@@ -33,10 +34,11 @@ public class Evalue {
 							classtype[5] = "gold";
 							classtype[6] = "diamond";
 							classtype[7] = "bow";
+							classtype[8] = "book";
 							int n = 0;
 							sender.sendMessage(L.get("LINE_BREAK"));
-							while (n < 8) {
-								double value = calc.getEnchantValue(nam, classtype[n], playerecon);
+							while (n < 9) {
+								double value = calc.getEnchantValue(nam, EnchantmentClass.fromString(classtype[n]), playerecon);
 								double salestax = calc.getSalesTax(player, value);
 								value = calc.twoDecimals(value - salestax);
 								sender.sendMessage(L.f(L.get("EVALUE_CLASS_SALE"), 1, value, nam, classtype[n]));
@@ -44,7 +46,7 @@ public class Evalue {
 							}
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else if (type.equalsIgnoreCase("b")) {
-							String[] classtype = new String[8];
+							String[] classtype = new String[9];
 							classtype[0] = "leather";
 							classtype[1] = "wood";
 							classtype[2] = "iron";
@@ -53,10 +55,11 @@ public class Evalue {
 							classtype[5] = "gold";
 							classtype[6] = "diamond";
 							classtype[7] = "bow";
+							classtype[8] = "book";
 							int n = 0;
 							sender.sendMessage(L.get("LINE_BREAK"));
-							while (n < 8) {
-								double cost = calc.getEnchantCost(nam, classtype[n], playerecon);
+							while (n < 9) {
+								double cost = calc.getEnchantCost(nam, EnchantmentClass.fromString(classtype[n]), playerecon);
 								cost = cost + calc.getEnchantTax(nam, playerecon, cost);
 								sender.sendMessage(L.f(L.get("EVALUE_CLASS_PURCHASE"), 1, cost, nam, classtype[n]));
 								n++;
@@ -77,6 +80,9 @@ public class Evalue {
 						Iterator<Enchantment> ite = ench.getEnchantmentMap(player.getItemInHand()).keySet().iterator();
 						player.sendMessage(L.get("LINE_BREAK"));
 						double duramult = ench.getDuramult(player);
+						if (player.getItemInHand().getType().equals(Material.ENCHANTED_BOOK)) {
+							duramult = 1;
+						}
 						while (ite.hasNext()) {
 							String rawstring = ite.next().toString();
 							String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
@@ -86,8 +92,8 @@ public class Evalue {
 							String nam = hc.getEnchantData(enchname);
 							String fnam = nam + lvl;
 							String mater = player.getItemInHand().getType().name();
-							double value = calc.getEnchantValue(fnam, mater, playerecon) * duramult;
-							double cost = calc.getEnchantCost(fnam, mater, playerecon);
+							double value = calc.getEnchantValue(fnam, EnchantmentClass.fromString(mater), playerecon) * duramult;
+							double cost = calc.getEnchantCost(fnam, EnchantmentClass.fromString(mater), playerecon);
 							cost = cost + calc.getEnchantTax(fnam, playerecon, cost);
 							value = calc.twoDecimals(value);
 							cost = calc.twoDecimals(cost);

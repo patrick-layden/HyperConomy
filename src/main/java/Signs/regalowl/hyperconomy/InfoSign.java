@@ -150,7 +150,7 @@ public class InfoSign {
 			switch (type) {
 				case BUY:
 					if (isEnchantment) {
-						double cost = calc.getEnchantCost(objectName, enchantClass.toString(), economy);
+						double cost = calc.getEnchantCost(objectName, enchantClass, economy);
 						cost = calc.twoDecimals((cost + calc.getEnchantTax(objectName, economy, cost)) * multiplier);
 						line3 = ChatColor.WHITE + "Buy:";
 						line4 = ChatColor.GREEN + L.get("CURRENCY") + cost;
@@ -162,7 +162,7 @@ public class InfoSign {
 					break;
 				case SELL:
 					if (isEnchantment) {
-						double value = calc.getEnchantValue(objectName, enchantClass.toString(), economy);
+						double value = calc.getEnchantValue(objectName, enchantClass, economy);
 						value = calc.twoDecimals((value - calc.getSalesTax(null, value)) * multiplier);
 						line3 = ChatColor.WHITE + "Sell:";
 						line4 = ChatColor.GREEN + L.get("CURRENCY") + value;
@@ -250,7 +250,7 @@ public class InfoSign {
 					break;
 				case TAX:
 					if (isEnchantment) {
-						double price = calc.getEnchantCost(objectName, enchantClass.toString(), economy);
+						double price = calc.getEnchantCost(objectName, enchantClass, economy);
 						double taxpaid = calc.twoDecimals(calc.getEnchantTax(objectName, economy, price) * multiplier);
 						line3 = ChatColor.WHITE + "Tax:";
 						line4 = ChatColor.GREEN + "" + L.get("CURRENCY") + taxpaid;
@@ -261,10 +261,10 @@ public class InfoSign {
 					break;
 				case SB:
 					if (isEnchantment) {
-						double cost = calc.getEnchantCost(objectName, enchantClass.toString(), economy);
+						double cost = calc.getEnchantCost(objectName, enchantClass, economy);
 						cost = calc.twoDecimals((cost + calc.getEnchantTax(objectName, economy, cost)) * multiplier);
 						line4 = ChatColor.WHITE + "B:" + "\u00A7a" + L.get("CURRENCY") + cost;
-						double value = calc.getEnchantValue(objectName, enchantClass.toString(), economy);
+						double value = calc.getEnchantValue(objectName, enchantClass, economy);
 						value = calc.twoDecimals((value - calc.getSalesTax(null, value)) * multiplier);
 						line3 = ChatColor.WHITE + "S:" + ChatColor.GREEN + L.get("CURRENCY") + value;
 					} else {
@@ -319,7 +319,7 @@ public class InfoSign {
 			percentc = ((currentvalue - historicvalue) / historicvalue) * 100;
 			percentc = calc.round(percentc, 3);
 		} else if (hc.enchantTest(itemn)) {
-			Double currentvalue = calc.getEnchantValue(itemn, "diamond", economy);
+			Double currentvalue = calc.getEnchantValue(itemn, EnchantmentClass.DIAMOND, economy);
 			percentc = ((currentvalue - historicvalue) / historicvalue) * 100;
 			percentc = calc.round(percentc, 3);
 		}

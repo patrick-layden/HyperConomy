@@ -50,6 +50,7 @@ CHAINMAIL_VALUE: &9Chainmail Value: &a%v
 IRON_VALUE: &9Iron Value: &a%v
 GOLD_VALUE: &9Gold Value: &a%v
 DIAMOND_VALUE: &9Diamond Value: &a%v
+BOOK_VALUE: &9Book Value: &a%v
 CLASSVALUES_INVALID: &4Invalid Parameters. Use /classvalues
 ECONOMY_EXPORTED: &6Economy exported to YML!
 EXPORT_PROCEED: &cThe will erase all data in your items.yml and enchants.yml, type /exporttoyml [economy] ['confirm'] to proceed!

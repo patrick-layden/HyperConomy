@@ -197,6 +197,10 @@ public class Update {
 	    	if (t43 == null) {
 	    		yaml.getConfig().set("config.sell-remaining-if-less-than-requested-amount", true);
 	    	}
+	    	String t44 = yaml.getConfig().getString("config.enchantment.classvalue.book");
+	    	if (t44 == null) {
+	    		yaml.getConfig().set("config.enchantment.classvalue.book", 1);
+	    	}
 	    	
 	    	
 	    	

@@ -72,8 +72,8 @@ public class Hv {
 						String enam = hc.getEnchantData(enchname);
 						String fnam = enam + lvl;
 						String mater = player.getItemInHand().getType().name();
-						double value = calc.getEnchantValue(fnam, mater, playerecon) * duramult;
-						double cost = calc.getEnchantCost(fnam, mater, playerecon);
+						double value = calc.getEnchantValue(fnam, EnchantmentClass.fromString(mater), playerecon) * duramult;
+						double cost = calc.getEnchantCost(fnam, EnchantmentClass.fromString(mater), playerecon);
 						cost = cost + calc.getEnchantTax(fnam, playerecon, cost);
 						value = calc.twoDecimals(value);
 						cost = calc.twoDecimals(cost);

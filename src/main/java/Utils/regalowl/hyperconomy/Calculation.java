@@ -210,13 +210,13 @@ public class Calculation {
 	 * This function calculates the value for the given enchantment.
 	 * 
 	 */
-	public double getEnchantValue(String name, String mater, String playerecon) {
+	public double getEnchantValue(String name, EnchantmentClass eclass, String playerecon) {
 		try {
 			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction etran = hc.getETransaction();
 			double cost = 0;
-			double classvalue = etran.getclassValue(mater);
+			double classvalue = etran.getclassValue(eclass);
 			boolean stax;
 			stax = Boolean.parseBoolean(sf.getStatic(name, playerecon));
 			if (!stax) {
@@ -254,7 +254,7 @@ public class Calculation {
 			}
 			return cost;
 		} catch (Exception e) {
-			String info = "Calculation getEnchantValue() passed values name='" + name + "', material='" + mater + "', economy='" + playerecon + "'";
+			String info = "Calculation getEnchantValue() passed values name='" + name + "', material='" + eclass.toString() + "', economy='" + playerecon + "'";
 			new HyperError(e, info);
 			double value = 0;
 			return value;
@@ -267,13 +267,13 @@ public class Calculation {
 	 * This function calculates the cost for the given enchantment.
 	 * 
 	 */
-	public double getEnchantCost(String name, String mater, String playerecon) {
+	public double getEnchantCost(String name, EnchantmentClass eclass, String playerecon) {
 		try {
 			DataFunctions sf = hc.getSQLFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction etran = hc.getETransaction();
 			double cost = 0;
-			double classvalue = etran.getclassValue(mater);
+			double classvalue = etran.getclassValue(eclass);
 			if (classvalue != 123456789) {
 				boolean stax;
 				stax = Boolean.parseBoolean(sf.getStatic(name, playerecon));
@@ -317,7 +317,7 @@ public class Calculation {
 			}
 			return cost;
 		} catch (Exception e) {
-			String info = "Calculation getEnchantCost() passed values name='" + name + "', material='" + mater + "', economy='" + playerecon + "'";
+			String info = "Calculation getEnchantCost() passed values name='" + name + "', material='" + eclass.toString() + "', economy='" + playerecon + "'";
 			new HyperError(e, info);
 			double cost = 99999999;
 			return cost;

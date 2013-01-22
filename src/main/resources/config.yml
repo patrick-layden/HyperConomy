@@ -1,4 +1,4 @@
-version: 0.959
+version: 0.960
 config:
   shopcheckinterval: 6
   saveinterval: 24000
@@ -49,6 +49,7 @@ config:
       gold: .1
       diamond: 1
       bow: .25
+      book: 1
   sql-connection:
     use-sql: false
     username: default

@@ -85,7 +85,7 @@ public class Notification {
 					previousmessage = message;
 				}
 			} else if (hc.enchantTest(name.get(0))) {
-				cost = calc.getEnchantCost(name.get(0), eclass.get(0), econ);
+				cost = calc.getEnchantCost(name.get(0), EnchantmentClass.fromString(eclass.get(0)), econ);
 				cost = cost + calc.getEnchantTax(name.get(0), econ, cost);
 				stock = (int) sf.getStock(name.get(0), econ);
 				String message = "";

@@ -109,7 +109,7 @@ public class Browseshop {
 							cost = calc.twoDecimals(cost + taxpaid);
 							stock = sf.getStock(iname, playerecon);
 						} else if (hc.enchantTest(iname)) {
-							cost = calc.getEnchantCost(iname, "diamond", playerecon);
+							cost = calc.getEnchantCost(iname, EnchantmentClass.DIAMOND, playerecon);
 							cost = cost + calc.getEnchantTax(iname, playerecon, cost);
 							stock = sf.getStock(iname, playerecon);
 						}

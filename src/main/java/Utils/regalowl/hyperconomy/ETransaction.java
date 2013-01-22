@@ -24,27 +24,10 @@ public class ETransaction {
 	ETransaction() {
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		enchantments.add(Enchantment.ARROW_DAMAGE);
-		enchantments.add(Enchantment.ARROW_FIRE);
-		enchantments.add(Enchantment.ARROW_INFINITE);
-		enchantments.add(Enchantment.ARROW_KNOCKBACK);
-		enchantments.add(Enchantment.DAMAGE_ALL);
-		enchantments.add(Enchantment.DAMAGE_ARTHROPODS);
-		enchantments.add(Enchantment.DAMAGE_UNDEAD);
-		enchantments.add(Enchantment.DIG_SPEED);
-		enchantments.add(Enchantment.DURABILITY);
-		enchantments.add(Enchantment.FIRE_ASPECT);
-		enchantments.add(Enchantment.KNOCKBACK);
-		enchantments.add(Enchantment.LOOT_BONUS_BLOCKS);
-		enchantments.add(Enchantment.LOOT_BONUS_MOBS);
-		enchantments.add(Enchantment.OXYGEN);
-		enchantments.add(Enchantment.PROTECTION_ENVIRONMENTAL);
-		enchantments.add(Enchantment.PROTECTION_EXPLOSIONS);
-		enchantments.add(Enchantment.PROTECTION_FALL);
-		enchantments.add(Enchantment.PROTECTION_FIRE);
-		enchantments.add(Enchantment.PROTECTION_PROJECTILE);
-		enchantments.add(Enchantment.SILK_TOUCH);
-		enchantments.add(Enchantment.WATER_WORKER);
+		Enchantment[] ens = Enchantment.values();
+		for (Enchantment e:ens) {
+			enchantments.add(e);
+		}
 	}
 
 	/**
@@ -75,7 +58,7 @@ public class ETransaction {
 					duramult = 1;
 				}
 				String mater = p.getItemInHand().getType().toString();
-				double price = calc.getEnchantValue(name, mater, playerecon);
+				double price = calc.getEnchantValue(name, EnchantmentClass.fromString(mater), playerecon);
 				double fprice = duramult * price;
 				boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
 				if (acc.checkshopBalance(fprice) || sunlimited) {
@@ -141,25 +124,12 @@ public class ETransaction {
 			shopstock = (int) sf.getStock(name, playerecon);
 			if (shopstock >= 1) {
 				String mater = p.getItemInHand().getType().toString();
-				double price = calc.getEnchantCost(name, mater, playerecon);
+				double price = calc.getEnchantCost(name, EnchantmentClass.fromString(mater), playerecon);
 				price = price + calc.getEnchantTax(name, playerecon, price);
 				if (price != 123456789) {
-					if (!p.getItemInHand().containsEnchantment(ench)) {
+					if (!containsEnchantment(p.getItemInHand(), ench)) {
 						if (acc.checkFunds(price, p)) {
-							boolean enchtest = ench.canEnchantItem(p.getItemInHand());
-							if (hasenchants(p.getItemInHand())) {
-								String allenchants = p.getItemInHand().getEnchantments().toString();
-								allenchants = allenchants.substring(0, allenchants.length() - 1) + ", E";
-								while (allenchants.length() > 1) {
-									String enchantname = allenchants.substring(allenchants.indexOf(",") + 2, allenchants.indexOf("]"));
-									allenchants = allenchants.substring(allenchants.indexOf("]") + 5, allenchants.length());
-									Enchantment enchant = Enchantment.getByName(enchantname);
-									if (ench.conflictsWith(enchant)) {
-										enchtest = false;
-									}
-								}
-							}
-							if (enchtest && p.getItemInHand().getAmount() == 1) {
+							if (canAcceptEnchantment(p.getItemInHand(), ench) && p.getItemInHand().getAmount() == 1) {
 								sf.setStock(name, playerecon, shopstock - 1);
 								acc.withdraw(price, p);
 								acc.depositShop(price);
@@ -170,7 +140,7 @@ public class ETransaction {
 								int l = name.length();
 								String lev = name.substring(l - 1, l);
 								int level = Integer.parseInt(lev);
-								p.getItemInHand().addEnchantment(ench, level);
+								addEnchantment(p.getItemInHand(), ench, level);
 								boolean stax;
 								stax = Boolean.parseBoolean(sf.getStatic(name, playerecon));
 								double taxrate;
@@ -239,30 +209,17 @@ public class ETransaction {
 			nenchant = sf.getMaterial(name, playerecon);
 			Enchantment ench = Enchantment.getByName(nenchant);
 			String mater = p.getItemInHand().getType().toString();
-			double price = calc.getEnchantValue(name, mater, playerecon);
+			double price = calc.getEnchantValue(name, EnchantmentClass.fromString(mater), playerecon);
 			if (price != 123456789) {
-				if (!p.getItemInHand().containsEnchantment(ench)) {
-					boolean enchtest = ench.canEnchantItem(p.getItemInHand());
-					if (hasenchants(p.getItemInHand())) {
-						String allenchants = p.getItemInHand().getEnchantments().toString();
-						allenchants = allenchants.substring(0, allenchants.length() - 1) + ", E";
-						while (allenchants.length() > 1) {
-							String enchantname = allenchants.substring(allenchants.indexOf(",") + 2, allenchants.indexOf("]"));
-							allenchants = allenchants.substring(allenchants.indexOf("]") + 5, allenchants.length());
-							Enchantment enchant = Enchantment.getByName(enchantname);
-							if (ench.conflictsWith(enchant)) {
-								enchtest = false;
-							}
-						}
-					}
-					if (enchtest && p.getItemInHand().getAmount() == 1) {
+				if (!containsEnchantment(p.getItemInHand(), ench)) {
+					if (canAcceptEnchantment(p.getItemInHand(), ench) && p.getItemInHand().getAmount() == 1) {
 						if (acc.checkFunds(price, p)) {
 							acc.withdraw(price, p);
 							acc.depositAccount(price, owner);
 							int l = name.length();
 							String lev = name.substring(l - 1, l);
 							int level = Integer.parseInt(lev);
-							p.getItemInHand().addEnchantment(ench, level);
+							addEnchantment(p.getItemInHand(), ench, level);
 							item.removeEnchantment(ench);
 							price = calc.twoDecimals(price);
 							p.sendMessage(L.get("LINE_BREAK"));
@@ -317,28 +274,15 @@ public class ETransaction {
 			String playerecon = sf.getPlayerEconomy(owner);
 			nenchant = sf.getMaterial(name, playerecon);
 			Enchantment ench = Enchantment.getByName(nenchant);
-			if (!p.getItemInHand().containsEnchantment(ench)) {
-				boolean enchtest = ench.canEnchantItem(p.getItemInHand());
-				if (hasenchants(p.getItemInHand())) {
-					String allenchants = p.getItemInHand().getEnchantments().toString();
-					allenchants = allenchants.substring(0, allenchants.length() - 1) + ", E";
-					while (allenchants.length() > 1) {
-						String enchantname = allenchants.substring(allenchants.indexOf(",") + 2, allenchants.indexOf("]"));
-						allenchants = allenchants.substring(allenchants.indexOf("]") + 5, allenchants.length());
-						Enchantment enchant = Enchantment.getByName(enchantname);
-						if (ench.conflictsWith(enchant)) {
-							enchtest = false;
-						}
-					}
-				}
-				if (enchtest && p.getItemInHand().getAmount() == 1) {
+			if (!containsEnchantment(p.getItemInHand(), ench)) {
+				if (canAcceptEnchantment(p.getItemInHand(), ench) && p.getItemInHand().getAmount() == 1) {
 					if (acc.checkFunds(price, p)) {
 						acc.withdraw(price, p);
 						acc.depositAccount(price, owner);
 						int l = name.length();
 						String lev = name.substring(l - 1, l);
 						int level = Integer.parseInt(lev);
-						p.getItemInHand().addEnchantment(ench, level);
+						addEnchantment(p.getItemInHand(), ench, level);
 						item.removeEnchantment(ench);
 						price = calc.twoDecimals(price);
 						p.sendMessage(L.get("LINE_BREAK"));
@@ -423,47 +367,75 @@ public class ETransaction {
 	 * material.
 	 * 
 	 */
-	public double getclassValue(String matname) {
+	public double getclassValue(EnchantmentClass eclass) {
 		try {
 			double value;
-			if (matname.toLowerCase().indexOf("leather") != -1) {
+			if (eclass.equals(EnchantmentClass.LEATHER)) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.leather"));
-			} else if (matname.toLowerCase().indexOf("wood") != -1) {
+			} else if (eclass.equals(EnchantmentClass.WOOD)) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.wood"));
-			} else if (matname.toLowerCase().indexOf("stone") != -1) {
+			} else if (eclass.equals(EnchantmentClass.STONE)) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.stone"));
-			} else if (matname.toLowerCase().indexOf("chainmail") != -1) {
+			} else if (eclass.equals(EnchantmentClass.CHAINMAIL)) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.chainmail"));
-			} else if (matname.toLowerCase().indexOf("iron") != -1) {
+			} else if (eclass.equals(EnchantmentClass.IRON)) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.iron"));
-			} else if (matname.toLowerCase().indexOf("gold") != -1) {
+			} else if (eclass.equals(EnchantmentClass.GOLD)) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.gold"));
-			} else if (matname.toLowerCase().indexOf("diamond") != -1 || matname.toLowerCase().indexOf("enchanted_book") != -1) {
+			} else if (eclass.equals(EnchantmentClass.DIAMOND)) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.diamond"));
-			} else if (matname.toLowerCase().indexOf("bow") != -1) {
+			} else if (eclass.equals(EnchantmentClass.BOOK)) {
+				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.book"));
+			} else if (eclass.equals(EnchantmentClass.BOW)) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.bow"));
 			} else {
-				value = 123456789;
+				value = 0;
 			}
 			return value;
 		} catch (Exception e) {
-			String info = "ETransaction getclassValue() passed values matname='" + matname + "'";
+			String info = "ETransaction getclassValue() passed values eclass='" + eclass.toString() + "'";
 			new HyperError(e, info);
-			return 987654321;
+			return 0;
 		}
 	}
-
-	public boolean isEnchantable(ItemStack item) {
-		boolean enchantable = false;
-		int count = 0;
-		while (count < enchantments.size()) {
-			Enchantment enchant = enchantments.get(count);
-			if (enchant.canEnchantItem(item)) {
-				enchantable = true;
-			}
-			count++;
+	
+	public boolean canEnchantItem(ItemStack stack) {
+		if (stack == null) {
+			return false;
 		}
-		return enchantable;
+		if (stack.getType().equals(Material.BOOK)) {
+			return true;
+		} else {
+			boolean enchantable = false;
+			int count = 0;
+			while (count < enchantments.size()) {
+				Enchantment enchant = enchantments.get(count);
+				if (enchant.canEnchantItem(stack)) {
+					enchantable = true;
+				}
+				count++;
+			}
+			return enchantable;
+		}
+	}
+	
+	public boolean canAcceptEnchantment(ItemStack stack, Enchantment e) {
+		if (e == null || stack == null) {
+			return false;
+		}
+		if (stack.getType().equals(Material.BOOK)) {
+			return true;
+		} else if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
+			return false;
+		} else {
+			ArrayList<Enchantment> enchants = listEnchantments(stack);
+			for (Enchantment en:enchants) {
+				if (en.conflictsWith(e)) {
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 	
 	public ArrayList<String> getEnchantments (ItemStack stack) {
@@ -479,6 +451,15 @@ public class ETransaction {
 		while (ite.hasNext()) {
 			Enchantment e = ite.next();
 			enchantments.add(hc.getEnchantData(e.getName()) + enchants.get(e));
+		}
+		return enchantments;
+	}
+	
+	public ArrayList<Enchantment> listEnchantments (ItemStack stack) {
+		ArrayList<Enchantment> enchantments = new ArrayList<Enchantment>();
+		ArrayList<String> names = getEnchantments(stack);
+		for (String name:names) {
+			enchantments.add(Enchantment.getByName(name));
 		}
 		return enchantments;
 	}
@@ -526,10 +507,23 @@ public class ETransaction {
 			return;
 		}
 		if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
-			EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)stack.getItemMeta();
 			stack.setType(Material.BOOK);
 		} else {
 			stack.removeEnchantment(e);
+		}
+	}
+	
+	public void addEnchantment(ItemStack stack, Enchantment e, int lvl) {
+		if (e == null || stack == null) {
+			return;
+		}
+		if (stack.getType().equals(Material.BOOK)) {
+			stack.setType(Material.ENCHANTED_BOOK);
+			EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)stack.getItemMeta();
+			emeta.addStoredEnchant(e, lvl, true);
+			stack.setItemMeta(emeta);
+		} else {
+			stack.addEnchantment(e, lvl);
 		}
 	}
 }
