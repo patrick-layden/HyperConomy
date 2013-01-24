@@ -24,8 +24,7 @@ public class Sellall {
 		ench = hc.getETransaction();
 		player = p;
 		try {
-			s.setinShop(player);
-			if (s.inShop() != -1) {
+			if (s.inShop(player) != -1) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					if (args.length == 0) {
 						int slotn = 0;

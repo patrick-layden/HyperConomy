@@ -12,8 +12,7 @@ public class Buyid {
 		int itd;
 		int da = 0;
 		try {
-			s.setinShop(player);
-			if (s.inShop() != -1) {
+			if (s.inShop(player) != -1) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					if (args.length == 2) {
 						amount = Integer.parseInt(args[0]);

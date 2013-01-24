@@ -42,8 +42,7 @@ public class Renameshop {
 						sender.sendMessage(ChatColor.DARK_RED + "You can't give the shop its original name!");
 						return;
 					}
-					s.setrenShop(renameshopname, name);
-					s.renameShop();
+					s.renameShop(renameshopname, name);
 					cmd.setRenameShopName("");
 					cmd.setRename(false);
 					sender.sendMessage(ChatColor.GOLD + "Shop renamed successfully!");

@@ -23,8 +23,7 @@ public class Removeshop {
 				if (teststring == null) {
 					name = hc.fixsName(name);
 				}
-				s.setrShop(name);
-				s.removeShop();
+				s.removeShop(name);
 				//sender.sendMessage(ChatColor.GOLD + name.replace("_", " ") + " has been removed!");
 				sender.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), name.replace("_", " ")));
 			} else {

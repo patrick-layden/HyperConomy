@@ -18,8 +18,7 @@ public class Value {
 				player = (Player) sender;
 			}
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			s.setinShop(player);
-			if (player == null || (requireShop && s.inShop() != -1) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if (player == null || (requireShop && s.inShop(player) != -1) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				String name = args[0];
 				int amount;
 				if (args.length == 2) {

@@ -93,8 +93,7 @@ public class ChestShop implements Listener{
 		    				BlockState pchest4 = cblock.getRelative(BlockFace.SOUTH).getState();
 		    				
 		    				if (!(pchest1 instanceof Chest) && !(pchest2 instanceof Chest) && !(pchest3 instanceof Chest) && !(pchest4 instanceof Chest)) {
-			    				s.setinShop(scevent.getPlayer());
-			    				if (!hc.getYaml().getConfig().getBoolean("config.require-chest-shops-to-be-in-shop") || s.inShop() != -1) {    				
+			    				if (!hc.getYaml().getConfig().getBoolean("config.require-chest-shops-to-be-in-shop") || s.inShop(scevent.getPlayer()) != -1) {    				
 			    				Chest c = (Chest) chestblock;
 			    				int count = 0;
 			    				int emptyslots = 0;
@@ -121,9 +120,23 @@ public class ChestShop implements Listener{
 				    							try {
 				    								String price = line1.substring(1, line1.length());
 				    								Double.parseDouble(price);
-				    								scevent.setLine(0, "\u00A7a" + line1);
+				    								scevent.setLine(0, "\u00A7a$" + price);
 				    							} catch (Exception e) {
 				    								scevent.setLine(0, "");
+				    							}
+				    						} else {
+				    							try {
+				    								String price = line1.substring(0, line1.length());
+				    								Double.parseDouble(price);
+				    								scevent.setLine(0, "\u00A7a$" + price);
+				    							} catch (Exception e) {
+					    							try {
+					    								String price = line1.substring(0, line1.length() - 1);
+					    								Double.parseDouble(price);
+					    								scevent.setLine(0, "\u00A7a$" + price);
+					    							} catch (Exception e2) {
+					    								scevent.setLine(0, "");
+					    							}
 				    							}
 				    						}
 					    					

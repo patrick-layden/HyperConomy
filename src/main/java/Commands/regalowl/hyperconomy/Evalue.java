@@ -18,8 +18,7 @@ public class Evalue {
 		Shop s = hc.getShop();
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			s.setinShop(player);
-			if ((requireShop && s.inShop() != -1) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if ((requireShop && s.inShop(player) != -1) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				if (args.length == 2) {
 					String nam = args[0];
 					if (hc.enchantTest(nam)) {

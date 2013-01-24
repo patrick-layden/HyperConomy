@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 public class Shop {
 	
 
-	private HashMap<Player, Boolean> sp;
+	private HashMap<Player, ShopStatus> playerStatus;
 	private ArrayList<String> shopdata = new ArrayList<String>();
 	private ArrayList<String> shopworld = new ArrayList<String>();
 	private ArrayList<String> shopecon = new ArrayList<String>();
@@ -37,11 +37,7 @@ public class Shop {
 	
 	private long shopinterval;
 	private int shoptaskid;
-	
-	private String name;
-	private String newname;
-	
-	private Player p;
+
 	private HyperConomy hc;
 	private LanguageFile L;
 	
@@ -65,7 +61,7 @@ public class Shop {
 	}
 	
 	public void clearAll() {
-    	sp.clear();
+		playerStatus.clear();
     	shopdata.clear();
     	shopecon.clear();
     	shopworld.clear();
@@ -79,50 +75,6 @@ public class Shop {
     	p2z.clear();
 	}
 
-	/**
-	 * 
-	 * 
-	 * Setter for inShop()
-	 * 
-	 */
-	public void setinShop(Player player) {
-		p = player;
-	}
-	
-	
-	/**
-	 * 
-	 * 
-	 * Setter for setShop1() and setShop2()
-	 * 
-	 */
-	public void setsShop(String n, Player player) {
-		name = n;
-		p = player;
-	}
-	
-	
-	/**
-	 * 
-	 * 
-	 * Setter for renameShop()
-	 * 
-	 */
-	public void setrenShop(String n, String nn) {
-		name = n;
-		newname = nn;
-	}
-	
-	/**
-	 * 
-	 * 
-	 * Setter for removeShop()
-	 * 
-	 */
-	public void setrShop(String n) {
-		name = n;
-	}
-	
 	
 	
 	/**
@@ -133,7 +85,7 @@ public class Shop {
 	 */
 	Shop(HyperConomy hyperc) {
 		hc = hyperc;
-		sp = new HashMap<Player, Boolean>();	
+		playerStatus = new HashMap<Player, ShopStatus>();	
 		shopinterval = hc.getYaml().getConfig().getLong("config.shopcheckinterval");
 		useShops = hc.getYaml().getConfig().getBoolean("config.use-shops");
 		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
@@ -180,50 +132,25 @@ public class Shop {
 	 * 
 	 */
 	public void shopThread() {
-		
-		//Maybe cache online players and update when someone logs in or out
-		Player[] players = Bukkit.getOnlinePlayers();
-		
-		//Counts how many players have been processed.
-		int c = 0;
-	
-		//Runs through all online players before stopping.
-		while (c < players.length) {
-			
-			//Gets the current player.
-			p = players[c];
-			int snum = inShop();
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			int snum = inShop(p);
 			//Gets whether or not the player was in the shop the last time the function was run.
-			boolean testshop = sp.containsKey(p);
-
-			boolean pinshop;
-			if (!testshop) {
-				pinshop = false;
-			} else {
-				pinshop = sp.get(p);
+			ShopStatus status = ShopStatus.NOT_IN_SHOP;;
+			if (playerStatus.containsKey(p)) {
+				status = playerStatus.get(p);
 			}
-			
 
-			//Deals with players that were not in the shop previously.
-			if (pinshop == false) {
-				
-				//If the player is still not in the shop it quickly moves on to the next player.
+			if (status == ShopStatus.NOT_IN_SHOP) {
 				if (snum <= -1) {
-					c++;
-					//p.sendMessage("Not in shop!");
+					//Player is not in a shop or shops are disabled.
 					continue;
-					
-				//If the player is now in the shop it sends the welcome message to them.
 				} else {
-					
+					//Player is in a shop
 					p.sendMessage(L.get("SHOP_LINE_BREAK"));
 					p.sendMessage(shopmessage1.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")).replace("&","\u00A7"));
 					p.sendMessage(shopmessage2.get(snum).replace("%n", shopdata.get(snum).replace("_", " ")).replace("&","\u00A7"));
 					p.sendMessage(L.get("SHOP_LINE_BREAK"));
-					
-					//Sets the player to being in the shop in the inshop.txt file.
-	    			//sp.setData(p.getName(), "true");
-					sp.put(p, true);
+					playerStatus.put(p, ShopStatus.IN_SHOP);
 					
 					if (hc.useSQL()) {
 						//Sets the player to the shop's economy.
@@ -235,25 +162,22 @@ public class Shop {
 							hc.getSQLFunctions().setPlayerEconomy(p.getName().toLowerCase(), shopecon);
 						}
 					}
-
-					
 				}
 				
 			//Deals with players that were in the shop previously.
-			} else if (pinshop == true) {
+			} else if (status == ShopStatus.IN_SHOP) {
 				
 				//If the player is no longer in the shop it sends the exit message.
 				if (snum == -1) {
 					
 					//Sets the player to not being in the shop in the inshop.txt file.
 					//sp.setData(p.getName(), "false");
-					sp.put(p, false);
+					playerStatus.put(p, ShopStatus.NOT_IN_SHOP);
 					if (useshopexitmessage) {
 						p.sendMessage(L.get("SHOP_EXIT_MESSAGE"));
 					}		
 				}
 			}
-			c++;
 		}
 	}
 
@@ -264,7 +188,7 @@ public class Shop {
 	 * This function checks if the player is in the shop.
 	 * 
 	 */
-	public int inShop() {
+	public int inShop(Player p) {
 		if (!useShops) {
 			return -2;
 		}
@@ -305,7 +229,7 @@ public class Shop {
 	 * This function sets the shop's location, changing the static coordinates of the shop and saving them to the config file.
 	 * 
 	 */
-	public void setShop1(){
+	public void setPoint1(String name, Player p){
 		int x = p.getLocation().getBlockX();
 		int y = p.getLocation().getBlockY();
 		int z = p.getLocation().getBlockZ();
@@ -363,7 +287,7 @@ public class Shop {
 	 * This function sets the shop's location, changing the static coordinates of the shop and saving them to the config file.
 	 * 
 	 */
-	public void setShop2(){
+	public void setPoint2(String name, Player p){
 		int x = p.getLocation().getBlockX();
 		int y = p.getLocation().getBlockY();
 		int z = p.getLocation().getBlockZ();
@@ -412,7 +336,7 @@ public class Shop {
 
 	}
 	
-	public void removeShop() {
+	public void removeShop(String name) {
 		
 		hc.getYaml().getShops().set(name, null);
 		int shopnumber = shopdata.indexOf(name);
@@ -433,7 +357,7 @@ public class Shop {
 	}
 	
 	
-	public void renameShop() {
+	public void renameShop(String name, String newname) {
 		FileConfiguration shopsfile = hc.getYaml().getShops();
 		shopsfile.set(newname + ".world", shopsfile.get(name + ".world"));
 		shopsfile.set(newname + ".p1.x", shopsfile.get(name + ".p1.x"));
@@ -478,8 +402,7 @@ public class Shop {
 	}
 	
 	public String getShop(Player player) {
-		p = player;
-		int shopnumber = inShop();
+		int shopnumber = inShop(player);
 		if (shopnumber == -2) {
 			return "shops_disabled";
 		}

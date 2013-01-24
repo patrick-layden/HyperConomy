@@ -123,8 +123,7 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.buysign")) {
-									shop.setinShop(p);
-									if ((shop.inShop() != -1 && requireShop) || !requireShop) {
+									if ((shop.inShop(p) != -1 && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".buy")) {
 											if (hc.itemTest(line12)) {
 												int id = sf.getId(line12, playerecon);
@@ -171,7 +170,7 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
-									if ((shop.inShop() != -1 && requireShop) || !requireShop) {
+									if ((shop.inShop(p) != -1 && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".sell")) {
 											if (hc.itemTest(line12)) {
 												int id = sf.getId(line12, playerecon);

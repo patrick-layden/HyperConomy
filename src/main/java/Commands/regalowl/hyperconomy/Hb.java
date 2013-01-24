@@ -18,8 +18,7 @@ public class Hb {
 		double amount;
 		boolean ma = false;
 		try {
-			s.setinShop(player);
-			if (s.inShop() != -1) {
+			if (s.inShop(player) != -1) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					ItemStack iinhand = player.getItemInHand();
 					if (ench.hasenchants(iinhand) == false) {

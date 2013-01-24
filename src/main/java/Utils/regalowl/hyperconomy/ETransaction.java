@@ -345,7 +345,7 @@ public class ETransaction {
 	public boolean hasenchants(ItemStack stack) {
 		try {
 			boolean hasenchants = false;
-			if (stack != null) {
+			if (stack != null && !stack.getType().equals(Material.AIR)) {
 				if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
 					EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)stack.getItemMeta();
 					hasenchants = emeta.hasStoredEnchants();
@@ -355,7 +355,7 @@ public class ETransaction {
 			}
 			return hasenchants;
 		} catch (Exception e) {
-			new HyperError(e);
+			new HyperError(e, "Passed stack: type = '" + stack.getType().toString() + "', amount = '" + stack.getAmount() + "', id = '" + stack.getTypeId() + "'");
 			return false;
 		}
 	}

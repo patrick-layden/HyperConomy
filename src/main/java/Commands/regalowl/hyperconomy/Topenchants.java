@@ -22,11 +22,10 @@ public class Topenchants {
 			}
 			String nameshop = "";
 			if (player != null) {
-				s.setinShop(player);
-				if (s.inShop() != -1) {
+				if (s.inShop(player) != -1) {
 					nameshop = s.getShop(player);
 				} 				
-				if (requireShop && s.inShop() == -1 && !player.hasPermission("hyperconomy.admin")) {
+				if (requireShop && s.inShop(player) == -1 && !player.hasPermission("hyperconomy.admin")) {
 					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
 					return;
 				}
