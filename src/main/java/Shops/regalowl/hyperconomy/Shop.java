@@ -44,6 +44,8 @@ public class Shop {
 	private Player p;
 	private HyperConomy hc;
 	private LanguageFile L;
+	
+	private boolean useShops;
 
 	
 	public int getshopdataSize() {
@@ -133,6 +135,7 @@ public class Shop {
 		hc = hyperc;
 		sp = new HashMap<Player, Boolean>();	
 		shopinterval = hc.getYaml().getConfig().getLong("config.shopcheckinterval");
+		useShops = hc.getYaml().getConfig().getBoolean("config.use-shops");
 		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
 		L = hc.getLanguageFile();
 		buildShopData();
@@ -205,7 +208,7 @@ public class Shop {
 			if (pinshop == false) {
 				
 				//If the player is still not in the shop it quickly moves on to the next player.
-				if (snum == -1) {
+				if (snum <= -1) {
 					c++;
 					//p.sendMessage("Not in shop!");
 					continue;
@@ -262,6 +265,9 @@ public class Shop {
 	 * 
 	 */
 	public int inShop() {
+		if (!useShops) {
+			return -2;
+		}
 		int inshop = -1;
 		int counter = 0;
 		while (counter < nshops) {
@@ -451,6 +457,9 @@ public class Shop {
 	}
 	
 	public boolean has(String nameshop, String item) {
+		if (nameshop.equalsIgnoreCase("shops_disabled")) {
+			return true;
+		}
 		item = hc.fixNameTest(item);
 		if (item == null) {
 			return false;
@@ -471,6 +480,9 @@ public class Shop {
 	public String getShop(Player player) {
 		p = player;
 		int shopnumber = inShop();
+		if (shopnumber == -2) {
+			return "shops_disabled";
+		}
 		String shopname = shopdata.get(shopnumber);
 		return shopname;
 	}

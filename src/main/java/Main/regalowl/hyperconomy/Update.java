@@ -201,7 +201,10 @@ public class Update {
 	    	if (t44 == null) {
 	    		yaml.getConfig().set("config.enchantment.classvalue.book", 1);
 	    	}
-	    	
+	    	String t45 = yaml.getConfig().getString("config.use-shops");
+	    	if (t45 == null) {
+	    		yaml.getConfig().set("config.use-shops", true);
+	    	}	    	
 	    	
 	    	
 	    	double dversion = Double.parseDouble(configversion);
