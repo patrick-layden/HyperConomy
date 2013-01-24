@@ -59,7 +59,7 @@ public class Iteminfo {
 			
 			String enchantments = "";
 			ItemStack inhand = player.getItemInHand();
-			SerializeArrayList sal = new SerializeArrayList();
+			SerializeArrayList sal = new SerializeArrayList(); 
 			if (inhand.getType().equals(Material.ENCHANTED_BOOK)) {
 				
 				EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)inhand.getItemMeta();

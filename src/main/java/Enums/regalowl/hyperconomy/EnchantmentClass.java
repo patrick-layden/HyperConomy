@@ -28,5 +28,6 @@ public enum EnchantmentClass {
 		} else {
 			return EnchantmentClass.NONE;
 		}
+		
 	}
 }
