@@ -33,16 +33,11 @@ public class ConnectionPool {
 		
 	}
 	
-	
-	@SuppressWarnings("deprecation")
+
 	private void refreshConnections() {
 		sw.pauseWrite(1200L);
-		hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
-			public void run() {
-				closeConnections();
-				openConnections();
-			}
-		}, 1000L);
+		closeConnections();
+		openConnections();
 	}
 	
 	
@@ -70,38 +65,41 @@ public class ConnectionPool {
 	
 	
 	
+	@SuppressWarnings("deprecation")
 	public void openConnections() {
-		String username = sf.getUserName();
-		String password = sf.getPassword();
-		int port = sf.getPort();
-		String host = sf.getHost();
-		String database = sf.getDatabase();
-		
 		for (int i = 0; i < maxConnections; i++) {
-			try {
-				Connection connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
-				connections.add(connect);
-				inUse.add(false);
-			} catch (SQLException e) {
-				new HyperError(e);
-				refreshConnections();
-				return;
-			}
+				hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
+					public void run() {
+						try {
+							Connection connect = DriverManager.getConnection("jdbc:mysql://" + sf.getHost() + ":" + sf.getPort() + "/" + sf.getDatabase(), sf.getUserName(), sf.getPassword());
+							connections.add(connect);
+							inUse.add(false);
+						} catch (SQLException e) {
+							new HyperError(e);
+							refreshConnections();
+							return;
+						}
+					}
+				}, (i + 1));
 		}
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	public void closeConnections() {
-		for (int i = 0; i < connections.size(); i++) {
-			try {
-				connections.get(i).close();
-			} catch (SQLException e) {
-				new HyperError(e);
-				//e.printStackTrace();
+		hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
+			public void run() {
+				for (int i = 0; i < connections.size(); i++) {
+					try {
+						connections.get(i).close();
+					} catch (SQLException e) {
+						new HyperError(e);
+					}
+				}
+				connections.clear();
+				inUse.clear();
 			}
-		}
-		connections.clear();
-		inUse.clear();
+		}, 0);
 	}
 	
 

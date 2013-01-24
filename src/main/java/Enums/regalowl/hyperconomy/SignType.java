@@ -2,7 +2,7 @@ package regalowl.hyperconomy;
 
 public enum SignType {
 	BUY, SELL, STOCK, VALUE, STATUS, STATICPRICE, STARTPRICE, MEDIAN, HISTORY, TAX, SB;
-	
+
 	public static SignType fromString(String type) {
 		if (type == null) {
 			return null;

@@ -2,7 +2,7 @@ package regalowl.hyperconomy;
 
 public enum EnchantmentClass {
 	WOOD, LEATHER, STONE, CHAINMAIL, IRON, GOLD, DIAMOND, BOW, BOOK, NONE;
-	
+
 	public static EnchantmentClass fromString(String type) {
 		type = type.toLowerCase();
 		if (type == null) {
