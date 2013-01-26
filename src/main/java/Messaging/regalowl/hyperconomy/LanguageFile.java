@@ -164,7 +164,7 @@ public class LanguageFile {
 	
 	
 	
-	private String formatMessage(String message) {
+	public String formatMessage(String message) {
 		message = message.replace("&0", ChatColor.BLACK+"");
 		message = message.replace("&1", ChatColor.DARK_BLUE+"");
 		message = message.replace("&2", ChatColor.DARK_GREEN+"");

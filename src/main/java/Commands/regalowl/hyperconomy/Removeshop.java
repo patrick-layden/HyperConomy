@@ -9,22 +9,12 @@ public class Removeshop {
 		ShopFactory s = hc.getShopFactory();
 		try {
 			if (args.length > 0) {
-				int counter = 0;
 				String name = "";
-				while (counter < args.length) {
-					if (counter == 0) {
-						name = args[0];
-					} else {
-						name = name + "_" + args[counter];
-					}
-					counter++;
-				}
 				String teststring = hc.getYaml().getShops().getString(name);
 				if (teststring == null) {
 					name = hc.fixsName(name);
 				}
 				s.removeShop(name);
-				//sender.sendMessage(ChatColor.GOLD + name.replace("_", " ") + " has been removed!");
 				sender.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), name.replace("_", " ")));
 			} else {
 				sender.sendMessage(L.get("REMOVE_SHOP_INVALID"));

@@ -121,8 +121,9 @@ public class ShopFactory {
 	}
 	
 	
-
-
+	public void addShop(Shop shop) {
+		shops.put(shop.getName(), shop);
+	}
 	
 	public void removeShop(String name) {
 		hc.getYaml().getShops().set(name, null);

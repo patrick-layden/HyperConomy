@@ -11,6 +11,7 @@ public class Shop {
 	private String name;
 	private String world;
 	private String economy;
+	private String account;
 	private String message1;
 	private String message2;
 	private int p1x;
@@ -95,6 +96,11 @@ public class Shop {
 	public void setMessage2(String message) {
 		message2 = message;
 		shopFile.set(name + ".shopmessage2", message2);
+	}
+	
+	public void setDefaultMessages() {
+		message1 = "&aWelcome to %n";
+		message2 = "&9Type &b/hc &9for help.";
 	}
 	
 	public void setWorld(String world) {
