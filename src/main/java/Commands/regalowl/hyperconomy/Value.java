@@ -8,17 +8,17 @@ public class Value {
 
 	Value(String args[], CommandSender sender, String playerecon) {
 		hc = HyperConomy.hc;
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		Player player = null;
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		try {
 			if (sender instanceof Player) {
 				player = (Player) sender;
 			}
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			if (player == null || (requireShop && s.inShop(player) != -1) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if (player == null || (requireShop && s.getShop(player) != null) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				String name = args[0];
 				int amount;
 				if (args.length == 2) {

@@ -17,7 +17,7 @@ public class Addcategory {
 	Addcategory(String args[], CommandSender se) {
 		sender = se;
 		hc = HyperConomy.hc;
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		SerializeArrayList sal = new SerializeArrayList();
 		try {
@@ -49,7 +49,7 @@ public class Addcategory {
 						String itemname = objects.get(i);
 						if (hc.itemTest(itemname) || hc.enchantTest(itemname)) {
 							String unavailable = hc.getYaml().getShops().getString(shopname + ".unavailable");
-							if (!s.has(shopname, itemname)) {
+							if (!s.getShop(shopname).has(itemname)) {
 								unavailable = unavailable.replace("," + itemname + ",", ",");
 								if (itemname.equalsIgnoreCase(unavailable.substring(0, itemname.length()))) {
 									unavailable = unavailable.substring(itemname.length() + 1, unavailable.length());

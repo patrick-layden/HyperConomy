@@ -11,7 +11,7 @@ public class Makedisplay {
 			player.sendMessage(L.get("ENABLE_ITEM_DISPLAYS"));
 			return;
 		}
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		ItemDisplayFactory itdi = hc.getItemDisplay();
 		if (args.length == 1) {
 			String name = hc.fixName(args[0]);

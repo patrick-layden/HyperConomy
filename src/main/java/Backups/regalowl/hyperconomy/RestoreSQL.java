@@ -157,7 +157,7 @@ public class RestoreSQL {
 
 		SQLWrite sw = hc.getSQLWrite();
 		sw.writeData(statements);
-		hc.getSQLFunctions().load();
+		hc.getDataFunctions().load();
 		sender.sendMessage(L.get("SQL_TABLES_IMPORTED"));
 	}
 }

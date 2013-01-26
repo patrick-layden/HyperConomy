@@ -8,7 +8,7 @@ public class Renameshop {
 	Renameshop(CommandSender sender, String[] args, _Command cmd) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		try {
 			boolean rename = cmd.getRename();
 			String renameshopname = cmd.getRenameShopName();

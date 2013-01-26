@@ -61,7 +61,7 @@ public class Notification {
     }
 	
 	public void send() {
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		if (checkNotify(name.get(0))) {
 			double cost = 0.0;

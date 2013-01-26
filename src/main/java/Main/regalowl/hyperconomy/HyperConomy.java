@@ -23,7 +23,7 @@ public class HyperConomy extends JavaPlugin {
 	private Calculation calc;
 	private ETransaction ench;
 	private Log l;
-	private Shop s;
+	private ShopFactory s;
 	private Account acc;
 	private InfoSignHandler isign;
 	private _Command commandhandler;
@@ -138,7 +138,7 @@ public class HyperConomy extends JavaPlugin {
 					return;
 				}
 			}
-			s = new Shop(this);
+			s = new ShopFactory();
 			l = new Log(this);
 			tran = new Transaction();
 			calc = new Calculation();
@@ -566,7 +566,7 @@ public class HyperConomy extends JavaPlugin {
 		return enchantdata.get(key);
 	}
 
-	public DataFunctions getSQLFunctions() {
+	public DataFunctions getDataFunctions() {
 		return sf;
 	}
 
@@ -578,7 +578,7 @@ public class HyperConomy extends JavaPlugin {
 		return calc;
 	}
 
-	public Shop getShop() {
+	public ShopFactory getShopFactory() {
 		return s;
 	}
 

@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 public class Hctop {
 	Hctop(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
 		try {

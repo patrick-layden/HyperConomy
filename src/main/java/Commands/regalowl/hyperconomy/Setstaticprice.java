@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 public class Setstaticprice {
 	Setstaticprice(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";

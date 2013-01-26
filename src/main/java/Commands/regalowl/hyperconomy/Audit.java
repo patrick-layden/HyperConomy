@@ -42,7 +42,7 @@ public class Audit {
 	
 	public Double getHyperLogTotal(String account, String type) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		String query = "";
 		if (type.equalsIgnoreCase("sale")) {
 			query = "SELECT SUM(MONEY) AS total FROM hyperlog WHERE CUSTOMER = '" + account + "' AND ACTION = 'sale'";
@@ -71,7 +71,7 @@ public class Audit {
 	
 	public Double getAuditLogTotal(String account) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		try {
 			Connection connect = DriverManager.getConnection("jdbc:mysql://" + df.getHost() + ":" + df.getPort() + "/" + df.getDatabase(), df.getUserName(), df.getPassword());
 			Statement state = connect.createStatement();

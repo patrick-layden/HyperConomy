@@ -6,13 +6,13 @@ public class Buyid {
 	Buyid(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		Transaction tran = hc.getTransaction();
 		int amount;
 		int itd;
 		int da = 0;
 		try {
-			if (s.inShop(player) != -1) {
+			if (s.getShop(player) != null) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					if (args.length == 2) {
 						amount = Integer.parseInt(args[0]);
@@ -30,7 +30,7 @@ public class Buyid {
 					if (nam == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
-						if (s.has(s.getShop(player), nam)) {
+						if (s.getShop(player).has(nam)) {
 							tran.buy(nam, amount, itd, da, player);
 						} else {
 							player.sendMessage(L.get("CANT_BE_TRADED"));

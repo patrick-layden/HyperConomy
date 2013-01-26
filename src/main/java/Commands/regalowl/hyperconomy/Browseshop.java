@@ -10,8 +10,8 @@ public class Browseshop {
 	
 	Browseshop(String args[], CommandSender sender, Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		Shop s = hc.getShop();
-		DataFunctions sf = hc.getSQLFunctions();
+		ShopFactory s = hc.getShopFactory();
+		DataFunctions sf = hc.getDataFunctions();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		ArrayList<String> aargs = new ArrayList<String>();
@@ -21,7 +21,7 @@ public class Browseshop {
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
     		if (player != null) {
-    			if ((requireShop && s.inShop(player) == -1) && !player.hasPermission("hyperconomy.admin")) {
+    			if ((requireShop && s.getShop(player) == null) && !player.hasPermission("hyperconomy.admin")) {
     				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
     				return;
     			}			
@@ -61,9 +61,7 @@ public class Browseshop {
 			}
     		String nameshop = null;
     		if (player != null) {
-    			if (s.inShop(player) != -1) {
-    				nameshop = s.getShop(player);
-    			}    			
+    			nameshop = s.getShop(player).getName();
     		}
 			ArrayList<String> names = hc.getNames();
 			ArrayList<String> rnames = new ArrayList<String>();
@@ -73,14 +71,14 @@ public class Browseshop {
 				if (alphabetic) {
 					if (cname.startsWith(input)) {
 						String itemname = cname;
-						if (nameshop == null || s.has(nameshop, itemname)) {
+						if (nameshop == null || s.getShop(nameshop).has(itemname)) {
 							rnames.add(cname);
 						}
 					}
 				} else {
 					if (cname.contains(input)) {
 						String itemname = cname;
-						if (nameshop == null || s.has(nameshop, itemname)) {
+						if (nameshop == null || s.getShop(nameshop).has(itemname)) {
 							rnames.add(cname);
 						}
 					}

@@ -9,9 +9,9 @@ public class Intervals {
 		HyperConomy hc = HyperConomy.hc;
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		Log l = hc.getLog();
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		try {
 			if (args.length == 0) {
 				SQLWrite sw = hc.getSQLWrite();

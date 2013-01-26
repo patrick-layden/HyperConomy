@@ -26,7 +26,7 @@ public class TransactionSign implements Listener {
 		hc = hyperc;
 		tran = trans;
 		ench = enchant;
-		sf = hc.getSQLFunctions();
+		sf = hc.getDataFunctions();
 		names = new HashSet<String>();
 		ArrayList<String> anames = hc.getNames();
 		for (int i = 0; i < anames.size(); i++) {
@@ -80,7 +80,7 @@ public class TransactionSign implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteractEvent(PlayerInteractEvent ievent) {
 		LanguageFile L = hc.getLanguageFile();
-		Shop shop = hc.getShop();
+		ShopFactory shop = hc.getShopFactory();
 		boolean requireShop = hc.getYaml().getConfig().getBoolean("config.require-transaction-signs-to-be-in-shop");
 		boolean shopPerms = hc.getYaml().getConfig().getBoolean("config.use-shop-permissions");
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
@@ -123,7 +123,7 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.buysign")) {
-									if ((shop.inShop(p) != -1 && requireShop) || !requireShop) {
+									if ((shop.getShop(p) != null && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".buy")) {
 											if (hc.itemTest(line12)) {
 												int id = sf.getId(line12, playerecon);
@@ -170,7 +170,7 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
-									if ((shop.inShop(p) != -1 && requireShop) || !requireShop) {
+									if ((shop.getShop(p) != null && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".sell")) {
 											if (hc.itemTest(line12)) {
 												int id = sf.getId(line12, playerecon);

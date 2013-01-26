@@ -9,13 +9,13 @@ public class Buy {
 	HyperConomy hc;
 	Buy(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		Transaction tran = hc.getTransaction();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		try {
-			if (s.inShop(player) != -1) {
+			if (s.getShop(player) != null) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					String name = args[0];
 					boolean xp = false;
@@ -63,7 +63,7 @@ public class Buy {
 						}
 					}
 					if (hc.itemTest(name)) {
-						if (s.has(s.getShop(player), name)) {
+						if (s.getShop(player).has(name)) {
 							if (xp) {
 								tran.buyXP(name, amount, player);
 							} else {

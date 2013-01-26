@@ -30,7 +30,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -68,7 +68,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -107,7 +107,7 @@ public class Account {
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String name = player.getName();
@@ -137,7 +137,7 @@ public class Account {
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				economy.withdrawPlayer(name, money);
@@ -165,7 +165,7 @@ public class Account {
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String name = player.getName();
@@ -195,7 +195,7 @@ public class Account {
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				economy.depositPlayer(name, money);
@@ -225,7 +225,7 @@ public class Account {
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -255,7 +255,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		Log l = hc.getLog();
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -289,7 +289,7 @@ public class Account {
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				if (economy.hasAccount(name)) {
@@ -326,7 +326,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			boolean hasaccount = false;
 			if (economy != null) {
@@ -358,7 +358,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				
@@ -398,7 +398,7 @@ public class Account {
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
@@ -436,7 +436,7 @@ public class Account {
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				return calc.twoDecimals(economy.getBalance(account));
@@ -466,7 +466,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		boolean useExternalEconomy = hc.useExternalEconomy();
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
 				if (!economy.hasAccount(account)) {

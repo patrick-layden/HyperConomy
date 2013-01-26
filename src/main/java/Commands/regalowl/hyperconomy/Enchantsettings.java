@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 public class Enchantsettings {
 	Enchantsettings(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			String nam = args[0];

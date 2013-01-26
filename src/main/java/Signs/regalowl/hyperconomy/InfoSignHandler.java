@@ -58,7 +58,7 @@ public class InfoSignHandler implements Listener {
 			String[] lines = scevent.getLines();
 			String economy = "default";
 			if (hc.useSQL()) {
-				DataFunctions df = hc.getSQLFunctions();
+				DataFunctions df = hc.getDataFunctions();
 				economy = df.getPlayerEconomy(p);
 			}
 			String objectName = lines[0].trim() + lines[1].trim();

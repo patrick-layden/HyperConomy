@@ -22,7 +22,7 @@ public class _Command {
 
 	public boolean handleCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		hc = HyperConomy.hc;
-		sf = hc.getSQLFunctions();
+		sf = hc.getDataFunctions();
 		player = null;
 		if (sender instanceof Player) {
 			player = (Player) sender;

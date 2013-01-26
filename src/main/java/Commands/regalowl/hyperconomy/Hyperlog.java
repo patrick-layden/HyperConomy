@@ -118,7 +118,7 @@ public class Hyperlog {
 	
 	public ArrayList<String> getHyperLog(String statement) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		ArrayList<String> entries = new ArrayList<String>();
 		try {
 			Connection connect = DriverManager.getConnection("jdbc:mysql://" + df.getHost() + ":" + df.getPort() + "/" + df.getDatabase(), df.getUserName(), df.getPassword());

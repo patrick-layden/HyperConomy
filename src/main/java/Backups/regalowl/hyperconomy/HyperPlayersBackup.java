@@ -29,7 +29,7 @@ public class HyperPlayersBackup {
 		HyperConomy hc = HyperConomy.hc;
 		FileTools ft = new FileTools();
 		ft.makeFolder(dpath);
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		SerializeArrayList sal = new SerializeArrayList();
 		String hyperplayers = "";
 		ArrayList<String> pplayer = sf.getStringColumn("SELECT PLAYER FROM hyperplayers");

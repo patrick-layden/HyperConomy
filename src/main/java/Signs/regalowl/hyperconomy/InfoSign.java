@@ -175,21 +175,21 @@ public class InfoSign {
 					break;
 				case STOCK:
 					line3 = ChatColor.WHITE + "Stock:";
-					line4 = ChatColor.GREEN + "" + hc.getSQLFunctions().getStock(objectName, economy);
+					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getStock(objectName, economy);
 					break;
 				case VALUE:
 					line3 = ChatColor.WHITE + "Value:";
-					line4 = ChatColor.GREEN + "" + hc.getSQLFunctions().getValue(objectName, economy) * multiplier;
+					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getValue(objectName, economy) * multiplier;
 					break;
 				case STATUS:
 					boolean staticstatus;
-					staticstatus = Boolean.parseBoolean(hc.getSQLFunctions().getStatic(objectName, economy));
+					staticstatus = Boolean.parseBoolean(hc.getDataFunctions().getStatic(objectName, economy));
 					line3 = ChatColor.WHITE + "Status:";
 					if (staticstatus) {
 						line4 = ChatColor.GREEN + "Static";
 					} else {
 						boolean initialstatus;
-						initialstatus = Boolean.parseBoolean(hc.getSQLFunctions().getInitiation(objectName, economy));
+						initialstatus = Boolean.parseBoolean(hc.getDataFunctions().getInitiation(objectName, economy));
 						if (initialstatus) {
 							line4 = ChatColor.GREEN + "Initial";
 						} else {
@@ -199,15 +199,15 @@ public class InfoSign {
 					break;
 				case STATICPRICE:
 					line3 = ChatColor.WHITE + "Static Price:";
-					line4 = ChatColor.GREEN + "" + hc.getSQLFunctions().getStaticPrice(objectName, economy) * multiplier;
+					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getStaticPrice(objectName, economy) * multiplier;
 					break;
 				case STARTPRICE:
 					line3 = ChatColor.WHITE + "Start Price:";
-					line4 = ChatColor.GREEN + "" + hc.getSQLFunctions().getStartPrice(objectName, economy) * multiplier;
+					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getStartPrice(objectName, economy) * multiplier;
 					break;
 				case MEDIAN:
 					line3 = ChatColor.WHITE + "Median:";
-					line4 = ChatColor.GREEN + "" + hc.getSQLFunctions().getMedian(objectName, economy);
+					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getMedian(objectName, economy);
 					break;
 				case HISTORY:
 					String increment = ChatColor.stripColor(line4.replace(" ", "")).toUpperCase().replaceAll("[0-9]", "");
@@ -308,7 +308,7 @@ public class InfoSign {
 	private String getpercentChange(String itemn, int timevalue, String economy) {
 		Calculation calc = hc.getCalculation();
 		String percentchange = "";
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		double percentc = 0.0;
 		double historicvalue = sf.getHistoryData(itemn, economy, timevalue);
 		if (historicvalue == -1.0) {

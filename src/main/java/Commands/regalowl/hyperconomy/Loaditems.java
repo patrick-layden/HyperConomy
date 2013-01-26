@@ -13,7 +13,7 @@ public class Loaditems {
 			if (hc.useSQL()) {
     			if (args.length == 1) {
     				String economy = args[0];
-    				if (hc.getSQLFunctions().testEconomy(economy)) {
+    				if (hc.getDataFunctions().testEconomy(economy)) {
     					if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
     						new Backup();
     					}

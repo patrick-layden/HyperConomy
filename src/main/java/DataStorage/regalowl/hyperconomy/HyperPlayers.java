@@ -20,10 +20,10 @@ public class HyperPlayers implements Listener {
     
 	@EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
-		DataFunctions df = hc.getSQLFunctions();
+		DataFunctions df = hc.getDataFunctions();
 		if (hc.useSQL()) {
 			if (!df.inDatabase(event.getPlayer().getName())) {
-				hc.getSQLFunctions().addPlayer(event.getPlayer().getName());
+				hc.getDataFunctions().addPlayer(event.getPlayer().getName());
 			}
 		} else {
 			String player = event.getPlayer().getName();
@@ -31,7 +31,7 @@ public class HyperPlayers implements Listener {
 			String test = players.getString(player + ".balance");
 			if (test == null) {
 				players.set(player + ".balance", 0);
-				hc.getSQLFunctions().addPlayer(player);
+				hc.getDataFunctions().addPlayer(player);
 			}
 		}
 	}

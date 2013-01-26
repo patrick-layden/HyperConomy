@@ -22,7 +22,7 @@ public class ConnectionPool {
 		sw = sqw;
 		hc = hyc;
 		maxConnections = maxconnections;
-		sf = hc.getSQLFunctions();
+		sf = hc.getDataFunctions();
 		openConnections();
 		
 		hc.getServer().getScheduler().scheduleAsyncRepeatingTask(hc, new Runnable() {

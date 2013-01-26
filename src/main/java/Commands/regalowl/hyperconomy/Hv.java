@@ -9,16 +9,16 @@ import org.bukkit.inventory.ItemStack;
 public class Hv {
 	Hv(String args[], Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		Transaction tran = hc.getTransaction();
 		ETransaction ench = hc.getETransaction();
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		int amount;
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			if ((requireShop && s.inShop(player) != -1) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if ((requireShop && s.getShop(player) != null) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				ItemStack iinhand = player.getItemInHand();
 					if (args.length == 0) {
 						amount = 1;

@@ -12,7 +12,7 @@ public class SQLRetry {
 		econplayer = player;
 		hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
 			public void run() {
-				hc.getSQLFunctions().setPlayerEconomy(econplayer, playerecon);
+				hc.getDataFunctions().setPlayerEconomy(econplayer, playerecon);
 			}
 		}, 20L);
 	}

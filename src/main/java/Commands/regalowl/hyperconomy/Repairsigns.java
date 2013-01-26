@@ -79,7 +79,7 @@ public class Repairsigns {
 											sns.set(signKey + ".multiplier", 1.0);
 											sns.set(signKey + ".type", type);
 											if (hc.useSQL()) {
-												sns.set(signKey + ".economy", hc.getSQLFunctions().getPlayerEconomy(player.getName()));
+												sns.set(signKey + ".economy", hc.getDataFunctions().getPlayerEconomy(player.getName()));
 											} else {
 												sns.set(signKey + ".economy", "default");
 											}

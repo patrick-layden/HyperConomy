@@ -11,7 +11,7 @@ public class Exporttoyml {
 			if (hc.useSQL()) {
 				if (args.length == 1 || args.length == 2) {
 					String economy = args[0];
-					if (hc.getSQLFunctions().testEconomy(economy)) {
+					if (hc.getDataFunctions().testEconomy(economy)) {
 						if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
 							if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 								new Backup();

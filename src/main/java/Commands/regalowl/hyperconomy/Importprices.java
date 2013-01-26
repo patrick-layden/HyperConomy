@@ -11,7 +11,7 @@ public class Importprices {
 	Importprices(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		
 		try {
 			if (hc.useSQL()) {

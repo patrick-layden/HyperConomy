@@ -12,13 +12,13 @@ public class Evalue {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			if ((requireShop && s.inShop(player) != -1) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if ((requireShop && s.getShop(player) != null) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				if (args.length == 2) {
 					String nam = args[0];
 					if (hc.enchantTest(nam)) {

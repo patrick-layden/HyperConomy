@@ -8,9 +8,9 @@ public class Esell {
 		HyperConomy hc = HyperConomy.hc;
 		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		try {
-			if (s.inShop(player) != -1) {
+			if (s.getShop(player) != null) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					String name = args[0];
 					if (args[0].equalsIgnoreCase("max")) {
@@ -19,7 +19,7 @@ public class Esell {
 						}
 						ArrayList<String> enchants = ench.getEnchantments(player.getItemInHand());
 						for (String e:enchants) {
-							if (s.has(s.getShop(player), e)) {
+							if (s.getShop(player).has(e)) {
 								ench.sellEnchant(e, player);
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));
@@ -28,7 +28,7 @@ public class Esell {
 
 					} else {
 						if (hc.enchantTest(name)) {
-							if (s.has(s.getShop(player), name)) {
+							if (s.getShop(player).has(name)) {
 								ench.sellEnchant(name, player);
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));

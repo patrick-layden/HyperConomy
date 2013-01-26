@@ -10,7 +10,7 @@ public class Createeconomy {
 			if (hc.useSQL()) {
     			if (args.length == 1) {
     				String economy = args[0];
-    				if (!hc.getSQLFunctions().testEconomy(economy)) {
+    				if (!hc.getDataFunctions().testEconomy(economy)) {
     					hc.getSQLEconomy().createNewEconomy(economy);
     					sender.sendMessage(L.get("NEW_ECONOMY_CREATED"));
     				} else {

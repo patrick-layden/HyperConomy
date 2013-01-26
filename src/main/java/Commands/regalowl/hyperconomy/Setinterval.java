@@ -6,7 +6,7 @@ public class Setinterval {
 
 	Setinterval(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		YamlFile yaml = hc.getYaml();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();

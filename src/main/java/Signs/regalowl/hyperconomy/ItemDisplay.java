@@ -84,7 +84,7 @@ public class ItemDisplay {
 	}
 	
 	public Item makeDisplay() {
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		Location l = new Location(w, x, y + 1, z);
 		ItemStack dropstack = new ItemStack(sf.getId(name, economy));
 		dropstack.setDurability((short) sf.getDurability(name, economy));

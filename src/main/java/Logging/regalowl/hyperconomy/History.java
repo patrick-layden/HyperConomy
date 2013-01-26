@@ -36,7 +36,7 @@ public class History {
 
   	
   	public void writehistoryThread() {
-  			sf = hc.getSQLFunctions();
+  			sf = hc.getDataFunctions();
   			historykeys = sf.getKeys();
   			
   			ArrayList<String> inames = hc.getInames();

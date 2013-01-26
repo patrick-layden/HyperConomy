@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 public class Topenchants {
 	Topenchants(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		Shop s = hc.getShop();
-		DataFunctions sf = hc.getSQLFunctions();
+		ShopFactory s = hc.getShopFactory();
+		DataFunctions sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
@@ -22,10 +22,10 @@ public class Topenchants {
 			}
 			String nameshop = "";
 			if (player != null) {
-				if (s.inShop(player) != -1) {
-					nameshop = s.getShop(player);
+				if (s.getShop(player) != null) {
+					nameshop = s.getShop(player).getName();
 				} 				
-				if (requireShop && s.inShop(player) == -1 && !player.hasPermission("hyperconomy.admin")) {
+				if (requireShop && s.getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
 					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
 					return;
 				}
@@ -42,7 +42,7 @@ public class Topenchants {
 				String elst = enames.get(c);
 				boolean unavailable = false;
 				if (nameshop != "") {
-					if (!s.has(nameshop, elst)) {
+					if (!s.getShop(nameshop).has(elst)) {
 						unavailable = true;
 					}
 				}

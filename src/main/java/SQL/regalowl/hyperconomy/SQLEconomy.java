@@ -84,7 +84,7 @@ public class SQLEconomy {
 	public boolean checkData() {
 		boolean migrate = false;
 		ArrayList<String> testdata = new ArrayList<String>();
-		testdata = hc.getSQLFunctions().getStringColumn("SELECT NAME FROM hyperobjects WHERE ECONOMY='default'");
+		testdata = hc.getDataFunctions().getStringColumn("SELECT NAME FROM hyperobjects WHERE ECONOMY='default'");
 		if (testdata.size() == 0) {
 			migrate = true;
 			new Backup();
@@ -125,10 +125,10 @@ public class SQLEconomy {
 		}
 		SQLWrite sw = hc.getSQLWrite();
 		sw.writeData(statements);
-		hc.getSQLFunctions().load();
+		hc.getDataFunctions().load();
 	}
 	public void createNewEconomy(String economy) {
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		ArrayList<String> items = hc.getInames();
 		ArrayList<String> enchants = hc.getEnames();
 		ArrayList<String> statements = new ArrayList<String>();
@@ -151,7 +151,7 @@ public class SQLEconomy {
 		sw.writeData(statements);
 		hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
 			public void run() {
-				DataFunctions sf = hc.getSQLFunctions();
+				DataFunctions sf = hc.getDataFunctions();
 				sf.load();
 			}
 		}, 100L);
@@ -165,7 +165,7 @@ public class SQLEconomy {
 		ArrayList<String> statements = new ArrayList<String>();
 		ArrayList<String> objectsAdded = new ArrayList<String>();
 		Iterator<String> it = itemsyaml.getKeys(false).iterator();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		ArrayList<String> keys = sf.getKeys();
 		while (it.hasNext()) {
 			String itemname = it.next().toString();
@@ -196,13 +196,13 @@ public class SQLEconomy {
 		}
 		SQLWrite sw = hc.getSQLWrite();
 		sw.writeData(statements);
-		hc.getSQLFunctions().load();
+		hc.getDataFunctions().load();
 		return objectsAdded;
 	}
 	public void exportToYml(String economy) {
 		FileConfiguration items = hc.getYaml().getItems();
 		FileConfiguration enchants = hc.getYaml().getEnchants();
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		ArrayList<String> names = new ArrayList<String>();
 		Iterator<String> it = items.getKeys(false).iterator();
 		while (it.hasNext()) {

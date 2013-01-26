@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class Removeitem {
 	Removeitem(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		SerializeArrayList sal = new SerializeArrayList();
 		LanguageFile L = hc.getLanguageFile();
 		try {
@@ -22,7 +22,7 @@ public class Removeitem {
     				}
     				if (teststring3 != null) {
 	    				ArrayList<String> unavailable = sal.stringToArray(hc.getYaml().getShops().getString(shopname + ".unavailable"));
-	    				if (s.has(shopname, itemname) || itemname.equalsIgnoreCase("all")) {
+	    				if (s.getShop(shopname).has(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
 	    						unavailable.add(itemname);
 		    					hc.getYaml().getShops().set(shopname + ".unavailable", sal.stringArrayToString(unavailable));

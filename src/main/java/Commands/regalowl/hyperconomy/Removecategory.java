@@ -15,7 +15,7 @@ public class Removecategory {
 	Removecategory(String args[], CommandSender se) {
 		sender = se;
 		hc = HyperConomy.hc;
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		SerializeArrayList sal = new SerializeArrayList();
 		try {
@@ -47,7 +47,7 @@ public class Removecategory {
 						String itemname = objects.get(i);
 						if (hc.itemTest(itemname) || hc.enchantTest(itemname)) {
 							String unavailable = hc.getYaml().getShops().getString(shopname + ".unavailable");
-							if (s.has(shopname, itemname)) {
+							if (s.getShop(shopname).has(itemname)) {
 								if (unavailable == null) {
 									unavailable = "";
 								}

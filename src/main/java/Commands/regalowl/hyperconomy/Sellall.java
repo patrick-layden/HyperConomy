@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class Sellall {
 	private HyperConomy hc;
-	private Shop s;
+	private ShopFactory s;
 	private Calculation calc;
 	private Transaction tran;
 	private ETransaction ench;
@@ -17,14 +17,14 @@ public class Sellall {
 
 	Sellall(String args[], Player p) {
 		hc = HyperConomy.hc;
-		s = hc.getShop();
+		s = hc.getShopFactory();
 		calc = hc.getCalculation();
 		tran = hc.getTransaction();
 		LanguageFile L = hc.getLanguageFile();
 		ench = hc.getETransaction();
 		player = p;
 		try {
-			if (s.inShop(player) != -1) {
+			if (s.getShop(player) != null) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					if (args.length == 0) {
 						int slotn = 0;
@@ -41,7 +41,7 @@ public class Sellall {
 							String nam = hc.getnameData(ke);
 							int amount = tran.countInvitems(itd, da, player);
 							if (nam != null) {
-								if (s.has(s.getShop(player), nam)) {
+								if (s.getShop(player).has(nam)) {
 									tran.sell(nam, itd, da, amount, player);
 								} else {
 									sendMessage(L.get("ONE_OR_MORE_CANT_BE_TRADED"));
@@ -63,7 +63,7 @@ public class Sellall {
 									String nam = hc.getnameData(ke);
 									if (nam != null) {
 										int amount = tran.countInvitems(itd, da, player);
-										if (s.has(s.getShop(player), nam)) {
+										if (s.getShop(player).has(nam)) {
 											tran.sell(nam, itd, da, amount, player);
 										} else {
 											sendMessage(L.get("ONE_OR_MORE_CANT_BE_TRADED"));

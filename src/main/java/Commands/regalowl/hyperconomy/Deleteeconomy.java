@@ -14,7 +14,7 @@ public class Deleteeconomy {
     					sender.sendMessage(L.get("CANT_DELETE_DEFAULT_ECONOMY"));
     					return;
     				}
-    				if (hc.getSQLFunctions().testEconomy(economy)) {
+    				if (hc.getDataFunctions().testEconomy(economy)) {
     					if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
     						new Backup();
     					}

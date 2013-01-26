@@ -6,14 +6,14 @@ import org.bukkit.inventory.ItemStack;
 public class Hs {
 	Hs(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		Calculation calc = hc.getCalculation();
 		Transaction tran = hc.getTransaction();
 		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
 		int amount;
 		try {
-			if (s.inShop(player) != -1) {
+			if (s.getShop(player) != null) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					if (args.length == 0) {
 						amount = 1;
@@ -41,7 +41,7 @@ public class Hs {
 					} else {
 						ItemStack iinhand = player.getItemInHand();
 						if (ench.hasenchants(iinhand) == false) {
-							if (s.has(s.getShop(player), nam)) {
+							if (s.getShop(player).has(nam)) {
 								tran.sell(nam, itd, da, amount, player);
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));

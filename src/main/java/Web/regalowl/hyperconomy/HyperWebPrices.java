@@ -50,7 +50,7 @@ public class HyperWebPrices extends AbstractHandler {
 	 * 
 	 */
 		public double getThreadSafeValue(String name, String playerecon){
-			DataFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getDataFunctions();
 			try {
 				double cost = 0.0;
 				boolean initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
@@ -94,7 +94,7 @@ public class HyperWebPrices extends AbstractHandler {
 		 * 
 		 */
 			public double getThreadSafeCost(String name, String playerecon){
-				DataFunctions sf = hc.getSQLFunctions();
+				DataFunctions sf = hc.getDataFunctions();
 				try {
 					double cost = 0.0;
 					boolean initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
@@ -138,7 +138,7 @@ public class HyperWebPrices extends AbstractHandler {
 		
 		private String getThreadSafePercentChange(String itemn, int timevalue, String economy) {
 			String percentchange = "";
-			DataFunctions sf = hc.getSQLFunctions();
+			DataFunctions sf = hc.getDataFunctions();
 			double percentc = 0.0;
 		    double historicvalue = sf.getHistoryData(itemn, economy, timevalue);
 		    if (historicvalue == -1.0) {
@@ -165,7 +165,7 @@ public class HyperWebPrices extends AbstractHandler {
 			
 			String page = "";
 			if (!hc.sqlLock()) {
-				DataFunctions sf = hc.getSQLFunctions();
+				DataFunctions sf = hc.getDataFunctions();
 				ArrayList<String> names = hc.getNames();
 				ArrayList<Integer> timevalues = new ArrayList<Integer>();
 				timevalues.add(1);

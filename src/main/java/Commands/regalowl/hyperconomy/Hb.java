@@ -9,16 +9,16 @@ public class Hb {
 
 	Hb(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
-		DataFunctions sf = hc.getSQLFunctions();
+		DataFunctions sf = hc.getDataFunctions();
 		Transaction tran = hc.getTransaction();
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
-		Shop s = hc.getShop();
+		ShopFactory s = hc.getShopFactory();
 		ETransaction ench = hc.getETransaction();
 		double amount;
 		boolean ma = false;
 		try {
-			if (s.inShop(player) != -1) {
+			if (s.getShop(player) != null) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					ItemStack iinhand = player.getItemInHand();
 					if (ench.hasenchants(iinhand) == false) {
@@ -53,7 +53,7 @@ public class Hb {
 							if (amount > shopstock && ma) {
 								amount = shopstock;
 							}
-							if (s.has(s.getShop(player), nam)) {
+							if (s.getShop(player).has(nam)) {
 								tran.buy(nam, (int) Math.rint(amount), itd, da, player);
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));
