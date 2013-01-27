@@ -175,7 +175,7 @@ CANNOT_PURCHASE_ITEMS_FROM_CHEST: &9You cannot purchase items from this chest.
 ITEM_CANNOT_ACCEPT_ENCHANTMENTS: &9That item cannot accept enchantments.
 CHEST_SHOP_BUY_VALUE: &a&o%a &b&o%n &9&ocan be purchased from %zc for &a&o%c%p.
 CHEST_SHOP_SELL_VALUE: &a&o%a &b&o%n &9&ocan be sold to %zc for &a&o%c%p.
-CHEST_SHOP_ENCHANTMENT_VALUE: &9The selected item's enchantments can be purchased from %zc for: %c%p;
+CHEST_SHOP_ENCHANTMENT_VALUE: &9The selected item's enchantments can be purchased from %zc for: &a%c%p
 WEB_PAGE_ENABLED: HyperConomy web page enabled.
 WEB_PAGE_DISABLED: HyperConomy web page disabled.
 TOTAL_XP_POINTS: &9Total Experience Points: &a%v

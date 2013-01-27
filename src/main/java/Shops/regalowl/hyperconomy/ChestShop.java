@@ -1,9 +1,7 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -636,20 +634,15 @@ public class ChestShop implements Listener{
 							    				if (buy) {
 				
 							    						double price = 0;
-								    					Iterator<Enchantment> ite = icevent.getCurrentItem().getEnchantments().keySet().iterator();
-								        				while (ite.hasNext()) {;
-								        					String rawstring = ite.next().toString();
-								        					String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
-								        					Enchantment en = null;
-								        					en = Enchantment.getByName(enchname);
-								        					int lvl = icevent.getCurrentItem().getEnchantmentLevel(en);
-								        					String nam = hc.getEnchantData(enchname);
+								    					for (Enchantment enchantment : ench.listEnchantments(icevent.getCurrentItem())) {
+								    						int lvl = ench.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
+								    						String nam = hc.getEnchantData(enchantment.getName());
 								        					String fnam = nam + lvl;
-								        					price = price + calc.getEnchantValue(fnam, EnchantmentClass.fromString(p.getItemInHand().getType().toString()), hc.getDataFunctions().getPlayerEconomy(line34));
+								        					price += calc.getEnchantValue(fnam, EnchantmentClass.fromString(p.getItemInHand().getType().toString()), hc.getDataFunctions().getPlayerEconomy(line34));
 									    					if (setprice) {
 									    						price = staticprice;
 									    					}
-								        				}
+								    					}
 								        				price = calc.twoDecimals(price);
 								        			if (ench.canEnchantItem(p.getItemInHand())) {
 										    			p.sendMessage(L.get("LINE_BREAK"));
@@ -739,23 +732,17 @@ public class ChestShop implements Listener{
 						    				
 							    			if (slot < 27 && name != null) {
 							    				
-							    				if (buy) {					    					
-							    					Iterator<Enchantment> ite = icevent.getCurrentItem().getEnchantments().keySet().iterator();
-							        				while (ite.hasNext()) {;
-							        					String rawstring = ite.next().toString();
-							        					String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
-							        					Enchantment en = null;
-							        					en = Enchantment.getByName(enchname);
-							        					int lvl = icevent.getCurrentItem().getEnchantmentLevel(en);
-							        					String nam = hc.getEnchantData(enchname);
+							    				if (buy) {	
+							    					for (Enchantment enchantment : ench.listEnchantments(icevent.getCurrentItem())) {
+							    						int lvl = ench.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
+							    						String nam = hc.getEnchantData(enchantment.getName());
 							        					String fnam = nam + lvl;
 							        					if (setprice) {
 							        						ench.buyChestEnchant(fnam, p, icevent.getCurrentItem(), line34, staticprice);
 							        					} else {
 							        						ench.buyChestEnchant(fnam, p, icevent.getCurrentItem(), line34);
 							        					}
-							        				}
-
+							    					}
 							    				} else {
 							    					p.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
 							    				}

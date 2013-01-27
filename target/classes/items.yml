@@ -7886,3 +7886,20 @@ commandblock:
   initiation:
     initiation: true
     startprice: 20000.0
+enchantedbook:
+  information:
+    type: item
+    category: unknown
+    material: ENCHANTED_BOOK
+    id: 403
+    data: 0
+  value: 15.0
+  price:
+    static: false
+    staticprice: 30.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 30.0

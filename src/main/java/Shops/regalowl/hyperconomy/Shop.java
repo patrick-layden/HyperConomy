@@ -11,7 +11,7 @@ public class Shop {
 	private String name;
 	private String world;
 	private String economy;
-	private String account;
+	//private String account;
 	private String message1;
 	private String message2;
 	private int p1x;
@@ -63,26 +63,12 @@ public class Shop {
 	
 	public void setPoint1(Player player) {
 		Location l = player.getLocation();
-		this.world = l.getWorld().getName();
-		p1x = l.getBlockX();
-		p1y = l.getBlockY();
-		p1z = l.getBlockZ();
-		shopFile.set(name + ".world", world);
-		shopFile.set(name + ".p1.x", p1x);
-		shopFile.set(name + ".p1.y", p1y);
-		shopFile.set(name + ".p1.z", p1z);
+		setPoint1(l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
 	
 	public void setPoint2(Player player) {
 		Location l = player.getLocation();
-		this.world = l.getWorld().getName();
-		p2x = l.getBlockX();
-		p2y = l.getBlockY();
-		p2z = l.getBlockZ();
-		shopFile.set(name + ".world", world);
-		shopFile.set(name + ".p2.x", p2x);
-		shopFile.set(name + ".p2.y", p2y);
-		shopFile.set(name + ".p2.z", p2z);
+		setPoint2(l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
 	
 	

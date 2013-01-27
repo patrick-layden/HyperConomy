@@ -220,7 +220,7 @@ public class ETransaction {
 							String lev = name.substring(l - 1, l);
 							int level = Integer.parseInt(lev);
 							addEnchantment(p.getItemInHand(), ench, level);
-							item.removeEnchantment(ench);
+							removeEnchantment(item, ench);
 							price = calc.twoDecimals(price);
 							p.sendMessage(L.get("LINE_BREAK"));
 							p.sendMessage(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, calc.twoDecimals(price), name, owner));
@@ -283,7 +283,7 @@ public class ETransaction {
 						String lev = name.substring(l - 1, l);
 						int level = Integer.parseInt(lev);
 						addEnchantment(p.getItemInHand(), ench, level);
-						item.removeEnchantment(ench);
+						removeEnchantment(item, ench);
 						price = calc.twoDecimals(price);
 						p.sendMessage(L.get("LINE_BREAK"));
 						p.sendMessage(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, calc.twoDecimals(price), name, owner));
@@ -400,20 +400,17 @@ public class ETransaction {
 	}
 	
 	public boolean canEnchantItem(ItemStack stack) {
-		if (stack == null) {
+		if (stack == null || stack.getType().equals(Material.AIR)) {
 			return false;
 		}
 		if (stack.getType().equals(Material.BOOK)) {
 			return true;
 		} else {
 			boolean enchantable = false;
-			int count = 0;
-			while (count < enchantments.size()) {
-				Enchantment enchant = enchantments.get(count);
+			for (Enchantment enchant:enchantments) {
 				if (enchant.canEnchantItem(stack)) {
 					enchantable = true;
 				}
-				count++;
 			}
 			return enchantable;
 		}
@@ -434,10 +431,14 @@ public class ETransaction {
 					return false;
 				}
 			}
-			return true;
+			return e.canEnchantItem(stack);
 		}
 	}
 	
+	/**
+	 * @param stack An ItemStack
+	 * @return ArrayList of all enchantments as String on the ItemStack
+	 */
 	public ArrayList<String> getEnchantments (ItemStack stack) {
 		return convertEnchantmentMapToNames(getEnchantmentMap(stack));
 	}
@@ -455,11 +456,14 @@ public class ETransaction {
 		return enchantments;
 	}
 	
+	/**
+	 * @param stack An ItemStack
+	 * @return ArrayList of all enchantments as Enchantment on the ItemStack
+	 */
 	public ArrayList<Enchantment> listEnchantments (ItemStack stack) {
 		ArrayList<Enchantment> enchantments = new ArrayList<Enchantment>();
-		ArrayList<String> names = getEnchantments(stack);
-		for (String name:names) {
-			enchantments.add(Enchantment.getByName(name));
+		for (Enchantment ench:getEnchantmentMap(stack).keySet()) {
+			enchantments.add(ench);
 		}
 		return enchantments;
 	}
