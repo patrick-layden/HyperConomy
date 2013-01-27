@@ -308,6 +308,7 @@ public class ItemDisplayFactory implements Listener {
 			}
 		}
 	}
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
 		Block bb = event.getBlock();

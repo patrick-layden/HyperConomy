@@ -363,3 +363,5 @@ ACCOUNT_NOT_FOUND: &4The specified account does not exist.
 SETCHESTOWNER_INVALID: &4Invalid parameters. Use /setchestowner [owner]
 LOOK_AT_VALID_CHESTSHOP: &4You must be looking at a valid chest shop!
 CHEST_OWNER_UPDATED: &6Chest owner updated!
+RENAMESHOP_INVALID: &4Invalid Parameters.  Use /renameshop [current name] [new name]
+SHOP_RENAMED: &6Shop renamed successfully!

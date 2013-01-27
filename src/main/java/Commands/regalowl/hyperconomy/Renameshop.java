@@ -1,59 +1,27 @@
 package regalowl.hyperconomy;
 
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Renameshop {
-	Renameshop(CommandSender sender, String[] args, _Command cmd) {
+	Renameshop(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
 		try {
-			boolean rename = cmd.getRename();
-			String renameshopname = cmd.getRenameShopName();
-			if (args.length >= 1) {
-				int counter = 0;
-				String name = "";
-				while (counter < args.length) {
-					if (counter == 0) {
-						name = args[0];
-					} else {
-						name = name + "_" + args[counter];
-					}
-					counter++;
-				}
-				name = hc.fixsName(name);
-				if (name.equalsIgnoreCase("reset")) {
-					cmd.setRenameShopName("");
-					cmd.setRename(false);
-					sender.sendMessage(ChatColor.GOLD + "Command has been reset!");
-					return;
-				}
-				String teststring = hc.getYaml().getShops().getString(name);
-				if (!rename && teststring != null) {
-					cmd.setRenameShopName(name);
-					cmd.setRename(true);
-					sender.sendMessage(ChatColor.GOLD + "Shop to be renamed selected!");
-					sender.sendMessage(ChatColor.GOLD + "Now type /renameshop [new name]");
-					sender.sendMessage(ChatColor.GOLD + "To reset the command and start over type /renameshop reset");
-				} else if (rename) {
-					if (name.equalsIgnoreCase(renameshopname)) {
-						sender.sendMessage(ChatColor.DARK_RED + "You can't give the shop its original name!");
-						return;
-					}
-					s.renameShop(renameshopname, name);
-					cmd.setRenameShopName("");
-					cmd.setRename(false);
-					sender.sendMessage(ChatColor.GOLD + "Shop renamed successfully!");
+			if (args.length == 2) {
+				String name = hc.fixsName(args[0]);
+				String newname = args[1];
+				if (s.shopExists(name)) {
+					s.getShop(name).setName(newname);
+					sender.sendMessage(L.get("SHOP_RENAMED"));
 				} else {
 					sender.sendMessage(L.get("SHOP_NOT_EXIST"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /renameshop [name]");
+				sender.sendMessage(L.get("RENAMESHOP_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.DARK_RED + "Invalid Parameters.  Use /renameshop [name]");
+			sender.sendMessage(L.get("RENAMESHOP_INVALID"));
 		}
 	}
 }

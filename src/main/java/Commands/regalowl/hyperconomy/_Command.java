@@ -8,15 +8,10 @@ public class _Command {
 	private Player player;
 	private HyperConomy hc;
 	private DataFunctions sf;
-	private boolean rename;
-	private String renameshopname;
 	private String playerecon;
 	private String nonPlayerEconomy;
 
-	// Constructor for server start.
 	_Command() {
-		rename = false;
-		renameshopname = "";
 		nonPlayerEconomy = "default";
 	}
 
@@ -219,7 +214,7 @@ public class _Command {
 			new Renameeconomyaccount(sender, args);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("renameshop")) {
-			new Renameshop(sender, args, this);
+			new Renameshop(sender, args);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("setmessage")) {
 			new Setmessage(args, sender);
@@ -288,17 +283,5 @@ public class _Command {
 	}
 	public String getNonPlayerEconomy() {
 		return nonPlayerEconomy;
-	}
-	public void setRenameShopName(String name) {
-		renameshopname = name;
-	}
-	public String getRenameShopName() {
-		return renameshopname;
-	}
-	public boolean getRename() {
-		return rename;
-	}
-	public void setRename(boolean status) {
-		rename = status;
 	}
 }
