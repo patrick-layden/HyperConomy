@@ -121,8 +121,9 @@ public class HyperConomy extends JavaPlugin {
 			logerrors = this.getYaml().getConfig().getBoolean("config.log-errors");
 			serverVersion = this.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
 			new Update();
+			sqe = new SQLEconomy();
+			//sqe.checkSQLLite();
 			if (usesql) {
-				sqe = new SQLEconomy(this);
 				boolean databaseOk = sqe.checkTables();
 				if (databaseOk) {
 					sw = new SQLWrite(this);

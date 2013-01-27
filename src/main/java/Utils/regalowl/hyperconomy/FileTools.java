@@ -139,6 +139,18 @@ public class FileTools {
 			e.printStackTrace();
 		}
 	}
+	
+	public void makeFile(String path) {
+		try {
+			File file = new File(path);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	public String getStringFromFile(String path) {
 		try {

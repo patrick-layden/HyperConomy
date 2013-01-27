@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,14 +20,38 @@ public class SQLEconomy {
 	private String host;
 	private String database;
 	private HyperConomy hc;
-	SQLEconomy(HyperConomy hyc) {
-		hc = hyc;
+	SQLEconomy() {
+		hc = HyperConomy.hc;
 		FileConfiguration config = hc.getYaml().getConfig();
 		username = config.getString("config.sql-connection.username");
 		password = config.getString("config.sql-connection.password");
 		port = config.getInt("config.sql-connection.port");
 		host = config.getString("config.sql-connection.host");
 		database = config.getString("config.sql-connection.database");
+	}
+	
+	public boolean checkSQLLite() {
+		FileTools ft = new FileTools();
+		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "database";
+		ft.makeFolder(path);
+		path += File.separator + "hyperconomy.db";
+		if (!ft.fileExists(path)) {
+			ft.makeFile(path);
+		}
+		try {
+			Class.forName("org.sqlite.JDBC");
+			Connection connect = DriverManager.getConnection("jdbc:sqlite:" + path);
+			Statement state = connect.createStatement();
+			//state.execute("CREATE TABLE IF NOT EXISTS hyperobjects (NAME TINYTEXT, ECONOMY TINYTEXT, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE)");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperplayers (PLAYER TINYTEXT, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0')");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperlog (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT)");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperhistory (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, COUNT INT)");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperauditlog (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL)");
+			return true;
+		} catch (Exception e) {
+			new HyperError(e);
+			return false;
+		}
 	}
 	public boolean checkTables() {
 		try {

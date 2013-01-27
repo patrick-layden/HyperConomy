@@ -37,7 +37,7 @@ public class Log {
 			String statement = "Insert Into hyperauditlog (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) Values (NOW(),'" + account + "','" + action + "','" + amount + "','" + economy + "')";
 			hc.getSQLWrite().writeData(statement);
 		} else {
-			String entry = "[Audit] " + "Account = " + account + " Action = " + action + " Amount = " + amount + " Type = " + economy;
+			String entry = "[Audit] " + "Account = " + account + ", Action = " + action + ", Amount = " + amount + ", Type = " + economy;
 			writeLog(entry);
 		}
 	}
