@@ -85,8 +85,8 @@ public class Shop {
 	}
 	
 	public void setDefaultMessages() {
-		message1 = "&aWelcome to %n";
-		message2 = "&9Type &b/hc &9for help.";
+		setMessage1("&aWelcome to %n");
+		setMessage2("&9Type &b/hc &9for help.");
 	}
 	
 	public void setWorld(String world) {
@@ -139,6 +139,10 @@ public class Shop {
 	}
 	
 	public void sendEntryMessage(Player player) {
+		if (message1 == null || message2 == null) {
+			message1 = "&aWelcome to %n";
+			message2 = "&9Type &b/hc &9for help.";
+		}
 		player.sendMessage(L.get("SHOP_LINE_BREAK"));
 		player.sendMessage(message1.replace("%n", name).replace("_", " ").replace("&","\u00A7"));
 		player.sendMessage(message2.replace("%n", name).replace("_", " ").replace("&","\u00A7"));

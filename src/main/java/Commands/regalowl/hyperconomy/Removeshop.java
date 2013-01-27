@@ -8,14 +8,14 @@ public class Removeshop {
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
 		try {
-			if (args.length > 0) {
-				String name = "";
-				String teststring = hc.getYaml().getShops().getString(name);
-				if (teststring == null) {
-					name = hc.fixsName(name);
+			if (args.length == 1) {
+				String name = hc.fixsName(args[0]);
+				if (s.shopExists(name)) {
+					s.removeShop(name);
+					sender.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), name));
+				} else {
+					sender.sendMessage(L.get("SHOP_NOT_EXIST"));
 				}
-				s.removeShop(name);
-				sender.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), name.replace("_", " ")));
 			} else {
 				sender.sendMessage(L.get("REMOVE_SHOP_INVALID"));
 			}

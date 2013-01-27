@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 public class ShopFactory {
 	
 
-	private HashMap<Player, ShopStatus> playerStatus;
+	private HashMap<Player, Boolean> shopStatus;
 	private HashMap<String, Shop> shops = new HashMap<String, Shop>();
 	
 	private boolean useshopexitmessage;
@@ -32,7 +32,7 @@ public class ShopFactory {
 
 	ShopFactory() {
 		hc = HyperConomy.hc;
-		playerStatus = new HashMap<Player, ShopStatus>();	
+		shopStatus = new HashMap<Player, Boolean>();	
 		shopinterval = hc.getYaml().getConfig().getLong("config.shopcheckinterval");
 		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
 		L = hc.getLanguageFile();
@@ -58,7 +58,7 @@ public class ShopFactory {
 	
 	
 	public void clearAll() {
-		playerStatus.clear();
+		shopStatus.clear();
     	shops.clear();
 	}
 	
@@ -85,16 +85,16 @@ public class ShopFactory {
 	public void shopThread() {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			Shop currentShop = getShop(p);
-			ShopStatus status = ShopStatus.NOT_IN_SHOP;;
-			if (playerStatus.containsKey(p)) {
-				status = playerStatus.get(p);
+			boolean inShop = false;
+			if (shopStatus.containsKey(p)) {
+				inShop = shopStatus.get(p);
 			}
-			if (status == ShopStatus.NOT_IN_SHOP) {
+			if (inShop == false) {
 				if (currentShop == null) {
 					continue;
 				} else {
 					currentShop.sendEntryMessage(p);
-					playerStatus.put(p, ShopStatus.IN_SHOP);
+					shopStatus.put(p, true);
 					if (hc.useSQL()) {
 						String shopecon = currentShop.getEconomy();
 						if (shopecon == null) {
@@ -105,9 +105,9 @@ public class ShopFactory {
 						}
 					}
 				}
-			} else if (status == ShopStatus.IN_SHOP) {
+			} else if (inShop == true) {
 				if (currentShop == null) {
-					playerStatus.put(p, ShopStatus.NOT_IN_SHOP);
+					shopStatus.put(p, false);
 					if (useshopexitmessage) {
 						p.sendMessage(L.get("SHOP_EXIT_MESSAGE"));
 					}		
