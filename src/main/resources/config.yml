@@ -52,7 +52,7 @@ config:
       bow: .25
       book: 1
   sql-connection:
-    use-sql: false
+    use-mysql: false
     username: default
     port: 3306
     password: default

@@ -92,22 +92,22 @@ public class Calculation {
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			double totalvalue = 0;
 			int itemid = 0;
-			itemid = sf.getId(name, playerecon);
+			itemid = sf.getHyperObject(name, playerecon).getId();
 			double damage = 0;
 			boolean isstatic = false;
-			isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+			isstatic = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic());
 			if (!isstatic) {
 				damage = getDamage(itemid, amount, p);
 				double shopstock = 0;
 				double value = 0;
 				double median = 0;
 				double icost = 0;
-				shopstock = sf.getStock(name, playerecon);
-				value = sf.getValue(name, playerecon);
-				median = sf.getMedian(name, playerecon);
-				icost = sf.getStartPrice(name, playerecon);
+				shopstock = sf.getHyperObject(name, playerecon).getStock();
+				value = sf.getHyperObject(name, playerecon).getValue();
+				median = sf.getHyperObject(name, playerecon).getMedian();
+				icost = sf.getHyperObject(name, playerecon).getStartprice();
 				if (icost >= ((median * value) / shopstock) && shopstock > 1) {
-					sf.setInitiation(name, playerecon, "false");
+					sf.getHyperObject(name, playerecon).setInitiation("false");
 				}
 				int counter = 0;
 				while (counter < amount) {
@@ -119,7 +119,7 @@ public class Calculation {
 				}
 				totalvalue = totalvalue * damage;
 				Boolean initial = false;
-				initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+				initial = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
 				if (initial == true) {
 					double ivalue = applyCeilingFloor(name, playerecon, icost);
 					totalvalue = ivalue * damage * amount;
@@ -131,7 +131,7 @@ public class Calculation {
 				}
 			} else {
 				damage = getDamage(itemid, amount, p);
-				double statprice = sf.getStaticPrice(name, playerecon);
+				double statprice = sf.getHyperObject(name, playerecon).getStaticprice();
 				double svalue = applyCeilingFloor(name, playerecon, statprice);
 				totalvalue = svalue * amount * damage;
 			}
@@ -154,16 +154,16 @@ public class Calculation {
 		try {
 			DataFunctions sf = hc.getDataFunctions();
 			double cost = 0;
-			boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+			boolean isstatic = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic());
 			if (isstatic == false) {
 				double shopstock = 0;
 				double oshopstock = 0;
 				double value = 0;
 				double median = 0;
-				shopstock = sf.getStock(name, playerecon);
+				shopstock = sf.getHyperObject(name, playerecon).getStock();
 				oshopstock = shopstock;
-				value = sf.getValue(name, playerecon);
-				median = sf.getMedian(name, playerecon);
+				value = sf.getHyperObject(name, playerecon).getValue();
+				median = sf.getHyperObject(name, playerecon).getMedian();
 				shopstock = shopstock - 1;
 				int counter = 0;
 				while (counter < amount) {
@@ -173,12 +173,12 @@ public class Calculation {
 					cost = cost + price;
 					counter++;
 				}
-				boolean initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+				boolean initial = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
 				if (initial == true) {
 					double icost = 0;
-					icost = sf.getStartPrice(name, playerecon);
+					icost = sf.getHyperObject(name, playerecon).getStartprice();
 					if (cost < (icost * amount) && oshopstock > 1) {
-						sf.setInitiation(name, playerecon, "false");
+						sf.getHyperObject(name, playerecon).setInitiation("false");
 					} else {
 						double price = applyCeilingFloor(name, playerecon, icost);
 						cost = price * amount;
@@ -190,7 +190,7 @@ public class Calculation {
 					cost = 3235624645000.7;
 				}
 			} else {
-				double staticcost = sf.getStaticPrice(name, playerecon);
+				double staticcost = sf.getHyperObject(name, playerecon).getStaticprice();
 				double price = applyCeilingFloor(name, playerecon, staticcost);
 				cost = price * amount;
 				cost = twoDecimals(cost);
@@ -218,25 +218,25 @@ public class Calculation {
 			double cost = 0;
 			double classvalue = etran.getclassValue(eclass);
 			boolean stax;
-			stax = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+			stax = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic());
 			if (!stax) {
 				double shopstock;
 				double value;
 				double median;
 				double icost;
-				shopstock = sf.getStock(name, playerecon);
-				value = sf.getValue(name, playerecon);
-				median = sf.getMedian(name, playerecon);
-				icost = sf.getStartPrice(name, playerecon);
+				shopstock = sf.getHyperObject(name, playerecon).getStock();
+				value = sf.getHyperObject(name, playerecon).getValue();
+				median = sf.getHyperObject(name, playerecon).getMedian();
+				icost = sf.getHyperObject(name, playerecon).getStartprice();
 				if (icost >= ((median * value) / shopstock) && shopstock > 1) {
-					sf.setInitiation(name, playerecon, "false");
+					sf.getHyperObject(name, playerecon).setInitiation("false");
 				}
 				double price = (median * value) / shopstock;
 				cost = cost + price;
 				cost = cost * classvalue;
 				cost = applyCeilingFloor(name, playerecon, cost);
 				Boolean initial;
-				initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+				initial = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
 				if (initial == true) {
 					cost = icost * classvalue;
 					cost = applyCeilingFloor(name, playerecon, cost);
@@ -248,7 +248,7 @@ public class Calculation {
 				}
 			} else {
 				double statprice;
-				statprice = sf.getStaticPrice(name, playerecon);
+				statprice = sf.getHyperObject(name, playerecon).getStaticprice();
 				cost = statprice * classvalue;
 				cost = applyCeilingFloor(name, playerecon, cost);
 			}
@@ -276,26 +276,26 @@ public class Calculation {
 			double classvalue = etran.getclassValue(eclass);
 			if (classvalue != 123456789) {
 				boolean stax;
-				stax = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+				stax = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic());
 				if (!stax) {
 					double shopstock;
 					double value;
 					double median;
-					shopstock = sf.getStock(name, playerecon);
-					value = sf.getValue(name, playerecon);
-					median = sf.getMedian(name, playerecon);
+					shopstock = sf.getHyperObject(name, playerecon).getStock();
+					value = sf.getHyperObject(name, playerecon).getValue();
+					median = sf.getHyperObject(name, playerecon).getMedian();
 					double oshopstock = shopstock;
 					shopstock = shopstock - 1;
 					double price = ((median * value) / shopstock);
 					cost = price * classvalue;
 					cost = applyCeilingFloor(name, playerecon, cost);
 					boolean initial;
-					initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+					initial = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
 					if (initial == true) {
 						double icost;
-						icost = sf.getStartPrice(name, playerecon);
+						icost = sf.getHyperObject(name, playerecon).getStartprice();
 						if (price < icost && oshopstock > 1) {
-							sf.setInitiation(name, playerecon, "false");
+							sf.getHyperObject(name, playerecon).setInitiation("false");
 						} else {
 							cost = icost * classvalue;
 							cost = applyCeilingFloor(name, playerecon, cost);
@@ -308,7 +308,7 @@ public class Calculation {
 					}
 				} else {
 					double staticcost;
-					staticcost = sf.getStaticPrice(name, playerecon);
+					staticcost = sf.getHyperObject(name, playerecon).getStaticprice();
 					cost = staticcost * classvalue;
 					cost = applyCeilingFloor(name, playerecon, cost);
 				}
@@ -457,18 +457,18 @@ public class Calculation {
 			double cost = 0;
 			int counter = 0;
 			Boolean initial = false;
-			initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+			initial = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
 			boolean isstatic = false;
-			isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+			isstatic = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic());
 			if (!isstatic) {
 				double shopstock = 0;
 				double value = 0;
 				double median = 0;
 				double icost = 0;
-				shopstock = sf.getStock(name, playerecon);
-				value = sf.getValue(name, playerecon);
-				median = sf.getMedian(name, playerecon);
-				icost = sf.getStartPrice(name, playerecon);
+				shopstock = sf.getHyperObject(name, playerecon).getStock();
+				value = sf.getHyperObject(name, playerecon).getValue();
+				median = sf.getHyperObject(name, playerecon).getMedian();
+				icost = sf.getHyperObject(name, playerecon).getStartprice();
 				while (counter < amount) {
 					double price = ((median * value) / shopstock);
 					price = applyCeilingFloor(name, playerecon, price);
@@ -486,7 +486,7 @@ public class Calculation {
 					cost = 3235624645000.7;
 				}
 			} else {
-				double statprice = sf.getStaticPrice(name, playerecon);
+				double statprice = sf.getHyperObject(name, playerecon).getStaticprice();
 				double price = applyCeilingFloor(name, playerecon, statprice);
 				cost = price * amount;
 			}
@@ -624,8 +624,8 @@ public class Calculation {
 
 	public double getPurchaseTax(String name, String economy, double cost) {
 		DataFunctions sf = hc.getDataFunctions();
-		boolean isinitial = Boolean.parseBoolean(sf.getInitiation(name, economy));
-		boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, economy));
+		boolean isinitial = Boolean.parseBoolean(sf.getHyperObject(name, economy).getInitiation());
+		boolean isstatic = Boolean.parseBoolean(sf.getHyperObject(name, economy).getIsstatic());
 		double tax = 0.0;
 		if (isstatic) {
 			tax = hc.getYaml().getConfig().getDouble("config.statictaxpercent") / 100.0;
@@ -639,7 +639,7 @@ public class Calculation {
 
 	public double getEnchantTax(String name, String economy, double cost) {
 		DataFunctions sf = hc.getDataFunctions();
-		boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, economy));
+		boolean isstatic = Boolean.parseBoolean(sf.getHyperObject(name, economy).getIsstatic());
 		double tax = 0.0;
 		if (isstatic) {
 			tax = hc.getYaml().getConfig().getDouble("config.statictaxpercent") / 100.0;
@@ -651,8 +651,8 @@ public class Calculation {
 
 	public double getCeiling(String name, String economy) {
 		DataFunctions sf = hc.getDataFunctions();
-		double ceiling = sf.getCeiling(name, economy);
-		double floor = sf.getFloor(name, economy);
+		double ceiling = sf.getHyperObject(name, economy).getCeiling();
+		double floor = sf.getHyperObject(name, economy).getFloor();
 		if (ceiling <= 0 || floor > ceiling) {
 			ceiling = 9999999999999.99;
 		}
@@ -661,8 +661,8 @@ public class Calculation {
 
 	public double getFloor(String name, String economy) {
 		DataFunctions sf = hc.getDataFunctions();
-		double floor = sf.getFloor(name, economy);
-		double ceiling = sf.getCeiling(name, economy);
+		double floor = sf.getHyperObject(name, economy).getFloor();
+		double ceiling = sf.getHyperObject(name, economy).getCeiling();
 		if (floor < 0 || ceiling < floor) {
 			floor = 0.0;
 		}

@@ -14,7 +14,7 @@ public class Setceiling {
 				name = args[0];
 				double ceiling = Double.parseDouble(args[1]);
 				if (hc.itemTest(name) || hc.enchantTest(name)) {
-					sf.setCeiling(name, playerecon, ceiling);
+					sf.getHyperObject(name, playerecon).setCeiling(ceiling);
 					sender.sendMessage(L.f(L.get("CEILING_SET"), name));
 					isign.updateSigns();
 				} else {

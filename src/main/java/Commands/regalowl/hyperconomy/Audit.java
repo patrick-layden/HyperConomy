@@ -1,7 +1,6 @@
 package regalowl.hyperconomy;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,23 +15,20 @@ public class Audit {
 		LanguageFile L = hc.getLanguageFile();
 		Account acc = hc.getAccount();
 		try {
-			if (hc.useSQL()) {
-				String account = args[0];
-				if (!acc.checkAccount(account)) {
-					sender.sendMessage(L.get("ACCOUNT_NOT_FOUND"));
-					return;
-				}
-				sender.sendMessage(L.get("LINE_BREAK"));
-				double cbalance = acc.getBalance(account);
-				sender.sendMessage("Current Balance: " + cbalance);
-				double logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
-				sender.sendMessage("Theoretical Balance condsidering sales/purchases: " + logbalance);
-				double auditbalance = getAuditLogTotal(account);
-				sender.sendMessage("Theoretical Balance condsidering everything: " + auditbalance);
-				sender.sendMessage(L.get("LINE_BREAK"));
-			} else {
-				sender.sendMessage(L.get("ONLY_AVAILABLE_SQL"));
+			String account = args[0];
+			if (!acc.checkAccount(account)) {
+				sender.sendMessage(L.get("ACCOUNT_NOT_FOUND"));
+				return;
 			}
+			sender.sendMessage(L.get("LINE_BREAK"));
+			double cbalance = acc.getBalance(account);
+			sender.sendMessage("Current Balance: " + cbalance);
+			double logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
+			sender.sendMessage("Theoretical Balance condsidering sales/purchases: " + logbalance);
+			double auditbalance = getAuditLogTotal(account);
+			sender.sendMessage("Theoretical Balance condsidering everything: " + auditbalance);
+			sender.sendMessage(L.get("LINE_BREAK"));
+
 		} catch (Exception e) {
 			sender.sendMessage(L.get("AUDIT_INVALID"));
 		}
@@ -42,7 +38,6 @@ public class Audit {
 	
 	public Double getHyperLogTotal(String account, String type) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions df = hc.getDataFunctions();
 		String query = "";
 		if (type.equalsIgnoreCase("sale")) {
 			query = "SELECT SUM(MONEY) AS total FROM hyperlog WHERE CUSTOMER = '" + account + "' AND ACTION = 'sale'";
@@ -50,7 +45,8 @@ public class Audit {
 			query = "SELECT SUM(MONEY) AS total FROM hyperlog WHERE CUSTOMER = '" + account + "' AND ACTION = 'purchase'";
 		}
 		try {
-			Connection connect = DriverManager.getConnection("jdbc:mysql://" + df.getHost() + ":" + df.getPort() + "/" + df.getDatabase(), df.getUserName(), df.getPassword());
+			hc.getSQLWrite().getConnectionPool().getConnectionForRead();
+			Connection connect = hc.getSQLWrite().getConnectionPool().getConnectionForRead();
 			Statement state = connect.createStatement();
 			ResultSet result = state.executeQuery(query);
 			double amount = 0.0;
@@ -71,9 +67,8 @@ public class Audit {
 	
 	public Double getAuditLogTotal(String account) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions df = hc.getDataFunctions();
 		try {
-			Connection connect = DriverManager.getConnection("jdbc:mysql://" + df.getHost() + ":" + df.getPort() + "/" + df.getDatabase(), df.getUserName(), df.getPassword());
+			Connection connect = hc.getSQLWrite().getConnectionPool().getConnectionForRead();
 			Statement state = connect.createStatement();
 			ResultSet result = state.executeQuery("SELECT * FROM hyperauditlog WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
 			double tBalance = 0.0;

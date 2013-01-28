@@ -21,9 +21,10 @@ public class Resetshop {
 				ArrayList<String> names = hc.getNames();
 				for (int c = 0; c < names.size(); c++) {
 					String cname = names.get(c);
-					sf.setStock(cname, playerecon, 0);
-					sf.setStatic(cname, playerecon, "false");
-					sf.setInitiation(cname, playerecon, "true");
+					HyperObject ho = sf.getHyperObject(cname, playerecon);
+					ho.setStock(0);
+					ho.setIsstatic("false");
+					ho.setInitiation("true");
 				}
 				sender.sendMessage(L.get("RESETSHOP_SUCCESS"));
 				isign.updateSigns();

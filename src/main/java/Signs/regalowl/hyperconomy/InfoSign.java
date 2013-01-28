@@ -175,21 +175,21 @@ public class InfoSign {
 					break;
 				case STOCK:
 					line3 = ChatColor.WHITE + "Stock:";
-					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getStock(objectName, economy);
+					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getHyperObject(objectName, economy).getStock();
 					break;
 				case VALUE:
 					line3 = ChatColor.WHITE + "Value:";
-					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getValue(objectName, economy) * multiplier;
+					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getHyperObject(objectName, economy).getValue() * multiplier;
 					break;
 				case STATUS:
 					boolean staticstatus;
-					staticstatus = Boolean.parseBoolean(hc.getDataFunctions().getStatic(objectName, economy));
+					staticstatus = Boolean.parseBoolean(hc.getDataFunctions().getHyperObject(objectName, economy).getIsstatic());
 					line3 = ChatColor.WHITE + "Status:";
 					if (staticstatus) {
 						line4 = ChatColor.GREEN + "Static";
 					} else {
 						boolean initialstatus;
-						initialstatus = Boolean.parseBoolean(hc.getDataFunctions().getInitiation(objectName, economy));
+						initialstatus = Boolean.parseBoolean(hc.getDataFunctions().getHyperObject(objectName, economy).getInitiation());
 						if (initialstatus) {
 							line4 = ChatColor.GREEN + "Initial";
 						} else {
@@ -199,15 +199,15 @@ public class InfoSign {
 					break;
 				case STATICPRICE:
 					line3 = ChatColor.WHITE + "Static Price:";
-					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getStaticPrice(objectName, economy) * multiplier;
+					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getHyperObject(objectName, economy).getStaticprice() * multiplier;
 					break;
 				case STARTPRICE:
 					line3 = ChatColor.WHITE + "Start Price:";
-					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getStartPrice(objectName, economy) * multiplier;
+					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getHyperObject(objectName, economy).getStartprice() * multiplier;
 					break;
 				case MEDIAN:
 					line3 = ChatColor.WHITE + "Median:";
-					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getMedian(objectName, economy);
+					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getHyperObject(objectName, economy).getMedian();
 					break;
 				case HISTORY:
 					String increment = ChatColor.stripColor(line4.replace(" ", "")).toUpperCase().replaceAll("[0-9]", "");

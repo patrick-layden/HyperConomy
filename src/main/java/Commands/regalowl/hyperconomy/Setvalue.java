@@ -14,7 +14,7 @@ public class Setvalue {
 				name = args[0];
 				double value = Double.parseDouble(args[1]);
 				if (hc.itemTest(name)) {
-					sf.setValue(name, playerecon, value);
+					sf.getHyperObject(name, playerecon).setValue(value);
 					sender.sendMessage(L.f(L.get("VALUE_SET"), name));
 					isign.updateSigns();
 				} else {
@@ -26,7 +26,7 @@ public class Setvalue {
 					name = args[0];
 					double value = Double.parseDouble(args[1]);
 					if (hc.enchantTest(name)) {
-						sf.setValue(name, playerecon, value);
+						sf.getHyperObject(name, playerecon).setValue(value);
 						sender.sendMessage(L.f(L.get("VALUE_SET"), name));
 						isign.updateSigns();
 					} else {

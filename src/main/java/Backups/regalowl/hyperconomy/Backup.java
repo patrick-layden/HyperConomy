@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class Backup {
 	Backup() {
-		HyperConomy hc = HyperConomy.hc;
 		FileTools ft = new FileTools();
 		ArrayList<String> backupFiles = new ArrayList<String>();
 		backupFiles.add("config.yml");
@@ -37,13 +36,10 @@ public class Backup {
 		for (int i = 0; i < backupFiles.size(); i++) {
 			ft.copyFile(spath + File.separator + backupFiles.get(i), dpath + File.separator + backupFiles.get(i));
 		}
-		
-		
-		if (hc.useSQL()) {
-			new HyperPlayersBackup();
-			new HyperHistoryBackup();
-			new HyperLogBackup();
-			new HyperObjectsBackup();
-		}
+
+		new HyperPlayersBackup();
+		new HyperHistoryBackup();
+		new HyperLogBackup();
+		new HyperObjectsBackup();
 	}
 }

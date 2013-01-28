@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -14,7 +15,7 @@ public class SQLUtils {
 	public boolean fieldExists(String host, int port, String database, String username, String password, String table, String field) {
 		
 		try {
-			Connection connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+			Connection connect = getConnection(host, port, database, username, password);
 			Statement state = connect.createStatement();	
 			String statement = "SELECT * FROM " + table;
 			ResultSet result = state.executeQuery(statement);
@@ -46,7 +47,7 @@ public class SQLUtils {
 	public void executeSQL(String host, int port, String database, String username, String password, String statement) {
 		
 		try {
-			Connection connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+			Connection connect = getConnection(host, port, database, username, password);
 			Statement state = connect.createStatement();	
 			state.execute(statement);
 	        state.close();
@@ -56,6 +57,22 @@ public class SQLUtils {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public Connection getConnection(String host, int port, String database, String username, String password) {
+		try {
+		if (HyperConomy.hc.useMySQL()) {
+			return DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+		} else {
+			Class.forName("org.sqlite.JDBC");
+			FileTools ft = new FileTools();
+			String sqlitePath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
+			return DriverManager.getConnection("jdbc:sqlite:" + sqlitePath);
+		}
+		} catch (Exception e) {
+			new HyperError(e);
+			return null;
+		}
 	}
 	
 	

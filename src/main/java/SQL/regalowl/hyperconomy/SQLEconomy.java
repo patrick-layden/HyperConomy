@@ -32,21 +32,22 @@ public class SQLEconomy {
 	
 	public boolean checkSQLLite() {
 		FileTools ft = new FileTools();
-		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "database";
-		ft.makeFolder(path);
-		path += File.separator + "hyperconomy.db";
-		if (!ft.fileExists(path)) {
-			ft.makeFile(path);
-		}
+		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
+		//path += File.separator + "hyperconomy.db";
+		//if (!ft.fileExists(path)) {
+		//	ft.makeFile(path);
+		//}
 		try {
 			Class.forName("org.sqlite.JDBC");
 			Connection connect = DriverManager.getConnection("jdbc:sqlite:" + path);
 			Statement state = connect.createStatement();
-			//state.execute("CREATE TABLE IF NOT EXISTS hyperobjects (NAME TINYTEXT, ECONOMY TINYTEXT, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE)");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperobjects (NAME TINYTEXT, ECONOMY TINYTEXT, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE)");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperplayers (PLAYER TINYTEXT, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0')");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperlog (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT)");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperhistory (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, COUNT INT)");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperauditlog (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL)");
+			state.close();
+			connect.close();
 			return true;
 		} catch (Exception e) {
 			new HyperError(e);
@@ -94,7 +95,7 @@ public class SQLEconomy {
 	}
 	public void deleteTables() {
 		try {
-			Connection connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+			Connection connect = hc.getSQLWrite().getConnectionPool().getConnectionForRead();
 			Statement state = connect.createStatement();
 			state.execute("DROP TABLE IF EXISTS hyperobjects");
 			state.execute("DROP TABLE IF EXISTS hyperhistory");
@@ -163,14 +164,16 @@ public class SQLEconomy {
 				type = "experience";
 			}
 			String c = items.get(i);
-			statements.add("Insert Into hyperobjects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR)" + " Values ('" + c + "','" + economy + "','" + type + "','" + sf.getCategory(c, "default") + "','" + sf.getMaterial(c, "default") + "','" + sf.getId(c, "default") + "','" + sf.getData(c, "default") + "','" + sf.getDurability(c, "default") + "','" + sf.getValue(c, "default") + "','"
-					+ sf.getStatic(c, "default") + "','" + sf.getStaticPrice(c, "default") + "','" + 0.0 + "','" + sf.getMedian(c, "default") + "','" + "true" + "','" + sf.getStartPrice(c, "default") + "','" + sf.getCeiling(c, "default") + "','" + sf.getFloor(c, "default") + "')");
+			HyperObject ho = sf.getHyperObject(c, "default");
+			statements.add("Insert Into hyperobjects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR)" + " Values ('" + c + "','" + economy + "','" + type + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','" + ho.getDurability() + "','" + ho.getValue() + "','"
+					+ ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + 0.0 + "','" + ho.getMedian() + "','" + "true" + "','" + ho.getStartprice() + "','" + ho.getCeiling() + "','" + ho.getFloor() + "')");
 		}
 		for (int i = 0; i < enchants.size(); i++) {
 			String type = "enchantment";
 			String c = enchants.get(i);
-			statements.add("Insert Into hyperobjects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR)" + " Values ('" + c + "','" + economy + "','" + type + "','" + sf.getCategory(c, "default") + "','" + sf.getMaterial(c, "default") + "','" + sf.getId(c, "default") + "','" + sf.getData(c, "default") + "','" + sf.getDurability(c, "default") + "','" + sf.getValue(c, "default") + "','"
-					+ sf.getStatic(c, "default") + "','" + sf.getStaticPrice(c, "default") + "','" + 0.0 + "','" + sf.getMedian(c, "default") + "','" + "true" + "','" + sf.getStartPrice(c, "default") + "','" + sf.getCeiling(c, "default") + "','" + sf.getFloor(c, "default") + "')");
+			HyperObject ho = sf.getHyperObject(c, "default");
+			statements.add("Insert Into hyperobjects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR)" + " Values ('" + c + "','" + economy + "','" + type + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','" + ho.getDurability() + "','" + ho.getValue() + "','"
+					+ ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + 0.0 + "','" + ho.getMedian() + "','" + "true" + "','" + ho.getStartprice() + "','" + ho.getCeiling() + "','" + ho.getFloor() + "')");
 		}
 		SQLWrite sw = hc.getSQLWrite();
 		sw.writeData(statements);
@@ -244,21 +247,22 @@ public class SQLEconomy {
 			String name = names.get(i);
 			items.set(name, null);
 			enchants.set(name, null);
-			String newtype = sf.getType(name, economy);
-			String newcategory = sf.getCategory(name, economy);
-			String newmaterial = sf.getMaterial(name, economy);
-			int newid = sf.getId(name, economy);
-			int newdata = sf.getData(name, economy);
-			int newdurability = sf.getDurability(name, economy);
-			double newvalue = sf.getValue(name, economy);
-			String newstatic = sf.getStatic(name, economy);
-			double newstaticprice = sf.getStaticPrice(name, economy);
-			double newstock = sf.getStock(name, economy);
-			double newmedian = sf.getMedian(name, economy);
-			String newinitiation = sf.getInitiation(name, economy);
-			double newstartprice = sf.getStartPrice(name, economy);
-			double newceiling = sf.getCeiling(name, economy);
-			double newfloor = sf.getFloor(name, economy);
+			HyperObject ho = sf.getHyperObject(name, economy);
+			String newtype = ho.getType();
+			String newcategory = ho.getCategory();
+			String newmaterial = ho.getMaterial();
+			int newid = ho.getId();
+			int newdata = ho.getData();
+			int newdurability = ho.getDurability();
+			double newvalue = ho.getValue();
+			String newstatic = ho.getIsstatic();
+			double newstaticprice = ho.getStaticprice();
+			double newstock = ho.getStock();
+			double newmedian = ho.getMedian();
+			String newinitiation = ho.getInitiation();
+			double newstartprice = ho.getStartprice();
+			double newceiling = ho.getCeiling();
+			double newfloor = ho.getFloor();
 			if (hc.itemTest(name)) {
 				items.set(name + ".information.type", newtype);
 			} else if (hc.enchantTest(name)) {

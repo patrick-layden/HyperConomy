@@ -247,7 +247,7 @@ public class _Command {
 			new Hcclearhistory(args, sender);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hcerror")) {
-			new Hcerror(sender);
+			new Hcerror(args, sender);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hcbalance")) {
 			new Hcbalance(args, sender, player);

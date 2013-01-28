@@ -53,10 +53,11 @@ public class HyperWebPrices extends AbstractHandler {
 			DataFunctions sf = hc.getDataFunctions();
 			try {
 				double cost = 0.0;
-				boolean initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
-				boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+				HyperObject ho = sf.getHyperObject(name, playerecon);
+				boolean initial = Boolean.parseBoolean(ho.getInitiation());
+				boolean isstatic = Boolean.parseBoolean(ho.getIsstatic());
 				if (isstatic) {
-					double statprice = sf.getStaticPrice(name, playerecon);
+					double statprice = ho.getStaticprice();
 					cost = calc.applyCeilingFloor(name, playerecon, statprice);
 					return cost;
 				} else {
@@ -64,10 +65,10 @@ public class HyperWebPrices extends AbstractHandler {
 					double value = 0;
 					double median = 0;
 					double icost = 0;
-					shopstock = sf.getStock(name, playerecon);
-					value = sf.getValue(name, playerecon);
-					median = sf.getMedian(name, playerecon);
-					icost = sf.getStartPrice(name, playerecon);
+					shopstock = ho.getStock();
+					value = ho.getValue();
+					median = ho.getMedian();
+					icost = ho.getStartprice();
 					double rawcost = ((median * value)/shopstock);
 					cost = calc.applyCeilingFloor(name, playerecon, rawcost);
 					if (initial == true){
@@ -97,10 +98,11 @@ public class HyperWebPrices extends AbstractHandler {
 				DataFunctions sf = hc.getDataFunctions();
 				try {
 					double cost = 0.0;
-					boolean initial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
-					boolean isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+					HyperObject ho = sf.getHyperObject(name, playerecon);
+					boolean initial = Boolean.parseBoolean(ho.getInitiation());
+					boolean isstatic = Boolean.parseBoolean(ho.getIsstatic());
 					if (isstatic) {
-						double statprice = sf.getStaticPrice(name, playerecon);
+						double statprice = ho.getStaticprice();
 						cost = calc.applyCeilingFloor(name, playerecon, statprice);
 						return cost;
 					} else {
@@ -108,10 +110,10 @@ public class HyperWebPrices extends AbstractHandler {
 						double value = 0;
 						double median = 0;
 						double icost = 0;
-						shopstock = sf.getStock(name, playerecon) - 1;
-						value = sf.getValue(name, playerecon);
-						median = sf.getMedian(name, playerecon);
-						icost = sf.getStartPrice(name, playerecon);
+						shopstock = ho.getStock() - 1;
+						value = ho.getValue();
+						median = ho.getMedian();
+						icost = ho.getStartprice();
 						double rawcost = ((median * value)/shopstock);
 						cost = calc.applyCeilingFloor(name, playerecon, rawcost);
 						if (initial == true){
@@ -272,15 +274,15 @@ public class HyperWebPrices extends AbstractHandler {
 					
 					
 					String type = "";
-					if (Boolean.parseBoolean(sf.getInitiation(names.get(i), economy))) {
+					if (Boolean.parseBoolean(sf.getHyperObject(names.get(i), economy).getInitiation())) {
 						type = "initial";
 					} else {
 						type = "dynamic";
 					}
-					if (Boolean.parseBoolean(sf.getStatic(names.get(i), economy))) {
+					if (Boolean.parseBoolean(sf.getHyperObject(names.get(i), economy).getIsstatic())) {
 						type = "static";
 					}
-					String otype = sf.getType(names.get(i), economy);
+					String otype = sf.getHyperObject(names.get(i), economy).getType();
 					otype = otype.substring(0, 4);
 					
 					double tax = 0.0;
@@ -317,10 +319,10 @@ public class HyperWebPrices extends AbstractHandler {
 					page += hws.getCurrencySymbol() + calc.twoDecimals(((bcost * (tax/100)) + bcost)) + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
-					page += sf.getStock(names.get(i), economy) + "\n";
+					page += sf.getHyperObject(names.get(i), economy).getStock() + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
-					page += sf.getId(names.get(i), economy) + "\n";
+					page += sf.getHyperObject(names.get(i), economy).getId() + "\n";
 					page += "</TD>\n";
 					/*
 					page += "<TD>\n";

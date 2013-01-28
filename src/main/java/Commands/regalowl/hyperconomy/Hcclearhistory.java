@@ -9,14 +9,10 @@ public class Hcclearhistory {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		DataFunctions sf = hc.getDataFunctions();
-		
+
 		try {
-			if (hc.useSQL()) {
-				sf.clearHistory();
-				sender.sendMessage(L.get("HCCLEARHISTORY_CLEARED"));
-			} else {
-				sender.sendMessage(L.get("ONLY_AVAILABLE_SQL"));
-			}
+			sf.clearHistory();
+			sender.sendMessage(L.get("HCCLEARHISTORY_CLEARED"));
 		} catch (Exception e) {
 			sender.sendMessage(L.get("HCCLEARHISTORY_INVALID"));
 		}

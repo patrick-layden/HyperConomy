@@ -14,7 +14,7 @@ public class Setinitiation {
 				name = args[0];
 				if (hc.itemTest(name)) {
 					boolean nstatus;
-					boolean istatus = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+					boolean istatus = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
 					if (istatus) {
 						nstatus = false;
 						sender.sendMessage(L.f(L.get("INITIATION_FALSE"), name));
@@ -23,7 +23,7 @@ public class Setinitiation {
 						//sender.sendMessage(ChatColor.GOLD + "Initiation price is set to true for " + name);
 						sender.sendMessage(L.f(L.get("INITIATION_TRUE"), name));
 					}
-					sf.setInitiation(name, playerecon, nstatus + "");
+					sf.getHyperObject(name, playerecon).setInitiation(nstatus + "");
 					isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
@@ -34,7 +34,7 @@ public class Setinitiation {
 					name = args[0];
 					if (hc.enchantTest(name)) {
 						boolean nstatus;
-						boolean istatus = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
+						boolean istatus = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
 						if (istatus) {
 							nstatus = false;
 							sender.sendMessage(L.f(L.get("INITIATION_FALSE"), name));
@@ -42,7 +42,7 @@ public class Setinitiation {
 							nstatus = true;
 							sender.sendMessage(L.f(L.get("INITIATION_TRUE"), name));
 						}
-						sf.setInitiation(name, playerecon, nstatus + "");
+						sf.getHyperObject(name, playerecon).setInitiation(nstatus + "");
 						isign.updateSigns();
 					} else {
 						sender.sendMessage(L.get("INVALID_ENCHANTMENT_NAME"));

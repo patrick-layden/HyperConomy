@@ -25,22 +25,16 @@ public class YamlFile {
     FileConfiguration items;
     FileConfiguration enchants;
     FileConfiguration shops;
-    FileConfiguration log;
     FileConfiguration signs;
-    FileConfiguration history;
     FileConfiguration categories;
     FileConfiguration displays;
-    FileConfiguration players;
     File configFile;
     File itemsFile;      
     File enchantsFile;  
     File shopsFile;
-    File logFile;
     File signsFile;
-    File historyFile;
     File categoryFile;
     File displaysFile;
-    File playersFile;
     
     private boolean brokenfile;
     
@@ -65,12 +59,9 @@ public class YamlFile {
         itemsFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "items.yml");   
         enchantsFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "enchants.yml");
         shopsFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "shops.yml");
-        logFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "log.yml");
         signsFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "signs.yml");
-        historyFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "history.yml");
         categoryFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "categories.yml");
         displaysFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "displays.yml");
-        playersFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "players.yml");
         
         try {
             firstRun();
@@ -83,12 +74,9 @@ public class YamlFile {
         items = new YamlConfiguration();
         enchants = new YamlConfiguration();
         shops = new YamlConfiguration();
-        log = new YamlConfiguration();
         signs = new YamlConfiguration();
-        history = new YamlConfiguration();
         categories = new YamlConfiguration();
         displays = new YamlConfiguration();
-        players = new YamlConfiguration();
         loadYamls();
 		
 	}
@@ -116,17 +104,9 @@ public class YamlFile {
             shopsFile.getParentFile().mkdirs();
             copy(this.getClass().getResourceAsStream("/shops.yml"), shopsFile);
         }
-        if(!logFile.exists()){
-            logFile.getParentFile().mkdirs();
-            copy(this.getClass().getResourceAsStream("/log.yml"), logFile);
-        }
         if(!signsFile.exists()){
             signsFile.getParentFile().mkdirs();
             copy(this.getClass().getResourceAsStream("/signs.yml"), signsFile);
-        }
-        if(!historyFile.exists()){
-            historyFile.getParentFile().mkdirs();
-            copy(this.getClass().getResourceAsStream("/history.yml"), historyFile);
         }
         if(!categoryFile.exists()){
             categoryFile.getParentFile().mkdirs();
@@ -135,10 +115,6 @@ public class YamlFile {
         if(!displaysFile.exists()){
             displaysFile.getParentFile().mkdirs();
             copy(this.getClass().getResourceAsStream("/displays.yml"), displaysFile);
-        }
-        if(!playersFile.exists()){
-        	playersFile.getParentFile().mkdirs();
-            copy(this.getClass().getResourceAsStream("/players.yml"), playersFile);
         }
     }
 
@@ -207,30 +183,12 @@ public class YamlFile {
 			failcount++;
         }
         try {
-        	log.load(logFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("Bad log.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "Bad log.yml file.", "hyperconomy.error");
-			failcount++;
-        }
-        try {
         	signs.load(signsFile);
         } catch (Exception e) {
             e.printStackTrace();
 	    	Logger log = Logger.getLogger("Minecraft");
 	    	log.info("Bad signs.yml file.");
 			Bukkit.broadcast(ChatColor.DARK_RED + "Bad signs.yml file.", "hyperconomy.error");
-			failcount++;
-        }
-        try {
-        	history.load(historyFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("Bad history.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "Bad history.yml file.", "hyperconomy.error");
 			failcount++;
         }
         try {
@@ -249,15 +207,6 @@ public class YamlFile {
 	    	Logger log = Logger.getLogger("Minecraft");
 	    	log.info("Bad displays.yml file.");
 			Bukkit.broadcast(ChatColor.DARK_RED + "Bad displays.yml file.", "hyperconomy.error");
-			failcount++;
-        }
-        try {
-        	players.load(playersFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-	    	Logger log = Logger.getLogger("Minecraft");
-	    	log.info("Bad players.yml file.");
-			Bukkit.broadcast(ChatColor.DARK_RED + "Bad players.yml file.", "hyperconomy.error");
 			failcount++;
         }
         if (failcount != 0) {
@@ -279,32 +228,16 @@ public class YamlFile {
                 items.save(itemsFile);
                 enchants.save(enchantsFile);
                 shops.save(shopsFile);
-                log.save(logFile);
                 signs.save(signsFile);
-                history.save(historyFile);
                 categories.save(categoryFile);
                 displays.save(displaysFile);
-                players.save(playersFile);
         	}
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
-    
-    
-	/**
-	 * 
-	 * This saves just the log file.
-	 * 
-	 */
-    public void saveLog() {
-        try {
-            log.save(logFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
     
     
     
@@ -347,15 +280,6 @@ public class YamlFile {
 	}
 	
 	
-	/**
-	 * 
-	 * This gets the log FileConfiguration.
-	 * 
-	 */
-	public FileConfiguration getLog(){
-		return log;
-	}
-	
 	
 	/**
 	 * 
@@ -366,15 +290,6 @@ public class YamlFile {
 		return signs;
 	}
 	
-	
-	/**
-	 * 
-	 * This gets the history FileConfiguration.
-	 * 
-	 */
-	public FileConfiguration getHistory(){
-		return history;
-	}
 	
 	
 	/**
@@ -396,13 +311,5 @@ public class YamlFile {
 		return displays;
 	}
 	
-	/**
-	 * 
-	 * This gets the displays FileConfiguration.
-	 * 
-	 */
-	public FileConfiguration getPlayers(){
-		return players;
-	}
 
 }

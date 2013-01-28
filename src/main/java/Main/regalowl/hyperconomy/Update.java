@@ -82,9 +82,9 @@ public class Update {
 	    	if (t16 == null) {
 	    		yaml.getConfig().set("config.currency-symbol", "$");
 	    	}
-	    	String t17 = yaml.getConfig().getString("config.sql-connection.use-sql");
+	    	String t17 = yaml.getConfig().getString("config.sql-connection.use-mysql");
 	    	if (t17 == null) {
-	    		yaml.getConfig().set("config.sql-connection.use-sql", false);
+	    		yaml.getConfig().set("config.sql-connection.use-mysql", false);
 	    	}
 	    	String t18 = yaml.getConfig().getString("config.sql-connection.username");
 	    	if (t18 == null) {
@@ -204,7 +204,7 @@ public class Update {
 	    	String t45 = yaml.getConfig().getString("config.use-shops");
 	    	if (t45 == null) {
 	    		yaml.getConfig().set("config.use-shops", true);
-	    	}	    	
+	    	}	    
 	    	
 	    	
 	    	double dversion = Double.parseDouble(configversion);

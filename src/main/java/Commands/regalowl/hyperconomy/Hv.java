@@ -51,7 +51,7 @@ public class Hv {
 							cost = -1;
 						}
 						double stock = 0;
-						stock = sf.getStock(nam, playerecon);
+						stock = sf.getHyperObject(nam, playerecon).getStock();
 						player.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, nam));
 						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, nam));
 						player.sendMessage(L.get("LINE_BREAK"));
@@ -92,7 +92,7 @@ public class Hv {
 						value = calc.twoDecimals(value - salestax);
 						player.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 						player.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-						player.sendMessage(L.f(L.get("EVALUE_STOCK"), sf.getStock(fnam, playerecon), fnam));
+						player.sendMessage(L.f(L.get("EVALUE_STOCK"), sf.getHyperObject(nam, playerecon).getStock(), fnam));
 					}
 					player.sendMessage(L.get("LINE_BREAK"));
 				}

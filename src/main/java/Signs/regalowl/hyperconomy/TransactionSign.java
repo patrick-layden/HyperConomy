@@ -126,10 +126,10 @@ public class TransactionSign implements Listener {
 									if ((shop.getShop(p) != null && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".buy")) {
 											if (hc.itemTest(line12)) {
-												int id = sf.getId(line12, playerecon);
+												int id = sf.getHyperObject(line12, playerecon).getId();
 												if (id >= 0) {
 													if (!hc.isLocked()) {
-														tran.buy(line12, amount, id, sf.getData(line12, playerecon), p);
+														tran.buy(line12, amount, id, sf.getHyperObject(line12, playerecon).getData(), p);
 													} else {
 														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 													}
@@ -173,10 +173,10 @@ public class TransactionSign implements Listener {
 									if ((shop.getShop(p) != null && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".sell")) {
 											if (hc.itemTest(line12)) {
-												int id = sf.getId(line12, playerecon);
+												int id = sf.getHyperObject(line12, playerecon).getId();
 												if (id >= 0) {
 													if (!hc.isLocked()) {
-														tran.sell(line12, id, sf.getData(line12, playerecon), amount, p);
+														tran.sell(line12, id, sf.getHyperObject(line12, playerecon).getData(), amount, p);
 													} else {
 														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 													}

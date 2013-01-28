@@ -21,7 +21,11 @@ public class SQLWrite {
 	SQLWrite(HyperConomy hyc) {
 		hc = hyc;
 		activethreads = 0;
-		threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads");
+		if (hc.useMySQL()) {
+			threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads");
+		} else {
+			threadlimit = 1;
+		}
 		sqw = this;
 		cp = new ConnectionPool(hc, this, threadlimit);
 		writePaused = false;
@@ -138,6 +142,10 @@ public class SQLWrite {
 	
 	public boolean initialWrite() {
 		return initialWrite;
+	}
+	
+	public ConnectionPool getConnectionPool() {
+		return cp;
 	}
 	
 

@@ -20,8 +20,9 @@ public class Sell {
 					boolean xp = false;
 
 					if (hc.itemTest(name)) {
-						int txpid = sf.getId(name, playerecon);
-						int txpdata = sf.getData(name, playerecon);
+						HyperObject ho = sf.getHyperObject(name, playerecon);
+						int txpid = ho.getId();
+						int txpdata = ho.getData();
 						if (txpid == -1 && txpdata == -1) {
 							xp = true;
 						}
@@ -37,7 +38,7 @@ public class Sell {
 									if (xp) {
 										amount = calc.gettotalxpPoints(player);
 									} else {
-										amount = tran.countInvitems(sf.getId(name, playerecon), sf.getData(name, playerecon), player);	
+										amount = tran.countInvitems(ho.getId(), ho.getData(), player);	
 									}
 								} else {
 									player.sendMessage(L.get("SELL_INVALID"));
@@ -47,11 +48,12 @@ public class Sell {
 						}
 					}
 					if (hc.itemTest(name)) {
+						HyperObject ho = sf.getHyperObject(name, playerecon);
 						if (s.getShop(player).has(name)) {
 							if (xp) {
 								tran.sellXP(name, amount, player);
 							} else {
-								tran.sell(name, sf.getId(name, playerecon), sf.getData(name, playerecon), amount, player);
+								tran.sell(name, ho.getId(), ho.getData(), amount, player);
 							}
 						} else {
 							player.sendMessage(L.get("CANT_BE_TRADED"));

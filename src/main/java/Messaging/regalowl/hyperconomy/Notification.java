@@ -59,7 +59,7 @@ public class Notification {
     	}
 		
     }
-	
+
 	public void send() {
 		DataFunctions sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
@@ -67,43 +67,29 @@ public class Notification {
 			double cost = 0.0;
 			int stock = 0;
 			if (hc.itemTest(name.get(0))) {
-				stock = (int) sf.getStock(name.get(0), econ);
+				stock = (int) sf.getHyperObject(name.get(0), econ).getStock();
 				cost = calc.getCost(name.get(0), 1, econ);
-				
-				String message = "";
-				if (hc.useSQL()) {
-					message = L.f(L.get("SQL_NOTIFICATION"), (double)stock, cost, name.get(0), econ);
-					//message = "\u00A79The \u00A7f" + econ + " \u00A79economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
-				} else {
-					message = L.f(L.get("NOTIFICATION"), (double)stock, cost, name.get(0), econ);
-					//message = "\u00A79The economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
-				}
-				
+
+				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, name.get(0), econ);
+
 				if (!message.equalsIgnoreCase(previousmessage)) {
-					//Bukkit.broadcast(message, "hyperconomy.notify");
 					manualNotify(message);
 					previousmessage = message;
 				}
 			} else if (hc.enchantTest(name.get(0))) {
 				cost = calc.getEnchantCost(name.get(0), EnchantmentClass.fromString(eclass.get(0)), econ);
 				cost = cost + calc.getEnchantTax(name.get(0), econ, cost);
-				stock = (int) sf.getStock(name.get(0), econ);
-				String message = "";
-				if (hc.useSQL()) {
-					message = L.f(L.get("SQL_NOTIFICATION"), (double)stock, cost, name.get(0), econ);
-					//message = "\u00A79The \u00A7f" + econ + " \u00A79economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
-				} else {
-					message = L.f(L.get("SQL_NOTIFICATION"), (double)stock, cost, name.get(0), econ);
-					//message = "\u00A79The economy now has \u00A7a" + stock + " \u00A7b" + name.get(0) + " \u00A79priced at \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79each.";
-				}
+				stock = (int) sf.getHyperObject(name.get(0), econ).getStock();
+				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, name.get(0), econ);
+
 				if (!message.equalsIgnoreCase(previousmessage)) {
-					//Bukkit.broadcast(message, "hyperconomy.notify");
+
 					manualNotify(message);
 					previousmessage = message;
 				}
 			} else {
-		    	Logger log = Logger.getLogger("Minecraft");
-		    	log.info("HyperConomy ERROR #32--Notifcation Error");
+				Logger log = Logger.getLogger("Minecraft");
+				log.info("HyperConomy ERROR #32--Notifcation Error");
 		    	Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #32--Notifcation Error", "hyperconomy.error");
 			}
 		}

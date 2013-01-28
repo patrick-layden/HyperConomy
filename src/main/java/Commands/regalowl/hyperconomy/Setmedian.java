@@ -14,7 +14,7 @@ public class Setmedian {
 				name = args[0];
 				int median = Integer.parseInt(args[1]);
 				if (hc.itemTest(name)) {
-					sf.setMedian(name, playerecon, median);
+					sf.getHyperObject(name, playerecon).setMedian(median);
 					sender.sendMessage(L.f(L.get("MEDIAN_SET"), name));
 					isign.updateSigns();
 				} else {
@@ -26,7 +26,7 @@ public class Setmedian {
 					name = args[0];
 					int median = Integer.parseInt(args[1]);
 					if (hc.enchantTest(name)) {
-						sf.setMedian(name, playerecon, median);
+						sf.getHyperObject(name, playerecon).setMedian(median);
 						sender.sendMessage(L.f(L.get("MEDIAN_SET"), name));
 						isign.updateSigns();
 					} else {

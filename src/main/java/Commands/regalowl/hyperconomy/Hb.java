@@ -47,7 +47,7 @@ public class Hb {
 							player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 						} else {
 							double shopstock = 0;
-							shopstock = sf.getStock(nam, playerecon);
+							shopstock = sf.getHyperObject(nam, playerecon).getStock();
 							// Buys the most possible from the shop if the
 							// amount is more than that for max.
 							if (amount > shopstock && ma) {

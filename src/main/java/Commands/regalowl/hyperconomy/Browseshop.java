@@ -103,11 +103,11 @@ public class Browseshop {
 							cost = calc.getCost(iname, 1, playerecon);
 							double taxpaid = calc.getPurchaseTax(iname, playerecon, cost);
 							cost = calc.twoDecimals(cost + taxpaid);
-							stock = sf.getStock(iname, playerecon);
+							stock = sf.getHyperObject(iname, playerecon).getStock();
 						} else if (hc.enchantTest(iname)) {
 							cost = calc.getEnchantCost(iname, EnchantmentClass.DIAMOND, playerecon);
 							cost = cost + calc.getEnchantTax(iname, playerecon, cost);
-							stock = sf.getStock(iname, playerecon);
+							stock = sf.getHyperObject(iname, playerecon).getStock();
 						}
 						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + L.get("AVAILABLE") + ": \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79" + L.get("EACH") + ".]");
 					} else {

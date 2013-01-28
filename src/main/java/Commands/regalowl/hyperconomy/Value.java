@@ -42,7 +42,7 @@ public class Value {
 						cost = -1;
 					}
 					double stock = 0;
-					stock = sf.getStock(name, playerecon);
+					stock = sf.getHyperObject(name, playerecon).getStock();
 					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, name));
 					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, name));
 					sender.sendMessage(L.get("LINE_BREAK"));

@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,6 +16,8 @@ public class ConnectionPool {
 	private ArrayList<Connection> connections = new ArrayList<Connection>();
 	private ArrayList<Boolean> inUse = new ArrayList<Boolean>();
 	
+	private String sqlitePath;
+	
 	
 	@SuppressWarnings("deprecation")
 	ConnectionPool(HyperConomy hyc, SQLWrite sqw, int maxconnections) {
@@ -23,7 +26,12 @@ public class ConnectionPool {
 		hc = hyc;
 		maxConnections = maxconnections;
 		sf = hc.getDataFunctions();
+		FileTools ft = new FileTools();
+		sqlitePath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
+		
+		
 		openConnections();
+		
 		
 		hc.getServer().getScheduler().scheduleAsyncRepeatingTask(hc, new Runnable() {
 			public void run() {
@@ -71,10 +79,16 @@ public class ConnectionPool {
 				hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
 					public void run() {
 						try {
-							Connection connect = DriverManager.getConnection("jdbc:mysql://" + sf.getHost() + ":" + sf.getPort() + "/" + sf.getDatabase(), sf.getUserName(), sf.getPassword());
+							Connection connect = null;
+							if (hc.useMySQL()) {
+								connect = DriverManager.getConnection("jdbc:mysql://" + sf.getHost() + ":" + sf.getPort() + "/" + sf.getDatabase(), sf.getUserName(), sf.getPassword());
+							} else {
+								Class.forName("org.sqlite.JDBC");
+								connect = DriverManager.getConnection("jdbc:sqlite:" + sqlitePath);
+							}
 							connections.add(connect);
 							inUse.add(false);
-						} catch (SQLException e) {
+						} catch (Exception e) {
 							new HyperError(e);
 							refreshConnections();
 							return;
@@ -100,6 +114,21 @@ public class ConnectionPool {
 				inUse.clear();
 			}
 		}, 0);
+	}
+	
+	
+	public Connection getConnectionForRead() {
+		try {
+		if (hc.useMySQL()) {
+			return DriverManager.getConnection("jdbc:mysql://" + sf.getHost() + ":" + sf.getPort() + "/" + sf.getDatabase(), sf.getUserName(), sf.getPassword());
+		} else {
+			Class.forName("org.sqlite.JDBC");
+			return DriverManager.getConnection("jdbc:sqlite:" + sqlitePath);
+		}
+		} catch (Exception e) {
+			new HyperError(e);
+			return null;
+		}
 	}
 	
 

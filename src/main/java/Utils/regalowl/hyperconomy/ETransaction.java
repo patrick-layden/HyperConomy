@@ -46,7 +46,7 @@ public class ETransaction {
 		try {
 			String nenchant = "";
 			String playerecon = sf.getPlayerEconomy(p.getName());
-			nenchant = sf.getMaterial(name, playerecon);
+			nenchant = sf.getHyperObject(name, playerecon).getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int lvl = Integer.parseInt(name.substring(name.length() - 1, name.length()));
 			int truelvl = getEnchantmentLevel(p.getItemInHand(), ench);
@@ -63,8 +63,8 @@ public class ETransaction {
 				boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
 				if (acc.checkshopBalance(fprice) || sunlimited) {
 					removeEnchantment(p.getItemInHand(), ench);
-					double shopstock = sf.getStock(name, playerecon);
-					sf.setStock(name, playerecon, shopstock + duramult);
+					double shopstock = sf.getHyperObject(name, playerecon).getStock();
+					sf.getHyperObject(name, playerecon).setStock(shopstock + duramult);
 					double salestax = calc.getSalesTax(p, fprice);
 					acc.deposit(fprice - salestax, p);
 					acc.withdrawShop(fprice - salestax);
@@ -76,18 +76,15 @@ public class ETransaction {
 					p.sendMessage(L.get("LINE_BREAK"));
 					p.sendMessage(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, calc.twoDecimals(fprice), name, calc.twoDecimals(salestax)));
 					p.sendMessage(L.get("LINE_BREAK"));
-					if (hc.useSQL()) {
-						String type = "dynamic";
-						if (Boolean.parseBoolean(sf.getInitiation(name, playerecon))) {
-							type = "initial";
-						} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
-							type = "static";
-						}
-						log.writeSQLLog(p.getName(), "sale", name, 1.0, fprice - salestax, salestax, playerecon, type);
-					} else {
-						String logentry = L.f(L.get("LOG_SELL_ENCHANTMENT"), 1, calc.twoDecimals(fprice), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
-						log.writeLog(logentry);
+
+					String type = "dynamic";
+					if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation())) {
+						type = "initial";
+					} else if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic())) {
+						type = "static";
 					}
+					log.writeSQLLog(p.getName(), "sale", name, 1.0, fprice - salestax, salestax, playerecon, type);
+
 					isign.updateSigns();
 					not.setNotify(hc, calc, this, name, mater, playerecon);
 					not.sendNotification();
@@ -118,10 +115,10 @@ public class ETransaction {
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
 			String playerecon = sf.getPlayerEconomy(p.getName());
-			String nenchant = sf.getMaterial(name, playerecon);
+			String nenchant = sf.getHyperObject(name, playerecon).getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int shopstock = 0;
-			shopstock = (int) sf.getStock(name, playerecon);
+			shopstock = (int) sf.getHyperObject(name, playerecon).getStock();
 			if (shopstock >= 1) {
 				String mater = p.getItemInHand().getType().toString();
 				double price = calc.getEnchantCost(name, EnchantmentClass.fromString(mater), playerecon);
@@ -130,7 +127,7 @@ public class ETransaction {
 					if (!containsEnchantment(p.getItemInHand(), ench)) {
 						if (acc.checkFunds(price, p)) {
 							if (canAcceptEnchantment(p.getItemInHand(), ench) && p.getItemInHand().getAmount() == 1) {
-								sf.setStock(name, playerecon, shopstock - 1);
+								sf.getHyperObject(name, playerecon).setStock(shopstock - 1);
 								acc.withdraw(price, p);
 								acc.depositShop(price);
 								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
@@ -142,7 +139,7 @@ public class ETransaction {
 								int level = Integer.parseInt(lev);
 								addEnchantment(p.getItemInHand(), ench, level);
 								boolean stax;
-								stax = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+								stax = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic());
 								double taxrate;
 								if (!stax) {
 									taxrate = hc.getYaml().getConfig().getDouble("config.enchanttaxpercent");
@@ -155,19 +152,14 @@ public class ETransaction {
 								p.sendMessage(L.get("LINE_BREAK"));
 								p.sendMessage(L.f(L.get("ENCHANTMENT_PURCHASE_MESSAGE"), 1, price, name, calc.twoDecimals(taxpaid)));
 								p.sendMessage(L.get("LINE_BREAK"));
-								String logentry = "";
-								if (hc.useSQL()) {
-									String type = "dynamic";
-									if (Boolean.parseBoolean(sf.getInitiation(name, playerecon))) {
-										type = "initial";
-									} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
-										type = "static";
-									}
-									log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, taxpaid, playerecon, type);
-								} else {
-									logentry = L.f(L.get("LOG_BUY_ENCHANTMENT"), 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
-									log.writeLog(logentry);
+								String type = "dynamic";
+								if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation())) {
+									type = "initial";
+								} else if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic())) {
+									type = "static";
 								}
+								log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, taxpaid, playerecon, type);
+
 								isign.updateSigns();
 								not.setNotify(hc, calc, this, name, mater, playerecon);
 								not.sendNotification();
@@ -206,7 +198,7 @@ public class ETransaction {
 		try {
 			String nenchant = "";
 			String playerecon = sf.getPlayerEconomy(owner);
-			nenchant = sf.getMaterial(name, playerecon);
+			nenchant = sf.getHyperObject(name, playerecon).getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			String mater = p.getItemInHand().getType().toString();
 			double price = calc.getEnchantValue(name, EnchantmentClass.fromString(mater), playerecon);
@@ -225,13 +217,7 @@ public class ETransaction {
 							p.sendMessage(L.get("LINE_BREAK"));
 							p.sendMessage(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, calc.twoDecimals(price), name, owner));
 							p.sendMessage(L.get("LINE_BREAK"));
-							String logentry = "";
-							if (hc.useSQL()) {
-								log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, 0.0, owner, "chestshop");
-							} else {
-								logentry = L.f(L.get("LOG_BUY_CHEST_ENCHANTMENT"), 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
-								log.writeLog(logentry);
-							}
+							log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, 0.0, owner, "chestshop");
 							Player o = Bukkit.getPlayer(owner);
 							if (o != null) {
 								o.sendMessage(L.f(L.get("CHEST_ENCHANTMENT_BUY_NOTIFICATION"), 1, calc.twoDecimals(price), name, p));
@@ -272,7 +258,7 @@ public class ETransaction {
 		try {
 			String nenchant = "";
 			String playerecon = sf.getPlayerEconomy(owner);
-			nenchant = sf.getMaterial(name, playerecon);
+			nenchant = sf.getHyperObject(name, playerecon).getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			if (!containsEnchantment(p.getItemInHand(), ench)) {
 				if (canAcceptEnchantment(p.getItemInHand(), ench) && p.getItemInHand().getAmount() == 1) {
@@ -288,13 +274,7 @@ public class ETransaction {
 						p.sendMessage(L.get("LINE_BREAK"));
 						p.sendMessage(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, calc.twoDecimals(price), name, owner));
 						p.sendMessage(L.get("LINE_BREAK"));
-						String logentry = "";
-						if (hc.useSQL()) {
-							log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, 0.0, owner, "chestshop");
-						} else {
-							logentry = L.f(L.get("LOG_BUY_CHEST_ENCHANTMENT"), 1, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
-							log.writeLog(logentry);
-						}
+						log.writeSQLLog(p.getName(), "purchase", name, 1.0, price, 0.0, owner, "chestshop");
 						Player o = Bukkit.getPlayer(owner);
 						if (o != null) {
 							o.sendMessage(L.f(L.get("CHEST_ENCHANTMENT_BUY_NOTIFICATION"), 1, calc.twoDecimals(price), name, p));

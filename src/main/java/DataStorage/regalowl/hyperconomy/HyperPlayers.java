@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,21 +18,13 @@ public class HyperPlayers implements Listener {
 
     
 	@EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerJoin(PlayerJoinEvent event) {
+	public void onPlayerJoin(PlayerJoinEvent event) {
 		DataFunctions df = hc.getDataFunctions();
-		if (hc.useSQL()) {
-			if (!df.inDatabase(event.getPlayer().getName())) {
-				hc.getDataFunctions().addPlayer(event.getPlayer().getName());
-			}
-		} else {
-			String player = event.getPlayer().getName();
-			FileConfiguration players = hc.getYaml().getPlayers();
-			String test = players.getString(player + ".balance");
-			if (test == null) {
-				players.set(player + ".balance", 0);
-				hc.getDataFunctions().addPlayer(player);
-			}
+
+		if (!df.inDatabase(event.getPlayer().getName())) {
+			hc.getDataFunctions().addPlayer(event.getPlayer().getName());
 		}
+
 	}
 
 

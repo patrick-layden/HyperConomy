@@ -48,7 +48,7 @@ public class Transaction {
 			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			if (amount > 0) {
-				double shopstock = sf.getStock(name, playerecon);
+				double shopstock = sf.getHyperObject(name, playerecon).getStock();
 				if (shopstock >= amount) {
 					if (id >= 0) {
 						double price = calc.getCost(name, amount, playerecon);
@@ -58,8 +58,8 @@ public class Transaction {
 							int space = getavailableSpace(id, data, p);
 							if (space >= amount) {
 								addboughtItems(amount, id, data, p);
-								if (!Boolean.parseBoolean(sf.getStatic(name, playerecon)) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-									sf.setStock(name, playerecon, shopstock - amount);
+								if (!Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+									sf.getHyperObject(name, playerecon).setStock(shopstock - amount);
 								}
 								acc.withdraw(price, p);
 								acc.depositShop(price);
@@ -70,18 +70,15 @@ public class Transaction {
 								p.sendMessage(L.get("LINE_BREAK"));
 								p.sendMessage(L.f(L.get("PURCHASE_MESSAGE"), amount, price, name, calc.twoDecimals(taxpaid)));
 								p.sendMessage(L.get("LINE_BREAK"));
-								if (hc.useSQL()) {
-									String type = "dynamic";
-									if (Boolean.parseBoolean(sf.getInitiation(name, playerecon))) {
-										type = "initial";
-									} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
-										type = "static";
-									}
-									log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price - taxpaid), calc.twoDecimals(taxpaid), playerecon, type);
-								} else {
-									String logentry = L.f(L.get("LOG_BUY"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
-									log.writeLog(logentry);
+
+								String type = "dynamic";
+								if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation())) {
+									type = "initial";
+								} else if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic())) {
+									type = "static";
 								}
+								log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price - taxpaid), calc.twoDecimals(taxpaid), playerecon, type);
+
 								isign.updateSigns();
 								not.setNotify(hc, calc, ench, name, null, playerecon);
 								not.sendNotification();
@@ -145,8 +142,8 @@ public class Transaction {
 							int maxi = getmaxInitial(name, p);
 							boolean isstatic = false;
 							boolean isinitial = false;
-							isinitial = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
-							isstatic = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+							isinitial = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
+							isstatic = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic());
 							if ((amount > maxi) && !isstatic && isinitial) {
 								amount = maxi;
 								price = calc.getValue(name, amount, p);
@@ -158,13 +155,13 @@ public class Transaction {
 								}
 								removesoldItems(id, data, amount, p);
 								double shopstock = 0;
-								shopstock = sf.getStock(name, playerecon);
-								if (!Boolean.parseBoolean(sf.getStatic(name, playerecon)) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-									sf.setStock(name, playerecon, (shopstock + amount));
+								shopstock = sf.getHyperObject(name, playerecon).getStock();
+								if (!Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+									sf.getHyperObject(name, playerecon).setStock(shopstock + amount);
 								}
 								int maxi2 = getmaxInitial(name, p);
 								if (maxi2 == 0) {
-									sf.setInitiation(name, playerecon, "false");
+									sf.getHyperObject(name, playerecon).setInitiation("false");
 								}
 								double salestax = calc.getSalesTax(p, price);
 								acc.deposit(price - salestax, p);
@@ -178,19 +175,14 @@ public class Transaction {
 								p.sendMessage(L.get("LINE_BREAK"));
 								World w = p.getWorld();
 								w.playEffect(p.getLocation(), Effect.SMOKE, 4);
-								String logentry = "";
-								if (hc.useSQL()) {
-									String type = "dynamic";
-									if (Boolean.parseBoolean(sf.getInitiation(name, playerecon))) {
-										type = "initial";
-									} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
-										type = "static";
-									}
-									log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
-								} else {
-									logentry = L.f(L.get("LOG_SELL"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
-									log.writeLog(logentry);
+
+								String type = "dynamic";
+								if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation())) {
+									type = "initial";
+								} else if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic())) {
+									type = "static";
 								}
+								log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
 								isign.updateSigns();
 								not.setNotify(hc, calc, ench, name, null, playerecon);
 								not.sendNotification();
@@ -198,7 +190,7 @@ public class Transaction {
 								p.sendMessage(L.get("SHOP_NOT_ENOUGH_MONEY"));
 							}
 						} else {
-							p.sendMessage(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), sf.getStock(name, playerecon), name));
+							p.sendMessage(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), sf.getHyperObject(name, playerecon).getStock(), name));
 						}
 					} else {
 						p.sendMessage(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name));
@@ -443,10 +435,11 @@ public class Transaction {
 		String playerecon = sf.getPlayerEconomy(p.getName());
 		try {
 			int maxinitialitems = 0;
-			double shopstock = sf.getStock(name, playerecon);
-			double value = sf.getValue(name, playerecon);
-			double median = sf.getMedian(name, playerecon);
-			double icost = sf.getStartPrice(name, playerecon);
+			HyperObject ho = sf.getHyperObject(name, playerecon);
+			double shopstock = ho.getStock();
+			double value = ho.getValue();
+			double median = ho.getMedian();
+			double icost = ho.getStartprice();
 			double totalstock = ((median * value) / icost);
 			maxinitialitems = (int) (Math.ceil(totalstock) - shopstock);
 			return maxinitialitems;
@@ -477,7 +470,7 @@ public class Transaction {
 			String playerecon = sf.getPlayerEconomy(p.getName());
 			if (amount > 0) {
 				int shopstock = 0;
-				shopstock = (int) sf.getStock(name, playerecon);
+				shopstock = (int) sf.getHyperObject(name, playerecon).getStock();
 				if (shopstock >= amount) {
 					double price = calc.getCost(name, amount, playerecon);
 					double taxpaid = calc.getPurchaseTax(name, playerecon, price);
@@ -490,8 +483,8 @@ public class Transaction {
 						float xpbarxp = (float) newxp / (float) calc.getxpfornextLvl(newlvl);
 						p.setLevel(newlvl);
 						p.setExp(xpbarxp);
-						if (!Boolean.parseBoolean(sf.getStatic(name, playerecon)) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-							sf.setStock(name, playerecon, (shopstock - amount));
+						if (!Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+							sf.getHyperObject(name, playerecon).setStock(shopstock - amount);
 						}
 						acc.withdraw(price, p);
 						acc.depositShop(price);
@@ -502,18 +495,14 @@ public class Transaction {
 						p.sendMessage(L.get("LINE_BREAK"));
 						p.sendMessage(L.f(L.get("PURCHASE_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(taxpaid)));
 						p.sendMessage(L.get("LINE_BREAK"));
-						if (hc.useSQL()) {
-							String type = "dynamic";
-							if (Boolean.parseBoolean(sf.getInitiation(name, playerecon))) {
-								type = "initial";
-							} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
-								type = "static";
-							}
-							log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price), calc.twoDecimals(taxpaid), playerecon, type);
-						} else {
-							String logentry = L.f(L.get("LOG_BUY"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
-							log.writeLog(logentry);
+
+						String type = "dynamic";
+						if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation())) {
+							type = "initial";
+						} else if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic())) {
+							type = "static";
 						}
+						log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price), calc.twoDecimals(taxpaid), playerecon, type);
 						isign.updateSigns();
 						not.setNotify(hc, calc, ench, name, null, playerecon);
 						not.sendNotification();
@@ -561,8 +550,8 @@ public class Transaction {
 						int maxi = getmaxInitial(name, p);
 						boolean itax;
 						boolean stax;
-						itax = Boolean.parseBoolean(sf.getInitiation(name, playerecon));
-						stax = Boolean.parseBoolean(sf.getStatic(name, playerecon));
+						itax = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
+						stax = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic());
 						if (amount > (maxi) && !stax && itax) {
 							amount = maxi;
 							price = calc.getValue(name, amount, p);
@@ -578,12 +567,12 @@ public class Transaction {
 							float xpbarxp = (float) newxp / (float) calc.getxpfornextLvl(newlvl);
 							p.setLevel(newlvl);
 							p.setExp(xpbarxp);
-							if (!Boolean.parseBoolean(sf.getStatic(name, playerecon)) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-								sf.setStock(name, playerecon, amount + sf.getStock(name, playerecon));
+							if (!Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+								sf.getHyperObject(name, playerecon).setStock(amount + sf.getHyperObject(name, playerecon).getStock());
 							}
 							int maxi2 = getmaxInitial(name, p);
 							if (maxi2 == 0) {
-								sf.setInitiation(name, playerecon, "false");
+								sf.getHyperObject(name, playerecon).setInitiation("false");
 							}
 							double salestax = calc.getSalesTax(p, price);
 							acc.deposit(price - salestax, p);
@@ -597,18 +586,15 @@ public class Transaction {
 							p.sendMessage(L.get("LINE_BREAK"));
 							World w = p.getWorld();
 							w.playEffect(p.getLocation(), Effect.SMOKE, 4);
-							if (hc.useSQL()) {
-								String type = "dynamic";
-								if (Boolean.parseBoolean(sf.getInitiation(name, playerecon))) {
-									type = "initial";
-								} else if (Boolean.parseBoolean(sf.getStatic(name, playerecon))) {
-									type = "static";
-								}
-								log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
-							} else {
-								String logentry = L.f(L.get("LOG_SELL"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p);
-								log.writeLog(logentry);
+
+							String type = "dynamic";
+							if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation())) {
+								type = "initial";
+							} else if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic())) {
+								type = "static";
 							}
+							log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
+
 							isign.updateSigns();
 							not.setNotify(hc, calc, ench, name, null, playerecon);
 							not.sendNotification();
@@ -616,7 +602,7 @@ public class Transaction {
 							p.sendMessage(L.get("SHOP_NOT_ENOUGH_MONEY"));
 						}
 					} else {
-						p.sendMessage(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), sf.getStock(name, playerecon), name));
+						p.sendMessage(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), sf.getHyperObject(name, playerecon).getStock(), name));
 					}
 				} else {
 					p.sendMessage(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name));
@@ -657,12 +643,9 @@ public class Transaction {
 					p.sendMessage(L.get("LINE_BREAK"));
 					p.sendMessage(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, calc.twoDecimals(price), name, owner));
 					p.sendMessage(L.get("LINE_BREAK"));
-					if (hc.useSQL()) {
-						log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
-					} else {
-						String logentry = L.f(L.get("LOG_BUY_CHEST"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
-						log.writeLog(logentry);
-					}
+
+					log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
+
 					Player o = Bukkit.getPlayer(owner);
 					if (o != null) {
 						o.sendMessage(L.f(L.get("CHEST_BUY_NOTIFICATION"), amount, calc.twoDecimals(price), name, p));
@@ -693,12 +676,10 @@ public class Transaction {
 	 */
 	public boolean buyChest(String name, int id, int data, String owner, Player p, int amount, Inventory invent, double price) {
 		try {
-			DataFunctions sf = hc.getDataFunctions();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();
 			Calculation calc = hc.getCalculation();
-			String playerecon = sf.getPlayerEconomy(owner);
 			if (acc.checkFunds(price, p)) {
 				int space = getavailableSpace(id, data, p);
 				if (space >= amount) {
@@ -709,12 +690,9 @@ public class Transaction {
 					p.sendMessage(L.get("LINE_BREAK"));
 					p.sendMessage(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, calc.twoDecimals(price), name, owner));
 					p.sendMessage(L.get("LINE_BREAK"));
-					if (hc.useSQL()) {
-						log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
-					} else {
-						String logentry = L.f(L.get("LOG_BUY_CHEST"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
-						log.writeLog(logentry);
-					}
+
+					log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
+
 					Player o = Bukkit.getPlayer(owner);
 					if (o != null) {
 						o.sendMessage(L.f(L.get("CHEST_BUY_NOTIFICATION"), amount, calc.twoDecimals(price), name, p));
@@ -763,19 +741,16 @@ public class Transaction {
 				p.sendMessage(L.get("LINE_BREAK"));
 				World w = p.getWorld();
 				w.playEffect(p.getLocation(), Effect.SMOKE, 4);
-				if (hc.useSQL()) {
-					log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
-				} else {
-					String logentry = L.f(L.get("LOG_SELL_CHEST"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
-					log.writeLog(logentry);
-				}
+
+				log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
+
 				Player o = Bukkit.getPlayer(owner);
 				if (o != null) {
 					o.sendMessage(L.f(L.get("CHEST_SELL_NOTIFICATION"), amount, calc.twoDecimals(price), name, p));
 				}
 				return true;
 			} else {
-				p.sendMessage(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), sf.getStock(name, playerecon), name));
+				p.sendMessage(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), sf.getHyperObject(name, playerecon).getStock(), name));
 			}
 			return false;
 		} catch (Exception e) {
@@ -794,12 +769,10 @@ public class Transaction {
 	 */
 	public boolean sellChest(String name, int id, int data, int amount, String owner, Player p, Inventory invent, double price) {
 		try {
-			DataFunctions sf = hc.getDataFunctions();
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();
 			Calculation calc = hc.getCalculation();
-			String playerecon = sf.getPlayerEconomy(owner);
 			removesoldItems(id, data, amount, p);
 			addItems(id, data, amount, invent);
 			acc.deposit(price, p);
@@ -809,12 +782,7 @@ public class Transaction {
 			p.sendMessage(L.get("LINE_BREAK"));
 			World w = p.getWorld();
 			w.playEffect(p.getLocation(), Effect.SMOKE, 4);
-			if (hc.useSQL()) {
-				log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
-			} else {
-				String logentry = L.f(L.get("LOG_SELL_CHEST"), amount, calc.twoDecimals(price), name, sf.getStatic(name, playerecon), sf.getInitiation(name, playerecon), p, owner);
-				log.writeLog(logentry);
-			}
+			log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price), 0.0, owner, "chestshop");
 			Player o = Bukkit.getPlayer(owner);
 			if (o != null) {
 				o.sendMessage(L.f(L.get("CHEST_SELL_NOTIFICATION"), amount, calc.twoDecimals(price), name, p));

@@ -74,7 +74,7 @@ public class HyperError {
 					info = ft.getTimeStamp() + "\r\n"
 					+ "HyperConomy version: " + hc.getServerVersion() + "\r\n"
 					+ Bukkit.getName() + " version: " + Bukkit.getServer().getBukkitVersion() + "\r\n"
-					+ "UseSQL='" + hc.useSQL() + "'\r\nDataBuilt='" + sf.dataBuilt() + "'\r\nSQLLoaded='" + sf.sqlLoaded()
+					+ "UseMySQL='" + hc.useMySQL() + "'\r\nDataBuilt='" + sf.dataBuilt() + "'\r\nSQLLoaded='" + sf.sqlLoaded()
 					+ "'\r\n" + info;
 					ft.writeStringToFile(info, path + File.separator + "info.txt");
 					LanguageFile L = hc.getLanguageFile();

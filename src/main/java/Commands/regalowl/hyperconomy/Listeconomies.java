@@ -10,15 +10,11 @@ public class Listeconomies {
 		DataFunctions sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
-			if (hc.useSQL()) {
-				if (args.length == 0) {
-    				ArrayList<String> economies = sf.getEconomyList();
-    				sender.sendMessage(ChatColor.AQUA + economies.toString());
-    			} else {
-    				sender.sendMessage(L.get("LISTECONOMIES_INVALID"));
-    			}
+			if (args.length == 0) {
+				ArrayList<String> economies = sf.getEconomyList();
+				sender.sendMessage(ChatColor.AQUA + economies.toString());
 			} else {
-				sender.sendMessage(L.get("ONLY_AVAILABLE_SQL"));
+				sender.sendMessage(L.get("LISTECONOMIES_INVALID"));
 			}
 		} catch (Exception e) {
 			sender.sendMessage(L.get("LISTECONOMIES_INVALID"));

@@ -95,14 +95,12 @@ public class ShopFactory {
 				} else {
 					currentShop.sendEntryMessage(p);
 					shopStatus.put(p, true);
-					if (hc.useSQL()) {
-						String shopecon = currentShop.getEconomy();
-						if (shopecon == null) {
-							shopecon = "default";
-						}
-						if (hc.getDataFunctions().testEconomy(shopecon)) {
-							hc.getDataFunctions().setPlayerEconomy(p.getName(), shopecon);
-						}
+					String shopecon = currentShop.getEconomy();
+					if (shopecon == null) {
+						shopecon = "default";
+					}
+					if (hc.getDataFunctions().testEconomy(shopecon)) {
+						hc.getDataFunctions().setPlayerEconomy(p.getName(), shopecon);
 					}
 				}
 			} else if (inShop == true) {

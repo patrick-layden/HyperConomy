@@ -72,181 +72,181 @@ public class HyperObjectAPI implements HyperObjectInterface {
 	public String getName(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getName(name, economy);
+		return sf.getHyperObject(name, economy).getName();
 	}
 
 	public String getEconomy(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getEconomy(name, economy);
+		return sf.getHyperObject(name, economy).getEconomy();
 	}
 
 	public String getType(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getType(name, economy);
+		return sf.getHyperObject(name, economy).getType();
 	}
 
 	public String getCategory(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getCategory(name, economy);
+		return sf.getHyperObject(name, economy).getCategory();
 	}
 
 	public String getMaterial(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getMaterial(name, economy);
+		return sf.getHyperObject(name, economy).getMaterial();
 	}
 
 	public int getId(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getId(name, economy);
+		return sf.getHyperObject(name, economy).getId();
 	}
 
 	public int getData(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getData(name, economy);
+		return sf.getHyperObject(name, economy).getData();
 	}
 
 	public int getDurability(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getDurability(name, economy);
+		return sf.getHyperObject(name, economy).getDurability();
 	}
 
 	public double getValue(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getValue(name, economy);
+		return sf.getHyperObject(name, economy).getValue();
 	}
 
 	public String getStatic(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getStatic(name, economy);
+		return sf.getHyperObject(name, economy).getIsstatic();
 	}
 
 	public double getStaticPrice(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getStaticPrice(name, economy);
+		return sf.getHyperObject(name, economy).getStaticprice();
 	}
 
 	public double getStock(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getStock(name, economy);
+		return sf.getHyperObject(name, economy).getStock();
 	}
 
 	public double getMedian(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getMedian(name, economy);
+		return sf.getHyperObject(name, economy).getMedian();
 	}
 
 	public String getInitiation(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getInitiation(name, economy);
+		return sf.getHyperObject(name, economy).getInitiation();
 	}
 
 	public double getStartPrice(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		return sf.getStartPrice(name, economy);
+		return sf.getHyperObject(name, economy).getStartprice();
 	}
 
 	public void setName(String name, String economy, String newname) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setName(name, economy, newname);
+		sf.getHyperObject(name, economy).setName(newname);
 	}
 
 	public void setEconomy(String name, String economy, String neweconomy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setEconomy(name, economy, neweconomy);
+		sf.getHyperObject(name, economy).setEconomy(neweconomy);
 	}
 
 	public void setType(String name, String economy, String newtype) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setType(name, economy, newtype);
+		sf.getHyperObject(name, economy).setType(newtype);
 	}
 
 	public void setCategory(String name, String economy, String newcategory) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setCategory(name, economy, newcategory);
+		sf.getHyperObject(name, economy).setCategory(newcategory);
 	}
 
 	public void setMaterial(String name, String economy, String newmaterial) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setMaterial(name, economy, newmaterial);
+		sf.getHyperObject(name, economy).setMaterial(newmaterial);
 	}
 
 	public void setId(String name, String economy, int newid) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setId(name, economy, newid);
+		sf.getHyperObject(name, economy).setId(newid);
 	}
 
 	public void setData(String name, String economy, int newdata) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setData(name, economy, newdata);
+		sf.getHyperObject(name, economy).setData(newdata);
 	}
 
 	public void setDurability(String name, String economy, int newdurability) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setDurability(name, economy, newdurability);
+		sf.getHyperObject(name, economy).setDurability(newdurability);
 	}
 
 	public void setValue(String name, String economy, double newvalue) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setValue(name, economy, newvalue);
+		sf.getHyperObject(name, economy).setValue(newvalue);
 	}
 
 	public void setStatic(String name, String economy, String newstatic) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setStatic(name, economy, newstatic);
+		sf.getHyperObject(name, economy).setIsstatic(newstatic);
 	}
 
 	public void setStaticPrice(String name, String economy, double newstaticprice) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setStaticPrice(name, economy, newstaticprice);
+		sf.getHyperObject(name, economy).setStaticprice(newstaticprice);
 	}
 
 	public void setStock(String name, String economy, double newstock) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setStock(name, economy, newstock);
+		sf.getHyperObject(name, economy).setStock(newstock);
 	}
 
 	public void setMedian(String name, String economy, double newmedian) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setMedian(name, economy, newmedian);
+		sf.getHyperObject(name, economy).setMedian(newmedian);
 	}
 
 	public void setInitiation(String name, String economy, String newinitiation) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setInitiation(name, economy, newinitiation);
+		sf.getHyperObject(name, economy).setInitiation(newinitiation);
 	}
 
 	public void setStartPrice(String name, String economy, double newstartprice) {
 		HyperConomy hc = HyperConomy.hc;
 		DataFunctions sf = hc.getDataFunctions();
-		sf.setStartPrice(name, economy, newstartprice);
+		sf.getHyperObject(name, economy).setStartprice(newstartprice);
 	}
 
 	public double getItemPurchasePrice(int id, int data, int amount) {

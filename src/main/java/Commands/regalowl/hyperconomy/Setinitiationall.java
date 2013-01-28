@@ -28,10 +28,9 @@ public class Setinitiationall {
 		new Backup();
 		for (int i = 0; i < names.size(); i++) {
 			name = names.get(i);
-			sf.setInitiation(name, playerecon, setting);
+			sf.getHyperObject(name, playerecon).setInitiation(setting);
 		}
 		isign.updateSigns();
-		//sender.sendMessage(ChatColor.GOLD + "All objects set to initial pricing: " + setting + ".");
 		sender.sendMessage(L.f(L.get("ALL_OBJECTS_SET_TO"), setting));
 	}
 }

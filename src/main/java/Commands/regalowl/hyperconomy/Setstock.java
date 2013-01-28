@@ -15,7 +15,7 @@ public class Setstock {
 				name = args[0];
 				double stock = calc.round(Double.parseDouble(args[1]), 2);
 				if (hc.itemTest(name)) {
-					sf.setStock(name, playerecon, stock);
+					sf.getHyperObject(name, playerecon).setStock(stock);
 					sender.sendMessage(L.f(L.get("STOCK_SET"), name));
 					isign.updateSigns();
 				} else {
@@ -27,7 +27,7 @@ public class Setstock {
 					name = args[0];
 					double stock = calc.round(Double.parseDouble(args[1]), 2);
 					if (hc.enchantTest(name)) {
-						sf.setStock(name, playerecon, stock);
+						sf.getHyperObject(name, playerecon).setStock(stock);
 						sender.sendMessage(L.f(L.get("STOCK_SET"), name));
 						isign.updateSigns();
 					} else {

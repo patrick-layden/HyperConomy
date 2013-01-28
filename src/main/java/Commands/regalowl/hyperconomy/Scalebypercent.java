@@ -33,16 +33,17 @@ public class Scalebypercent {
 						}
 						for (int c = 0; c < names.size(); c++) {
 							String cname = names.get(c);
+							HyperObject ho = sf.getHyperObject(cname, playerecon);
 							if (type.equalsIgnoreCase("value")) {
-								sf.setValue(cname, playerecon, calc.twoDecimals(sf.getValue(cname, playerecon) * percent));
+								ho.setValue(calc.twoDecimals(ho.getValue() * percent));
 							} else if (type.equalsIgnoreCase("staticprice")) {
-								sf.setStaticPrice(cname, playerecon, calc.twoDecimals(sf.getStaticPrice(cname, playerecon) * percent));
+								ho.setStaticprice(calc.twoDecimals(ho.getStaticprice() * percent));
 							} else if (type.equalsIgnoreCase("stock")) {
-								sf.setStock(cname, playerecon, Math.floor(sf.getStock(cname, playerecon) * percent + .5));
+								ho.setStock(Math.floor(ho.getStock() * percent + .5));
 							} else if (type.equalsIgnoreCase("median")) {
-								sf.setMedian(cname, playerecon, calc.twoDecimals(sf.getMedian(cname, playerecon) * percent));
+								ho.setMedian(calc.twoDecimals(ho.getMedian() * percent));
 							} else if (type.equalsIgnoreCase("startprice")) {
-								sf.setStartPrice(cname, playerecon, calc.twoDecimals(sf.getStartPrice(cname, playerecon) * percent));
+								ho.setStartprice(calc.twoDecimals(ho.getStartprice() * percent));
 							}
 						}
 						sender.sendMessage(L.get("ADJUSTMENT_SUCCESSFUL"));

@@ -23,15 +23,16 @@ public class Buy {
 					int data = 0;
 					int amount = 0;
 					if (hc.itemTest(name)) {
-						int txpid = sf.getId(name, playerecon);
-						int txpdata = sf.getData(name, playerecon);
+						HyperObject ho = sf.getHyperObject(name, playerecon);
+						int txpid = ho.getId();
+						int txpdata = ho.getData();
 						if (txpid == -1 && txpdata == -1) {
 							xp = true;
 						}
 
 
-						id = sf.getId(name, playerecon);
-						data = sf.getData(name, playerecon);
+						id = ho.getId();
+						data = ho.getData();
 						if (args.length == 1) {
 							amount = 1;
 						} else {
@@ -41,7 +42,7 @@ public class Buy {
 								String max = args[1];
 								if (max.equalsIgnoreCase("max")) {
 									if (xp) {
-										amount = (int) sf.getStock(name, playerecon);
+										amount = (int) ho.getStock();
 									} else {
 										MaterialData damagemd = new MaterialData(id, (byte) data);
 										ItemStack damagestack = damagemd.toItemStack();
@@ -50,7 +51,7 @@ public class Buy {
 											space = tran.getavailableSpace(id, calc.getDamageValue(damagestack), player);
 										}
 										amount = space;
-										int shopstock = (int) sf.getStock(name, playerecon);
+										int shopstock = (int) ho.getStock();
 										if (amount > shopstock) {
 											amount = shopstock;
 										}

@@ -14,7 +14,7 @@ public class Setstaticprice {
 				name = args[0];
 				Double staticprice = Double.parseDouble(args[1]);
 				if (hc.itemTest(name)) {
-					sf.setStaticPrice(name, playerecon, staticprice);
+					sf.getHyperObject(name, playerecon).setStaticprice(staticprice);
 					sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), name));
 					isign.updateSigns();
 				} else {
@@ -26,7 +26,7 @@ public class Setstaticprice {
 					name = args[0];
 					Double staticprice = Double.parseDouble(args[1]);
 					if (hc.enchantTest(name)) {
-						sf.setStaticPrice(name, playerecon, staticprice);
+						sf.getHyperObject(name, playerecon).setStaticprice(staticprice);
 						sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), name));
 						isign.updateSigns();
 					} else {

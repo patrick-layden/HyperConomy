@@ -57,10 +57,8 @@ public class InfoSignHandler implements Listener {
 		if (p.hasPermission("hyperconomy.createsign")) {
 			String[] lines = scevent.getLines();
 			String economy = "default";
-			if (hc.useSQL()) {
-				DataFunctions df = hc.getDataFunctions();
-				economy = df.getPlayerEconomy(p);
-			}
+			DataFunctions df = hc.getDataFunctions();
+			economy = df.getPlayerEconomy(p);
 			String objectName = lines[0].trim() + lines[1].trim();
 			objectName = hc.fixName(objectName);
 			int multiplier = 1;

@@ -31,11 +31,11 @@ public class HyperConomy extends JavaPlugin {
 	private Notification not;
 	private TransactionSign tsign;
 	private ItemDisplayFactory itdi;
-	private DataFunctions sf;
+	private DataFunctions df;
 	private SQLWrite sw;
 	private SQLEconomy sqe;
 	private HyperWebStart hws;
-	private boolean usesql;
+	private boolean usemysql;
 	private long saveinterval;
 	private int savetaskid;
 	private YamlFile yaml;
@@ -113,31 +113,34 @@ public class HyperConomy extends JavaPlugin {
 		if (!brokenfile) {
 			new Update();
 			saveinterval = yaml.getConfig().getLong("config.saveinterval");
-			usesql = yaml.getConfig().getBoolean("config.sql-connection.use-sql");
+			usemysql = yaml.getConfig().getBoolean("config.sql-connection.use-mysql");
 			currency = yaml.getConfig().getString("config.currency-symbol");
 			useExternalEconomy = yaml.getConfig().getBoolean("config.use-external-economy-plugin");
-			sf = new DataFunctions();
+			df = new DataFunctions();
 			currency = this.getYaml().getConfig().getString("config.currency-symbol");
 			logerrors = this.getYaml().getConfig().getBoolean("config.log-errors");
 			serverVersion = this.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
 			new Update();
 			sqe = new SQLEconomy();
-			//sqe.checkSQLLite();
-			if (usesql) {
-				boolean databaseOk = sqe.checkTables();
-				if (databaseOk) {
-					sw = new SQLWrite(this);
-					migrate = sqe.checkData();
-				} else {
-					log.severe(L.get("LOG_BREAK"));
-					log.severe(L.get("LOG_BREAK"));
-					log.severe(L.get("DATABASE_CONNECTION_ERROR"));
-					log.severe(L.get("LOG_BREAK"));
-					log.severe(L.get("LOG_BREAK"));
-					getServer().getScheduler().cancelTasks(this);
-					getPluginLoader().disablePlugin(this);
-					return;
-				}
+			
+			boolean databaseOk = false;
+			if (usemysql) {
+				databaseOk = sqe.checkTables();
+			} else {
+				databaseOk = sqe.checkSQLLite();
+			}
+			if (databaseOk) {
+				sw = new SQLWrite(this);
+				migrate = sqe.checkData();
+			} else {
+				log.severe(L.get("LOG_BREAK"));
+				log.severe(L.get("LOG_BREAK"));
+				log.severe(L.get("DATABASE_CONNECTION_ERROR"));
+				log.severe(L.get("LOG_BREAK"));
+				log.severe(L.get("LOG_BREAK"));
+				getServer().getScheduler().cancelTasks(this);
+				getPluginLoader().disablePlugin(this);
+				return;
 			}
 			s = new ShopFactory();
 			l = new Log(this);
@@ -150,10 +153,8 @@ public class HyperConomy extends JavaPlugin {
 			isign = new InfoSignHandler();
 			tsign = new TransactionSign();
 			buildData();
-			if (useSQL() && !migrate) {
-				sf.load();
-			} else {
-				sf.loadYML();
+			if (!migrate) {
+				df.load();
 			}
 			s.startshopCheck();
 			startSave();
@@ -187,7 +188,7 @@ public class HyperConomy extends JavaPlugin {
 		if (hws != null) {
 			hws.endServer();
 		}
-		if (useSQL() && sw != null) {
+		if (sw != null) {
 			sw.closeConnections();
 			new SQLShutdown(this, sw);
 		}
@@ -199,8 +200,8 @@ public class HyperConomy extends JavaPlugin {
 	}
 	
 	public void clearData() {
-		if (sf != null) {
-			sf.clearData();
+		if (df != null) {
+			df.clearData();
 		}
 		tran= null;
 		calc= null;
@@ -214,7 +215,7 @@ public class HyperConomy extends JavaPlugin {
 		not= null;
 		tsign= null;
 		itdi= null;
-		sf= null;
+		df= null;
 		sw= null;
 		sqe= null;
 		hws= null;
@@ -310,46 +311,23 @@ public class HyperConomy extends JavaPlugin {
 		namedata.clear();
 		enames.clear();
 		enchantdata.clear();
+
 		names.clear();
-		if (usesql) {
-			inames = sf.getStringColumn("SELECT NAME FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
-			ArrayList<String> iids = sf.getStringColumn("SELECT ID FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
-			ArrayList<String> idatas = sf.getStringColumn("SELECT DATA FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
-			for (int c = 0; c < inames.size(); c++) {
-				namedata.put(iids.get(c) + ":" + idatas.get(c), inames.get(c));
-			}
-			enames = sf.getStringColumn("SELECT NAME FROM hyperobjects WHERE TYPE='enchantment' AND ECONOMY='default'");
-			ArrayList<String> eids = sf.getStringColumn("SELECT MATERIAL FROM hyperobjects WHERE TYPE='enchantment' AND ECONOMY='default'");
-			for (int c = 0; c < enames.size(); c++) {
-				String enchantname = enames.get(c);
-				enchantdata.put(eids.get(c), enchantname.substring(0, enchantname.length() - 1));
-			}
-			names = sf.getStringColumn("SELECT NAME FROM hyperobjects WHERE ECONOMY='default'");
-		} else {
-			Iterator<String> it = yaml.getItems().getKeys(false).iterator();
-			while (it.hasNext()) {
-				String elst = it.next().toString();
-				String ikey = yaml.getItems().getString(elst + ".information.id") + ":" + yaml.getItems().getString(elst + ".information.data");
-				namedata.put(ikey, elst);
-			}
-			Iterator<String> it2 = yaml.getEnchants().getKeys(false).iterator();
-			while (it2.hasNext()) {
-				String elst2 = it2.next().toString();
-				enchantdata.put(yaml.getEnchants().getString(elst2 + ".information.name"), elst2.substring(0, elst2.length() - 1));
-			}
-			Iterator<String> it3 = yaml.getItems().getKeys(false).iterator();
-			while (it3.hasNext()) {
-				String cname = it3.next().toString();
-				names.add(cname);
-				inames.add(cname);
-			}
-			Iterator<String> it4 = yaml.getEnchants().getKeys(false).iterator();
-			while (it4.hasNext()) {
-				String cname = it4.next().toString();
-				names.add(cname);
-				enames.add(cname);
-			}
+
+		inames = df.getStringColumn("SELECT NAME FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+		ArrayList<String> iids = df.getStringColumn("SELECT ID FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+		ArrayList<String> idatas = df.getStringColumn("SELECT DATA FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+		for (int c = 0; c < inames.size(); c++) {
+			namedata.put(iids.get(c) + ":" + idatas.get(c), inames.get(c));
 		}
+		enames = df.getStringColumn("SELECT NAME FROM hyperobjects WHERE TYPE='enchantment' AND ECONOMY='default'");
+		ArrayList<String> eids = df.getStringColumn("SELECT MATERIAL FROM hyperobjects WHERE TYPE='enchantment' AND ECONOMY='default'");
+		for (int c = 0; c < enames.size(); c++) {
+			String enchantname = enames.get(c);
+			enchantdata.put(eids.get(c), enchantname.substring(0, enchantname.length() - 1));
+		}
+		names = df.getStringColumn("SELECT NAME FROM hyperobjects WHERE ECONOMY='default'");
+
 		return true;
 	}
 
@@ -543,8 +521,8 @@ public class HyperConomy extends JavaPlugin {
 		return sqllock;
 	}
 
-	public boolean useSQL() {
-		return usesql;
+	public boolean useMySQL() {
+		return usemysql;
 	}
 
 	public long getsaveInterval() {
@@ -568,7 +546,7 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public DataFunctions getDataFunctions() {
-		return sf;
+		return df;
 	}
 
 	public Transaction getTransaction() {
