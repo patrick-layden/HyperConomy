@@ -13,7 +13,7 @@ public class Seteconomy {
 				String economy = args[0];
 				if (hc.getDataFunctions().testEconomy(economy)) {
 					if (player != null) {
-						sf.setPlayerEconomy(player.getName(), economy);
+						sf.getHyperPlayer(player).setEconomy(economy);
 						sender.sendMessage(L.get("ECONOMY_SET"));
 					} else {
 						command.setNonPlayerEconomy(economy);

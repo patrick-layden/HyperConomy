@@ -42,7 +42,7 @@ public class ConnectionPool {
 	}
 	
 
-	private void refreshConnections() {
+	public void refreshConnections() {
 		sw.pauseWrite(1200L);
 		closeConnections();
 		openConnections();
@@ -76,25 +76,25 @@ public class ConnectionPool {
 	@SuppressWarnings("deprecation")
 	public void openConnections() {
 		for (int i = 0; i < maxConnections; i++) {
-				hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
-					public void run() {
-						try {
-							Connection connect = null;
-							if (hc.useMySQL()) {
-								connect = DriverManager.getConnection("jdbc:mysql://" + sf.getHost() + ":" + sf.getPort() + "/" + sf.getDatabase(), sf.getUserName(), sf.getPassword());
-							} else {
-								Class.forName("org.sqlite.JDBC");
-								connect = DriverManager.getConnection("jdbc:sqlite:" + sqlitePath);
-							}
-							connections.add(connect);
-							inUse.add(false);
-						} catch (Exception e) {
-							new HyperError(e);
-							refreshConnections();
-							return;
+			hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
+				public void run() {
+					try {
+						Connection connect = null;
+						if (hc.useMySQL()) {
+							connect = DriverManager.getConnection("jdbc:mysql://" + sf.getHost() + ":" + sf.getPort() + "/" + sf.getDatabase(), sf.getUserName(), sf.getPassword());
+						} else {
+							Class.forName("org.sqlite.JDBC");
+							connect = DriverManager.getConnection("jdbc:sqlite:" + sqlitePath);
 						}
+						connections.add(connect);
+						inUse.add(false);
+					} catch (Exception e) {
+						new HyperError(e);
+						refreshConnections();
+						return;
 					}
-				}, (i + 1));
+				}
+			}, (i + 1));
 		}
 	}
 

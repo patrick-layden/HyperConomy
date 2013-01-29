@@ -18,7 +18,7 @@ public class Writeitems {
     			if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("column")) {
 						ArrayList<String> inames = hc.getInames();
-						String output = sal.stringArrayToStringColumn(inames);
+						String output = sal.stringArrayToStringNL(inames);
 						ft.writeStringToFile(output, path + File.separator + "items.txt");
 						sender.sendMessage(L.get("ITEM_NAMES_WRITTEN"));
 					} else if (args[0].equalsIgnoreCase("row")) {
@@ -30,7 +30,7 @@ public class Writeitems {
 				} else if (args.length == 2 && args[1].equalsIgnoreCase("e")) {
 					if (args[0].equalsIgnoreCase("column")) {
 						ArrayList<String> enames = hc.getEnames();
-						String output = sal.stringArrayToStringColumn(enames);
+						String output = sal.stringArrayToStringNL(enames);
 						ft.writeStringToFile(output, path + File.separator + "enchants.txt");
 						sender.sendMessage(L.get("ENCHANT_NAMES_WRITTEN"));
 					} else if (args[0].equalsIgnoreCase("row")) {

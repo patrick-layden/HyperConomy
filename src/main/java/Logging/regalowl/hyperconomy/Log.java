@@ -24,11 +24,11 @@ public class Log {
 	public void writeSQLLog(String playername, String action, String object, Double amount, Double money, Double tax, String store, String type) {
 		String statement = "";
 		if (hc.useMySQL()) {
-			statement = "Insert Into hyperlog (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE)"
+			statement = "Insert Into hyperconomy_log (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE)"
 		            + " Values (NOW(),'" + playername + "','" + action + "','" + object + "','" + amount + "','" + hc.getCalculation().twoDecimals(money) + "','" + hc.getCalculation().twoDecimals(tax) + "','" + store + 
 		        "','" + type + "')";
 		} else {
-			statement = "Insert Into hyperlog (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE)"
+			statement = "Insert Into hyperconomy_log (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE)"
 		            + " Values (datetime('NOW', 'localtime'),'" + playername + "','" + action + "','" + object + "','" + amount + "','" + hc.getCalculation().twoDecimals(money) + "','" + hc.getCalculation().twoDecimals(tax) + "','" + store + 
 		        "','" + type + "')";
 		}
@@ -38,9 +38,9 @@ public class Log {
 	public void writeAuditLog(String account, String action, Double amount, String economy) {
 		String statement = "";
 		if (hc.useMySQL()) {
-			statement = "Insert Into hyperauditlog (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) Values (NOW(),'" + account + "','" + action + "','" + amount + "','" + economy + "')";
+			statement = "Insert Into hyperconomy_audit_log (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) Values (NOW(),'" + account + "','" + action + "','" + amount + "','" + economy + "')";
 		} else {
-			statement = "Insert Into hyperauditlog (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) Values (datetime('NOW', 'localtime'),'" + account + "','" + action + "','" + amount + "','" + economy + "')";
+			statement = "Insert Into hyperconomy_audit_log (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) Values (datetime('NOW', 'localtime'),'" + account + "','" + action + "','" + amount + "','" + economy + "')";
 		}
 		hc.getSQLWrite().writeData(statement);
 

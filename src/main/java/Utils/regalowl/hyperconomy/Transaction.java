@@ -46,7 +46,7 @@ public class Transaction {
 			Log log = hc.getLog();
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
-			String playerecon = sf.getPlayerEconomy(p.getName());
+			String playerecon = sf.getHyperPlayer(p).getEconomy();
 			if (amount > 0) {
 				double shopstock = sf.getHyperObject(name, playerecon).getStock();
 				if (shopstock >= amount) {
@@ -119,7 +119,7 @@ public class Transaction {
 			Log log = hc.getLog();
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
-			String playerecon = sf.getPlayerEconomy(p.getName());
+			String playerecon = sf.getHyperPlayer(p).getEconomy();
 			if (amount > 0) {
 				if (id >= 0) {
 					int totalitems = countInvitems(id, data, p);
@@ -432,7 +432,7 @@ public class Transaction {
 	 */
 	private int getmaxInitial(String name, Player p) {
 		DataFunctions sf = hc.getDataFunctions();
-		String playerecon = sf.getPlayerEconomy(p.getName());
+		String playerecon = sf.getHyperPlayer(p).getEconomy();
 		try {
 			int maxinitialitems = 0;
 			HyperObject ho = sf.getHyperObject(name, playerecon);
@@ -467,7 +467,7 @@ public class Transaction {
 			Log log = hc.getLog();
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
-			String playerecon = sf.getPlayerEconomy(p.getName());
+			String playerecon = sf.getHyperPlayer(p).getEconomy();
 			if (amount > 0) {
 				int shopstock = 0;
 				shopstock = (int) sf.getHyperObject(name, playerecon).getStock();
@@ -537,7 +537,7 @@ public class Transaction {
 			Log log = hc.getLog();
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
-			String playerecon = sf.getPlayerEconomy(p.getName());
+			String playerecon = sf.getHyperPlayer(p).getEconomy();
 			if (amount > 0) {
 				int totalxp = calc.gettotalxpPoints(p);
 				if (totalxp >= amount) {
@@ -631,7 +631,7 @@ public class Transaction {
 			Account acc = hc.getAccount();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
-			String playerecon = sf.getPlayerEconomy(owner);
+			String playerecon = sf.getHyperPlayer(owner).getEconomy();
 			double price = calc.getTvalue(name, amount, playerecon);
 			if (acc.checkFunds(price, p)) {
 				int space = getavailableSpace(id, data, p);
@@ -725,7 +725,7 @@ public class Transaction {
 			Account acc = hc.getAccount();
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();
-			String playerecon = sf.getPlayerEconomy(owner);
+			String playerecon = sf.getHyperPlayer(owner).getEconomy();
 			double price = calc.getValue(name, amount, p);
 			Boolean toomuch = false;
 			if (price == 3235624645000.7) {

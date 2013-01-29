@@ -25,7 +25,7 @@ public class _Command {
 			playerecon = nonPlayerEconomy;
 		}
 		if (player != null) {
-			playerecon = sf.getPlayerEconomy(player.getName());
+			playerecon = sf.getHyperPlayer(player).getEconomy();
 		}
 		if (cmd.getName().equalsIgnoreCase("buy") && (player != null)) {
 			new Buy(args, player, playerecon);

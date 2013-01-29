@@ -16,7 +16,7 @@ public class Makedisplay {
 		if (args.length == 1) {
 			String name = hc.fixName(args[0]);
 			if (hc.itemTest(name)) {
-				String economy = sf.getPlayerEconomy(player);
+				String economy = sf.getHyperPlayer(player).getEconomy();
 				double x = player.getLocation().getX();
 				double y = player.getLocation().getY();
 				double z = player.getLocation().getZ();

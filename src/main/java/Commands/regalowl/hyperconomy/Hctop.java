@@ -23,18 +23,15 @@ public class Hctop {
 				sender.sendMessage(L.get("HCTOP_INVALID"));
 				return;
 			}
-			ArrayList<String> p = df.getEconPlayers();
-			ArrayList<Double> b = df.getPlayerBalances();
 			
 			ArrayList<String> players = new ArrayList<String>();
 			ArrayList<Double> balances = new ArrayList<Double>();
-			
-			//sender.sendMessage(b.toString());
-			for (int i = 0; i < p.size(); i++) {
-				players.add(p.get(i));
-				balances.add(b.get(i));
+			for (HyperPlayer hp:df.getHyperPlayers()) {
+				players.add(hp.getName());
+				balances.add(hp.getBalance());
 			}
 			
+
 			
 			ArrayList<String> splayers = new ArrayList<String>();
 			ArrayList<Double> sbalances = new ArrayList<Double>();

@@ -19,7 +19,7 @@ public class Intervals {
 				sender.sendMessage(ChatColor.BLUE + "Save Interval: " + ChatColor.GREEN + "" + hc.getsaveInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + hc.getsaveInterval() / 20 + ChatColor.BLUE + " Seconds");
 				sender.sendMessage(ChatColor.BLUE + "Sign Update Interval: " + ChatColor.GREEN + "" + isign.getUpdateInterval() + ChatColor.BLUE + " Ticks/" + ChatColor.GREEN + "" + isign.getUpdateInterval() / 20 + ChatColor.BLUE + " Seconds");
 				sender.sendMessage(ChatColor.BLUE + "There are " + ChatColor.GREEN + "" + isign.getUpdateInterval() + ChatColor.BLUE + " signs waiting to update.");
-				sender.sendMessage(ChatColor.BLUE + "The log has " + ChatColor.GREEN + "" + sf.countTableEntries("hyperlog") + ChatColor.BLUE + " entries.");
+				sender.sendMessage(ChatColor.BLUE + "The log has " + ChatColor.GREEN + "" + sf.countTableEntries("hyperconomy_log") + ChatColor.BLUE + " entries.");
 				sender.sendMessage(ChatColor.BLUE + "The SQL buffer contains " + ChatColor.GREEN + "" + sw.getBufferSize() + ChatColor.BLUE + " statements.");
 				sender.sendMessage(ChatColor.BLUE + "There are currently " + ChatColor.GREEN + "" + sw.getActiveThreads() + ChatColor.BLUE + " active SQL threads.");
 				sender.sendMessage(L.get("LINE_BREAK"));

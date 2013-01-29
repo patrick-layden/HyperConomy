@@ -12,8 +12,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
-public class DataFunctions {
+public class DataFunctions implements Listener {
 	private HyperConomy hc;
 	private String username;
 	private String password;
@@ -23,11 +27,10 @@ public class DataFunctions {
 	private boolean sqlloaded;
 	private boolean databuilt;
 	private HashMap<String, HyperObject> hyperObjects = new HashMap<String, HyperObject>();
+	private HashMap<String, HyperPlayer> hyperPlayers = new HashMap<String, HyperPlayer>();
 	
+
 	
-	private ArrayList<String> econplayer = new ArrayList<String>();
-	private ArrayList<String> playerecon = new ArrayList<String>();
-	private ArrayList<Double> playerbalance = new ArrayList<Double>();
 	private ArrayList<String> koec = new ArrayList<String>();
 	private ArrayList<String> hobject = new ArrayList<String>();
 	private ArrayList<String> heconomy = new ArrayList<String>();
@@ -47,6 +50,16 @@ public class DataFunctions {
 		database = config.getString("config.sql-connection.database");
 		sqlloaded = false;
 		databuilt = false;
+		hc.getServer().getPluginManager().registerEvents(this, hc);
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		String name = event.getPlayer().getName();
+		if (!hasAccount(name)) {
+			addPlayer(name);
+		}
+
 	}
 
 	
@@ -65,6 +78,30 @@ public class DataFunctions {
 		} else {
 			return null;
 		}
+	}
+	
+	public HyperPlayer getHyperPlayer(String player) {
+		player = fixpN(player);
+		if (hyperPlayers.containsKey(player)) {
+			return hyperPlayers.get(player);
+		} else {
+			//addPlayer(player);
+			//return hyperPlayers.get(player);
+			return null;
+		}
+	}
+	
+	public HyperPlayer getHyperPlayer(Player player) {
+		String p = player.getName();
+		return getHyperPlayer(p);
+	}
+	
+	public ArrayList<HyperPlayer> getHyperPlayers() {
+		ArrayList<HyperPlayer> hps = new ArrayList<HyperPlayer>();
+		for (HyperPlayer hp:hyperPlayers.values()) {
+			hps.add(hp);
+		}
+		return hps;
 	}
 	
 	
@@ -95,10 +132,8 @@ public class DataFunctions {
 
 	private boolean loadSQL() {
 		hyperObjects.clear();
+		hyperPlayers.clear();
 		
-		playerecon.clear();
-		playerbalance.clear();
-		econplayer.clear();
 		hobject.clear();
 		heconomy.clear();
 		hprice.clear();
@@ -107,26 +142,14 @@ public class DataFunctions {
 		try {
 			Connection connect = hc.getSQLWrite().getConnectionPool().getConnectionForRead();
 			Statement state = connect.createStatement();
-			ResultSet result = state.executeQuery("SELECT * FROM hyperobjects");
+			ResultSet result = state.executeQuery("SELECT * FROM hyperconomy_objects");
 			while (result.next()) {
-				HyperObject hobj = new HyperObject();
-				hobj.setName(result.getString("NAME"));
-				hobj.setEconomy(result.getString("ECONOMY"));
-				hobj.setType(result.getString("TYPE"));
-				hobj.setCategory(result.getString("CATEGORY"));
-				hobj.setMaterial(result.getString("MATERIAL"));
-				hobj.setId(result.getInt("ID"));
-				hobj.setData(result.getInt("DATA"));
-				hobj.setDurability(result.getInt("DURABILITY"));
-				hobj.setValue(result.getDouble("VALUE"));
-				hobj.setIsstatic(result.getString("STATIC"));
-				hobj.setStaticprice(result.getDouble("STATICPRICE"));
-				hobj.setStock(result.getDouble("STOCK"));
-				hobj.setMedian(result.getDouble("MEDIAN"));
-				hobj.setInitiation(result.getString("INITIATION"));
-				hobj.setStartprice(result.getDouble("STARTPRICE"));
-				hobj.setCeiling(result.getDouble("CEILING"));
-				hobj.setFloor(result.getDouble("FLOOR"));
+				HyperObject hobj = new HyperObject(result.getString("NAME"), result.getString("ECONOMY"), 
+						result.getString("TYPE"), result.getString("CATEGORY"), result.getString("MATERIAL"), 
+						result.getInt("ID"), result.getInt("DATA"), result.getInt("DURABILITY"), result.getDouble("VALUE"), 
+						result.getString("STATIC"), result.getDouble("STATICPRICE"), result.getDouble("STOCK"), 
+						result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
+						result.getDouble("CEILING"), result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
 				hyperObjects.put(hobj.getName() + ":" + hobj.getEconomy(), hobj);
 			}
 			result.close();
@@ -136,16 +159,32 @@ public class DataFunctions {
 			new HyperError(e);
 		}
 		
-		playerecon = getStringColumn("SELECT ECONOMY FROM hyperplayers");
-		econplayer = getStringColumn("SELECT PLAYER FROM hyperplayers");
-		playerbalance = getDoubleColumn("SELECT BALANCE FROM hyperplayers");
-		economies = getStringColumn("SELECT ECONOMY FROM hyperobjects");
+		try {
+			Connection connect = hc.getSQLWrite().getConnectionPool().getConnectionForRead();
+			Statement state = connect.createStatement();
+			ResultSet result = state.executeQuery("SELECT * FROM hyperconomy_players");
+			while (result.next()) {
+				HyperPlayer hplayer = new HyperPlayer();
+				hplayer.setName(result.getString("PLAYER"));
+				hplayer.setEconomy(result.getString("ECONOMY"));
+				hplayer.setBalance(result.getDouble("BALANCE"));
+				hyperPlayers.put(hplayer.getName(), hplayer);
+			}
+			result.close();
+			state.close();
+			connect.close();
+		} catch (SQLException e) {
+			new HyperError(e);
+		}
+		
+
+		economies = getStringColumn("SELECT ECONOMY FROM hyperconomy_objects");
 
 		// History
-		hobject = getStringColumn("SELECT OBJECT FROM hyperhistory");
-		heconomy = getStringColumn("SELECT ECONOMY FROM hyperhistory");
-		hprice = getDoubleColumn("SELECT PRICE FROM hyperhistory");
-		hcount = getIntColumn("SELECT COUNT FROM hyperhistory");
+		hobject = getStringColumn("SELECT OBJECT FROM hyperconomy_history");
+		heconomy = getStringColumn("SELECT ECONOMY FROM hyperconomy_history");
+		hprice = getDoubleColumn("SELECT PRICE FROM hyperconomy_history");
+		hcount = getIntColumn("SELECT COUNT FROM hyperconomy_history");
 		for (int c = 0; c < hobject.size(); c++) {
 			koec.add(hobject.get(c) + ":" + heconomy.get(c) + ":" + hcount.get(c));
 		}
@@ -223,133 +262,21 @@ public class DataFunctions {
 		}
 	}
 
-	public String getPlayerEconomy(String player) {
-		player = fixpN(player);
-		try {
-			if (player == null) {
-				return "default";
-			}
-			if (econplayer.indexOf(player) == -1) {
-				addPlayer(player);
-			}
-			String econ = playerecon.get(econplayer.indexOf(player));
-			return econ;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "default";
-		}
-	}
-
-	public String getPlayerEconomy(Player p) {
-		try {
-			if (p == null) {
-				return "default";
-			}
-			String player = p.getName();
-			player = fixpN(player);
-			if (econplayer.indexOf(player) == -1) {
-				addPlayer(player);
-			}
-			String econ = playerecon.get(econplayer.indexOf(player));
-			return econ;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "default";
-		}
-	}
 
 	public void addPlayer(String player) {
 		player = fixpN(player);
-		if (!econplayer.contains(player)) {
-			if (!inDatabase(player)) {
-				SQLWrite sw = hc.getSQLWrite();
-				sw.writeData("Insert Into hyperplayers (PLAYER, ECONOMY, BALANCE)" + " Values ('" + player + "','" + "default" + "','" + 0.0 + "')");
-			}
-			playerecon.add("default");
-			econplayer.add(player);
-			playerbalance.add(0.0);
+		if (!hyperPlayers.containsKey(player)) {
+			hyperPlayers.put(player, new HyperPlayer(player));
 		}
 	}
 
-	public void setPlayerEconomy(String player, String econ) {
-		player = fixpN(player);
-		try {
-			String statement = "UPDATE hyperplayers SET ECONOMY='" + econ + "' WHERE PLAYER = '" + player + "'";
-			hc.getSQLWrite().writeData(statement);
-			playerecon.set(econplayer.indexOf(player), econ);
-		} catch (Exception e) {
-			SQLRetry sqr = new SQLRetry();
-			sqr.retrySetEconomy(hc, player, econ);
-		}
-	}
+
 
 	public boolean hasAccount(String name) {
-		name = fixpN(name);
-		boolean ha = false;
-		if (econplayer.contains(name)) {
-			ha = true;
-		}
-		return ha;
+		return hyperPlayers.containsKey(fixpN(name));
 	}
 
-	public Double getPlayerBalance(Player p) {
-		try {
-			if (p == null) {
-				throw new PlayerNotFoundException("Function passed player that cannot be found");
-			}
-			String player = p.getName();
-			player = fixpN(player);
-			if (econplayer.indexOf(player) != -1) {
-				return playerbalance.get(econplayer.indexOf(player));
-			} else {
-				throw new PlayerNotFoundException("Function passed player that cannot be found");
-			}
-		} catch (Exception e) {
-			new HyperError(e, "Passed player: " + p.getDisplayName());
-			return 0.0;
-		}
-	}
 
-	public Double getPlayerBalance(String player) {
-		player = fixpN(player);
-		try {
-			if (econplayer.indexOf(player) != -1) {
-				return playerbalance.get(econplayer.indexOf(player));
-			} else {
-				throw new PlayerNotFoundException("Function passed player that cannot be found");
-			}
-		} catch (Exception e) {
-			new HyperError(e, "Passed player: " + player);
-			return 0.0;
-		}
-	}
-
-	public void setPlayerBalance(String player, Double balance) {
-		player = fixpN(player);
-		Calculation calc = hc.getCalculation();
-		balance = calc.twoDecimals(balance);
-		try {
-			String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player + "'";
-			hc.getSQLWrite().writeData(statement);
-			playerbalance.set(econplayer.indexOf(player), balance);
-		} catch (Exception e) {
-			new HyperError(e, "Passed player: " + player + ", balance: " + balance);
-		}
-	}
-
-	public void setPlayerBalance(Player p, Double balance) {
-		Calculation calc = hc.getCalculation();
-		balance = calc.twoDecimals(balance);
-		String player = p.getName();
-		player = fixpN(player);
-		try {
-			String statement = "UPDATE hyperplayers SET BALANCE='" + balance + "' WHERE PLAYER = '" + player + "'";
-			hc.getSQLWrite().writeData(statement);
-			playerbalance.set(econplayer.indexOf(player), balance);
-		} catch (Exception e) {
-			new HyperError(e, "Passed player: " + player + ", balance: " + balance);
-		}
-	}
 
 	public boolean createPlayerAccount(String player) {
 		player = fixpN(player);
@@ -361,13 +288,19 @@ public class DataFunctions {
 		}
 	}
 
+	
 	public ArrayList<String> getEconPlayers() {
-		return econplayer;
+		ArrayList<String> econplayers = new ArrayList<String>();
+		for (String player:hyperPlayers.keySet()) {
+			econplayers.add(player);
+		}
+		return econplayers;
 	}
+	
 
-	public ArrayList<Double> getPlayerBalances() {
-		return playerbalance;
-	}
+	//public ArrayList<Double> getPlayerBalances() {
+	//	return playerbalance;
+	//}
 
 	public int countTableEntries(String table) {
 		try {
@@ -390,7 +323,7 @@ public class DataFunctions {
 	private void startHistoryDataCount() {
 		ArrayList<String> names = hc.getNames();
 		ArrayList<String> ecns = new ArrayList<String>();
-		ArrayList<String> economies = getStringColumn("SELECT ECONOMY FROM hyperobjects");
+		ArrayList<String> economies = getStringColumn("SELECT ECONOMY FROM hyperconomy_objects");
 		HashMap<String, String> uecons = new HashMap<String, String>();
 		for (int c = 0; c < economies.size(); c++) {
 			uecons.put(economies.get(c), "irrelevant");
@@ -443,16 +376,16 @@ public class DataFunctions {
 		int count = getHistoryDataCount(object, economy) + 1;
 		String statement = "";
 		if (hc.useMySQL()) {
-			statement = "Insert Into hyperhistory (OBJECT, ECONOMY, TIME, PRICE, COUNT)" + " Values ('" + object + "','" + economy + "', NOW() ,'" + price + "','" + count + "')";
+			statement = "Insert Into hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE, COUNT)" + " Values ('" + object + "','" + economy + "', NOW() ,'" + price + "','" + count + "')";
 		} else {
-			statement = "Insert Into hyperhistory (OBJECT, ECONOMY, TIME, PRICE, COUNT)" + " Values ('" + object + "','" + economy + "', datetime('NOW', 'localtime') ,'" + price + "','" + count + "')";
+			statement = "Insert Into hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE, COUNT)" + " Values ('" + object + "','" + economy + "', datetime('NOW', 'localtime') ,'" + price + "','" + count + "')";
 		}
 		hc.getSQLWrite().writeData(statement);
 		int daystosavehistory = hc.getYaml().getConfig().getInt("config.daystosavehistory");
 		if (hc.useMySQL()) {
-			statement = "DELETE FROM hyperhistory WHERE time < DATE_SUB(NOW(), INTERVAL " + daystosavehistory + " DAY)";
+			statement = "DELETE FROM hyperconomy_history WHERE time < DATE_SUB(NOW(), INTERVAL " + daystosavehistory + " DAY)";
 		} else {
-			statement = "DELETE FROM hyperhistory WHERE time < date('now','" + formatSQLiteTime(daystosavehistory * -1) + " day')";
+			statement = "DELETE FROM hyperconomy_history WHERE time < date('now','" + formatSQLiteTime(daystosavehistory * -1) + " day')";
 		}
 		hc.getSQLWrite().writeData(statement);
 		setHistoryDataCount(object, economy, getHistoryDataCount(object, economy) + 1);
@@ -547,9 +480,7 @@ public class DataFunctions {
 		host = null;
 		database = null;
 		hyperObjects.clear();
-
-		econplayer.clear();
-		playerecon.clear();
+		hyperPlayers.clear();
 		koec.clear();
 		hobject.clear();
 		heconomy.clear();
@@ -560,7 +491,7 @@ public class DataFunctions {
 	}
 
 	public void clearHistory() {
-		String statement = "TRUNCATE TABLE hyperhistory";
+		String statement = "TRUNCATE TABLE hyperconomy_history";
 		hc.getSQLWrite().writeData(statement);
 		koec.clear();
 		hobject.clear();
@@ -571,21 +502,22 @@ public class DataFunctions {
 	}
 
 	public String fixpN(String player) {
-		for (int i = 0; i < econplayer.size(); i++) {
-			if (econplayer.get(i).equalsIgnoreCase(player)) {
-				return econplayer.get(i);
+		for (String name:hyperPlayers.keySet()) {
+			if (name.equalsIgnoreCase(player)) {
+				return name;
 			}
 		}
 		return player;
 	}
 
+	/*
 	public boolean inDatabase(String player) {
 		player = fixpN(player);
 		boolean indatabase = true;
 		try {
 			Connection connect = hc.getSQLWrite().getConnectionPool().getConnectionForRead();
 			Statement state = connect.createStatement();
-			ResultSet result = state.executeQuery("SELECT PLAYER FROM hyperplayers WHERE PLAYER = " + "'" + player + "'");
+			ResultSet result = state.executeQuery("SELECT PLAYER FROM hyperconomy_players WHERE PLAYER = " + "'" + player + "'");
 			if (!result.next()) {
 				indatabase = false;
 			}
@@ -599,4 +531,5 @@ public class DataFunctions {
 			return false;
 		}
 	}
+	*/
 }

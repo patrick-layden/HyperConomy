@@ -3,7 +3,6 @@ package regalowl.hyperconomy;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.logging.Logger;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
@@ -87,7 +86,7 @@ public class HyperConomy extends JavaPlugin {
 			//return;
 			useExternalEconomy = false;
 		}
-		
+		acc.checkshopAccount();
 		itdi = new ItemDisplayFactory();
 	}
 
@@ -125,7 +124,7 @@ public class HyperConomy extends JavaPlugin {
 			
 			boolean databaseOk = false;
 			if (usemysql) {
-				databaseOk = sqe.checkTables();
+				databaseOk = sqe.checkMySQL();
 			} else {
 				databaseOk = sqe.checkSQLLite();
 			}
@@ -158,16 +157,10 @@ public class HyperConomy extends JavaPlugin {
 			}
 			s.startshopCheck();
 			startSave();
-			this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-				public void run() {
-					acc.checkshopAccount();
-				}
-			}, 300L);
 			hist = new History(this, calc, ench, isign);
 			hist.starthistoryLog();
 			tsign.setTransactionSign(this, tran, calc, ench, l, acc, not);
 			new ChestShop();
-			new HyperPlayers(this);
 			hws = new HyperWebStart();
 			log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 		}
@@ -314,19 +307,19 @@ public class HyperConomy extends JavaPlugin {
 
 		names.clear();
 
-		inames = df.getStringColumn("SELECT NAME FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
-		ArrayList<String> iids = df.getStringColumn("SELECT ID FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
-		ArrayList<String> idatas = df.getStringColumn("SELECT DATA FROM hyperobjects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+		inames = df.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+		ArrayList<String> iids = df.getStringColumn("SELECT ID FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+		ArrayList<String> idatas = df.getStringColumn("SELECT DATA FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
 		for (int c = 0; c < inames.size(); c++) {
 			namedata.put(iids.get(c) + ":" + idatas.get(c), inames.get(c));
 		}
-		enames = df.getStringColumn("SELECT NAME FROM hyperobjects WHERE TYPE='enchantment' AND ECONOMY='default'");
-		ArrayList<String> eids = df.getStringColumn("SELECT MATERIAL FROM hyperobjects WHERE TYPE='enchantment' AND ECONOMY='default'");
+		enames = df.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE TYPE='enchantment' AND ECONOMY='default'");
+		ArrayList<String> eids = df.getStringColumn("SELECT MATERIAL FROM hyperconomy_objects WHERE TYPE='enchantment' AND ECONOMY='default'");
 		for (int c = 0; c < enames.size(); c++) {
 			String enchantname = enames.get(c);
 			enchantdata.put(eids.get(c), enchantname.substring(0, enchantname.length() - 1));
 		}
-		names = df.getStringColumn("SELECT NAME FROM hyperobjects WHERE ECONOMY='default'");
+		names = df.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE ECONOMY='default'");
 
 		return true;
 	}

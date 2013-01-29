@@ -12,6 +12,7 @@ public class Importbalance {
 		LanguageFile L = hc.getLanguageFile();
 		DataFunctions df = hc.getDataFunctions();
 		Economy econ = hc.getEconomy();
+		Log l = hc.getLog();
 		try {
 			if (hc.useExternalEconomy()) {
 				ArrayList<String> players = df.getEconPlayers();
@@ -19,7 +20,8 @@ public class Importbalance {
 					
 					for (String player:players) {
 						if (econ.hasAccount(player)) {
-							df.setPlayerBalance(player, econ.getBalance(player));
+							df.getHyperPlayer(player).setBalance(econ.getBalance(player));
+							l.writeAuditLog(player, "setbalance", econ.getBalance(player), "HyperConomy");
 						}
 					}
 					sender.sendMessage(L.get("PLAYERS_IMPORTED"));
@@ -28,10 +30,11 @@ public class Importbalance {
 						String player = df.fixpN(args[i]);
 						if (econ.hasAccount(player)) {
 							if (players.contains(player)) {
-								df.setPlayerBalance(player, econ.getBalance(player));
+								df.getHyperPlayer(player).setBalance(econ.getBalance(player));
 							} else {
 								df.addPlayer(player);
-								df.setPlayerBalance(player, econ.getBalance(player));
+								df.getHyperPlayer(player).setBalance(econ.getBalance(player));
+								l.writeAuditLog(player, "setbalance", econ.getBalance(player), "HyperConomy");
 							}
 						}
 					}

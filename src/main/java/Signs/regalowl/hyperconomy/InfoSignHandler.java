@@ -58,7 +58,7 @@ public class InfoSignHandler implements Listener {
 			String[] lines = scevent.getLines();
 			String economy = "default";
 			DataFunctions df = hc.getDataFunctions();
-			economy = df.getPlayerEconomy(p);
+			economy = df.getHyperPlayer(p).getEconomy();
 			String objectName = lines[0].trim() + lines[1].trim();
 			objectName = hc.fixName(objectName);
 			int multiplier = 1;

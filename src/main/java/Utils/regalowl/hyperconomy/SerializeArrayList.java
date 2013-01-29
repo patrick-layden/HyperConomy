@@ -86,15 +86,7 @@ public class SerializeArrayList {
 	}
 	
 	
-	public String stringArrayToStringColumn(ArrayList<String> array) {
-		String string = "";
-		int c = 0;
-		while (c < array.size()) {
-			string = string + array.get(c) + "\n";
-			c++;
-		}
-		return string;
-	}
+
 	
 	public String doubleArrayToString(ArrayList<Double> array) {
 		String string = "";
@@ -114,6 +106,55 @@ public class SerializeArrayList {
 			c++;
 		}
 		return string;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public String stringArrayToStringNL(ArrayList<String> array) {
+		String string = "";
+		for (String item:array) {
+			string += (item + "\n");
+		}
+		return string;
+	}
+	
+	
+	public String stringArrayToStringA(ArrayList<String> array) {
+		String string = "";
+		for (String item:array) {
+			string += (item + "#");
+		}
+		return string;
+	}
+	
+	
+	
+	public ArrayList<String> stringToArrayA(String list) {
+		try {
+			ArrayList<String> array = new ArrayList<String>();
+			if (list.indexOf("#") == 0) {
+				list = list.substring(1, list.length());
+			}
+			if (!list.substring(list.length() - 1, list.length()).equalsIgnoreCase("#")) {
+				list = list + "#";
+			}
+			while (list.contains("#")) {
+				array.add(list.substring(0, list.indexOf("#")));
+				if (list.indexOf("#") == list.lastIndexOf("#")) {
+					break;
+				}
+				list = list.substring(list.indexOf("#") + 1, list.length());
+			}
+			return array;
+		} catch (Exception e) {
+			ArrayList<String> array = new ArrayList<String>();
+			return array;
+		}
 	}
 	
 

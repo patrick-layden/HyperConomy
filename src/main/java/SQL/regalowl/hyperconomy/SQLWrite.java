@@ -156,7 +156,7 @@ public class SQLWrite {
 		if (ft.fileExists(path)) {
 			String statements = ft.getStringFromFile(path);
 			ft.deleteFile(path);
-			return sal.stringToArray(statements);
+			return sal.stringToArrayA(statements);
 		} else {
 			ArrayList<String> empty = new ArrayList<String>();
 			return empty;

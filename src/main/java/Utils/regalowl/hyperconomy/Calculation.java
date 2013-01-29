@@ -89,7 +89,7 @@ public class Calculation {
 	public double getValue(String name, int amount, Player p) {
 		try {
 			DataFunctions sf = hc.getDataFunctions();
-			String playerecon = sf.getPlayerEconomy(p.getName());
+			String playerecon = sf.getHyperPlayer(p).getEconomy();
 			double totalvalue = 0;
 			int itemid = 0;
 			itemid = sf.getHyperObject(name, playerecon).getId();

@@ -100,7 +100,7 @@ public class ShopFactory {
 						shopecon = "default";
 					}
 					if (hc.getDataFunctions().testEconomy(shopecon)) {
-						hc.getDataFunctions().setPlayerEconomy(p.getName(), shopecon);
+						hc.getDataFunctions().getHyperPlayer(p).setEconomy(shopecon);
 					}
 				}
 			} else if (inShop == true) {

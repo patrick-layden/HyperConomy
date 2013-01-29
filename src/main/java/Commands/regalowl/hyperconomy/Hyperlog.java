@@ -22,7 +22,7 @@ public class Hyperlog {
 				return;
 			}
 
-			String statement = "SELECT * FROM hyperlog WHERE";
+			String statement = "SELECT * FROM hyperconomy_log WHERE";
 			for (int i = 0; i < args.length; i += 2) {
 
 				String type = args[i];

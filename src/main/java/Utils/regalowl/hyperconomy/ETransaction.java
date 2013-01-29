@@ -45,7 +45,7 @@ public class ETransaction {
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
 			String nenchant = "";
-			String playerecon = sf.getPlayerEconomy(p.getName());
+			String playerecon = sf.getHyperPlayer(p.getName()).getEconomy();
 			nenchant = sf.getHyperObject(name, playerecon).getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int lvl = Integer.parseInt(name.substring(name.length() - 1, name.length()));
@@ -114,7 +114,7 @@ public class ETransaction {
 		Notification not = hc.getNotify();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
-			String playerecon = sf.getPlayerEconomy(p.getName());
+			String playerecon = sf.getHyperPlayer(p.getName()).getEconomy();
 			String nenchant = sf.getHyperObject(name, playerecon).getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int shopstock = 0;
@@ -197,7 +197,7 @@ public class ETransaction {
 		Log log = hc.getLog();
 		try {
 			String nenchant = "";
-			String playerecon = sf.getPlayerEconomy(owner);
+			String playerecon = sf.getHyperPlayer(owner).getEconomy();
 			nenchant = sf.getHyperObject(name, playerecon).getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			String mater = p.getItemInHand().getType().toString();
@@ -257,7 +257,7 @@ public class ETransaction {
 		Log log = hc.getLog();
 		try {
 			String nenchant = "";
-			String playerecon = sf.getPlayerEconomy(owner);
+			String playerecon = sf.getHyperPlayer(owner).getEconomy();
 			nenchant = sf.getHyperObject(name, playerecon).getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			if (!containsEnchantment(p.getItemInHand(), ench)) {

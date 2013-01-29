@@ -544,7 +544,7 @@ public class ChestShop implements Listener{
 								    				int space = tran.getInventoryAvailableSpace(id, data, icevent.getView().getTopInventory(), 27);
 								    				if (space >= camount) {
 							    						double bal = acc.getBalance(line34);
-							    						double cost = calc.getTvalue(name, camount, hc.getDataFunctions().getPlayerEconomy(line34));
+							    						double cost = calc.getTvalue(name, camount, hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
 							    						if (setprice) {
 							    							cost = staticprice * camount;
 							    						}
@@ -589,7 +589,7 @@ public class ChestShop implements Listener{
 						    			if (slot < 27 && name != null) {
 						    				
 						    				if (buy) {
-						    					double price = calc.getTvalue(name, 1, hc.getDataFunctions().getPlayerEconomy(line34));
+						    					double price = calc.getTvalue(name, 1, hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
 						    					if (setprice) {
 						    						price = staticprice;
 						    					}
@@ -608,7 +608,7 @@ public class ChestShop implements Listener{
 						    					int itemamount = tran.countItems(id, data, icevent.getView().getTopInventory());
 						    					
 						    					if (itemamount > 0) {
-						    						double price = calc.getTvalue(name, 1, hc.getDataFunctions().getPlayerEconomy(line34));
+						    						double price = calc.getTvalue(name, 1, hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
 							    					if (setprice) {
 							    						price = staticprice;
 							    					}
@@ -638,7 +638,7 @@ public class ChestShop implements Listener{
 								    						int lvl = ench.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
 								    						String nam = hc.getEnchantData(enchantment.getName());
 								        					String fnam = nam + lvl;
-								        					price += calc.getEnchantValue(fnam, EnchantmentClass.fromString(p.getItemInHand().getType().toString()), hc.getDataFunctions().getPlayerEconomy(line34));
+								        					price += calc.getEnchantValue(fnam, EnchantmentClass.fromString(p.getItemInHand().getType().toString()), hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
 									    					if (setprice) {
 									    						price = staticprice;
 									    					}
@@ -699,7 +699,7 @@ public class ChestShop implements Listener{
 							    					int space = tran.getInventoryAvailableSpace(id, data, icevent.getView().getTopInventory(), 27);
 							    					if (space >= 1) {
 							    						double bal = acc.getBalance(line34);
-							    						double cost = calc.getTvalue(name, 1, hc.getDataFunctions().getPlayerEconomy(line34));
+							    						double cost = calc.getTvalue(name, 1, hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
 							    						if (setprice) {
 							    							cost = staticprice;
 							    						}

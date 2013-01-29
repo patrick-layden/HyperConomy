@@ -40,9 +40,9 @@ public class Audit {
 		HyperConomy hc = HyperConomy.hc;
 		String query = "";
 		if (type.equalsIgnoreCase("sale")) {
-			query = "SELECT SUM(MONEY) AS total FROM hyperlog WHERE CUSTOMER = '" + account + "' AND ACTION = 'sale'";
+			query = "SELECT SUM(MONEY) AS total FROM hyperconomy_log WHERE CUSTOMER = '" + account + "' AND ACTION = 'sale'";
 		} else if (type.equalsIgnoreCase("purchase")) {
-			query = "SELECT SUM(MONEY) AS total FROM hyperlog WHERE CUSTOMER = '" + account + "' AND ACTION = 'purchase'";
+			query = "SELECT SUM(MONEY) AS total FROM hyperconomy_log WHERE CUSTOMER = '" + account + "' AND ACTION = 'purchase'";
 		}
 		try {
 			hc.getSQLWrite().getConnectionPool().getConnectionForRead();
@@ -70,7 +70,7 @@ public class Audit {
 		try {
 			Connection connect = hc.getSQLWrite().getConnectionPool().getConnectionForRead();
 			Statement state = connect.createStatement();
-			ResultSet result = state.executeQuery("SELECT * FROM hyperauditlog WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
+			ResultSet result = state.executeQuery("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
 			double tBalance = 0.0;
 			//double lastSetBalance = -1;
 			while (result.next()) {

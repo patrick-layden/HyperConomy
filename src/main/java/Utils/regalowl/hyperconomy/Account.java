@@ -48,7 +48,7 @@ public class Account {
 			}
 		} else {
 			boolean result = false;
-			if ((df.getPlayerBalance(player) - money) >= 0) {
+			if ((df.getHyperPlayer(player).getBalance() - money) >= 0) {
 				result = true;
 			}
 			return result;
@@ -85,7 +85,7 @@ public class Account {
 			}
 		} else {
 			boolean result = false;
-			if ((df.getPlayerBalance(name) - money) >= 0) {
+			if ((df.getHyperPlayer(name).getBalance() - money) >= 0) {
 				result = true;
 			}
 			return result;
@@ -119,7 +119,7 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
-			df.setPlayerBalance(player, df.getPlayerBalance(player) - money);
+			df.getHyperPlayer(player).setBalance(df.getHyperPlayer(player).getBalance() - money);
 			l.writeAuditLog(player.getName(), "withdrawal", money, "HyperConomy");
 		}
 	}
@@ -148,7 +148,7 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
-			df.setPlayerBalance(name, df.getPlayerBalance(name) - money);
+			df.getHyperPlayer(name).setBalance(df.getHyperPlayer(name).getBalance() - money);
 			l.writeAuditLog(name, "withdrawal", money, "HyperConomy");
 		}
 	}
@@ -177,7 +177,8 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
-			df.setPlayerBalance(player, df.getPlayerBalance(player) + money);
+			HyperPlayer hp = df.getHyperPlayer(player);
+			hp.setBalance(hp.getBalance() + money);
 			l.writeAuditLog(player.getName(), "deposit", money, "HyperConomy");
 		}
 	}
@@ -206,7 +207,8 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
-			df.setPlayerBalance(name, df.getPlayerBalance(name) + money);
+			HyperPlayer hp = df.getHyperPlayer(name);
+			hp.setBalance(hp.getBalance() + money);
 			l.writeAuditLog(name, "deposit", money, "HyperConomy");
 		}
 	}
@@ -238,7 +240,8 @@ public class Account {
 			}
 		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-			df.setPlayerBalance(globalaccount, df.getPlayerBalance(globalaccount) - money);
+			HyperPlayer hp = df.getHyperPlayer(globalaccount);
+			hp.setBalance(hp.getBalance() - money);
 			l.writeAuditLog(globalaccount, "withdrawal", money, "HyperConomy");
 		}
 	}
@@ -269,7 +272,8 @@ public class Account {
 			}
 		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-			df.setPlayerBalance(globalaccount, df.getPlayerBalance(globalaccount) + money);
+			HyperPlayer hp = df.getHyperPlayer(globalaccount);
+			hp.setBalance(hp.getBalance() + money);
 			l.writeAuditLog(globalaccount, "deposit", money, "HyperConomy");
 		}
 	}
@@ -308,7 +312,7 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
-			df.setPlayerBalance(name, balance);
+			df.getHyperPlayer(name).setBalance(balance);
 			l.writeAuditLog(name, "setbalance", balance, "HyperConomy");
 		}
 	}
@@ -378,7 +382,7 @@ public class Account {
 		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 			boolean result = false;
-			if ((df.getPlayerBalance(globalaccount) - money) >= 0) {
+			if ((df.getHyperPlayer(globalaccount).getBalance() - money) >= 0) {
 				result = true;
 			}
 			return result;
@@ -416,7 +420,7 @@ public class Account {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 			if (!df.hasAccount(globalaccount)) {
 				df.createPlayerAccount(globalaccount);
-				df.setPlayerBalance(globalaccount, hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
+				df.getHyperPlayer(globalaccount).setBalance(hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
 				l.writeAuditLog(globalaccount, "initialization", hc.getYaml().getConfig().getDouble("config.initialshopbalance"), "HyperConomy");
 			}
 		}
@@ -447,7 +451,7 @@ public class Account {
 		    	return 0.0;
 			}
 		} else {
-			return calc.twoDecimals(df.getPlayerBalance(account));
+			return calc.twoDecimals(df.getHyperPlayer(account).getBalance());
 		}
 	}
 	
