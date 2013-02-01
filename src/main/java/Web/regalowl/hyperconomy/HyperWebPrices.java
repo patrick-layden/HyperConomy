@@ -14,18 +14,18 @@ public class HyperWebPrices extends AbstractHandler {
 	
 	private HyperConomy hc;
 	private Calculation calc;
+	private History hist;
 	private HyperWebStart hws;
 	private String page = "Please wait, the price page is loading...  Refresh your page in a few seconds.";
 	
 	@SuppressWarnings("deprecation")
-	public HyperWebPrices(HyperConomy hyc, Calculation c, HyperWebStart hyws) {
-		hc = hyc;
-		calc = c;
-		hws = hyws;
+	public HyperWebPrices(HyperWebStart hyperws) {
+		hc = HyperConomy.hc;
+		calc = hc.getCalculation();
+		hist = hc.getHistory();
+		hws = hyperws;
 		hc.getServer().getScheduler().scheduleAsyncRepeatingTask(hc, new Runnable() {
 			public void run() {
-				//SQLFunctions sf = hc.getSQLFunctions();
-				//ArrayList<String> econs = sf.getEconomyList();
 				page = buildPage(hws.getPageEconomy());
 			}
 		}, 400L, 6000L);
@@ -50,7 +50,7 @@ public class HyperWebPrices extends AbstractHandler {
 	 * 
 	 */
 		public double getThreadSafeValue(String name, String playerecon){
-			DataFunctions sf = hc.getDataFunctions();
+			DataHandler sf = hc.getDataFunctions();
 			try {
 				double cost = 0.0;
 				HyperObject ho = sf.getHyperObject(name, playerecon);
@@ -95,7 +95,7 @@ public class HyperWebPrices extends AbstractHandler {
 		 * 
 		 */
 			public double getThreadSafeCost(String name, String playerecon){
-				DataFunctions sf = hc.getDataFunctions();
+				DataHandler sf = hc.getDataFunctions();
 				try {
 					double cost = 0.0;
 					HyperObject ho = sf.getHyperObject(name, playerecon);
@@ -133,33 +133,6 @@ public class HyperWebPrices extends AbstractHandler {
 					return cost;			
 				}
 			}
-    
-		
-		
-		
-		
-		private String getThreadSafePercentChange(String itemn, int timevalue, String economy) {
-			String percentchange = "";
-			DataFunctions sf = hc.getDataFunctions();
-			double percentc = 0.0;
-		    double historicvalue = sf.getHistoryData(itemn, economy, timevalue);
-		    if (historicvalue == -1.0) {
-		        return "?";
-		    }
-			Double currentvalue = getThreadSafeValue(itemn, economy);
-			percentc = ((currentvalue - historicvalue)/historicvalue) * 100;
-			percentc = calc.twoDecimals(percentc);
-			percentchange = percentc + "";
-			return percentchange;
-		}
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		
@@ -167,7 +140,7 @@ public class HyperWebPrices extends AbstractHandler {
 			
 			String page = "";
 			if (!hc.sqlLock()) {
-				DataFunctions sf = hc.getDataFunctions();
+				DataHandler sf = hc.getDataFunctions();
 				ArrayList<String> names = hc.getNames();
 				ArrayList<Integer> timevalues = new ArrayList<Integer>();
 				timevalues.add(1);
@@ -335,7 +308,7 @@ public class HyperWebPrices extends AbstractHandler {
 					
 					if (hws.getUseHistory()) {
 						for (int j = 0; j < timevalues.size(); j++) {
-							String pc = getThreadSafePercentChange(names.get(i), timevalues.get(j), economy);
+							String pc = hist.getPercentChange(names.get(i), timevalues.get(j), economy);
 							String iclass = "";
 							if (pc.indexOf("-") != -1) {
 								iclass = "red";
@@ -345,7 +318,7 @@ public class HyperWebPrices extends AbstractHandler {
 								iclass = "green";
 							}
 							page += "<TD " + "class='" + iclass + "'>\n";
-							page += getThreadSafePercentChange(names.get(i), timevalues.get(j), economy) + "%\n";
+							page += hist.getPercentChange(names.get(i), timevalues.get(j), economy) + "%\n";
 							page += "</TD>\n";
 						}
 					}

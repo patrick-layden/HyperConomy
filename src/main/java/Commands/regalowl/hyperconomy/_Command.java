@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 public class _Command {
 	private Player player;
 	private HyperConomy hc;
-	private DataFunctions sf;
+	private DataHandler sf;
 	private String playerecon;
 	private String nonPlayerEconomy;
 

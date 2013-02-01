@@ -30,7 +30,7 @@ public class HyperConomy extends JavaPlugin {
 	private Notification not;
 	private TransactionSign tsign;
 	private ItemDisplayFactory itdi;
-	private DataFunctions df;
+	private DataHandler df;
 	private SQLWrite sw;
 	private SQLEconomy sqe;
 	private HyperWebStart hws;
@@ -87,6 +87,7 @@ public class HyperConomy extends JavaPlugin {
 			useExternalEconomy = false;
 		}
 		acc.checkshopAccount();
+		hist = new History();
 		itdi = new ItemDisplayFactory();
 	}
 
@@ -115,7 +116,7 @@ public class HyperConomy extends JavaPlugin {
 			usemysql = yaml.getConfig().getBoolean("config.sql-connection.use-mysql");
 			currency = yaml.getConfig().getString("config.currency-symbol");
 			useExternalEconomy = yaml.getConfig().getBoolean("config.use-external-economy-plugin");
-			df = new DataFunctions();
+			df = new DataHandler();
 			currency = this.getYaml().getConfig().getString("config.currency-symbol");
 			logerrors = this.getYaml().getConfig().getBoolean("config.log-errors");
 			serverVersion = this.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
@@ -129,7 +130,7 @@ public class HyperConomy extends JavaPlugin {
 				databaseOk = sqe.checkSQLLite();
 			}
 			if (databaseOk) {
-				sw = new SQLWrite(this);
+				sw = new SQLWrite();
 				migrate = sqe.checkData();
 			} else {
 				log.severe(L.get("LOG_BREAK"));
@@ -157,8 +158,6 @@ public class HyperConomy extends JavaPlugin {
 			}
 			s.startshopCheck();
 			startSave();
-			hist = new History(this, calc, ench, isign);
-			hist.starthistoryLog();
 			tsign.setTransactionSign(this, tran, calc, ench, l, acc, not);
 			new ChestShop();
 			hws = new HyperWebStart();
@@ -176,14 +175,13 @@ public class HyperConomy extends JavaPlugin {
 			stopSave();
 		}
 		if (hist != null) {
-			hist.stophistoryLog();
+			hist.stopHistoryLog();
 		}
 		if (hws != null) {
 			hws.endServer();
 		}
 		if (sw != null) {
-			sw.closeConnections();
-			new SQLShutdown(this, sw);
+			sw.shutDown();
 		}
 		if (yaml != null) {
 			yaml.saveYamls();
@@ -307,20 +305,22 @@ public class HyperConomy extends JavaPlugin {
 
 		names.clear();
 
-		inames = df.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
-		ArrayList<String> iids = df.getStringColumn("SELECT ID FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
-		ArrayList<String> idatas = df.getStringColumn("SELECT DATA FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+		SQLSelect ss = new SQLSelect();
+		inames = ss.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+		ArrayList<String> iids = ss.getStringColumn("SELECT ID FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
+		ArrayList<String> idatas = ss.getStringColumn("SELECT DATA FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
 		for (int c = 0; c < inames.size(); c++) {
 			namedata.put(iids.get(c) + ":" + idatas.get(c), inames.get(c));
 		}
-		enames = df.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE TYPE='enchantment' AND ECONOMY='default'");
-		ArrayList<String> eids = df.getStringColumn("SELECT MATERIAL FROM hyperconomy_objects WHERE TYPE='enchantment' AND ECONOMY='default'");
+		enames = ss.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE TYPE='enchantment' AND ECONOMY='default'");
+		ArrayList<String> eids = ss.getStringColumn("SELECT MATERIAL FROM hyperconomy_objects WHERE TYPE='enchantment' AND ECONOMY='default'");
 		for (int c = 0; c < enames.size(); c++) {
 			String enchantname = enames.get(c);
 			enchantdata.put(eids.get(c), enchantname.substring(0, enchantname.length() - 1));
 		}
-		names = df.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE ECONOMY='default'");
-
+		names = ss.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE ECONOMY='default'");
+		ss.closeConnection();
+		ss = null;
 		return true;
 	}
 
@@ -352,7 +352,7 @@ public class HyperConomy extends JavaPlugin {
 				lock = true;
 				s.stopshopCheck();
 				//l.stopBuffer();
-				hist.stophistoryLog();
+				hist.stopHistoryLog();
 				isign.stopSignUpdate();
 				isign.reloadSigns();
 				//l.saveBuffer();
@@ -538,7 +538,7 @@ public class HyperConomy extends JavaPlugin {
 		return enchantdata.get(key);
 	}
 
-	public DataFunctions getDataFunctions() {
+	public DataHandler getDataFunctions() {
 		return df;
 	}
 
@@ -588,6 +588,10 @@ public class HyperConomy extends JavaPlugin {
 
 	public ItemDisplayFactory getItemDisplay() {
 		return itdi;
+	}
+	
+	public History getHistory() {
+		return hist;
 	}
 
 	public LanguageFile getLanguageFile() {

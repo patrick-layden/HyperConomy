@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 public class Setstock {
 	Setstock(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();

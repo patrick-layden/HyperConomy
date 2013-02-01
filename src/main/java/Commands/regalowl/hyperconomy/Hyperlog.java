@@ -15,7 +15,7 @@ public class Hyperlog {
 	Hyperlog(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataFunctions df = hc.getDataFunctions();
+		DataHandler df = hc.getDataFunctions();
 		try {
 			if (args.length % 2 != 0 || args.length == 0) {
 				sender.sendMessage(L.get("HYPERLOG_INVALID"));
@@ -121,10 +121,10 @@ public class Hyperlog {
 	}
 
 	public ArrayList<String> getHyperLog(String statement) {
-		HyperConomy hc = HyperConomy.hc;
 		ArrayList<String> entries = new ArrayList<String>();
 		try {
-			Connection connect = hc.getSQLWrite().getConnectionPool().getConnectionForRead();
+			SQLSelect ss = new SQLSelect();
+			Connection connect = ss.getConnection();
 			Statement state = connect.createStatement();
 			ResultSet result = state.executeQuery(statement);
 			while (result.next()) {
@@ -151,6 +151,7 @@ public class Hyperlog {
 			result.close();
 			state.close();
 			connect.close();
+			ss = null;
 			return entries;
 		} catch (SQLException e) {
 			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "hyperconomy.error");

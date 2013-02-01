@@ -45,8 +45,8 @@ public class Audit {
 			query = "SELECT SUM(MONEY) AS total FROM hyperconomy_log WHERE CUSTOMER = '" + account + "' AND ACTION = 'purchase'";
 		}
 		try {
-			hc.getSQLWrite().getConnectionPool().getConnectionForRead();
-			Connection connect = hc.getSQLWrite().getConnectionPool().getConnectionForRead();
+			SQLSelect ss = new SQLSelect();
+			Connection connect = ss.getConnection();
 			Statement state = connect.createStatement();
 			ResultSet result = state.executeQuery(query);
 			double amount = 0.0;
@@ -56,6 +56,7 @@ public class Audit {
 			result.close();
 			state.close();
 			connect.close();
+			ss = null;
 			return amount;
 		} catch (SQLException e) {
 			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "hyperconomy.error");
@@ -68,7 +69,8 @@ public class Audit {
 	public Double getAuditLogTotal(String account) {
 		HyperConomy hc = HyperConomy.hc;
 		try {
-			Connection connect = hc.getSQLWrite().getConnectionPool().getConnectionForRead();
+			SQLSelect ss = new SQLSelect();
+			Connection connect = ss.getConnection();
 			Statement state = connect.createStatement();
 			ResultSet result = state.executeQuery("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
 			double tBalance = 0.0;
@@ -89,6 +91,7 @@ public class Audit {
 			result.close();
 			state.close();
 			connect.close();
+			ss = null;
 			return tBalance;
 		} catch (SQLException e) {
 			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "hyperconomy.error");

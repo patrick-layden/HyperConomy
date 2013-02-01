@@ -11,7 +11,6 @@ public class HyperWebStart {
 
 	private Logger log = Logger.getLogger("Minecraft");
 	private HyperConomy hc;
-	private Calculation calc;
 	private HyperWebStart hws;
 	private int serverid;
 	private Server server;
@@ -22,7 +21,6 @@ public class HyperWebStart {
 	
 	HyperWebStart() {
 		hc = HyperConomy.hc;
-		calc = hc.getCalculation();
 		hws = this;
 		L = hc.getLanguageFile();
 		
@@ -59,7 +57,7 @@ public class HyperWebStart {
     			public void run() {
     			System.setProperty("org.eclipse.jetty.LEVEL", "WARN");
 	            server = new Server(port);
-	            server.setHandler(new HyperWebPrices(hc, calc, hws));
+	            server.setHandler(new HyperWebPrices(hws));
 	            try {
 					server.start();
 					server.join();

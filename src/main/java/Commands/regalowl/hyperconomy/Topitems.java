@@ -13,7 +13,7 @@ public class Topitems {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			if (args.length > 1) {

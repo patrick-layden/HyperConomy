@@ -7,9 +7,7 @@ public class Backup {
 	Backup() {
 		HyperConomy hc = HyperConomy.hc;
 		SQLWrite sw = hc.getSQLWrite();
-		int bufferSize = sw.getBufferSize();
 		
-		if (bufferSize == 0) {
 			FileTools ft = new FileTools();
 			
 			ArrayList<String> backupFiles = new ArrayList<String>();
@@ -21,10 +19,10 @@ public class Backup {
 			backupFiles.add("signs.yml");
 			backupFiles.add("categories.yml");
 			if (hc.useMySQL()) {
-				sw.writeData("CREATE TABLE hyperconomy_objects_backup LIKE hyperconomy_objects; INSERT INTO hyperconomy_objects_backup SELECT * FROM hyperconomy_objects");
-				sw.writeData("CREATE TABLE hyperconomy_players_backup LIKE hyperconomy_players; INSERT INTO hyperconomy_players_backup SELECT * FROM hyperconomy_players");
-				sw.writeData("CREATE TABLE hyperconomy_log_backup LIKE hyperconomy_log; INSERT INTO hyperconomy_log_backup SELECT * FROM hyperconomy_log");
-				sw.writeData("CREATE TABLE hyperconomy_audit_log_backup LIKE hyperconomy_audit_log; INSERT INTO hyperconomy_audit_log_backup SELECT * FROM hyperconomy_audit_log");
+				sw.executeSQL("CREATE TABLE hyperconomy_objects_backup LIKE hyperconomy_objects; INSERT INTO hyperconomy_objects_backup SELECT * FROM hyperconomy_objects");
+				sw.executeSQL("CREATE TABLE hyperconomy_players_backup LIKE hyperconomy_players; INSERT INTO hyperconomy_players_backup SELECT * FROM hyperconomy_players");
+				sw.executeSQL("CREATE TABLE hyperconomy_log_backup LIKE hyperconomy_log; INSERT INTO hyperconomy_log_backup SELECT * FROM hyperconomy_log");
+				sw.executeSQL("CREATE TABLE hyperconomy_audit_log_backup LIKE hyperconomy_audit_log; INSERT INTO hyperconomy_audit_log_backup SELECT * FROM hyperconomy_audit_log");
 			}
 			
 			backupFiles.add("HyperConomy.db");
@@ -51,8 +49,5 @@ public class Backup {
 			for (int i = 0; i < backupFiles.size(); i++) {
 				ft.copyFile(spath + File.separator + backupFiles.get(i), dpath + File.separator + backupFiles.get(i));
 			}
-		} else {
-			
-		}
 	}
 }

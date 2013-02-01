@@ -58,7 +58,7 @@ config:
     password: default
     host: localhost
     database: minecraft
-    max-sql-threads: 5
+    max-sql-threads: 4
   web-page:
     port: 8765
     use-web-page: false

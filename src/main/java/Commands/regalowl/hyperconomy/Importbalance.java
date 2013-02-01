@@ -10,7 +10,7 @@ public class Importbalance {
 	Importbalance(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataFunctions df = hc.getDataFunctions();
+		DataHandler df = hc.getDataFunctions();
 		Economy econ = hc.getEconomy();
 		Log l = hc.getLog();
 		try {

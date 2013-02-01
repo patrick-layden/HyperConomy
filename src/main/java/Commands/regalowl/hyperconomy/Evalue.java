@@ -12,7 +12,7 @@ public class Evalue {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();

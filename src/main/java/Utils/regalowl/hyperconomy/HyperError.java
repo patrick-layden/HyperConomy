@@ -70,7 +70,7 @@ public class HyperError {
 					} catch (FileNotFoundException e1) {
 						e1.printStackTrace();
 					}
-					DataFunctions sf = hc.getDataFunctions();
+					DataHandler sf = hc.getDataFunctions();
 					info = ft.getTimeStamp() + "\r\n"
 					+ "HyperConomy version: " + hc.getServerVersion() + "\r\n"
 					+ Bukkit.getName() + " version: " + Bukkit.getServer().getBukkitVersion() + "\r\n"

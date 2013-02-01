@@ -32,7 +32,7 @@ public class Log {
 		            + " Values (datetime('NOW', 'localtime'),'" + playername + "','" + action + "','" + object + "','" + amount + "','" + hc.getCalculation().twoDecimals(money) + "','" + hc.getCalculation().twoDecimals(tax) + "','" + store + 
 		        "','" + type + "')";
 		}
-		hc.getSQLWrite().writeData(statement);
+		hc.getSQLWrite().executeSQL(statement);
 	}
 	
 	public void writeAuditLog(String account, String action, Double amount, String economy) {
@@ -42,7 +42,7 @@ public class Log {
 		} else {
 			statement = "Insert Into hyperconomy_audit_log (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) Values (datetime('NOW', 'localtime'),'" + account + "','" + action + "','" + amount + "','" + economy + "')";
 		}
-		hc.getSQLWrite().writeData(statement);
+		hc.getSQLWrite().executeSQL(statement);
 
 	}
 

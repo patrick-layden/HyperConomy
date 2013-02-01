@@ -9,7 +9,7 @@ public class Scalebypercent {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		try {
-			DataFunctions sf = hc.getDataFunctions();
+			DataHandler sf = hc.getDataFunctions();
 			Calculation calc = hc.getCalculation();
 			InfoSignHandler isign = hc.getInfoSignHandler();
 			ArrayList<String> names = new ArrayList<String>();;

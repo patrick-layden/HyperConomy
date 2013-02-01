@@ -88,7 +88,7 @@ public class Calculation {
 	 */
 	public double getValue(String name, int amount, Player p) {
 		try {
-			DataFunctions sf = hc.getDataFunctions();
+			DataHandler sf = hc.getDataFunctions();
 			String playerecon = sf.getHyperPlayer(p).getEconomy();
 			double totalvalue = 0;
 			int itemid = 0;
@@ -152,7 +152,7 @@ public class Calculation {
 	 */
 	public double getCost(String name, int amount, String playerecon) {
 		try {
-			DataFunctions sf = hc.getDataFunctions();
+			DataHandler sf = hc.getDataFunctions();
 			double cost = 0;
 			boolean isstatic = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic());
 			if (isstatic == false) {
@@ -212,7 +212,7 @@ public class Calculation {
 	 */
 	public double getEnchantValue(String name, EnchantmentClass eclass, String playerecon) {
 		try {
-			DataFunctions sf = hc.getDataFunctions();
+			DataHandler sf = hc.getDataFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction etran = hc.getETransaction();
 			double cost = 0;
@@ -269,7 +269,7 @@ public class Calculation {
 	 */
 	public double getEnchantCost(String name, EnchantmentClass eclass, String playerecon) {
 		try {
-			DataFunctions sf = hc.getDataFunctions();
+			DataHandler sf = hc.getDataFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction etran = hc.getETransaction();
 			double cost = 0;
@@ -452,7 +452,7 @@ public class Calculation {
 	 * 
 	 */
 	public double getTvalue(String name, int amount, String playerecon) {
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		try {
 			double cost = 0;
 			int counter = 0;
@@ -623,7 +623,7 @@ public class Calculation {
 	}
 
 	public double getPurchaseTax(String name, String economy, double cost) {
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		boolean isinitial = Boolean.parseBoolean(sf.getHyperObject(name, economy).getInitiation());
 		boolean isstatic = Boolean.parseBoolean(sf.getHyperObject(name, economy).getIsstatic());
 		double tax = 0.0;
@@ -638,7 +638,7 @@ public class Calculation {
 	}
 
 	public double getEnchantTax(String name, String economy, double cost) {
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		boolean isstatic = Boolean.parseBoolean(sf.getHyperObject(name, economy).getIsstatic());
 		double tax = 0.0;
 		if (isstatic) {
@@ -650,7 +650,7 @@ public class Calculation {
 	}
 
 	public double getCeiling(String name, String economy) {
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		double ceiling = sf.getHyperObject(name, economy).getCeiling();
 		double floor = sf.getHyperObject(name, economy).getFloor();
 		if (ceiling <= 0 || floor > ceiling) {
@@ -660,7 +660,7 @@ public class Calculation {
 	}
 
 	public double getFloor(String name, String economy) {
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		double floor = sf.getHyperObject(name, economy).getFloor();
 		double ceiling = sf.getHyperObject(name, economy).getCeiling();
 		if (floor < 0 || ceiling < floor) {

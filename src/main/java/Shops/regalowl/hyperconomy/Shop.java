@@ -180,4 +180,28 @@ public class Shop {
 	}
 	
 	
+	public int getP1x() {
+		return p1x;
+	}
+
+	public int getP1y() {
+		return p1y;
+	}
+
+	public int getP1z() {
+		return p1z;
+	}
+
+	public int getP2x() {
+		return p2x;
+	}
+
+	public int getP2y() {
+		return p2y;
+	}
+
+	public int getP2z() {
+		return p2z;
+	}
+	
 }

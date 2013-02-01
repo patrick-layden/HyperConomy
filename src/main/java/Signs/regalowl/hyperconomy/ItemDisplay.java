@@ -84,7 +84,7 @@ public class ItemDisplay {
 	}
 	
 	public Item makeDisplay() {
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		Location l = new Location(w, x, y + 1, z);
 		ItemStack dropstack = new ItemStack(sf.getHyperObject(name, economy).getId());
 		dropstack.setDurability((short) sf.getHyperObject(name, economy).getDurability());

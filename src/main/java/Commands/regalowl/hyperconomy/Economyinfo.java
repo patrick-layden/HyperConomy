@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 public class Economyinfo {
 	Economyinfo(_Command command, String args[], CommandSender sender, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0) {

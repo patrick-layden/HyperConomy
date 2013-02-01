@@ -65,7 +65,7 @@ public class SQLEconomy {
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE, PRIMARY KEY (NAME, ECONOMY))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL PRIMARY KEY, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0')");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_log (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT)");
-			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, COUNT INT)");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE)");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL)");
 			state.close();
 			connect.close();
@@ -106,7 +106,7 @@ public class SQLEconomy {
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE, PRIMARY KEY (NAME, ECONOMY))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', PRIMARY KEY (PLAYER))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_log (ID INT NOT NULL AUTO_INCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT, PRIMARY KEY (ID))");
-			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INT NOT NULL AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, COUNT INT, PRIMARY KEY (ID))");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INT NOT NULL AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, PRIMARY KEY (ID))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INT NOT NULL AUTO_INCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL, PRIMARY KEY (ID))");
 			state.close();
 			connect.close();
@@ -135,17 +135,12 @@ public class SQLEconomy {
 			if (numcolumns != 3) {
 				state.execute("DROP TABLE hyperplayers");
 				state.execute("CREATE TABLE IF NOT EXISTS hyperplayers (PLAYER TINYTEXT, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0')");
-			}
-			
-			state.close();
-			connect.close();		
-			SQLUtils su = new SQLUtils();
-			boolean exists = su.fieldExists(host, port, database, username, password, "hyperobjects", "ceiling");
+			}	
+			SQLSelect ss = new SQLSelect();
+			boolean exists = ss.fieldExists("hyperobjects", "ceiling");
 			if (!exists) {
-				String statement = "ALTER TABLE hyperobjects ADD CEILING DOUBLE AFTER STARTPRICE";
-				su.executeSQL(host, port, database, username, password, statement);
-				statement = "ALTER TABLE hyperobjects ADD FLOOR DOUBLE AFTER CEILING";
-				su.executeSQL(host, port, database, username, password, statement);
+				state.execute("ALTER TABLE hyperobjects ADD CEILING DOUBLE AFTER STARTPRICE");
+				state.execute("ALTER TABLE hyperobjects ADD FLOOR DOUBLE AFTER CEILING");
 			}		
 			state.execute("ALTER TABLE hyperobjects CHANGE NAME NAME VARCHAR(255) NOT NULL");
 			state.execute("ALTER TABLE hyperobjects CHANGE ECONOMY ECONOMY VARCHAR(255) NOT NULL");
@@ -153,6 +148,7 @@ public class SQLEconomy {
 			state.execute("ALTER TABLE hyperobjects ADD PRIMARY KEY(NAME, ECONOMY)");
 			state.execute("ALTER TABLE hyperplayers ADD PRIMARY KEY(PLAYER)");
 			state.execute("ALTER TABLE hyperobjects ADD MAXSTOCK DOUBLE AFTER FLOOR");
+			state.execute("ALTER TABLE hyperhistory DROP COUNT");
 			state.execute("ALTER TABLE hyperobjects RENAME TO hyperconomy_objects");
 			state.execute("ALTER TABLE hyperplayers RENAME TO hyperconomy_players");
 			state.execute("ALTER TABLE hyperlog RENAME TO hyperconomy_log");
@@ -170,7 +166,10 @@ public class SQLEconomy {
 	public boolean checkData() {
 		boolean migrate = false;
 		ArrayList<String> testdata = new ArrayList<String>();
-		testdata = hc.getDataFunctions().getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE ECONOMY='default'");
+		SQLSelect ss = new SQLSelect();
+		testdata = ss.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE ECONOMY='default'");
+		ss.closeConnection();
+		ss = null;
 		if (testdata.size() == 0) {
 			migrate = true;
 			new Backup();
@@ -213,11 +212,11 @@ public class SQLEconomy {
 					+ enchantsyaml.getString(ename + ".price.static") + "','" + enchantsyaml.getDouble(ename + ".price.staticprice") + "','" + enchantsyaml.getDouble(ename + ".stock.stock") + "','" + enchantsyaml.getDouble(ename + ".stock.median") + "','" + enchantsyaml.getString(ename + ".initiation.initiation") + "','" + enchantsyaml.getDouble(ename + ".initiation.startprice") + "','" + enchantsyaml.getDouble(ename + ".price.ceiling") + "','" + enchantsyaml.getDouble(ename + ".price.floor") + "','" + enchantsyaml.getDouble(ename + ".stock.maxstock") + "')");
 		}
 		SQLWrite sw = hc.getSQLWrite();
-		sw.writeData(statements);
+		sw.executeSQL(statements);
 		hc.getDataFunctions().load();
 	}
 	public void createNewEconomy(String economy) {
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		ArrayList<String> items = hc.getInames();
 		ArrayList<String> enchants = hc.getEnames();
 		ArrayList<String> statements = new ArrayList<String>();
@@ -239,16 +238,16 @@ public class SQLEconomy {
 					+ ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + 0.0 + "','" + ho.getMedian() + "','" + "true" + "','" + ho.getStartprice() + "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
 		}
 		SQLWrite sw = hc.getSQLWrite();
-		sw.writeData(statements);
+		sw.executeSQL(statements);
 		hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
 			public void run() {
-				DataFunctions sf = hc.getDataFunctions();
+				DataHandler sf = hc.getDataFunctions();
 				sf.load();
 			}
 		}, 100L);
 	}
 	public void deleteEconomy(String economy) {
-		hc.getSQLWrite().writeData("DELETE FROM hyperconomy_objects WHERE ECONOMY='" + economy + "'");
+		hc.getSQLWrite().executeSQL("DELETE FROM hyperconomy_objects WHERE ECONOMY='" + economy + "'");
 	}
 	public ArrayList<String> loadItems(String economy) {
 		FileConfiguration itemsyaml = hc.getYaml().getItems();
@@ -256,8 +255,8 @@ public class SQLEconomy {
 		ArrayList<String> statements = new ArrayList<String>();
 		ArrayList<String> objectsAdded = new ArrayList<String>();
 		Iterator<String> it = itemsyaml.getKeys(false).iterator();
-		DataFunctions sf = hc.getDataFunctions();
-		ArrayList<String> keys = sf.getKeys();
+		DataHandler sf = hc.getDataFunctions();
+		ArrayList<String> keys = sf.getObjectKeys();
 		while (it.hasNext()) {
 			String itemname = it.next().toString();
 			String key = itemname + ":" + economy;
@@ -286,14 +285,14 @@ public class SQLEconomy {
 			}
 		}
 		SQLWrite sw = hc.getSQLWrite();
-		sw.writeData(statements);
+		sw.executeSQL(statements);
 		hc.getDataFunctions().load();
 		return objectsAdded;
 	}
 	public void exportToYml(String economy) {
 		FileConfiguration items = hc.getYaml().getItems();
 		FileConfiguration enchants = hc.getYaml().getEnchants();
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		ArrayList<String> names = new ArrayList<String>();
 		Iterator<String> it = items.getKeys(false).iterator();
 		while (it.hasNext()) {
@@ -406,4 +405,5 @@ public class SQLEconomy {
 		}
 		hc.getYaml().saveYamls();
 	}
+	
 }

@@ -10,7 +10,7 @@ public class Importprices {
 	Importprices(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 
 		try {
 			if (args.length == 1) {

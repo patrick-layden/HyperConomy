@@ -26,6 +26,10 @@ public class InfoSign {
 	private String line3;
 	private String line4;
 	private boolean dataOk;
+	
+	private int timeValueHours;
+	private int timeValue;
+	private String increment;
 
 	InfoSign(String signKey, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass) {
 		this.multiplier = multiplier;
@@ -216,37 +220,23 @@ public class InfoSign {
 					}
 					String timev = ChatColor.stripColor(line4.replace(" ", "")).toUpperCase().replaceAll("[A-Z]", "");
 					int timevalue;
+					int timevalueHours;
 					if (timev.contains("(")) {
 						timevalue = Integer.parseInt(timev.substring(0, timev.indexOf("(")));
 					} else {
 						timevalue = Integer.parseInt(timev);
 					}
-					String percentchange = "";
-					String colorcode = "\u00A71";
+					timevalueHours = timevalue;
 					if (increment.equalsIgnoreCase("h")) {
-						percentchange = getpercentChange(objectName, timevalue, economy);
-						colorcode = getcolorCode(percentchange);
+						timevalueHours *= 1;
 					} else if (increment.equalsIgnoreCase("d")) {
-						timevalue = timevalue * 24;
-						percentchange = getpercentChange(objectName, timevalue, economy);
-						colorcode = getcolorCode(percentchange);
-						timevalue = timevalue / 24;
+						timevalueHours *= 24;
 					} else if (increment.equalsIgnoreCase("w")) {
-						timevalue = timevalue * 168;
-						percentchange = getpercentChange(objectName, timevalue, economy);
-						colorcode = getcolorCode(percentchange);
-						timevalue = timevalue / 168;
+						timevalueHours *= 168;
 					} else if (increment.equalsIgnoreCase("m")) {
-						timevalue = timevalue * 672;
-						percentchange = getpercentChange(objectName, timevalue, economy);
-						colorcode = getcolorCode(percentchange);
-						timevalue = timevalue / 672;
+						timevalueHours *= 672;
 					}
-					line3 = ChatColor.WHITE + "History:";
-					line4 = ChatColor.WHITE + "" + timevalue + increment.toLowerCase() + colorcode + "(" + percentchange + ")";
-					if (line3.length() > 14) {
-						line3 = line3.substring(0, 13) + ")";
-					}
+					updateHistorySign(timevalueHours, timevalue, increment);
 					break;
 				case TAX:
 					if (isEnchantment) {
@@ -282,13 +272,45 @@ public class InfoSign {
 			dataOk = false;
 			return false;
 		}
-		s.setLine(0, line1);
-		s.setLine(1, line2);
-		s.setLine(2, line3);
-		s.setLine(3, line4);
-		s.update();
+		if (!type.equals(SignType.HISTORY)) {
+			s.setLine(0, line1);
+			s.setLine(1, line2);
+			s.setLine(2, line3);
+			s.setLine(3, line4);
+			s.update();
+		}
 		return true;
 	}
+	
+	
+	@SuppressWarnings("deprecation")
+	private void updateHistorySign(int timevalueHours, int timevalue, String inc) {
+		this.timeValueHours = timevalueHours;
+		this.timeValue = timevalue;
+		this.increment = inc;
+		hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
+    		public void run() {
+    			String percentchange = hc.getHistory().getPercentChange(objectName, timeValueHours, economy);
+    			String colorcode = getcolorCode(percentchange);
+    			line3 = ChatColor.WHITE + "History:";
+    			line4 = ChatColor.WHITE + "" + timeValue + increment.toLowerCase() + colorcode + "(" + percentchange + ")";
+    			if (line3.length() > 14) {
+    				line3 = line3.substring(0, 13) + ")";
+    			}
+    			hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+    	    		public void run() {
+    	    			s.setLine(0, line1);
+    	    			s.setLine(1, line2);
+    	    			s.setLine(2, line3);
+    	    			s.setLine(3, line4);
+    	    			s.update();
+    	    		}
+    	    	}, 0L);
+    		}
+    	}, 0L);
+
+	}
+	
 
 	private String getcolorCode(String percentchange) {
 		String colorcode = "\u00A71";
@@ -304,26 +326,8 @@ public class InfoSign {
 		}
 		return colorcode;
 	}
+	
+	
 
-	private String getpercentChange(String itemn, int timevalue, String economy) {
-		Calculation calc = hc.getCalculation();
-		String percentchange = "";
-		DataFunctions sf = hc.getDataFunctions();
-		double percentc = 0.0;
-		double historicvalue = sf.getHistoryData(itemn, economy, timevalue);
-		if (historicvalue == -1.0) {
-			return "?";
-		}
-		if (hc.itemTest(itemn)) {
-			Double currentvalue = calc.getTvalue(itemn, 1, economy);
-			percentc = ((currentvalue - historicvalue) / historicvalue) * 100;
-			percentc = calc.round(percentc, 3);
-		} else if (hc.enchantTest(itemn)) {
-			Double currentvalue = calc.getEnchantValue(itemn, EnchantmentClass.DIAMOND, economy);
-			percentc = ((currentvalue - historicvalue) / historicvalue) * 100;
-			percentc = calc.round(percentc, 3);
-		}
-		percentchange = percentc + "";
-		return percentchange;
-	}
+
 }

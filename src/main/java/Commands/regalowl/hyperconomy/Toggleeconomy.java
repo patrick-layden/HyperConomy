@@ -19,10 +19,12 @@ public class Toggleeconomy {
 			if (hc.useExternalEconomy()) {
 				hc.getYaml().getConfig().set("config.use-external-economy-plugin", false);
 				hc.setUseExternalEconomy(false);
+				hc.getAccount().checkshopAccount();
 				sender.sendMessage(L.get("TOGGLEECONOMY_DISABLED"));
 			} else {
 				hc.getYaml().getConfig().set("config.use-external-economy-plugin", true);
 				hc.setUseExternalEconomy(true);
+				hc.getAccount().checkshopAccount();
 				sender.sendMessage(L.get("TOGGLEECONOMY_ENABLED"));
 			}
 		} catch (Exception e) {

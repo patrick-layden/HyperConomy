@@ -8,10 +8,9 @@ public class Hcclearhistory {
 	Hcclearhistory(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataFunctions sf = hc.getDataFunctions();
-
+		History hist = hc.getHistory();
 		try {
-			sf.clearHistory();
+			hist.clearHistory();
 			sender.sendMessage(L.get("HCCLEARHISTORY_CLEARED"));
 		} catch (Exception e) {
 			sender.sendMessage(L.get("HCCLEARHISTORY_INVALID"));

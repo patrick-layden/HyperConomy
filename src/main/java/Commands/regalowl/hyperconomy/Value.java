@@ -8,7 +8,7 @@ public class Value {
 
 	Value(String args[], CommandSender sender, String playerecon) {
 		hc = HyperConomy.hc;
-		DataFunctions sf = hc.getDataFunctions();
+		DataHandler sf = hc.getDataFunctions();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		Player player = null;

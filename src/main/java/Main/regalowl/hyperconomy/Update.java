@@ -139,7 +139,7 @@ public class Update {
 	    	}
 	    	String t29 = yaml.getConfig().getString("config.sql-connection.max-sql-threads");
 	    	if (t29 == null) {
-	    		yaml.getConfig().set("config.sql-connection.max-sql-threads", 20);
+	    		yaml.getConfig().set("config.sql-connection.max-sql-threads", 4);
 	    	}
 	    	String t30 = yaml.getConfig().getString("config.web-page.port");
 	    	if (t30 == null) {

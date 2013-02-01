@@ -14,72 +14,130 @@ public class History {
 	private HyperConomy hc;
 	private Calculation calc;
 	private InfoSignHandler isign;
-	
-	private ArrayList<String> historykeys = new ArrayList<String>();
+	private DataHandler df;
+	private SQLWrite sw;
 
-	
-	private long historyloginterval;
 	private int historylogtaskid;
-	private DataFunctions sf;
+
+	private int daysToSaveHistory;
 	
-	//For server start.
-	History(HyperConomy hyperc, Calculation cal, ETransaction enchant, InfoSignHandler infosign) {
-		hc = hyperc;
-		calc = cal;
-		isign = infosign;
-
-		historyloginterval = 72000;
-		//historyloginterval = 800;
+	private long lastTime;
+	private long timeCounter;
+	
+	History() {
+		hc = HyperConomy.hc;
+		calc = hc.getCalculation();
+		isign = hc.getInfoSignHandler();
+		sw = hc.getSQLWrite();
+		df = hc.getDataFunctions();
+		SQLSelect ss = new SQLSelect();
+		daysToSaveHistory = hc.getYaml().getConfig().getInt("config.daystosavehistory");
+		lastTime = System.currentTimeMillis();
+		String tc = ss.getSettingValue("history_time_counter");
+		if (tc == null) {
+			sw.addSetting("history_time_counter", "0");
+			timeCounter = 0;
+		} else {
+			try {
+				timeCounter = Long.parseLong(tc);
+			} catch (Exception e) {
+				new HyperError(e);
+			}
+		}
+		startTimer();
 	}
+	
 
 
 
-  	
-  	public void writehistoryThread() {
-  			sf = hc.getDataFunctions();
-  			historykeys = sf.getKeys();
-  			
-  			ArrayList<String> inames = hc.getInames();
-  			ArrayList<String> enames = hc.getEnames();
-  			
-  			for (int i = 0; i < historykeys.size(); i++) {
-  				String key = historykeys.get(i);
-  				String name = key.substring(0, key.indexOf(":"));
-  				String economy = key.substring(key.indexOf(":") + 1, key.length());
-  				Double price = 0.0;
-  				if (inames.contains(name)) {
-  					price = calc.getTvalue(name, 1, economy);
-  				} else if (enames.contains(name)) {
-  					price = calc.getEnchantValue(name, EnchantmentClass.DIAMOND, economy);
+	
+    private void startTimer() {
+    	if (hc.getYaml().getConfig().getBoolean("config.store-price-history")) {
+			historylogtaskid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
+			    public void run() {
+			    	long currentTime = System.currentTimeMillis();
+			    	timeCounter += (currentTime - lastTime);
+			    	lastTime = currentTime;
+			    	//if (timeCounter >= 3600000) {
+			    	if (timeCounter >= 120000) {
+			    		timeCounter = 0;
+			    		writeHistoryThread();
+						hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+						    public void run() {
+						    	isign.updateSigns();
+						    }
+						}, 1200L);
+			    	}
+			    	sw.updateSetting("history_time_counter", timeCounter + "");
+			    }
+			}, 600, 600);
+    	}
+    }
+	
+
+	
+  	private void writeHistoryThread() {
+  		ArrayList<String> objects = hc.getNames();
+  		ArrayList<String> economies = df.getEconomyList();
+  		for (String object:objects) {
+  			for (String economy:economies) {
+  				if (hc.itemTest(object)) {
+  					writeHistoryData(object, economy, calc.getTvalue(object, 1, economy));
+  				} else if (hc.enchantTest(object)) {
+  					writeHistoryData(object, economy, calc.getEnchantValue(object, EnchantmentClass.DIAMOND, economy));
   				}
-  				sf.writeHistoryData(name, economy, price);
   			}
+  		}
   	}
   	
   	
   	
   	
-    public void starthistoryLog() {
-    	if (hc.getYaml().getConfig().getBoolean("config.store-price-history")) {
-			historylogtaskid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
-			    public void run() {
-			    	writehistoryThread();
-			    	
-					//Updates all information signs.
-					historylogtaskid = hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
-					    public void run() {
-					    	isign.updateSigns();
-					    }
-					}, 200L);
-			    }
-			}, (historyloginterval/2), historyloginterval);
-    	}
-    }
+	private void writeHistoryData(String object, String economy, double price) {
+		String statement = "";
+		if (hc.useMySQL()) {
+			statement = "Insert Into hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " Values ('" + object + "','" + economy + "', NOW() ,'" + price + "')";
+		} else {
+			statement = "Insert Into hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " Values ('" + object + "','" + economy + "', datetime('NOW', 'localtime') ,'" + price + "')";
+		}
+		sw.executeSQL(statement);
+		if (hc.useMySQL()) {
+			statement = "DELETE FROM hyperconomy_history WHERE TIME < DATE_SUB(NOW(), INTERVAL " + daysToSaveHistory + " DAY)";
+		} else {
+			statement = "DELETE FROM hyperconomy_history WHERE TIME < date('now','" + df.formatSQLiteTime(daysToSaveHistory * -1) + " day')";
+		}
+		sw.executeSQL(statement);
+	}
+  	
+  	
     
-    
-    public void stophistoryLog() {
+    public void stopHistoryLog() {
     	hc.getServer().getScheduler().cancelTask(historylogtaskid);
     }
+    
+	public void clearHistory() {
+		String statement = "TRUNCATE TABLE hyperconomy_history";
+		hc.getSQLWrite().executeSQL(statement);
+	}
+	
+	public String getPercentChange(String object, int timevalue, String economy) {
+		Calculation calc = hc.getCalculation();
+		double percentChange = 0.0;
+		SQLSelect ss = new SQLSelect();
+		double historicvalue = ss.getHistoricValue(object, economy, timevalue);
+		if (historicvalue == -1.0) {
+			return "?";
+		}
+		double currentvalue = 0.0;
+		if (hc.itemTest(object)) {
+			currentvalue = calc.getTvalue(object, 1, economy);
+		} else if (hc.enchantTest(object)) {
+			currentvalue = calc.getEnchantValue(object, EnchantmentClass.DIAMOND, economy);
+		}
+		percentChange = ((currentvalue - historicvalue) / historicvalue) * 100;
+		percentChange = calc.round(percentChange, 3);
+		return percentChange + "";
+	}
 
   	
 }
