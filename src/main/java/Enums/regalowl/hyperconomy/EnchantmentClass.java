@@ -4,10 +4,12 @@ public enum EnchantmentClass {
 	WOOD, LEATHER, STONE, CHAINMAIL, IRON, GOLD, DIAMOND, BOW, BOOK, NONE;
 
 	public static EnchantmentClass fromString(String type) {
-		type = type.toLowerCase();
+		
 		if (type == null) {
 			return EnchantmentClass.NONE;
-		} else if (type.contains("wood")) {
+		}
+		type = type.toLowerCase();
+		if (type.contains("wood")) {
 			return EnchantmentClass.WOOD;
 		} else if (type.contains("leather")) {
 			return EnchantmentClass.LEATHER;
