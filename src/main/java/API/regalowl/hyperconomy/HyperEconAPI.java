@@ -7,43 +7,63 @@ public class HyperEconAPI implements HyperEconInterface {
 	public boolean checkFunds(double money, Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		Account acc = hc.getAccount();
+		if (!acc.checkAccount(player.getName())) {
+			return false;
+		}
 		return acc.checkFunds(money, player);
 	}
 	
 	public boolean checkFunds(double money, String name) {
 		HyperConomy hc = HyperConomy.hc;
 		Account acc = hc.getAccount();
+		if (!acc.checkAccount(name)) {
+			return false;
+		}
 		return acc.checkFunds(money, name);
 	}
 
 	public void withdraw(double money, Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		Account acc = hc.getAccount();
+		if (!acc.checkAccount(player.getName())) {
+			return;
+		}
 		acc.withdraw(money, player);
 	}
 
 	public void withdrawAccount(double money, String name) {
 		HyperConomy hc = HyperConomy.hc;
 		Account acc = hc.getAccount();
+		if (!acc.checkAccount(name)) {
+			return;
+		}
 		acc.withdrawAccount(money, name);
 	}
 
 	public void deposit(double money, Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		Account acc = hc.getAccount();
+		if (!acc.checkAccount(player.getName())) {
+			return;
+		}
 		acc.deposit(money, player);
 	}
 
 	public void depositAccount(double money, String name) {
 		HyperConomy hc = HyperConomy.hc;
 		Account acc = hc.getAccount();
+		if (!acc.checkAccount(name)) {
+			return;
+		}
 		acc.depositAccount(money, name);
 	}
 
 	public void withdrawShop(double money) {
 		HyperConomy hc = HyperConomy.hc;
 		Account acc = hc.getAccount();
-		acc.withdrawShop(money);
+		if (acc.checkshopBalance(money)) {
+			acc.withdrawShop(money);
+		}
 	}
 
 	public void depositShop(double money) {
@@ -55,6 +75,9 @@ public class HyperEconAPI implements HyperEconInterface {
 	public void setBalance(double balance, String name) {
 		HyperConomy hc = HyperConomy.hc;
 		Account acc = hc.getAccount();
+		if (!acc.checkAccount(name)) {
+			return;
+		}
 		acc.setBalance(balance, name);
 	}
 
@@ -79,6 +102,9 @@ public class HyperEconAPI implements HyperEconInterface {
 	public double getBalance(String account) {
 		HyperConomy hc = HyperConomy.hc;
 		Account acc = hc.getAccount();
+		if (!acc.checkAccount(account)) {
+			return 0.0;
+		}
 		return acc.getBalance(account);
 	}
 

@@ -6,11 +6,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class DataHandler implements Listener {
 	private HyperConomy hc;
@@ -37,7 +40,20 @@ public class DataHandler implements Listener {
 		if (!hasAccount(name)) {
 			addPlayer(name);
 		}
-
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		Location l = event.getPlayer().getLocation();
+		String name = event.getPlayer().getName();
+		if (!hasAccount(name)) {
+			addPlayer(name);
+		}
+		HyperPlayer hp = hyperPlayers.get(name);
+		hp.setX(l.getX());
+		hp.setY(l.getY());
+		hp.setZ(l.getZ());
+		hp.setWorld(l.getWorld().getName());
 	}
 
 	
@@ -58,6 +74,8 @@ public class DataHandler implements Listener {
 		}
 	}
 	
+	
+	
 	public HyperPlayer getHyperPlayer(String player) {
 		player = fixpN(player);
 		if (hyperPlayers.containsKey(player)) {
@@ -68,9 +86,15 @@ public class DataHandler implements Listener {
 		}
 	}
 	
+	
 	public HyperPlayer getHyperPlayer(Player player) {
-		String p = player.getName();
-		return getHyperPlayer(p);
+		String name = player.getName();
+		if (hyperPlayers.containsKey(name)) {
+			return hyperPlayers.get(name);
+		} else {
+			addPlayer(name);
+			return hyperPlayers.get(name);
+		}
 	}
 	
 	public ArrayList<HyperPlayer> getHyperPlayers() {
@@ -143,6 +167,11 @@ public class DataHandler implements Listener {
 				hplayer.setName(result.getString("PLAYER"));
 				hplayer.setEconomy(result.getString("ECONOMY"));
 				hplayer.setBalance(result.getDouble("BALANCE"));
+				hplayer.setX(result.getDouble("X"));
+				hplayer.setY(result.getDouble("Y"));
+				hplayer.setZ(result.getDouble("Z"));
+				hplayer.setWorld(result.getString("WORLD"));
+				hplayer.setHash(result.getString("HASH"));
 				hyperPlayers.put(hplayer.getName(), hplayer);
 			}
 			result.close();

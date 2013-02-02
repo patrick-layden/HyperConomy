@@ -9,7 +9,7 @@ public class Itemsettings {
 		Calculation calc = hc.getCalculation();
 		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
-		//try {
+		try {
 			if (args.length == 0 && player != null) {
 				int itd = player.getItemInHand().getTypeId();
 				int da = calc.getDamageValue(player.getItemInHand());
@@ -92,8 +92,8 @@ public class Itemsettings {
 			} else {
 				sender.sendMessage(L.get("ITEMSETTINGS_INVALID"));
 			}
-		//} catch (Exception e) {
-		//	sender.sendMessage(L.get("ITEMSETTINGS_INVALID"));
-		//}
+		} catch (Exception e) {
+			sender.sendMessage(L.get("ITEMSETTINGS_INVALID"));
+		}
 	}
 }

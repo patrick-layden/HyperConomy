@@ -21,7 +21,7 @@ public class Importbalance {
 					for (String player:players) {
 						if (econ.hasAccount(player)) {
 							df.getHyperPlayer(player).setBalance(econ.getBalance(player));
-							l.writeAuditLog(player, "setbalance", econ.getBalance(player), "HyperConomy");
+							l.writeAuditLog(player, "initialization", econ.getBalance(player), "HyperConomy");
 						}
 					}
 					sender.sendMessage(L.get("PLAYERS_IMPORTED"));
@@ -34,7 +34,7 @@ public class Importbalance {
 							} else {
 								df.addPlayer(player);
 								df.getHyperPlayer(player).setBalance(econ.getBalance(player));
-								l.writeAuditLog(player, "setbalance", econ.getBalance(player), "HyperConomy");
+								l.writeAuditLog(player, "initialization", econ.getBalance(player), "HyperConomy");
 							}
 						}
 					}

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.scheduler.BukkitTask;
+
 
 public class SQLWrite {
 
@@ -12,7 +14,7 @@ public class SQLWrite {
 	private int threadlimit;
 	private ArrayList<String> buffer = new ArrayList<String>();
 	private boolean initialWrite;
-	private int writeThreadId;
+	private BukkitTask writeTask;
 	private boolean writeActive;
 	private HashMap<DatabaseConnection, Boolean> dbConnections = new HashMap<DatabaseConnection, Boolean>();
 	
@@ -26,9 +28,14 @@ public class SQLWrite {
 		}
 		
 		for (int i = 0; i < threadlimit; i++) {
-			writeThreadId = hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+			hc.getServer().getScheduler().runTaskLaterAsynchronously(hc, new Runnable() {
 	    		public void run() {
-	    			DatabaseConnection dc = new DatabaseConnection(sw);
+	    			DatabaseConnection dc = null;
+	    			if (hc.useMySQL()) {
+	    				dc = new MySQLConnection(sw);
+	    			} else {
+		    			dc = new SQLiteConnection(sw);
+	    			}
 	    			dbConnections.put(dc, true);
 	    		}
 	    	}, i);
@@ -86,7 +93,7 @@ public class SQLWrite {
 			return;
 		}
 		writeActive = true;
-		writeThreadId = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
+		writeTask = hc.getServer().getScheduler().runTaskTimerAsynchronously(hc, new Runnable() {
     		public void run() {
     			for (int i = 0; i < threadlimit; i++) {
 	    			if (buffer.size() == 0) {
@@ -107,7 +114,7 @@ public class SQLWrite {
 	}
 	
 	private void cancelWrite() {
-		hc.getServer().getScheduler().cancelTask(writeThreadId);
+		writeTask.cancel();
 		writeActive = false;
 		initialWrite = false;
 	}

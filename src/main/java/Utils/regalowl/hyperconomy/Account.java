@@ -47,6 +47,9 @@ public class Account {
 				return false;
 			}
 		} else {
+			if (!df.hasAccount(player.getName())) {
+				return false;
+			}
 			boolean result = false;
 			if ((df.getHyperPlayer(player).getBalance() - money) >= 0) {
 				result = true;
@@ -85,6 +88,9 @@ public class Account {
 			}
 		} else {
 			boolean result = false;
+			if (!df.hasAccount(name)) {
+				return false;
+			}
 			if ((df.getHyperPlayer(name).getBalance() - money) >= 0) {
 				result = true;
 			}
@@ -119,6 +125,9 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
+			if (!df.hasAccount(player.getName())) {
+				return;
+			}
 			df.getHyperPlayer(player).setBalance(df.getHyperPlayer(player).getBalance() - money);
 			l.writeAuditLog(player.getName(), "withdrawal", money, "HyperConomy");
 		}
@@ -148,6 +157,9 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
+			if (!df.hasAccount(name)) {
+				return;
+			}
 			df.getHyperPlayer(name).setBalance(df.getHyperPlayer(name).getBalance() - money);
 			l.writeAuditLog(name, "withdrawal", money, "HyperConomy");
 		}
@@ -177,6 +189,9 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
+			if (!df.hasAccount(player.getName())) {
+				return;
+			}
 			HyperPlayer hp = df.getHyperPlayer(player);
 			hp.setBalance(hp.getBalance() + money);
 			l.writeAuditLog(player.getName(), "deposit", money, "HyperConomy");
@@ -207,6 +222,9 @@ public class Account {
 		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
 			}
 		} else {
+			if (!df.hasAccount(name)) {
+				return;
+			}
 			HyperPlayer hp = df.getHyperPlayer(name);
 			hp.setBalance(hp.getBalance() + money);
 			l.writeAuditLog(name, "deposit", money, "HyperConomy");
@@ -240,6 +258,9 @@ public class Account {
 			}
 		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+			if (!df.hasAccount(globalaccount)) {
+				checkshopAccount();
+			}
 			HyperPlayer hp = df.getHyperPlayer(globalaccount);
 			hp.setBalance(hp.getBalance() - money);
 			l.writeAuditLog(globalaccount, "withdrawal", money, "HyperConomy");
@@ -272,6 +293,9 @@ public class Account {
 			}
 		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+			if (!df.hasAccount(globalaccount)) {
+				checkshopAccount();
+			}
 			HyperPlayer hp = df.getHyperPlayer(globalaccount);
 			hp.setBalance(hp.getBalance() + money);
 			l.writeAuditLog(globalaccount, "deposit", money, "HyperConomy");
@@ -381,6 +405,9 @@ public class Account {
 			}
 		} else {
 			String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+			if (!df.hasAccount(globalaccount)) {
+				checkshopAccount();
+			}
 			boolean result = false;
 			if ((df.getHyperPlayer(globalaccount).getBalance() - money) >= 0) {
 				result = true;
@@ -451,6 +478,9 @@ public class Account {
 		    	return 0.0;
 			}
 		} else {
+			if (!df.hasAccount(account)) {
+				return 0.0;
+			}
 			return calc.twoDecimals(df.getHyperPlayer(account).getBalance());
 		}
 	}
@@ -488,6 +518,11 @@ public class Account {
 		} else {
 			return df.createPlayerAccount(account);
 		}
+	}
+	
+	
+	public String getShopAccount() {
+		return HyperConomy.hc.getYaml().getConfig().getString("config.global-shop-account");
 	}
 	
 	

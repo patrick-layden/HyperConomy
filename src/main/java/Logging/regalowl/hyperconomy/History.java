@@ -58,8 +58,8 @@ public class History {
 			    	long currentTime = System.currentTimeMillis();
 			    	timeCounter += (currentTime - lastTime);
 			    	lastTime = currentTime;
-			    	//if (timeCounter >= 3600000) {
-			    	if (timeCounter >= 120000) {
+			    	if (timeCounter >= 3600000) {
+			    	//if (timeCounter >= 120000) {
 			    		timeCounter = 0;
 			    		writeHistoryThread();
 						hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {

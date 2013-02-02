@@ -204,6 +204,10 @@ public class Update {
 	    	String t45 = yaml.getConfig().getString("config.use-shops");
 	    	if (t45 == null) {
 	    		yaml.getConfig().set("config.use-shops", true);
+	    	}
+	    	String t46 = yaml.getConfig().getString("api-version");
+	    	if (t46 == null) {
+	    		yaml.getConfig().set("api-version", 1.0);
 	    	}	    
 	    	
 	    	

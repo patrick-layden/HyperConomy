@@ -45,7 +45,7 @@ public class ETransaction {
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
 			String nenchant = "";
-			String playerecon = sf.getHyperPlayer(p.getName()).getEconomy();
+			String playerecon = sf.getHyperPlayer(p).getEconomy();
 			nenchant = sf.getHyperObject(name, playerecon).getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int lvl = Integer.parseInt(name.substring(name.length() - 1, name.length()));
@@ -114,7 +114,7 @@ public class ETransaction {
 		Notification not = hc.getNotify();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
-			String playerecon = sf.getHyperPlayer(p.getName()).getEconomy();
+			String playerecon = sf.getHyperPlayer(p).getEconomy();
 			String nenchant = sf.getHyperObject(name, playerecon).getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int shopstock = 0;

@@ -57,6 +57,7 @@ public class HyperConomy extends JavaPlugin {
 	private boolean logerrors;
 	private String serverVersion;
 	private int errorcount;
+	private double apiVersion;
 
 	@Override
 	public void onEnable() {
@@ -114,6 +115,7 @@ public class HyperConomy extends JavaPlugin {
 			new Update();
 			saveinterval = yaml.getConfig().getLong("config.saveinterval");
 			usemysql = yaml.getConfig().getBoolean("config.sql-connection.use-mysql");
+			apiVersion = yaml.getConfig().getDouble("api-version");
 			currency = yaml.getConfig().getString("config.currency-symbol");
 			useExternalEconomy = yaml.getConfig().getBoolean("config.use-external-economy-plugin");
 			df = new DataHandler();
@@ -643,6 +645,10 @@ public class HyperConomy extends JavaPlugin {
 			}
 			errorcount = max + 1;
 		}
+	}
+	
+	public double getApiVersion() {
+		return apiVersion;
 	}
 
 }

@@ -543,22 +543,24 @@ public class ChestShop implements Listener{
 						    					if (itemamount > 0) {
 								    				int space = tran.getInventoryAvailableSpace(id, data, icevent.getView().getTopInventory(), 27);
 								    				if (space >= camount) {
-							    						double bal = acc.getBalance(line34);
-							    						double cost = calc.getTvalue(name, camount, hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
-							    						if (setprice) {
-							    							cost = staticprice * camount;
-							    						}
-							    						
-							    						if (bal >= cost) {
-											    			if (setprice) {
-											    				tran.sellChest(name, id, data, camount, line34, p, icevent.getView().getTopInventory(), calc.twoDecimals(cost));
-											    			} else {
-											    				tran.sellChest(name, id, data, camount, line34, p, icevent.getView().getTopInventory());
-											    			}
-							    						} else {
-							    							//p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
-							    							L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), line34);
-							    						}
+								    					if (acc.checkAccount(line34)) {
+								    						double bal = acc.getBalance(line34);
+								    						double cost = calc.getTvalue(name, camount, hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
+								    						if (setprice) {
+								    							cost = staticprice * camount;
+								    						}
+								    						
+								    						if (bal >= cost) {
+												    			if (setprice) {
+												    				tran.sellChest(name, id, data, camount, line34, p, icevent.getView().getTopInventory(), calc.twoDecimals(cost));
+												    			} else {
+												    				tran.sellChest(name, id, data, camount, line34, p, icevent.getView().getTopInventory());
+												    			}
+								    						} else {
+								    							//p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
+								    							L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), line34);
+								    						}
+								    					}
 								    				} else {
 								    					p.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
 								    				}
@@ -698,20 +700,22 @@ public class ChestShop implements Listener{
 						    					if (itemamount > 0) {
 							    					int space = tran.getInventoryAvailableSpace(id, data, icevent.getView().getTopInventory(), 27);
 							    					if (space >= 1) {
-							    						double bal = acc.getBalance(line34);
-							    						double cost = calc.getTvalue(name, 1, hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
-							    						if (setprice) {
-							    							cost = staticprice;
-							    						}
-							    						if (bal >= cost) {
-							    							if (setprice) {
-							    								tran.sellChest(name, id, data, 1, line34, p, icevent.getView().getTopInventory(), cost);
-							    							} else {
-							    								tran.sellChest(name, id, data, 1, line34, p, icevent.getView().getTopInventory());
-							    							}
-							    						} else {
-							    							//p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
-							    							p.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), line34));
+							    						if (acc.checkAccount(line34)) {
+								    						double bal = acc.getBalance(line34);
+								    						double cost = calc.getTvalue(name, 1, hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
+								    						if (setprice) {
+								    							cost = staticprice;
+								    						}
+								    						if (bal >= cost) {
+								    							if (setprice) {
+								    								tran.sellChest(name, id, data, 1, line34, p, icevent.getView().getTopInventory(), cost);
+								    							} else {
+								    								tran.sellChest(name, id, data, 1, line34, p, icevent.getView().getTopInventory());
+								    							}
+								    						} else {
+								    							//p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
+								    							p.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), line34));
+								    						}
 							    						}
 							    					} else {
 							    						p.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));

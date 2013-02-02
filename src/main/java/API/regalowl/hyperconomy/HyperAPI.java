@@ -77,8 +77,13 @@ public class HyperAPI implements HyperInterface {
 				return op.getLocation().getX();
 			}
 		}
-		// TODO Auto-generated method stub (Add player location storage to hyperconomy_players, change on logout)
-		return 0;
+		HyperConomy hc = HyperConomy.hc;
+		DataHandler dh = hc.getDataFunctions();
+		if (dh.hasAccount(player)) {
+			return dh.getHyperPlayer(player).getX();
+		} else {
+			return 0.0;
+		}
 	}
 
 	public double getPlayerY(String player) {
@@ -87,8 +92,13 @@ public class HyperAPI implements HyperInterface {
 				return op.getLocation().getY();
 			}
 		}
-		// TODO Auto-generated method stub
-		return 0;
+		HyperConomy hc = HyperConomy.hc;
+		DataHandler dh = hc.getDataFunctions();
+		if (dh.hasAccount(player)) {
+			return dh.getHyperPlayer(player).getY();
+		} else {
+			return 0.0;
+		}
 	}
 
 	public double getPlayerZ(String player) {
@@ -97,18 +107,31 @@ public class HyperAPI implements HyperInterface {
 				return op.getLocation().getZ();
 			}
 		}
-		// TODO Auto-generated method stub
-		return 0;
+		HyperConomy hc = HyperConomy.hc;
+		DataHandler dh = hc.getDataFunctions();
+		if (dh.hasAccount(player)) {
+			return dh.getHyperPlayer(player).getZ();
+		} else {
+			return 0.0;
+		}
 	}
 
-	public boolean checkPassword(String player, String hash) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean checkPassword(String player, String MD5hash) {
+		HyperConomy hc = HyperConomy.hc;
+		DataHandler dh = hc.getDataFunctions();
+		if (dh.hasAccount(player)) {
+			if (dh.getHyperPlayer(player).getHash().equals(MD5hash)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	public double getAPIVersion() {
-		// TODO Auto-generated method stub
-		return 0;
+		return HyperConomy.hc.getApiVersion();
 	}
 
 }

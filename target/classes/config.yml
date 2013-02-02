@@ -1,4 +1,5 @@
 version: 0.960
+api-version: 1.0
 config:
   shopcheckinterval: 6
   saveinterval: 24000

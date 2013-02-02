@@ -1,5 +1,8 @@
 package regalowl.hyperconomy;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 
 
 public class HyperPlayer {
@@ -9,6 +12,11 @@ public class HyperPlayer {
 	private String name;
 	private String economy;
 	private double balance;
+	private double x;
+	private double y;
+	private double z;
+	private String world;
+	private String hash;
 	
 	
 	HyperPlayer() {
@@ -18,7 +26,24 @@ public class HyperPlayer {
 	HyperPlayer(String player) {
 		hc = HyperConomy.hc;
 		SQLWrite sw = hc.getSQLWrite();
-		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE)" + " VALUES ('" + player + "','" + "default" + "','" + 0.0 + "')");
+		for (Player p:Bukkit.getOnlinePlayers()) {
+			if (p.getName().equalsIgnoreCase(player)) {
+				name = p.getName();
+				economy = "default";
+				balance = 0.0;
+				x = p.getLocation().getX();
+				y = p.getLocation().getY();
+				z = p.getLocation().getZ();
+				world = p.getLocation().getWorld().getName();
+				sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE)" + " VALUES ('" + name + "','" + economy + "','" + balance + "')");
+				return;
+			}
+		}
+		name = player;
+		economy = "default";
+		balance = 0.0;
+		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE)" + " VALUES ('" + name + "','" + economy + "','" + balance + "')");
+		
 	}
 	
 	public String getName() {
@@ -29,6 +54,21 @@ public class HyperPlayer {
 	}
 	public double getBalance() {
 		return balance;
+	}
+	public double getX() {
+		return x;
+	}
+	public double getY() {
+		return y;
+	}
+	public double getZ() {
+		return z;
+	}
+	public String getWorld() {
+		return world;
+	}
+	public String getHash() {
+		return hash;
 	}
 	
 	
@@ -46,6 +86,31 @@ public class HyperPlayer {
 		String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";
 		hc.getSQLWrite().executeSQL(statement);
 		this.balance = balance;
+	}
+	public void setX(double x) {
+		String statement = "UPDATE hyperconomy_players SET X='" + x + "' WHERE PLAYER = '" + name + "'";
+		hc.getSQLWrite().executeSQL(statement);
+		this.x = x;
+	}
+	public void setY(double y) {
+		String statement = "UPDATE hyperconomy_players SET Y='" + y + "' WHERE PLAYER = '" + name + "'";
+		hc.getSQLWrite().executeSQL(statement);
+		this.y = y;
+	}
+	public void setZ(double z) {
+		String statement = "UPDATE hyperconomy_players SET Z='" + z + "' WHERE PLAYER = '" + name + "'";
+		hc.getSQLWrite().executeSQL(statement);
+		this.z = z;
+	}
+	public void setWorld(String world) {
+		String statement = "UPDATE hyperconomy_players SET WORLD='" + world + "' WHERE PLAYER = '" + name + "'";
+		hc.getSQLWrite().executeSQL(statement);
+		this.world = world;
+	}
+	public void setHash(String hash) {
+		String statement = "UPDATE hyperconomy_players SET HASH='" + hash + "' WHERE PLAYER = '" + name + "'";
+		hc.getSQLWrite().executeSQL(statement);
+		this.hash = hash;
 	}
 
 	
