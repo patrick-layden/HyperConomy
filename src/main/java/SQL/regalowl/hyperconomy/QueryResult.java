@@ -33,12 +33,22 @@ public class QueryResult {
 	}
 	
 	public Double getDouble(String column) {
-		return Double.parseDouble(data.get(colNames.indexOf(column)).get(currentRow));
+		String dat = data.get(colNames.indexOf(column)).get(currentRow);
+		if (dat == null) {
+			return 0.0;
+		} else {
+			return Double.parseDouble(dat);
+		}
 	}
 	
 	
 	public Integer getInt(String column) {
-		return Integer.parseInt(data.get(colNames.indexOf(column)).get(currentRow));
+		String dat = data.get(colNames.indexOf(column)).get(currentRow);
+		if (dat == null) {
+			return 0;
+		} else {
+			return Integer.parseInt(dat);
+		}
 	}
 	
 	public String getString(Integer column) {
@@ -46,11 +56,21 @@ public class QueryResult {
 	}
 	
 	public Double getDouble(Integer column) {
-		return Double.parseDouble(data.get(column - 1).get(currentRow));
+		String dat = data.get(column - 1).get(currentRow);
+		if (dat == null) {
+			return 0.0;
+		} else {
+			return Double.parseDouble(dat);
+		}
 	}
 	
 	public Integer getInt(Integer column) {
-		return Integer.parseInt(data.get(column - 1).get(currentRow));
+		String dat = data.get(column - 1).get(currentRow);
+		if (dat == null) {
+			return 0;
+		} else {
+			return Integer.parseInt(dat);
+		}
 	}
 	
 	public boolean next() {

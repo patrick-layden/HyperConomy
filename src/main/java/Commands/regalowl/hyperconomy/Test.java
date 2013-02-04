@@ -8,10 +8,10 @@ public class Test {
 
 	private HyperConomy hc;
 	Test(Player player, String args[]) {
-		if (!args[2].equalsIgnoreCase("confirm")) {
+		if (args.length == 1) {
 			player.sendMessage("Type /hc test confirm to proceed.  This command will test HyperConomy and should only be used on test installs.");
 			player.sendMessage("Make one InfoSign and on ItemDisplay near you.");
-		} else {
+		} else if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
 			hc = HyperConomy.hc;
 			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 				public void run() {
