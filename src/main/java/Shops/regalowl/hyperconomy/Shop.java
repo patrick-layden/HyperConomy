@@ -162,7 +162,7 @@ public class Shop {
 		if (!useShops) {
 			return true;
 		}
-		item = hc.fixNameTest(item);
+		item = hc.getDataFunctions().fixNameTest(item);
 		if (item == null) {
 			return false;
 		}

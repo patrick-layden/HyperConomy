@@ -28,7 +28,7 @@ public class TransactionSign implements Listener {
 		ench = enchant;
 		sf = hc.getDataFunctions();
 		names = new HashSet<String>();
-		ArrayList<String> anames = hc.getNames();
+		ArrayList<String> anames = sf.getNames();
 		for (int i = 0; i < anames.size(); i++) {
 			names.add(anames.get(i));
 		}
@@ -46,7 +46,7 @@ public class TransactionSign implements Listener {
 				try {
 					Integer.parseInt(line4);
 					String line12 = ChatColor.stripColor(scevent.getLine(0)).trim() + ChatColor.stripColor(scevent.getLine(1)).trim();
-					line12 = hc.fixName(line12);
+					line12 = sf.fixName(line12);
 					if (names.contains(line12.toLowerCase())) {
 						if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
 							scevent.setLine(0, "\u00A71" + scevent.getLine(0));
@@ -106,7 +106,7 @@ public class TransactionSign implements Listener {
 						return;
 					}
 					String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
-					line12 = hc.fixName(line12);
+					line12 = sf.fixName(line12);
 					if (names.contains(line12.toLowerCase())) {
 						if (!s.getLine(0).startsWith("\u00A7")) {
 							s.setLine(0, "\u00A71" + s.getLine(0));
@@ -125,7 +125,7 @@ public class TransactionSign implements Listener {
 								if (p.hasPermission("hyperconomy.buysign")) {
 									if ((shop.getShop(p) != null && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".buy")) {
-											if (hc.itemTest(line12)) {
+											if (sf.itemTest(line12)) {
 												int id = sf.getHyperObject(line12, playerecon).getId();
 												if (id >= 0) {
 													if (!hc.isLocked()) {
@@ -140,7 +140,7 @@ public class TransactionSign implements Listener {
 														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 													}
 												}
-											} else if (hc.enchantTest(line12)) {
+											} else if (sf.enchantTest(line12)) {
 												if (!hc.isLocked()) {
 													ench.buyEnchant(line12, p);
 												} else {
@@ -172,7 +172,7 @@ public class TransactionSign implements Listener {
 								if (p.hasPermission("hyperconomy.sellsign")) {
 									if ((shop.getShop(p) != null && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".sell")) {
-											if (hc.itemTest(line12)) {
+											if (sf.itemTest(line12)) {
 												int id = sf.getHyperObject(line12, playerecon).getId();
 												if (id >= 0) {
 													if (!hc.isLocked()) {
@@ -187,7 +187,7 @@ public class TransactionSign implements Listener {
 														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 													}
 												}
-											} else if (hc.enchantTest(line12)) {
+											} else if (sf.enchantTest(line12)) {
 												if (!hc.isLocked()) {
 													ench.sellEnchant(line12, p);
 												} else {

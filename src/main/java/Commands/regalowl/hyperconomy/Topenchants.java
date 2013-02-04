@@ -37,7 +37,7 @@ public class Topenchants {
 				page = Integer.parseInt(args[0]);
 			}
 			SortedMap<Double, String> enchantstocks = new TreeMap<Double, String>();
-			ArrayList<String> enames = hc.getEnames();
+			ArrayList<String> enames = sf.getEnchantNames();
 			for (int c = 0; c < enames.size(); c++) {
 				String elst = enames.get(c);
 				boolean unavailable = false;

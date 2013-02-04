@@ -10,14 +10,15 @@ public class Removeitem {
 		ShopFactory s = hc.getShopFactory();
 		SerializeArrayList sal = new SerializeArrayList();
 		LanguageFile L = hc.getLanguageFile();
+		DataHandler dh = hc.getDataFunctions();
 		try {
-			String itemname = hc.fixName(args[0]);
+			String itemname = dh.fixName(args[0]);
 			if (args.length >= 2) {
-				if (hc.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
+				if (dh.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
 					String shopname = args[1].replace("_", " ");
     				String teststring3 = hc.getYaml().getShops().getString(shopname);
     				if (teststring3 == null) {
-    					shopname = hc.fixsName(shopname);
+    					shopname = s.fixShopName(shopname);
     					teststring3 = hc.getYaml().getShops().getString(shopname);
     				}
     				if (teststring3 != null) {
@@ -28,7 +29,7 @@ public class Removeitem {
 		    					hc.getYaml().getShops().set(shopname + ".unavailable", sal.stringArrayToString(unavailable));
 		    					sender.sendMessage(L.f(L.get("REMOVED_FROM"), itemname, shopname.replace("_", " ")));
 	    					} else if (itemname.equalsIgnoreCase("all")) {
-	    	        	        ArrayList<String> names = hc.getNames();
+	    	        	        ArrayList<String> names = dh.getNames();
 	    	        	        unavailable.clear();
 	    	        	        for (int c = 0; c < names.size(); c++) {
 	    	        	        	unavailable.add(names.get(c));    	    						

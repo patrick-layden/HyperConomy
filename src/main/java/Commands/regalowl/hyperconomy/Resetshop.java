@@ -18,7 +18,7 @@ public class Resetshop {
 				if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 					new Backup();
 				}
-				ArrayList<String> names = hc.getNames();
+				ArrayList<String> names = sf.getNames();
 				for (int c = 0; c < names.size(); c++) {
 					String cname = names.get(c);
 					HyperObject ho = sf.getHyperObject(cname, playerecon);

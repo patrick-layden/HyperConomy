@@ -16,9 +16,8 @@ public class Ymladditem {
 			double startprice = Double.parseDouble(args[3]);
 			int itd = player.getItemInHand().getTypeId();
 			int da = calc.getDamageValue(player.getItemInHand());
-			String ke = itd + ":" + da;
-			String nam = hc.getnameData(ke);
-			if (nam != null) {
+			HyperObject ho =  hc.getDataFunctions().getHyperObject(itd, da);
+			if (ho != null) {
 				player.sendMessage(L.get("ALREADY_IN_DATABASE"));
 				return;
 			}

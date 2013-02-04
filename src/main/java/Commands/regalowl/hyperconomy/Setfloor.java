@@ -13,7 +13,7 @@ public class Setfloor {
 			if (args.length == 2) {
 				name = args[0];
 				double floor = Double.parseDouble(args[1]);
-				if (hc.itemTest(name) || hc.enchantTest(name)) {
+				if (sf.objectTest(name)) {
 					sf.getHyperObject(name, playerecon).setFloor(floor);
 					sender.sendMessage(L.f(L.get("FLOOR_SET"), name));
 					isign.updateSigns();

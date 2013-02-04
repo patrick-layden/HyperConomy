@@ -24,7 +24,7 @@ public class Setmessage {
 					}
 					String teststring = hc.getYaml().getShops().getString(name);
 					if (teststring == null) {
-						name = hc.fixsName(name);
+						name = s.fixShopName(name);
 					}
 					if (s.shopExists(name)) {
 						s.getShop(name).setMessage1(message);
@@ -47,7 +47,7 @@ public class Setmessage {
 					}
 					String teststring = hc.getYaml().getShops().getString(name);
 					if (teststring == null) {
-						name = hc.fixsName(name);
+						name = s.fixShopName(name);
 					}
 					if (s.shopExists(name)) {
 						s.getShop(name).setMessage2(message);

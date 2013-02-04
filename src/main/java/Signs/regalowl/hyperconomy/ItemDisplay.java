@@ -28,11 +28,12 @@ public class ItemDisplay {
 	ItemDisplay(Location location, String name, String economy) {
 		this.hc = HyperConomy.hc;
 		this.location = location;
+		DataHandler dh = hc.getDataFunctions();
 		this.x = this.location.getX();
 		this.y = this.location.getY();
 		this.z = this.location.getZ();
 		this.w = this.location.getWorld();
-		this.name = hc.fixName(name);
+		this.name = dh.fixName(name);
 		this.economy = economy;
 		this.item = makeDisplay();
 	}

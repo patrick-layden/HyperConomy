@@ -141,7 +141,7 @@ public class HyperWebPrices extends AbstractHandler {
 			String page = "";
 			if (!hc.sqlLock()) {
 				DataHandler sf = hc.getDataFunctions();
-				ArrayList<String> names = hc.getNames();
+				ArrayList<String> names = sf.getNames();
 				ArrayList<Integer> timevalues = new ArrayList<Integer>();
 				timevalues.add(1);
 				timevalues.add(6);

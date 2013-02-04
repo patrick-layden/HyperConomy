@@ -60,7 +60,7 @@ public class InfoSignHandler implements Listener {
 			DataHandler df = hc.getDataFunctions();
 			economy = df.getHyperPlayer(p).getEconomy();
 			String objectName = lines[0].trim() + lines[1].trim();
-			objectName = hc.fixName(objectName);
+			objectName = df.fixName(objectName);
 			int multiplier = 1;
 			try {
 				multiplier = Integer.parseInt(lines[3]);
@@ -71,7 +71,7 @@ public class InfoSignHandler implements Listener {
 			if (EnchantmentClass.fromString(lines[3]) != null) {
 				enchantClass = EnchantmentClass.fromString(lines[3]);
 			}
-			if (hc.objectTest(objectName)) {
+			if (df.objectTest(objectName)) {
 				SignType type = SignType.fromString(lines[2]);
 				if (type != null) {
 					String signKey = scevent.getBlock().getWorld().getName() + "|" + scevent.getBlock().getX() + "|" + scevent.getBlock().getY() + "|" + scevent.getBlock().getZ();
@@ -137,6 +137,18 @@ public class InfoSignHandler implements Listener {
 	
 	public void reloadSigns() {
 		loadSigns();
+	}
+	
+	public int signsWaitingToUpdate() {
+		if (signUpdateActive) {
+			return infoSigns.size() - currentSign - 1;
+		} else {
+			return 0;
+		}
+	}
+	
+	public ArrayList<InfoSign> getInfoSigns() {
+		return infoSigns;
 	}
 	
 }

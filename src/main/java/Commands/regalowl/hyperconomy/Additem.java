@@ -11,13 +11,13 @@ public class Additem {
 		SerializeArrayList sal = new SerializeArrayList();
 		LanguageFile L = hc.getLanguageFile();
 		try {
-			String itemname = hc.fixName(args[0]);
+			String itemname = hc.getDataFunctions().fixName(args[0]);
 			if (args.length >= 2) {
-				if (hc.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
+				if (hc.getDataFunctions().objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
 					String shopname = args[1].replace("_", " ");
     				String teststring3 = hc.getYaml().getShops().getString(shopname);
     				if (teststring3 == null) {
-    					shopname = hc.fixsName(shopname);
+    					shopname = s.fixShopName(shopname);
     					teststring3 = hc.getYaml().getShops().getString(shopname);
     				}
     				if (teststring3 != null) {

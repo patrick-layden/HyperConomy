@@ -10,8 +10,11 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		}
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		String ke = id + ":" + durability;
-		String name = hc.getnameData(ke);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability);
+		if (ho == null) {
+			return 0.0;
+		}
+		String name = ho.getName();
 		Double price = calc.getCost(name, amount, economy);
 		price = calc.twoDecimals(price);
 		return price;
@@ -23,8 +26,11 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		}
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		String ke = id + ":" + durability;
-		String name = hc.getnameData(ke);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability);
+		if (ho == null) {
+			return 0.0;
+		}
+		String name = ho.getName();
 		Double value = calc.getTvalue(name, amount, economy);
 		value = calc.twoDecimals(value);
 		return value;
@@ -42,8 +48,11 @@ public class HyperObjectAPI implements HyperObjectInterface {
 			durabilityPercent = 1.0 - ((double) durability / item.getType().getMaxDurability());
 			durability = 0;
 		}
-		String ke = id + ":" + durability;
-		String name = hc.getnameData(ke);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability);
+		if (ho == null) {
+			return 0.0;
+		}
+		String name = ho.getName();
 		Double price = calc.getCost(name, amount, economy) * durabilityPercent;
 		double tax = calc.getPurchaseTax(name, economy, price);
 		price = tax + price;
@@ -60,8 +69,11 @@ public class HyperObjectAPI implements HyperObjectInterface {
 			durabilityPercent = 1.0 - ((double) durability / item.getType().getMaxDurability());
 			durability = 0;
 		}
-		String ke = id + ":" + durability;
-		String name = hc.getnameData(ke);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability);
+		if (ho == null) {
+			return 0.0;
+		}
+		String name = ho.getName();
 		Double value = calc.getValue(name, amount, player) * durabilityPercent;
 		double salestax = calc.getSalesTax(player, value);
 		value = value - salestax;
@@ -252,8 +264,11 @@ public class HyperObjectAPI implements HyperObjectInterface {
 	public double getItemPurchasePrice(int id, int data, int amount) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		String ke = id + ":" + data;
-		String name = hc.getnameData(ke);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, data);
+		if (ho == null) {
+			return 0.0;
+		}
+		String name = ho.getName();
 		Double price = calc.getCost(name, amount, "default");
 		price = calc.twoDecimals(price);
 		return price;
@@ -262,8 +277,11 @@ public class HyperObjectAPI implements HyperObjectInterface {
 	public double getItemSaleValue(int id, int data, int amount) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		String ke = id + ":" + data;
-		String name = hc.getnameData(ke);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, data);
+		if (ho == null) {
+			return 0.0;
+		}
+		String name = ho.getName();
 		Double value = calc.getTvalue(name, amount, "default");
 		value = calc.twoDecimals(value);
 		return value;

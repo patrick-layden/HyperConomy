@@ -1,12 +1,8 @@
 package regalowl.hyperconomy;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,23 +10,29 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 public class DataHandler implements Listener {
 	private HyperConomy hc;
-	private boolean sqlloaded;
-	private boolean databuilt;
+	private SQLRead sr;
+	private boolean objectsLoaded;
+	//private boolean databuilt;
 	private HashMap<String, HyperObject> hyperObjects = new HashMap<String, HyperObject>();
 	private HashMap<String, HyperPlayer> hyperPlayers = new HashMap<String, HyperPlayer>();
 	
 
-	
-	private int sqllockthreadid;
+	private BukkitTask waitToLoad;
+	private BukkitTask waitForLoad;
 	private ArrayList<String> economies = new ArrayList<String>();
+	
+	
+	//private Logger log = Logger.getLogger("Minecraft");
 
 	DataHandler() {
 		hc = HyperConomy.hc;
-		sqlloaded = false;
-		databuilt = false;
+		sr = hc.getSQLRead();
+		objectsLoaded = false;
+		//databuilt = false;
 		hc.getServer().getPluginManager().registerEvents(this, hc);
 	}
 	
@@ -56,13 +58,24 @@ public class DataHandler implements Listener {
 		hp.setWorld(l.getWorld().getName());
 	}
 
-	
+	/*
 	public HyperObject getHyperObject(String key) {
 		if (hyperObjects.containsKey(key)) {
 			return hyperObjects.get(key);
 		} else {
 			return null;
 		}
+	}
+	*/
+	
+	
+	public HyperObject getHyperObject(int id, int data) {
+		for (HyperObject ho:hyperObjects.values()) {
+			if (ho.getId() == id && ho.getData() == data) {
+				return ho;
+			}
+		}
+		return null;
 	}
 	
 	public HyperObject getHyperObject(String name, String economy) {
@@ -117,76 +130,70 @@ public class DataHandler implements Listener {
 	public void load() {
 		reset();
 		hc.sqllockShop();
-		sqllockthreadid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
+		waitToLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 			public void run() {
 				SQLWrite sw = hc.getSQLWrite();
-				if (hc.getSQLWrite().getBuffer().size() == 0 && !sw.initialWrite()) {
-					databuilt = hc.buildData();
-					sqlloaded = loadSQL();
-					hc.sqlunlockShop();
-					hc.getServer().getScheduler().cancelTask(sqllockthreadid);
-					hc.onDataLoad();
+				if (sw.getBuffer().size() == 0 && !sw.initialWrite()) {
+					loadSQL();
+					waitForLoad();
+					waitToLoad.cancel();
 				}
 			}
 		}, 0L, 10L);
 	}
+	
+	
+	private void waitForLoad() {
+		waitForLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
+			public void run() {
+				if (objectsLoaded) {
+					hc.sqlunlockShop();
+					hc.onDataLoad();
+					waitForLoad.cancel();
+				}
+			}
+		}, 3L, 3L);
+	}
 
-	private boolean loadSQL() {
+	private void loadSQL() {
 		hyperObjects.clear();
 		hyperPlayers.clear();
-		
-		try {
-			SQLSelect ss = new SQLSelect();
-			Connection connect = ss.getConnection();
-			Statement state = connect.createStatement();
-			ResultSet result = state.executeQuery("SELECT * FROM hyperconomy_objects");
-			while (result.next()) {
-				HyperObject hobj = new HyperObject(result.getString("NAME"), result.getString("ECONOMY"), 
-						result.getString("TYPE"), result.getString("CATEGORY"), result.getString("MATERIAL"), 
-						result.getInt("ID"), result.getInt("DATA"), result.getInt("DURABILITY"), result.getDouble("VALUE"), 
-						result.getString("STATIC"), result.getDouble("STATICPRICE"), result.getDouble("STOCK"), 
-						result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-						result.getDouble("CEILING"), result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
-				hyperObjects.put(hobj.getName() + ":" + hobj.getEconomy(), hobj);
+
+
+		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			public void run() {
+				//log.severe("loadSQL() async task");
+				QueryResult result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_objects");
+				//log = Logger.getLogger("Minecraft");
+				
+				while (result.next()) {
+					//log.severe("Name:" + result.getString("NAME"));
+					HyperObject hobj = new HyperObject(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), result.getString("CATEGORY"), result.getString("MATERIAL"), result.getInt("ID"), result.getInt("DATA"), result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"), result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), result
+							.getDouble("CEILING"), result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
+					hyperObjects.put(hobj.getName() + ":" + hobj.getEconomy(), hobj);
+				}
+				//log.severe("Result closed");
+				result.close();
+
+				result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_players");
+				while (result.next()) {
+					HyperPlayer hplayer = new HyperPlayer();
+					hplayer.setName(result.getString("PLAYER"));
+					hplayer.setEconomy(result.getString("ECONOMY"));
+					hplayer.setBalance(result.getDouble("BALANCE"));
+					hplayer.setX(result.getDouble("X"));
+					hplayer.setY(result.getDouble("Y"));
+					hplayer.setZ(result.getDouble("Z"));
+					hplayer.setWorld(result.getString("WORLD"));
+					hplayer.setHash(result.getString("HASH"));
+					hyperPlayers.put(hplayer.getName(), hplayer);
+				}
+				result.close();
+
+				economies = sr.getStringColumn("SELECT DISTINCT ECONOMY FROM hyperconomy_objects");
+				objectsLoaded = true;
 			}
-			result.close();
-			state.close();
-			connect.close();
-			ss = null;
-		} catch (SQLException e) {
-			new HyperError(e);
-		}
-		
-		try {
-			SQLSelect ss = new SQLSelect();
-			Connection connect = ss.getConnection();
-			Statement state = connect.createStatement();
-			ResultSet result = state.executeQuery("SELECT * FROM hyperconomy_players");
-			while (result.next()) {
-				HyperPlayer hplayer = new HyperPlayer();
-				hplayer.setName(result.getString("PLAYER"));
-				hplayer.setEconomy(result.getString("ECONOMY"));
-				hplayer.setBalance(result.getDouble("BALANCE"));
-				hplayer.setX(result.getDouble("X"));
-				hplayer.setY(result.getDouble("Y"));
-				hplayer.setZ(result.getDouble("Z"));
-				hplayer.setWorld(result.getString("WORLD"));
-				hplayer.setHash(result.getString("HASH"));
-				hyperPlayers.put(hplayer.getName(), hplayer);
-			}
-			result.close();
-			state.close();
-			connect.close();
-			ss = null;
-		} catch (SQLException e) {
-			new HyperError(e);
-		}
-		
-		SQLSelect ss = new SQLSelect();
-		economies = ss.getStringColumn("SELECT ECONOMY FROM hyperconomy_objects");
-		ss.closeConnection();
-		ss = null;
-		return true;
+		});
 	}
 
 	public ArrayList<String> getObjectKeys() {
@@ -264,17 +271,17 @@ public class DataHandler implements Listener {
 		return econs;
 	}
 
-	public boolean sqlLoaded() {
-		return sqlloaded;
+	public boolean objectsLoaded() {
+		return objectsLoaded;
 	}
 
-	public boolean dataBuilt() {
-		return databuilt;
-	}
+	//public boolean dataBuilt() {
+	//	return databuilt;
+	//}
 
 	public void reset() {
-		sqlloaded = false;
-		databuilt = false;
+		objectsLoaded = false;
+		//databuilt = false;
 	}
 
 	public void clearData() {
@@ -292,6 +299,103 @@ public class DataHandler implements Listener {
 			}
 		}
 		return player;
+	}
+	
+	
+	
+	public ArrayList<String> getNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		for (HyperObject ho:hyperObjects.values()) {
+			if (ho.getEconomy().equalsIgnoreCase("default")) {
+				names.add(ho.getName());
+			}
+		}
+		return names;
+	}
+
+	public ArrayList<String> getItemNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		for (HyperObject ho:hyperObjects.values()) {
+			if (ho.getEconomy().equalsIgnoreCase("default") && (ho.getType().equalsIgnoreCase("item") || ho.getType().equalsIgnoreCase("experience"))) {
+				names.add(ho.getName());
+			}
+		}
+		return names;
+	}
+
+	public ArrayList<String> getEnchantNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		for (HyperObject ho:hyperObjects.values()) {
+			if (ho.getEconomy().equalsIgnoreCase("default") && ho.getType().equalsIgnoreCase("enchantment")) {
+				names.add(ho.getName());
+			}
+		}
+		return names;
+	}
+	
+	//public String getnameData(String key) {
+	//	return namedata.get(key);
+	//}
+
+	//public String getEnchantData(String key) {
+	//	return enchantdata.get(key);
+	//}
+	
+	public String getEnchantNameWithoutLevel(String bukkitName) {
+		for (HyperObject ho:hyperObjects.values()) {
+			if (ho.getType().equalsIgnoreCase("enchantment") && ho.getMaterial().equalsIgnoreCase(bukkitName)) {
+				String name = ho.getName();
+				return name.substring(0, name.length() - 1);
+			}
+		}
+		return null;
+	}
+	
+	public boolean objectTest(String name) {
+		for (HyperObject ho:hyperObjects.values()) {
+			if (ho.getName().equalsIgnoreCase(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean itemTest(String name) {
+		for (HyperObject ho:hyperObjects.values()) {
+			if (ho.getName().equalsIgnoreCase(name) && (ho.getType().equalsIgnoreCase("item") || ho.getType().equalsIgnoreCase("experience"))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean enchantTest(String name) {
+		for (HyperObject ho:hyperObjects.values()) {
+			if (ho.getName().equalsIgnoreCase(name) && ho.getType().equalsIgnoreCase("enchantment")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public String fixName(String nam) {
+		ArrayList<String> names = getNames();
+		for (int i = 0; i < names.size(); i++) {
+			if (names.get(i).equalsIgnoreCase(nam)) {
+				return names.get(i);
+			}
+		}
+		return nam;
+	}
+	
+	public String fixNameTest(String nam) {
+		ArrayList<String> names = getNames();
+		for (int i = 0; i < names.size(); i++) {
+			if (names.get(i).equalsIgnoreCase(nam)) {
+				return names.get(i);
+			}
+		}
+		return null;
 	}
 
 }

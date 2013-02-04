@@ -26,7 +26,7 @@ public class Value {
 				} else {
 					amount = 1;
 				}
-				if (hc.itemTest(name)) {
+				if (sf.itemTest(name)) {
 					double val = calc.getTvalue(name, amount, playerecon);
 					double salestax = 0;
 					if (player != null) {

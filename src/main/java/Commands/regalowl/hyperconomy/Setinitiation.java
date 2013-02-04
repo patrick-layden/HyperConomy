@@ -12,7 +12,7 @@ public class Setinitiation {
 		try {
 			if (args.length == 1) {
 				name = args[0];
-				if (hc.itemTest(name)) {
+				if (sf.itemTest(name)) {
 					boolean nstatus;
 					boolean istatus = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
 					if (istatus) {
@@ -32,7 +32,7 @@ public class Setinitiation {
 				String ench = args[1];
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
-					if (hc.enchantTest(name)) {
+					if (sf.enchantTest(name)) {
 						boolean nstatus;
 						boolean istatus = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
 						if (istatus) {

@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class Setstaticall {
 	Setstaticall(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		ArrayList<String> names = hc.getNames();
+		ArrayList<String> names = hc.getDataFunctions().getNames();
 		DataHandler sf = hc.getDataFunctions();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();

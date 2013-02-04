@@ -63,7 +63,7 @@ public class Browseshop {
     		if (player != null) {
     			nameshop = s.getShop(player).getName();
     		}
-			ArrayList<String> names = hc.getNames();
+			ArrayList<String> names = sf.getNames();
 			ArrayList<String> rnames = new ArrayList<String>();
 			int i = 0;
 			while(i < names.size()) {
@@ -99,12 +99,12 @@ public class Browseshop {
 						String iname = rnames.get(count);
 			            Double cost = 0.0;
 			            double stock = 0;
-			            if (hc.itemTest(iname)) {
+			            if (sf.itemTest(iname)) {
 							cost = calc.getCost(iname, 1, playerecon);
 							double taxpaid = calc.getPurchaseTax(iname, playerecon, cost);
 							cost = calc.twoDecimals(cost + taxpaid);
 							stock = sf.getHyperObject(iname, playerecon).getStock();
-						} else if (hc.enchantTest(iname)) {
+						} else if (sf.enchantTest(iname)) {
 							cost = calc.getEnchantCost(iname, EnchantmentClass.DIAMOND, playerecon);
 							cost = cost + calc.getEnchantTax(iname, playerecon, cost);
 							stock = sf.getHyperObject(iname, playerecon).getStock();

@@ -431,7 +431,7 @@ public class ETransaction {
 		Iterator<Enchantment> ite = enchants.keySet().iterator();
 		while (ite.hasNext()) {
 			Enchantment e = ite.next();
-			enchantments.add(hc.getEnchantData(e.getName()) + enchants.get(e));
+			enchantments.add(hc.getDataFunctions().getEnchantNameWithoutLevel(e.getName()) + enchants.get(e));
 		}
 		return enchantments;
 	}

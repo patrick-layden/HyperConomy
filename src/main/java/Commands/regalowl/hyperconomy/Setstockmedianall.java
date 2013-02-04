@@ -17,7 +17,7 @@ public class Setstockmedianall {
 				if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 					new Backup();
 				}
-				ArrayList<String> names = hc.getNames();
+				ArrayList<String> names = hc.getDataFunctions().getNames();
 				for (int c = 0; c < names.size(); c++) {
 					sf.getHyperObject(names.get(c), playerecon).setStock(sf.getHyperObject(names.get(c), playerecon).getMedian());
 					sf.getHyperObject(names.get(c), playerecon).setInitiation("false");

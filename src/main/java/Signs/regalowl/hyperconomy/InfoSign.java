@@ -66,6 +66,7 @@ public class InfoSign {
 	public boolean setData(String signKey, SignType type, String objectName, String economy) {
 		try {
 			hc = HyperConomy.hc;
+			DataHandler dh = hc.getDataFunctions();
 			L = hc.getLanguageFile();
 			if (signKey == null || type == null || objectName == null) {
 				return false;
@@ -84,7 +85,7 @@ public class InfoSign {
 			if (economy != null) {
 				this.economy = economy;
 			}
-			isEnchantment = hc.enchantTest(this.objectName);
+			isEnchantment = dh.enchantTest(this.objectName);
 			Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
 			if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
 				s = (Sign) signblock.getState();

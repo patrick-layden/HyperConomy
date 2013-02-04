@@ -34,6 +34,7 @@ public class ChestShop implements Listener{
 	private Account acc;
 	private ShopFactory s;
 	private LanguageFile L;
+	private DataHandler dh;
 	
 	private ArrayList<BlockFace> faces = new ArrayList<BlockFace>();
 	private ArrayList<BlockFace> allfaces = new ArrayList<BlockFace>();
@@ -41,6 +42,7 @@ public class ChestShop implements Listener{
 	ChestShop() {
 		
 		hc = HyperConomy.hc;
+		dh = hc.getDataFunctions();
 		tran = hc.getTransaction();
 		calc = hc.getCalculation();
 		ench = hc.getETransaction();
@@ -517,14 +519,13 @@ public class ChestShop implements Listener{
 				    				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 					    			if (!ench.hasenchants(icevent.getCurrentItem())) {
 					    				
-						    			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getDurability();
-					    				String name = hc.getnameData(key);
+					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
 					    				int id = icevent.getCurrentItem().getTypeId();
 					    				int data =  icevent.getCurrentItem().getDurability();
 					    				int camount = icevent.getCurrentItem().getAmount();
 					    				
-						    			if (slot < 27 && name != null) {
-						    				
+						    			if (slot < 27 && ho != null) {
+						    				String name = ho.getName();
 						    				if (buy) {
 								    			if (setprice) {
 								    				tran.buyChest(name, id, data, line34, p, camount, icevent.getView().getTopInventory(), calc.twoDecimals((camount * staticprice)));
@@ -535,8 +536,8 @@ public class ChestShop implements Listener{
 						    					p.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
 						    				}
 
-						    			} else if (slot >= 27 && name != null){
-						    				
+						    			} else if (slot >= 27 && ho != null){
+						    				String name = ho.getName();
 						    				if (sell) {
 						    					int itemamount = tran.countItems(id, data, icevent.getView().getTopInventory());
 						    					
@@ -583,13 +584,12 @@ public class ChestShop implements Listener{
 					    		} else if (icevent.isLeftClick()) {
 					    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 					    			if (!ench.hasenchants(icevent.getCurrentItem())) {
-						    			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getDurability();
-					    				String name = hc.getnameData(key);
+					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
 					    				int id = icevent.getCurrentItem().getTypeId();
 					    				int data =  icevent.getCurrentItem().getDurability();
 					    				
-						    			if (slot < 27 && name != null) {
-						    				
+						    			if (slot < 27 && ho != null) {
+						    				String name = ho.getName();
 						    				if (buy) {
 						    					double price = calc.getTvalue(name, 1, hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
 						    					if (setprice) {
@@ -604,8 +604,8 @@ public class ChestShop implements Listener{
 						    				}
 			
 							    			
-						    			} else if (slot >= 27 && name != null) {
-						    				
+						    			} else if (slot >= 27 && ho != null) {
+						    				String name = ho.getName();
 						    				if (sell) {
 						    					int itemamount = tran.countItems(id, data, icevent.getView().getTopInventory());
 						    					
@@ -628,17 +628,16 @@ public class ChestShop implements Listener{
 						    			}
 					    			} else {
 
-					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getDurability();
-						    				String name = hc.getnameData(key);
+					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
 						    				
-							    			if (slot < 27 && name != null) {
+							    			if (slot < 27 && ho != null) {
 							    				
 							    				if (buy) {
 				
 							    						double price = 0;
 								    					for (Enchantment enchantment : ench.listEnchantments(icevent.getCurrentItem())) {
 								    						int lvl = ench.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
-								    						String nam = hc.getEnchantData(enchantment.getName());
+								    						String nam = dh.getEnchantNameWithoutLevel(enchantment.getName());
 								        					String fnam = nam + lvl;
 								        					price += calc.getEnchantValue(fnam, EnchantmentClass.fromString(p.getItemInHand().getType().toString()), hc.getDataFunctions().getHyperPlayer(line34).getEconomy());
 									    					if (setprice) {
@@ -661,7 +660,7 @@ public class ChestShop implements Listener{
 							    				}
 				
 							    				
-							    			} else if (slot >= 27 && name != null) {
+							    			} else if (slot >= 27 && ho != null) {
 							    				
 							    				p.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
 							    				
@@ -673,12 +672,12 @@ public class ChestShop implements Listener{
 					    		} else if (icevent.isRightClick()) {
 					    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 					    			if (!ench.hasenchants(icevent.getCurrentItem())) {
-					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getDurability();
-					    				String name = hc.getnameData(key);
+					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
+					    				String name = ho.getName();
 					    				int id = icevent.getCurrentItem().getTypeId();
 					    				int data =  icevent.getCurrentItem().getDurability();
 					    				
-						    			if (slot < 27 && name != null) {
+						    			if (slot < 27 && ho != null) {
 						    				
 						    				if (buy) {
 						    					if (setprice) {
@@ -692,7 +691,7 @@ public class ChestShop implements Listener{
 						    				}
 			
 						    				
-						    			} else if (slot >= 27 && name != null) {
+						    			} else if (slot >= 27 && ho != null) {
 						    				
 						    				if (sell) {
 						    					int itemamount = tran.countItems(id, data, icevent.getView().getTopInventory());
@@ -731,15 +730,13 @@ public class ChestShop implements Listener{
 						    				
 						    			}
 					    			} else {				    				
-					        			String key = icevent.getCurrentItem().getTypeId() + ":" + icevent.getCurrentItem().getDurability();
-						    				String name = hc.getnameData(key);
+					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
 						    				
-							    			if (slot < 27 && name != null) {
-							    				
+							    			if (slot < 27 && ho != null) {
 							    				if (buy) {	
 							    					for (Enchantment enchantment : ench.listEnchantments(icevent.getCurrentItem())) {
 							    						int lvl = ench.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
-							    						String nam = hc.getEnchantData(enchantment.getName());
+							    						String nam = dh.getEnchantNameWithoutLevel(enchantment.getName());
 							        					String fnam = nam + lvl;
 							        					if (setprice) {
 							        						ench.buyChestEnchant(fnam, p, icevent.getCurrentItem(), line34, staticprice);
@@ -750,7 +747,7 @@ public class ChestShop implements Listener{
 							    				} else {
 							    					p.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
 							    				}
-							    			} else if (slot >= 27 && name != null) {
+							    			} else if (slot >= 27 && ho != null) {
 							    				
 							    				p.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
 							    				

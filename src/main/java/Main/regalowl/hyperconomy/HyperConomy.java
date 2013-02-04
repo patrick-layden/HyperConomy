@@ -2,7 +2,6 @@ package regalowl.hyperconomy;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Logger;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
@@ -32,6 +31,7 @@ public class HyperConomy extends JavaPlugin {
 	private ItemDisplayFactory itdi;
 	private DataHandler df;
 	private SQLWrite sw;
+	private SQLRead sr;
 	private SQLEconomy sqe;
 	private HyperWebStart hws;
 	private boolean usemysql;
@@ -45,11 +45,6 @@ public class HyperConomy extends JavaPlugin {
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
 	private Economy economy;
-	private HashMap<String, String> namedata = new HashMap<String, String>();
-	private HashMap<String, String> enchantdata = new HashMap<String, String>();
-	private ArrayList<String> names = new ArrayList<String>();
-	private ArrayList<String> inames = new ArrayList<String>();
-	private ArrayList<String> enames = new ArrayList<String>();
 	private int errorCount;
 	private boolean errorResetActive;
 	private boolean shuttingDown;
@@ -83,13 +78,13 @@ public class HyperConomy extends JavaPlugin {
 			this.setupEconomy();
 		} else if (useExternalEconomy) {
 			log.warning(L.get("VAULT_NOT_FOUND"));
-			//getPluginLoader().disablePlugin(this);
-			//return;
 			useExternalEconomy = false;
 		}
 		acc.checkshopAccount();
 		hist = new History();
 		itdi = new ItemDisplayFactory();
+		hws = new HyperWebStart();
+		log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 	}
 
 	public void initialize() {
@@ -98,11 +93,6 @@ public class HyperConomy extends JavaPlugin {
 		mlock = false;
 		sqllock = false;
 		brokenfile = false;
-		enames.clear();
-		inames.clear();
-		names.clear();
-		enchantdata.clear();
-		namedata.clear();
 		boolean migrate = false;
 		YamlFile yam = new YamlFile(this);
 		yam.YamlEnable();
@@ -118,13 +108,12 @@ public class HyperConomy extends JavaPlugin {
 			apiVersion = yaml.getConfig().getDouble("api-version");
 			currency = yaml.getConfig().getString("config.currency-symbol");
 			useExternalEconomy = yaml.getConfig().getBoolean("config.use-external-economy-plugin");
-			df = new DataHandler();
 			currency = this.getYaml().getConfig().getString("config.currency-symbol");
 			logerrors = this.getYaml().getConfig().getBoolean("config.log-errors");
 			serverVersion = this.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
 			new Update();
-			sqe = new SQLEconomy();
 			
+			sqe = new SQLEconomy();
 			boolean databaseOk = false;
 			if (usemysql) {
 				databaseOk = sqe.checkMySQL();
@@ -133,6 +122,8 @@ public class HyperConomy extends JavaPlugin {
 			}
 			if (databaseOk) {
 				sw = new SQLWrite();
+				sr = new SQLRead();
+				df = new DataHandler();
 				migrate = sqe.checkData();
 			} else {
 				log.severe(L.get("LOG_BREAK"));
@@ -154,7 +145,7 @@ public class HyperConomy extends JavaPlugin {
 			not = new Notification();
 			isign = new InfoSignHandler();
 			tsign = new TransactionSign();
-			buildData();
+			//buildData();
 			if (!migrate) {
 				df.load();
 			}
@@ -162,8 +153,6 @@ public class HyperConomy extends JavaPlugin {
 			startSave();
 			tsign.setTransactionSign(this, tran, calc, ench, l, acc, not);
 			new ChestShop();
-			hws = new HyperWebStart();
-			log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 		}
 	}
 
@@ -209,16 +198,12 @@ public class HyperConomy extends JavaPlugin {
 		tsign= null;
 		itdi= null;
 		df= null;
-		sw= null;
+		sw = null;
+		sr = null;
 		sqe= null;
 		hws= null;
 		yaml= null;
 		economy= null;
-		namedata.clear();
-		enchantdata.clear();
-		names.clear();
-		inames.clear();
-		enames.clear();
 	}
 	
 	public void disableWebPage() {
@@ -299,33 +284,6 @@ public class HyperConomy extends JavaPlugin {
 		return (economy != null);
 	}
 
-	public boolean buildData() {
-		inames.clear();
-		namedata.clear();
-		enames.clear();
-		enchantdata.clear();
-
-		names.clear();
-
-		SQLSelect ss = new SQLSelect();
-		inames = ss.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
-		ArrayList<String> iids = ss.getStringColumn("SELECT ID FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
-		ArrayList<String> idatas = ss.getStringColumn("SELECT DATA FROM hyperconomy_objects WHERE (TYPE='experience' OR TYPE = 'item') AND ECONOMY='default'");
-		for (int c = 0; c < inames.size(); c++) {
-			namedata.put(iids.get(c) + ":" + idatas.get(c), inames.get(c));
-		}
-		enames = ss.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE TYPE='enchantment' AND ECONOMY='default'");
-		ArrayList<String> eids = ss.getStringColumn("SELECT MATERIAL FROM hyperconomy_objects WHERE TYPE='enchantment' AND ECONOMY='default'");
-		for (int c = 0; c < enames.size(); c++) {
-			String enchantname = enames.get(c);
-			enchantdata.put(eids.get(c), enchantname.substring(0, enchantname.length() - 1));
-		}
-		names = ss.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE ECONOMY='default'");
-		ss.closeConnection();
-		ss = null;
-		return true;
-	}
-
 	public void startSave() {
 		savetaskid = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
@@ -353,119 +311,15 @@ public class HyperConomy extends JavaPlugin {
 				}
 				lock = true;
 				s.stopshopCheck();
-				//l.stopBuffer();
 				hist.stopHistoryLog();
 				isign.stopSignUpdate();
 				isign.reloadSigns();
-				//l.saveBuffer();
 				stopSave();
 			}
 		}
 	}
 
-	public String fixName(String nam) {
-		for (int i = 0; i < names.size(); i++) {
-			if (names.get(i).equalsIgnoreCase(nam)) {
-				return names.get(i);
-			}
-		}
-		return nam;
-	}
-	
-	public String fixNameTest(String nam) {
-		for (int i = 0; i < names.size(); i++) {
-			if (names.get(i).equalsIgnoreCase(nam)) {
-				return names.get(i);
-			}
-		}
-		return null;
-	}
 
-	public String fixsName(String nam) {
-		String name = nam;
-		int c = 0;
-		int l = getYaml().getShops().getKeys(false).size();
-		Object names[] = getYaml().getShops().getKeys(false).toArray();
-		while (c < l) {
-			if (names[c].toString().equalsIgnoreCase(name)) {
-				name = names[c].toString();
-				return name;
-			}
-			c++;
-		}
-		return name;
-	}
-
-	
-	public boolean objectTest(String name) {
-		if (names.contains(name)) {
-			return true;
-		}
-		name = fixName(name);
-		if (names.contains(name)) {
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean itemTest(String name) {
-		if (inames.contains(name)) {
-			return true;
-		}
-		name = fixName(name);
-		if (inames.contains(name)) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean enchantTest(String name) {
-		if (enames.contains(name)) {
-			return true;
-		}
-		name = fixName(name);
-		if (enames.contains(name)) {
-			return true;
-		}
-		return false;
-	}
-/*
-	public String testiString(String name) {
-		String teststring = null;
-		if (inames.contains(name)) {
-			teststring = name;
-		} else {
-			teststring = null;
-		}
-		if (teststring == null) {
-			name = fixName(name);
-			if (inames.contains(name)) {
-				teststring = name;
-			} else {
-				teststring = null;
-			}
-		}
-		return teststring;
-	}
-
-	public String testeString(String name) {
-		String teststring = null;
-		if (enames.contains(name)) {
-			teststring = name;
-		} else {
-			teststring = null;
-		}
-		if (teststring == null) {
-			name = fixName(name);
-			if (enames.contains(name)) {
-				teststring = name;
-			} else {
-				teststring = null;
-			}
-		}
-		return teststring;
-	}
-*/	
 	public void incrementErrorCount() {
 		errorCount++;
 		if (errorCount > 20) {
@@ -488,17 +342,7 @@ public class HyperConomy extends JavaPlugin {
 		}
 	}
 
-	public ArrayList<String> getNames() {
-		return names;
-	}
 
-	public ArrayList<String> getInames() {
-		return inames;
-	}
-
-	public ArrayList<String> getEnames() {
-		return enames;
-	}
 
 	public boolean isLocked() {
 		return lock;
@@ -530,14 +374,6 @@ public class HyperConomy extends JavaPlugin {
 
 	public YamlFile getYaml() {
 		return yaml;
-	}
-
-	public String getnameData(String key) {
-		return namedata.get(key);
-	}
-
-	public String getEnchantData(String key) {
-		return enchantdata.get(key);
 	}
 
 	public DataHandler getDataFunctions() {
@@ -582,6 +418,10 @@ public class HyperConomy extends JavaPlugin {
 
 	public SQLWrite getSQLWrite() {
 		return sw;
+	}
+	
+	public SQLRead getSQLRead() {
+		return sr;
 	}
 
 	public SQLEconomy getSQLEconomy() {

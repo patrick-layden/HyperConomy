@@ -2,6 +2,7 @@ package regalowl.hyperconomy;
 
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 
 public class Hc {
@@ -170,6 +171,12 @@ public class Hc {
 				}
 			} else {
 				// do nothing
+			}
+			if (args[0].equalsIgnoreCase("test")) {
+				if (sender instanceof Player) {
+					Player p = (Player) sender;
+					new Test(p, args);
+				}
 			}
 			return;
 		} catch (Exception e) {

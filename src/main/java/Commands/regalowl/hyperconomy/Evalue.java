@@ -21,7 +21,7 @@ public class Evalue {
 			if ((requireShop && s.getShop(player) != null) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				if (args.length == 2) {
 					String nam = args[0];
-					if (hc.enchantTest(nam)) {
+					if (sf.enchantTest(nam)) {
 						String type = args[1];
 						if (type.equalsIgnoreCase("s")) {
 							String[] classtype = new String[9];
@@ -88,7 +88,7 @@ public class Evalue {
 							Enchantment en = null;
 							en = Enchantment.getByName(enchname);
 							int lvl = ench.getEnchantmentLevel(player.getItemInHand(), en);
-							String nam = hc.getEnchantData(enchname);
+							String nam = sf.getEnchantNameWithoutLevel(enchname);
 							String fnam = nam + lvl;
 							String mater = player.getItemInHand().getType().name();
 							double value = calc.getEnchantValue(fnam, EnchantmentClass.fromString(mater), playerecon) * duramult;

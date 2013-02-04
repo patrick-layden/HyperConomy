@@ -16,6 +16,7 @@ public class History {
 	private InfoSignHandler isign;
 	private DataHandler df;
 	private SQLWrite sw;
+	private SQLRead sr;
 
 	private int historylogtaskid;
 
@@ -30,10 +31,10 @@ public class History {
 		isign = hc.getInfoSignHandler();
 		sw = hc.getSQLWrite();
 		df = hc.getDataFunctions();
-		SQLSelect ss = new SQLSelect();
+		sr = hc.getSQLRead();
 		daysToSaveHistory = hc.getYaml().getConfig().getInt("config.daystosavehistory");
 		lastTime = System.currentTimeMillis();
-		String tc = ss.getSettingValue("history_time_counter");
+		String tc = sr.getSettingValue("history_time_counter");
 		if (tc == null) {
 			sw.addSetting("history_time_counter", "0");
 			timeCounter = 0;
@@ -77,13 +78,13 @@ public class History {
 
 	
   	private void writeHistoryThread() {
-  		ArrayList<String> objects = hc.getNames();
+  		ArrayList<String> objects = df.getNames();
   		ArrayList<String> economies = df.getEconomyList();
   		for (String object:objects) {
   			for (String economy:economies) {
-  				if (hc.itemTest(object)) {
+  				if (df.itemTest(object)) {
   					writeHistoryData(object, economy, calc.getTvalue(object, 1, economy));
-  				} else if (hc.enchantTest(object)) {
+  				} else if (df.enchantTest(object)) {
   					writeHistoryData(object, economy, calc.getEnchantValue(object, EnchantmentClass.DIAMOND, economy));
   				}
   			}
@@ -123,15 +124,14 @@ public class History {
 	public String getPercentChange(String object, int timevalue, String economy) {
 		Calculation calc = hc.getCalculation();
 		double percentChange = 0.0;
-		SQLSelect ss = new SQLSelect();
-		double historicvalue = ss.getHistoricValue(object, economy, timevalue);
+		double historicvalue = sr.getHistoricValue(object, economy, timevalue);
 		if (historicvalue == -1.0) {
 			return "?";
 		}
 		double currentvalue = 0.0;
-		if (hc.itemTest(object)) {
+		if (df.itemTest(object)) {
 			currentvalue = calc.getTvalue(object, 1, economy);
-		} else if (hc.enchantTest(object)) {
+		} else if (df.enchantTest(object)) {
 			currentvalue = calc.getEnchantValue(object, EnchantmentClass.DIAMOND, economy);
 		}
 		percentChange = ((currentvalue - historicvalue) / historicvalue) * 100;

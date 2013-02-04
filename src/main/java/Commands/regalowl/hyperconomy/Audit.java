@@ -38,66 +38,44 @@ public class Audit {
 	
 	public Double getHyperLogTotal(String account, String type) {
 		HyperConomy hc = HyperConomy.hc;
+		SQLRead sr = hc.getSQLRead();
 		String query = "";
 		if (type.equalsIgnoreCase("sale")) {
 			query = "SELECT SUM(MONEY) AS total FROM hyperconomy_log WHERE CUSTOMER = '" + account + "' AND ACTION = 'sale'";
 		} else if (type.equalsIgnoreCase("purchase")) {
 			query = "SELECT SUM(MONEY) AS total FROM hyperconomy_log WHERE CUSTOMER = '" + account + "' AND ACTION = 'purchase'";
 		}
-		try {
-			SQLSelect ss = new SQLSelect();
-			Connection connect = ss.getConnection();
-			Statement state = connect.createStatement();
-			ResultSet result = state.executeQuery(query);
-			double amount = 0.0;
-			if (result.next()) {
-				amount = result.getDouble("total");
-			}
-			result.close();
-			state.close();
-			connect.close();
-			ss = null;
-			return amount;
-		} catch (SQLException e) {
-			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "hyperconomy.error");
-			e.printStackTrace();
-			return 0.0;
+		QueryResult result = sr.getDatabaseConnection().read(query);
+		double amount = 0.0;
+		if (result.next()) {
+			amount = result.getDouble("total");
 		}
+		result.close();
+		return amount;
 	}
 	
 	
 	public Double getAuditLogTotal(String account) {
 		HyperConomy hc = HyperConomy.hc;
-		try {
-			SQLSelect ss = new SQLSelect();
-			Connection connect = ss.getConnection();
-			Statement state = connect.createStatement();
-			ResultSet result = state.executeQuery("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
-			double tBalance = 0.0;
-			//double lastSetBalance = -1;
-			while (result.next()) {
-				String action = result.getString("ACTION");
-				double amount = result.getDouble("AMOUNT");
-				if (action.equalsIgnoreCase("deposit")) {
-					tBalance += amount;
-				} else if (action.equalsIgnoreCase("withdrawal")) {
-					tBalance -= amount;
-				} else if (action.equalsIgnoreCase("setbalance")) {
-					tBalance = amount;
-				} else if (action.equalsIgnoreCase("initialization")) {
-					tBalance = amount;
-				}
+		SQLRead sr = hc.getSQLRead();
+		QueryResult result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
+		double tBalance = 0.0;
+		//double lastSetBalance = -1;
+		while (result.next()) {
+			String action = result.getString("ACTION");
+			double amount = result.getDouble("AMOUNT");
+			if (action.equalsIgnoreCase("deposit")) {
+				tBalance += amount;
+			} else if (action.equalsIgnoreCase("withdrawal")) {
+				tBalance -= amount;
+			} else if (action.equalsIgnoreCase("setbalance")) {
+				tBalance = amount;
+			} else if (action.equalsIgnoreCase("initialization")) {
+				tBalance = amount;
 			}
-			result.close();
-			state.close();
-			connect.close();
-			ss = null;
-			return tBalance;
-		} catch (SQLException e) {
-			Bukkit.broadcast(ChatColor.RED + "SQL connection failed.  Check your config settings.", "hyperconomy.error");
-			e.printStackTrace();
-			return 0.0;
 		}
+		result.close();
+		return tBalance;
 	}
 	
 }

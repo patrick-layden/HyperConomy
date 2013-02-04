@@ -14,16 +14,18 @@ public class Iteminfo {
 		Calculation calc = hc.getCalculation();
 		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
+		DataHandler dh = hc.getDataFunctions();
 		try {		
 			if (args.length == 1) {
 				int givenid = Integer.parseInt(args[0]);
 				int dv = 0;
 				int newdat = calc.newData(givenid, dv);
-				String ke = givenid + ":" + newdat;
-				String nam = hc.getnameData(ke);
-				
-				if (nam == null) {
+				HyperObject ho = dh.getHyperObject(givenid, newdat);
+				String nam = "";
+				if (ho == null) {
 					nam = "Item not in database.";
+				} else {
+					nam = ho.getName();
 				}
 				player.sendMessage(L.get("LINE_BREAK"));
 				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
@@ -33,11 +35,12 @@ public class Iteminfo {
 				int givenid = Integer.parseInt(args[0]);;
 				int givendam = Integer.parseInt(args[1]);
 				int newdat = calc.newData(givenid, givendam);
-				String ke = givenid + ":" + newdat;
-				String nam = hc.getnameData(ke);
-				
-				if (nam == null) {
+				HyperObject ho = dh.getHyperObject(givenid, newdat);
+				String nam = "";
+				if (ho == null) {
 					nam = "Item not in database.";
+				} else {
+					nam = ho.getName();
 				}
 				player.sendMessage(L.get("LINE_BREAK"));
 				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
@@ -47,11 +50,12 @@ public class Iteminfo {
 			String mat = player.getItemInHand().getType().toString();
 			int itemid = player.getItemInHand().getTypeId();
 			int dv = calc.getDamageValue(player.getItemInHand());
-			String ke = itemid + ":" + dv;
-			String nam = hc.getnameData(ke);
-
-			if (nam == null) {
+			HyperObject ho = dh.getHyperObject(itemid, dv);
+			String nam = "";
+			if (ho == null) {
 				nam = "Item not in database.";
+			} else {
+				nam = ho.getName();
 			}
 			
 			String enchantments = "";

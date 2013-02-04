@@ -2,25 +2,21 @@ package regalowl.hyperconomy;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.bukkit.scheduler.BukkitTask;
 
 
 public class SQLWrite {
 
 	private HyperConomy hc;
-	private SQLWrite sw;
 	private int threadlimit;
 	private ArrayList<String> buffer = new ArrayList<String>();
 	private boolean initialWrite;
 	private BukkitTask writeTask;
 	private boolean writeActive;
-	private HashMap<DatabaseConnection, Boolean> dbConnections = new HashMap<DatabaseConnection, Boolean>();
+	private ArrayList<DatabaseConnection> dbConnections = new ArrayList<DatabaseConnection>();
 	
 	SQLWrite() {
 		hc = HyperConomy.hc;
-		sw = this;
 		if (hc.useMySQL()) {
 			threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads");
 		} else {
@@ -32,11 +28,11 @@ public class SQLWrite {
 	    		public void run() {
 	    			DatabaseConnection dc = null;
 	    			if (hc.useMySQL()) {
-	    				dc = new MySQLConnection(sw);
+	    				dc = new MySQLConnection();
 	    			} else {
-		    			dc = new SQLiteConnection(sw);
+		    			dc = new SQLiteConnection();
 	    			}
-	    			dbConnections.put(dc, true);
+	    			dbConnections.add(dc);
 	    		}
 	    	}, i);
 		}
@@ -78,15 +74,8 @@ public class SQLWrite {
 		startWrite();
 	}
 	
-	
-	public void returnConnection(DatabaseConnection dc) {
-		dbConnections.put(dc, true);
-	}
-	
-    
-    
-    
-	
+
+
 	
 	private void startWrite() {
 		if (writeActive) {
@@ -96,16 +85,15 @@ public class SQLWrite {
 		writeTask = hc.getServer().getScheduler().runTaskTimerAsynchronously(hc, new Runnable() {
     		public void run() {
     			for (int i = 0; i < threadlimit; i++) {
-	    			if (buffer.size() == 0) {
-	    				cancelWrite();
-	    				return;
-	    			}
-	    			for (DatabaseConnection dbc:dbConnections.keySet()) {
-	    				if (dbConnections.get(dbc) == true) {
-	    					dbConnections.put(dbc, false);
+	    			for (DatabaseConnection dc:dbConnections) {
+	    				if (!dc.inUse()) {
+	    	    			if (buffer.size() == 0) {
+	    	    				cancelWrite();
+	    	    				return;
+	    	    			}
 	    	    			String statement = buffer.get(0);
 	    	    			buffer.remove(statement);
-	    	    			dbc.write(statement);
+	    	    			dc.write(statement);
 	    				}
 	    			}
     			}
@@ -143,8 +131,8 @@ public class SQLWrite {
 	
 	public int getActiveThreads() {
 		int activeThreads = 0;
-		for (boolean available:dbConnections.values()) {
-			if (!available) {
+		for (DatabaseConnection dc:dbConnections) {
+			if (dc.inUse()) {
 				activeThreads++;
 			}
 		}
@@ -153,8 +141,8 @@ public class SQLWrite {
 	
 	public int getAvailableThreads() {
 		int availableThreads = 0;
-		for (boolean available:dbConnections.values()) {
-			if (available) {
+		for (DatabaseConnection dc:dbConnections) {
+			if (!dc.inUse()) {
 				availableThreads++;
 			}
 		}
@@ -169,7 +157,7 @@ public class SQLWrite {
 	public void shutDown() {
 		cancelWrite();
 		writeActive = true;
-		for (DatabaseConnection dc:dbConnections.keySet()) {
+		for (DatabaseConnection dc:dbConnections) {
 			buffer.add(dc.closeConnection());
 		}
 		dbConnections.clear();

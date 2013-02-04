@@ -34,6 +34,21 @@ public class SQLEconomy {
 		database = config.getString("config.sql-connection.database");
 	}
 	
+	
+	private Connection getConnection() {
+		try {
+			if (hc.useMySQL()) {
+				return DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+			} else {
+				FileTools ft = new FileTools();
+				String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
+				return DriverManager.getConnection("jdbc:sqlite:" + path);
+			}
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	public boolean checkSQLLite() {
 		FileTools ft = new FileTools();
 		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
@@ -63,7 +78,7 @@ public class SQLEconomy {
 			connect = DriverManager.getConnection("jdbc:sqlite:" + path);
 			Statement state = connect.createStatement();
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE, PRIMARY KEY (NAME, ECONOMY))");
-			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL PRIMARY KEY, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL DEFAULT 'world', HASH TEXT)");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL PRIMARY KEY, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH TEXT)");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_log (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT)");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE)");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL)");
@@ -104,7 +119,7 @@ public class SQLEconomy {
 			connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 			Statement state = connect.createStatement();
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE, PRIMARY KEY (NAME, ECONOMY))");
-			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL DEFAULT 'world', HASH TEXT, PRIMARY KEY (PLAYER))");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH TEXT, PRIMARY KEY (PLAYER))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_log (ID INT NOT NULL AUTO_INCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT, PRIMARY KEY (ID))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INT NOT NULL AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, PRIMARY KEY (ID))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INT NOT NULL AUTO_INCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL, PRIMARY KEY (ID))");
@@ -121,12 +136,17 @@ public class SQLEconomy {
 	private void updateMySQL1(Connection connect) {
 		try {
 			Statement state = connect.createStatement();
+			state.execute("CREATE TABLE IF NOT EXISTS hyperobjects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE)");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperplayers (PLAYER VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0')");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperlog (ID INT NOT NULL AUTO_INCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT, PRIMARY KEY (ID))");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperhistory (ID INT NOT NULL AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, COUNT INT, PRIMARY KEY (ID))");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperauditlog (ID INT NOT NULL AUTO_INCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL, PRIMARY KEY (ID))");
 			ResultSet rs = state.executeQuery("SELECT * FROM hyperhistory");
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int numcolumns = rsmd.getColumnCount();
 			if (numcolumns != 6) {
 				state.execute("DROP TABLE hyperhistory");
-				state.execute("CREATE TABLE IF NOT EXISTS hyperhistory (ID INT NOT NULL AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, COUNT INT, PRIMARY KEY (ID))");
+				state.execute("CREATE TABLE hyperhistory (ID INT NOT NULL AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, COUNT INT, PRIMARY KEY (ID))");
 			}
 	
 			rs = state.executeQuery("SELECT * FROM hyperplayers");
@@ -134,10 +154,9 @@ public class SQLEconomy {
 			numcolumns = rsmd.getColumnCount();
 			if (numcolumns != 3) {
 				state.execute("DROP TABLE hyperplayers");
-				state.execute("CREATE TABLE IF NOT EXISTS hyperplayers (PLAYER TINYTEXT, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0')");
+				state.execute("CREATE TABLE hyperplayers (PLAYER TINYTEXT, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0')");
 			}	
-			SQLSelect ss = new SQLSelect();
-			boolean exists = ss.fieldExists("hyperobjects", "ceiling");
+			boolean exists = fieldExists(connect, "hyperobjects", "ceiling");
 			if (!exists) {
 				state.execute("ALTER TABLE hyperobjects ADD CEILING DOUBLE AFTER STARTPRICE");
 				state.execute("ALTER TABLE hyperobjects ADD FLOOR DOUBLE AFTER CEILING");
@@ -150,7 +169,7 @@ public class SQLEconomy {
 			state.execute("ALTER TABLE hyperplayers ADD X DOUBLE NOT NULL DEFAULT '0' AFTER BALANCE");
 			state.execute("ALTER TABLE hyperplayers ADD Y DOUBLE NOT NULL DEFAULT '0' AFTER X");
 			state.execute("ALTER TABLE hyperplayers ADD Z DOUBLE NOT NULL DEFAULT '0' AFTER Y");
-			state.execute("ALTER TABLE hyperplayers ADD WORLD TINYTEXT NOT NULL DEFAULT 'world' AFTER Z");
+			state.execute("ALTER TABLE hyperplayers ADD WORLD TINYTEXT NOT NULL AFTER Z");
 			state.execute("ALTER TABLE hyperplayers ADD HASH TEXT AFTER WORLD");
 			state.execute("ALTER TABLE hyperobjects ADD MAXSTOCK DOUBLE AFTER FLOOR");
 			state.execute("ALTER TABLE hyperhistory DROP COUNT");
@@ -163,18 +182,39 @@ public class SQLEconomy {
 			state.close();
 			connect.close();
 		} catch (SQLException e) {
-			
+			//do nothing and continue
 		}
+	}
+	
+	
+	public boolean fieldExists(Connection connect, String table, String field) {
+		
+		try {
+			Statement state = connect.createStatement();
+			ResultSet result = state.executeQuery("SELECT * FROM " + table);
+			ResultSetMetaData meta = result.getMetaData();
+			int nCols = meta.getColumnCount();
+			for (int i = 1; i < nCols + 1; i++) {
+			    if (meta.getColumnName(i).equalsIgnoreCase(field)) {
+			        result.close();
+			    	return true;
+			    }
+			}
+	        result.close();
+	        state.close();
+			return false;
+		} catch (Exception e) {
+			new HyperError(e);
+			return false;
+		}
+
 	}
 	
 	
 	public boolean checkData() {
 		boolean migrate = false;
 		ArrayList<String> testdata = new ArrayList<String>();
-		SQLSelect ss = new SQLSelect();
-		testdata = ss.getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE ECONOMY='default'");
-		ss.closeConnection();
-		ss = null;
+		testdata = getStringColumn("SELECT NAME FROM hyperconomy_objects WHERE ECONOMY='default'");
 		if (testdata.size() == 0) {
 			migrate = true;
 			new Backup();
@@ -182,6 +222,8 @@ public class SQLEconomy {
 		}
 		return migrate;
 	}
+	
+	
 	/**
 	 * 
 	 */
@@ -222,8 +264,8 @@ public class SQLEconomy {
 	}
 	public void createNewEconomy(String economy) {
 		DataHandler sf = hc.getDataFunctions();
-		ArrayList<String> items = hc.getInames();
-		ArrayList<String> enchants = hc.getEnames();
+		ArrayList<String> items = sf.getItemNames();
+		ArrayList<String> enchants = sf.getEnchantNames();
 		ArrayList<String> statements = new ArrayList<String>();
 		for (int i = 0; i < items.size(); i++) {
 			String type = "item";
@@ -331,84 +373,101 @@ public class SQLEconomy {
 			double newceiling = ho.getCeiling();
 			double newfloor = ho.getFloor();
 			double newmaxstock = ho.getMaxstock();
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".information.type", newtype);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".information.type", newtype);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".information.category", newcategory);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".information.category", newcategory);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".information.material", newmaterial);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".information.name", newmaterial);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".information.id", newid);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".information.id", newid);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".information.data", newdata);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".information.data", newdurability);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".value", newvalue);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".value", newvalue);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".price.static", Boolean.parseBoolean(newstatic));
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".price.static", Boolean.parseBoolean(newstatic));
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".price.staticprice", newstaticprice);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".price.staticprice", newstaticprice);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".stock.stock", newstock);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".stock.stock", newstock);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".stock.median", newmedian);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".stock.median", newmedian);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".initiation.startprice", newstartprice);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".initiation.startprice", newstartprice);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".price.ceiling", newceiling);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".price.ceiling", newceiling);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".price.floor", newfloor);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".price.floor", newfloor);
 			}
-			if (hc.itemTest(name)) {
+			if (sf.itemTest(name)) {
 				items.set(name + ".stock.maxstock", newmaxstock);
-			} else if (hc.enchantTest(name)) {
+			} else if (sf.enchantTest(name)) {
 				enchants.set(name + ".stock.maxstock", newmaxstock);
 			}
 		}
 		hc.getYaml().saveYamls();
+	}
+	
+	
+	private ArrayList<String> getStringColumn(String statement) {
+		ArrayList<String> data = new ArrayList<String>();
+		try {
+			Connection connect = getConnection();
+			Statement state = connect.createStatement();
+			ResultSet result = state.executeQuery(statement);
+			while (result.next()) {
+				data.add(result.getString(1));
+			}
+			result.close();
+			return data;
+		} catch (SQLException e) {
+			return data;
+		}
 	}
 	
 }

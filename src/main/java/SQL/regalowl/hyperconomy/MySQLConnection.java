@@ -2,15 +2,18 @@ package regalowl.hyperconomy;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitTask;
 
 public class MySQLConnection extends DatabaseConnection {
 
 
-	private DatabaseConnection dc;
+
 	
 	private HyperConomy hc;
 	private String username;
@@ -23,19 +26,15 @@ public class MySQLConnection extends DatabaseConnection {
 	private String statement;
 	private boolean logErrors;
 	private int sqlRetryCount;
-	private int connectionRetryCount;
-	private SQLWrite sw;
+
 	
 	private BukkitTask writeTask;
 	private BukkitTask retryWriteTask;
-	private BukkitTask retryConnectTask;
 	
+	private boolean inUse;
 	
-	MySQLConnection(SQLWrite sw) {
-		this.sw = sw;
-		dc = this;
+	MySQLConnection() {
 		hc = HyperConomy.hc;
-		sw = hc.getSQLWrite();
 		FileConfiguration config = hc.getYaml().getConfig();
 		username = config.getString("config.sql-connection.username");
 		password = config.getString("config.sql-connection.password");
@@ -45,13 +44,50 @@ public class MySQLConnection extends DatabaseConnection {
 		openConnection();
 		logErrors = hc.getYaml().getConfig().getBoolean("config.log-sqlwrite-errors");
 		sqlRetryCount = 0;
-		connectionRetryCount = 0;
+		inUse = false;
 	}
 	
 	
 	public void write(String statement) {
+		inUse = true;
 		this.statement = statement;
 		writeThread();
+	}
+	
+	
+	/**
+	 * This function should be run asynchronously to prevent slowing the main thread.
+	 * @param statement
+	 * @return QueryResult
+	 */
+	public QueryResult read(String statement) {
+		QueryResult qr = new QueryResult();
+		try {
+			if (connection == null || connection.isClosed()) {
+				openConnection();
+			}
+			Statement state = connection.createStatement();
+			ResultSet resultSet = state.executeQuery(statement);
+			ResultSetMetaData rsmd = resultSet.getMetaData();
+			int columnCount = rsmd.getColumnCount();
+			for (int i = 1; i <= columnCount; i++) {
+				qr.addColumnName(rsmd.getColumnLabel(i));
+			}
+			while (resultSet.next()) {
+				for (int i = 1; i <= columnCount; i++) {
+					qr.addData(i, resultSet.getString(i));
+				}
+			}
+			resultSet.close();
+			state.close();
+			statement = null;
+			hc.getSQLRead().returnConnection(this);
+			return qr;
+		} catch (SQLException e) {
+			new HyperError(e, "The failed SQL statement is in the following brackets: [" + statement + "]");
+			hc.getSQLRead().returnConnection(this);
+			return qr;
+		}
 	}
 	
 	
@@ -60,27 +96,15 @@ public class MySQLConnection extends DatabaseConnection {
 		try {
 			connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 		} catch (Exception e) {
-			connectionRetryCount++;
-			if (connectionRetryCount < 4) {
-				retryConnection(100L);
-			} else {
-				new HyperError(e, "Fatal database connection error.  Attempted to connect to database 5 times unsuccessfully.");
+			try {
+				connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+			} catch (Exception e2) {
+				new HyperError(e, "Fatal database connection error.");
 				return;
 			}
 		}
 	}
 	
-	protected void retryConnection(long wait) {
-		retryConnectTask = hc.getServer().getScheduler().runTaskLaterAsynchronously(hc, new Runnable() {
-			public void run() {
-				openConnection();
-			}
-		}, wait);
-	}
-	
-	protected void refreshConnection() {
-		openConnection();
-	}
 	
 
 	protected void writeThread() {
@@ -88,13 +112,13 @@ public class MySQLConnection extends DatabaseConnection {
 			public void run() {
 				try {
 					if (connection == null || connection.isClosed()) {
-						refreshConnection();
+						openConnection();
 					}
 					Statement state = connection.createStatement();
 					state.execute(statement);
 					state.close();
 					statement = null;
-					returnConnection();
+					inUse = false;
 				} catch (SQLException e) {
 					sqlRetryCount++;
 					if (sqlRetryCount == 0) {
@@ -107,7 +131,7 @@ public class MySQLConnection extends DatabaseConnection {
 						}
 						sqlRetryCount = 0;
 						statement = null;
-						returnConnection();
+						inUse = false;
 					}
 				}
 			}
@@ -122,18 +146,11 @@ public class MySQLConnection extends DatabaseConnection {
 		}, wait);
 	}
 	
-	protected void returnConnection() {
-		sw.returnConnection(dc);
-	}
-	
-	
 	
 	public String closeConnection() {
+		inUse = true;
 		if (writeTask != null) {
 			writeTask.cancel();
-		}
-		if (retryConnectTask != null) {
-			retryConnectTask.cancel();
 		}
 		if (retryWriteTask != null) {
 			retryWriteTask.cancel();
@@ -144,4 +161,9 @@ public class MySQLConnection extends DatabaseConnection {
 		}
 		return statement;
 	}
+	
+	public boolean inUse() {
+		return inUse;
+	}
+	
 }

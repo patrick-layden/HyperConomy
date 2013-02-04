@@ -41,11 +41,11 @@ public class Hb {
 						}
 						int itd = player.getItemInHand().getTypeId();
 						int da = calc.getDamageValue(player.getItemInHand());
-						String ke = itd + ":" + da;
-						String nam = hc.getnameData(ke);
-						if (nam == null) {
+						HyperObject ho = sf.getHyperObject(itd, da);
+						if (ho == null) {
 							player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 						} else {
+							String nam = ho.getName();
 							double shopstock = 0;
 							shopstock = sf.getHyperObject(nam, playerecon).getStock();
 							// Buys the most possible from the shop if the

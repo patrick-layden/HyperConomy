@@ -37,10 +37,10 @@ public class Sellall {
 						}
 						if (itd != 0) {
 							int da = calc.getDamageValue(invent.getItem(heldslot));
-							String ke = itd + ":" + da;
-							String nam = hc.getnameData(ke);
+							HyperObject ho =  hc.getDataFunctions().getHyperObject(itd, da);
 							int amount = tran.countInvitems(itd, da, player);
-							if (nam != null) {
+							if (ho != null) {
+								String nam = ho.getName();
 								if (s.getShop(player).has(nam)) {
 									tran.sell(nam, itd, da, amount, player);
 								} else {
@@ -59,9 +59,9 @@ public class Sellall {
 								ItemStack itemn = invent.getItem(slotn);
 								if (ench.hasenchants(itemn) == false) {
 									int da = calc.getDamageValue(invent.getItem(slotn));
-									String ke = itd + ":" + da;
-									String nam = hc.getnameData(ke);
-									if (nam != null) {
+									HyperObject ho =  hc.getDataFunctions().getHyperObject(itd, da);
+									if (ho != null) {
+										String nam = ho.getName();
 										int amount = tran.countInvitems(itd, da, player);
 										if (s.getShop(player).has(nam)) {
 											tran.sell(nam, itd, da, amount, player);

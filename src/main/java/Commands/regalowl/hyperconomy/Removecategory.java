@@ -18,6 +18,7 @@ public class Removecategory {
 		ShopFactory s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		SerializeArrayList sal = new SerializeArrayList();
+		DataHandler dh = hc.getDataFunctions();
 		try {
 			FileConfiguration category = hc.getYaml().getCategories();
 			String testcategory = category.getString(args[0]);
@@ -39,13 +40,13 @@ public class Removecategory {
 				}
 				String teststring3 = hc.getYaml().getShops().getString(shopname);
 				if (teststring3 == null) {
-					shopname = hc.fixsName(shopname);
+					shopname = s.fixShopName(shopname);
 					teststring3 = hc.getYaml().getShops().getString(shopname);
 				}
 				if (teststring3 != null) {
 					for (int i = 0; i < objects.size(); i++) {
 						String itemname = objects.get(i);
-						if (hc.itemTest(itemname) || hc.enchantTest(itemname)) {
+						if (dh.itemTest(itemname) || dh.enchantTest(itemname)) {
 							String unavailable = hc.getYaml().getShops().getString(shopname + ".unavailable");
 							if (s.getShop(shopname).has(itemname)) {
 								if (unavailable == null) {

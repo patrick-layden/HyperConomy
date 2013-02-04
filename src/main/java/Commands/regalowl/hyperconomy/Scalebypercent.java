@@ -16,12 +16,12 @@ public class Scalebypercent {
 			if (args.length == 2 || args.length == 3) {
 				if (args.length == 3) {
 					if (args[2].contains("item")) {
-						names = hc.getInames();
+						names = sf.getItemNames();
 					} else if (args[2].contains("enchantment")) {
-						names = hc.getEnames();
+						names = sf.getEnchantNames();
 					}
 				} else {
-					names = hc.getNames();
+					names = sf.getNames();
 				}
 				String type = args[0];
 				Double percent = Double.parseDouble(args[1]);

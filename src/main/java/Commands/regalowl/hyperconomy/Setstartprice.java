@@ -13,7 +13,7 @@ public class Setstartprice {
 			if (args.length == 2) {
 				name = args[0];
 				double startprice = Double.parseDouble(args[1]);
-				if (hc.itemTest(name)) {
+				if (sf.itemTest(name)) {
 					sf.getHyperObject(name, playerecon).setStartprice(startprice);
 					sender.sendMessage(L.f(L.get("START_PRICE_SET"), name));
 					isign.updateSigns();
@@ -25,7 +25,7 @@ public class Setstartprice {
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
 					double startprice = Double.parseDouble(args[1]);
-					if (hc.enchantTest(name)) {
+					if (sf.enchantTest(name)) {
 						sf.getHyperObject(name, playerecon).setStartprice(startprice);
 						sender.sendMessage(L.f(L.get("START_PRICE_SET"), name));
 						isign.updateSigns();

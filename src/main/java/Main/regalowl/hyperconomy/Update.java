@@ -209,6 +209,11 @@ public class Update {
 	    	if (t46 == null) {
 	    		yaml.getConfig().set("api-version", 1.0);
 	    	}	    
+	    	String t47 = yaml.getConfig().getString("config.sql-connection.use-sql");
+	    	if (t47 != null) {
+	    		yaml.getConfig().set("config.sql-connection.use-mysql", yaml.getConfig().getBoolean("config.sql-connection.use-sql"));
+	    		yaml.getConfig().set("config.sql-connection.use-sql", null);
+	    	}
 	    	
 	    	
 	    	double dversion = Double.parseDouble(configversion);

@@ -66,7 +66,7 @@ public class Notification {
 		if (checkNotify(name.get(0))) {
 			double cost = 0.0;
 			int stock = 0;
-			if (hc.itemTest(name.get(0))) {
+			if (sf.itemTest(name.get(0))) {
 				stock = (int) sf.getHyperObject(name.get(0), econ).getStock();
 				cost = calc.getCost(name.get(0), 1, econ);
 
@@ -76,7 +76,7 @@ public class Notification {
 					manualNotify(message);
 					previousmessage = message;
 				}
-			} else if (hc.enchantTest(name.get(0))) {
+			} else if (sf.enchantTest(name.get(0))) {
 				cost = calc.getEnchantCost(name.get(0), EnchantmentClass.fromString(eclass.get(0)), econ);
 				cost = cost + calc.getEnchantTax(name.get(0), econ, cost);
 				stock = (int) sf.getHyperObject(name.get(0), econ).getStock();

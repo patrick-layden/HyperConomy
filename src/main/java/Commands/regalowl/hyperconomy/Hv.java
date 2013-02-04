@@ -27,11 +27,11 @@ public class Hv {
 					}
 					int itd = player.getItemInHand().getTypeId();
 					int da = calc.getDamageValue(player.getItemInHand());
-					String ke = itd + ":" + da;
-					String nam = hc.getnameData(ke);
-					if (nam == null) {
+					HyperObject ho = sf.getHyperObject(itd, da);
+					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
+						String nam = ho.getName();
 						double val = calc.getValue(nam, amount, player);
 						if (calc.isDurable(itd) && amount > 1) {
 							int numberofitem = tran.countInvitems(itd, player.getItemInHand().getData().getData(), player);
@@ -68,7 +68,7 @@ public class Hv {
 						Enchantment en = null;
 						en = Enchantment.getByName(enchname);
 						int lvl = player.getItemInHand().getEnchantmentLevel(en);
-						String enam = hc.getEnchantData(enchname);
+						String enam = sf.getEnchantNameWithoutLevel(enchname);
 						String fnam = enam + lvl;
 						String mater = player.getItemInHand().getType().name();
 						double value = calc.getEnchantValue(fnam, EnchantmentClass.fromString(mater), playerecon) * duramult;
@@ -92,7 +92,7 @@ public class Hv {
 						value = calc.twoDecimals(value - salestax);
 						player.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 						player.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-						player.sendMessage(L.f(L.get("EVALUE_STOCK"), sf.getHyperObject(nam, playerecon).getStock(), fnam));
+						player.sendMessage(L.f(L.get("EVALUE_STOCK"), sf.getHyperObject(fnam, playerecon).getStock(), fnam));
 					}
 					player.sendMessage(L.get("LINE_BREAK"));
 				}

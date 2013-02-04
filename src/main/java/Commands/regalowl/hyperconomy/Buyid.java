@@ -25,11 +25,11 @@ public class Buyid {
 						player.sendMessage(L.get("BUYID_INVALID"));
 						return;
 					}
-					String ke = itd + ":" + da;
-					String nam = hc.getnameData(ke);
-					if (nam == null) {
+					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da);
+					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
+						String nam = ho.getName();
 						if (s.getShop(player).has(nam)) {
 							tran.buy(nam, amount, itd, da, player);
 						} else {

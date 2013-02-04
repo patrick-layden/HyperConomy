@@ -38,7 +38,7 @@ public class Topitems {
 				page = Integer.parseInt(args[0]);
 			}
 			SortedMap<Double, String> itemstocks = new TreeMap<Double, String>();
-			ArrayList<String> inames = hc.getInames();
+			ArrayList<String> inames = sf.getItemNames();
 			for (int c = 0; c < inames.size(); c++) {
 				String elst = inames.get(c);
 				boolean unavailable = false;

@@ -167,6 +167,15 @@ public class ShopFactory {
     public void setshopInterval(long interval) {
     	shopinterval = interval;
     }
+    
+	public String fixShopName(String nam) {
+		for (String shop:shops.keySet()) {
+			if (shop.equalsIgnoreCase(nam)) {
+				return shop;
+			}
+		}
+		return nam;
+	}
 	
 
 	

@@ -14,8 +14,8 @@ public class Makedisplay {
 		DataHandler sf = hc.getDataFunctions();
 		ItemDisplayFactory itdi = hc.getItemDisplay();
 		if (args.length == 1) {
-			String name = hc.fixName(args[0]);
-			if (hc.itemTest(name)) {
+			String name = hc.getDataFunctions().fixName(args[0]);
+			if (hc.getDataFunctions().itemTest(name)) {
 				String economy = sf.getHyperPlayer(player).getEconomy();
 				double x = player.getLocation().getX();
 				double y = player.getLocation().getY();

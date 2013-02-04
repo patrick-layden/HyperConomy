@@ -9,7 +9,7 @@ public class Renameshop {
 		ShopFactory s = hc.getShopFactory();
 		try {
 			if (args.length == 2) {
-				String name = hc.fixsName(args[0]);
+				String name = s.fixShopName(args[0]);
 				String newname = args[1];
 				if (s.shopExists(name)) {
 					s.getShop(name).setName(newname);

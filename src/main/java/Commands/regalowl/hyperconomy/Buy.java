@@ -22,7 +22,7 @@ public class Buy {
 					int id = 0;
 					int data = 0;
 					int amount = 0;
-					if (hc.itemTest(name)) {
+					if (sf.itemTest(name)) {
 						HyperObject ho = sf.getHyperObject(name, playerecon);
 						int txpid = ho.getId();
 						int txpdata = ho.getData();
@@ -63,7 +63,7 @@ public class Buy {
 							}
 						}
 					}
-					if (hc.itemTest(name)) {
+					if (sf.itemTest(name)) {
 						if (s.getShop(player).has(name)) {
 							if (xp) {
 								tran.buyXP(name, amount, player);

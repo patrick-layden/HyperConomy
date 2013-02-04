@@ -12,7 +12,7 @@ public class Setshopeconomy {
 				String name = args[0];
 				String teststring = hc.getYaml().getShops().getString(name);
 				if (teststring == null) {
-					name = hc.fixsName(name);
+					name = s.fixShopName(name);
 				}
 				if (name == null) {
 					sender.sendMessage(L.get("SHOP_NOT_EXIST"));

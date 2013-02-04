@@ -13,11 +13,11 @@ public class Itemsettings {
 			if (args.length == 0 && player != null) {
 				int itd = player.getItemInHand().getTypeId();
 				int da = calc.getDamageValue(player.getItemInHand());
-				String ke = itd + ":" + da;
-				String nam = hc.getnameData(ke);
-				if (nam == null) {
+				HyperObject hob = hc.getDataFunctions().getHyperObject(itd, da);
+				if (hob == null) {
 					sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 				} else {
+					String nam = hob.getName();
 					double val = 0;
 					boolean stat = false;
 					double statprice = 0;
@@ -53,7 +53,7 @@ public class Itemsettings {
 				}
 			} else if (args.length == 1) {
 				String nam = args[0];
-				if (hc.itemTest(nam)) {
+				if (sf.itemTest(nam)) {
 					double val = 0;
 					boolean stat = false;
 					double statprice = 0;

@@ -41,13 +41,13 @@ public class Addcategory {
 				}
 				String teststring3 = hc.getYaml().getShops().getString(shopname);
 				if (teststring3 == null) {
-					shopname = hc.fixsName(shopname);
+					shopname = s.fixShopName(shopname);
 					teststring3 = hc.getYaml().getShops().getString(shopname);
 				}
 				if (teststring3 != null) {
 					for (int i = 0; i < objects.size(); i++) {
 						String itemname = objects.get(i);
-						if (hc.itemTest(itemname) || hc.enchantTest(itemname)) {
+						if (hc.getDataFunctions().itemTest(itemname) || hc.getDataFunctions().enchantTest(itemname)) {
 							String unavailable = hc.getYaml().getShops().getString(shopname + ".unavailable");
 							if (!s.getShop(shopname).has(itemname)) {
 								unavailable = unavailable.replace("," + itemname + ",", ",");

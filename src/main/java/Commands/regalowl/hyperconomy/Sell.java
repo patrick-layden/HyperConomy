@@ -19,7 +19,7 @@ public class Sell {
 					int amount = 0;
 					boolean xp = false;
 
-					if (hc.itemTest(name)) {
+					if (sf.itemTest(name)) {
 						HyperObject ho = sf.getHyperObject(name, playerecon);
 						int txpid = ho.getId();
 						int txpdata = ho.getData();
@@ -47,7 +47,7 @@ public class Sell {
 							}
 						}
 					}
-					if (hc.itemTest(name)) {
+					if (sf.itemTest(name)) {
 						HyperObject ho = sf.getHyperObject(name, playerecon);
 						if (s.getShop(player).has(name)) {
 							if (xp) {

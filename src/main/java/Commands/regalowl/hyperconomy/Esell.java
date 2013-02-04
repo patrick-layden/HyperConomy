@@ -27,7 +27,7 @@ public class Esell {
 						}
 
 					} else {
-						if (hc.enchantTest(name)) {
+						if (hc.getDataFunctions().enchantTest(name)) {
 							if (s.getShop(player).has(name)) {
 								ench.sellEnchant(name, player);
 							} else {

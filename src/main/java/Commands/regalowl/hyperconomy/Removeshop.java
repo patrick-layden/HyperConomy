@@ -9,7 +9,7 @@ public class Removeshop {
 		ShopFactory s = hc.getShopFactory();
 		try {
 			if (args.length == 1) {
-				String name = hc.fixsName(args[0]);
+				String name = s.fixShopName(args[0]);
 				if (s.shopExists(name)) {
 					s.removeShop(name);
 					sender.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), name));

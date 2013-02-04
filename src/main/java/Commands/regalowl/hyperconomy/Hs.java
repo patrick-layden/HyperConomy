@@ -34,11 +34,11 @@ public class Hs {
 					}
 					int itd = player.getItemInHand().getTypeId();
 					int da = calc.getDamageValue(player.getItemInHand());
-					String ke = itd + ":" + da;
-					String nam = hc.getnameData(ke);
-					if (nam == null) {
+					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da);
+					if (ho == null) {
 						player.sendMessage(L.get("CANT_BE_TRADED"));
 					} else {
+						String nam = ho.getName();
 						ItemStack iinhand = player.getItemInHand();
 						if (ench.hasenchants(iinhand) == false) {
 							if (s.getShop(player).has(nam)) {
