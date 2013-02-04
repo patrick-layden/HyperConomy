@@ -129,7 +129,7 @@ public class DataHandler implements Listener {
 
 	public void load() {
 		reset();
-		hc.sqllockShop();
+		hc.lockHyperConomy(true);
 		waitToLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 			public void run() {
 				SQLWrite sw = hc.getSQLWrite();
@@ -147,7 +147,7 @@ public class DataHandler implements Listener {
 		waitForLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 			public void run() {
 				if (objectsLoaded) {
-					hc.sqlunlockShop();
+					hc.lockHyperConomy(false);
 					hc.onDataLoad();
 					waitForLoad.cancel();
 				}
@@ -158,21 +158,14 @@ public class DataHandler implements Listener {
 	private void loadSQL() {
 		hyperObjects.clear();
 		hyperPlayers.clear();
-
-
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
-				//log.severe("loadSQL() async task");
 				QueryResult result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_objects");
-				//log = Logger.getLogger("Minecraft");
-				
 				while (result.next()) {
-					//log.severe("Name:" + result.getString("NAME"));
 					HyperObject hobj = new HyperObject(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), result.getString("CATEGORY"), result.getString("MATERIAL"), result.getInt("ID"), result.getInt("DATA"), result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"), result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), result
 							.getDouble("CEILING"), result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
 					hyperObjects.put(hobj.getName() + ":" + hobj.getEconomy(), hobj);
 				}
-				//log.severe("Result closed");
 				result.close();
 
 				result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_players");

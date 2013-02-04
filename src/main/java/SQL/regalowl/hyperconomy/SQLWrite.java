@@ -43,7 +43,7 @@ public class SQLWrite {
 		ArrayList<String> sstatements = loadStatements();
 		if (sstatements.size() > 0) {
 			initialWrite = true;
-			hc.sqllockShop();
+			hc.lockHyperConomy(true);
 			executeSQL(sstatements);
 		}
 	}

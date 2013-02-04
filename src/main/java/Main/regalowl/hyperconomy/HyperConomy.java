@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
@@ -38,9 +36,9 @@ public class HyperConomy extends JavaPlugin {
 	private long saveinterval;
 	private int savetaskid;
 	private YamlFile yaml;
-	private boolean lock;
-	private boolean mlock;
-	private boolean sqllock;
+	private boolean playerLock;
+	private boolean fullLock;
+	//private boolean sqllock;
 	private boolean brokenfile;
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
@@ -89,9 +87,8 @@ public class HyperConomy extends JavaPlugin {
 
 	public void initialize() {
 		hc = this;
-		lock = false;
-		mlock = false;
-		sqllock = false;
+		playerLock = false;
+		fullLock = false;
 		brokenfile = false;
 		boolean migrate = false;
 		YamlFile yam = new YamlFile(this);
@@ -217,15 +214,15 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("lockshop") && !mlock) {
+		if (cmd.getName().equalsIgnoreCase("lockshop") && !fullLock) {
 			try {
 				if (args.length == 0) {
-					if (lock && !brokenfile) {
-						lock = false;
+					if (playerLock && !brokenfile) {
+						playerLock = false;
 						sender.sendMessage(L.get("SHOP_UNLOCKED"));
 						return true;
-					} else if (!lock) {
-						lock = true;
+					} else if (!playerLock) {
+						playerLock = true;
 						sender.sendMessage(L.get("SHOP_LOCKED"));
 						return true;
 					} else {
@@ -241,30 +238,29 @@ public class HyperConomy extends JavaPlugin {
 				return true;
 			}
 		} else if (cmd.getName().equalsIgnoreCase("hc")) {
-			if (args.length == 0 || (!args[0].equalsIgnoreCase("enable") && !args[0].equalsIgnoreCase("disable")) && !lock && !sqllock && !mlock) {
+			if (args.length == 0 || (!args[0].equalsIgnoreCase("enable") && !args[0].equalsIgnoreCase("disable")) && !playerLock && !fullLock) {
 				new Hc(sender, args);
 				return true;
 			} else {
 				if (sender.hasPermission("hyperconomy.admin")) {
-					if (args[0].equalsIgnoreCase("enable") && mlock) {
+					if (args[0].equalsIgnoreCase("enable") && fullLock) {
 						initialize();
-						sqllock = false;
 						sender.sendMessage(L.get("HC_HYPERCONOMY_ENABLED"));
 						sender.sendMessage(L.get("FILES_RELOADED"));
 						sender.sendMessage(L.get("SHOP_UNLOCKED"));
 						return true;
-					} else if (args[0].equalsIgnoreCase("disable") && !mlock) {
+					} else if (args[0].equalsIgnoreCase("disable") && !fullLock) {
 						sender.sendMessage(L.get("HC_HYPERCONOMY_DISABLED"));
 						sender.sendMessage(L.get("SHOP_LOCKED"));
-						lock = true;
-						mlock = true;
+						playerLock = true;
+						fullLock = true;
 						shutDown();
 						return true;
 					}
 				}
 			}
 		} 
-		if (((!lock && !sqllock) || sender.hasPermission("hyperconomy.admin")) && !mlock) {
+		if ((!playerLock || sender.hasPermission("hyperconomy.admin")) && !fullLock) {
 			boolean result = commandhandler.handleCommand(sender, cmd, label, args);
 			return result;
 		} else {
@@ -303,19 +299,10 @@ public class HyperConomy extends JavaPlugin {
 			brokenfile = false;
 		} else {
 			brokenfile = true;
-			if (!lock) {
-				if (s == null) {
-					log.info(L.get("BAD_YMLFILE_DETECTED"));
-					Bukkit.getPluginManager().disablePlugin(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy"));
-					return;
-				}
-				lock = true;
-				s.stopshopCheck();
-				hist.stopHistoryLog();
-				isign.stopSignUpdate();
-				isign.reloadSigns();
-				stopSave();
-			}
+			log.info(L.get("BAD_YMLFILE_DETECTED"));
+			playerLock = true;
+			fullLock = true;
+			shutDown();
 		}
 	}
 
@@ -345,19 +332,30 @@ public class HyperConomy extends JavaPlugin {
 
 
 	public boolean isLocked() {
-		return lock;
+		return playerLock;
 	}
 
+	/*
 	public void sqllockShop() {
 		sqllock = true;
 	}
 
+	
 	public void sqlunlockShop() {
 		sqllock = false;
 	}
 
 	public boolean sqlLock() {
 		return sqllock;
+	}
+	*/
+	
+	public void lockHyperConomy(boolean lockState) {
+		fullLock = lockState;
+	}
+	
+	public boolean fullLock() {
+		return fullLock;
 	}
 
 	public boolean useMySQL() {
