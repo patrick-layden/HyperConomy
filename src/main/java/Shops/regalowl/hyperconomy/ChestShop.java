@@ -630,7 +630,7 @@ public class ChestShop implements Listener{
 
 					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
 						    				
-							    			if (slot < 27 && ho != null) {
+							    			if (slot < 27 && (ho != null || icevent.getCurrentItem().getType().equals(Material.ENCHANTED_BOOK))) {
 							    				
 							    				if (buy) {
 				
@@ -732,7 +732,7 @@ public class ChestShop implements Listener{
 					    			} else {				    				
 					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
 						    				
-							    			if (slot < 27 && ho != null) {
+							    			if (slot < 27 && (ho != null || icevent.getCurrentItem().getType().equals(Material.ENCHANTED_BOOK))) {
 							    				if (buy) {	
 							    					for (Enchantment enchantment : ench.listEnchantments(icevent.getCurrentItem())) {
 							    						int lvl = ench.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
