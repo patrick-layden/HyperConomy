@@ -70,6 +70,7 @@ HC_BUY: &bType &a/hc buy &bfor buy commands.
 HC_SELL: &bType &a/hc sell &bfor sell commands.
 HC_INFO: &bType &a/hc info &bfor informational commands.
 HC_PARAMS: &bType &a/hc params &bfor parameter help.
+HC_ECON: &bType &a/hc econ &bfor economy commands.
 HC_SELL_SELL: &a/sell &c[name] &e(amount/'max')
 HC_SELL_HS: &a/hs &e(amount/'max')
 HC_SELL_ESELL: &a/esell &c[name/'max']
@@ -87,6 +88,13 @@ HC_INFO_TOPITEMS: &a/topitems &e(page)
 HC_INFO_TOPENCHANTS: &a/topenchants &e(page)
 HC_INFO_BROWSESHOP: &a/browseshop &c[name] &e(page)
 HC_INFO_XPINFO: &a/xpinfo
+HC_ECON_HCB: &a/hcb &e(account)
+HC_ECON_HCP: &a/hcp &c[account] &c[amount]
+HC_ECON_HCT: &a/hct &e(page)
+HC_ECON_MORE: &bFor more help type &a/hc econ &c[command]
+HC_HCB_DETAIL: &bDisplays your balance if no account is specified, or the balance of the specified account.
+HC_HCP_DETAIL: &bRemoves the specified balance from your account and puts it in the specified account.
+HC_HCT_DETAIL: &bDisplays the top balances on the server.  10 results are displayed per page.
 HC_INFO_EVALUE: &a/evalue &d{enchantment name} {'b'/'s'/'a'}
 HC_INFO_MORE: &bFor more help type &a/hc info [command]
 HC_PARAMS_REQUIRED: &c[something] = required parameter
@@ -365,3 +373,4 @@ LOOK_AT_VALID_CHESTSHOP: &4You must be looking at a valid chest shop!
 CHEST_OWNER_UPDATED: &6Chest owner updated!
 RENAMESHOP_INVALID: &4Invalid Parameters.  Use /renameshop [current name] [new name]
 SHOP_RENAMED: &6Shop renamed successfully!
+SWITCH_TO_SQLITE: There is a problem with your MySQL connection, defaulting to SQLite.

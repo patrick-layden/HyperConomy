@@ -114,6 +114,11 @@ public class HyperConomy extends JavaPlugin {
 			boolean databaseOk = false;
 			if (usemysql) {
 				databaseOk = sqe.checkMySQL();
+				if (!databaseOk) {
+					usemysql = false;
+					databaseOk = sqe.checkSQLLite();
+					log.severe(L.get("SWITCH_TO_SQLITE"));
+				}
 			} else {
 				databaseOk = sqe.checkSQLLite();
 			}
