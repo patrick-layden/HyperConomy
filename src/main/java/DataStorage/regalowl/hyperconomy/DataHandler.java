@@ -87,6 +87,14 @@ public class DataHandler implements Listener {
 		}
 	}
 	
+	public ArrayList<HyperObject> getHyperObjects() {
+		ArrayList<HyperObject> hos = new ArrayList<HyperObject>();
+		for (HyperObject ho:hyperObjects.values()) {
+			hos.add(ho);
+		}
+		return hos;
+	}
+	
 	
 	
 	public HyperPlayer getHyperPlayer(String player) {

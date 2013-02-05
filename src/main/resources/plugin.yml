@@ -287,8 +287,8 @@ commands:
       description: Adds the item you're holding to the yml item database.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-   importsql:
-      description: Imports HyperConomy SQL backup files.
+   copydatabase:
+      description: Copys database from SQLite to MySQL and vice versa.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
    addcategory:

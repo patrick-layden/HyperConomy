@@ -150,8 +150,8 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("exporttoyml")) {
 			new Exporttoyml(sender, args);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("importsql")) {
-			new Importsql(sender, args);
+		} else if (cmd.getName().equalsIgnoreCase("copydatabase")) {
+			new Copydatabase(sender, args);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hyperlog")) {
 			new Hyperlog(args, sender);

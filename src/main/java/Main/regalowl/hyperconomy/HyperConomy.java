@@ -467,6 +467,10 @@ public class HyperConomy extends JavaPlugin {
 		errorcount++;
 	}
 	
+	public void setUseMySQL(boolean usemysql) {
+		this.usemysql = usemysql;
+	}
+	
 	public void loadErrorCount() {
 		FileTools ft = new FileTools();
 		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "errors";

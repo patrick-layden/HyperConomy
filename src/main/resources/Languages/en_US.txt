@@ -53,13 +53,18 @@ DIAMOND_VALUE: &9Diamond Value: &a%v
 BOOK_VALUE: &9Book Value: &a%v
 CLASSVALUES_INVALID: &4Invalid Parameters. Use /classvalues
 ECONOMY_EXPORTED: &6Economy exported to YML!
-EXPORT_PROCEED: &cThe will erase all data in your items.yml and enchants.yml, type /exporttoyml [economy] ['confirm'] to proceed!
+EXPORT_PROCEED: &cThe will erase all data in your items.yml and enchants.yml, type '/exporttoyml [economy] [confirm]' to proceed!
 ECONOMY_NOT_EXIST: &4That economy doesn't exist!
 EXPORTTOYML_INVALID: &4Invalid Parameters.  Use /exporttoyml [economy] ['confirm']
 ONLY_AVAILABLE_SQL: &cThis command is only available when SQL is enabled!
-IMPORTING_TABLES: &9Importing tables...
-IMPORTSQL_WARNING: &cThe will erase all of your HyperConomy SQL tables, type /importsql ['confirm'] to proceed!
-IMPORTSQL_INVALID: &4Invalid Parameters.  Use /importsql
+COPYDATABASE_MYSQL_WARNING: &cThis will erase any existing SQLite HyperConomy tables.  Type '/copydatabase confirm' to proceed. The plugin will be locked during the transfer.
+COPYDATABASE_SQLITE_WARNING: &cThis will erase any existing MySQL HyperConomy tables.  Type '/copydatabase confirm' to proceed. The plugin will be locked during the transfer.
+COPYDATABASE_CONNECTION_FAILED_MYSQL: &cThe connection to your SQLite database has failed.
+COPYDATABASE_CONNECTION_FAILED_SQLITE: &cThe connection to your MySQL database has failed.  Check your config.yml settings.
+COPYDATABASE_INVALID: &4Invalid Parameters.  Use /copydatabase
+COPYDATABASE_MYSQL: &6MySQL database successfully copied to SQLite database.
+COPYDATABASE_STARTED: &6Database copy started successfully...this may take some time.
+COPYDATABASE_SQLITE: &6SQLite database successfully copied to MySQL database.
 LISTCATEGORIES_INVALID: &4Invalid Parameters.  Use /listcategories
 ALREADY_IN_DATABASE: &9That item is already in the database.
 ITEM_ADDED: &6Item added to items.yml.  Use /reloadfiles or restart your server for it to become active.
@@ -323,7 +328,6 @@ NO_ECON_PLUGIN: &4No economy plugin detected! No money can be gained or lost.
 HYPERERROR_LOG: &4An error has occurred. [#%v] Enable error logging in config.yml to log future errors.
 ERROR_HAS_OCCURRED: &4An error has occurred. [#%v] Check the errors folder for more info.
 SQL_BACKUP_NOT_FOUND: &4SQL backup not found.  Place your backup in the HyperConomy folder.
-SQL_TABLES_IMPORTED: &6SQL tables imported from file!
 ENCHANTSETTINGS_INVALID: &4Invalid parameters. Use /enchantsettings [enchantment] or /es [enchantment]
 IMPORTPRICES_INVALID: &4Invalid parameters. Use /importprices [economy]
 PRICES_IMPORTED: &6Prices have been imported from YML.
