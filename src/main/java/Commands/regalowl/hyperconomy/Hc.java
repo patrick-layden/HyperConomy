@@ -172,7 +172,7 @@ public class Hc {
 			} else {
 				// do nothing
 			}
-			if (args[0].equalsIgnoreCase("test")) {
+			if (args[0].equalsIgnoreCase("test") && sender.hasPermission("hyperconomy.admin")) {
 				if (sender instanceof Player) {
 					Player p = (Player) sender;
 					new Test(p, args);
