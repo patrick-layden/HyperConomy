@@ -75,7 +75,9 @@ public class QueryResult {
 	
 	public boolean next() {
 		currentRow++;
-		if (data.get(0).size() > currentRow) {
+		if (data.isEmpty()) {
+			return false;
+		} else if (data.get(0).size() > currentRow) {
 			return true;
 		} else {
 			return false;

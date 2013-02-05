@@ -20,7 +20,7 @@ public class Copydatabase {
 		this.sender = sender;
 		LanguageFile L = hc.getLanguageFile();
 		
-		try {
+		//try {
 			mysqlMessage = L.get("COPYDATABASE_MYSQL");
 			sqliteMessage = L.get("COPYDATABASE_SQLITE");
 			if (args.length == 0) {
@@ -32,6 +32,7 @@ public class Copydatabase {
 			} else if (args.length == 1 && args[0].equalsIgnoreCase("confirm")) {
 				SQLEconomy se = hc.getSQLEconomy();
 				DataHandler dh = hc.getDataFunctions();
+				SQLRead sr = hc.getSQLRead();
 				if (hc.useMySQL()) {
 					boolean databaseOk = se.checkSQLLite();
 					if (databaseOk) {
@@ -39,15 +40,35 @@ public class Copydatabase {
 
 						hc.setUseMySQL(false);
 						tempWrite = new SQLWrite();
+						//tempWrite.executeSQL("TRUNCATE TABLE hyperconomy_objects");
+						//tempWrite.executeSQL("TRUNCATE TABLE hyperconomy_players");
+						//tempWrite.executeSQL("TRUNCATE TABLE hyperconomy_audit_log");
+						//tempWrite.executeSQL("TRUNCATE TABLE hyperconomy_history");
+						//tempWrite.executeSQL("TRUNCATE TABLE hyperconomy_log");
 						for (HyperObject ho:dh.getHyperObjects()) {
-							tempWrite.executeSQL("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','"
+							tempWrite.executeSQL("INSERT INTO hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','"
 									+ ho.getDurability() + "','" + ho.getValue() + "','" + ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + ho.getStock() + "','" + ho.getMedian() + "','" + ho.getInitiation() + "','" + ho.getStartprice()
 									+ "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
 						}
 						for (HyperPlayer hp:dh.getHyperPlayers()) {
-							tempWrite.executeSQL("Insert Into hyperconomy_objects (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH)" + " Values ('" + hp.getName() + "','" + hp.getEconomy() + "','" + hp.getBalance() + "','" + hp.getX() + "','" + hp.getY() + "','" + hp.getZ() + "','" + hp.getWorld() + "','"
+							tempWrite.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH)" + " VALUES ('" + hp.getName() + "','" + hp.getEconomy() + "','" + hp.getBalance() + "','" + hp.getX() + "','" + hp.getY() + "','" + hp.getZ() + "','" + hp.getWorld() + "','"
 									+ hp.getHash() + "')");
 						}
+						QueryResult result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_audit_log");
+						while (result.next()) {
+							tempWrite.executeSQL("INSERT INTO hyperconomy_audit_log (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) VALUES ('" + result.getString("TIME") + "','" + result.getString("ACCOUNT") + "','" + result.getString("ACTION") + "','" + result.getDouble("AMOUNT") + "','" + result.getString("ECONOMY") + "')");
+						}
+						result.close();
+						result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_log");
+						while (result.next()) {
+							tempWrite.executeSQL("INSERT INTO hyperconomy_log (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE) VALUES ('" + result.getString("TIME") + "','" + result.getString("CUSTOMER") + "','" + result.getString("ACTION") + "','" + result.getString("OBJECT") + "','" + result.getDouble("AMOUNT") + "','" + result.getDouble("MONEY") + "','" + result.getDouble("TAX") + "','" + result.getString("STORE") + "','" + result.getString("TYPE") + "')");
+						}
+						result.close();
+						result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_history");
+						while (result.next()) {
+							tempWrite.executeSQL("INSERT INTO hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " VALUES ('" + result.getString("OBJECT") + "','" + result.getString("ECONOMY") + "','" + result.getString("TIME") + "','" + result.getDouble("PRICE") + "')");
+						}
+						result.close();
 						waitForFinish();
 						sender.sendMessage(L.get("COPYDATABASE_STARTED"));
 					} else {
@@ -60,15 +81,35 @@ public class Copydatabase {
 						hc.lockHyperConomy(true);
 						hc.setUseMySQL(true);
 						tempWrite = new SQLWrite();
+						//tempWrite.executeSQL("DROP TABLE IF EXISTS hyperconomy_objects");
+						//tempWrite.executeSQL("DROP TABLE IF EXISTS hyperconomy_players");
+						//tempWrite.executeSQL("DROP TABLE IF EXISTS hyperconomy_audit_log");
+						//tempWrite.executeSQL("DROP TABLE IF EXISTS hyperconomy_history");
+						//tempWrite.executeSQL("DROP TABLE IF EXISTS hyperconomy_log");
 						for (HyperObject ho:dh.getHyperObjects()) {
-							tempWrite.executeSQL("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','"
+							tempWrite.executeSQL("INSERT INTO hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','"
 									+ ho.getDurability() + "','" + ho.getValue() + "','" + ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + ho.getStock() + "','" + ho.getMedian() + "','" + ho.getInitiation() + "','" + ho.getStartprice()
 									+ "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
 						}
 						for (HyperPlayer hp:dh.getHyperPlayers()) {
-							tempWrite.executeSQL("Insert Into hyperconomy_objects (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH)" + " Values ('" + hp.getName() + "','" + hp.getEconomy() + "','" + hp.getBalance() + "','" + hp.getX() + "','" + hp.getY() + "','" + hp.getZ() + "','" + hp.getWorld() + "','"
+							tempWrite.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH)" + " VALUES ('" + hp.getName() + "','" + hp.getEconomy() + "','" + hp.getBalance() + "','" + hp.getX() + "','" + hp.getY() + "','" + hp.getZ() + "','" + hp.getWorld() + "','"
 									+ hp.getHash() + "')");
 						}
+						QueryResult result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_audit_log");
+						while (result.next()) {
+							tempWrite.executeSQL("INSERT INTO hyperconomy_audit_log (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) VALUES ('" + result.getString("TIME") + "','" + result.getString("ACCOUNT") + "','" + result.getString("ACTION") + "','" + result.getDouble("AMOUNT") + "','" + result.getString("ECONOMY") + "')");
+						}
+						result.close();
+						result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_log");
+						while (result.next()) {
+							tempWrite.executeSQL("INSERT INTO hyperconomy_log (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE) VALUES ('" + result.getString("TIME") + "','" + result.getString("CUSTOMER") + "','" + result.getString("ACTION") + "','" + result.getString("OBJECT") + "','" + result.getDouble("AMOUNT") + "','" + result.getDouble("MONEY") + "','" + result.getDouble("TAX") + "','" + result.getString("STORE") + "','" + result.getString("TYPE") + "')");
+						}
+						result.close();
+						result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_history");
+						while (result.next()) {
+							tempWrite.executeSQL("INSERT INTO hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " VALUES ('" + result.getString("OBJECT") + "','" + result.getString("ECONOMY") + "','" + result.getString("TIME") + "','" + result.getDouble("PRICE") + "')");
+						}
+						result.close();
 						waitForFinish();
 						sender.sendMessage(L.get("COPYDATABASE_STARTED"));
 					} else {
@@ -80,10 +121,10 @@ public class Copydatabase {
 				sender.sendMessage(L.get("COPYDATABASE_INVALID"));
 			}
 			return;
-		} catch (Exception e) {
-			sender.sendMessage(L.get("COPYDATABASE_INVALID"));
-			return;
-		}
+		//} catch (Exception e) {
+		//	sender.sendMessage(L.get("COPYDATABASE_INVALID"));
+		//	return;
+		//}
 	}
 	
 	
@@ -95,6 +136,13 @@ public class Copydatabase {
 	private void waitForFinish() {
 		waitTask = hc.getServer().getScheduler().runTaskTimerAsynchronously(hc, new Runnable() {
     		public void run() {
+				hc.getServer().getScheduler().runTask(hc, new Runnable() {
+		    		public void run() {
+		    			if (tempWrite != null) {
+		    				sender.sendMessage(tempWrite.getBufferSize() + " statements remaining.");
+		    			}
+		    		}
+		    	});
     			if (tempWrite == null || tempWrite.getBufferSize() == 0) {
     				hc.setUseMySQL(!hc.useMySQL());
     				hc.lockHyperConomy(false);
@@ -110,7 +158,7 @@ public class Copydatabase {
     				endWait();
     			}
     		}
-    	}, 5L, 5L);
+    	}, 40L, 40L);
 	}
 	
 	
