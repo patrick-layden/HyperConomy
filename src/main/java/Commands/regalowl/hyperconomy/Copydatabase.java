@@ -40,11 +40,12 @@ public class Copydatabase {
 
 						hc.setUseMySQL(false);
 						tempWrite = new SQLWrite();
-						//tempWrite.executeSQL("TRUNCATE TABLE hyperconomy_objects");
-						//tempWrite.executeSQL("TRUNCATE TABLE hyperconomy_players");
-						//tempWrite.executeSQL("TRUNCATE TABLE hyperconomy_audit_log");
-						//tempWrite.executeSQL("TRUNCATE TABLE hyperconomy_history");
-						//tempWrite.executeSQL("TRUNCATE TABLE hyperconomy_log");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_objects");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_players");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_audit_log");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_history");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_log");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_settings");
 						for (HyperObject ho:dh.getHyperObjects()) {
 							tempWrite.executeSQL("INSERT INTO hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','"
 									+ ho.getDurability() + "','" + ho.getValue() + "','" + ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + ho.getStock() + "','" + ho.getMedian() + "','" + ho.getInitiation() + "','" + ho.getStartprice()
@@ -67,6 +68,11 @@ public class Copydatabase {
 						result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_history");
 						while (result.next()) {
 							tempWrite.executeSQL("INSERT INTO hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " VALUES ('" + result.getString("OBJECT") + "','" + result.getString("ECONOMY") + "','" + result.getString("TIME") + "','" + result.getDouble("PRICE") + "')");
+						}
+						result.close();
+						result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_settings");
+						while (result.next()) {
+							tempWrite.executeSQL("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('" + result.getString("SETTING") + "','" + result.getString("VALUE") + "','" + result.getString("TIME") + "')");
 						}
 						result.close();
 						waitForFinish();
@@ -81,11 +87,12 @@ public class Copydatabase {
 						hc.lockHyperConomy(true);
 						hc.setUseMySQL(true);
 						tempWrite = new SQLWrite();
-						//tempWrite.executeSQL("DROP TABLE IF EXISTS hyperconomy_objects");
-						//tempWrite.executeSQL("DROP TABLE IF EXISTS hyperconomy_players");
-						//tempWrite.executeSQL("DROP TABLE IF EXISTS hyperconomy_audit_log");
-						//tempWrite.executeSQL("DROP TABLE IF EXISTS hyperconomy_history");
-						//tempWrite.executeSQL("DROP TABLE IF EXISTS hyperconomy_log");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_objects");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_players");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_audit_log");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_history");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_log");
+						tempWrite.executeSQL("DELETE FROM hyperconomy_settings");
 						for (HyperObject ho:dh.getHyperObjects()) {
 							tempWrite.executeSQL("INSERT INTO hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','"
 									+ ho.getDurability() + "','" + ho.getValue() + "','" + ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + ho.getStock() + "','" + ho.getMedian() + "','" + ho.getInitiation() + "','" + ho.getStartprice()
@@ -108,6 +115,10 @@ public class Copydatabase {
 						result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_history");
 						while (result.next()) {
 							tempWrite.executeSQL("INSERT INTO hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " VALUES ('" + result.getString("OBJECT") + "','" + result.getString("ECONOMY") + "','" + result.getString("TIME") + "','" + result.getDouble("PRICE") + "')");
+						}
+						result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_settings");
+						while (result.next()) {
+							tempWrite.executeSQL("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('" + result.getString("SETTING") + "','" + result.getString("VALUE") + "','" + result.getString("TIME") + "')");
 						}
 						result.close();
 						waitForFinish();
