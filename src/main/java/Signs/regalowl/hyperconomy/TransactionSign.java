@@ -3,6 +3,8 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -22,10 +24,10 @@ public class TransactionSign implements Listener {
 	private Set<String> names;
 	private String playerecon;
 
-	public void setTransactionSign(HyperConomy hyperc, Transaction trans, Calculation cal, ETransaction enchant, Log lo, Account account, Notification notify) {
-		hc = hyperc;
-		tran = trans;
-		ench = enchant;
+	TransactionSign() {
+		hc = HyperConomy.hc;
+		tran = hc.getTransaction();
+		ench = hc.getETransaction();
 		sf = hc.getDataFunctions();
 		names = new HashSet<String>();
 		ArrayList<String> anames = sf.getNames();
@@ -47,7 +49,7 @@ public class TransactionSign implements Listener {
 					Integer.parseInt(line4);
 					String line12 = ChatColor.stripColor(scevent.getLine(0)).trim() + ChatColor.stripColor(scevent.getLine(1)).trim();
 					line12 = sf.fixName(line12);
-					if (names.contains(line12.toLowerCase())) {
+					if (names.contains(line12)) {
 						if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
 							scevent.setLine(0, "\u00A71" + scevent.getLine(0));
 							scevent.setLine(1, "\u00A71" + scevent.getLine(1));

@@ -25,7 +25,6 @@ public class HyperConomy extends JavaPlugin {
 	private _Command commandhandler;
 	private History hist;
 	private Notification not;
-	private TransactionSign tsign;
 	private ItemDisplayFactory itdi;
 	private DataHandler df;
 	private SQLWrite sw;
@@ -82,6 +81,7 @@ public class HyperConomy extends JavaPlugin {
 		hist = new History();
 		itdi = new ItemDisplayFactory();
 		hws = new HyperWebStart();
+		new TransactionSign();
 		log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 	}
 
@@ -146,14 +146,11 @@ public class HyperConomy extends JavaPlugin {
 			commandhandler = new _Command();
 			not = new Notification();
 			isign = new InfoSignHandler();
-			tsign = new TransactionSign();
-			//buildData();
 			if (!migrate) {
 				df.load();
 			}
 			s.startshopCheck();
 			startSave();
-			tsign.setTransactionSign(this, tran, calc, ench, l, acc, not);
 			new ChestShop();
 		}
 	}
@@ -197,7 +194,6 @@ public class HyperConomy extends JavaPlugin {
 		commandhandler= null;
 		hist= null;
 		not= null;
-		tsign= null;
 		itdi= null;
 		df= null;
 		sw = null;
