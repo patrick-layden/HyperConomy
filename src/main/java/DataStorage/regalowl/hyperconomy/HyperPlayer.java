@@ -35,14 +35,14 @@ public class HyperPlayer {
 				y = p.getLocation().getY();
 				z = p.getLocation().getZ();
 				world = p.getLocation().getWorld().getName();
-				sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE)" + " VALUES ('" + name + "','" + economy + "','" + balance + "')");
+				sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + x + "','" + y + "','" + z + "','" + world + "','" + "none" + "')");
 				return;
 			}
 		}
 		name = player;
 		economy = "default";
 		balance = 0.0;
-		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE)" + " VALUES ('" + name + "','" + economy + "','" + balance + "')");
+		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','" + "none" + "')");
 		
 	}
 	
