@@ -121,6 +121,13 @@ public class History {
 		hc.getSQLWrite().executeSQL(statement);
 	}
 	
+	/**
+	 * This function must be called from an asynchronous thread!
+	 * @param object
+	 * @param timevalue
+	 * @param economy
+	 * @return The percentage change in theoretical price for the given object and timevalue in hours
+	 */
 	public String getPercentChange(String object, int timevalue, String economy) {
 		Calculation calc = hc.getCalculation();
 		double percentChange = 0.0;

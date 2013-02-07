@@ -7,8 +7,14 @@ import org.bukkit.command.CommandSender;
 
 public class Hyperlog {
 
-	Hyperlog(String args[], CommandSender sender) {
-		HyperConomy hc = HyperConomy.hc;
+	private CommandSender sender;
+	private String statement;
+	private ArrayList<String> result;
+	private HyperConomy hc;
+	
+	Hyperlog(String args[], CommandSender csender) {
+		sender = csender;
+		hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler df = hc.getDataFunctions();
 		try {
@@ -17,7 +23,7 @@ public class Hyperlog {
 				return;
 			}
 
-			String statement = "SELECT * FROM hyperconomy_log WHERE";
+			statement = "SELECT * FROM hyperconomy_log WHERE";
 			for (int i = 0; i < args.length; i += 2) {
 
 				String type = args[i];
@@ -99,23 +105,37 @@ public class Hyperlog {
 			}
 
 			statement += " ORDER BY TIME DESC";
-			ArrayList<String> result = getHyperLog(statement);
-			// sender.sendMessage(ChatColor.RED + statement);
+			
+			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+	    		public void run() {
+	    			result = getHyperLog(statement);
+	    			hc.getServer().getScheduler().runTask(hc, new Runnable() {
+	    	    		public void run() {
+	    	    			int m = result.size();
+	    	    			if (m > 100) {
+	    	    				m = 100;
+	    	    			}
+	    	    			for (int k = 0; k < m; k++) {
+	    	    				sender.sendMessage(result.get(k));
+	    	    			}
+	    	    		}
+	    	    	});
+	    		}
+	    	});
+			
 
-			int m = result.size();
-			if (m > 100) {
-				m = 100;
-			}
-			for (int k = 0; k < m; k++) {
-				sender.sendMessage(result.get(k));
-			}
 
 		} catch (Exception e) {
 			sender.sendMessage(L.get("HYPERLOG_INVALID"));
 		}
 	}
 
-	public ArrayList<String> getHyperLog(String statement) {
+	/**
+	 * This function must be called from an asynchronous thread!
+	 * @param statement
+	 * @return a display of the selected HyperLog entry
+	 */
+	private ArrayList<String> getHyperLog(String statement) {
 		SQLRead sr = HyperConomy.hc.getSQLRead();
 		ArrayList<String> entries = new ArrayList<String>();
 		QueryResult result = sr.getDatabaseConnection().read(statement);

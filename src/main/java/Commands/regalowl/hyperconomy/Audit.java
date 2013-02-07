@@ -1,42 +1,63 @@
 package regalowl.hyperconomy;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+
 import org.bukkit.command.CommandSender;
 
 public class Audit {
 	
-	Audit(String args[], CommandSender sender) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
-		Account acc = hc.getAccount();
+	private Account acc;
+	private String account;
+	private CommandSender sender;
+	private LanguageFile L;
+	private HyperConomy hc;
+	private double cbalance;
+	private double logbalance;
+	private double auditbalance;
+	
+	Audit(String args[], CommandSender csender) {
+		sender = csender;
+		hc = HyperConomy.hc;
+		L = hc.getLanguageFile();
+		acc = hc.getAccount();
 		try {
-			String account = args[0];
+			account = args[0];
 			if (!acc.checkAccount(account)) {
 				sender.sendMessage(L.get("ACCOUNT_NOT_FOUND"));
 				return;
 			}
-			sender.sendMessage(L.get("LINE_BREAK"));
-			double cbalance = acc.getBalance(account);
-			sender.sendMessage("Current Balance: " + cbalance);
-			double logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
-			sender.sendMessage("Theoretical Balance condsidering sales/purchases: " + logbalance);
-			double auditbalance = getAuditLogTotal(account);
-			sender.sendMessage("Theoretical Balance condsidering everything: " + auditbalance);
-			sender.sendMessage(L.get("LINE_BREAK"));
+
+			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+	    		public void run() {
+	    			cbalance = acc.getBalance(account);
+	    			logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
+	    			auditbalance = getAuditLogTotal(account);
+	    			hc.getServer().getScheduler().runTask(hc, new Runnable() {
+	    	    		public void run() {
+	    	    			sender.sendMessage(L.get("LINE_BREAK"));
+	    	    			sender.sendMessage("Current Balance: " + cbalance);
+	    	    			sender.sendMessage("Theoretical Balance condsidering sales/purchases: " + logbalance);
+	    	    			sender.sendMessage("Theoretical Balance condsidering everything: " + auditbalance);
+	    	    			sender.sendMessage(L.get("LINE_BREAK"));
+	    	    		}
+	    	    	});
+	    		}
+	    	});
 
 		} catch (Exception e) {
 			sender.sendMessage(L.get("AUDIT_INVALID"));
 		}
+
 	}
 	
 	
 	
-	public Double getHyperLogTotal(String account, String type) {
+	/**
+	 * This function must be called from an asynchronous thread!
+	 * @param account
+	 * @param type
+	 * @return returns the theoretical amount of money an account should have after all logged (buy or sell individually) transactions in the hyperconomy_log
+	 */
+	private Double getHyperLogTotal(String account, String type) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLRead sr = hc.getSQLRead();
 		String query = "";
@@ -55,7 +76,12 @@ public class Audit {
 	}
 	
 	
-	public Double getAuditLogTotal(String account) {
+	/**
+	 * This function must be called from an asynchronous thread!
+	 * @param account
+	 * @return returns the theoretical amount of money an account should have after all logged transactions in the hyperconomy_audit_log
+	 */
+	private Double getAuditLogTotal(String account) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLRead sr = hc.getSQLRead();
 		QueryResult result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");

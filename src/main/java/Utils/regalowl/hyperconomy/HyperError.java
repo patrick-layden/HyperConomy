@@ -44,6 +44,37 @@ public class HyperError {
 		hc.raiseErrorCount();
 		handleError();
 	}
+	
+	HyperError(Throwable t) {
+		StackTraceElement[] elements = t.getStackTrace();
+		String methodName = elements[0].getMethodName();
+		String callerMethod = elements[1].getMethodName();
+		String callerClass = elements[1].getClassName();
+		hc = HyperConomy.hc;
+		e = null;
+		info += "Method: " + methodName + "\r\n";
+		info += "Called by: " + callerMethod + "\r\n";
+		info += "Called by class:" + callerClass + "\r\n";
+		errornumber = hc.getErrorCount();
+		hc.raiseErrorCount();
+		handleError();
+	}
+	
+	HyperError(Throwable t, String infor) {
+		StackTraceElement[] elements = t.getStackTrace();
+		String methodName = elements[0].getMethodName();
+		String callerMethod = elements[1].getMethodName();
+		String callerClass = elements[1].getClassName(); 
+		hc = HyperConomy.hc;
+		e = null;
+		info += "Method: " + methodName + "\r\n";
+		info += "Called by: " + callerMethod + "\r\n";
+		info += "Called by class:" + callerClass + "\r\n";
+		info += infor;
+		errornumber = hc.getErrorCount();
+		hc.raiseErrorCount();
+		handleError();
+	}
 
 	
 	@SuppressWarnings("deprecation")

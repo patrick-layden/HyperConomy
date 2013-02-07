@@ -86,7 +86,7 @@ public class SQLEconomy {
 			connect.close();
 			return true;
 		} catch (Exception e) {
-			new HyperError(e);
+			//new HyperError(e);
 			return false;
 		}
 	}
@@ -127,7 +127,7 @@ public class SQLEconomy {
 			connect.close();
 			return true;
 		} catch (Exception e) {
-			new HyperError(e);
+			//new HyperError(e);
 			return false;
 		}
 	}

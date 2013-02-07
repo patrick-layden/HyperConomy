@@ -66,11 +66,19 @@ public class SQLWrite {
 	public void executeSQL(ArrayList<String> statements) {
 		for (String statement:statements) {
 			buffer.add(statement);
+			if (statement == null || statement == "") {
+				Throwable t = new Throwable();
+				new HyperError(t);
+			}
 		}
 		startWrite();
 	}
 	public void executeSQL(String statement) {
 		buffer.add(statement);
+		if (statement == null || statement == "") {
+			Throwable t = new Throwable();
+			new HyperError(t);
+		}
 		startWrite();
 	}
 	
