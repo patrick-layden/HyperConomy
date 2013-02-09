@@ -197,6 +197,7 @@ public class LanguageFile {
 	public String f(String inputstring, int value, int value2) {
 		inputstring = inputstring.replace("%v",value+"");
 		inputstring = inputstring.replace("%w",value2+"");
+		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -245,22 +246,26 @@ public class LanguageFile {
 	
 	public String f(String inputstring, String name) {
 		inputstring = inputstring.replace("%n",name);
+		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
 		return inputstring;
 	}
 	
 	public String f(String inputstring, double value) {
 		inputstring = inputstring.replace("%v",value+"");
+		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
 		return inputstring;
 	}
 	
 	public String f(String inputstring, int value) {
 		inputstring = inputstring.replace("%v",value+"");
+		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
 		return inputstring;
 	}
 	
 	public String f(String inputstring, int amount, String name) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%n",name);
+		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -276,6 +281,7 @@ public class LanguageFile {
 	public String f(String inputstring, double value, boolean status) {
 		inputstring = inputstring.replace("%s",status+"");
 		inputstring = inputstring.replace("%v",value+"");
+		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
 		return inputstring;
 	}
 

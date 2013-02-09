@@ -3,8 +3,6 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

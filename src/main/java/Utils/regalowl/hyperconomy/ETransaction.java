@@ -397,7 +397,7 @@ public class ETransaction {
 	}
 	
 	public boolean canAcceptEnchantment(ItemStack stack, Enchantment e) {
-		if (e == null || stack == null) {
+		if (e == null || stack == null || stack.getType().equals(Material.AIR)) {
 			return false;
 		}
 		if (stack.getType().equals(Material.BOOK)) {

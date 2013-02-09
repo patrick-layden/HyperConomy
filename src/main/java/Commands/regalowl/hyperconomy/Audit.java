@@ -33,10 +33,14 @@ public class Audit {
 	    			auditbalance = getAuditLogTotal(account);
 	    			hc.getServer().getScheduler().runTask(hc, new Runnable() {
 	    	    		public void run() {
+	    	    			Calculation calc = hc.getCalculation();
 	    	    			sender.sendMessage(L.get("LINE_BREAK"));
-	    	    			sender.sendMessage("Current Balance: " + cbalance);
-	    	    			sender.sendMessage("Theoretical Balance condsidering sales/purchases: " + logbalance);
-	    	    			sender.sendMessage("Theoretical Balance condsidering everything: " + auditbalance);
+	    	    			sender.sendMessage(L.f(L.get("AUDIT_TRUE"), cbalance));
+	    	    			sender.sendMessage(L.f(L.get("AUDIT_THEORETICAL1"), calc.twoDecimals(logbalance)));
+	    	    			sender.sendMessage(L.f(L.get("AUDIT_THEORETICAL2"), calc.twoDecimals(auditbalance)));
+	    	    			//sender.sendMessage("True balance: " + cbalance);
+	    	    			//sender.sendMessage("Theoretical balance condsidering only sales/purchases: " + calc.twoDecimals(logbalance));
+	    	    			//sender.sendMessage("Theoretical balance condsidering all logged balance changes: " + calc.twoDecimals(auditbalance));
 	    	    			sender.sendMessage(L.get("LINE_BREAK"));
 	    	    		}
 	    	    	});

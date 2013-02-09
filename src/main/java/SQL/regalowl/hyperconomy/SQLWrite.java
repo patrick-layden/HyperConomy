@@ -65,21 +65,23 @@ public class SQLWrite {
 
 	public void executeSQL(ArrayList<String> statements) {
 		for (String statement:statements) {
-			buffer.add(statement);
-			if (statement == null || statement == "") {
+			if (statement == null || statement.equals("")) {
 				Throwable t = new Throwable();
-				new HyperError(t);
+				new HyperError(t, "Passed blank or null SQL statement.");
+			} else {
+				buffer.add(statement);
 			}
 		}
 		startWrite();
 	}
 	public void executeSQL(String statement) {
-		buffer.add(statement);
-		if (statement == null || statement == "") {
+		if (statement == null || statement.equals("")) {
 			Throwable t = new Throwable();
-			new HyperError(t);
+			new HyperError(t, "Passed blank or null SQL statement.");
+		} else {
+			buffer.add(statement);
+			startWrite();
 		}
-		startWrite();
 	}
 	
 

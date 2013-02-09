@@ -371,6 +371,9 @@ PLAYER_NOT_FOUND: &4The specified player does not have an economy account.
 PLAYERS_IMPORTED: &6External balances imported into HyperConomy.
 REQUIRE_SHOP_FOR_INFO: &4You must enter a shop to recieve information.
 AUDIT_INVALID: &4Invalid parameters. Use /audit [account]
+AUDIT_TRUE: &9True balance: &b%c%v
+AUDIT_THEORETICAL1: &9Theoretical balance condsidering only sales/purchases: &b%c%v
+AUDIT_THEORETICAL2: &9Theoretical balance condsidering all logged balance changes: &b%c%v
 ACCOUNT_NOT_FOUND: &4The specified account does not exist.
 SETCHESTOWNER_INVALID: &4Invalid parameters. Use /setchestowner [owner]
 LOOK_AT_VALID_CHESTSHOP: &4You must be looking at a valid chest shop!
