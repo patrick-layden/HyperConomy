@@ -354,7 +354,7 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
    hcclearhistory:
-      description: Clears the hyperhistory table.
+      description: Clears the hyperconomy_history table.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
    hcerror:
