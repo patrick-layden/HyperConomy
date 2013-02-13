@@ -14,6 +14,7 @@ public class SQLiteConnection extends DatabaseConnection {
 
 	
 	private HyperConomy hc;
+	private SQLRead sr;
 
 	private String sqlitePath;
 	private Connection connection;
@@ -29,6 +30,7 @@ public class SQLiteConnection extends DatabaseConnection {
 	
 	SQLiteConnection() {
 		hc = HyperConomy.hc;
+		sr = hc.getSQLRead();
 		FileTools ft = new FileTools();
 		sqlitePath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
 		openConnection();
@@ -71,11 +73,15 @@ public class SQLiteConnection extends DatabaseConnection {
 			resultSet.close();
 			state.close();
 			statement = null;
-			hc.getSQLRead().returnConnection(this);
+			if (sr != null) {
+				sr.returnConnection(this);
+			}
 			return qr;
 		} catch (SQLException e) {
 			new HyperError(e, "The failed SQL statement is in the following brackets: [" + statement + "]");
-			hc.getSQLRead().returnConnection(this);
+			if (sr != null) {
+				sr.returnConnection(this);
+			}
 			return qr;
 		}
 	}

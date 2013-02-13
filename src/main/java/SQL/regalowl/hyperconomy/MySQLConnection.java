@@ -16,6 +16,7 @@ public class MySQLConnection extends DatabaseConnection {
 
 	
 	private HyperConomy hc;
+	private SQLRead sr;
 	private String username;
 	private String password;
 	private int port;
@@ -35,6 +36,7 @@ public class MySQLConnection extends DatabaseConnection {
 	
 	MySQLConnection() {
 		hc = HyperConomy.hc;
+		sr = hc.getSQLRead();
 		FileConfiguration config = hc.getYaml().getConfig();
 		username = config.getString("config.sql-connection.username");
 		password = config.getString("config.sql-connection.password");
@@ -81,11 +83,15 @@ public class MySQLConnection extends DatabaseConnection {
 			resultSet.close();
 			state.close();
 			statement = null;
-			hc.getSQLRead().returnConnection(this);
+			if (sr != null) {
+				sr.returnConnection(this);
+			}
 			return qr;
 		} catch (SQLException e) {
 			new HyperError(e, "The failed SQL statement is in the following brackets: [" + statement + "]");
-			hc.getSQLRead().returnConnection(this);
+			if (sr != null) {
+				sr.returnConnection(this);
+			}
 			return qr;
 		}
 	}
