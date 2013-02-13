@@ -78,10 +78,6 @@ public class Update {
 	    	if (t15 == null) {
 	    		yaml.getConfig().set("config.require-chest-shops-to-be-in-shop", false);
 	    	}
-	    	String t16 = yaml.getConfig().getString("config.currency-symbol");
-	    	if (t16 == null) {
-	    		yaml.getConfig().set("config.currency-symbol", "$");
-	    	}
 	    	String t17 = yaml.getConfig().getString("config.sql-connection.use-mysql");
 	    	if (t17 == null) {
 	    		yaml.getConfig().set("config.sql-connection.use-mysql", false);

@@ -187,6 +187,7 @@ public class DataHandler implements Listener {
 					hplayer.setZ(result.getDouble("Z"));
 					hplayer.setWorld(result.getString("WORLD"));
 					hplayer.setHash(result.getString("HASH"));
+					hplayer.setSalt(result.getString("SALT"));
 					hyperPlayers.put(hplayer.getName(), hplayer);
 				}
 				result.close();

@@ -116,7 +116,7 @@ public class ChestShop implements Listener{
 					    					//probably add a check for lockette/deadbolt/lwc chests
 				    						
 				    						String line1 = scevent.getLine(0);
-				    						if (line1.startsWith(hc.getYaml().getConfig().getString("config.currency-symbol"))) {
+				    						if (line1.startsWith(HyperConomy.currency)) {
 				    							try {
 				    								String price = line1.substring(1, line1.length());
 				    								Double.parseDouble(price);
@@ -505,7 +505,7 @@ public class ChestShop implements Listener{
 				    			boolean setprice = false;
 				    			double staticprice = 0.0;
 				    			String line1 = ChatColor.stripColor(s.getLine(0)).trim();
-	    						if (line1.startsWith(hc.getYaml().getConfig().getString("config.currency-symbol"))) {
+	    						if (line1.startsWith(HyperConomy.currency)) {
 	    							try {
 	    								String price = line1.substring(1, line1.length());
 	    								staticprice = calc.twoDecimals(Double.parseDouble(price));
@@ -597,7 +597,6 @@ public class ChestShop implements Listener{
 						    					}
 								    			p.sendMessage(L.get("LINE_BREAK"));
 								    			p.sendMessage(L.f(L.get("CHEST_SHOP_BUY_VALUE"), 1, price, name, line34));
-								    			//p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 " + ChatColor.AQUA + "" + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
 								    			p.sendMessage(L.get("LINE_BREAK"));
 						    				} else {
 						    					p.sendMessage(L.get("CANNOT_PURCHASE_ITEMS_FROM_CHEST"));
@@ -615,7 +614,6 @@ public class ChestShop implements Listener{
 							    						price = staticprice;
 							    					}
 								    				p.sendMessage(L.get("LINE_BREAK"));
-								    				//p.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "1 "  + ChatColor.AQUA + ""  + ChatColor.ITALIC + name + ChatColor.BLUE + ChatColor.ITALIC + " can be sold to " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
 								    				p.sendMessage(L.f(L.get("CHEST_SHOP_SELL_VALUE"), 1, price, name, line34));
 								    				p.sendMessage(L.get("LINE_BREAK"));	
 						    					} else {
@@ -647,7 +645,6 @@ public class ChestShop implements Listener{
 								        				price = calc.twoDecimals(price);
 								        			if (ench.canEnchantItem(p.getItemInHand())) {
 										    			p.sendMessage(L.get("LINE_BREAK"));
-										    			//p.sendMessage(ChatColor.BLUE + "The selected item's enchantments can be purchased from " + line34 + " for: " + ChatColor.GREEN + ChatColor.ITALIC + hc.getYaml().getConfig().getString("config.currency-symbol") + price);
 										    			p.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, line34));
 										    			p.sendMessage(L.get("LINE_BREAK"));
 							    					} else {

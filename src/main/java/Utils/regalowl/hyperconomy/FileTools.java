@@ -5,10 +5,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -154,7 +154,8 @@ public class FileTools {
 
 	public String getStringFromFile(String path) {
 		try {
-			BufferedReader input = new BufferedReader(new FileReader(path));
+			//BufferedReader input = new BufferedReader(new FileReader(path));
+			BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF8"));
 			String text = "";
 			String string;
 			while ((string = input.readLine()) != null) {
@@ -162,17 +163,29 @@ public class FileTools {
 			}
 			input.close();
 			return text;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
 		}
+
+		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	public ArrayList<String> getStringArrayFromFile(String path) {
 		ArrayList<String> text = new ArrayList<String>();
 		try {
-			BufferedReader input = new BufferedReader(new FileReader(path));
+			BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF8"));
+			//BufferedReader input = new BufferedReader(new FileReader(path));
 			String string;
 			while ((string = input.readLine()) != null) {
 				text.add(string);

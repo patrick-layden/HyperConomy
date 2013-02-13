@@ -103,9 +103,8 @@ public class HyperConomy extends JavaPlugin {
 			saveinterval = yaml.getConfig().getLong("config.saveinterval");
 			usemysql = yaml.getConfig().getBoolean("config.sql-connection.use-mysql");
 			apiVersion = yaml.getConfig().getDouble("api-version");
-			currency = yaml.getConfig().getString("config.currency-symbol");
+			currency = L.get("CURRENCY");
 			useExternalEconomy = yaml.getConfig().getBoolean("config.use-external-economy-plugin");
-			currency = this.getYaml().getConfig().getString("config.currency-symbol");
 			logerrors = this.getYaml().getConfig().getBoolean("config.log-errors");
 			serverVersion = this.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
 			new Update();

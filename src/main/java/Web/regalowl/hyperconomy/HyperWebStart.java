@@ -39,7 +39,7 @@ public class HyperWebStart {
 		salestax = conf.getDouble("config.sales-tax-percent");
 		initialtax = conf.getDouble("config.initialpurchasetaxpercent");
 		statictax = conf.getDouble("config.statictaxpercent");
-		currencySymbol = conf.getString("config.currency-symbol");
+		currencySymbol = HyperConomy.currency;
 		port = conf.getInt("config.web-page.port");
 		useHistory = conf.getBoolean("config.store-price-history");
 		pageEconomy = conf.getString("config.web-page.web-page-economy");

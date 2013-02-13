@@ -116,17 +116,28 @@ public class HyperAPI implements HyperInterface {
 		}
 	}
 
-	public boolean checkPassword(String player, String MD5hash) {
+	public boolean checkHash(String player, String SHA256Hash) {
 		HyperConomy hc = HyperConomy.hc;
 		DataHandler dh = hc.getDataFunctions();
 		if (dh.hasAccount(player)) {
-			if (dh.getHyperPlayer(player).getHash().equals(MD5hash)) {
+			if (dh.getHyperPlayer(player).getHash().equals(SHA256Hash)) {
 				return true;
 			} else {
 				return false;
 			}
 		} else {
 			return false;
+		}
+	}
+	
+	
+	public String getSalt(String player) {
+		HyperConomy hc = HyperConomy.hc;
+		DataHandler dh = hc.getDataFunctions();
+		if (dh.hasAccount(player)) {
+			return dh.getHyperPlayer(player).getSalt();
+		} else {
+			return "";
 		}
 	}
 

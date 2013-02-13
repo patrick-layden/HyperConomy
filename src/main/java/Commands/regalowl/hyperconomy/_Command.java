@@ -273,6 +273,9 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("setchestowner")) {
 			new Setchestowner(args, player);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("setpassword")) {
+			new Setpassword(args, player);
+			return true;
 		}
 		
 		return false;

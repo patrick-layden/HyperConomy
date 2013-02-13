@@ -15,7 +15,17 @@ public interface HyperInterface {
 	double getPlayerX(String player);
 	double getPlayerY(String player);
 	double getPlayerZ(String player);
-	boolean checkPassword(String player, String hash);
+	/**
+	 * @param player (name of player)
+	 * @return true if the hash matches the player's hash and false if it doesn't
+	 */
+	boolean checkHash(String player, String hash);
+
+	/**
+	 * @param player (name of player)
+	 * @return The random hash for the specified player.  If the player is not in the HyperConomy database it returns ""
+	 */
+	String getSalt(String player);
 	double getAPIVersion();
 	
 }

@@ -60,8 +60,13 @@ public class SQLEconomy {
 				ResultSet result = state.executeQuery("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'version'");
 				if (result.next()) {
 					double version = Double.parseDouble(result.getString("VALUE"));
-					if (version < 1.1) {
-						//for next database version
+					if (version == 1.0) {
+						state.execute("ALTER TABLE hyperconomy_players CHANGE HASH HASH VARCHAR(255) NOT NULL DEFAULT ''");
+						state.execute("ALTER TABLE hyperconomy_players ADD SALT VARCHAR(255) NOT NULL DEFAULT '' AFTER HASH");
+						state.execute("UPDATE hyperconomy_settings SET VALUE = '1.1' WHERE SETTING = 'version'");
+					} 
+					if (version == 1.1) {
+						//for next version
 					}
 				}
 				result.close();
@@ -71,14 +76,14 @@ public class SQLEconomy {
 				connect = DriverManager.getConnection("jdbc:sqlite:" + path);
 				Statement state = connect.createStatement();
 				state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_settings (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, SETTING TINYTEXT NOT NULL, VALUE STRING, TIME DATETIME NOT NULL)");
-				state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('version', '1.0', datetime('NOW', 'localtime'))");
+				state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('version', '1.1', datetime('NOW', 'localtime'))");
 				state.close();
 			}
 			connect.close();
 			connect = DriverManager.getConnection("jdbc:sqlite:" + path);
 			Statement state = connect.createStatement();
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
-			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL PRIMARY KEY, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH TEXT)");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL PRIMARY KEY, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_log (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT)");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE)");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL)");
@@ -100,8 +105,13 @@ public class SQLEconomy {
 				ResultSet result = state.executeQuery("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'version'");
 				if (result.next()) {
 					version = Double.parseDouble(result.getString("VALUE"));
-					if (version < 1.1) {
-						//for next database version
+					if (version == 1.0) {
+						state.execute("ALTER TABLE hyperconomy_players CHANGE HASH HASH VARCHAR(255) NOT NULL DEFAULT ''");
+						state.execute("ALTER TABLE hyperconomy_players ADD SALT VARCHAR(255) NOT NULL DEFAULT '' AFTER HASH");
+						state.execute("UPDATE hyperconomy_settings SET VALUE = '1.1' WHERE SETTING = 'version'");
+					} 
+					if (version == 1.1) {
+						//for next version
 					}
 				}
 				result.close();
@@ -111,7 +121,7 @@ public class SQLEconomy {
 				connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 				Statement state = connect.createStatement();
 				state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_settings (ID INT NOT NULL AUTO_INCREMENT, SETTING TINYTEXT NOT NULL, VALUE TEXT, TIME DATETIME NOT NULL, PRIMARY KEY (ID))");
-				state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('version', '1.0', NOW() )");
+				state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('version', '1.1', NOW() )");
 				updateMySQL1(connect);
 				state.close();
 			}
@@ -119,7 +129,7 @@ public class SQLEconomy {
 			connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 			Statement state = connect.createStatement();
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, TYPE TINYTEXT, CATEGORY TINYTEXT, MATERIAL TINYTEXT, ID INT, DATA INT, DURABILITY INT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
-			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH TEXT, PRIMARY KEY (PLAYER))");
+			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '', PRIMARY KEY (PLAYER))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_log (ID INT NOT NULL AUTO_INCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT, PRIMARY KEY (ID))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INT NOT NULL AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE, PRIMARY KEY (ID))");
 			state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INT NOT NULL AUTO_INCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL, PRIMARY KEY (ID))");
@@ -178,6 +188,8 @@ public class SQLEconomy {
 			state.execute("ALTER TABLE hyperlog RENAME TO hyperconomy_log");
 			state.execute("ALTER TABLE hyperhistory RENAME TO hyperconomy_history");
 			state.execute("ALTER TABLE hyperauditlog RENAME TO hyperconomy_audit_log");
+			state.execute("ALTER TABLE hyperconomy_players CHANGE HASH HASH VARCHAR(255) NOT NULL DEFAULT ''");
+			state.execute("ALTER TABLE hyperconomy_players ADD SALT VARCHAR(255) NOT NULL DEFAULT '' AFTER HASH");
 			
 			state.close();
 			connect.close();

@@ -104,7 +104,6 @@ public class LanguageFile {
 			language.put(name, text);
 		}
 		language.put("CC", "\u00A7");
-		language.put("CURRENCY", formatMessage(HyperConomy.hc.getYaml().getConfig().getString("config.currency-symbol")));
 	}
 	
 	
@@ -120,7 +119,6 @@ public class LanguageFile {
 			languageBackup.put(name, text);
 		}
 		languageBackup.put("CC", "\u00A7");
-		languageBackup.put("CURRENCY", formatMessage(HyperConomy.hc.getYaml().getConfig().getString("config.currency-symbol")));
 	}
 	
 

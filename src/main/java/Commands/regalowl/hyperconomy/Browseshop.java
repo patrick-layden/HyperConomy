@@ -18,7 +18,7 @@ public class Browseshop {
 		for (int i = 0; i < args.length; i++) {
 			aargs.add(args[i]);
 		}
-		try {
+		//try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
     		if (player != null) {
     			if ((requireShop && s.getShop(player) == null) && !player.hasPermission("hyperconomy.admin")) {
@@ -61,7 +61,12 @@ public class Browseshop {
 			}
     		String nameshop = null;
     		if (player != null) {
-    			nameshop = s.getShop(player).getName();
+    			Shop shop = s.getShop(player);
+    			if (shop == null) {
+    				nameshop = null;
+    			} else {
+    				nameshop = shop.getName();
+    			}		
     		}
 			ArrayList<String> names = sf.getNames();
 			ArrayList<String> rnames = new ArrayList<String>();
@@ -109,7 +114,7 @@ public class Browseshop {
 							cost = cost + calc.getEnchantTax(iname, playerecon, cost);
 							stock = sf.getHyperObject(iname, playerecon).getStock();
 						}
-						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + L.get("AVAILABLE") + ": \u00A7a" + hc.getYaml().getConfig().getString("config.currency-symbol") + cost + " \u00A79" + L.get("EACH") + ".]");
+						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + L.get("AVAILABLE") + ": \u00A7a" + L.get("CURRENCY") + cost + " \u00A79" + L.get("EACH") + ".]");
 					} else {
 						sender.sendMessage(L.get("REACHED_END"));
 						break;
@@ -117,8 +122,8 @@ public class Browseshop {
 				}
 				count++;
 			}
-		} catch (Exception e) {
-			sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
-		}
+		//} catch (Exception e) {
+		//	sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
+		//}
 	}
 }

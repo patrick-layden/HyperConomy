@@ -396,6 +396,10 @@ commands:
       description: Sets the owner of the chest shop you're looking at.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+   setpassword:
+      description: Sets your account password.
+      permission: hyperconomy.use
+      permission-message: You do not have permission.
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

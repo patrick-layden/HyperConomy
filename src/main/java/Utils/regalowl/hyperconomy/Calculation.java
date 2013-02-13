@@ -1,9 +1,15 @@
 package regalowl.hyperconomy;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -689,6 +695,19 @@ public class Calculation {
 			currency = "";
 		}
 		return currency + rounded.toPlainString();
+	}
+	
+	public String sha256Digest(String string) {
+		try {
+			return (new HexBinaryAdapter()).marshal(MessageDigest.getInstance("SHA-256").digest(string.getBytes()));
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	public String generateSecureSalt() {
+		SecureRandom random = new SecureRandom();
+		return new BigInteger(130, random).toString(32);
 	}
 	
 }
