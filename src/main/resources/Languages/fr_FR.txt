@@ -273,7 +273,7 @@ SETSHOP_INVALID: &4Paramètres invalides. Utiliser /setshop ['p1'/'p2'] [nom]
 SETSHOPECONOMY_INVALID: &4Paramètres invalides. Utiliser /setshopeconomy [magasin] [économie]
 SHOP_ECONOMY_SET: &6Economie du magasin configurée !
 SETSTARTPRICE_INVALID: &4Paramètres invalides. Utiliser /setstartprice [objet/enchantement] [prix de départ] ('e')
-START_PRICE_SET: &6Prix de départ enregistré pour %n !"
+START_PRICE_SET: &6Prix de départ enregistré pour %n !
 SETSTATIC_INVALID: &4Paramètres invalides. Utiliser /setstatic [objet/enchantement] ('e')
 USE_DYNAMIC_PRICE: &6%n aura un prix dynamique.
 USE_STATIC_PRICE: &6%n aura un prix fixe.
@@ -282,7 +282,7 @@ ALL_OBJECTS_SET_TO_STATIC: &6Tous les objets configurés en prix statique : %n.
 SETSTATICPRICE_INVALID: &4Paramètres invalides. Utiliser /setstaticprice [objet/enchantement] [prix de départ] ('e')
 STATIC_PRICE_SET: &6%n prix statique configuré !
 SETSTOCK_INVALID: &4Paramètres invalides. Utiliser /setstock [objet/enchantement] [stock] ('e')
-STOCK_SET: &6stock configuré pour %n!"
+STOCK_SET: &6stock configuré pour %n!
 SETSTOCKALL_INVALID: &4Paramètres invalides. Utiliser /setstockall [stock]
 ALL_STOCKS_SET: &6Tous les stocks sont configurés !
 SETSTOCKMEDIANALL_WARNING: &cEtes-vous certain de souhaiter faire ça ? Tous les stocks d'objets et enchantements seront réinitialisés au stock moyen avec prix initial désactivé. Entrer '/setstockmedianall' confirm pour continuer.
