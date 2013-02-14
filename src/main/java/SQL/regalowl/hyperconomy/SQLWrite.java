@@ -112,9 +112,14 @@ public class SQLWrite {
 	}
 	
 	private void cancelWrite() {
-		writeTask.cancel();
-		writeActive = false;
-		initialWrite = false;
+		try {
+			writeTask.cancel();
+			writeActive = false;
+			initialWrite = false;
+		} catch (Exception e) {
+			writeActive = false;
+			initialWrite = false;
+		}
 	}
     
     
