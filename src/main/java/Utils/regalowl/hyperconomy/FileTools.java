@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -48,6 +49,15 @@ public class FileTools {
 
 	public void copyFileFromJar(String resource, String destination) {
 		InputStream resStreamIn = HyperConomy.class.getClassLoader().getResourceAsStream(resource);
+		if (resStreamIn == null) {
+			Logger log = Logger.getLogger("Minecraft");
+			if (resource.equalsIgnoreCase("Languages/en_US.txt")) {
+				log.severe("[HyperConomy] Failed to copy language file backup.  Do not use /reload to update HyperConomy.");
+			} else {
+				log.severe("[HyperConomy] Failed to copy file.  Restart your server to fix this.  Do not use /reload.");
+			}
+			return;
+		}
 		File newFile = new File(destination);
 		try {
 			OutputStream ostream = new FileOutputStream(newFile);
