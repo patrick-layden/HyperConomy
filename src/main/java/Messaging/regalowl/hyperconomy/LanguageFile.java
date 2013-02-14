@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -93,17 +94,22 @@ public class LanguageFile {
 	
 	
 	private void buildHashMap(String filepath) {
-		ArrayList<String> lines = ft.getStringArrayFromFile(filepath);
-		for (int i = 0; i < lines.size(); i++) {
-			String name = lines.get(i).substring(0, lines.get(i).indexOf(":"));
-			String text = lines.get(i).substring(lines.get(i).indexOf(":") + 1, lines.get(i).length());
-			if (text.startsWith(" ")) {
-				text = text.substring(1, text.length());
+		try {
+			ArrayList<String> lines = ft.getStringArrayFromFile(filepath);
+			for (int i = 0; i < lines.size(); i++) {
+				String name = lines.get(i).substring(0, lines.get(i).indexOf(":"));
+				String text = lines.get(i).substring(lines.get(i).indexOf(":") + 1, lines.get(i).length());
+				if (text.startsWith(" ")) {
+					text = text.substring(1, text.length());
+				}
+				text = formatMessage(text);
+				language.put(name, text);
 			}
-			text = formatMessage(text);
-			language.put(name, text);
+			language.put("CC", "\u00A7");
+		} catch (Exception e) {
+			Logger log = Logger.getLogger("Minecraft");
+			log.severe("[HyperConomy]You likely have an error in your language file...using a backup.");
 		}
-		language.put("CC", "\u00A7");
 	}
 	
 	
