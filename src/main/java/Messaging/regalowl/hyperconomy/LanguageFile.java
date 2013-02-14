@@ -195,7 +195,7 @@ public class LanguageFile {
 	public String f(String inputstring, int value, int value2) {
 		inputstring = inputstring.replace("%v",value+"");
 		inputstring = inputstring.replace("%w",value2+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -203,7 +203,7 @@ public class LanguageFile {
 	public String f(String inputstring, String name, String extra) {
 		inputstring = inputstring.replace("%e",extra);
 		inputstring = inputstring.replace("%n",name);
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -211,7 +211,7 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%e",extra);
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%i",i+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -221,7 +221,7 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%zc",extra);
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%p",price+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -230,7 +230,7 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%t",tax+"");
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%p",price+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -238,32 +238,32 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%p",price+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
 	public String f(String inputstring, String name) {
 		inputstring = inputstring.replace("%n",name);
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
 	public String f(String inputstring, double value) {
 		inputstring = inputstring.replace("%v",value+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
 	public String f(String inputstring, int value) {
 		inputstring = inputstring.replace("%v",value+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
 	public String f(String inputstring, int amount, String name) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%n",name);
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -272,14 +272,14 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%zc",name);
 		inputstring = inputstring.replace("%p",amount+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
 	public String f(String inputstring, double value, boolean status) {
 		inputstring = inputstring.replace("%s",status+"");
 		inputstring = inputstring.replace("%v",value+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 
@@ -288,7 +288,7 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%y",player.getName());
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%p",price+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
 	
@@ -297,7 +297,7 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%y",player.getName());
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%p",price+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		inputstring = inputstring.replace("%za",isstatic);
 		inputstring = inputstring.replace("%zb",isinitial);
 		return inputstring;
@@ -308,7 +308,7 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%y",player.getName());
 		inputstring = inputstring.replace("%n",name);
 		inputstring = inputstring.replace("%p",price+"");
-		inputstring = inputstring.replace("%c",language.get("CURRENCY"));
+		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		inputstring = inputstring.replace("%za",isstatic);
 		inputstring = inputstring.replace("%zb",isinitial);
 		inputstring = inputstring.replace("%zc",owner);
