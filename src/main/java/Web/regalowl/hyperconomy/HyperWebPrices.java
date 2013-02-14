@@ -26,7 +26,11 @@ public class HyperWebPrices extends AbstractHandler {
 		hws = hyperws;
 		hc.getServer().getScheduler().scheduleAsyncRepeatingTask(hc, new Runnable() {
 			public void run() {
-				page = buildPage(hws.getPageEconomy());
+				try {
+					page = buildPage(hws.getPageEconomy());
+				} catch (Exception e) {
+					new HyperError(e);
+				}
 			}
 		}, 400L, 6000L);
 	}
@@ -54,6 +58,9 @@ public class HyperWebPrices extends AbstractHandler {
 			try {
 				double cost = 0.0;
 				HyperObject ho = sf.getHyperObject(name, playerecon);
+				if (ho == null) {
+					return 99999999;
+				}
 				boolean initial = Boolean.parseBoolean(ho.getInitiation());
 				boolean isstatic = Boolean.parseBoolean(ho.getIsstatic());
 				if (isstatic) {
@@ -82,7 +89,7 @@ public class HyperWebPrices extends AbstractHandler {
 					return cost;
 				}
 			} catch (Exception e) {				
-				e.printStackTrace();
+				new HyperError(e);
 				double cost = 99999999;
 				return cost;			
 			}
@@ -99,6 +106,9 @@ public class HyperWebPrices extends AbstractHandler {
 				try {
 					double cost = 0.0;
 					HyperObject ho = sf.getHyperObject(name, playerecon);
+					if (ho == null) {
+						return -1;
+					}
 					boolean initial = Boolean.parseBoolean(ho.getInitiation());
 					boolean isstatic = Boolean.parseBoolean(ho.getIsstatic());
 					if (isstatic) {
@@ -128,7 +138,7 @@ public class HyperWebPrices extends AbstractHandler {
 						return cost;
 					}
 				} catch (Exception e) {				
-					e.printStackTrace();
+					new HyperError(e);
 					double cost = -1;
 					return cost;			
 				}
@@ -247,15 +257,19 @@ public class HyperWebPrices extends AbstractHandler {
 					
 					
 					String type = "";
-					if (Boolean.parseBoolean(sf.getHyperObject(names.get(i), economy).getInitiation())) {
+					HyperObject ho = sf.getHyperObject(names.get(i), economy);
+					if (ho == null) {
+						continue;
+					}
+					if (Boolean.parseBoolean(ho.getInitiation())) {
 						type = "initial";
 					} else {
 						type = "dynamic";
 					}
-					if (Boolean.parseBoolean(sf.getHyperObject(names.get(i), economy).getIsstatic())) {
+					if (Boolean.parseBoolean(ho.getIsstatic())) {
 						type = "static";
 					}
-					String otype = sf.getHyperObject(names.get(i), economy).getType();
+					String otype = ho.getType();
 					otype = otype.substring(0, 4);
 					
 					double tax = 0.0;
@@ -292,10 +306,10 @@ public class HyperWebPrices extends AbstractHandler {
 					page += hws.getCurrencySymbol() + calc.twoDecimals(((bcost * (tax/100)) + bcost)) + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
-					page += sf.getHyperObject(names.get(i), economy).getStock() + "\n";
+					page += ho.getStock() + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
-					page += sf.getHyperObject(names.get(i), economy).getId() + "\n";
+					page += ho.getId() + "\n";
 					page += "</TD>\n";
 					/*
 					page += "<TD>\n";
