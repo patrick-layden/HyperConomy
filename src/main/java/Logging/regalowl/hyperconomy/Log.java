@@ -7,7 +7,7 @@ package regalowl.hyperconomy;
 /**
  * 
  * 
- * This class logs all transactions to log.txt and lists all items/enchantments on command.
+ * 
  * 
  */
 public class Log {

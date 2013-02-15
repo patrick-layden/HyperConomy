@@ -51,8 +51,8 @@ public class FileTools {
 		InputStream resStreamIn = HyperConomy.class.getClassLoader().getResourceAsStream(resource);
 		if (resStreamIn == null) {
 			Logger log = Logger.getLogger("Minecraft");
-			if (resource.equalsIgnoreCase("Languages/en_US.txt")) {
-				log.severe("[HyperConomy] Failed to copy language file backup.  Do not use /reload to update HyperConomy.");
+			if (resource.contains(".hl")) {
+				log.severe("[HyperConomy] Failed to copy language file.  Do not use /reload to update HyperConomy.");
 			} else {
 				log.severe("[HyperConomy] Failed to copy file.  Restart your server to fix this.  Do not use /reload.");
 			}

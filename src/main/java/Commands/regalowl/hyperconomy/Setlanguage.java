@@ -15,7 +15,7 @@ public class Setlanguage {
 		try {
 			if (args.length == 1) {
 				String language = args[0].toLowerCase();
-				String filepath = folderpath + File.separator + language + ".txt";
+				String filepath = folderpath + File.separator + language + ".hl";
 				if (L.languageSupported(language) || ft.fileExists(filepath)) {
 					language = L.fixLanguage(language);
 					hc.getYaml().getConfig().set("config.language", language);
