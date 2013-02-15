@@ -1,3 +1,4 @@
+CURRENCY: €
 ADD_CATEGORY_INVALID: &4Paramètre invalide. Utiliser /addcategory [nom] [magasin]
 SHOP_NOT_EXIST: &4Magasin inexistant !
 CATEGORY_NOT_EXIST: &4Catégorie inexistante!
