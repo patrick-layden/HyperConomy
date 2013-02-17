@@ -61,8 +61,10 @@ public class SQLEconomy {
 				if (result.next()) {
 					double version = Double.parseDouble(result.getString("VALUE"));
 					if (version == 1.0) {
-						state.execute("ALTER TABLE hyperconomy_players CHANGE HASH HASH VARCHAR(255) NOT NULL DEFAULT ''");
-						state.execute("ALTER TABLE hyperconomy_players ADD SALT VARCHAR(255) NOT NULL DEFAULT '' AFTER HASH");
+						state.execute("ALTER TABLE hyperconomy_players RENAME TO hyperconomy_players_temp");
+						state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL PRIMARY KEY, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
+						state.execute("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH) SELECT * FROM hyperconomy_players_temp");
+						state.execute("DROP TABLE hyperconomy_players_temp");
 						state.execute("DROP TABLE IF EXISTS hyperconomy_settings");
 						state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL PRIMARY KEY, VALUE STRING, TIME DATETIME NOT NULL)");
 						state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('version', '1.1', datetime('NOW', 'localtime'))");
@@ -74,10 +76,12 @@ public class SQLEconomy {
 				result.close();
 				state.close();
 			} catch (Exception e) {
+				e.printStackTrace();
 				connect.close();
 				connect = DriverManager.getConnection("jdbc:sqlite:" + path);
 				Statement state = connect.createStatement();
 				state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL PRIMARY KEY, VALUE STRING, TIME DATETIME NOT NULL)");
+				state.execute("DELETE * FROM hyperconomy_settings");
 				state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('version', '1.1', datetime('NOW', 'localtime'))");
 				state.close();
 			}
@@ -93,7 +97,7 @@ public class SQLEconomy {
 			connect.close();
 			return true;
 		} catch (Exception e) {
-			//new HyperError(e);
+			new HyperError(e);
 			return false;
 		}
 	}
@@ -125,6 +129,7 @@ public class SQLEconomy {
 				connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 				Statement state = connect.createStatement();
 				state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL, VALUE TEXT, TIME DATETIME NOT NULL, PRIMARY KEY (SETTING))");
+				state.execute("DELETE * FROM hyperconomy_settings");
 				state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('version', '1.1', NOW() )");
 				updateMySQL1(connect);
 				state.close();
