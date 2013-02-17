@@ -80,8 +80,8 @@ public class SQLEconomy {
 				connect = DriverManager.getConnection("jdbc:sqlite:" + path);
 				Statement state = connect.createStatement();
 				state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL PRIMARY KEY, VALUE STRING, TIME DATETIME NOT NULL)");
-				state.execute("DELETE * FROM hyperconomy_settings");
-				state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('version', '1.1', datetime('NOW', 'localtime'))");
+				state.execute("DELETE FROM hyperconomy_settings");
+				state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '1.1', datetime('NOW', 'localtime'))");
 				state.close();
 			}
 			connect.close();
