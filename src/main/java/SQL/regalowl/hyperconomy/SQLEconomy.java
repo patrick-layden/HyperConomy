@@ -76,7 +76,6 @@ public class SQLEconomy {
 				result.close();
 				state.close();
 			} catch (Exception e) {
-				e.printStackTrace();
 				connect.close();
 				connect = DriverManager.getConnection("jdbc:sqlite:" + path);
 				Statement state = connect.createStatement();

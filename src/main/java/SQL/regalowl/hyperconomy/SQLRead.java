@@ -28,6 +28,13 @@ public class SQLRead {
 		}
 		DatabaseConnection dc = available.get(0);
 		available.remove(dc);
+		if (dc == null) {
+			if (hc.useMySQL()) {
+				dc = new MySQLConnection();
+			} else {
+    			dc = new SQLiteConnection();
+			}
+		}
 		return dc;
 	}
     
