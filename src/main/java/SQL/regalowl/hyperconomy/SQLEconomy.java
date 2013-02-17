@@ -115,7 +115,7 @@ public class SQLEconomy {
 						state.execute("ALTER TABLE hyperconomy_players ADD SALT VARCHAR(255) NOT NULL DEFAULT '' AFTER HASH");
 						state.execute("DROP TABLE IF EXISTS hyperconomy_settings");
 						state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL, VALUE TEXT, TIME DATETIME NOT NULL, PRIMARY KEY (SETTING))");
-						state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('version', '1.1', datetime('NOW', 'localtime'))");
+						state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '1.1', datetime('NOW', 'localtime'))");
 					} 
 					if (version == 1.1) {
 						//for next version
@@ -128,8 +128,8 @@ public class SQLEconomy {
 				connect = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 				Statement state = connect.createStatement();
 				state.execute("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL, VALUE TEXT, TIME DATETIME NOT NULL, PRIMARY KEY (SETTING))");
-				state.execute("DELETE * FROM hyperconomy_settings");
-				state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('version', '1.1', NOW() )");
+				state.execute("DELETE FROM hyperconomy_settings");
+				state.execute("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '1.1', NOW() )");
 				updateMySQL1(connect);
 				state.close();
 			}
