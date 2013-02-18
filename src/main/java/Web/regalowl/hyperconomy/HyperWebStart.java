@@ -68,7 +68,7 @@ public class HyperWebStart {
     			}
     		}, 0L);
 		} catch (Exception e) {
-			e.printStackTrace();
+			new HyperError(e);
 		}
 	}
 	
