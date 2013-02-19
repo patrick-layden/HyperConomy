@@ -239,7 +239,7 @@ public class HyperConomy extends JavaPlugin {
 				return true;
 			}
 		} else if (cmd.getName().equalsIgnoreCase("hc")) {
-			if (args.length == 0 || (!args[0].equalsIgnoreCase("enable") && !args[0].equalsIgnoreCase("disable")) && !playerLock && !fullLock) {
+			if ((args.length == 0  && !fullLock) || (!args[0].equalsIgnoreCase("enable") && !args[0].equalsIgnoreCase("disable")) && !playerLock && !fullLock) {
 				new Hc(sender, args);
 				return true;
 			} else {
