@@ -101,9 +101,12 @@ public class DataHandler implements Listener {
 	
 	public HyperPlayer getHyperPlayer(String player) {
 		player = fixpN(player);
-		if (hyperPlayers.containsKey(player)) {
+		if (hyperPlayers.containsKey(player) && hyperPlayers.get(player) != null) {
 			return hyperPlayers.get(player);
 		} else {
+			if (hyperPlayers.get(player) == null) {
+				hyperPlayers.remove(player);
+			}
 			addPlayer(player);
 			return hyperPlayers.get(player);
 		}
@@ -112,9 +115,12 @@ public class DataHandler implements Listener {
 	
 	public HyperPlayer getHyperPlayer(Player player) {
 		String name = player.getName();
-		if (hyperPlayers.containsKey(name)) {
+		if (hyperPlayers.containsKey(name) && hyperPlayers.get(name) != null) {
 			return hyperPlayers.get(name);
 		} else {
+			if (hyperPlayers.get(name) == null) {
+				hyperPlayers.remove(name);
+			}
 			addPlayer(name);
 			return hyperPlayers.get(name);
 		}
