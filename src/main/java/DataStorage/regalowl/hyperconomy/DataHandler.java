@@ -3,6 +3,8 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -136,7 +138,7 @@ public class DataHandler implements Listener {
 	}
 
 	public void load() {
-		reset();
+		objectsLoaded = false;
 		hc.lockHyperConomy(true);
 		waitToLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 			public void run() {
@@ -158,6 +160,11 @@ public class DataHandler implements Listener {
 					hc.lockHyperConomy(false);
 					hc.onDataLoad();
 					waitForLoad.cancel();
+					for (Player p : Bukkit.getOnlinePlayers()) {
+						if (!hasAccount(p.getName())) {
+							addPlayer(p.getName());
+						}
+					}
 				}
 			}
 		}, 3L, 3L);
@@ -281,10 +288,10 @@ public class DataHandler implements Listener {
 	//	return databuilt;
 	//}
 
-	public void reset() {
-		objectsLoaded = false;
+	//public void reset() {
+	//	objectsLoaded = false;
 		//databuilt = false;
-	}
+	//}
 
 	public void clearData() {
 		hyperObjects.clear();
@@ -398,6 +405,20 @@ public class DataHandler implements Listener {
 			}
 		}
 		return null;
+	}
+	
+	public void shutDown() {
+		QueryResult result = sr.getDatabaseConnection().read("SELECT PLAYER FROM hyperconomy_players");
+		ArrayList<String> inDatabase = new ArrayList<String>();
+		while (result.next()) {
+			inDatabase.add(result.getString("PLAYER"));
+		}
+		result.close();
+		for (String player:hyperPlayers.keySet()) {
+			if (!inDatabase.contains(player)) {
+				hyperPlayers.get(player).save();
+			}
+		}
 	}
 
 }

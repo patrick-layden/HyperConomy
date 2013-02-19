@@ -9,6 +9,7 @@ public class HyperPlayer {
 
 	private HyperConomy hc;
 	
+	
 	private String name;
 	private String economy;
 	private double balance;
@@ -24,6 +25,7 @@ public class HyperPlayer {
 		hc = HyperConomy.hc;
 	}
 	
+	
 	HyperPlayer(String player) {
 		hc = HyperConomy.hc;
 		SQLWrite sw = hc.getSQLWrite();
@@ -36,16 +38,23 @@ public class HyperPlayer {
 				y = p.getLocation().getY();
 				z = p.getLocation().getZ();
 				world = p.getLocation().getWorld().getName();
-				sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + x + "','" + y + "','" + z + "','" + world + "','" + "''" + "''" + "')");
+				sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + x + "','" + y + "','" + z + "','" + world + "','','')");
 				return;
 			}
 		}
 		name = player;
 		economy = "default";
 		balance = 0.0;
-		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','" + "''" + "''" + "')");
+		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','','')");
 		
 	}
+	
+	
+	public void save() {
+		SQLWrite sw = hc.getSQLWrite();
+		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + x + "','" + y + "','" + z + "','" + world + "','" + hash + "','" + salt + "')");
+	}
+	
 	
 	public String getName() {
 		return name;
