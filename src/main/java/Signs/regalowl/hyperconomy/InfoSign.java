@@ -286,30 +286,33 @@ public class InfoSign {
 	
 	@SuppressWarnings("deprecation")
 	private void updateHistorySign(int timevalueHours, int timevalue, String inc) {
-		this.timeValueHours = timevalueHours;
-		this.timeValue = timevalue;
-		this.increment = inc;
-		hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
-    		public void run() {
-    			String percentchange = hc.getHistory().getPercentChange(objectName, timeValueHours, economy);
-    			String colorcode = getcolorCode(percentchange);
-    			line3 = ChatColor.WHITE + "History:";
-    			line4 = ChatColor.WHITE + "" + timeValue + increment.toLowerCase() + colorcode + "(" + percentchange + ")";
-    			if (line3.length() > 14) {
-    				line3 = line3.substring(0, 13) + ")";
-    			}
-    			hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
-    	    		public void run() {
-    	    			s.setLine(0, line1);
-    	    			s.setLine(1, line2);
-    	    			s.setLine(2, line3);
-    	    			s.setLine(3, line4);
-    	    			s.update();
-    	    		}
-    	    	}, 0L);
-    		}
-    	}, 0L);
-
+		try {
+			this.timeValueHours = timevalueHours;
+			this.timeValue = timevalue;
+			this.increment = inc;
+			hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
+				public void run() {
+					String percentchange = hc.getHistory().getPercentChange(objectName, timeValueHours, economy);
+					String colorcode = getcolorCode(percentchange);
+					line3 = ChatColor.WHITE + "History:";
+					line4 = ChatColor.WHITE + "" + timeValue + increment.toLowerCase() + colorcode + "(" + percentchange + ")";
+					if (line3.length() > 14) {
+						line3 = line3.substring(0, 13) + ")";
+					}
+					hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+						public void run() {
+							s.setLine(0, line1);
+							s.setLine(1, line2);
+							s.setLine(2, line3);
+							s.setLine(3, line4);
+							s.update();
+						}
+					}, 0L);
+				}
+			}, 0L);
+		} catch (Exception e) {
+			new HyperError(e);
+		}
 	}
 	
 
