@@ -2,11 +2,16 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 public class InfoSignHandler implements Listener {
@@ -53,11 +58,11 @@ public class InfoSignHandler implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChangeEvent(SignChangeEvent scevent) {
+		DataHandler df = hc.getDataFunctions();
 		Player p = scevent.getPlayer();
 		if (p.hasPermission("hyperconomy.createsign")) {
 			String[] lines = scevent.getLines();
 			String economy = "default";
-			DataHandler df = hc.getDataFunctions();
 			economy = df.getHyperPlayer(p).getEconomy();
 			String objectName = lines[0].trim() + lines[1].trim();
 			objectName = df.fixName(objectName);
@@ -88,6 +93,22 @@ public class InfoSignHandler implements Listener {
 	}
 	
 	
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onBlockBreakEvent(BlockBreakEvent bbevent) {
+		DataHandler dh = hc.getDataFunctions();
+		Block b = bbevent.getBlock();
+		if (b != null && b.getType().equals(Material.WALL_SIGN)) {
+			Sign s = (Sign) b.getState();
+			String[] lines = s.getLines();
+			String objectName = lines[0].trim() + lines[1].trim();
+			if (dh.objectTest(objectName)) {
+				updateSigns();
+			}
+		}
+	}
+
+	
 	public void updateSigns() {
 		startSignUpdate();
 	}
@@ -105,6 +126,7 @@ public class InfoSignHandler implements Listener {
 						if (infoSign.testData()) {
 							infoSign.update();
 						} else {
+							infoSign.deleteSign();
 							infoSigns.remove(infoSign);
 						}
 						currentSign++;

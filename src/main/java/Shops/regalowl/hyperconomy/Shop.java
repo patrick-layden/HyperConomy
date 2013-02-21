@@ -162,21 +162,70 @@ public class Shop {
 		if (!useShops) {
 			return true;
 		}
+		FileConfiguration sh = hc.getYaml().getShops();
+		String unavailableS = sh.getString(name + ".unavailable");
+		if (unavailableS == null || unavailableS.equalsIgnoreCase("")) {
+			return true;
+		}
+		if (unavailableS.equalsIgnoreCase("all")) {
+			return false;
+		}
 		item = hc.getDataFunctions().fixNameTest(item);
 		if (item == null) {
 			return false;
 		}
 		SerializeArrayList sal = new SerializeArrayList();
-		FileConfiguration sh = hc.getYaml().getShops();
-		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
-		if (unavailable != null) {
-			for (String object : unavailable) {
-				if (object.equalsIgnoreCase(item)) {
-					return false;
-				}
+
+		ArrayList<String> unavailable = sal.stringToArray(unavailableS);
+		for (String object : unavailable) {
+			if (object.equalsIgnoreCase(item)) {
+				return false;
 			}
 		}
 		return true;
+	}
+	
+	
+	public void addAllObjects() {
+		FileConfiguration sh = hc.getYaml().getShops();
+		sh.set(name + ".unavailable", null);
+	}
+	
+	public void removeAllObjects() {
+		FileConfiguration sh = hc.getYaml().getShops();
+		sh.set(name + ".unavailable", "all");
+	}
+	
+	public void addObjects(ArrayList<String> objects) {
+		DataHandler dh = hc.getDataFunctions();
+		FileConfiguration sh = hc.getYaml().getShops();
+		SerializeArrayList sal = new SerializeArrayList();
+		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
+		if (unavailable.size() == 1 && unavailable.get(0).equalsIgnoreCase("all")) {
+			unavailable = dh.getNames();
+		}
+		for (String object:objects) {
+			if (unavailable.contains(dh.fixName(object))) {
+				unavailable.remove(object);
+			}
+		}
+		sh.set(name + ".unavailable", sal.stringArrayToString(unavailable));
+	}
+	
+	public void removeObjects(ArrayList<String> objects) {
+		DataHandler dh = hc.getDataFunctions();
+		FileConfiguration sh = hc.getYaml().getShops();
+		SerializeArrayList sal = new SerializeArrayList();
+		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
+		if (unavailable.size() == 1 && unavailable.get(0).equalsIgnoreCase("all")) {
+			return;
+		}
+		for (String object:objects) {
+			if (!unavailable.contains(dh.fixName(object))) {
+				unavailable.add(object);
+			}
+		}
+		sh.set(name + ".unavailable", sal.stringArrayToString(unavailable));
 	}
 	
 	

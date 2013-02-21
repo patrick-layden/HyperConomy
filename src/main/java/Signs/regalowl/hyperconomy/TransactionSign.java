@@ -85,6 +85,9 @@ public class TransactionSign implements Listener {
 		boolean shopPerms = hc.getYaml().getConfig().getBoolean("config.use-shop-permissions");
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
 			Player p = ievent.getPlayer();
+			if (p == null) {
+				return;
+			}
 			playerecon = sf.getHyperPlayer(p).getEconomy();
 			boolean sneak = false;
 			if (p.isSneaking()) {

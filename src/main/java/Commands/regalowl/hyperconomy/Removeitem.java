@@ -8,33 +8,23 @@ public class Removeitem {
 	Removeitem(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		ShopFactory s = hc.getShopFactory();
-		SerializeArrayList sal = new SerializeArrayList();
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
 		try {
-			String itemname = dh.fixName(args[0]);
-			if (args.length >= 2) {
+			if (args.length == 2) {
+				String itemname = dh.fixName(args[0]);
+				String shopname = s.fixShopName(args[1]);
 				if (dh.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
-					String shopname = args[1].replace("_", " ");
-    				String teststring3 = hc.getYaml().getShops().getString(shopname);
-    				if (teststring3 == null) {
-    					shopname = s.fixShopName(shopname);
-    					teststring3 = hc.getYaml().getShops().getString(shopname);
-    				}
-    				if (teststring3 != null) {
-	    				ArrayList<String> unavailable = sal.stringToArray(hc.getYaml().getShops().getString(shopname + ".unavailable"));
-	    				if (s.getShop(shopname).has(itemname) || itemname.equalsIgnoreCase("all")) {
+    				if (s.shopExists(shopname)) {
+    					Shop shop = s.getShop(shopname);
+	    				if (shop.has(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
-	    						unavailable.add(itemname);
-		    					hc.getYaml().getShops().set(shopname + ".unavailable", sal.stringArrayToString(unavailable));
+	    						ArrayList<String> remove = new ArrayList<String>();
+	    						remove.add(itemname);
+	    						shop.removeObjects(remove);
 		    					sender.sendMessage(L.f(L.get("REMOVED_FROM"), itemname, shopname.replace("_", " ")));
-	    					} else if (itemname.equalsIgnoreCase("all")) {
-	    	        	        ArrayList<String> names = dh.getNames();
-	    	        	        unavailable.clear();
-	    	        	        for (int c = 0; c < names.size(); c++) {
-	    	        	        	unavailable.add(names.get(c));    	    						
-	    	        	        }
-		    					hc.getYaml().getShops().set(shopname + ".unavailable", sal.stringArrayToString(unavailable));
+	    					} else {
+	    						shop.removeAllObjects();
 		    					sender.sendMessage(L.f(L.get("ALL_REMOVED_FROM"), shopname.replace("_", " ")));
 	    					}
 	    				} else {

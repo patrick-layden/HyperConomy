@@ -45,7 +45,6 @@ public class SerializeArrayList {
 			return array;
 		} catch (Exception e) {
 			ArrayList<Double> array = new ArrayList<Double>();
-			array.add(-1234567890.0);
 			return array;
 		}
 	}
@@ -68,7 +67,6 @@ public class SerializeArrayList {
 			return array;
 		} catch (Exception e) {
 			ArrayList<Integer> array = new ArrayList<Integer>();
-			array.add(-1234567890);
 			return array;
 		}
 	}

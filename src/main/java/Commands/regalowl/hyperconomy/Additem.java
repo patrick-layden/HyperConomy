@@ -8,27 +8,22 @@ public class Additem {
 	Additem(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		ShopFactory s = hc.getShopFactory();
-		SerializeArrayList sal = new SerializeArrayList();
 		LanguageFile L = hc.getLanguageFile();
 		try {
-			String itemname = hc.getDataFunctions().fixName(args[0]);
-			if (args.length >= 2) {
+			if (args.length == 2) {
+				String itemname = hc.getDataFunctions().fixName(args[0]);
+				String shopname = s.fixShopName(args[1]);
 				if (hc.getDataFunctions().objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
-					String shopname = args[1].replace("_", " ");
-    				String teststring3 = hc.getYaml().getShops().getString(shopname);
-    				if (teststring3 == null) {
-    					shopname = s.fixShopName(shopname);
-    					teststring3 = hc.getYaml().getShops().getString(shopname);
-    				}
-    				if (teststring3 != null) {
-	    				ArrayList<String> unavailable = sal.stringToArray(hc.getYaml().getShops().getString(shopname + ".unavailable"));
-	    				if (!s.getShop(shopname).has(itemname) || itemname.equalsIgnoreCase("all")) {
+    				if (s.shopExists(shopname)) {
+    					Shop shop = s.getShop(shopname);
+	    				if (!shop.has(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
-	    						unavailable.remove(itemname);
-		    					hc.getYaml().getShops().set(shopname + ".unavailable", sal.stringArrayToString(unavailable));
+	    						ArrayList<String> add = new ArrayList<String>();
+	    						add.add(itemname);
+	    						shop.addObjects(add);
 		    					sender.sendMessage(ChatColor.GOLD + itemname + " " + L.get("ADDED_TO") + " " + shopname.replace("_", " "));
 	    					} else if (itemname.equalsIgnoreCase("all")) {
-		    					hc.getYaml().getShops().set(shopname + ".unavailable", null);
+		    					shop.addAllObjects();
 		    					sender.sendMessage(ChatColor.GOLD + L.get("ALL_ITEMS_ADDED") + " " + shopname.replace("_", " "));
 	    					}
 	    				} else {

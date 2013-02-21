@@ -215,57 +215,62 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("lockshop") && !fullLock) {
-			try {
-				if (args.length == 0) {
-					if (playerLock && !brokenfile) {
-						playerLock = false;
-						sender.sendMessage(L.get("SHOP_UNLOCKED"));
-						return true;
-					} else if (!playerLock) {
-						playerLock = true;
-						sender.sendMessage(L.get("SHOP_LOCKED"));
-						return true;
+		try {
+			if (cmd.getName().equalsIgnoreCase("lockshop") && !fullLock) {
+				try {
+					if (args.length == 0) {
+						if (playerLock && !brokenfile) {
+							playerLock = false;
+							sender.sendMessage(L.get("SHOP_UNLOCKED"));
+							return true;
+						} else if (!playerLock) {
+							playerLock = true;
+							sender.sendMessage(L.get("SHOP_LOCKED"));
+							return true;
+						} else {
+							sender.sendMessage(L.get("FIX_YML_FILE"));
+							return true;
+						}
 					} else {
-						sender.sendMessage(L.get("FIX_YML_FILE"));
+						sender.sendMessage(L.get("LOCKSHOP_INVALID"));
 						return true;
 					}
-				} else {
+				} catch (Exception e) {
 					sender.sendMessage(L.get("LOCKSHOP_INVALID"));
 					return true;
 				}
-			} catch (Exception e) {
-				sender.sendMessage(L.get("LOCKSHOP_INVALID"));
-				return true;
-			}
-		} else if (cmd.getName().equalsIgnoreCase("hc")) {
-			if ((args.length == 0  && !fullLock) || (!args[0].equalsIgnoreCase("enable") && !args[0].equalsIgnoreCase("disable")) && !playerLock && !fullLock) {
-				new Hc(sender, args);
-				return true;
-			} else {
-				if (sender.hasPermission("hyperconomy.admin")) {
-					if (args[0].equalsIgnoreCase("enable") && fullLock) {
-						initialize();
-						sender.sendMessage(L.get("HC_HYPERCONOMY_ENABLED"));
-						sender.sendMessage(L.get("FILES_RELOADED"));
-						sender.sendMessage(L.get("SHOP_UNLOCKED"));
-						return true;
-					} else if (args[0].equalsIgnoreCase("disable") && !fullLock) {
-						sender.sendMessage(L.get("HC_HYPERCONOMY_DISABLED"));
-						sender.sendMessage(L.get("SHOP_LOCKED"));
-						playerLock = true;
-						fullLock = true;
-						shutDown();
-						return true;
+			} else if (cmd.getName().equalsIgnoreCase("hc")) {
+				if ((args.length == 0 && !fullLock) || (!args[0].equalsIgnoreCase("enable") && !args[0].equalsIgnoreCase("disable")) && !playerLock && !fullLock) {
+					new Hc(sender, args);
+					return true;
+				} else {
+					if (sender.hasPermission("hyperconomy.admin")) {
+						if (args[0].equalsIgnoreCase("enable") && fullLock) {
+							initialize();
+							sender.sendMessage(L.get("HC_HYPERCONOMY_ENABLED"));
+							sender.sendMessage(L.get("FILES_RELOADED"));
+							sender.sendMessage(L.get("SHOP_UNLOCKED"));
+							return true;
+						} else if (args[0].equalsIgnoreCase("disable") && !fullLock) {
+							sender.sendMessage(L.get("HC_HYPERCONOMY_DISABLED"));
+							sender.sendMessage(L.get("SHOP_LOCKED"));
+							playerLock = true;
+							fullLock = true;
+							shutDown();
+							return true;
+						}
 					}
 				}
 			}
-		} 
-		if ((!playerLock || sender.hasPermission("hyperconomy.admin")) && !fullLock) {
-			boolean result = commandhandler.handleCommand(sender, cmd, label, args);
-			return result;
-		} else {
-			sender.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+			if ((!playerLock || sender.hasPermission("hyperconomy.admin")) && !fullLock) {
+				boolean result = commandhandler.handleCommand(sender, cmd, label, args);
+				return result;
+			} else {
+				sender.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+				return true;
+			}
+		} catch (Exception e) {
+			new HyperError(e, "Unhandled command exception.");
 			return true;
 		}
 	}

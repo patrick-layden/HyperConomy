@@ -329,6 +329,9 @@ public class InfoSign {
 	}
 	
 	
+	public void deleteSign() {
+		hc.getYaml().getSigns().set(signKey, null);
+	}
 
 
 }
