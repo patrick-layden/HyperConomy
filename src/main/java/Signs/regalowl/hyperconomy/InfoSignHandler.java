@@ -2,10 +2,8 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -95,16 +93,16 @@ public class InfoSignHandler implements Listener {
 	
 	
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onBlockBreakEvent(BlockBreakEvent bbevent) {
-		DataHandler dh = hc.getDataFunctions();
+	public void onSignRemoval(BlockBreakEvent bbevent) {
 		Block b = bbevent.getBlock();
 		if (b != null && b.getType().equals(Material.WALL_SIGN)) {
-			Sign s = (Sign) b.getState();
-			String[] lines = s.getLines();
-			String objectName = lines[0].trim() + lines[1].trim();
-			if (dh.objectTest(objectName)) {
-				updateSigns();
+			String signKey = bbevent.getBlock().getWorld().getName() + "|" + bbevent.getBlock().getX() + "|" + bbevent.getBlock().getY() + "|" + bbevent.getBlock().getZ();
+			InfoSign is = getInfoSign(signKey);
+			if (is != null && !bbevent.isCancelled()) {
+				is.deleteSign();
 			}
+			updateSigns();
+
 		}
 	}
 
@@ -126,7 +124,7 @@ public class InfoSignHandler implements Listener {
 						if (infoSign.testData()) {
 							infoSign.update();
 						} else {
-							infoSign.deleteSign();
+							infoSign.markBroken();
 							infoSigns.remove(infoSign);
 						}
 						currentSign++;
@@ -171,6 +169,15 @@ public class InfoSignHandler implements Listener {
 	
 	public ArrayList<InfoSign> getInfoSigns() {
 		return infoSigns;
+	}
+	
+	public InfoSign getInfoSign(String key) {
+		for (InfoSign is:infoSigns) {
+			if (is.getKey().equalsIgnoreCase(key)) {
+				return is;
+			}
+		}
+		return null;
 	}
 	
 }
