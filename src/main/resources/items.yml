@@ -7903,3 +7903,20 @@ enchantedbook:
   initiation:
     initiation: true
     startprice: 30.0
+netherbrickslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 6
+  value: 10.0
+  price:
+    static: false
+    staticprice: 20.0
+  stock:
+    stock: 0
+    median: 8000
+  initiation:
+    initiation: true
+    startprice: 20.0    
