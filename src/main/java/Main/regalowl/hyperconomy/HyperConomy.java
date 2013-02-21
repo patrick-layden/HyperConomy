@@ -81,7 +81,6 @@ public class HyperConomy extends JavaPlugin {
 		hist = new History();
 		itdi = new ItemDisplayFactory();
 		hws = new HyperWebStart();
-		new TransactionSign();
 		log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 	}
 
@@ -145,6 +144,7 @@ public class HyperConomy extends JavaPlugin {
 			commandhandler = new _Command();
 			not = new Notification();
 			isign = new InfoSignHandler();
+			new TransactionSign();
 			if (!migrate) {
 				df.load();
 			}
