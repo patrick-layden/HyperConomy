@@ -276,6 +276,9 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("setpassword")) {
 			new Setpassword(args, player);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("importfromyml")) {
+			new Importfromyml(sender, args);
+			return true;
 		}
 		
 		return false;

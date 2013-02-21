@@ -384,3 +384,6 @@ SHOP_RENAMED: &6Shop renamed successfully!
 SWITCH_TO_SQLITE: [HyperConomy]There is a problem with your MySQL connection, defaulting to SQLite.
 SETPASSWORD_SUCCESS: &6Your password has been successfully set!
 SETPASSWORD_INVALID: &4Invalid Parameters.  Use /setpassword [password]
+ECONOMY_IMPORTED: &6All objects successfully imported from YML!
+IMPORT_PROCEED: &cThe will erase all object data in your HyperConomy database (hyperconomy_objects table), type '/importfromyml [economy] [confirm]' to proceed!
+IMPORTFROMYML_INVALID: &4Invalid parameters.  Use /importfromyml [economy]

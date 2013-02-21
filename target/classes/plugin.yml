@@ -279,6 +279,10 @@ commands:
       description: Exports the selected economy to the items and enchants yml files.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+   importfromyml:
+      description: Replaces the selected economy with data from your YML files.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
    hcbackup:
       description: Backs up all HyperConomy data.
       permission: hyperconomy.admin
