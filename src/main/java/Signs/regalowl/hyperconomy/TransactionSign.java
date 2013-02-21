@@ -1,8 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,7 +16,6 @@ public class TransactionSign implements Listener {
 	private Transaction tran;
 	private ETransaction ench;
 	private DataHandler sf;
-	private Set<String> names;
 	private String playerecon;
 
 	TransactionSign() {
@@ -27,11 +23,6 @@ public class TransactionSign implements Listener {
 		tran = hc.getTransaction();
 		ench = hc.getETransaction();
 		sf = hc.getDataFunctions();
-		names = new HashSet<String>();
-		ArrayList<String> anames = sf.getNames();
-		for (int i = 0; i < anames.size(); i++) {
-			names.add(anames.get(i));
-		}
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
 		}
@@ -47,7 +38,7 @@ public class TransactionSign implements Listener {
 					Integer.parseInt(line4);
 					String line12 = ChatColor.stripColor(scevent.getLine(0)).trim() + ChatColor.stripColor(scevent.getLine(1)).trim();
 					line12 = sf.fixName(line12);
-					if (names.contains(line12)) {
+					if (sf.objectTest(line12)) {
 						if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
 							scevent.setLine(0, "\u00A71" + scevent.getLine(0));
 							scevent.setLine(1, "\u00A71" + scevent.getLine(1));
@@ -110,7 +101,7 @@ public class TransactionSign implements Listener {
 					}
 					String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
 					line12 = sf.fixName(line12);
-					if (names.contains(line12.toLowerCase())) {
+					if (sf.objectTest(line12.toLowerCase())) {
 						if (!s.getLine(0).startsWith("\u00A7")) {
 							s.setLine(0, "\u00A71" + s.getLine(0));
 							s.setLine(1, "\u00A71" + s.getLine(1));
