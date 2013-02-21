@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.util.logging.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.eclipse.jetty.server.Server;
 
@@ -9,20 +8,20 @@ import org.eclipse.jetty.server.Server;
 
 public class HyperWebStart {
 
-	private Logger log = Logger.getLogger("Minecraft");
+	//private Logger log = Logger.getLogger("Minecraft");
 	private HyperConomy hc;
 	private HyperWebStart hws;
 	private int serverid;
 	private Server server;
 	private int port;
-	private LanguageFile L;
+	//private LanguageFile L;
 	
 	
 	
 	HyperWebStart() {
 		hc = HyperConomy.hc;
 		hws = this;
-		L = hc.getLanguageFile();
+		//L = hc.getLanguageFile();
 		
 		FileConfiguration conf = hc.getYaml().getConfig();
 		useWebPage = conf.getBoolean("config.web-page.use-web-page");
@@ -46,7 +45,7 @@ public class HyperWebStart {
 		
 		if (useWebPage) {
 			startServer();
-	    	log.info(L.get("WEB_PAGE_ENABLED"));
+	    	//log.info(L.get("WEB_PAGE_ENABLED"));
 		}
 	}
 	

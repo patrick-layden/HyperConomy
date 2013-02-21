@@ -81,7 +81,7 @@ public class HyperConomy extends JavaPlugin {
 		hist = new History();
 		itdi = new ItemDisplayFactory();
 		hws = new HyperWebStart();
-		log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
+		//log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 	}
 
 	public void initialize() {
