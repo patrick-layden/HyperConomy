@@ -144,8 +144,8 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("listeconomies")) {
 			new Listeconomies(args, sender);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("loaditems")) {
-			new Loaditems(args, sender);
+		} else if (cmd.getName().equalsIgnoreCase("importnewitems")) {
+			new Importnewitems(args, sender);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("exporttoyml")) {
 			new Exporttoyml(sender, args);

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-public class Loaditems {
-	Loaditems(String args[], CommandSender sender) {
+public class Importnewitems {
+	Importnewitems(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		try {

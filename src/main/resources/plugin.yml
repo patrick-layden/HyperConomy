@@ -271,7 +271,7 @@ commands:
       permission: hyperconomy.use
       permission-message: You do not have permission.
       aliases: [ei]
-   loaditems:
+   importnewitems:
       description: Loads new items into the specified economy.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
