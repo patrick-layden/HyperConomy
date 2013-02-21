@@ -23,10 +23,10 @@ public class Importnewitems {
 					sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
 				}
 			} else {
-				sender.sendMessage(L.get("LOADITEMS_INVALID"));
+				sender.sendMessage(L.get("IMPORTNEWITEMS_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("LOADITEMS_INVALID"));
+			sender.sendMessage(L.get("IMPORTNEWITEMS_INVALID"));
 		}
 	}
 }

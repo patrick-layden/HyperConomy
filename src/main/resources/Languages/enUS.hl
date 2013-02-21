@@ -220,7 +220,7 @@ ITEMSETTINGS_INVALID: &4Invalid parameters. Hold an item and use /itemsettings (
 LISTECONOMIES_INVALID: &4Invalid Parameters.  Use /listeconomies
 LISTSHOPS_INVALID: &4Invalid Parameters.  Use /listshops
 LOADED_INTO_ECONOMY: loaded into economy!
-LOADITEMS_INVALID: &4Invalid Parameters.  Use /loaditems [economy]
+IMPORTNEWITEMS_INVALID: &4Invalid Parameters.  Use /importnewitems [economy]
 ENABLE_ITEM_DISPLAYS: &4Item displays must be enabled to use this command.
 MAKEDISPLAY_INVALID: &4Invalid Parameters. Use /makedisplay [name]
 NOTIFY_INVALID: &4Invalid Parameters.  Use /notify [name/'all']
