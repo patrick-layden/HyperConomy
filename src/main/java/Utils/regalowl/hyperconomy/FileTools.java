@@ -44,6 +44,9 @@ public class FileTools {
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
+		if (serverpath.startsWith("file:")) {
+			serverpath = serverpath.replace("file:", "");
+		}
 		return serverpath;
 	}
 

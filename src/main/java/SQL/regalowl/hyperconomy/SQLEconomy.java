@@ -51,9 +51,7 @@ public class SQLEconomy {
 	
 	public boolean checkSQLLite() {
 		FileTools ft = new FileTools();
-		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
-		//Logger log = Logger.getLogger("Minecraft");
-		//log.severe(path);
+		String path = ft.getJarPath() + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
 		try {
 			Class.forName("org.sqlite.JDBC");
 			Connection connect = DriverManager.getConnection("jdbc:sqlite:" + path);
@@ -78,6 +76,7 @@ public class SQLEconomy {
 				result.close();
 				state.close();
 			} catch (Exception e) {
+				//e.printStackTrace();
 				connect.close();
 				connect = DriverManager.getConnection("jdbc:sqlite:" + path);
 				Statement state = connect.createStatement();
@@ -98,6 +97,7 @@ public class SQLEconomy {
 			connect.close();
 			return true;
 		} catch (Exception e) {
+			//e.printStackTrace();
 			new HyperError(e);
 			return false;
 		}
