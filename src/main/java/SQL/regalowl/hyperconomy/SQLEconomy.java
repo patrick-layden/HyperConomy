@@ -52,6 +52,8 @@ public class SQLEconomy {
 	public boolean checkSQLLite() {
 		FileTools ft = new FileTools();
 		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
+		//Logger log = Logger.getLogger("Minecraft");
+		//log.severe(path);
 		try {
 			Class.forName("org.sqlite.JDBC");
 			Connection connect = DriverManager.getConnection("jdbc:sqlite:" + path);

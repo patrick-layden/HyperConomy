@@ -155,7 +155,9 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public void shutDown() {
-		df.shutDown();
+		if (df != null) {
+			df.shutDown();
+		}
 		HandlerList.unregisterAll(this);
 		if (itdi != null) {
 			itdi.unloadDisplays();
@@ -240,7 +242,7 @@ public class HyperConomy extends JavaPlugin {
 					return true;
 				}
 			} else if (cmd.getName().equalsIgnoreCase("hc")) {
-				if ((args.length == 0 && !fullLock) || (!args[0].equalsIgnoreCase("enable") && !args[0].equalsIgnoreCase("disable")) && !playerLock && !fullLock) {
+				if ((args.length == 0 && !fullLock && !playerLock) || (args.length >= 1 && !args[0].equalsIgnoreCase("enable") && !args[0].equalsIgnoreCase("disable") && !playerLock && !fullLock)) {
 					new Hc(sender, args);
 					return true;
 				} else {
