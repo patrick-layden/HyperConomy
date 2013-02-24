@@ -101,7 +101,7 @@ public class Browseshop {
 			while (count < numberpage) {
 				if (count > ((page * 10) - 11)) {
 					if (count < rsize) {
-						String iname = rnames.get(count);
+						String iname = sf.fixName(rnames.get(count));
 			            Double cost = 0.0;
 			            double stock = 0;
 			            if (sf.itemTest(iname)) {

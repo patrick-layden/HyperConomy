@@ -11,7 +11,7 @@ public class Setstaticprice {
 		String name = "";
 		try {
 			if (args.length == 2) {
-				name = args[0];
+				name = sf.fixName(args[0]);
 				Double staticprice = Double.parseDouble(args[1]);
 				if (sf.itemTest(name)) {
 					sf.getHyperObject(name, playerecon).setStaticprice(staticprice);

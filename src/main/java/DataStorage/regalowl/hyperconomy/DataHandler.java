@@ -375,14 +375,16 @@ public class DataHandler implements Listener {
 		return false;
 	}
 	
+	
 	public boolean itemTest(String name) {
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getName().equalsIgnoreCase(name) && (ho.getType().equalsIgnoreCase("item") || ho.getType().equalsIgnoreCase("experience"))) {
+			if (ho.getName().equals(name) && (ho.getType().equalsIgnoreCase("item") || ho.getType().equalsIgnoreCase("experience"))) {
 				return true;
 			}
 		}
 		return false;
 	}
+	
 
 	public boolean enchantTest(String name) {
 		for (HyperObject ho:hyperObjects.values()) {

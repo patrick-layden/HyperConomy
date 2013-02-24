@@ -129,6 +129,7 @@ public class History {
 	 * @return The percentage change in theoretical price for the given object and timevalue in hours
 	 */
 	public String getPercentChange(String object, int timevalue, String economy) {
+		object = df.fixName(object);
 		Calculation calc = hc.getCalculation();
 		double percentChange = 0.0;
 		double historicvalue = sr.getHistoricValue(object, economy, timevalue);

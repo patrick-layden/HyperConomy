@@ -19,7 +19,7 @@ public class Value {
 			}
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			if (player == null || (requireShop && s.getShop(player) != null) || !requireShop || player.hasPermission("hyperconomy.admin")) {
-				String name = args[0];
+				String name = sf.fixName(args[0]);
 				int amount;
 				if (args.length == 2) {
 					amount = Integer.parseInt(args[1]);

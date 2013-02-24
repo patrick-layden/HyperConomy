@@ -52,7 +52,7 @@ public class Itemsettings {
     				sender.sendMessage(L.get("LINE_BREAK"));
 				}
 			} else if (args.length == 1) {
-				String nam = args[0];
+				String nam = sf.fixName(args[0]);
 				if (sf.itemTest(nam)) {
 					double val = 0;
 					boolean stat = false;

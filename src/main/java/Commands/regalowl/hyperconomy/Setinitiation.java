@@ -11,7 +11,7 @@ public class Setinitiation {
 		String name = "";
 		try {
 			if (args.length == 1) {
-				name = args[0];
+				name = sf.fixName(args[0]);
 				if (sf.itemTest(name)) {
 					boolean nstatus;
 					boolean istatus = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());

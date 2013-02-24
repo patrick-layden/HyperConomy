@@ -11,7 +11,7 @@ public class Setmedian {
 		String name = "";
 		try {
 			if (args.length == 2) {
-				name = args[0];
+				name = sf.fixName(args[0]);
 				int median = Integer.parseInt(args[1]);
 				if (sf.itemTest(name)) {
 					sf.getHyperObject(name, playerecon).setMedian(median);

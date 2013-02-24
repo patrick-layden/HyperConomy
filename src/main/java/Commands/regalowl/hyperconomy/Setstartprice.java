@@ -11,7 +11,7 @@ public class Setstartprice {
 		String name = "";
 		try {
 			if (args.length == 2) {
-				name = args[0];
+				name = sf.fixName(args[0]);
 				double startprice = Double.parseDouble(args[1]);
 				if (sf.itemTest(name)) {
 					sf.getHyperObject(name, playerecon).setStartprice(startprice);

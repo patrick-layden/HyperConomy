@@ -12,7 +12,7 @@ public class Setstock {
 		String name = "";
 		try {
 			if (args.length == 2) {
-				name = args[0];
+				name = sf.fixName(args[0]);
 				double stock = calc.round(Double.parseDouble(args[1]), 2);
 				if (sf.itemTest(name)) {
 					sf.getHyperObject(name, playerecon).setStock(stock);

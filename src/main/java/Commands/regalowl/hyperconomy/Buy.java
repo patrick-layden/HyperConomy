@@ -17,7 +17,7 @@ public class Buy {
 		try {
 			if (s.getShop(player) != null) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
-					String name = args[0];
+					String name = sf.fixName(args[0]);
 					boolean xp = false;
 					int id = 0;
 					int data = 0;

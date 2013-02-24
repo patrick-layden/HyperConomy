@@ -33,9 +33,9 @@ public class Shop {
 		L = hc.getLanguageFile();
 		useShops = hc.getYaml().getConfig().getBoolean("config.use-shops");
 		shopFile = hc.getYaml().getShops();
-		if (shopFile.getString(name) == null) {
+		//if (shopFile.getString(name) == null) {
 			shopFile.set(name + ".economy", economy);
-		}
+		//}
 	}
 	
 	public void setPoint1(String world, int x, int y, int z) {

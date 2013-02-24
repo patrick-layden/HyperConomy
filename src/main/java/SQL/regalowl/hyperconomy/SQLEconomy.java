@@ -13,10 +13,7 @@ import java.util.Iterator;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-/**
- * @author 7T
- *
- */
+
 public class SQLEconomy {
 	private String username;
 	private String password;
