@@ -670,12 +670,12 @@ public class ChestShop implements Listener{
 					    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 					    			if (!ench.hasenchants(icevent.getCurrentItem())) {
 					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
-					    				String name = ho.getName();
+					    				
 					    				int id = icevent.getCurrentItem().getTypeId();
 					    				int data =  icevent.getCurrentItem().getDurability();
 					    				
 						    			if (slot < 27 && ho != null) {
-						    				
+						    				String name = ho.getName();
 						    				if (buy) {
 						    					if (setprice) {
 						    						tran.buyChest(name, id, data, line34, p, 1, icevent.getView().getTopInventory(), staticprice);
@@ -689,7 +689,7 @@ public class ChestShop implements Listener{
 			
 						    				
 						    			} else if (slot >= 27 && ho != null) {
-						    				
+						    				String name = ho.getName();
 						    				if (sell) {
 						    					int itemamount = tran.countItems(id, data, icevent.getView().getTopInventory());
 						    					
