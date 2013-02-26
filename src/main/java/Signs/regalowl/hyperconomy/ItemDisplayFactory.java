@@ -263,6 +263,8 @@ public class ItemDisplayFactory implements Listener {
 			new HyperError(e);
 		}
 	}
+	
+	/*
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChunkUnload(ChunkUnloadEvent event) {
 		try {
@@ -281,6 +283,8 @@ public class ItemDisplayFactory implements Listener {
 			new HyperError(e);
 		}
 	}
+	*/
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
 		Item item = event.getItem();
