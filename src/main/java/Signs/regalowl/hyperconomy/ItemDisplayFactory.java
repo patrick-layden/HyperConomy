@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -31,9 +32,11 @@ public class ItemDisplayFactory implements Listener {
 	
 	private HyperConomy hc; 
 	private int refreshthreadid;
-	private ArrayList<ItemDisplay> displays;
+	private List<ItemDisplay> displays;
 	private ArrayList<Block> protectedBlocks;
 	private Calculation calc;
+	private boolean loadActive;
+
 
 	ItemDisplayFactory() {
 		try {
@@ -41,9 +44,11 @@ public class ItemDisplayFactory implements Listener {
 			calc = hc.getCalculation();
 			if (hc.getYaml().getConfig().getBoolean("config.use-item-displays")) {
 				hc.getServer().getPluginManager().registerEvents(this, hc);
-				displays = new ArrayList<ItemDisplay>();
+				//displays = new ArrayList<ItemDisplay>();
+				displays = new CopyOnWriteArrayList<ItemDisplay>();
 				protectedBlocks = new ArrayList<Block>();
 				loadProtectedBlocks();
+				loadActive = false;
 				loadDisplays();
 				startRefreshThread();
 			}
@@ -74,24 +79,28 @@ public class ItemDisplayFactory implements Listener {
 	
 	public void loadDisplays() {
 		try {
-			unloadDisplays();
-			FileConfiguration disp = hc.getYaml().getDisplays();
-			Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
-			while (it.hasNext()) {
-				String key = it.next().toString();
-				String name = disp.getString(key + ".name");
-				String economy = disp.getString(key + ".economy");
-				double x = disp.getDouble(key + ".x");
-				double y = disp.getDouble(key + ".y");
-				double z = disp.getDouble(key + ".z");
-				World w = Bukkit.getWorld(disp.getString(key + ".world"));
-				Location l = new Location(w, x, y, z);
-				Chunk locChunk = l.getChunk();
-				if (locChunk.isLoaded()) {
-					ItemDisplay display = new ItemDisplay(l, name, economy);
-					displays.add(display);
-					display.clearNearbyItems();
+			if (!loadActive) {
+				loadActive = true;
+				unloadDisplays();
+				FileConfiguration disp = hc.getYaml().getDisplays();
+				Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
+				while (it.hasNext()) {
+					String key = it.next().toString();
+					String name = disp.getString(key + ".name");
+					String economy = disp.getString(key + ".economy");
+					double x = disp.getDouble(key + ".x");
+					double y = disp.getDouble(key + ".y");
+					double z = disp.getDouble(key + ".z");
+					World w = Bukkit.getWorld(disp.getString(key + ".world"));
+					Location l = new Location(w, x, y, z);
+					Chunk locChunk = l.getChunk();
+					if (locChunk.isLoaded()) {
+						ItemDisplay display = new ItemDisplay(l, name, economy);
+						displays.add(display);
+						display.clearNearbyItems();
+					}
 				}
+				loadActive = false;
 			}
 		} catch (Exception e) {
 			new HyperError(e);
@@ -246,18 +255,23 @@ public class ItemDisplayFactory implements Listener {
 
 		}
 	}
+	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChunkLoad(ChunkLoadEvent event) {
 		try {
-			boolean refresh = false;
 			Chunk chunk = event.getChunk();
-			for (ItemDisplay display:displays) {
-				if (chunk.equals(display.getLocation().getChunk())) {
-					refresh = true;
-				}
+			if (chunk == null) {
+				return;
 			}
-			if (refresh) {
-				loadDisplays();
+			for (ItemDisplay display:displays) {
+				if (display == null) {
+					continue;
+				}
+				Location l = display.getLocation();
+				if (l != null && chunk.equals(l.getChunk())) {
+					loadDisplays();
+					return;
+				}
 			}
 		} catch (Exception e) {
 			new HyperError(e);
@@ -268,16 +282,19 @@ public class ItemDisplayFactory implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChunkUnload(ChunkUnloadEvent event) {
 		try {
-			Chunk unloadchunk = event.getChunk();
-			boolean refresh = false;
-			for (ItemDisplay display:displays) {
-				Chunk displaychunk = display.getLocation().getChunk();
-				if (displaychunk.equals(unloadchunk)) {
-					refresh = true;
-				}
+			Chunk chunk = event.getChunk();
+			if (chunk == null) {
+				return;
 			}
-			if (refresh) {
-				loadDisplays();
+			for (ItemDisplay display:displays) {
+				if (display == null) {
+					continue;
+				}
+				Location l = display.getLocation();
+				if (l != null && chunk.equals(l.getChunk())) {
+					loadDisplays();
+					return;
+				}
 			}
 		} catch (Exception e) {
 			new HyperError(e);
