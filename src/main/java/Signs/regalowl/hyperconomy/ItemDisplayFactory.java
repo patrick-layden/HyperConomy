@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -24,7 +23,6 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.Vector;
 
@@ -33,7 +31,7 @@ public class ItemDisplayFactory implements Listener {
 	private HyperConomy hc; 
 	private int refreshthreadid;
 	private List<ItemDisplay> displays;
-	private ArrayList<Block> protectedBlocks;
+	private List<Block> protectedBlocks;
 	private Calculation calc;
 	private boolean loadActive;
 
@@ -46,7 +44,7 @@ public class ItemDisplayFactory implements Listener {
 				hc.getServer().getPluginManager().registerEvents(this, hc);
 				//displays = new ArrayList<ItemDisplay>();
 				displays = new CopyOnWriteArrayList<ItemDisplay>();
-				protectedBlocks = new ArrayList<Block>();
+				protectedBlocks = new CopyOnWriteArrayList<Block>();
 				loadProtectedBlocks();
 				loadActive = false;
 				loadDisplays();

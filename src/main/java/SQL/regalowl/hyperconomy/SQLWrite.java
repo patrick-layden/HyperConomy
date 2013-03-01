@@ -2,6 +2,9 @@ package regalowl.hyperconomy;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.bukkit.scheduler.BukkitTask;
 
 
@@ -9,13 +12,17 @@ public class SQLWrite {
 
 	private HyperConomy hc;
 	private int threadlimit;
-	private ArrayList<String> buffer = new ArrayList<String>();
+	private ConcurrentHashMap<Integer, String> buffer = new ConcurrentHashMap<Integer, String>();
 	private boolean initialWrite;
 	private BukkitTask writeTask;
 	private boolean writeActive;
+	private AtomicInteger bufferCounter = new AtomicInteger();
+	private AtomicInteger processNext = new AtomicInteger();
 	private ArrayList<DatabaseConnection> dbConnections = new ArrayList<DatabaseConnection>();
 	
 	SQLWrite() {
+		bufferCounter.set(0);
+		processNext.set(0);
 		hc = HyperConomy.hc;
 		if (hc.useMySQL()) {
 			threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads");
@@ -65,23 +72,13 @@ public class SQLWrite {
 
 	public void executeSQL(ArrayList<String> statements) {
 		for (String statement:statements) {
-			if (statement == null || statement.equals("")) {
-				Throwable t = new Throwable();
-				new HyperError(t, "Passed blank or null SQL statement.");
-			} else {
-				buffer.add(statement);
-			}
+			buffer.put(bufferCounter.getAndIncrement(), statement);
 		}
 		startWrite();
 	}
 	public void executeSQL(String statement) {
-		if (statement == null || statement.equals("")) {
-			Throwable t = new Throwable();
-			new HyperError(t, "Passed blank or null SQL statement.");
-		} else {
-			buffer.add(statement);
-			startWrite();
-		}
+		buffer.put(bufferCounter.getAndIncrement(), statement);
+		startWrite();
 	}
 	
 
@@ -101,8 +98,8 @@ public class SQLWrite {
 	    	    				cancelWrite();
 	    	    				return;
 	    	    			}
-	    	    			String statement = buffer.get(0);
-	    	    			buffer.remove(statement);
+	    	    			String statement = buffer.get(processNext.get());
+	    	    			buffer.remove(processNext.getAndIncrement());
 	    	    			dc.write(statement);
 	    				}
 	    			}
@@ -166,14 +163,18 @@ public class SQLWrite {
 
 	
 	public ArrayList<String> getBuffer() {
-		return buffer;
+		ArrayList<String> abuffer = new ArrayList<String>();
+		for (String item:buffer.values()) {
+			abuffer.add(item);
+		}
+		return abuffer;
 	}
 	
 	public void shutDown() {
 		cancelWrite();
 		writeActive = true;
 		for (DatabaseConnection dc:dbConnections) {
-			buffer.add(dc.closeConnection());
+			buffer.put(bufferCounter.getAndIncrement(), dc.closeConnection());
 		}
 		dbConnections.clear();
 		saveBuffer();
@@ -190,7 +191,7 @@ public class SQLWrite {
 			String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "temp";
 			ft.makeFolder(path);
 			path += File.separator + "buffer.txt";
-			String stringBuffer = sal.stringArrayToStringA(buffer);
+			String stringBuffer = sal.stringArrayToStringA(getBuffer());
 			ft.writeStringToFile(stringBuffer, path);
 		}
 	}

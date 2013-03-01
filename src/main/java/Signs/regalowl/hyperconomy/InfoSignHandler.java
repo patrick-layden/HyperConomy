@@ -2,6 +2,8 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +18,7 @@ public class InfoSignHandler implements Listener {
 	
 	private HyperConomy hc;
 	private FileConfiguration sns;
-	private ArrayList<InfoSign> infoSigns = new ArrayList<InfoSign>();
+	private ConcurrentHashMap<String, InfoSign> infoSigns = new ConcurrentHashMap<String, InfoSign>();
 	
 	private long signUpdateInterval;
 	private boolean signUpdateActive;
@@ -49,7 +51,7 @@ public class InfoSignHandler implements Listener {
 			if (multiplier < 1) {
 				multiplier = 1;
 			}
-			infoSigns.add(new InfoSign(signKey, type, name, multiplier, economy, enchantClass));
+			infoSigns.put(signKey, new InfoSign(signKey, type, name, multiplier, economy, enchantClass));
 		}
 	}
 	
@@ -83,7 +85,7 @@ public class InfoSignHandler implements Listener {
 					sns.set(signKey + ".multiplier", multiplier);
 					sns.set(signKey + ".economy", economy);
 					sns.set(signKey + ".enchantclass", enchantClass.toString());
-					infoSigns.add(new InfoSign(signKey, type, objectName, multiplier, economy, enchantClass, lines));
+					infoSigns.put(signKey, new InfoSign(signKey, type, objectName, multiplier, economy, enchantClass, lines));
 					updateSigns();
 				}
 			}
@@ -168,16 +170,19 @@ public class InfoSignHandler implements Listener {
 	}
 	
 	public ArrayList<InfoSign> getInfoSigns() {
-		return infoSigns;
+		ArrayList<InfoSign> isigns = new ArrayList<InfoSign>();
+		for (InfoSign is:infoSigns.values()) {
+			isigns.add(is);
+		}
+		return isigns;
 	}
 	
 	public InfoSign getInfoSign(String key) {
-		for (InfoSign is:infoSigns) {
-			if (is.getKey().equalsIgnoreCase(key)) {
-				return is;
-			}
+		if (infoSigns.containsKey(key)) {
+			return infoSigns.get(key);
+		} else {
+			return null;
 		}
-		return null;
 	}
 	
 }

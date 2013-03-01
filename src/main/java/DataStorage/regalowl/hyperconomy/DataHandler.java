@@ -2,8 +2,7 @@ package regalowl.hyperconomy;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
+import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -18,23 +17,16 @@ public class DataHandler implements Listener {
 	private HyperConomy hc;
 	private SQLRead sr;
 	private boolean objectsLoaded;
-	//private boolean databuilt;
-	private HashMap<String, HyperObject> hyperObjects = new HashMap<String, HyperObject>();
-	private HashMap<String, HyperPlayer> hyperPlayers = new HashMap<String, HyperPlayer>();
-	
-
+	private ConcurrentHashMap<String, HyperObject> hyperObjects = new ConcurrentHashMap<String, HyperObject>();
+	private ConcurrentHashMap<String, HyperPlayer> hyperPlayers = new ConcurrentHashMap<String, HyperPlayer>();
 	private BukkitTask waitToLoad;
 	private BukkitTask waitForLoad;
 	private ArrayList<String> economies = new ArrayList<String>();
-	
-	
-	//private Logger log = Logger.getLogger("Minecraft");
 
 	DataHandler() {
 		hc = HyperConomy.hc;
 		sr = hc.getSQLRead();
 		objectsLoaded = false;
-		//databuilt = false;
 		hc.getServer().getPluginManager().registerEvents(this, hc);
 	}
 	

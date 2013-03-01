@@ -50,9 +50,17 @@ public class HyperPlayer {
 	}
 	
 	
+	public void create() {
+		SQLWrite sw = hc.getSQLWrite();
+		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) VALUES ('" + name + "','" + economy + "','" + balance + "','" + x + "','" + y + "','" + z + "','" + world + "','" + hash + "','" + salt + "')");
+	}
+	
 	public void save() {
 		SQLWrite sw = hc.getSQLWrite();
-		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + x + "','" + y + "','" + z + "','" + world + "','" + hash + "','" + salt + "')");
+		sw.executeSQL("UPDATE hyperconomy_players SET PLAYER='" + this.name + "', ECONOMY='" + this.economy + 
+				"', BALANCE='" + this.balance + "', X='" + this.x + "', Y='" + this.y + "', Z='" + this.z + 
+				"', WORLD='" + this.world + "', SALT='" + this.salt + "', HASH='" + this.hash + "' WHERE PLAYER = '" + this.name + "'");
+		
 	}
 	
 	
