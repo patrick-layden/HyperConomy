@@ -35,6 +35,7 @@ config:
   tekkit: false
   use-external-economy-plugin: true
   use-shops: true
+  allow-scrolling-transaction-signs: true
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

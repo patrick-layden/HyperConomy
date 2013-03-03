@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 
 public class TransactionSign implements Listener {
 	private HyperConomy hc;
@@ -27,6 +28,56 @@ public class TransactionSign implements Listener {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
 		}
 	}
+	
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerItemHeldEvent(PlayerItemHeldEvent event) {
+		if (hc.getYaml().getConfig().getBoolean("config.allow-scrolling-transaction-signs")) {
+			Player p = event.getPlayer();
+			Block b = p.getTargetBlock(null, 500);
+			if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
+				Sign s = (Sign) b.getState();
+				String line3 = ChatColor.stripColor(s.getLine(2)).trim();
+				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
+					String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
+					line12 = sf.fixName(line12);
+					if (sf.objectTest(line12)) {
+						String line4 = ChatColor.stripColor(s.getLine(3)).trim();
+						int amount = 0;
+						try {
+							amount = Integer.parseInt(line4);
+						} catch (Exception e) {
+							amount = 0;
+						}
+						int change = 1;
+						if (p.isSneaking()) {
+							change = 10;
+						}
+						int ps = event.getPreviousSlot();
+						int ns = event.getNewSlot();
+						if (ns == 0 && ps == 8) {
+							ns = 9;
+						} else if (ns == 8 && ps == 0) {
+							ns = -1;
+						}
+						if (ns > ps) {
+							amount -= change;
+						} else if (ns < ps) {
+							amount += change;
+						}
+						if (amount < 0) {
+							amount = 0;
+						} else if (amount > 512) {
+							amount = 512;
+						}
+						s.setLine(3, "\u00A7a" + amount);
+						s.update();
+					}
+				}
+			}
+		}
+	}
+	
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChangeEvent(SignChangeEvent scevent) {
@@ -34,35 +85,36 @@ public class TransactionSign implements Listener {
 			String line3 = ChatColor.stripColor(scevent.getLine(2)).trim();
 			if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
 				String line4 = ChatColor.stripColor(scevent.getLine(3)).trim();
+				int amount = 0;
 				try {
-					Integer.parseInt(line4);
-					String line12 = ChatColor.stripColor(scevent.getLine(0)).trim() + ChatColor.stripColor(scevent.getLine(1)).trim();
-					line12 = sf.fixName(line12);
-					if (sf.objectTest(line12)) {
-						if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
-							scevent.setLine(0, "\u00A71" + scevent.getLine(0));
-							scevent.setLine(1, "\u00A71" + scevent.getLine(1));
-							if (line3.equalsIgnoreCase("[sell:buy]")) {
-								scevent.setLine(2, "\u00A7f[Sell:Buy]");
-							} else if (line3.equalsIgnoreCase("[sell]")) {
-								scevent.setLine(2, "\u00A7f[Sell]");
-							} else if (line3.equalsIgnoreCase("[buy]")) {
-								scevent.setLine(2, "\u00A7f[Buy]");
-							}
-							scevent.setLine(3, "\u00A7a" + scevent.getLine(3));
-						} else if (!scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
-							scevent.setLine(0, "");
-							scevent.setLine(1, "");
-							scevent.setLine(2, "");
-							scevent.setLine(3, "");
-						}
-						if (scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.SIGN_POST) || scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.WALL_SIGN)) {
-							Sign s = (Sign) scevent.getBlock().getState();
-							s.update();
-						}
-					}
+					amount = Integer.parseInt(line4);
 				} catch (Exception e) {
-					return;
+					amount = 0;
+				}
+				String line12 = ChatColor.stripColor(scevent.getLine(0)).trim() + ChatColor.stripColor(scevent.getLine(1)).trim();
+				line12 = sf.fixName(line12);
+				if (sf.objectTest(line12)) {
+					if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
+						scevent.setLine(0, "\u00A71" + scevent.getLine(0));
+						scevent.setLine(1, "\u00A71" + scevent.getLine(1));
+						if (line3.equalsIgnoreCase("[sell:buy]")) {
+							scevent.setLine(2, "\u00A7f[Sell:Buy]");
+						} else if (line3.equalsIgnoreCase("[sell]")) {
+							scevent.setLine(2, "\u00A7f[Sell]");
+						} else if (line3.equalsIgnoreCase("[buy]")) {
+							scevent.setLine(2, "\u00A7f[Buy]");
+						}
+						scevent.setLine(3, "\u00A7a" + amount);
+					} else if (!scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
+						scevent.setLine(0, "");
+						scevent.setLine(1, "");
+						scevent.setLine(2, "");
+						scevent.setLine(3, "");
+					}
+					if (scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.SIGN_POST) || scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.WALL_SIGN)) {
+						Sign s = (Sign) scevent.getBlock().getState();
+						s.update();
+					}
 				}
 			}
 		}
@@ -101,7 +153,7 @@ public class TransactionSign implements Listener {
 					}
 					String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
 					line12 = sf.fixName(line12);
-					if (sf.objectTest(line12.toLowerCase())) {
+					if (sf.objectTest(line12)) {
 						if (!s.getLine(0).startsWith("\u00A7")) {
 							s.setLine(0, "\u00A71" + s.getLine(0));
 							s.setLine(1, "\u00A71" + s.getLine(1));

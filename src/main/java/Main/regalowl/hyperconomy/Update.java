@@ -210,7 +210,10 @@ public class Update {
 	    		yaml.getConfig().set("config.sql-connection.use-mysql", yaml.getConfig().getBoolean("config.sql-connection.use-sql"));
 	    		yaml.getConfig().set("config.sql-connection.use-sql", null);
 	    	}
-	    	
+	    	String t48 = yaml.getConfig().getString("config.allow-scrolling-transaction-signs");
+	    	if (t48 == null) {
+	    		yaml.getConfig().set("config.allow-scrolling-transaction-signs", true);
+	    	}	    
 	    	
 	    	double dversion = Double.parseDouble(configversion);
 	    	if (dversion < .952) {
