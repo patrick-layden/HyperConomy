@@ -90,6 +90,7 @@ public class Repairsigns {
 			if (signsRepaired > 0) {
 				InfoSignHandler is = hc.getInfoSignHandler();
 				is.reloadSigns();
+				is.updateSigns();
 				player.sendMessage(L.f(L.get("X_SIGNS_REPAIRED"), signsRepaired));
 			} else {
 				player.sendMessage(L.get("NO_SIGNS_FOUND"));
