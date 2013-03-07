@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,8 +19,8 @@ public class InfoSignHandler implements Listener {
 	
 	private HyperConomy hc;
 	private FileConfiguration sns;
-	private ConcurrentHashMap<String, InfoSign> infoSigns = new ConcurrentHashMap<String, InfoSign>();
-	
+	private ConcurrentHashMap<Integer, InfoSign> infoSigns = new ConcurrentHashMap<Integer, InfoSign>();
+	private AtomicInteger signCounter = new AtomicInteger();
 	private long signUpdateInterval;
 	private boolean signUpdateActive;
 	private int signUpdateTaskId;
@@ -39,6 +40,7 @@ public class InfoSignHandler implements Listener {
 	}
 	
 	private void loadSigns() {
+		signCounter.set(0);
 		infoSigns.clear();
 		Iterator<String> iterat = sns.getKeys(false).iterator();
 		while (iterat.hasNext()) {
@@ -51,7 +53,7 @@ public class InfoSignHandler implements Listener {
 			if (multiplier < 1) {
 				multiplier = 1;
 			}
-			infoSigns.put(signKey, new InfoSign(signKey, type, name, multiplier, economy, enchantClass));
+			infoSigns.put(signCounter.getAndIncrement(), new InfoSign(signKey, type, name, multiplier, economy, enchantClass));
 		}
 	}
 	
@@ -85,7 +87,7 @@ public class InfoSignHandler implements Listener {
 					sns.set(signKey + ".multiplier", multiplier);
 					sns.set(signKey + ".economy", economy);
 					sns.set(signKey + ".enchantclass", enchantClass.toString());
-					infoSigns.put(signKey, new InfoSign(signKey, type, objectName, multiplier, economy, enchantClass, lines));
+					infoSigns.put(signCounter.getAndIncrement(), new InfoSign(signKey, type, objectName, multiplier, economy, enchantClass, lines));
 					updateSigns();
 				}
 			}
@@ -127,7 +129,7 @@ public class InfoSignHandler implements Listener {
 							infoSign.update();
 						} else {
 							infoSign.markBroken();
-							infoSigns.remove(infoSign);
+							infoSigns.remove(currentSign);
 						}
 						currentSign++;
 					} else {
@@ -178,11 +180,13 @@ public class InfoSignHandler implements Listener {
 	}
 	
 	public InfoSign getInfoSign(String key) {
-		if (infoSigns.containsKey(key)) {
-			return infoSigns.get(key);
-		} else {
-			return null;
+		for (int i = 0; i < signCounter.get(); i++) {
+			InfoSign isign = infoSigns.get(i);
+			if (isign != null && isign.getKey() == key) {
+				return isign;
+			}
 		}
+		return null;
 	}
 	
 }

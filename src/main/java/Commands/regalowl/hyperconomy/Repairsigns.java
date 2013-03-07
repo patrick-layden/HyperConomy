@@ -60,7 +60,7 @@ public class Repairsigns {
 								objectName = dh.fixName(objectName);
 								if (dh.objectTest(objectName)) {
 									String ttype = ChatColor.stripColor(s.getLine(2).trim().replace(":", ""));
-									if (ttype.contains("S:") || ttype.contains("s:")) {
+									if (ttype.contains("S") || ttype.contains("s")) {
 										ttype = "SB";
 									}
 									SignType stype = SignType.fromString(ttype);

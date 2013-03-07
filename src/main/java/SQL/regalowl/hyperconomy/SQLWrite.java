@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.bukkit.scheduler.BukkitTask;
 
 
@@ -18,7 +17,7 @@ public class SQLWrite {
 	private boolean writeActive;
 	private AtomicInteger bufferCounter = new AtomicInteger();
 	private AtomicInteger processNext = new AtomicInteger();
-	private ArrayList<DatabaseConnection> dbConnections = new ArrayList<DatabaseConnection>();
+	private ConcurrentHashMap<Integer, DatabaseConnection> dbConnections = new ConcurrentHashMap<Integer, DatabaseConnection>();
 	
 	SQLWrite() {
 		bufferCounter.set(0);
@@ -39,7 +38,7 @@ public class SQLWrite {
 	    			} else {
 		    			dc = new SQLiteConnection();
 	    			}
-	    			dbConnections.add(dc);
+	    			dbConnections.put(dbConnections.size(), dc);
 	    		}
 	    	}, i);
 		}
@@ -92,7 +91,7 @@ public class SQLWrite {
 		writeTask = hc.getServer().getScheduler().runTaskTimerAsynchronously(hc, new Runnable() {
     		public void run() {
     			for (int i = 0; i < threadlimit; i++) {
-	    			for (DatabaseConnection dc:dbConnections) {
+	    			for (DatabaseConnection dc:dbConnections.values()) {
 	    				if (!dc.inUse()) {
 	    	    			if (buffer.size() == 0) {
 	    	    				cancelWrite();
@@ -143,7 +142,7 @@ public class SQLWrite {
 	
 	public int getActiveThreads() {
 		int activeThreads = 0;
-		for (DatabaseConnection dc:dbConnections) {
+		for (DatabaseConnection dc:dbConnections.values()) {
 			if (dc.inUse()) {
 				activeThreads++;
 			}
@@ -153,7 +152,7 @@ public class SQLWrite {
 	
 	public int getAvailableThreads() {
 		int availableThreads = 0;
-		for (DatabaseConnection dc:dbConnections) {
+		for (DatabaseConnection dc:dbConnections.values()) {
 			if (!dc.inUse()) {
 				availableThreads++;
 			}
@@ -173,8 +172,11 @@ public class SQLWrite {
 	public void shutDown() {
 		cancelWrite();
 		writeActive = true;
-		for (DatabaseConnection dc:dbConnections) {
-			buffer.put(bufferCounter.getAndIncrement(), dc.closeConnection());
+		for (DatabaseConnection dc : dbConnections.values()) {
+			String statement = dc.closeConnection();
+			if (statement != null) {
+				buffer.put(bufferCounter.getAndIncrement(), dc.closeConnection());
+			}
 		}
 		dbConnections.clear();
 		saveBuffer();
