@@ -2,6 +2,7 @@ package regalowl.hyperconomy;
 
 
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class Removedisplay {
@@ -13,10 +14,12 @@ public class Removedisplay {
 			return;
 		}
 		ItemDisplayFactory itdi = hc.getItemDisplay();
-		int x = player.getLocation().getBlockX();
-		int z = player.getLocation().getBlockZ();
+		Block b = player.getTargetBlock(null, 500);
+		int x = (int) Math.floor(b.getLocation().getX());
+		int y = b.getLocation().getBlockY() + 1;
+		int z = (int) Math.floor(b.getLocation().getZ());
 		World w = player.getLocation().getWorld();
-		boolean success = itdi.removeDisplay(x, z, w);
+		boolean success = itdi.removeDisplay(x, y, z, w);
 		if (success) {
 			player.sendMessage(L.get("DISPLAY_REMOVED"));
 		} else {

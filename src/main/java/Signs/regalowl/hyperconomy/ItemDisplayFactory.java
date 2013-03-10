@@ -2,7 +2,7 @@ package regalowl.hyperconomy;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -24,28 +24,20 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.metadata.MetadataValue;
-import org.bukkit.util.Vector;
 
 public class ItemDisplayFactory implements Listener {
 	
 	private HyperConomy hc; 
 	private int refreshthreadid;
-	private List<ItemDisplay> displays;
-	private List<Block> protectedBlocks;
-	private Calculation calc;
+	private ConcurrentHashMap<String, ItemDisplay> displays = new ConcurrentHashMap<String, ItemDisplay>();
 	private boolean loadActive;
 
 
 	ItemDisplayFactory() {
 		try {
 			hc = HyperConomy.hc;
-			calc = hc.getCalculation();
 			if (hc.getYaml().getConfig().getBoolean("config.use-item-displays")) {
 				hc.getServer().getPluginManager().registerEvents(this, hc);
-				//displays = new ArrayList<ItemDisplay>();
-				displays = new CopyOnWriteArrayList<ItemDisplay>();
-				protectedBlocks = new CopyOnWriteArrayList<Block>();
-				loadProtectedBlocks();
 				loadActive = false;
 				loadDisplays();
 				startRefreshThread();
@@ -55,25 +47,7 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 	
-	
-	public void loadProtectedBlocks() {
-		FileConfiguration disp = hc.getYaml().getDisplays();
-		Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
-		protectedBlocks.clear();
-		while (it.hasNext()) {
-			String key = it.next().toString();
-			int x = (int) Math.floor(disp.getDouble(key + ".x"));
-			int y = (int) Math.floor(disp.getDouble(key + ".y") - 1);
-			int z = (int) Math.floor(disp.getDouble(key + ".z"));
-			World w = Bukkit.getWorld(disp.getString(key + ".world"));
-			Block cb = w.getBlockAt(x, y, z);
-			protectedBlocks.add(cb);
-			cb = w.getBlockAt(x, y + 1, z);
-			protectedBlocks.add(cb);
-		}
-	}
-	
-	
+
 	
 	public void loadDisplays() {
 		try {
@@ -93,8 +67,10 @@ public class ItemDisplayFactory implements Listener {
 					Location l = new Location(w, x, y, z);
 					Chunk locChunk = l.getChunk();
 					if (locChunk.isLoaded()) {
-						ItemDisplay display = new ItemDisplay(l, name, economy);
-						displays.add(display);
+						ItemDisplay display = new ItemDisplay(key, l, name, economy);
+						String hkey = (int)Math.floor(x) + ":" + (int)Math.floor(y) + ":" + (int)Math.floor(z) + ":" + w.getName();
+						displays.put(hkey, display);				
+						display.makeDisplay();
 						display.clearNearbyItems();
 					}
 				}
@@ -107,7 +83,7 @@ public class ItemDisplayFactory implements Listener {
 	
 
 	public void unloadDisplays() {
-		for (ItemDisplay display:displays) {
+		for (ItemDisplay display:displays.values()) {
 			display.clearNearbyItems();
 			display.clearDisplay();
 		}
@@ -129,64 +105,20 @@ public class ItemDisplayFactory implements Listener {
 	}
 	
 
-	public void storeDisplay(double x, double y, double z, World w, String name, String economy) {
-		Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
-		int numdisplays = 0;
-		while (it.hasNext()) {
-			String key = it.next().toString();
-			int number = Integer.parseInt(key.substring(1, key.length()));
-			if (number > numdisplays) {
-				numdisplays = number;
-			}
-		}
-		numdisplays++;
-		FileConfiguration disp = hc.getYaml().getDisplays();
-		
-		String key = "d" + numdisplays;
-		disp.set(key + ".name", name);
-		disp.set(key + ".economy", economy);
-		disp.set(key + ".x", x);
-		disp.set(key + ".y", y);
-		disp.set(key + ".z", z);
-		disp.set(key + ".world", w.getName());
-		loadProtectedBlocks();
-		loadDisplays();
-	}
-	
-	
-	public boolean removeDisplay(int x, int z, World w) {
-		FileConfiguration disp = hc.getYaml().getDisplays();
-		for (ItemDisplay display:displays) {
-			Location il = display.getLocation();
-			int tx =  il.getBlockX();
-			int tz =  il.getBlockZ();
-			World tw = il.getWorld();
-			if (tw == w && tx == x && tz == z) {
-				Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
-				while (it.hasNext()) {
-					String key = it.next().toString();
-					int ymlx = (int) Math.floor(disp.getDouble(key + ".x"));
-					int ymlz = (int) Math.floor(disp.getDouble(key + ".z"));
-					World ymlw = Bukkit.getWorld(disp.getString(key + ".world"));
-					if (ymlw == w && ymlx == x && ymlz == z) {
-						disp.set(key, null);
-						display.clearDisplay();
-						displays.remove(display);
-						loadProtectedBlocks();
-						loadDisplays();
-						return true;
-					}
-				}
-			}
-		}
+	public boolean removeDisplay(int x, int y, int z, World w) {
+		String hkey = x + ":" + y + ":" + z + ":" + w.getName();
+		if (displays.containsKey(hkey)) {
+			ItemDisplay display = displays.get(hkey);
+			display.deleteDisplay();
+			displays.remove(hkey);
+			return true;
+		} 
 		return false;
 	}
-	
-	
+
 	public boolean testDisplay(double x, double y, double z, World w, String name, String economy) {
 		x = Math.floor(x) + .5;
-		z = Math.floor(z) + .5;
-		
+		z = Math.floor(z) + .5;	
 		FileConfiguration disp = hc.getYaml().getDisplays();
 		Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
 		while (it.hasNext()) {
@@ -199,60 +131,32 @@ public class ItemDisplayFactory implements Listener {
 				return false;
 			}
 		}
-		storeDisplay(x, y, z, w, name, economy);
-		loadDisplays();
+		Location l = new Location(w, x, y, z);
+		ItemDisplay display = new ItemDisplay(l, name, economy);
+		String hkey = (int)Math.floor(x) + ":" + (int)Math.floor(y) + ":" + (int)Math.floor(z) + ":" + w.getName();
+		displays.put(hkey, display);
+		Chunk locChunk = l.getChunk();
+		if (locChunk.isLoaded()) {
+			display.makeDisplay();
+			display.clearNearbyItems();
+		}
 		return true;
 	}
 
 	
 
-	
-	
-	
-	
-	
-	
-
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
 		Item droppedItem = event.getItemDrop();
-		Location l = droppedItem.getLocation();
-		int did = droppedItem.getItemStack().getType().getId();
-		int dda = calc.getDamageValue(droppedItem.getItemStack());
-		double dx = l.getX();
-		double dy = l.getY();
-		double dz = l.getZ();
-		World w = l.getWorld();
-		
-		for (ItemDisplay display:displays) {
-			Location dl = display.getLocation();
-			int id = display.getItem().getItemStack().getType().getId();
-			int da = calc.getDamageValue(display.getItem().getItemStack());
-			if (id == did) {
-				if (dda == da) {
-					if (w.equals(dl.getWorld())) {
-						if (Math.abs(dx - dl.getX()) < 10) {
-							if (Math.abs(dz - dl.getZ()) < 10) {
-								if (Math.abs(dy - dl.getY()) < 30) {
-									event.setCancelled(true);
-								} else {
-									droppedItem.setVelocity(new Vector(0,0,0));
-									Block dblock = droppedItem.getLocation().getBlock();
-									while (dblock.getType().equals(Material.AIR)) {
-										dblock = dblock.getRelative(BlockFace.DOWN);
-									}
-									if (dblock.getLocation().getY() <= (dl.getBlockY() + 10)) {
-										event.setCancelled(true);
-									}
-								}
-							}
-						}
-					}
-				}
+		for (ItemDisplay display:displays.values()) {
+			if (display.blockItemDrop(droppedItem)) {
+				event.setCancelled(true);
+				return;
 			}
-
 		}
 	}
+	
+	
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChunkLoad(ChunkLoadEvent event) {
@@ -261,13 +165,14 @@ public class ItemDisplayFactory implements Listener {
 			if (chunk == null) {
 				return;
 			}
-			for (ItemDisplay display:displays) {
+			for (ItemDisplay display:displays.values()) {
 				if (display == null) {
 					continue;
 				}
 				Location l = display.getLocation();
 				if (l != null && chunk.equals(l.getChunk())) {
-					loadDisplays();
+					display.removeItem();
+					display.makeDisplay();
 					return;
 				}
 			}
@@ -276,39 +181,10 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 	
-	/*
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onChunkUnload(ChunkUnloadEvent event) {
-		try {
-			Chunk chunk = event.getChunk();
-			if (chunk == null) {
-				return;
-			}
-			for (ItemDisplay display:displays) {
-				if (display == null) {
-					continue;
-				}
-				Location l = display.getLocation();
-				if (l != null && chunk.equals(l.getChunk())) {
-					loadDisplays();
-					return;
-				}
-			}
-		} catch (Exception e) {
-			new HyperError(e);
-		}
-	}
-	*/
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
 		Item item = event.getItem();
-		for (ItemDisplay display:displays) {
-			if (display.getId() == item.getEntityId()) {
-				event.setCancelled(true);
-				break;
-			}
-		}
 		if (!event.isCancelled()) {
 			List<MetadataValue> meta = item.getMetadata("HyperConomy");
 			for (MetadataValue cmeta: meta) {
@@ -318,12 +194,10 @@ public class ItemDisplayFactory implements Listener {
 				}
 			}
 		}
-		if (!event.isCancelled()) {
-			for (ItemDisplay display:displays) {
-				if (item.equals(display.getItem())) {
-					event.setCancelled(true);
-					break;
-				}
+		for (ItemDisplay display:displays.values()) {
+			if (display.getEntityId() == item.getEntityId() || item.equals(display.getItem())) {
+				event.setCancelled(true);
+				break;
 			}
 		}
 	}
@@ -331,21 +205,22 @@ public class ItemDisplayFactory implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
 		Block bb = event.getBlock();
-		for (Block cb:protectedBlocks) {
-			if (cb.equals(bb)) {
+		for (ItemDisplay display:displays.values()) {
+			if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
 				event.setCancelled(true);
-				loadDisplays();
+				display.removeItem();
+				display.makeDisplay();
 			}
 		}
-
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPlaceEvent(BlockPlaceEvent event) {
 		Block bb = event.getBlock();
-		for (Block cb:protectedBlocks) {
-			if (cb.equals(bb)) {
+		for (ItemDisplay display:displays.values()) {
+			if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
 				event.setCancelled(true);
-				loadDisplays();
+				display.removeItem();
+				display.makeDisplay();
 			}
 		}
 		if (bb.getType().equals(Material.GRAVEL) || bb.getType().equals(Material.SAND)) {
@@ -353,10 +228,11 @@ public class ItemDisplayFactory implements Listener {
 			while (below.getType().equals(Material.AIR)) {
 				below = below.getRelative(BlockFace.DOWN);
 			}
-			for (Block cb:protectedBlocks) {
-				if (cb.equals(below)) {
+			for (ItemDisplay display:displays.values()) {
+				if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
 					event.setCancelled(true);
-					loadDisplays();
+					display.removeItem();
+					display.makeDisplay();
 				}
 			}
 		}
@@ -366,9 +242,11 @@ public class ItemDisplayFactory implements Listener {
 		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
 			Location l = event.getRetractLocation();
 			Block b = l.getBlock();
-			for (Block cb:protectedBlocks) {
-				if (cb.equals(b)) {
+			for (ItemDisplay display:displays.values()) {
+				if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
 					event.setCancelled(true);
+					display.removeItem();
+					display.makeDisplay();
 				}
 			}
 		}
@@ -376,11 +254,12 @@ public class ItemDisplayFactory implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonExtendEvent(BlockPistonExtendEvent event) {
 		List<Block> blocks = event.getBlocks();
-		for (int i = 0; i < blocks.size(); i++) {
-			Block cblock = blocks.get(i);
-			for (Block cb:protectedBlocks) {
-				if (cb.equals(cblock)) {
+		for (Block cblock:blocks) {
+			for (ItemDisplay display:displays.values()) {
+				if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
 					event.setCancelled(true);
+					display.removeItem();
+					display.makeDisplay();
 				}
 			}
 		}
@@ -389,12 +268,12 @@ public class ItemDisplayFactory implements Listener {
 	public void onEntityExplodeEvent(EntityExplodeEvent event) {
 		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
 			List<Block> blocks = event.blockList();
-			for (int i = 0; i < blocks.size(); i++) {
-				Block cblock = blocks.get(i);
-				for (Block cb:protectedBlocks) {
-					if (cb.equals(cblock)) {
+			for (Block cblock:blocks) {
+				for (ItemDisplay display:displays.values()) {
+					if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
 						event.setCancelled(true);
-						loadDisplays();
+						display.removeItem();
+						display.makeDisplay();
 					}
 				}
 			}

@@ -222,7 +222,7 @@ LISTSHOPS_INVALID: &4Invalid Parameters.  Use /listshops
 LOADED_INTO_ECONOMY: loaded into economy!
 IMPORTNEWITEMS_INVALID: &4Invalid Parameters.  Use /importnewitems [economy]
 ENABLE_ITEM_DISPLAYS: &4Item displays must be enabled to use this command.
-MAKEDISPLAY_INVALID: &4Invalid Parameters. Use /makedisplay [name] ('l')
+MAKEDISPLAY_INVALID: &4Invalid Parameters. Use /makedisplay [name]
 NOTIFY_INVALID: &4Invalid Parameters.  Use /notify [name/'all']
 NOTIFICATIONS_DISABLED: &4Notifications are currently disabled!
 RECEIVE_NOTIFICATIONS: &6You will now receive notifications for all items and enchantments.
@@ -234,7 +234,7 @@ REMOVECATEGORY_INVALID: &4Invalid Parameters.  Use /removecategory [name] [shop]
 REMOVED_FROM: &6%n removed from %e
 ITEMDISPLAYS_MUST_BE_ENABLED: &4Item displays must be enabled to use this command.
 DISPLAY_REMOVED: &6Display removed!
-NO_DISPLAY_DETECTED: &4There was no display detected where you're standing.
+NO_DISPLAY_DETECTED: &4There was no display detected where you're looking.
 ALL_REMOVED_FROM: &6All items and enchantments have been removed from %n.
 ALREADY_BEEN_REMOVED: &4That item has already been removed from the shop.
 REMOVEITEM_INVALID: &4Invalid Parameters.  Use /removeitem [name/'all'] [shop]
