@@ -2,8 +2,9 @@ package regalowl.hyperconomy;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -18,8 +19,8 @@ import org.bukkit.entity.Player;
 public class ShopFactory {
 	
 
-	private HashMap<Player, Boolean> shopStatus;
-	private HashMap<String, Shop> shops = new HashMap<String, Shop>();
+	private ConcurrentHashMap<Player, Boolean> shopStatus;
+	private ConcurrentHashMap<String, Shop> shops = new ConcurrentHashMap<String, Shop>();
 	
 	private boolean useshopexitmessage;
 	
@@ -34,7 +35,7 @@ public class ShopFactory {
 
 	ShopFactory() {
 		hc = HyperConomy.hc;	
-		shopStatus = new HashMap<Player, Boolean>();	
+		shopStatus = new ConcurrentHashMap<Player, Boolean>();	
 		useShops = hc.getYaml().getConfig().getBoolean("config.use-shops");
 		shopinterval = hc.getYaml().getConfig().getLong("config.shopcheckinterval");
 		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
