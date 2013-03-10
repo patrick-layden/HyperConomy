@@ -10,7 +10,7 @@ public class Ebuy {
 		ShopFactory s = hc.getShopFactory();
 		ETransaction ench =  hc.getETransaction();
 		try {
-			if (s.getShop(player) != null) {
+			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					String name = args[0];
 					if (hc.getDataFunctions().enchantTest(name)) {

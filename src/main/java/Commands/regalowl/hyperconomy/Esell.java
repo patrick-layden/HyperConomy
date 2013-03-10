@@ -10,7 +10,7 @@ public class Esell {
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
 		try {
-			if (s.getShop(player) != null) {
+			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					String name = args[0];
 					if (args[0].equalsIgnoreCase("max")) {

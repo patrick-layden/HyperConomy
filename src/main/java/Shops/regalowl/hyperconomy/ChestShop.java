@@ -93,7 +93,7 @@ public class ChestShop implements Listener{
 		    				BlockState pchest4 = cblock.getRelative(BlockFace.SOUTH).getState();
 		    				
 		    				if (!(pchest1 instanceof Chest) && !(pchest2 instanceof Chest) && !(pchest3 instanceof Chest) && !(pchest4 instanceof Chest)) {
-			    				if (!hc.getYaml().getConfig().getBoolean("config.require-chest-shops-to-be-in-shop") || s.getShop(scevent.getPlayer()) != null) {    				
+			    				if (!hc.getYaml().getConfig().getBoolean("config.require-chest-shops-to-be-in-shop") || s.inAnyShop(scevent.getPlayer())) {    				
 			    				Chest c = (Chest) chestblock;
 			    				int count = 0;
 			    				int emptyslots = 0;

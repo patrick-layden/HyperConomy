@@ -1,7 +1,6 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -23,19 +22,18 @@ public class Shop {
 	
 	private HyperConomy hc;
 	private LanguageFile L;
-	private boolean useShops;
 	private FileConfiguration shopFile;
+	
+	private boolean globalShop;
 	
 	Shop(String name, String economy) {
 		this.name = name;
 		this.economy = economy;
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		useShops = hc.getYaml().getConfig().getBoolean("config.use-shops");
+		globalShop = false;
 		shopFile = hc.getYaml().getShops();
-		//if (shopFile.getString(name) == null) {
-			shopFile.set(name + ".economy", economy);
-		//}
+		shopFile.set(name + ".economy", economy);
 	}
 	
 	public void setPoint1(String world, int x, int y, int z) {
@@ -58,6 +56,12 @@ public class Shop {
 		shopFile.set(name + ".p2.x", x);
 		shopFile.set(name + ".p2.y", y);
 		shopFile.set(name + ".p2.z", z);
+	}
+	
+	public void setGlobal() {
+		globalShop = true;
+		setMessage1("");
+		setMessage1("");
 	}
 	
 	
@@ -117,6 +121,9 @@ public class Shop {
 	
 	
 	public boolean inShop(int x, int y, int z, String world) {
+		if (globalShop) {
+			return true;
+		}
 		if (world.equalsIgnoreCase(this.world)) {
 			int rangex = Math.abs(p1x - p2x);
 			if (Math.abs(x - p1x) <= rangex && Math.abs(x - p2x) <= rangex) {
@@ -139,6 +146,9 @@ public class Shop {
 	}
 	
 	public void sendEntryMessage(Player player) {
+		if (globalShop) {
+			return;
+		}
 		if (message1 == null || message2 == null) {
 			message1 = "&aWelcome to %n";
 			message2 = "&9Type &b/hc &9for help.";
@@ -159,9 +169,6 @@ public class Shop {
 	
 	
 	public boolean has(String item) {
-		if (!useShops) {
-			return true;
-		}
 		FileConfiguration sh = hc.getYaml().getShops();
 		String unavailableS = sh.getString(name + ".unavailable");
 		if (unavailableS == null || unavailableS.equalsIgnoreCase("")) {

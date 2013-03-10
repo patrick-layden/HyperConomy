@@ -29,10 +29,13 @@ public class ShopFactory {
 	private HyperConomy hc;
 	private LanguageFile L;
 	
+	private boolean useShops;
+	
 
 	ShopFactory() {
-		hc = HyperConomy.hc;
+		hc = HyperConomy.hc;	
 		shopStatus = new HashMap<Player, Boolean>();	
+		useShops = hc.getYaml().getConfig().getBoolean("config.use-shops");
 		shopinterval = hc.getYaml().getConfig().getLong("config.shopcheckinterval");
 		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
 		L = hc.getLanguageFile();
@@ -43,16 +46,23 @@ public class ShopFactory {
 	private void buildShopData() {
 		clearAll();
 		FileConfiguration sh = hc.getYaml().getShops();
+		if (!useShops) {
+			Shop shop = new Shop("GlobalShop", "default");
+			shop.setGlobal();
+			shops.put("GlobalShop", shop);
+		}
 		Iterator<String> it = hc.getYaml().getShops().getKeys(false).iterator();
 		while (it.hasNext()) {   			
 			Object element = it.next();
 			String name = element.toString(); 
-			Shop shop = new Shop(name, sh.getString(name + ".economy"));
-			shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
-			shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
-			shop.setMessage1(sh.getString(name + ".shopmessage1"));
-			shop.setMessage2(sh.getString(name + ".shopmessage2"));
-			shops.put(name, shop);
+			if (!name.equalsIgnoreCase("GlobalShop")) {
+				Shop shop = new Shop(name, sh.getString(name + ".economy"));
+				shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
+				shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
+				shop.setMessage1(sh.getString(name + ".shopmessage1"));
+				shop.setMessage2(sh.getString(name + ".shopmessage2"));
+				shops.put(name, shop);
+			}
 		}
 	}
 	
@@ -63,8 +73,7 @@ public class ShopFactory {
 	}
 	
 	
-	
-	public Shop getShop(Player player) {
+	Shop getShop(Player player) {
 		for (Shop shop : shops.values()) {
 			if (shop.inShop(player)) {
 				return shop;
@@ -73,12 +82,23 @@ public class ShopFactory {
 		return null;
 	}
 	
+	
 	public Shop getShop(String shop) {
 		if (shops.containsKey(shop)) {
 			return shops.get(shop);
 		} else {
 			return null;
 		}
+	}
+	
+	
+	public boolean inAnyShop(Player player) {
+		for (Shop shop : shops.values()) {
+			if (shop.inShop(player)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	

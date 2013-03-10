@@ -22,7 +22,7 @@ public class Topenchants {
 			}
 			String nameshop = "";
 			if (player != null) {
-				if (s.getShop(player) != null) {
+				if (s.inAnyShop(player)) {
 					nameshop = s.getShop(player).getName();
 				} 				
 				if (requireShop && s.getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {

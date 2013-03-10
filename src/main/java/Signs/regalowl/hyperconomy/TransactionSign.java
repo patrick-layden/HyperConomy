@@ -169,8 +169,8 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.buysign")) {
-									if ((shop.getShop(p) != null && requireShop) || !requireShop) {
-										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".buy")) {
+									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
+										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p).getName()) || p.hasPermission("hyperconomy.shop." + shop.getShop(p).getName() + ".buy")) {
 											if (sf.itemTest(line12)) {
 												int id = sf.getHyperObject(line12, playerecon).getId();
 												if (id >= 0) {
@@ -216,8 +216,8 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
-									if ((shop.getShop(p) != null && requireShop) || !requireShop) {
-										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p)) || p.hasPermission("hyperconomy.shop." + shop.getShop(p) + ".sell")) {
+									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
+										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p).getName()) || p.hasPermission("hyperconomy.shop." + shop.getShop(p).getName() + ".sell")) {
 											if (sf.itemTest(line12)) {
 												int id = sf.getHyperObject(line12, playerecon).getId();
 												if (id >= 0) {

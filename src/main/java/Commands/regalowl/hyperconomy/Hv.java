@@ -18,7 +18,7 @@ public class Hv {
 		int amount;
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			if ((requireShop && s.getShop(player) != null) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if ((requireShop && s.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				ItemStack iinhand = player.getItemInHand();
 					if (args.length == 0) {
 						amount = 1;

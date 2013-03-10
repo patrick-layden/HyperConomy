@@ -13,7 +13,7 @@ public class Hs {
 		LanguageFile L = hc.getLanguageFile();
 		int amount;
 		try {
-			if (s.getShop(player) != null) {
+			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					if (args.length == 0) {
 						amount = 1;

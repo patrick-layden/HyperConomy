@@ -13,7 +13,7 @@ public class Sell {
 		Calculation calc = hc.getCalculation();
 		ShopFactory s = hc.getShopFactory();
 		try {
-			if (s.getShop(player) != null) {
+			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					String name = sf.fixName(args[0]);
 					int amount = 0;
