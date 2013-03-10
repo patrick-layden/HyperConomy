@@ -78,6 +78,9 @@ public class InfoSignHandler implements Listener {
 			if (EnchantmentClass.fromString(lines[3]) != null) {
 				enchantClass = EnchantmentClass.fromString(lines[3]);
 			}
+			if (df.enchantTest(objectName) && enchantClass == EnchantmentClass.NONE) {
+				enchantClass = EnchantmentClass.DIAMOND;
+			}
 			if (df.objectTest(objectName)) {
 				SignType type = SignType.fromString(lines[2]);
 				if (type != null) {
