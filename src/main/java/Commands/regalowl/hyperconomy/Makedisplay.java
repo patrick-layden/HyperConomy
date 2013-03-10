@@ -1,6 +1,8 @@
 package regalowl.hyperconomy;
 
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class Makedisplay {
@@ -22,6 +24,16 @@ public class Makedisplay {
 				double z = player.getLocation().getZ();
 				World w = player.getLocation().getWorld();
 				itdi.testDisplay(x, y, z, w, name, economy);
+			} else {
+				player.sendMessage(L.get("INVALID_ITEM_NAME"));
+			}
+		} else if (args.length == 2 && args[1].equalsIgnoreCase("l")) {
+			Block b = player.getTargetBlock(null, 500);
+			Location bl = b.getLocation();
+			String name = hc.getDataFunctions().fixName(args[0]);
+			if (hc.getDataFunctions().itemTest(name)) {
+				String economy = sf.getHyperPlayer(player).getEconomy();
+				itdi.testDisplay(bl.getX(), bl.getY() + 1, bl.getZ(), bl.getWorld(), name, economy);
 			} else {
 				player.sendMessage(L.get("INVALID_ITEM_NAME"));
 			}
