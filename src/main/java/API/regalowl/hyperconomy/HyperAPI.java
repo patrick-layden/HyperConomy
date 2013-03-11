@@ -145,4 +145,14 @@ public class HyperAPI implements HyperInterface {
 		return HyperConomy.hc.getApiVersion();
 	}
 
+	public String getShopEconomy(String shop) {
+		HyperConomy hc = HyperConomy.hc;
+		ShopFactory sf = hc.getShopFactory();
+		if (sf.shopExists(shop)) {
+			return sf.getShop(shop).getEconomy();
+		} else {
+			return "";
+		}
+	}
+
 }
