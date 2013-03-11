@@ -16,6 +16,7 @@ public interface HyperInterface {
 	double getPlayerY(String player);
 	double getPlayerZ(String player);
 	String getShopEconomy(String shop);
+	String getGlobalShopAccount();
 	/**
 	 * @param player (name of player)
 	 * @return true if the hash matches the player's hash and false if it doesn't

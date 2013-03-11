@@ -155,4 +155,10 @@ public class HyperAPI implements HyperInterface {
 		}
 	}
 
+	public String getGlobalShopAccount() {
+		return HyperConomy.hc.getYaml().getConfig().getString("config.global-shop-account");
+	}
+	
+	
+
 }
