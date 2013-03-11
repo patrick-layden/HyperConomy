@@ -23,6 +23,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.metadata.MetadataValue;
 
 public class ItemDisplayFactory implements Listener {
@@ -173,6 +174,28 @@ public class ItemDisplayFactory implements Listener {
 				if (l != null && chunk.equals(l.getChunk())) {
 					display.removeItem();
 					display.makeDisplay();
+					return;
+				}
+			}
+		} catch (Exception e) {
+			new HyperError(e);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onChunkUnload(ChunkUnloadEvent event) {
+		try {
+			Chunk chunk = event.getChunk();
+			if (chunk == null) {
+				return;
+			}
+			for (ItemDisplay display:displays.values()) {
+				if (display == null) {
+					continue;
+				}
+				Location l = display.getLocation();
+				if (l != null && chunk.equals(l.getChunk())) {
+					display.removeItem();
 					return;
 				}
 			}
