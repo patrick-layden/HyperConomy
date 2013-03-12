@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,8 +23,7 @@ public class InfoSignHandler implements Listener {
 	private long signUpdateInterval;
 	private boolean signUpdateActive;
 	private int signUpdateTaskId;
-	
-
+	private ArrayList<InfoSign> signsToUpdate = new ArrayList<InfoSign>();
 	private int currentSign;
 	
 	InfoSignHandler() {
@@ -102,14 +100,14 @@ public class InfoSignHandler implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSignRemoval(BlockBreakEvent bbevent) {
 		Block b = bbevent.getBlock();
-		if (b != null && b.getType().equals(Material.WALL_SIGN)) {
+		if (b != null && (b.getType().equals(Material.WALL_SIGN) || b.getType().equals(Material.SIGN_POST))) {
 			String signKey = bbevent.getBlock().getWorld().getName() + "|" + bbevent.getBlock().getX() + "|" + bbevent.getBlock().getY() + "|" + bbevent.getBlock().getZ();
 			InfoSign is = getInfoSign(signKey);
 			if (is != null && !bbevent.isCancelled()) {
 				is.deleteSign();
+				infoSigns.remove(signKey);
 			}
 			updateSigns();
-
 		}
 	}
 
@@ -123,15 +121,19 @@ public class InfoSignHandler implements Listener {
 	public void startSignUpdate() {
 		signUpdateActive = true;
 		currentSign = 0;
+		signsToUpdate.clear();
+		for (InfoSign iSign:infoSigns.values()) {
+			signsToUpdate.add(iSign);
+		}
 		signUpdateTaskId = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
 			public void run() {
 				for (int i = 0; i < 4; i++) {
 					if (currentSign < infoSigns.size()) {
-						InfoSign infoSign = infoSigns.get(currentSign);
+						InfoSign infoSign = signsToUpdate.get(currentSign);
 						if (infoSign.testData()) {
 							infoSign.update();
 						} else {
-							infoSign.markBroken();
+							infoSign.deleteSign();
 							infoSigns.remove(currentSign);
 						}
 						currentSign++;
@@ -182,10 +184,10 @@ public class InfoSignHandler implements Listener {
 		return isigns;
 	}
 	
+	
 	public InfoSign getInfoSign(String key) {
-		for (int i = 0; i < signCounter.get(); i++) {
-			InfoSign isign = infoSigns.get(i);
-			if (isign != null && isign.getKey() == key) {
+		for (InfoSign isign:infoSigns.values()) {
+			if (isign != null && isign.getKey().equalsIgnoreCase(key)) {
 				return isign;
 			}
 		}

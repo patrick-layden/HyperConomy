@@ -37,7 +37,6 @@ public class HyperConomy extends JavaPlugin {
 	private YamlFile yaml;
 	private boolean playerLock;
 	private boolean fullLock;
-	//private boolean sqllock;
 	private boolean brokenfile;
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
@@ -81,6 +80,7 @@ public class HyperConomy extends JavaPlugin {
 		hist = new History();
 		itdi = new ItemDisplayFactory();
 		hws = new HyperWebStart();
+		isign.updateSigns();
 		//log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 	}
 
@@ -247,13 +247,13 @@ public class HyperConomy extends JavaPlugin {
 					return true;
 				} else {
 					if (sender.hasPermission("hyperconomy.admin")) {
-						if (args[0].equalsIgnoreCase("enable") && fullLock) {
+						if (args.length == 1 && args[0].equalsIgnoreCase("enable") && fullLock) {
 							initialize();
 							sender.sendMessage(L.get("HC_HYPERCONOMY_ENABLED"));
 							sender.sendMessage(L.get("FILES_RELOADED"));
 							sender.sendMessage(L.get("SHOP_UNLOCKED"));
 							return true;
-						} else if (args[0].equalsIgnoreCase("disable") && !fullLock) {
+						} else if (args.length == 1 && args[0].equalsIgnoreCase("disable") && !fullLock) {
 							sender.sendMessage(L.get("HC_HYPERCONOMY_DISABLED"));
 							sender.sendMessage(L.get("SHOP_LOCKED"));
 							playerLock = true;

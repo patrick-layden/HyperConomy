@@ -101,10 +101,14 @@ public class HyperError {
 							e1.printStackTrace();
 						}
 						DataHandler sf = hc.getDataFunctions();
+						boolean objectsLoaded = false;
+						if (sf != null) {
+							objectsLoaded = sf.objectsLoaded();
+						}
 						info = ft.getTimeStamp() + "\r\n"
 						+ "HyperConomy version: " + hc.getServerVersion() + "\r\n"
 						+ Bukkit.getName() + " version: " + Bukkit.getServer().getBukkitVersion() + "\r\n"
-						+ "UseMySQL='" + hc.useMySQL() + "'\r\nObjects Loaded='" + sf.objectsLoaded()
+						+ "UseMySQL='" + hc.useMySQL() + "'\r\nObjects Loaded='" + objectsLoaded
 						+ "'\r\n" + info;
 						ft.writeStringToFile(info, path + File.separator + "info.txt");
 						LanguageFile L = hc.getLanguageFile();
