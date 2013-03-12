@@ -226,7 +226,7 @@ public class _Command {
 			new Makedisplay(args, player);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("removedisplay") && player != null) {
-			new Removedisplay(player);
+			new Removedisplay(args, player);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hcchunk") && player != null) {
 			new Hcchunk(args, player);

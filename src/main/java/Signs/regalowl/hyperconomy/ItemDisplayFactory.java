@@ -116,6 +116,26 @@ public class ItemDisplayFactory implements Listener {
 		} 
 		return false;
 	}
+	
+	public boolean removeDisplay(int x, int z, World w) {
+		for (String key:displays.keySet()) {
+			int kx = Integer.parseInt(key.substring(0, key.indexOf(":")));
+			key = key.substring(key.indexOf(":") + 1, key.length());
+			int ky = Integer.parseInt(key.substring(0, key.indexOf(":")));
+			key = key.substring(key.indexOf(":") + 1, key.length());
+			int kz = Integer.parseInt(key.substring(0, key.indexOf(":")));
+			key = key.substring(key.indexOf(":") + 1, key.length());
+			String kw = key;
+			if (kx == x && kz == z && kw.equalsIgnoreCase(w.getName())) {
+				key = kx + ":" + ky + ":" + kz + ":" + kw;
+				ItemDisplay display = displays.get(key);
+				display.deleteDisplay();
+				displays.remove(key);
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public boolean testDisplay(double x, double y, double z, World w, String name, String economy) {
 		x = Math.floor(x) + .5;

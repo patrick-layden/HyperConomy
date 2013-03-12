@@ -235,6 +235,7 @@ REMOVED_FROM: &6%n removed from %e
 ITEMDISPLAYS_MUST_BE_ENABLED: &4Item displays must be enabled to use this command.
 DISPLAY_REMOVED: &6Display removed!
 NO_DISPLAY_DETECTED: &4There was no display detected where you're looking.
+NO_DISPLAY_DETECTED_HERE: &4There was no display detected in your vertical block column.
 ALL_REMOVED_FROM: &6All items and enchantments have been removed from %n.
 ALREADY_BEEN_REMOVED: &4That item has already been removed from the shop.
 REMOVEITEM_INVALID: &4Invalid Parameters.  Use /removeitem [name/'all'] [shop]
