@@ -3,6 +3,8 @@ package regalowl.hyperconomy;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +19,9 @@ public class HyperWebPrices extends AbstractHandler {
 	private History hist;
 	private HyperWebStart hws;
 	private String page = "Please wait, the price page is loading...  Refresh your page in a few seconds.";
+	
+	/** The WebAPI object */
+	private AbstractHandler webAPI;
 	
 	@SuppressWarnings("deprecation")
 	public HyperWebPrices(HyperWebStart hyperws) {
@@ -33,19 +38,45 @@ public class HyperWebPrices extends AbstractHandler {
 				}
 			}
 		}, 400L, 6000L);
+		
+		// Initialize the WebAPI
+		this.webAPI = null;
+		try {
+			this.webAPI = (AbstractHandler) Class.forName("regalowl.hyperconomy.HyperWebAPI").newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    	//Check if the user try to call the API 
+    	if (this.webAPI != null) {
+    		String[] lParts = baseRequest.getRequestURI().split("/");
+        	List<String> lPartList = new ArrayList<String>();
+        	for (String lObj : lParts) {
+        		if (lObj.trim().length() > 0) {
+        			lPartList.add(lObj.trim());
+        		}
+        	}
+        	
+        	if (lPartList.size() > 0 && lPartList.get(0).equals("API")) {
+        		this.webAPI.handle(target, baseRequest, request, response);
+        		return;
+        	}
+    	}
+    	
+    	//Else call classic WebSite
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
         response.getWriter().println(page);
         //response.getWriter().println(testpage);
     }
-    
-    
-    
     
 	/**
 	 * 
