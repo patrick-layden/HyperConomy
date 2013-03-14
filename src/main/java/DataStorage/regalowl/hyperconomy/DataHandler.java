@@ -175,7 +175,11 @@ public class DataHandler implements Listener {
 			public void run() {
 				QueryResult result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_objects");
 				while (result.next()) {
-					HyperObject hobj = new HyperObject(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), result.getString("CATEGORY"), result.getString("MATERIAL"), result.getInt("ID"), result.getInt("DATA"), result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"), result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), result
+					HyperObject hobj = new HyperObject(result.getString("NAME"), result.getString("ECONOMY"), 
+							result.getString("TYPE"), result.getString("CATEGORY"), result.getString("MATERIAL"), 
+							result.getInt("ID"), result.getInt("DATA"), result.getInt("DURABILITY"), result.getDouble("VALUE"), 
+							result.getString("STATIC"), result.getDouble("STATICPRICE"), result.getDouble("STOCK"),
+							result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), result
 							.getDouble("CEILING"), result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
 					hyperObjects.put(hobj.getName() + ":" + hobj.getEconomy(), hobj);
 				}
