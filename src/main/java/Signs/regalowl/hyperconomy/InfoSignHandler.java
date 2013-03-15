@@ -127,8 +127,12 @@ public class InfoSignHandler implements Listener {
 		}
 		signUpdateTaskId = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
 			public void run() {
+				if (infoSigns == null || signsToUpdate == null) {
+					stopSignUpdate();
+					return;
+				}
 				for (int i = 0; i < 4; i++) {
-					if (currentSign < infoSigns.size()) {
+					if (currentSign < signsToUpdate.size()) {
 						InfoSign infoSign = signsToUpdate.get(currentSign);
 						if (infoSign.testData()) {
 							infoSign.update();
