@@ -59,11 +59,11 @@ public class Repairsigns {
 								String objectName = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
 								objectName = dh.fixName(objectName);
 								if (dh.objectTest(objectName)) {
-									String ttype = ChatColor.stripColor(s.getLine(2).trim().replace(":", ""));
-									if (ttype.contains("S") || ttype.contains("s")) {
+									String ttype = ChatColor.stripColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
+									if (ttype.startsWith("s:")) {
 										ttype = "SB";
 									}
-									SignType stype = SignType.fromString(ttype);
+									SignType stype = SignType.fromString(ttype.replace(":", ""));
 									String type = null;
 									if (stype != null) {
 										type = stype.toString();
