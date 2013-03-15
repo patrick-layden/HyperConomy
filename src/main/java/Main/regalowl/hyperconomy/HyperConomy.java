@@ -57,7 +57,7 @@ public class HyperConomy extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		shutDown();
+		shutDown(false);
 	}
 
 	public void onDataLoad() {
@@ -85,6 +85,7 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public void initialize() {
+		HandlerList.unregisterAll(this);
 		hc = this;
 		playerLock = false;
 		fullLock = false;
@@ -154,7 +155,7 @@ public class HyperConomy extends JavaPlugin {
 		}
 	}
 
-	public void shutDown() {
+	public void shutDown(boolean protect) {
 		if (df != null) {
 			df.shutDown();
 		}
@@ -180,6 +181,9 @@ public class HyperConomy extends JavaPlugin {
 		}
 		getServer().getScheduler().cancelTasks(this);
 		clearData();
+		if (protect) {
+			new DisabledProtection();
+		}
 	}
 	
 	public void clearData() {
@@ -258,7 +262,7 @@ public class HyperConomy extends JavaPlugin {
 							sender.sendMessage(L.get("SHOP_LOCKED"));
 							playerLock = true;
 							fullLock = true;
-							shutDown();
+							shutDown(true);
 							return true;
 						}
 					}
@@ -310,7 +314,7 @@ public class HyperConomy extends JavaPlugin {
 			log.info(L.get("BAD_YMLFILE_DETECTED"));
 			playerLock = true;
 			fullLock = true;
-			shutDown();
+			shutDown(true);
 		}
 	}
 
@@ -322,7 +326,7 @@ public class HyperConomy extends JavaPlugin {
 			if (!shuttingDown) {
 				shuttingDown = true;
 				log.severe("HyperConomy is experiencing a massive amount of errors...shutting down....");
-				shutDown();
+				shutDown(true);
 				getPluginLoader().disablePlugin(this);
 			}
 		}
