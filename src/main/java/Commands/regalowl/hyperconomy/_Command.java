@@ -39,7 +39,7 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("value")) {
 			new Value(args, sender, playerecon);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("hb") && (player != null)) {
+		} else if (cmd.getName().equalsIgnoreCase("heldbuy") && (player != null)) {
 			new Hb(args, player, playerecon);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("xpinfo") && (player != null)) {
@@ -48,10 +48,10 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("buyid") && (player != null)) {
 			new Buyid(args, player);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("hs") && (player != null)) {
+		} else if (cmd.getName().equalsIgnoreCase("heldsell") && (player != null)) {
 			new Hs(args, player);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("hv") && (player != null)) {
+		} else if (cmd.getName().equalsIgnoreCase("heldvalue") && (player != null)) {
 			new Hv(args, player, playerecon);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("settax")) {

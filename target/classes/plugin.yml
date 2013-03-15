@@ -21,21 +21,21 @@ commands:
       permission: hyperconomy.value
       permission-message: You don't have permission to do this.
       aliases: [vl]
-   hv:
+   heldvalue:
       description: Gets information about the value of the item you're holding.
       permission: hyperconomy.value
       permission-message: You don't have permission to do this.
-      aliases: [heldvalue]
-   hs:
+      aliases: [hv]
+   heldsell:
       description: Sells an amount of the item you're holding.
       permission: hyperconomy.sell
       permission-message: You don't have permission to do this.
-      aliases: [heldsell]
-   hb:
+      aliases: [hs]
+   heldbuy:
       description: Buys an amount of the item you're holding.
       permission: hyperconomy.buy
       permission-message: You don't have permission to do this.
-      aliases: [heldbuy]
+      aliases: [hb]
    buyid:
       description: Buys an amount of an item with the chosen id and damage value.
       permission: hyperconomy.buy
