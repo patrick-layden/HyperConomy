@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,13 +27,11 @@ public class HyperWebAPI extends AbstractHandler {
 
 	/**
 	 * Constructor
-	 * @param hyc
-	 * @param c
-	 * @param hyws
 	 */
-	public HyperWebAPI(HyperConomy hyc, Calculation c, HyperWebStart hyws) {
+	public HyperWebAPI() {
 		
 		//Add classes for the API
+		classes.put("HGeneral", HyperAPI.class);
 		classes.put("HEcon", HyperEconAPI.class);
 		classes.put("HObject", HyperObjectAPI.class);
 	}
@@ -46,7 +45,16 @@ public class HyperWebAPI extends AbstractHandler {
         pBaseRequest.setHandled(true);
 
     	String lUri = pRequest.getRequestURI();
-        pResponse.getWriter().println(getObjects(lUri));
+    	String lReturn  = "";
+    	try {
+    		lReturn = getObjects(lUri);
+    	} catch (Throwable e) {
+    		Writer lWriter = new StringWriter();
+    		PrintWriter lPrintWriter = new PrintWriter(lWriter);
+    		e.printStackTrace(lPrintWriter);
+    		lReturn = lWriter.toString();
+    	}
+        pResponse.getWriter().println(lReturn);
     }
     
     /**
@@ -58,9 +66,16 @@ public class HyperWebAPI extends AbstractHandler {
     	//Find all parts of the URI
     	String[] lParts = pUri.split("/");
     	List<String> lPartList = new ArrayList<String>();
+    	boolean lPassAPI = false;
     	for (String lObj : lParts) {
     		if (lObj.trim().length() > 0) {
-    			lPartList.add(lObj.trim());
+    			if (!lPassAPI) {
+    				if(lObj.trim().equals("API")) {
+    					lPassAPI = true;
+    				}
+    			} else {
+    				lPartList.add(lObj.trim());
+    			}
     		}
     	}
     	
