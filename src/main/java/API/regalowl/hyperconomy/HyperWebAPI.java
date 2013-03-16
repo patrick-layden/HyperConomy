@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 
 public class HyperWebAPI extends AbstractHandler {
@@ -49,10 +52,13 @@ public class HyperWebAPI extends AbstractHandler {
     	try {
     		lReturn = getObjects(lUri);
     	} catch (Throwable e) {
-    		Writer lWriter = new StringWriter();
-    		PrintWriter lPrintWriter = new PrintWriter(lWriter);
-    		e.printStackTrace(lPrintWriter);
-    		lReturn = lWriter.toString();
+    		while (e != null) {
+	    		Writer lWriter = new StringWriter();
+	    		PrintWriter lPrintWriter = new PrintWriter(lWriter);
+	    		e.printStackTrace(lPrintWriter);
+	    		lReturn += lWriter.toString();
+	    		e = e.getCause();
+    		}
     	}
         pResponse.getWriter().println(lReturn);
     }
@@ -61,8 +67,12 @@ public class HyperWebAPI extends AbstractHandler {
      * Execute an treatement
      * @param pUri Uri source
      * @return The text that must be send to the client
+     * @throws InvocationTargetException InvocationTargetException
+     * @throws IllegalAccessException IllegalAccessException
+     * @throws InstantiationException InstantiationException
+     * @throws IllegalArgumentException IllegalArgumentException
      */
-    private String getObjects(String pUri) {
+    private String getObjects(String pUri) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
     	//Find all parts of the URI
     	String[] lParts = pUri.split("/");
     	List<String> lPartList = new ArrayList<String>();
@@ -146,86 +156,128 @@ public class HyperWebAPI extends AbstractHandler {
      * @param pMethod Method to call
      * @param pParams Parameters of the method
      * @return the result of the method (or an exception)
+     * @throws IllegalAccessException IllegalAccessException
+     * @throws InstantiationException InstantiationException
+     * @throws InvocationTargetException InvocationTargetException
+     * @throws IllegalArgumentException IllegalArgumentException
      */
-    private String callMethod(String pClass, String pMethod, List<String> pParams) {
+    @SuppressWarnings("rawtypes")
+	private String callMethod(String pClass, String pMethod, List<String> pParams) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     	String lReturn = "";
-    	try {
+		
+		//Get the class
+    	Class<?> lClass = classes.get(pClass);
+    	Method lMethod = null;
+    	
+    	//Search the method
+    	for (Method lMethodTemp : lClass.getMethods()) {
+    		if (lMethodTemp.getName().equalsIgnoreCase(pMethod)) {
+    			lMethod = lMethodTemp;
+    		}
+    	}
+    	
+    	//Create the instance
+    	Object lObject = lClass.newInstance();
+    	
+    	//Table to call the method
+    	Object[] lArgs = new Object[lMethod.getParameterTypes().length];
+    	int lIndex = 0;
+    	
+    	//For each parameter
+    	for (Class<?> lType : lMethod.getParameterTypes()) {
     		
-    		//Get the class
-	    	Class<?> lClass = classes.get(pClass);
-	    	Method lMethod = null;
-	    	
-	    	//Search the method
-	    	for (Method lMethodTemp : lClass.getMethods()) {
-	    		if (lMethodTemp.getName().equalsIgnoreCase(pMethod)) {
-	    			lMethod = lMethodTemp;
-	    		}
-	    	}
-	    	
-	    	//Create the instance
-	    	Object lObject = lClass.newInstance();
-	    	
-	    	//Table to call the method
-	    	Object[] lArgs = new Object[lMethod.getParameterTypes().length];
-	    	int lIndex = 0;
-	    	
-	    	//For each parameter
-	    	for (Class<?> lType : lMethod.getParameterTypes()) {
-	    		
-	    		//It's a String
-	    		if (lType.isAssignableFrom(String.class)) {
-	    			lArgs[lIndex] = pParams.get(lIndex);
-	    		
-	    		} //It's a long
-	    		else if (lType.isAssignableFrom(long.class)) {
-	    			lArgs[lIndex] = Long.parseLong(pParams.get(lIndex));
-	    		} //It's an integer
-	    		else if (lType.isAssignableFrom(int.class)) {
-	    			lArgs[lIndex] = Integer.parseInt(pParams.get(lIndex));
-	    		} //It's a double
-	    		else if (lType.isAssignableFrom(double.class)) {
-	    			lArgs[lIndex] = Double.parseDouble(pParams.get(lIndex));
-	    		} //It's a byte
-	    		else if (lType.isAssignableFrom(byte.class)) {
-	    			lArgs[lIndex] = Byte.parseByte(pParams.get(lIndex));
-	    		} //It's a short
-	    		else if (lType.isAssignableFrom(short.class)) {
-	    			lArgs[lIndex] = Short.parseShort(pParams.get(lIndex));
-	    		} //It's a float
-	    		else if (lType.isAssignableFrom(float.class)) {
-	    			lArgs[lIndex] = Float.parseFloat(pParams.get(lIndex));
-	    		} //It's a boolean
-	    		else if (lType.isAssignableFrom(boolean.class)) {
-	    			lArgs[lIndex] = Boolean.parseBoolean(pParams.get(lIndex));
-	    		} //It's a char
-	    		else if (lType.isAssignableFrom(char.class)) {
-	    			lArgs[lIndex] = new Character(pParams.get(lIndex).charAt(0));
-	    		} //It's a player -> find by name
-	    		else if (lType.isAssignableFrom(Player.class)) {
-	    			lArgs[lIndex] = Bukkit.getPlayer(pParams.get(lIndex));
-	    		} //The type isn't autorized (you must add a new type at this list
-	    		else {
-	    			throw new IllegalArgumentException(pClass + "." + pMethod + "() : arg(" + lIndex + ") isn't autorized! (" + lType.getCanonicalName() + ")");
-	    		}
-	    		
-	    		//Next object
-	    		lIndex++;
-	    	}
-	    	
-	    	//Call the method
-	    	Object lToReturn = lMethod.invoke(lObject, lArgs);
-	    	
-	    	//Change the value to string
-	    	if (lToReturn != null) {
+    		//It's a String
+    		if (lType.isAssignableFrom(String.class)) {
+    			lArgs[lIndex] = pParams.get(lIndex);
+    		
+    		} //It's a long
+    		else if (lType.isAssignableFrom(long.class)) {
+    			lArgs[lIndex] = Long.parseLong(pParams.get(lIndex));
+    		} //It's an integer
+    		else if (lType.isAssignableFrom(int.class)) {
+    			lArgs[lIndex] = Integer.parseInt(pParams.get(lIndex));
+    		} //It's a double
+    		else if (lType.isAssignableFrom(double.class)) {
+    			lArgs[lIndex] = Double.parseDouble(pParams.get(lIndex));
+    		} //It's a byte
+    		else if (lType.isAssignableFrom(byte.class)) {
+    			lArgs[lIndex] = Byte.parseByte(pParams.get(lIndex));
+    		} //It's a short
+    		else if (lType.isAssignableFrom(short.class)) {
+    			lArgs[lIndex] = Short.parseShort(pParams.get(lIndex));
+    		} //It's a float
+    		else if (lType.isAssignableFrom(float.class)) {
+    			lArgs[lIndex] = Float.parseFloat(pParams.get(lIndex));
+    		} //It's a boolean
+    		else if (lType.isAssignableFrom(boolean.class)) {
+    			lArgs[lIndex] = Boolean.parseBoolean(pParams.get(lIndex));
+    		} //It's a char
+    		else if (lType.isAssignableFrom(char.class)) {
+    			lArgs[lIndex] = new Character(pParams.get(lIndex).charAt(0));
+    		} //It's a player -> find by name
+    		else if (lType.isAssignableFrom(Player.class)) {
+    			lArgs[lIndex] = Bukkit.getPlayer(pParams.get(lIndex));
+    		} //The type isn't autorized (you must add a new type at this list
+    		else {
+    			throw new IllegalArgumentException(pClass + "." + pMethod + "() : arg(" + lIndex + ") isn't autorized! (" + lType.getCanonicalName() + ")");
+    		}
+    		
+    		//Next object
+    		lIndex++;
+    	}
+    	
+    	//Call the method
+    	Object lToReturn = lMethod.invoke(lObject, lArgs);
+    	
+    	//Change the value to string
+    	if (lToReturn != null) {
+	    	if (lToReturn instanceof List) {
+	    		lReturn = listToJSON((List)lToReturn).toJSONString();
+	    	} else if (lToReturn instanceof Map) {
+	    		lReturn = mapToJSON((Map)lToReturn).toJSONString();
+	    	} else {
 	    		lReturn = lToReturn.toString();
 	    	}
-    	} catch (Exception e) {
-    		//An exception has been thrown
-    		StringWriter sw = new StringWriter();
-    		PrintWriter psw = new PrintWriter(sw);
-			e.printStackTrace(psw);
-			lReturn = sw.toString();
-		}
+    	}
     	return lReturn;
+    }
+    
+    /**
+     * Transform a map to JSONObject
+     * @param pMap Map to transform
+     * @return the JSONObject
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public JSONObject mapToJSON(Map<?, ?> pMap) {
+    	JSONObject lJsonObject = new JSONObject();
+    	for (Object lKey : pMap.keySet()) {
+    		Object lValue = pMap.get(lKey);
+    		if (lValue instanceof Map) {
+    			lValue = mapToJSON((Map)lValue);
+    		} else if (lValue instanceof List) {
+    			lValue = listToJSON((List)lValue);
+    		}
+    		lJsonObject.put(lKey.toString(), lValue);
+    	}
+    	return lJsonObject;
+    }
+    
+    /**
+     * Transform a list to JSONArray
+     * @param pList list to transform
+     * @return the JSONArray
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public JSONArray listToJSON(List<?> pList) {
+    	JSONArray lJsonArray = new JSONArray();
+    	for (Object lValue : pList) {
+    		if (lValue instanceof Map) {
+    			lValue = mapToJSON((Map)lValue);
+    		} else if (lValue instanceof List) {
+    			lValue = listToJSON((List)lValue);
+    		}
+    		lJsonArray.add(lValue);
+    	}
+    	return lJsonArray;
     }
 }
