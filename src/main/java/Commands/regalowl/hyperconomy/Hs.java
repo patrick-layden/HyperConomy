@@ -27,7 +27,7 @@ public class Hs {
 							if (max.equalsIgnoreCase("max")) {
 								int itmid = player.getItemInHand().getTypeId();
 								int da = calc.getDamageValue(player.getItemInHand());
-								amount = tran.countInvitems(itmid, da, player.getInventory());
+								amount = tran.countItems(itmid, da, player.getInventory());
 							} else {
 								player.sendMessage(L.get("HS_INVALID"));
 								return;

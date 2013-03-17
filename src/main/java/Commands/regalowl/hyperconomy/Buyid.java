@@ -32,7 +32,7 @@ public class Buyid {
 					} else {
 						String nam = ho.getName();
 						if (s.getShop(player).has(nam)) {
-							TransactionResponse response = tran.buy(nam, amount, itd, da, player);
+							TransactionResponse response = tran.buy(ho, amount, player, null);
 							response.sendMessages();
 						} else {
 							player.sendMessage(L.get("CANT_BE_TRADED"));

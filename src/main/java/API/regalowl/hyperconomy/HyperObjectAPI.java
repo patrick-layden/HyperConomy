@@ -306,7 +306,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 	public TransactionResponse buy(Player p, HyperObject o, int amount) {
 		HyperConomy hc = HyperConomy.hc;
 		Transaction tran = hc.getTransaction();
-		return tran.buy(o.getName(), amount, o.getId(), o.getData(), p);
+		return tran.buy(o, amount, p, null);
 	}
 
 	public TransactionResponse sellAll(Player p) {

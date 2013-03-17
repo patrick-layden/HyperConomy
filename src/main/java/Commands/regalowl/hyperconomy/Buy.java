@@ -48,7 +48,7 @@ public class Buy {
 										ItemStack damagestack = damagemd.toItemStack();
 										int space = 0;
 										if (id >= 0) {
-											space = tran.getavailableSpace(id, calc.getDamageValue(damagestack), player);
+											space = tran.getavailableSpace(id, calc.getDamageValue(damagestack), player.getInventory());
 										}
 										amount = space;
 										int shopstock = (int) ho.getStock();
@@ -64,11 +64,12 @@ public class Buy {
 						}
 					}
 					if (sf.itemTest(name)) {
+						HyperObject ho = sf.getHyperObject(name, playerecon);
 						if (s.getShop(player).has(name)) {
 							if (xp) {
 								tran.buyXP(name, amount, player);
 							} else {
-								TransactionResponse response = tran.buy(name, amount, id, data, player);	
+								TransactionResponse response = tran.buy(ho, amount, player, null);	
 								response.sendMessages();
 							}
 						} else {

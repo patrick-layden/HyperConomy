@@ -172,10 +172,11 @@ public class TransactionSign implements Listener {
 									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p).getName()) || p.hasPermission("hyperconomy.shop." + shop.getShop(p).getName() + ".buy")) {
 											if (sf.itemTest(line12)) {
-												int id = sf.getHyperObject(line12, playerecon).getId();
+												HyperObject ho = sf.getHyperObject(line12, playerecon);
+												int id = ho.getId();
 												if (id >= 0) {
 													if (!hc.isLocked()) {
-														TransactionResponse response = tran.buy(line12, amount, id, sf.getHyperObject(line12, playerecon).getData(), p);
+														TransactionResponse response = tran.buy(ho, amount, p, null);
 														response.sendMessages();
 													} else {
 														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
