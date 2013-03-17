@@ -341,8 +341,9 @@ public class HyperObjectAPI implements HyperObjectInterface {
 				availableSubset.add(availableObjects.get(i));
 			}
 		}
-		return null;
+		return availableSubset;
 	}
+	
 	
 	public List<Map<String, String>> getAllStockEconomy(String pEconomy, Player pPlayer) {
 		List<Map<String, String>> lAllStock = new ArrayList<Map<String, String>>();
