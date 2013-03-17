@@ -1,6 +1,8 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -182,4 +184,12 @@ public interface HyperObjectInterface
 	 */
 	@Deprecated
 	double getItemSaleValue(int id, int data, int amount);
+	
+	/**
+	 * Get all objects in an economy
+	 * @param pEconomy Economy name
+	 * @param pPlayer Player
+	 * @return List of each objects with properties
+	 */
+	public List<Map<String, String>> getAllStockEconomy(String pEconomy, Player pPlayer);
 }

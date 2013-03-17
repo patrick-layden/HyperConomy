@@ -1,6 +1,9 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -339,5 +342,41 @@ public class HyperObjectAPI implements HyperObjectInterface {
 			}
 		}
 		return null;
+	}
+	
+	public List<Map<String, String>> getAllStockEconomy(String pEconomy, Player pPlayer) {
+		List<Map<String, String>> lAllStock = new ArrayList<Map<String, String>>();
+		HyperConomy hc = HyperConomy.hc;
+		DataHandler sf = hc.getDataFunctions();
+		List<HyperObject> lObjects = sf.getHyperObjects();
+		// For each object
+		for (HyperObject lObject : lObjects) {
+			// If the object is from the economy
+			if (lObject.getEconomy().equals(pEconomy)) {
+				int lId = lObject.getId();
+				double lStock = lObject.getStock();
+				String lType = lObject.getType();
+				double lMaxStock = lObject.getMaxstock();
+				int lData = lObject.getData();
+				int lDurability = lObject.getDurability();
+				String lName = lObject.getName();
+				double lPurchase = getTruePurchasePrice(lId, lDurability, 1, pEconomy);
+				double lSale = getTrueSaleValue(lId, lDurability, 1, pPlayer);
+
+				// Add information to MAP
+				Map<String, String> lMapObject = new HashMap<String, String>();
+				lMapObject.put("id", "" + lId);
+				lMapObject.put("stock", "" + lStock);
+				lMapObject.put("type", lType);
+				lMapObject.put("maxStock", "" + lMaxStock);
+				lMapObject.put("purchasePrice", "" + lPurchase);
+				lMapObject.put("salePrice", "" + lSale);
+				lMapObject.put("data", "" + lData);
+				lMapObject.put("durability", "" + lDurability);
+				lMapObject.put("name", "" + lName);
+				lAllStock.add(lMapObject);
+			}
+		}
+		return lAllStock;
 	}
 }
