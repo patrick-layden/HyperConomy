@@ -175,7 +175,8 @@ public class TransactionSign implements Listener {
 												int id = sf.getHyperObject(line12, playerecon).getId();
 												if (id >= 0) {
 													if (!hc.isLocked()) {
-														tran.buy(line12, amount, id, sf.getHyperObject(line12, playerecon).getData(), p);
+														TransactionResponse response = tran.buy(line12, amount, id, sf.getHyperObject(line12, playerecon).getData(), p);
+														response.sendMessages();
 													} else {
 														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 													}
@@ -222,7 +223,8 @@ public class TransactionSign implements Listener {
 												int id = sf.getHyperObject(line12, playerecon).getId();
 												if (id >= 0) {
 													if (!hc.isLocked()) {
-														tran.sell(line12, id, sf.getHyperObject(line12, playerecon).getData(), amount, p);
+														TransactionResponse response = tran.sell(line12, id, sf.getHyperObject(line12, playerecon).getData(), amount, p);
+														response.sendMessages();
 													} else {
 														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 													}

@@ -10,10 +10,11 @@ public class Itemsettings {
 		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
+			HyperPlayer hp = sf.getHyperPlayer(player);
 			if (args.length == 0 && player != null) {
 				int itd = player.getItemInHand().getTypeId();
 				int da = calc.getDamageValue(player.getItemInHand());
-				HyperObject hob = hc.getDataFunctions().getHyperObject(itd, da);
+				HyperObject hob = hc.getDataFunctions().getHyperObject(itd, da, hp.getEconomy());
 				if (hob == null) {
 					sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 				} else {

@@ -517,9 +517,10 @@ public class ChestShop implements Listener{
 				    			if (icevent.isShiftClick()) {
 				    				
 				    				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
+				    				HyperPlayer hp = dh.getHyperPlayer(p);
 					    			if (!ench.hasenchants(icevent.getCurrentItem())) {
 					    				
-					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
+					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
 					    				int id = icevent.getCurrentItem().getTypeId();
 					    				int data =  icevent.getCurrentItem().getDurability();
 					    				int camount = icevent.getCurrentItem().getAmount();
@@ -583,8 +584,9 @@ public class ChestShop implements Listener{
 					    			
 					    		} else if (icevent.isLeftClick()) {
 					    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
+					    			HyperPlayer hp = dh.getHyperPlayer(p);
 					    			if (!ench.hasenchants(icevent.getCurrentItem())) {
-					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
+					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
 					    				int id = icevent.getCurrentItem().getTypeId();
 					    				int data =  icevent.getCurrentItem().getDurability();
 					    				
@@ -626,7 +628,7 @@ public class ChestShop implements Listener{
 						    			}
 					    			} else {
 
-					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
+					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
 						    				
 							    			if (slot < 27 && (ho != null || icevent.getCurrentItem().getType().equals(Material.ENCHANTED_BOOK))) {
 							    				
@@ -668,8 +670,9 @@ public class ChestShop implements Listener{
 					    			return;
 					    		} else if (icevent.isRightClick()) {
 					    			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
+					    			HyperPlayer hp = dh.getHyperPlayer(p);
 					    			if (!ench.hasenchants(icevent.getCurrentItem())) {
-					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
+					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
 					    				
 					    				int id = icevent.getCurrentItem().getTypeId();
 					    				int data =  icevent.getCurrentItem().getDurability();
@@ -727,7 +730,7 @@ public class ChestShop implements Listener{
 						    				
 						    			}
 					    			} else {				    				
-					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability());
+					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
 						    				
 							    			if (slot < 27 && (ho != null || icevent.getCurrentItem().getType().equals(Material.ENCHANTED_BOOK))) {
 							    				if (buy) {	

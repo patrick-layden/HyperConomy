@@ -16,11 +16,12 @@ public class Iteminfo {
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
 		try {		
+			HyperPlayer hp = dh.getHyperPlayer(player);
 			if (args.length == 1) {
 				int givenid = Integer.parseInt(args[0]);
 				int dv = 0;
 				int newdat = calc.newData(givenid, dv);
-				HyperObject ho = dh.getHyperObject(givenid, newdat);
+				HyperObject ho = dh.getHyperObject(givenid, newdat, hp.getEconomy());
 				String nam = "";
 				if (ho == null) {
 					nam = "Item not in database.";
@@ -35,7 +36,7 @@ public class Iteminfo {
 				int givenid = Integer.parseInt(args[0]);;
 				int givendam = Integer.parseInt(args[1]);
 				int newdat = calc.newData(givenid, givendam);
-				HyperObject ho = dh.getHyperObject(givenid, newdat);
+				HyperObject ho = dh.getHyperObject(givenid, newdat, hp.getEconomy());
 				String nam = "";
 				if (ho == null) {
 					nam = "Item not in database.";
@@ -50,7 +51,7 @@ public class Iteminfo {
 			String mat = player.getItemInHand().getType().toString();
 			int itemid = player.getItemInHand().getTypeId();
 			int dv = calc.getDamageValue(player.getItemInHand());
-			HyperObject ho = dh.getHyperObject(itemid, dv);
+			HyperObject ho = dh.getHyperObject(itemid, dv, hp.getEconomy());
 			String nam = "";
 			if (ho == null) {
 				nam = "Item not in database.";

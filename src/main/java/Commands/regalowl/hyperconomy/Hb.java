@@ -41,7 +41,7 @@ public class Hb {
 						}
 						int itd = player.getItemInHand().getTypeId();
 						int da = calc.getDamageValue(player.getItemInHand());
-						HyperObject ho = sf.getHyperObject(itd, da);
+						HyperObject ho = sf.getHyperObject(itd, da, playerecon);
 						if (ho == null) {
 							player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 						} else {
@@ -54,7 +54,8 @@ public class Hb {
 								amount = shopstock;
 							}
 							if (s.getShop(player).has(nam)) {
-								tran.buy(nam, (int) Math.rint(amount), itd, da, player);
+								TransactionResponse response = tran.buy(nam, (int) Math.rint(amount), itd, da, player);
+								response.sendMessages();
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));
 							}

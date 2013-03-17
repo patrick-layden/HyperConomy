@@ -36,8 +36,9 @@ public class Transaction {
 	 * 
 	 */
 	
-	public void buy(String name, int amount, int id, int data, Player p) {
+	public TransactionResponse buy(String name, int amount, int id, int data, Player p) {
 		try {
+			TransactionResponse response = new TransactionResponse(p);
 			DataHandler sf = hc.getDataFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction ench = hc.getETransaction();
@@ -47,8 +48,9 @@ public class Transaction {
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = sf.getHyperPlayer(p).getEconomy();
+			HyperObject ho = sf.getHyperObject(name, playerecon);
 			if (amount > 0) {
-				double shopstock = sf.getHyperObject(name, playerecon).getStock();
+				double shopstock = ho.getStock();
 				if (shopstock >= amount) {
 					if (id >= 0) {
 						double price = calc.getCost(name, amount, playerecon);
@@ -58,8 +60,8 @@ public class Transaction {
 							int space = getavailableSpace(id, data, p);
 							if (space >= amount) {
 								addboughtItems(amount, id, data, p);
-								if (!Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-									sf.getHyperObject(name, playerecon).setStock(shopstock - amount);
+								if (!Boolean.parseBoolean(ho.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+									ho.setStock(shopstock - amount);
 								}
 								acc.withdraw(price, p);
 								acc.depositShop(price);
@@ -67,14 +69,13 @@ public class Transaction {
 									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 									acc.setBalance(0, globalaccount);
 								}
-								p.sendMessage(L.get("LINE_BREAK"));
-								p.sendMessage(L.f(L.get("PURCHASE_MESSAGE"), amount, price, name, calc.twoDecimals(taxpaid)));
-								p.sendMessage(L.get("LINE_BREAK"));
-
+								
+								response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, name, calc.twoDecimals(taxpaid)), price, ho);
+								response.setSuccessful();
 								String type = "dynamic";
-								if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation())) {
+								if (Boolean.parseBoolean(ho.getInitiation())) {
 									type = "initial";
-								} else if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic())) {
+								} else if (Boolean.parseBoolean(ho.getIsstatic())) {
 									type = "static";
 								}
 								log.writeSQLLog(p.getName(), "purchase", name, (double) amount, calc.twoDecimals(price - taxpaid), calc.twoDecimals(taxpaid), playerecon, type);
@@ -82,26 +83,34 @@ public class Transaction {
 								isign.updateSigns();
 								not.setNotify(hc, calc, ench, name, null, playerecon);
 								not.sendNotification();
+								return response;
 							} else {
-								p.sendMessage(L.f(L.get("ONLY_ROOM_TO_BUY"), space, name));
+								response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, name), ho);
+								return response;
 							}
 						} else {
-							p.sendMessage(L.get("INSUFFICIENT_FUNDS"));
+							response.addFailed(L.get("INSUFFICIENT_FUNDS"), ho);
+							return response;
 						}
 					} else {
-						p.sendMessage(L.f(L.get("CANNOT_BE_PURCHASED_WITH"), name));
+						response.addFailed(L.f(L.get("CANNOT_BE_PURCHASED_WITH"), name), ho);
+						return response;
 					}
 				} else {
-					p.sendMessage(L.f(L.get("THE_SHOP_DOESNT_HAVE_ENOUGH"), name));
+					response.addFailed(L.f(L.get("THE_SHOP_DOESNT_HAVE_ENOUGH"), name), ho);
+					return response;
 				}
 			} else {
-				p.sendMessage(L.f(L.get("CANT_BUY_LESS_THAN_ONE"), name));
+				response.addFailed(L.f(L.get("CANT_BUY_LESS_THAN_ONE"), name), ho);
+				return response;
 			}
 		} catch (Exception e) {
 			String info = "Transaction buy() passed values name='" + name + "', player='" + p.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
 			new HyperError(e, info);
+			return new TransactionResponse(p);
 		}
 	}
+	
 
 	/**
 	 * 
@@ -109,8 +118,10 @@ public class Transaction {
 	 * This function handles the sale of items.
 	 * 
 	 */
-	public void sell(String name, int id, int data, int amount, Player p) {
+	
+	public TransactionResponse sell(String name, int id, int data, int amount, Player p) {
 		try {
+			TransactionResponse response = new TransactionResponse(p);
 			DataHandler sf = hc.getDataFunctions();
 			Calculation calc = hc.getCalculation();
 			ETransaction ench = hc.getETransaction();
@@ -120,6 +131,7 @@ public class Transaction {
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = sf.getHyperPlayer(p).getEconomy();
+			HyperObject ho = sf.getHyperObject(name, playerecon);
 			if (amount > 0) {
 				if (id >= 0) {
 					int totalitems = countInvitems(id, data, p);
@@ -128,8 +140,9 @@ public class Transaction {
 						if (sellRemaining) {
 							amount = totalitems;
 						} else {
-							p.sendMessage(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name));
-							return;
+							
+							response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), ho);
+							return response;	
 						}
 					}
 					if (amount > 0) {
@@ -142,8 +155,8 @@ public class Transaction {
 							int maxi = getmaxInitial(name, p);
 							boolean isstatic = false;
 							boolean isinitial = false;
-							isinitial = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation());
-							isstatic = Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic());
+							isinitial = Boolean.parseBoolean(ho.getInitiation());
+							isstatic = Boolean.parseBoolean(ho.getIsstatic());
 							if ((amount > maxi) && !isstatic && isinitial) {
 								amount = maxi;
 								price = calc.getValue(name, amount, p);
@@ -155,13 +168,13 @@ public class Transaction {
 								}
 								removesoldItems(id, data, amount, p);
 								double shopstock = 0;
-								shopstock = sf.getHyperObject(name, playerecon).getStock();
-								if (!Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-									sf.getHyperObject(name, playerecon).setStock(shopstock + amount);
+								shopstock = ho.getStock();
+								if (!Boolean.parseBoolean(ho.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+									ho.setStock(shopstock + amount);
 								}
 								int maxi2 = getmaxInitial(name, p);
 								if (maxi2 == 0) {
-									sf.getHyperObject(name, playerecon).setInitiation("false");
+									ho.setInitiation("false");
 								}
 								double salestax = calc.getSalesTax(p, price);
 								acc.deposit(price - salestax, p);
@@ -170,40 +183,126 @@ public class Transaction {
 									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 									acc.setBalance(0, globalaccount);
 								}
-								p.sendMessage(L.get("LINE_BREAK"));
-								p.sendMessage(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)));
-								p.sendMessage(L.get("LINE_BREAK"));
+								
+								response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)), price - salestax, ho);
+								response.setSuccessful();
 								World w = p.getWorld();
 								w.playEffect(p.getLocation(), Effect.SMOKE, 4);
 
 								String type = "dynamic";
-								if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getInitiation())) {
+								if (Boolean.parseBoolean(ho.getInitiation())) {
 									type = "initial";
-								} else if (Boolean.parseBoolean(sf.getHyperObject(name, playerecon).getIsstatic())) {
+								} else if (Boolean.parseBoolean(ho.getIsstatic())) {
 									type = "static";
 								}
 								log.writeSQLLog(p.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
 								isign.updateSigns();
 								not.setNotify(hc, calc, ench, name, null, playerecon);
 								not.sendNotification();
+								return response;
 							} else {
-								p.sendMessage(L.get("SHOP_NOT_ENOUGH_MONEY"));
+								response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), ho);
+								return response;	
 							}
 						} else {
-							p.sendMessage(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), sf.getHyperObject(name, playerecon).getStock(), name));
+							response.addFailed(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), ho.getStock(), name), ho);
+							return response;	
 						}
 					} else {
-						p.sendMessage(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name));
+						response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), ho);
+						return response;	
 					}
 				} else {
-					p.sendMessage(L.f(L.get("CANNOT_BE_SOLD_WITH"), name));
+					response.addFailed(L.f(L.get("CANNOT_BE_SOLD_WITH"), name), ho);
+					return response;	
 				}
 			} else {
-				p.sendMessage(L.f(L.get("CANT_SELL_LESS_THAN_ONE"), name));
+				response.addFailed(L.f(L.get("CANT_SELL_LESS_THAN_ONE"), name), ho);
+				return response;	
 			}
 		} catch (Exception e) {
 			String info = "Transaction sell() passed values name='" + name + "', player='" + p.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
 			new HyperError(e, info);
+			return new TransactionResponse(p);
+		}
+	}
+	
+	
+	
+	public TransactionResponse sellAll(Player player) {
+		try {
+			DataHandler sf = hc.getDataFunctions();
+			Calculation calc = hc.getCalculation();
+			ETransaction ench = hc.getETransaction();
+			LanguageFile L = hc.getLanguageFile();
+			TransactionResponse response = new TransactionResponse(player);
+			response.setSuccessful();
+			ShopFactory s = hc.getShopFactory();
+			Inventory invent = player.getInventory();
+			int heldslot = player.getInventory().getHeldItemSlot();
+			int itd = 0;
+			String playerecon = sf.getHyperPlayer(player).getEconomy();
+			// Sells the held item slot first.
+			if (invent.getItem(heldslot) != null) {
+				itd = invent.getItem(heldslot).getTypeId();
+			}
+			if (itd != 0) {
+				int da = calc.getDamageValue(invent.getItem(heldslot));
+				HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, playerecon);
+				int amount = countInvitems(itd, da, player);
+				if (ho != null) {
+					String nam = ho.getName();
+					if (s.getShop(player).has(nam)) {
+						TransactionResponse sresponse = sell(nam, itd, da, amount, player);
+						if (sresponse.successful()) {
+							response.addSuccess(sresponse.getMessage(), sresponse.getPrice(), ho);
+						} else {
+							response.addFailed(sresponse.getMessage(), ho);
+						}
+					} else {
+						response.addFailed(L.get("CANT_BE_TRADED"), null);
+					}
+				} else {
+					
+				}
+			}
+			// Sells remaining items after the held slot.
+			for (int slot = 0; slot < 36; slot++) {
+				if (invent.getItem(slot) == null) {
+					itd = 0;
+				} else {
+					itd = invent.getItem(slot).getTypeId();
+				}
+				if (itd != 0) {
+					ItemStack itemn = invent.getItem(slot);
+					int da = calc.getDamageValue(invent.getItem(slot));
+					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, playerecon);
+					if (ench.hasenchants(itemn) == false) {
+						if (ho != null) {
+							String nam = ho.getName();
+							int amount = countInvitems(itd, da, player);
+							if (s.getShop(player).has(nam)) {
+								TransactionResponse sresponse = sell(nam, itd, da, amount, player);
+								if (sresponse.successful()) {
+									response.addSuccess(sresponse.getMessage(), sresponse.getPrice(), ho);
+								} else {
+									response.addFailed(sresponse.getMessage(), ho);
+								}
+							} else {
+								response.addFailed(L.get("CANT_BE_TRADED"), ho);
+							}
+						} else {
+							response.addFailed(L.get("CANT_BE_TRADED"), null);
+						}
+					} else {
+						response.addFailed(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"), ho);
+					}
+				}
+			}
+			return response;
+		} catch (Exception e) {
+			new HyperError(e);
+			return new TransactionResponse(player);
 		}
 	}
 
@@ -317,7 +416,7 @@ public class Transaction {
 	 * 
 	 */
 	@SuppressWarnings("deprecation")
-	private void addboughtItems(int amount, int itd, int idata, Player p) {
+	public void addboughtItems(int amount, int itd, int idata, Player p) {
 		Calculation calc = hc.getCalculation();
 		try {
 			int id = itd;

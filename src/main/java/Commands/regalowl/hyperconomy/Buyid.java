@@ -12,6 +12,7 @@ public class Buyid {
 		int itd;
 		int da = 0;
 		try {
+			String playerecon = hc.getDataFunctions().getHyperPlayer(player).getEconomy();
 			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					if (args.length == 2) {
@@ -25,13 +26,14 @@ public class Buyid {
 						player.sendMessage(L.get("BUYID_INVALID"));
 						return;
 					}
-					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da);
+					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, playerecon);
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
 						String nam = ho.getName();
 						if (s.getShop(player).has(nam)) {
-							tran.buy(nam, amount, itd, da, player);
+							TransactionResponse response = tran.buy(nam, amount, itd, da, player);
+							response.sendMessages();
 						} else {
 							player.sendMessage(L.get("CANT_BE_TRADED"));
 						}

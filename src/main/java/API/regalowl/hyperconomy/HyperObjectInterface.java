@@ -1,6 +1,8 @@
 package regalowl.hyperconomy;
 
+import java.util.ArrayList;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 //UNDER CONSTRUCTION
 
@@ -138,6 +140,24 @@ public interface HyperObjectInterface
 	public void setInitiation(String name, String economy, String newinitiation);
 
 	public void setStartPrice(String name, String economy, double newstartprice);
+	
+	
+	
+	/**
+	 * @param ItemStack stack
+	 * @param Player player
+	 * @return They HyperObject representing the Minecraft item.  Returns null if there is no HyperObject for the item.
+	 */
+	public HyperObject getHyperObject(ItemStack stack, Player player);
+	
+	public TransactionResponse buy(Player p, HyperObject o, int amount);
+	
+	public TransactionResponse sellAll(Player p);
+	
+	public ArrayList<HyperObject> getAvailableObjects(Player p);
+	
+	public ArrayList<HyperObject> getAvailableObjects(Player p, int startingPosition, int limit);
+	
 
 	/**
 	 * @deprecated The economy should be specified for future versions of the

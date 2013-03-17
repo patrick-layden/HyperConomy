@@ -146,6 +146,7 @@ LOG_BUY_ENCHANTMENT: %y bought %n for %c%p. [Static Price=%za][Initial Price=%zb
 LOG_SELL_ENCHANTMENT: %y sold %n for %c%p. [Static Price=%za][Initial Price=%zb]
 LOG_BUY_CHEST_ENCHANTMENT: %y bought %n from %zc for %c%p. [Static Price=%za][Initial Price=%zb]
 SELL_INVALID: &4Invalid parameters. Use /sell [name] (amount or 'max').
+ALL_ITEMS_SOLD: &9All items sold successfully.
 ONE_OR_MORE_CANT_BE_TRADED: &9Sorry, one or more of those items cannot be traded at this shop.
 CANT_BUY_SELL_ENCHANTED_ITEMS: &9You cannot buy or sell enchanted items!
 SELLALL_INVALID: &4Invalid Parameters. Use /sellall
@@ -388,3 +389,4 @@ SETPASSWORD_INVALID: &4Invalid Parameters.  Use /setpassword [password]
 ECONOMY_IMPORTED: &6All objects successfully imported from YML!
 IMPORT_PROCEED: &cThe will erase all object data in your HyperConomy database (hyperconomy_objects table), type '/importfromyml [economy] confirm' to proceed!
 IMPORTFROMYML_INVALID: &4Invalid parameters.  Use /importfromyml [economy]
+SOLD_ITEMS_FOR: &9&oYou sold your items for &a&o%c%v&9.

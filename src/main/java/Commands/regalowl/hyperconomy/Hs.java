@@ -11,8 +11,10 @@ public class Hs {
 		Transaction tran = hc.getTransaction();
 		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
+		DataHandler dh = hc.getDataFunctions();
 		int amount;
 		try {
+			HyperPlayer hp = dh.getHyperPlayer(player);
 			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					if (args.length == 0) {
@@ -34,7 +36,7 @@ public class Hs {
 					}
 					int itd = player.getItemInHand().getTypeId();
 					int da = calc.getDamageValue(player.getItemInHand());
-					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da);
+					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, hp.getEconomy());
 					if (ho == null) {
 						player.sendMessage(L.get("CANT_BE_TRADED"));
 					} else {
@@ -42,7 +44,8 @@ public class Hs {
 						ItemStack iinhand = player.getItemInHand();
 						if (ench.hasenchants(iinhand) == false) {
 							if (s.getShop(player).has(nam)) {
-								tran.sell(nam, itd, da, amount, player);
+								TransactionResponse response = tran.sell(nam, itd, da, amount, player);
+								response.sendMessages();
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));
 							}

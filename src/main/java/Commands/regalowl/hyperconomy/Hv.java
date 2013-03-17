@@ -15,8 +15,10 @@ public class Hv {
 		Transaction tran = hc.getTransaction();
 		ETransaction ench = hc.getETransaction();
 		ShopFactory s = hc.getShopFactory();
+		DataHandler dh = hc.getDataFunctions();
 		int amount;
 		try {
+			HyperPlayer hp = dh.getHyperPlayer(player);
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			if ((requireShop && s.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				ItemStack iinhand = player.getItemInHand();
@@ -27,7 +29,7 @@ public class Hv {
 					}
 					int itd = player.getItemInHand().getTypeId();
 					int da = calc.getDamageValue(player.getItemInHand());
-					HyperObject ho = sf.getHyperObject(itd, da);
+					HyperObject ho = sf.getHyperObject(itd, da, hp.getEconomy());
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {

@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+import java.util.ArrayList;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,7 +11,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		}
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability, economy);
 		if (ho == null) {
 			return 0.0;
 		}
@@ -26,7 +27,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		}
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability, economy);
 		if (ho == null) {
 			return 0.0;
 		}
@@ -48,7 +49,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 			durabilityPercent = 1.0 - ((double) durability / item.getType().getMaxDurability());
 			durability = 0;
 		}
-		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability, economy);
 		if (ho == null) {
 			return 0.0;
 		}
@@ -69,7 +70,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 			durabilityPercent = 1.0 - ((double) durability / item.getType().getMaxDurability());
 			durability = 0;
 		}
-		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability, hc.getDataFunctions().getHyperPlayer(player).getEconomy());
 		if (ho == null) {
 			return 0.0;
 		}
@@ -264,7 +265,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 	public double getItemPurchasePrice(int id, int data, int amount) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		HyperObject ho = hc.getDataFunctions().getHyperObject(id, data);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, data, "default");
 		if (ho == null) {
 			return 0.0;
 		}
@@ -277,7 +278,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 	public double getItemSaleValue(int id, int data, int amount) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		HyperObject ho = hc.getDataFunctions().getHyperObject(id, data);
+		HyperObject ho = hc.getDataFunctions().getHyperObject(id, data, "default");
 		if (ho == null) {
 			return 0.0;
 		}
@@ -285,5 +286,58 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		Double value = calc.getTvalue(name, amount, "default");
 		value = calc.twoDecimals(value);
 		return value;
+	}
+
+	public HyperObject getHyperObject(ItemStack stack, Player player) {
+		HyperConomy hc = HyperConomy.hc;
+		Calculation calc = hc.getCalculation();
+		DataHandler dh = hc.getDataFunctions();
+		String economy = dh.getHyperPlayer(player).getEconomy();
+		int id = stack.getTypeId();
+		int damageValue = calc.getDamageValue(stack);
+		HyperObject ho = dh.getHyperObject(id, damageValue, economy);
+		return ho;
+	}
+
+	public TransactionResponse buy(Player p, HyperObject o, int amount) {
+		HyperConomy hc = HyperConomy.hc;
+		Transaction tran = hc.getTransaction();
+		return tran.buy(o.getName(), amount, o.getId(), o.getData(), p);
+	}
+
+	public TransactionResponse sellAll(Player p) {
+		HyperConomy hc = HyperConomy.hc;
+		Transaction tran = hc.getTransaction();
+		return tran.sellAll(p);
+	}
+
+	public ArrayList<HyperObject> getAvailableObjects(Player p) {
+		HyperConomy hc = HyperConomy.hc;
+		DataHandler dh = hc.getDataFunctions();
+		ShopFactory sf = hc.getShopFactory();
+		HyperPlayer hp = dh.getHyperPlayer(p);
+		String economy = hp.getEconomy();
+		ArrayList<HyperObject> hyperObjects = dh.getHyperObjects(economy);
+		ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
+		Shop s = sf.getShop(p);
+		if (s != null) {
+			for (HyperObject ho:hyperObjects) {
+				if (s.has(ho.getName())) {
+					availableObjects.add(ho);
+				}
+			}
+		}
+		return availableObjects;
+	}
+
+	public ArrayList<HyperObject> getAvailableObjects(Player p, int startingPosition, int limit) {
+		ArrayList<HyperObject> availableObjects = getAvailableObjects(p);
+		ArrayList<HyperObject> availableSubset = new ArrayList<HyperObject>();
+		for (int i = startingPosition; i <= limit; i++) {
+			if (availableObjects.indexOf(i) != -1) {
+				availableSubset.add(availableObjects.get(i));
+			}
+		}
+		return null;
 	}
 }

@@ -53,7 +53,8 @@ public class Sell {
 							if (xp) {
 								tran.sellXP(name, amount, player);
 							} else {
-								tran.sell(name, ho.getId(), ho.getData(), amount, player);
+								TransactionResponse response = tran.sell(name, ho.getId(), ho.getData(), amount, player);
+								response.sendMessages();
 							}
 						} else {
 							player.sendMessage(L.get("CANT_BE_TRADED"));

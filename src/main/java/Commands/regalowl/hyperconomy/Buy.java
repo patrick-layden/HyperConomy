@@ -68,7 +68,8 @@ public class Buy {
 							if (xp) {
 								tran.buyXP(name, amount, player);
 							} else {
-								tran.buy(name, amount, id, data, player);		
+								TransactionResponse response = tran.buy(name, amount, id, data, player);	
+								response.sendMessages();
 							}
 						} else {
 							player.sendMessage(L.get("CANT_BE_TRADED"));

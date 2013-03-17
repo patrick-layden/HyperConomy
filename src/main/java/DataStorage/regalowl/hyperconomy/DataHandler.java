@@ -32,6 +32,9 @@ public class DataHandler implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (!objectsLoaded) {
+			return;
+		}
 		String name = event.getPlayer().getName();
 		if (!hasAccount(name)) {
 			addPlayer(name);
@@ -40,6 +43,9 @@ public class DataHandler implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
+		if (!objectsLoaded) {
+			return;
+		}
 		Location l = event.getPlayer().getLocation();
 		String name = event.getPlayer().getName();
 		if (!hasAccount(name)) {
@@ -63,9 +69,9 @@ public class DataHandler implements Listener {
 	*/
 	
 	
-	public HyperObject getHyperObject(int id, int data) {
+	public HyperObject getHyperObject(int id, int data, String economy) {
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getId() == id && ho.getData() == data) {
+			if (ho.getId() == id && ho.getData() == data && ho.getEconomy().equalsIgnoreCase(economy)) {
 				return ho;
 			}
 		}
@@ -85,6 +91,16 @@ public class DataHandler implements Listener {
 		ArrayList<HyperObject> hos = new ArrayList<HyperObject>();
 		for (HyperObject ho:hyperObjects.values()) {
 			hos.add(ho);
+		}
+		return hos;
+	}
+	
+	public ArrayList<HyperObject> getHyperObjects(String economy) {
+		ArrayList<HyperObject> hos = new ArrayList<HyperObject>();
+		for (HyperObject ho:hyperObjects.values()) {
+			if (ho.getEconomy().equalsIgnoreCase(economy)) {
+				hos.add(ho);
+			}
 		}
 		return hos;
 	}
