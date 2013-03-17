@@ -38,7 +38,7 @@ public class Sell {
 									if (xp) {
 										amount = calc.gettotalxpPoints(player);
 									} else {
-										amount = tran.countInvitems(ho.getId(), ho.getData(), player);	
+										amount = tran.countInvitems(ho.getId(), ho.getData(), player.getInventory());	
 									}
 								} else {
 									player.sendMessage(L.get("SELL_INVALID"));
@@ -53,7 +53,7 @@ public class Sell {
 							if (xp) {
 								tran.sellXP(name, amount, player);
 							} else {
-								TransactionResponse response = tran.sell(name, ho.getId(), ho.getData(), amount, player);
+								TransactionResponse response = tran.sell(ho, amount, player, null);
 								response.sendMessages();
 							}
 						} else {

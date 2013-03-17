@@ -36,7 +36,7 @@ public class Hv {
 						String nam = ho.getName();
 						double val = calc.getValue(nam, amount, player);
 						if (calc.isDurable(itd) && amount > 1) {
-							int numberofitem = tran.countInvitems(itd, player.getItemInHand().getData().getData(), player);
+							int numberofitem = tran.countInvitems(itd, player.getItemInHand().getData().getData(), player.getInventory());
 							if (amount - numberofitem > 0) {
 								int addamount = amount - numberofitem;
 								val = val + calc.getTvalue(nam, addamount, playerecon);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 //UNDER CONSTRUCTION
@@ -155,6 +156,8 @@ public interface HyperObjectInterface
 	public TransactionResponse buy(Player p, HyperObject o, int amount);
 	
 	public TransactionResponse sellAll(Player p);
+	
+	public TransactionResponse sellAll(Player p, Inventory inventory);
 	
 	public ArrayList<HyperObject> getAvailableObjects(Player p);
 	

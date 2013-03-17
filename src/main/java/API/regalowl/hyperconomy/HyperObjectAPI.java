@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class HyperObjectAPI implements HyperObjectInterface {
@@ -311,7 +312,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 	public TransactionResponse sellAll(Player p) {
 		HyperConomy hc = HyperConomy.hc;
 		Transaction tran = hc.getTransaction();
-		return tran.sellAll(p);
+		return tran.sellAll(p, null);
 	}
 
 	public ArrayList<HyperObject> getAvailableObjects(Player p) {
@@ -379,5 +380,11 @@ public class HyperObjectAPI implements HyperObjectInterface {
 			}
 		}
 		return lAllStock;
+	}
+
+	public TransactionResponse sellAll(Player p, Inventory inventory) {
+		HyperConomy hc = HyperConomy.hc;
+		Transaction tran = hc.getTransaction();
+		return tran.sellAll(p, inventory);
 	}
 }

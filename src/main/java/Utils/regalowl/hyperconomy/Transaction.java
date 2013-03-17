@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -119,7 +120,7 @@ public class Transaction {
 	 * 
 	 */
 	
-	public TransactionResponse sell(String name, int id, int data, int amount, Player p) {
+	public TransactionResponse sell(HyperObject ho, int amount, Player p, Inventory inventory) {
 		try {
 			TransactionResponse response = new TransactionResponse(p);
 			DataHandler sf = hc.getDataFunctions();
@@ -131,16 +132,20 @@ public class Transaction {
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = sf.getHyperPlayer(p).getEconomy();
-			HyperObject ho = sf.getHyperObject(name, playerecon);
+			int id = ho.getId();
+			int data = ho.getData();
+			String name = ho.getName();
+			if (inventory == null) {
+				inventory = p.getInventory();
+			}
 			if (amount > 0) {
 				if (id >= 0) {
-					int totalitems = countInvitems(id, data, p);
+					int totalitems = countInvitems(id, data, inventory);
 					if (totalitems < amount) {
 						boolean sellRemaining = hc.getYaml().getConfig().getBoolean("config.sell-remaining-if-less-than-requested-amount");
 						if (sellRemaining) {
 							amount = totalitems;
-						} else {
-							
+						} else {	
 							response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), ho);
 							return response;	
 						}
@@ -166,7 +171,7 @@ public class Transaction {
 								if (maxi == 0) {
 									price = calc.getValue(name, amount, p);
 								}
-								removesoldItems(id, data, amount, p);
+								removesoldItems(id, data, amount, inventory);
 								double shopstock = 0;
 								shopstock = ho.getStock();
 								if (!Boolean.parseBoolean(ho.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
@@ -221,7 +226,7 @@ public class Transaction {
 				return response;	
 			}
 		} catch (Exception e) {
-			String info = "Transaction sell() passed values name='" + name + "', player='" + p.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
+			String info = "Transaction sell() passed values name='" + ho.getName() + "', player='" + p.getName() + "', id='" + ho.getId() + "', data='" + ho.getData() + "', amount='" + amount + "'";
 			new HyperError(e, info);
 			return new TransactionResponse(p);
 		}
@@ -229,7 +234,7 @@ public class Transaction {
 	
 	
 	
-	public TransactionResponse sellAll(Player player) {
+	public TransactionResponse sellAll(Player player, Inventory i) {
 		try {
 			DataHandler sf = hc.getDataFunctions();
 			Calculation calc = hc.getCalculation();
@@ -238,51 +243,26 @@ public class Transaction {
 			TransactionResponse response = new TransactionResponse(player);
 			response.setSuccessful();
 			ShopFactory s = hc.getShopFactory();
-			Inventory invent = player.getInventory();
-			int heldslot = player.getInventory().getHeldItemSlot();
-			int itd = 0;
+			Inventory invent = null;
 			String playerecon = sf.getHyperPlayer(player).getEconomy();
-			// Sells the held item slot first.
-			if (invent.getItem(heldslot) != null) {
-				itd = invent.getItem(heldslot).getTypeId();
+			int itd = 0;
+			if (i == null) {
+				invent = player.getInventory();
+			} else {
+				invent = i;
 			}
-			if (itd != 0) {
-				int da = calc.getDamageValue(invent.getItem(heldslot));
-				HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, playerecon);
-				int amount = countInvitems(itd, da, player);
-				if (ho != null) {
-					String nam = ho.getName();
-					if (s.getShop(player).has(nam)) {
-						TransactionResponse sresponse = sell(nam, itd, da, amount, player);
-						if (sresponse.successful()) {
-							response.addSuccess(sresponse.getMessage(), sresponse.getPrice(), ho);
-						} else {
-							response.addFailed(sresponse.getMessage(), ho);
-						}
-					} else {
-						response.addFailed(L.get("CANT_BE_TRADED"), null);
-					}
-				} else {
-					
-				}
-			}
-			// Sells remaining items after the held slot.
-			for (int slot = 0; slot < 36; slot++) {
-				if (invent.getItem(slot) == null) {
-					itd = 0;
-				} else {
+			for (int slot = 0; slot < invent.getSize(); slot++) {
+				if (invent.getItem(slot) != null) {
 					itd = invent.getItem(slot).getTypeId();
-				}
-				if (itd != 0) {
-					ItemStack itemn = invent.getItem(slot);
+					ItemStack stack = invent.getItem(slot);
 					int da = calc.getDamageValue(invent.getItem(slot));
 					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, playerecon);
-					if (ench.hasenchants(itemn) == false) {
+					if (ench.hasenchants(stack) == false) {
 						if (ho != null) {
 							String nam = ho.getName();
-							int amount = countInvitems(itd, da, player);
+							int amount = countInvitems(itd, da, invent);
 							if (s.getShop(player).has(nam)) {
-								TransactionResponse sresponse = sell(nam, itd, da, amount, player);
+								TransactionResponse sresponse = sell(ho, amount, player, invent);
 								if (sresponse.successful()) {
 									response.addSuccess(sresponse.getMessage(), sresponse.getPrice(), ho);
 								} else {
@@ -297,7 +277,7 @@ public class Transaction {
 					} else {
 						response.addFailed(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"), ho);
 					}
-				}
+				} 
 			}
 			return response;
 		} catch (Exception e) {
@@ -313,14 +293,13 @@ public class Transaction {
 	 * inventory. It ignores durability.
 	 * 
 	 */
-	public int countInvitems(int id, int data, Player p) {
+	public int countInvitems(int id, int data, Inventory inventory) {
 		try {
 			int totalitems = 0;
 			Calculation calc = hc.getCalculation();
 			ETransaction ench = hc.getETransaction();
 			data = calc.newData(id, data);
-			Inventory pinv = p.getInventory();
-			ItemStack[] stacks = pinv.getContents();
+			ItemStack[] stacks = inventory.getContents();
 			for (ItemStack stack:stacks) {
 				if (stack != null && !ench.hasenchants(stack)) {
 					int stackid = stack.getTypeId();
@@ -333,7 +312,7 @@ public class Transaction {
 			return totalitems;
 		} catch (Exception e) {
 			int totalitems = 0;
-			String info = "Transaction countInvItems() passed values player='" + p.getName() + "', id='" + id + "', data='" + data + "'";
+			String info = "Transaction countInvItems() passed values inventory='" + inventory.getName() + "', id='" + id + "', data='" + data + "'";
 			new HyperError(e, info);
 			return totalitems;
 		}
@@ -472,36 +451,38 @@ public class Transaction {
 	 * player and the item's id and data.
 	 * 
 	 */
-	private boolean removesoldItems(int id, int data, int amount, Player p) {
+	private boolean removesoldItems(int id, int data, int amount, Inventory inventory) {
 		try {
 			int oamount = amount;
 			Calculation calc = hc.getCalculation();
 			ETransaction ench = hc.getETransaction();
 			data = calc.newData(id, data);
-			Inventory pinv = p.getInventory();
-			ItemStack hstack = p.getItemInHand();
-			if (hstack != null && !ench.hasenchants(hstack)) {
-				int stackid = hstack.getTypeId();
-				int stackdata = calc.getDamageValue(hstack);
-				if (stackid == id && stackdata == data) {
-					if (amount >= hstack.getAmount()) {
-						amount -= hstack.getAmount();
-						pinv.clear(p.getInventory().getHeldItemSlot());
-					} else {
-						hstack.setAmount(hstack.getAmount() - amount);
-						return true;
+			if (inventory.getType() == InventoryType.PLAYER) {
+				Player p = (Player) inventory.getHolder();
+				ItemStack hstack = p.getItemInHand();
+				if (hstack != null && !ench.hasenchants(hstack)) {
+					int stackid = hstack.getTypeId();
+					int stackdata = calc.getDamageValue(hstack);
+					if (stackid == id && stackdata == data) {
+						if (amount >= hstack.getAmount()) {
+							amount -= hstack.getAmount();
+							inventory.clear(p.getInventory().getHeldItemSlot());
+						} else {
+							hstack.setAmount(hstack.getAmount() - amount);
+							return true;
+						}
 					}
 				}
 			}
-			for (int i = 0; i < pinv.getSize(); i++) {
-				ItemStack stack = pinv.getItem(i);
+			for (int i = 0; i < inventory.getSize(); i++) {
+				ItemStack stack = inventory.getItem(i);
 				if (stack != null && !ench.hasenchants(stack)) {
 					int stackid = stack.getTypeId();
 					int stackdata = calc.getDamageValue(stack);
 					if (stackid == id && stackdata == data) {
 						if (amount >= stack.getAmount()) {
 							amount -= stack.getAmount();
-							pinv.clear(i);
+							inventory.clear(i);
 						} else {
 							stack.setAmount(stack.getAmount() - amount);
 							return true;
@@ -516,7 +497,7 @@ public class Transaction {
 				return true;
 			}
 		} catch (Exception e) {
-			String info = "Transaction removeSoldItems() passed values player='" + p.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
+			String info = "Transaction removeSoldItems() passed values inventory='" + inventory.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
 			new HyperError(e, info);
 			return false;
 		}
@@ -831,7 +812,7 @@ public class Transaction {
 				toomuch = true;
 			}
 			if (!toomuch) {
-				removesoldItems(id, data, amount, p);
+				removesoldItems(id, data, amount, p.getInventory());
 				addItems(id, data, amount, invent);
 				acc.deposit(price, p);
 				acc.withdrawAccount(price, owner);
@@ -872,7 +853,7 @@ public class Transaction {
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();
 			Calculation calc = hc.getCalculation();
-			removesoldItems(id, data, amount, p);
+			removesoldItems(id, data, amount, p.getInventory());
 			addItems(id, data, amount, invent);
 			acc.deposit(price, p);
 			acc.withdrawAccount(price, owner);

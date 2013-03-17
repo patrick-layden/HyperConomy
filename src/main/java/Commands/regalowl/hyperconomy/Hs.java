@@ -27,7 +27,7 @@ public class Hs {
 							if (max.equalsIgnoreCase("max")) {
 								int itmid = player.getItemInHand().getTypeId();
 								int da = calc.getDamageValue(player.getItemInHand());
-								amount = tran.countInvitems(itmid, da, player);
+								amount = tran.countInvitems(itmid, da, player.getInventory());
 							} else {
 								player.sendMessage(L.get("HS_INVALID"));
 								return;
@@ -44,7 +44,7 @@ public class Hs {
 						ItemStack iinhand = player.getItemInHand();
 						if (ench.hasenchants(iinhand) == false) {
 							if (s.getShop(player).has(nam)) {
-								TransactionResponse response = tran.sell(nam, itd, da, amount, player);
+								TransactionResponse response = tran.sell(ho, amount, player, null);
 								response.sendMessages();
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));

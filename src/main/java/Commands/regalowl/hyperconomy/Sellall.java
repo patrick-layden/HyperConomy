@@ -18,7 +18,7 @@ public class Sellall {
 			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					if (args.length == 0) {
-						TransactionResponse response = tran.sellAll(p);
+						TransactionResponse response = tran.sellAll(p, null);
 						if (response.getFailedObjects().size() == 0) {
 							player.sendMessage(L.get("LINE_BREAK"));
 							player.sendMessage(L.get("ALL_ITEMS_SOLD"));
