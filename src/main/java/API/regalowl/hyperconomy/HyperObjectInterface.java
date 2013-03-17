@@ -194,5 +194,5 @@ public interface HyperObjectInterface
 	 * @param pPlayer Player
 	 * @return List of each objects with properties
 	 */
-	public List<Map<String, String>> getAllStockEconomy(String pEconomy, Player pPlayer);
+	public List<Map<String, String>> getAllStockPlayer(Player pPlayer);
 }

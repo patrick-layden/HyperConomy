@@ -346,15 +346,16 @@ public class HyperObjectAPI implements HyperObjectInterface {
 	}
 	
 	
-	public List<Map<String, String>> getAllStockEconomy(String pEconomy, Player pPlayer) {
+	public List<Map<String, String>> getAllStockPlayer(Player pPlayer) {
 		List<Map<String, String>> lAllStock = new ArrayList<Map<String, String>>();
 		HyperConomy hc = HyperConomy.hc;
 		DataHandler sf = hc.getDataFunctions();
 		List<HyperObject> lObjects = sf.getHyperObjects();
+		HyperPlayer hp = sf.getHyperPlayer(pPlayer);
 		// For each object
 		for (HyperObject lObject : lObjects) {
 			// If the object is from the economy
-			if (lObject.getEconomy().equals(pEconomy)) {
+			if (lObject.getEconomy().equals(hp.getEconomy())) {
 				int lId = lObject.getId();
 				double lStock = lObject.getStock();
 				String lType = lObject.getType();
@@ -362,7 +363,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 				int lData = lObject.getData();
 				int lDurability = lObject.getDurability();
 				String lName = lObject.getName();
-				double lPurchase = getTruePurchasePrice(lId, lDurability, 1, pEconomy);
+				double lPurchase = getTruePurchasePrice(lId, lDurability, 1, hp.getEconomy());
 				double lSale = getTrueSaleValue(lId, lDurability, 1, pPlayer);
 
 				// Add information to MAP
