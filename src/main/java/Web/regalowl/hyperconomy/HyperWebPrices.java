@@ -84,6 +84,7 @@ public class HyperWebPrices extends AbstractHandler {
 	 * This function calculates the theoretical value for items, ignoring durability.
 	 * 
 	 */
+    /*
 		public double getThreadSafeValue(String name, String playerecon){
 			DataHandler sf = hc.getDataFunctions();
 			try {
@@ -125,6 +126,7 @@ public class HyperWebPrices extends AbstractHandler {
 				return cost;			
 			}
 		}
+		*/
 		
 		/**
 		 * 
@@ -132,6 +134,7 @@ public class HyperWebPrices extends AbstractHandler {
 		 * This function calculates the theoretical value for items, ignoring durability.
 		 * 
 		 */
+		/*
 			public double getThreadSafeCost(String name, String playerecon){
 				DataHandler sf = hc.getDataFunctions();
 				try {
@@ -175,7 +178,7 @@ public class HyperWebPrices extends AbstractHandler {
 				}
 			}
 		
-		
+		*/
 		
 		private String buildPage(String economy) {
 			
@@ -300,8 +303,7 @@ public class HyperWebPrices extends AbstractHandler {
 					if (Boolean.parseBoolean(ho.getIsstatic())) {
 						type = "static";
 					}
-					String otype = ho.getType();
-					otype = otype.substring(0, 4);
+					HyperObjectType otype = ho.getType();
 					
 					double tax = 0.0;
 					double stax = hws.getSalesTax();
@@ -309,20 +311,20 @@ public class HyperWebPrices extends AbstractHandler {
 					if (type.equalsIgnoreCase("static")) {
 						tax = hws.getStaticTax();
 					} else if (type.equalsIgnoreCase("initial")) {
-						if (otype.equalsIgnoreCase("enchantment")) {
+						if (otype == HyperObjectType.ENCHANTMENT) {
 							tax = hws.getEnchantTax();
 						} else {
 							tax = hws.getInitialTax();
 						}
 					} else if (type.equalsIgnoreCase("dynamic")) {
-						if (otype.equalsIgnoreCase("enchantment")) {
+						if (otype == HyperObjectType.ENCHANTMENT) {
 							tax = hws.getEnchantTax();
 						} else {
 							tax = hws.getTax();
 						}
 					}
-					double scost = getThreadSafeValue(names.get(i), economy);
-					double bcost = getThreadSafeCost(names.get(i), economy);
+					double scost = ho.getValue(1);
+					double bcost = ho.getCost(1);
 					
 					
 					
@@ -353,7 +355,7 @@ public class HyperWebPrices extends AbstractHandler {
 					
 					if (hws.getUseHistory()) {
 						for (int j = 0; j < timevalues.size(); j++) {
-							String pc = hist.getPercentChange(names.get(i), timevalues.get(j), economy);
+							String pc = hist.getPercentChange(ho, timevalues.get(j));
 							String iclass = "";
 							if (pc.indexOf("-") != -1) {
 								iclass = "red";
@@ -363,7 +365,7 @@ public class HyperWebPrices extends AbstractHandler {
 								iclass = "green";
 							}
 							page += "<TD " + "class='" + iclass + "'>\n";
-							page += hist.getPercentChange(names.get(i), timevalues.get(j), economy) + "%\n";
+							page += hist.getPercentChange(ho, timevalues.get(j)) + "%\n";
 							page += "</TD>\n";
 						}
 					}

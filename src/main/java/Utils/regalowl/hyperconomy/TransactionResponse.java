@@ -2,21 +2,19 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 
-import org.bukkit.entity.Player;
-
 public class TransactionResponse {
 
 	private boolean success;
-	private Player player;
+	private HyperPlayer hp;
 	
 	private ArrayList<String> messages = new ArrayList<String>();
 	private ArrayList<Double> prices = new ArrayList<Double>();
 	private ArrayList<HyperObject> failedObjects = new ArrayList<HyperObject>();
 	private ArrayList<HyperObject> successfulObjects = new ArrayList<HyperObject>();
 	
-	TransactionResponse(Player player) {
+	TransactionResponse(HyperPlayer hp) {
 		this.success = false;
-		this.player = player;
+		this.hp = hp;
 	}
 	
 	public void addFailed(String message, HyperObject ho) {
@@ -38,13 +36,13 @@ public class TransactionResponse {
 	public void sendMessages() {
 		LanguageFile L = HyperConomy.hc.getLanguageFile();
 		if (success) {
-			player.sendMessage(L.get("LINE_BREAK"));
+			hp.sendMessage(L.get("LINE_BREAK"));
 		}
 		for (String message:messages) {
-			player.sendMessage(message);
+			hp.sendMessage(message);
 		}
 		if (success) {
-			player.sendMessage(L.get("LINE_BREAK"));
+			hp.sendMessage(L.get("LINE_BREAK"));
 		}
 	}
 	

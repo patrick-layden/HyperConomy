@@ -10,18 +10,17 @@ public class Hb {
 	Hb(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
 		DataHandler sf = hc.getDataFunctions();
-		Transaction tran = hc.getTransaction();
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
 		ShopFactory s = hc.getShopFactory();
-		ETransaction ench = hc.getETransaction();
+		InventoryManipulation im = hc.getInventoryManipulation();
 		double amount;
 		boolean ma = false;
 		try {
 			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					ItemStack iinhand = player.getItemInHand();
-					if (ench.hasenchants(iinhand) == false) {
+					if (im.hasenchants(iinhand) == false) {
 						if (args.length == 0) {
 							amount = 1;
 						} else {
@@ -31,7 +30,7 @@ public class Hb {
 								String max = args[0];
 								if (max.equalsIgnoreCase("max")) {
 									ma = true;
-									int space = tran.getavailableSpace(player.getItemInHand().getTypeId(), calc.getDamageValue(player.getItemInHand()), player.getInventory());
+									int space = im.getAvailableSpace(player.getItemInHand().getTypeId(), calc.getDamageValue(player.getItemInHand()), player.getInventory());
 									amount = space;
 								} else {
 									player.sendMessage(L.get("HB_INVALID"));
@@ -47,14 +46,18 @@ public class Hb {
 						} else {
 							String nam = ho.getName();
 							double shopstock = 0;
-							shopstock = sf.getHyperObject(nam, playerecon).getStock();
+							shopstock = ho.getStock();
 							// Buys the most possible from the shop if the
 							// amount is more than that for max.
 							if (amount > shopstock && ma) {
 								amount = shopstock;
 							}
+							HyperPlayer hp = sf.getHyperPlayer(player);
 							if (s.getShop(player).has(nam)) {
-								TransactionResponse response = tran.buy(ho, (int) Math.rint(amount), player, null);
+								PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+								pt.setHyperObject(ho);
+								pt.setAmount((int) Math.rint(amount));
+								TransactionResponse response = hp.processTransaction(pt);
 								response.sendMessages();
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));

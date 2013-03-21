@@ -12,9 +12,9 @@ public class Iteminfo {
 	Iteminfo(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
+		InventoryManipulation im = hc.getInventoryManipulation();
 		try {		
 			HyperPlayer hp = dh.getHyperPlayer(player);
 			if (args.length == 1) {
@@ -65,15 +65,15 @@ public class Iteminfo {
 			if (inhand.getType().equals(Material.ENCHANTED_BOOK)) {
 				
 				EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)inhand.getItemMeta();
-				ArrayList<String> enchants = ench.convertEnchantmentMapToNames(emeta.getStoredEnchants());
+				ArrayList<String> enchants = im.convertEnchantmentMapToNames(emeta.getStoredEnchants());
 				if (enchants.size() == 0) {
 					enchantments = "None";
 				} else {
 					enchantments = sal.stringArrayToString(enchants);
 				}
 			} else {
-				if (ench.hasenchants(inhand)) {
-					ArrayList<String> enchants = ench.convertEnchantmentMapToNames(inhand.getEnchantments());
+				if (im.hasenchants(inhand)) {
+					ArrayList<String> enchants = im.convertEnchantmentMapToNames(inhand.getEnchantments());
 					enchantments = sal.stringArrayToString(enchants);
 				} else {
 					enchantments = "None";
@@ -92,7 +92,7 @@ public class Iteminfo {
 			double dura = player.getItemInHand().getDurability();
 			double maxdura = player.getItemInHand().getType().getMaxDurability();
 			double durp = (1 - dura/maxdura) * 100;
-			if  (calc.isDurable(itemid)) {
+			if  (ho.isDurable()) {
 				durp = (long)Math.floor(durp + .5);
 			} else {
 				durp = 100;

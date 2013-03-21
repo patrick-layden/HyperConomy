@@ -13,15 +13,17 @@ public class Evalue {
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
 		DataHandler sf = hc.getDataFunctions();
-		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
+		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
+			HyperPlayer hp = sf.getHyperPlayer(player);
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			if ((requireShop && s.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				if (args.length == 2) {
 					String nam = args[0];
 					if (sf.enchantTest(nam)) {
+						HyperObject ho = sf.getHyperObject(nam, hp.getEconomy());
 						String type = args[1];
 						if (type.equalsIgnoreCase("s")) {
 							String[] classtype = new String[9];
@@ -37,8 +39,8 @@ public class Evalue {
 							int n = 0;
 							sender.sendMessage(L.get("LINE_BREAK"));
 							while (n < 9) {
-								double value = calc.getEnchantValue(nam, EnchantmentClass.fromString(classtype[n]), playerecon);
-								double salestax = calc.getSalesTax(player, value);
+								double value = ho.getValue(EnchantmentClass.fromString(classtype[n]));
+								double salestax = hp.getSalesTax(value);
 								value = calc.twoDecimals(value - salestax);
 								sender.sendMessage(L.f(L.get("EVALUE_CLASS_SALE"), 1, value, nam, classtype[n]));
 								n++;
@@ -58,8 +60,8 @@ public class Evalue {
 							int n = 0;
 							sender.sendMessage(L.get("LINE_BREAK"));
 							while (n < 9) {
-								double cost = calc.getEnchantCost(nam, EnchantmentClass.fromString(classtype[n]), playerecon);
-								cost = cost + calc.getEnchantTax(nam, playerecon, cost);
+								double cost = ho.getCost(EnchantmentClass.fromString(classtype[n]));
+								cost = cost + ho.getPurchaseTax(cost);
 								sender.sendMessage(L.f(L.get("EVALUE_CLASS_PURCHASE"), 1, cost, nam, classtype[n]));
 								n++;
 							}
@@ -75,10 +77,10 @@ public class Evalue {
 						sender.sendMessage(L.get("ENCHANTMENT_NOT_IN_DATABASE"));
 					}
 				} else if (args.length == 0 && player != null) {
-					if (ench.hasenchants(player.getItemInHand())) {
-						Iterator<Enchantment> ite = ench.getEnchantmentMap(player.getItemInHand()).keySet().iterator();
+					if (im.hasenchants(player.getItemInHand())) {
+						Iterator<Enchantment> ite = im.getEnchantmentMap(player.getItemInHand()).keySet().iterator();
 						player.sendMessage(L.get("LINE_BREAK"));
-						double duramult = ench.getDuramult(player);
+						double duramult = im.getDuramult(player);
 						if (player.getItemInHand().getType().equals(Material.ENCHANTED_BOOK)) {
 							duramult = 1;
 						}
@@ -87,13 +89,14 @@ public class Evalue {
 							String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
 							Enchantment en = null;
 							en = Enchantment.getByName(enchname);
-							int lvl = ench.getEnchantmentLevel(player.getItemInHand(), en);
+							int lvl = im.getEnchantmentLevel(player.getItemInHand(), en);
 							String nam = sf.getEnchantNameWithoutLevel(enchname);
 							String fnam = nam + lvl;
+							HyperObject ho = sf.getHyperObject(fnam, hp.getEconomy());
 							String mater = player.getItemInHand().getType().name();
-							double value = calc.getEnchantValue(fnam, EnchantmentClass.fromString(mater), playerecon) * duramult;
-							double cost = calc.getEnchantCost(fnam, EnchantmentClass.fromString(mater), playerecon);
-							cost = cost + calc.getEnchantTax(fnam, playerecon, cost);
+							double value = ho.getValue(EnchantmentClass.fromString(mater)) * duramult;
+							double cost = ho.getCost(EnchantmentClass.fromString(mater));
+							cost = cost + ho.getPurchaseTax(cost);
 							value = calc.twoDecimals(value);
 							cost = calc.twoDecimals(cost);
 							double salestax = 0;

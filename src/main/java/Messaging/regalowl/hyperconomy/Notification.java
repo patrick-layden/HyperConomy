@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 public class Notification {
 	
 	private HyperConomy hc;
-	private Calculation calc;
 	private ArrayList<String> name = new ArrayList<String>();
 	private ArrayList<String> eclass = new ArrayList<String>();
 
@@ -23,17 +22,18 @@ public class Notification {
 	boolean usenotify;
 	
 	Notification() {
+		hc = HyperConomy.hc;
 		previousmessage = "";
 		notifrequests = 0;
-		usenotify = false;
+		usenotify = hc.getYaml().getConfig().getBoolean("config.use-notifications");
 	}
 	
 	
-	public void setNotify(HyperConomy hyperc, Calculation cal, ETransaction enchant, String nam, String ecla, String economy) {
+	public void setNotify(String nam, String ecla, String economy) {
 		
-		hc = hyperc;
-		calc = cal;
-		usenotify = hc.getYaml().getConfig().getBoolean("config.use-notifications");
+		hc = HyperConomy.hc;
+
+		
 		econ = economy;
 		
 		if (usenotify) {
@@ -66,9 +66,10 @@ public class Notification {
 		if (checkNotify(name.get(0))) {
 			double cost = 0.0;
 			int stock = 0;
+			HyperObject ho = sf.getHyperObject(name.get(0), econ);
 			if (sf.itemTest(name.get(0))) {
-				stock = (int) sf.getHyperObject(name.get(0), econ).getStock();
-				cost = calc.getCost(name.get(0), 1, econ);
+				stock = (int) ho.getStock();
+				cost = ho.getCost(1);
 
 				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, name.get(0), econ);
 
@@ -77,8 +78,8 @@ public class Notification {
 					previousmessage = message;
 				}
 			} else if (sf.enchantTest(name.get(0))) {
-				cost = calc.getEnchantCost(name.get(0), EnchantmentClass.fromString(eclass.get(0)), econ);
-				cost = cost + calc.getEnchantTax(name.get(0), econ, cost);
+				cost = ho.getCost(EnchantmentClass.fromString(eclass.get(0)));
+				cost = cost + ho.getPurchaseTax(cost);
 				stock = (int) sf.getHyperObject(name.get(0), econ).getStock();
 				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, name.get(0), econ);
 

@@ -14,15 +14,11 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 
 public class TransactionSign implements Listener {
 	private HyperConomy hc;
-	private Transaction tran;
-	private ETransaction ench;
 	private DataHandler sf;
 	private String playerecon;
 
 	TransactionSign() {
 		hc = HyperConomy.hc;
-		tran = hc.getTransaction();
-		ench = hc.getETransaction();
 		sf = hc.getDataFunctions();
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
@@ -131,7 +127,8 @@ public class TransactionSign implements Listener {
 			if (p == null) {
 				return;
 			}
-			playerecon = sf.getHyperPlayer(p).getEconomy();
+			HyperPlayer hp = sf.getHyperPlayer(p);
+			playerecon = hp.getEconomy();
 			boolean sneak = false;
 			if (p.isSneaking()) {
 				sneak = true;
@@ -171,29 +168,18 @@ public class TransactionSign implements Listener {
 								if (p.hasPermission("hyperconomy.buysign")) {
 									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p).getName()) || p.hasPermission("hyperconomy.shop." + shop.getShop(p).getName() + ".buy")) {
-											if (sf.itemTest(line12)) {
-												HyperObject ho = sf.getHyperObject(line12, playerecon);
-												int id = ho.getId();
-												if (id >= 0) {
-													if (!hc.isLocked()) {
-														TransactionResponse response = tran.buy(ho, amount, p, null);
-														response.sendMessages();
-													} else {
-														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-													}
-												} else if (id == -1) {
-													if (!hc.isLocked()) {
-														tran.buyXP(line12, amount, p);
-													} else {
-														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-													}
-												}
-											} else if (sf.enchantTest(line12)) {
-												if (!hc.isLocked()) {
-													ench.buyEnchant(line12, p);
-												} else {
-													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-												}
+											HyperObject ho = sf.getHyperObject(line12, playerecon);
+											if (!hc.isLocked()) {
+												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+												pt.setAmount(amount);
+												pt.setHyperObject(ho);
+												TransactionResponse response = hp.processTransaction(pt);
+												// TransactionResponse response
+												// = tran.buy(ho, amount, p,
+												// null);
+												response.sendMessages();
+											} else {
+												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 											}
 										} else {
 											p.sendMessage(L.get("NO_TRADE_PERMISSION"));
@@ -220,30 +206,21 @@ public class TransactionSign implements Listener {
 								if (p.hasPermission("hyperconomy.sellsign")) {
 									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
 										if (!shopPerms || !requireShop || p.hasPermission("hyperconomy.shop.*") || p.hasPermission("hyperconomy.shop." + shop.getShop(p).getName()) || p.hasPermission("hyperconomy.shop." + shop.getShop(p).getName() + ".sell")) {
-											if (sf.itemTest(line12)) {
-												HyperObject ho = sf.getHyperObject(line12, playerecon);
-												int id = ho.getId();
-												if (id >= 0) {
-													if (!hc.isLocked()) {
-														TransactionResponse response = tran.sell(ho, amount, p, null);
-														response.sendMessages();
-													} else {
-														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-													}
-												} else if (id == -1) {
-													if (!hc.isLocked()) {
-														tran.sellXP(line12, amount, p);
-													} else {
-														p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-													}
-												}
-											} else if (sf.enchantTest(line12)) {
-												if (!hc.isLocked()) {
-													ench.sellEnchant(line12, p);
-												} else {
-													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-												}
+
+											HyperObject ho = sf.getHyperObject(line12, playerecon);
+											if (!hc.isLocked()) {
+												PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+												pt.setAmount(amount);
+												pt.setHyperObject(ho);
+												TransactionResponse response = hp.processTransaction(pt);
+												response.sendMessages();
+												// TransactionResponse response
+												// = tran.sell(ho, amount, p,
+												// null);
+											} else {
+												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 											}
+
 										} else {
 											p.sendMessage(L.get("NO_TRADE_PERMISSION"));
 										}

@@ -5,20 +5,21 @@ import org.bukkit.entity.Player;
 public class Sellall {
 	private HyperConomy hc;
 	private ShopFactory s;
-	private Transaction tran;
 	private Player player;
 
 	Sellall(String args[], Player p) {
 		hc = HyperConomy.hc;
 		s = hc.getShopFactory();
-		tran = hc.getTransaction();
 		LanguageFile L = hc.getLanguageFile();
+		DataHandler dh = hc.getDataFunctions();
 		player = p;
 		try {
 			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					if (args.length == 0) {
-						TransactionResponse response = tran.sellAll(p, null);
+						PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_ALL);
+						TransactionResponse response = dh.getHyperPlayer(player).processTransaction(pt);
+						response.sendMessages();
 						if (response.getFailedObjects().size() == 0) {
 							player.sendMessage(L.get("LINE_BREAK"));
 							player.sendMessage(L.get("ALL_ITEMS_SOLD"));

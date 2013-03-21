@@ -15,15 +15,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class HyperConomy extends JavaPlugin {
 	public static HyperConomy hc;
 	public static String currency;
-	private Transaction tran;
 	private Calculation calc;
-	private ETransaction ench;
 	private Log l;
 	private ShopFactory s;
 	private Account acc;
 	private InfoSignHandler isign;
 	private _Command commandhandler;
 	private History hist;
+	private InventoryManipulation im;
 	private Notification not;
 	private ItemDisplayFactory itdi;
 	private DataHandler df;
@@ -138,9 +137,8 @@ public class HyperConomy extends JavaPlugin {
 			}
 			s = new ShopFactory();
 			l = new Log(this);
-			tran = new Transaction();
+			im = new InventoryManipulation();
 			calc = new Calculation();
-			ench = new ETransaction();
 			acc = new Account();
 			commandhandler = new _Command();
 			not = new Notification();
@@ -190,9 +188,7 @@ public class HyperConomy extends JavaPlugin {
 		if (df != null) {
 			df.clearData();
 		}
-		tran= null;
 		calc= null;
-		ench= null;
 		l= null;
 		s= null;
 		acc= null;
@@ -390,10 +386,6 @@ public class HyperConomy extends JavaPlugin {
 		return df;
 	}
 
-	public Transaction getTransaction() {
-		return tran;
-	}
-
 	public Calculation getCalculation() {
 		return calc;
 	}
@@ -404,10 +396,6 @@ public class HyperConomy extends JavaPlugin {
 
 	public Economy getEconomy() {
 		return economy;
-	}
-
-	public ETransaction getETransaction() {
-		return ench;
 	}
 
 	public Log getLog() {
@@ -444,6 +432,10 @@ public class HyperConomy extends JavaPlugin {
 	
 	public History getHistory() {
 		return hist;
+	}
+	
+	public InventoryManipulation getInventoryManipulation() {
+		return im;
 	}
 
 	public LanguageFile getLanguageFile() {

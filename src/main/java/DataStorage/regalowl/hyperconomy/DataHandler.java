@@ -343,7 +343,7 @@ public class DataHandler implements Listener {
 	public ArrayList<String> getItemNames() {
 		ArrayList<String> names = new ArrayList<String>();
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getEconomy().equalsIgnoreCase("default") && (ho.getType().equalsIgnoreCase("item") || ho.getType().equalsIgnoreCase("experience"))) {
+			if (ho.getEconomy().equalsIgnoreCase("default") && (ho.getType() == HyperObjectType.ITEM || ho.getType() == HyperObjectType.EXPERIENCE)) {
 				names.add(ho.getName());
 			}
 		}
@@ -353,7 +353,7 @@ public class DataHandler implements Listener {
 	public ArrayList<String> getEnchantNames() {
 		ArrayList<String> names = new ArrayList<String>();
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getEconomy().equalsIgnoreCase("default") && ho.getType().equalsIgnoreCase("enchantment")) {
+			if (ho.getEconomy().equalsIgnoreCase("default") && ho.getType() == HyperObjectType.ENCHANTMENT) {
 				names.add(ho.getName());
 			}
 		}
@@ -370,7 +370,7 @@ public class DataHandler implements Listener {
 	
 	public String getEnchantNameWithoutLevel(String bukkitName) {
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getType().equalsIgnoreCase("enchantment") && ho.getMaterial().equalsIgnoreCase(bukkitName)) {
+			if (ho.getType() == HyperObjectType.ENCHANTMENT && ho.getMaterial().equalsIgnoreCase(bukkitName)) {
 				String name = ho.getName();
 				return name.substring(0, name.length() - 1);
 			}
@@ -390,7 +390,7 @@ public class DataHandler implements Listener {
 	
 	public boolean itemTest(String name) {
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getName().equals(name) && (ho.getType().equalsIgnoreCase("item") || ho.getType().equalsIgnoreCase("experience"))) {
+			if (ho.getName().equals(name) && (ho.getType() == HyperObjectType.ITEM || ho.getType() == HyperObjectType.EXPERIENCE)) {
 				return true;
 			}
 		}
@@ -400,7 +400,7 @@ public class DataHandler implements Listener {
 
 	public boolean enchantTest(String name) {
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getName().equalsIgnoreCase(name) && ho.getType().equalsIgnoreCase("enchantment")) {
+			if (ho.getName().equalsIgnoreCase(name) && ho.getType() == HyperObjectType.ENCHANTMENT) {
 				return true;
 			}
 		}
@@ -408,10 +408,9 @@ public class DataHandler implements Listener {
 	}
 	
 	public String fixName(String nam) {
-		ArrayList<String> names = getNames();
-		for (int i = 0; i < names.size(); i++) {
-			if (names.get(i).equalsIgnoreCase(nam)) {
-				return names.get(i);
+		for (String name:getNames()) {
+			if (name.equalsIgnoreCase(nam)) {
+				return name;
 			}
 		}
 		return nam;

@@ -4,9 +4,12 @@ package regalowl.hyperconomy;
 public class HyperObject {
 	
 	private HyperConomy hc;
+	private HyperObjectValue hov;
+	
+	
 	private String name;
 	private String economy;
-	private String type;
+	private HyperObjectType type;
 	private String category;
 	private String material;
 	private int id;
@@ -26,13 +29,14 @@ public class HyperObject {
 	
 	HyperObject() {
 		hc = HyperConomy.hc;
+		hov = new HyperObjectValue(this);
 	}
 	
 	public HyperObject(String name, String economy, String type, String category, String material, int id, int data, int durability, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
 		hc = HyperConomy.hc;
 		this.name = name;
 		this.economy = economy;
-		this.type = type;
+		this.type = HyperObjectType.fromString(type);
 		this.category = category;
 		this.material = material;
 		this.id = id;
@@ -48,6 +52,7 @@ public class HyperObject {
 		this.ceiling = ceiling;
 		this.floor = floor;
 		this.maxstock = maxstock;
+		hov = new HyperObjectValue(this);
 	}
 	
 	
@@ -57,7 +62,7 @@ public class HyperObject {
 	public String getEconomy() {
 		return economy;
 	}
-	public String getType() {
+	public HyperObjectType getType() {
 		return type;
 	}
 	public String getCategory() {
@@ -97,16 +102,22 @@ public class HyperObject {
 		return startprice;
 	}
 	public double getCeiling() {
+		if (ceiling <= 0 || floor > ceiling) {
+			return 9999999999999.99;
+		}
 		return ceiling;
 	}
 	public double getFloor() {
+		if (floor < 0 || ceiling < floor) {
+			return 0.0;
+		}
 		return floor;
 	}
 	public double getMaxstock() {
 		return maxstock;
 	}
 	
-	
+
 	
 	
 	public void setName(String name) {
@@ -123,7 +134,7 @@ public class HyperObject {
 	public void setType(String type) {
 		String statement = "UPDATE hyperconomy_objects SET TYPE='" + type + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().executeSQL(statement);
-		this.type = type;
+		this.type = HyperObjectType.fromString(type);
 	}
 	public void setCategory(String category) {
 		String statement = "UPDATE hyperconomy_objects SET CATEGORY='" + category + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
@@ -202,7 +213,52 @@ public class HyperObject {
 		hc.getSQLWrite().executeSQL(statement);
 		this.maxstock = maxstock;
 	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * 
+	 * This function returns the maximum number of items that can be sold before
+	 * reaching the hyperbolic pricing curve.
+	 * 
+	 */
+	public int getMaxInitial() {
+		double medianStock = ((median * value) / startprice);
+		return (int) (Math.ceil(medianStock) - stock);
+	}
 
+	
+	public double getCost(int amount) {
+		return hov.getCost(amount);
+	}
+	public double getCost(EnchantmentClass enchantClass) {
+		return hov.getEnchantCost(enchantClass);
+	}
+	
+	public double getValue(int amount) {
+		return hov.getTheoreticalValue(amount);
+	}
+	public double getValue(int amount, HyperPlayer hp) {
+		return hov.getValue(amount, hp);
+	}
+	public double getValue(EnchantmentClass enchantClass) {
+		return hov.getEnchantValue(enchantClass);
+	}
 
+	public double getPurchaseTax(double cost) {
+		return hov.getPurchaseTax(cost);
+	}
+	
+	public double getSalesTaxEstimate(double value) {
+		return hov.getSalesTaxEstimate(value);
+	}
+	
+	public boolean isDurable() {
+		return hov.isDurable();
+	}
 	
 }

@@ -10,12 +10,12 @@ public class Buy {
 	Buy(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
 		DataHandler sf = hc.getDataFunctions();
-		Transaction tran = hc.getTransaction();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
 		try {
 			if (s.inAnyShop(player)) {
+				HyperPlayer hp = sf.getHyperPlayer(player);
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					String name = sf.fixName(args[0]);
 					boolean xp = false;
@@ -48,7 +48,7 @@ public class Buy {
 										ItemStack damagestack = damagemd.toItemStack();
 										int space = 0;
 										if (id >= 0) {
-											space = tran.getavailableSpace(id, calc.getDamageValue(damagestack), player.getInventory());
+											space = hc.getInventoryManipulation().getAvailableSpace(id, calc.getDamageValue(damagestack), player.getInventory());
 										}
 										amount = space;
 										int shopstock = (int) ho.getStock();
@@ -66,12 +66,11 @@ public class Buy {
 					if (sf.itemTest(name)) {
 						HyperObject ho = sf.getHyperObject(name, playerecon);
 						if (s.getShop(player).has(name)) {
-							if (xp) {
-								tran.buyXP(name, amount, player);
-							} else {
-								TransactionResponse response = tran.buy(ho, amount, player, null);	
-								response.sendMessages();
-							}
+							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+							pt.setHyperObject(ho);
+							pt.setAmount(amount);
+							TransactionResponse response = hp.processTransaction(pt);
+							response.sendMessages();
 						} else {
 							player.sendMessage(L.get("CANT_BE_TRADED"));
 							return;

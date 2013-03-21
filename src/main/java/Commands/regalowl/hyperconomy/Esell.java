@@ -6,21 +6,26 @@ import org.bukkit.entity.Player;
 public class Esell {
 	Esell(Player player, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
-		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
+		DataHandler dh = hc.getDataFunctions();
+		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
 			if (s.inAnyShop(player)) {
+				HyperPlayer hp = dh.getHyperPlayer(player);
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					String name = args[0];
 					if (args[0].equalsIgnoreCase("max")) {
-						if (!ench.hasenchants(player.getItemInHand())) {
+						if (!im.hasenchants(player.getItemInHand())) {
 							player.sendMessage(L.get("HAS_NO_ENCHANTMENTS"));
 						}
-						ArrayList<String> enchants = ench.getEnchantments(player.getItemInHand());
+						ArrayList<String> enchants = im.getEnchantments(player.getItemInHand());
 						for (String e:enchants) {
 							if (s.getShop(player).has(e)) {
-								ench.sellEnchant(e, player);
+								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+								pt.setHyperObject(dh.getHyperObject(e, hp.getEconomy()));
+								TransactionResponse response = hp.processTransaction(pt);
+								response.sendMessages();
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));
 							}
@@ -29,7 +34,10 @@ public class Esell {
 					} else {
 						if (hc.getDataFunctions().enchantTest(name)) {
 							if (s.getShop(player).has(name)) {
-								ench.sellEnchant(name, player);
+								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+								pt.setHyperObject(dh.getHyperObject(name, hp.getEconomy()));
+								TransactionResponse response = hp.processTransaction(pt);
+								response.sendMessages();
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));
 							}

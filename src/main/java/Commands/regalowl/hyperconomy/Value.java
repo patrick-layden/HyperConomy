@@ -13,6 +13,7 @@ public class Value {
 		LanguageFile L = hc.getLanguageFile();
 		Player player = null;
 		ShopFactory s = hc.getShopFactory();
+		DataHandler dh = hc.getDataFunctions();
 		try {
 			if (sender instanceof Player) {
 				player = (Player) sender;
@@ -27,16 +28,18 @@ public class Value {
 					amount = 1;
 				}
 				if (sf.itemTest(name)) {
-					double val = calc.getTvalue(name, amount, playerecon);
+					HyperPlayer hp = dh.getHyperPlayer(player);
+					HyperObject ho = dh.getHyperObject(name, hp.getEconomy());
+					double val = ho.getValue(amount);
 					double salestax = 0;
 					if (player != null) {
-						salestax = calc.getSalesTax(player, val);
+						salestax = hp.getSalesTax(val);
 					}
 					val = calc.twoDecimals(val - salestax);
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, name));
-					double cost = calc.getCost(name, amount, playerecon);
-					double taxpaid = calc.getPurchaseTax(name, playerecon, cost);
+					double cost = ho.getCost(amount);
+					double taxpaid = ho.getPurchaseTax(cost);
 					cost = calc.twoDecimals(cost + taxpaid);
 					if (cost > Math.pow(10, 10)) {
 						cost = -1;

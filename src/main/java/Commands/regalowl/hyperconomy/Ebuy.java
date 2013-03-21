@@ -8,14 +8,18 @@ public class Ebuy {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
-		ETransaction ench =  hc.getETransaction();
+		DataHandler dh = hc.getDataFunctions();
 		try {
 			if (s.inAnyShop(player)) {
+				HyperPlayer hp = dh.getHyperPlayer(player);
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					String name = args[0];
 					if (hc.getDataFunctions().enchantTest(name)) {
 						if (s.getShop(player).has(name)) {
-							ench.buyEnchant(name, player);
+							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+							pt.setHyperObject(dh.getHyperObject(name, hp.getEconomy()));
+							TransactionResponse response = hp.processTransaction(pt);
+							response.sendMessages();
 						} else {
 							player.sendMessage(ChatColor.BLUE + "Sorry, that item or enchantment cannot be traded at this shop.");
 						}

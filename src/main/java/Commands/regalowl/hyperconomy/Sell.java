@@ -8,10 +8,9 @@ public class Sell {
 	Sell(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
 		DataHandler sf = hc.getDataFunctions();
-		Transaction tran = hc.getTransaction();
 		LanguageFile L = hc.getLanguageFile();
-		Calculation calc = hc.getCalculation();
 		ShopFactory s = hc.getShopFactory();
+		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
 			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
@@ -36,9 +35,9 @@ public class Sell {
 								String max = args[1];
 								if (max.equalsIgnoreCase("max")) {
 									if (xp) {
-										amount = calc.gettotalxpPoints(player);
+										amount = im.gettotalxpPoints(player);
 									} else {
-										amount = tran.countItems(ho.getId(), ho.getData(), player.getInventory());	
+										amount = im.countItems(ho.getId(), ho.getData(), player.getInventory());	
 									}
 								} else {
 									player.sendMessage(L.get("SELL_INVALID"));
@@ -50,12 +49,11 @@ public class Sell {
 					if (sf.itemTest(name)) {
 						HyperObject ho = sf.getHyperObject(name, playerecon);
 						if (s.getShop(player).has(name)) {
-							if (xp) {
-								tran.sellXP(name, amount, player);
-							} else {
-								TransactionResponse response = tran.sell(ho, amount, player, null);
-								response.sendMessages();
-							}
+							PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+							pt.setHyperObject(ho);
+							pt.setAmount(amount);
+							TransactionResponse response = sf.getHyperPlayer(player).processTransaction(pt);
+							response.sendMessages();
 						} else {
 							player.sendMessage(L.get("CANT_BE_TRADED"));
 							return;

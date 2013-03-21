@@ -7,13 +7,13 @@ public class Buyid {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
-		Transaction tran = hc.getTransaction();
 		int amount;
 		int itd;
 		int da = 0;
 		try {
 			String playerecon = hc.getDataFunctions().getHyperPlayer(player).getEconomy();
 			if (s.inAnyShop(player)) {
+				HyperPlayer hp = hc.getDataFunctions().getHyperPlayer(player);
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
 					if (args.length == 2) {
 						amount = Integer.parseInt(args[0]);
@@ -32,7 +32,10 @@ public class Buyid {
 					} else {
 						String nam = ho.getName();
 						if (s.getShop(player).has(nam)) {
-							TransactionResponse response = tran.buy(ho, amount, player, null);
+							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+							pt.setHyperObject(ho);
+							pt.setAmount(amount);
+							TransactionResponse response = hp.processTransaction(pt);
 							response.sendMessages();
 						} else {
 							player.sendMessage(L.get("CANT_BE_TRADED"));

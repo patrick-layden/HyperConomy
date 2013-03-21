@@ -103,14 +103,15 @@ public class Browseshop {
 						String iname = sf.fixName(rnames.get(count));
 			            Double cost = 0.0;
 			            double stock = 0;
+			            HyperObject ho = sf.getHyperObject(iname, playerecon);
 			            if (sf.itemTest(iname)) {
-							cost = calc.getCost(iname, 1, playerecon);
-							double taxpaid = calc.getPurchaseTax(iname, playerecon, cost);
+							cost = ho.getCost(1);
+							double taxpaid = ho.getPurchaseTax(cost);
 							cost = calc.twoDecimals(cost + taxpaid);
 							stock = sf.getHyperObject(iname, playerecon).getStock();
 						} else if (sf.enchantTest(iname)) {
-							cost = calc.getEnchantCost(iname, EnchantmentClass.DIAMOND, playerecon);
-							cost = cost + calc.getEnchantTax(iname, playerecon, cost);
+							cost = ho.getCost(EnchantmentClass.DIAMOND);
+							cost = cost + ho.getPurchaseTax(cost);
 							stock = sf.getHyperObject(iname, playerecon).getStock();
 						}
 						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + L.get("AVAILABLE") + ": \u00A7a" + L.get("CURRENCY") + cost + " \u00A79" + L.get("EACH") + ".]");

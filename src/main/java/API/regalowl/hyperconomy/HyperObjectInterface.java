@@ -88,7 +88,7 @@ public interface HyperObjectInterface
 
 	public String getEconomy(String name, String economy);
 
-	public String getType(String name, String economy);
+	public HyperObjectType getType(String name, String economy);
 
 	public String getCategory(String name, String economy);
 

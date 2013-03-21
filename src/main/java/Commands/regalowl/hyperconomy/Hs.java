@@ -8,10 +8,9 @@ public class Hs {
 		HyperConomy hc = HyperConomy.hc;
 		ShopFactory s = hc.getShopFactory();
 		Calculation calc = hc.getCalculation();
-		Transaction tran = hc.getTransaction();
-		ETransaction ench = hc.getETransaction();
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
+		InventoryManipulation im = hc.getInventoryManipulation();
 		int amount;
 		try {
 			HyperPlayer hp = dh.getHyperPlayer(player);
@@ -27,7 +26,7 @@ public class Hs {
 							if (max.equalsIgnoreCase("max")) {
 								int itmid = player.getItemInHand().getTypeId();
 								int da = calc.getDamageValue(player.getItemInHand());
-								amount = tran.countItems(itmid, da, player.getInventory());
+								amount = im.countItems(itmid, da, player.getInventory());
 							} else {
 								player.sendMessage(L.get("HS_INVALID"));
 								return;
@@ -42,9 +41,12 @@ public class Hs {
 					} else {
 						String nam = ho.getName();
 						ItemStack iinhand = player.getItemInHand();
-						if (ench.hasenchants(iinhand) == false) {
+						if (im.hasenchants(iinhand) == false) {
 							if (s.getShop(player).has(nam)) {
-								TransactionResponse response = tran.sell(ho, amount, player, null);
+								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+								pt.setHyperObject(ho);
+								pt.setAmount(amount);
+								TransactionResponse response = hp.processTransaction(pt);
 								response.sendMessages();
 							} else {
 								player.sendMessage(L.get("CANT_BE_TRADED"));

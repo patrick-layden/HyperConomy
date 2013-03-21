@@ -61,7 +61,7 @@ public class HyperWebStart {
 					server.start();
 					server.join();
 				} catch (Exception e) {
-					//SILENCE
+					endServer();
 				}
             
     			}

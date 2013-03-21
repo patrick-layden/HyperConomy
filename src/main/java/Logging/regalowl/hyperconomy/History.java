@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class History {
 	
 	private HyperConomy hc;
-	private Calculation calc;
 	private InfoSignHandler isign;
 	private DataHandler df;
 	private SQLWrite sw;
@@ -27,7 +26,6 @@ public class History {
 	
 	History() {
 		hc = HyperConomy.hc;
-		calc = hc.getCalculation();
 		isign = hc.getInfoSignHandler();
 		sw = hc.getSQLWrite();
 		df = hc.getDataFunctions();
@@ -77,20 +75,17 @@ public class History {
 	
 
 	
-  	private void writeHistoryThread() {
-  		ArrayList<String> objects = df.getNames();
-  		ArrayList<String> economies = df.getEconomyList();
-  		for (String object:objects) {
-  			for (String economy:economies) {
-  				if (df.itemTest(object)) {
-  					writeHistoryData(object, economy, calc.getTvalue(object, 1, economy));
-  				} else if (df.enchantTest(object)) {
-  					writeHistoryData(object, economy, calc.getEnchantValue(object, EnchantmentClass.DIAMOND, economy));
-  				}
-  			}
-  		}
-  	}
-  	
+	private void writeHistoryThread() {
+		ArrayList<HyperObject> objects = df.getHyperObjects();
+		for (HyperObject object : objects) {
+			if (object.getType() == HyperObjectType.ENCHANTMENT) {
+				writeHistoryData(object.getName(), object.getEconomy(), object.getValue(EnchantmentClass.DIAMOND));
+			} else {
+				writeHistoryData(object.getName(), object.getEconomy(), object.getValue(1));
+			}
+
+		}
+	}
   	
   	
   	
@@ -128,19 +123,21 @@ public class History {
 	 * @param economy
 	 * @return The percentage change in theoretical price for the given object and timevalue in hours
 	 */
-	public String getPercentChange(String object, int timevalue, String economy) {
-		object = df.fixName(object);
+	public String getPercentChange(HyperObject ho, int timevalue) {
+		if (ho == null || sr == null) {
+			return "?";
+		}
 		Calculation calc = hc.getCalculation();
 		double percentChange = 0.0;
-		double historicvalue = sr.getHistoricValue(object, economy, timevalue);
+		double historicvalue = sr.getHistoricValue(ho.getName(), ho.getEconomy(), timevalue);
 		if (historicvalue == -1.0) {
 			return "?";
 		}
 		double currentvalue = 0.0;
-		if (df.itemTest(object)) {
-			currentvalue = calc.getTvalue(object, 1, economy);
-		} else if (df.enchantTest(object)) {
-			currentvalue = calc.getEnchantValue(object, EnchantmentClass.DIAMOND, economy);
+		if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+			currentvalue = ho.getValue(EnchantmentClass.DIAMOND);
+		} else {
+			currentvalue = ho.getValue(1);
 		}
 		percentChange = ((currentvalue - historicvalue) / historicvalue) * 100;
 		percentChange = calc.round(percentChange, 3);

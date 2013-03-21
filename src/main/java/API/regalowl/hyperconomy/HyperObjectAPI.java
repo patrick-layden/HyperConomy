@@ -19,8 +19,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		if (ho == null) {
 			return 0.0;
 		}
-		String name = ho.getName();
-		Double price = calc.getCost(name, amount, economy);
+		Double price = ho.getCost(amount);
 		price = calc.twoDecimals(price);
 		return price;
 	}
@@ -35,8 +34,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		if (ho == null) {
 			return 0.0;
 		}
-		String name = ho.getName();
-		Double value = calc.getTvalue(name, amount, economy);
+		Double value = ho.getValue(amount);
 		value = calc.twoDecimals(value);
 		return value;
 	}
@@ -47,19 +45,12 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		}
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		double durabilityPercent = 1.0;
-		if (calc.isDurable(id)) {
-			ItemStack item = new ItemStack(id, durability);
-			durabilityPercent = 1.0 - ((double) durability / item.getType().getMaxDurability());
-			durability = 0;
-		}
 		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability, economy);
 		if (ho == null) {
 			return 0.0;
 		}
-		String name = ho.getName();
-		Double price = calc.getCost(name, amount, economy) * durabilityPercent;
-		double tax = calc.getPurchaseTax(name, economy, price);
+		Double price = ho.getCost(amount);
+		double tax = ho.getPurchaseTax(price);
 		price = tax + price;
 		price = calc.twoDecimals(price);
 		return price;
@@ -68,19 +59,13 @@ public class HyperObjectAPI implements HyperObjectInterface {
 	public double getTrueSaleValue(int id, int durability, int amount, Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		double durabilityPercent = 1.0;
-		if (calc.isDurable(id)) {
-			ItemStack item = new ItemStack(id, durability);
-			durabilityPercent = 1.0 - ((double) durability / item.getType().getMaxDurability());
-			durability = 0;
-		}
 		HyperObject ho = hc.getDataFunctions().getHyperObject(id, durability, hc.getDataFunctions().getHyperPlayer(player).getEconomy());
 		if (ho == null) {
 			return 0.0;
 		}
-		String name = ho.getName();
-		Double value = calc.getValue(name, amount, player) * durabilityPercent;
-		double salestax = calc.getSalesTax(player, value);
+		HyperPlayer hp = hc.getDataFunctions().getHyperPlayer(player);
+		Double value = ho.getValue(amount, hp);
+		double salestax = hp.getSalesTax(value);
 		value = value - salestax;
 		value = calc.twoDecimals(value);
 		return value;
@@ -98,7 +83,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		return sf.getHyperObject(name, economy).getEconomy();
 	}
 
-	public String getType(String name, String economy) {
+	public HyperObjectType getType(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		DataHandler sf = hc.getDataFunctions();
 		return sf.getHyperObject(name, economy).getType();
@@ -273,8 +258,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		if (ho == null) {
 			return 0.0;
 		}
-		String name = ho.getName();
-		Double price = calc.getCost(name, amount, "default");
+		Double price = ho.getCost(amount);
 		price = calc.twoDecimals(price);
 		return price;
 	}
@@ -286,8 +270,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		if (ho == null) {
 			return 0.0;
 		}
-		String name = ho.getName();
-		Double value = calc.getTvalue(name, amount, "default");
+		Double value = ho.getValue(amount);
 		value = calc.twoDecimals(value);
 		return value;
 	}
@@ -305,14 +288,18 @@ public class HyperObjectAPI implements HyperObjectInterface {
 
 	public TransactionResponse buy(Player p, HyperObject o, int amount) {
 		HyperConomy hc = HyperConomy.hc;
-		Transaction tran = hc.getTransaction();
-		return tran.buy(o, amount, p, null);
+		HyperPlayer hp = hc.getDataFunctions().getHyperPlayer(p);
+		PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+		pt.setHyperObject(o);
+		pt.setAmount(amount);
+		return hp.processTransaction(pt);
 	}
 
 	public TransactionResponse sellAll(Player p) {
 		HyperConomy hc = HyperConomy.hc;
-		Transaction tran = hc.getTransaction();
-		return tran.sellAll(p, null);
+		HyperPlayer hp = hc.getDataFunctions().getHyperPlayer(p);
+		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_ALL);
+		return hp.processTransaction(pt);
 	}
 
 	public ArrayList<HyperObject> getAvailableObjects(Player p) {
@@ -358,7 +345,7 @@ public class HyperObjectAPI implements HyperObjectInterface {
 			if (lObject.getEconomy().equals(hp.getEconomy())) {
 				int lId = lObject.getId();
 				double lStock = lObject.getStock();
-				String lType = lObject.getType();
+				String lType = HyperObjectType.getString(lObject.getType());
 				double lMaxStock = lObject.getMaxstock();
 				int lData = lObject.getData();
 				int lDurability = lObject.getDurability();
@@ -385,7 +372,9 @@ public class HyperObjectAPI implements HyperObjectInterface {
 
 	public TransactionResponse sellAll(Player p, Inventory inventory) {
 		HyperConomy hc = HyperConomy.hc;
-		Transaction tran = hc.getTransaction();
-		return tran.sellAll(p, inventory);
+		HyperPlayer hp = hc.getDataFunctions().getHyperPlayer(p);
+		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_ALL);
+		pt.setGiveInventory(inventory);
+		return hp.processTransaction(pt);
 	}
 }

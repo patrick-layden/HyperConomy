@@ -381,7 +381,7 @@ public class SQLEconomy {
 			items.set(name, null);
 			enchants.set(name, null);
 			HyperObject ho = sf.getHyperObject(name, economy);
-			String newtype = ho.getType();
+			String newtype = HyperObjectType.getString(ho.getType());
 			String newcategory = ho.getCategory();
 			String newmaterial = ho.getMaterial();
 			int newid = ho.getId();

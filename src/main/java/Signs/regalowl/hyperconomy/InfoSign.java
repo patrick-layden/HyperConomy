@@ -13,6 +13,7 @@ public class InfoSign {
 	private double multiplier;
 	private String economy;
 	private EnchantmentClass enchantClass;
+	private HyperObject ho;
 	private int x;
 	private int y;
 	private int z;
@@ -87,6 +88,7 @@ public class InfoSign {
 			}
 			isEnchantment = dh.enchantTest(this.objectName);
 			Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
+			ho = hc.getDataFunctions().getHyperObject(objectName, economy);
 			if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
 				s = (Sign) signblock.getState();
 				return true;
@@ -155,25 +157,25 @@ public class InfoSign {
 			switch (type) {
 				case BUY:
 					if (isEnchantment) {
-						double cost = calc.getEnchantCost(objectName, enchantClass, economy);
-						cost = calc.twoDecimals((cost + calc.getEnchantTax(objectName, economy, cost)) * multiplier);
+						double cost = ho.getCost(enchantClass);
+						cost = calc.twoDecimals((cost + ho.getPurchaseTax(cost)) * multiplier);
 						line3 = ChatColor.WHITE + "Buy:";
 						line4 = ChatColor.GREEN + L.get("CURRENCY") + cost;
 					} else {
-						double pcost = calc.getCost(objectName, 1, economy);
+						double pcost = ho.getCost(1);
 						line3 = ChatColor.WHITE + "Buy:";
-						line4 = ChatColor.GREEN + L.get("CURRENCY") + (calc.twoDecimals((pcost + calc.getPurchaseTax(objectName, economy, pcost)) * multiplier));
+						line4 = ChatColor.GREEN + L.get("CURRENCY") + (calc.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
 					}
 					break;
 				case SELL:
 					if (isEnchantment) {
-						double value = calc.getEnchantValue(objectName, enchantClass, economy);
-						value = calc.twoDecimals((value - calc.getSalesTax(null, value)) * multiplier);
+						double value = ho.getValue(enchantClass);
+						value = calc.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "Sell:";
 						line4 = ChatColor.GREEN + L.get("CURRENCY") + value;
 					} else {
-						double value = calc.getTvalue(objectName, 1, economy);
-						value = calc.twoDecimals((value - calc.getSalesTax(null, value)) * multiplier);
+						double value = ho.getValue(1);
+						value = calc.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "Sell:";
 						line4 = ChatColor.GREEN + L.get("CURRENCY") + value;
 					}
@@ -241,28 +243,28 @@ public class InfoSign {
 					break;
 				case TAX:
 					if (isEnchantment) {
-						double price = calc.getEnchantCost(objectName, enchantClass, economy);
-						double taxpaid = calc.twoDecimals(calc.getEnchantTax(objectName, economy, price) * multiplier);
+						double price = ho.getCost(enchantClass);
+						double taxpaid = calc.twoDecimals(ho.getPurchaseTax(price) * multiplier);
 						line3 = ChatColor.WHITE + "Tax:";
 						line4 = ChatColor.GREEN + "" + L.get("CURRENCY") + taxpaid;
 					} else {
 						line3 = ChatColor.WHITE + "Tax:";
-						line4 = ChatColor.GREEN + L.get("CURRENCY") + calc.twoDecimals(calc.getPurchaseTax(objectName, economy, calc.getCost(objectName, 1, economy) * multiplier));
+						line4 = ChatColor.GREEN + L.get("CURRENCY") + calc.twoDecimals(ho.getPurchaseTax(ho.getCost(1) * multiplier));
 					}
 					break;
 				case SB:
 					if (isEnchantment) {
-						double cost = calc.getEnchantCost(objectName, enchantClass, economy);
-						cost = calc.twoDecimals((cost + calc.getEnchantTax(objectName, economy, cost)) * multiplier);
+						double cost = ho.getCost(enchantClass);
+						cost = calc.twoDecimals((cost + ho.getPurchaseTax(cost)) * multiplier);
 						line4 = ChatColor.WHITE + "B:" + "\u00A7a" + L.get("CURRENCY") + cost;
-						double value = calc.getEnchantValue(objectName, enchantClass, economy);
-						value = calc.twoDecimals((value - calc.getSalesTax(null, value)) * multiplier);
+						double value = ho.getValue(enchantClass);
+						value = calc.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "S:" + ChatColor.GREEN + L.get("CURRENCY") + value;
 					} else {
-						double pcost = calc.getCost(objectName, 1, economy);
-						line4 = ChatColor.WHITE + "B:" + ChatColor.GREEN + L.get("CURRENCY") + (calc.twoDecimals((pcost + calc.getPurchaseTax(objectName, economy, pcost)) * multiplier));
-						double value = calc.getTvalue(objectName, 1, economy);
-						value = calc.twoDecimals((value - calc.getSalesTax(null, value)) * multiplier);
+						double pcost = ho.getCost(1);
+						line4 = ChatColor.WHITE + "B:" + ChatColor.GREEN + L.get("CURRENCY") + (calc.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
+						double value = ho.getValue(1);
+						value = calc.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "S:" + ChatColor.GREEN + L.get("CURRENCY") + value;
 					}
 					break;
@@ -292,7 +294,7 @@ public class InfoSign {
 			this.increment = inc;
 			hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
 				public void run() {
-					String percentchange = hc.getHistory().getPercentChange(objectName, timeValueHours, economy);
+					String percentchange = hc.getHistory().getPercentChange(ho, timeValueHours);
 					String colorcode = getcolorCode(percentchange);
 					line3 = ChatColor.WHITE + "History:";
 					line4 = ChatColor.WHITE + "" + timeValue + increment.toLowerCase() + colorcode + "(" + percentchange + ")";

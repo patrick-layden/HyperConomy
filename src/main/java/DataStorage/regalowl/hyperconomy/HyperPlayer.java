@@ -2,13 +2,14 @@ package regalowl.hyperconomy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 
 
 public class HyperPlayer {
 
 	private HyperConomy hc;
-	
+	private TransactionProcessor tp;
 	
 	private String name;
 	private String economy;
@@ -23,6 +24,7 @@ public class HyperPlayer {
 	
 	HyperPlayer() {
 		hc = HyperConomy.hc;
+		tp = new TransactionProcessor(this);
 	}
 	
 	
@@ -139,5 +141,56 @@ public class HyperPlayer {
 		this.salt = salt;
 	}
 	
+	
+	public Player getPlayer() {
+		return Bukkit.getPlayer(name);
+	}
+	
+	public Inventory getInventory() {
+		Player p = Bukkit.getPlayer(name);
+		if (p != null) {
+			return p.getInventory();
+		} else {
+			return null;
+		}
+	}
+
+	public boolean sendMessage(String message) {
+		if (getPlayer() != null) {
+			getPlayer().sendMessage(message);
+			return true;
+		}
+		return false;
+	}
+	
+	public double getSalesTax(Double price) {
+		Account acc = hc.getAccount();
+		double salestax = 0;
+		if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+			double moneyfloor = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-floor");
+			double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
+			double cbal = acc.getBalance(name);
+			double maxtaxrate = hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent") / 100.0;
+			if (cbal >= moneycap) {
+				salestax = price * maxtaxrate;
+			} else if (cbal <= moneyfloor) {
+				salestax = 0;
+			} else {
+				double taxrate = ((cbal - moneyfloor) / (moneycap - moneyfloor));
+				if (taxrate > maxtaxrate) {
+					taxrate = maxtaxrate;
+				}
+				salestax = price * taxrate;
+			}
+		} else {
+			double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
+			salestax = (salestaxpercent / 100) * price;
+		}
+		return salestax;
+	}
+	
+	public TransactionResponse processTransaction(PlayerTransaction playerTransaction) {
+		return tp.processTransaction(playerTransaction);
+	}
 	
 }

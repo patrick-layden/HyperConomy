@@ -12,9 +12,8 @@ public class Hv {
 		DataHandler sf = hc.getDataFunctions();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
-		Transaction tran = hc.getTransaction();
-		ETransaction ench = hc.getETransaction();
 		ShopFactory s = hc.getShopFactory();
+		InventoryManipulation im = hc.getInventoryManipulation();
 		DataHandler dh = hc.getDataFunctions();
 		int amount;
 		try {
@@ -34,20 +33,20 @@ public class Hv {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
 						String nam = ho.getName();
-						double val = calc.getValue(nam, amount, player);
-						if (calc.isDurable(itd) && amount > 1) {
-							int numberofitem = tran.countItems(itd, player.getItemInHand().getData().getData(), player.getInventory());
+						double val = ho.getValue(amount, hp);
+						if (ho.isDurable() && amount > 1) {
+							int numberofitem = im.countItems(itd, player.getItemInHand().getData().getData(), player.getInventory());
 							if (amount - numberofitem > 0) {
 								int addamount = amount - numberofitem;
-								val = val + calc.getTvalue(nam, addamount, playerecon);
+								val = val + ho.getValue(addamount);
 							}
 						}
-						double salestax = calc.getSalesTax(player, val);
+						double salestax = hp.getSalesTax(val);
 						val = calc.twoDecimals(val - salestax);
 						player.sendMessage(L.get("LINE_BREAK"));
 						player.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, nam));
-						double cost = calc.getCost(nam, amount, playerecon);
-						double taxpaid = calc.getPurchaseTax(nam, playerecon, cost);
+						double cost = ho.getCost(amount);
+						double taxpaid = ho.getPurchaseTax(cost);
 						cost = calc.twoDecimals(cost + taxpaid);
 						if (cost > Math.pow(10, 10)) {
 							cost = -1;
@@ -58,12 +57,12 @@ public class Hv {
 						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, nam));
 						player.sendMessage(L.get("LINE_BREAK"));
 					}
-				if (ench.hasenchants(iinhand)) {
+				if (im.hasenchants(iinhand)) {
 					Account acc = hc.getAccount();
 					player.getItemInHand().getEnchantments().keySet().toArray();
 					Iterator<Enchantment> ite = player.getItemInHand().getEnchantments().keySet().iterator();
 					player.sendMessage(L.get("LINE_BREAK"));
-					double duramult = ench.getDuramult(player);
+					double duramult = im.getDuramult(player);
 					while (ite.hasNext()) {
 						String rawstring = ite.next().toString();
 						String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
@@ -73,9 +72,9 @@ public class Hv {
 						String enam = sf.getEnchantNameWithoutLevel(enchname);
 						String fnam = enam + lvl;
 						String mater = player.getItemInHand().getType().name();
-						double value = calc.getEnchantValue(fnam, EnchantmentClass.fromString(mater), playerecon) * duramult;
-						double cost = calc.getEnchantCost(fnam, EnchantmentClass.fromString(mater), playerecon);
-						cost = cost + calc.getEnchantTax(fnam, playerecon, cost);
+						double value = ho.getValue(EnchantmentClass.fromString(mater)) * duramult;
+						double cost = ho.getCost(EnchantmentClass.fromString(mater));
+						cost = cost + ho.getPurchaseTax(cost);
 						value = calc.twoDecimals(value);
 						cost = calc.twoDecimals(cost);
 						double salestax = 0;

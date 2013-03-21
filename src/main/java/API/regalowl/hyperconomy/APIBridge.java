@@ -44,7 +44,7 @@ public class APIBridge implements OldAPI
 	@Deprecated
 	public String getType(String name, String economy) {
 		HyperObjectAPI hoi = new HyperObjectAPI();
-		return hoi.getType(name, economy);
+		return HyperObjectType.getString(hoi.getType(name, economy));
 	}
 
 	@Deprecated
