@@ -296,7 +296,7 @@ public class TransactionProcessor {
 			ShopFactory s = hc.getShopFactory();
 			Inventory invent = null;
 			String playerecon = hp.getEconomy();
-			int itd = 0;
+			int id = 0;
 			if (giveInventory == null) {
 				invent = hp.getPlayer().getInventory();
 			} else {
@@ -304,28 +304,28 @@ public class TransactionProcessor {
 			}
 			for (int slot = 0; slot < invent.getSize(); slot++) {
 				if (invent.getItem(slot) != null) {
-					itd = invent.getItem(slot).getTypeId();
+					id = invent.getItem(slot).getTypeId();
 					ItemStack stack = invent.getItem(slot);
 					int da = calc.getDamageValue(invent.getItem(slot));
-					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, playerecon);
+					hyperObject = hc.getDataFunctions().getHyperObject(id, da, playerecon);
 					if (im.hasenchants(stack) == false) {
-						if (ho != null) {
-							String nam = ho.getName();
-							if (s.getShop(hp.getPlayer()).has(nam)) {
+						if (hyperObject != null) {
+							if (s.getShop(hp.getPlayer()).has(hyperObject.getName())) {
+								amount = im.countItems(id, da, hp.getInventory());
 								TransactionResponse sresponse = sell();
 								if (sresponse.successful()) {
-									response.addSuccess(sresponse.getMessage(), sresponse.getPrice(), ho);
+									response.addSuccess(sresponse.getMessage(), sresponse.getPrice(), hyperObject);
 								} else {
-									response.addFailed(sresponse.getMessage(), ho);
+									response.addFailed(sresponse.getMessage(), hyperObject);
 								}
 							} else {
-								response.addFailed(L.get("CANT_BE_TRADED"), ho);
+								response.addFailed(L.get("CANT_BE_TRADED"), hyperObject);
 							}
 						} else {
 							response.addFailed(L.get("CANT_BE_TRADED"), null);
 						}
 					} else {
-						response.addFailed(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"), ho);
+						response.addFailed(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"), hyperObject);
 					}
 				} 
 			}
@@ -570,7 +570,7 @@ public class TransactionProcessor {
 			}
 			if (!toomuch) {
 				im.removeItems(hyperObject.getId(), hyperObject.getData(), amount, hp.getPlayer().getInventory());
-				im.addItems(hyperObject.getId(), hyperObject.getData(), amount, receiveInventory);
+				im.addItems(amount, hyperObject.getId(), hyperObject.getData(), receiveInventory);
 				acc.deposit(price, hp.getPlayer());
 				acc.withdrawAccount(price, tradePartner.getName());
 				response.addSuccess(L.f(L.get("SELL_CHEST_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), tradePartner.getName()), calc.twoDecimals(price), hyperObject);
