@@ -19,23 +19,32 @@ public class SQLRead {
 
 	
 	public DatabaseConnection getDatabaseConnection() {
-		while (available.size() == 0) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				new HyperError(e);
+		try {
+			while (available.size() == 0) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					new HyperError(e);
+				}
 			}
-		}
-		DatabaseConnection dc = available.get(0);
-		available.remove(dc);
-		if (dc == null) {
+			DatabaseConnection dc = available.get(0);
+			available.remove(dc);
+			if (dc == null) {
+				if (hc.useMySQL()) {
+					dc = new MySQLConnection();
+				} else {
+					dc = new SQLiteConnection();
+				}
+			}
+			return dc;
+		} catch (Exception e) {
+			new HyperError(e);
 			if (hc.useMySQL()) {
-				dc = new MySQLConnection();
+				return new MySQLConnection();
 			} else {
-    			dc = new SQLiteConnection();
+				return new SQLiteConnection();
 			}
 		}
-		return dc;
 	}
     
     

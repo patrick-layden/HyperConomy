@@ -524,7 +524,6 @@ public class ChestShop implements Listener{
 					    				int camount = icevent.getCurrentItem().getAmount();
 					    				
 						    			if (slot < 27 && ho != null) {
-						    				String name = ho.getName();
 						    				if (buy) {
 						    					/*
 								    			if (setprice) {
@@ -548,7 +547,6 @@ public class ChestShop implements Listener{
 						    				}
 
 						    			} else if (slot >= 27 && ho != null){
-						    				String name = ho.getName();
 						    				if (sell) {
 						    					int itemamount = im.countItems(id, data, icevent.getView().getTopInventory());
 						    					
@@ -650,9 +648,9 @@ public class ChestShop implements Listener{
 						    			}
 					    			} else {
 
-					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
+					    				//HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
 						    				
-							    			if (slot < 27 && (ho != null || icevent.getCurrentItem().getType().equals(Material.ENCHANTED_BOOK))) {
+							    			if (slot < 27) {
 							    				
 							    				if (buy) {
 				
@@ -661,7 +659,8 @@ public class ChestShop implements Listener{
 								    						int lvl = im.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
 								    						String nam = dh.getEnchantNameWithoutLevel(enchantment.getName());
 								        					String fnam = nam + lvl;
-								        					price += ho.getValue(EnchantmentClass.fromString(p.getItemInHand().getType().toString()));
+								        					HyperObject ho = dh.getHyperObject(fnam, hp.getEconomy());
+								        					price += ho.getValue(EnchantmentClass.fromString(p.getItemInHand().getType().name()));
 									    					if (setprice) {
 									    						price = staticprice;
 									    					}
@@ -681,7 +680,7 @@ public class ChestShop implements Listener{
 							    				}
 				
 							    				
-							    			} else if (slot >= 27 && ho != null) {
+							    			} else {
 							    				
 							    				p.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
 							    				
@@ -700,7 +699,6 @@ public class ChestShop implements Listener{
 					    				int data =  icevent.getCurrentItem().getDurability();
 					    				
 						    			if (slot < 27 && ho != null) {
-						    				String name = ho.getName();
 						    				if (buy) {
 						    					/*
 						    					if (setprice) {
@@ -726,7 +724,6 @@ public class ChestShop implements Listener{
 			
 						    				
 						    			} else if (slot >= 27 && ho != null) {
-						    				String name = ho.getName();
 						    				if (sell) {
 						    					int itemamount = im.countItems(id, data, icevent.getView().getTopInventory());
 						    					
@@ -776,21 +773,13 @@ public class ChestShop implements Listener{
 						    				
 						    			}
 					    			} else {				    				
-					    				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
-						    				
-							    			if (slot < 27 && (ho != null || icevent.getCurrentItem().getType().equals(Material.ENCHANTED_BOOK))) {
+							    			if (slot < 27) {
 							    				if (buy) {	
 							    					for (Enchantment enchantment : im.listEnchantments(icevent.getCurrentItem())) {
 							    						int lvl = im.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
 							    						String nam = dh.getEnchantNameWithoutLevel(enchantment.getName());
 							        					String fnam = nam + lvl;
-							        					/*
-							        					if (setprice) {
-							        						ench.buyChestEnchant(fnam, p, icevent.getCurrentItem(), line34, staticprice);
-							        					} else {
-							        						ench.buyChestEnchant(fnam, p, icevent.getCurrentItem(), line34);
-							        					}
-							        					*/
+							        					HyperObject ho = dh.getHyperObject(fnam, hp.getEconomy());
 														PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_ITEM);
 														pt.setHyperObject(ho);
 														pt.setTradePartner(dh.getHyperPlayer(line34));
@@ -804,10 +793,8 @@ public class ChestShop implements Listener{
 							    				} else {
 							    					p.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
 							    				}
-							    			} else if (slot >= 27 && ho != null) {
-							    				
+							    			} else if (slot >= 27) {
 							    				p.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
-							    				
 							    			}
 					    			}
 					

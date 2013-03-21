@@ -80,6 +80,7 @@ public class TransactionProcessor {
 			case BUY_FROM_INVENTORY:
 				return buyFromInventory();
 			case BUY_FROM_ITEM:
+				return buyEnchantFromItem();
 			default:
 				return new TransactionResponse(hp);
 		}
