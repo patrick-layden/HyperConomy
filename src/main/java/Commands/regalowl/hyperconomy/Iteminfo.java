@@ -92,7 +92,7 @@ public class Iteminfo {
 			double dura = player.getItemInHand().getDurability();
 			double maxdura = player.getItemInHand().getType().getMaxDurability();
 			double durp = (1 - dura/maxdura) * 100;
-			if  (ho.isDurable()) {
+			if  (ho != null && ho.isDurable()) {
 				durp = (long)Math.floor(durp + .5);
 			} else {
 				durp = 100;

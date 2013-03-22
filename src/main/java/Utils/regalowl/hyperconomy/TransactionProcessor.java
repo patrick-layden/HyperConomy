@@ -317,16 +317,16 @@ public class TransactionProcessor {
 								if (sresponse.successful()) {
 									response.addSuccess(sresponse.getMessage(), sresponse.getPrice(), hyperObject);
 								} else {
-									response.addFailed(sresponse.getMessage(), hyperObject);
+									response.addFailed(sresponse.getMessage(), hyperObject, stack);
 								}
 							} else {
-								response.addFailed(L.get("CANT_BE_TRADED"), hyperObject);
+								response.addFailed(L.get("CANT_BE_TRADED"), hyperObject, stack);
 							}
 						} else {
-							response.addFailed(L.get("CANT_BE_TRADED"), null);
+							response.addFailed(L.get("CANT_BE_TRADED"), hyperObject, stack);
 						}
 					} else {
-						response.addFailed(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"), hyperObject);
+						response.addFailed(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"), hyperObject, stack);
 					}
 				} 
 			}
