@@ -204,6 +204,77 @@ public class HyperObjectValue {
 	
 	
 	
+	
+	
+	
+	
+	/**
+	 * 
+	 * 
+	 * This function calculates the value for the given enchantment.
+	 * 
+	 */
+	public double getEnchantValue(EnchantmentClass eclass, HyperPlayer hp) {
+		try {
+			Calculation calc = hc.getCalculation();
+			double cost = 0;
+			double classvalue = im.getclassValue(eclass);
+			boolean stax;
+			stax = Boolean.parseBoolean(ho.getIsstatic());
+			double duramult = im.getDuramult(hp.getPlayer());
+			if (hp.getPlayer().getItemInHand().getType().equals(Material.ENCHANTED_BOOK)) {
+				duramult = 1;
+			}
+			if (!stax) {
+				double shopstock;
+				double value;
+				double median;
+				double icost;
+				shopstock = ho.getStock();
+				value = ho.getValue();
+				median = ho.getMedian();
+				icost = ho.getStartprice();
+				if (icost >= ((median * value) / shopstock) && shopstock > 1) {
+					ho.setInitiation("false");
+				}
+				double price = (median * value) / shopstock;
+				cost = cost + price;
+				cost = cost * classvalue;
+				
+				cost = applyCeilingFloor(cost);
+				Boolean initial;
+				initial = Boolean.parseBoolean(ho.getInitiation());
+				if (initial == true) {
+					cost = icost * classvalue * duramult;
+					cost = applyCeilingFloor(cost);
+				}
+				if (cost < Math.pow(10, 10)) {
+					cost = calc.twoDecimals(cost);
+				} else {
+					cost = 3235624645000.7;
+				}
+			} else {
+				double statprice;
+				statprice = ho.getStaticprice();
+				cost = statprice * classvalue * duramult;
+				cost = applyCeilingFloor(cost);
+			}
+			return cost;
+		} catch (Exception e) {
+			String info = "Calculation getEnchantValue() passed values name='" + ho.getName() + "', material='" + eclass.toString() + "'";
+			new HyperError(e, info);
+			double value = 0;
+			return value;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * 
@@ -211,7 +282,7 @@ public class HyperObjectValue {
 	 * This function calculates the value for the given enchantment.
 	 * 
 	 */
-	public double getEnchantValue(EnchantmentClass eclass) {
+	public double getTheoreticalEnchantValue(EnchantmentClass eclass) {
 		try {
 			Calculation calc = hc.getCalculation();
 			double cost = 0;

@@ -70,6 +70,63 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		value = calc.twoDecimals(value);
 		return value;
 	}
+	
+	
+	public double getTruePurchasePrice(HyperObject hyperObject, EnchantmentClass enchantClass, int amount) {
+		if (hyperObject == null) {
+			return 0.0;
+		}
+		if (enchantClass == null || enchantClass == EnchantmentClass.NONE) {
+			enchantClass = EnchantmentClass.DIAMOND;
+		}
+		if (hyperObject.getType() == HyperObjectType.ENCHANTMENT) {
+			double cost = hyperObject.getCost(enchantClass);
+			cost += hyperObject.getPurchaseTax(cost);
+			return cost;
+		} else {
+			double cost = hyperObject.getCost(amount);
+			cost += hyperObject.getPurchaseTax(cost);
+			return cost;
+		}
+	}
+
+	public double getTrueSaleValue(HyperObject hyperObject, HyperPlayer hyperPlayer, EnchantmentClass enchantClass, int amount) {
+		if (hyperObject == null || hyperPlayer == null) {
+			return 0.0;
+		}
+		if (hyperObject.getType() == HyperObjectType.ENCHANTMENT) {
+			if (enchantClass == null || enchantClass == EnchantmentClass.NONE) {
+				enchantClass = EnchantmentClass.DIAMOND;
+			}
+			double value = hyperObject.getValue(enchantClass, hyperPlayer);
+			value -= hyperPlayer.getSalesTax(value);
+			return value;
+		} else {
+			double value = hyperObject.getValue(amount, hyperPlayer);
+			value -= hyperPlayer.getSalesTax(value);
+			return value;
+		}
+	}
+	
+	
+	public double getTheoreticalSaleValue(HyperObject hyperObject, EnchantmentClass enchantClass, int amount) {
+		if (hyperObject == null) {
+			return 0.0;
+		}
+		if (hyperObject.getType() == HyperObjectType.ENCHANTMENT) {
+			if (enchantClass == null || enchantClass == EnchantmentClass.NONE) {
+				enchantClass = EnchantmentClass.DIAMOND;
+			}
+			double value = hyperObject.getValue(enchantClass);
+			value -= hyperObject.getSalesTaxEstimate(value);
+			return value;
+		} else {
+			double value = hyperObject.getValue(amount);
+			value -= hyperObject.getSalesTaxEstimate(value);
+			return value;
+		}
+	}
+	
 
 	public String getName(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
@@ -285,6 +342,38 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		HyperObject ho = dh.getHyperObject(id, damageValue, economy);
 		return ho;
 	}
+	
+	public HyperObject getHyperObject(ItemStack stack, String player) {
+		HyperConomy hc = HyperConomy.hc;
+		Calculation calc = hc.getCalculation();
+		DataHandler dh = hc.getDataFunctions();
+		String economy = dh.getHyperPlayer(player).getEconomy();
+		int id = stack.getTypeId();
+		int damageValue = calc.getDamageValue(stack);
+		HyperObject ho = dh.getHyperObject(id, damageValue, economy);
+		return ho;
+	}
+	
+	
+	public HyperObject getHyperObject(String name, String economy) {
+		HyperConomy hc = HyperConomy.hc;
+		DataHandler dh = hc.getDataFunctions();
+		return dh.getHyperObject(name, economy);
+	}
+	
+	public HyperPlayer getHyperPlayer(String name) {
+		HyperConomy hc = HyperConomy.hc;
+		DataHandler dh = hc.getDataFunctions();
+		return dh.getHyperPlayer(name);
+	}
+	
+	public ArrayList<HyperObject> getEnchantmentHyperObjects(ItemStack stack, String player) {
+		HyperConomy hc = HyperConomy.hc;
+		InventoryManipulation im = hc.getInventoryManipulation();
+		DataHandler dh = hc.getDataFunctions();
+		HyperPlayer hp = dh.getHyperPlayer(player);
+		return im.getEnchantmentObjects(stack, hp.getEconomy());
+	}
 
 	public TransactionResponse buy(Player p, HyperObject o, int amount) {
 		HyperConomy hc = HyperConomy.hc;
@@ -350,8 +439,45 @@ public class HyperObjectAPI implements HyperObjectInterface {
 				int lData = lObject.getData();
 				int lDurability = lObject.getDurability();
 				String lName = lObject.getName();
-				double lPurchase = getTruePurchasePrice(lId, lDurability, 1, hp.getEconomy());
-				double lSale = getTrueSaleValue(lId, lDurability, 1, pPlayer);
+				double lPurchase = getTruePurchasePrice(lObject, EnchantmentClass.DIAMOND, 1);
+				double lSale = getTrueSaleValue(lObject, hp, EnchantmentClass.DIAMOND, 1);
+
+				// Add information to MAP
+				Map<String, String> lMapObject = new HashMap<String, String>();
+				lMapObject.put("id", "" + lId);
+				lMapObject.put("stock", "" + lStock);
+				lMapObject.put("type", lType);
+				lMapObject.put("maxStock", "" + lMaxStock);
+				lMapObject.put("purchasePrice", "" + lPurchase);
+				lMapObject.put("salePrice", "" + lSale);
+				lMapObject.put("data", "" + lData);
+				lMapObject.put("durability", "" + lDurability);
+				lMapObject.put("name", "" + lName);
+				lAllStock.add(lMapObject);
+			}
+		}
+		return lAllStock;
+	}
+	
+	
+	public List<Map<String, String>> getAllStockEconomy(String economy) {
+		List<Map<String, String>> lAllStock = new ArrayList<Map<String, String>>();
+		HyperConomy hc = HyperConomy.hc;
+		DataHandler sf = hc.getDataFunctions();
+		List<HyperObject> lObjects = sf.getHyperObjects();
+		// For each object
+		for (HyperObject lObject : lObjects) {
+			// If the object is from the economy
+			if (lObject.getEconomy().equals(economy)) {
+				int lId = lObject.getId();
+				double lStock = lObject.getStock();
+				String lType = HyperObjectType.getString(lObject.getType());
+				double lMaxStock = lObject.getMaxstock();
+				int lData = lObject.getData();
+				int lDurability = lObject.getDurability();
+				String lName = lObject.getName();
+				double lPurchase = getTruePurchasePrice(lObject, EnchantmentClass.DIAMOND, 1);
+				double lSale = getTheoreticalSaleValue(lObject, EnchantmentClass.DIAMOND, 1);
 
 				// Add information to MAP
 				Map<String, String> lMapObject = new HashMap<String, String>();
@@ -377,4 +503,21 @@ public class HyperObjectAPI implements HyperObjectInterface {
 		pt.setGiveInventory(inventory);
 		return hp.processTransaction(pt);
 	}
+
+	public EnchantmentClass getEnchantmentClass(ItemStack stack) {
+		HyperConomy hc = HyperConomy.hc;
+		InventoryManipulation im = hc.getInventoryManipulation();
+		return im.getEnchantmentClass(stack);
+	}
+
+
+
+
+
+
+
+
+
+
+
 }

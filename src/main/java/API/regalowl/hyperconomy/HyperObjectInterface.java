@@ -84,6 +84,15 @@ public interface HyperObjectInterface
 	
 	
 	
+	double getTruePurchasePrice(HyperObject hyperObject, EnchantmentClass enchantClass, int amount);
+
+	double getTrueSaleValue(HyperObject hyperObject, HyperPlayer hyperPlayer, EnchantmentClass enchantClass, int amount);
+	
+	double getTheoreticalSaleValue(HyperObject hyperObject, EnchantmentClass enchantClass, int amount);
+	
+	
+	
+	
 	public String getName(String name, String economy);
 
 	public String getEconomy(String name, String economy);
@@ -153,6 +162,14 @@ public interface HyperObjectInterface
 	 */
 	public HyperObject getHyperObject(ItemStack stack, Player player);
 	
+	public HyperObject getHyperObject(ItemStack stack, String player);
+	
+	public HyperObject getHyperObject(String name, String economy);
+	
+	public HyperPlayer getHyperPlayer(String name);
+	
+	public ArrayList<HyperObject> getEnchantmentHyperObjects(ItemStack stack, String player);
+	
 	public TransactionResponse buy(Player p, HyperObject o, int amount);
 	
 	public TransactionResponse sellAll(Player p);
@@ -195,4 +212,8 @@ public interface HyperObjectInterface
 	 * @return List of each objects with properties
 	 */
 	public List<Map<String, String>> getAllStockPlayer(Player pPlayer);
+	
+	public List<Map<String, String>> getAllStockEconomy(String economy);
+	
+	public EnchantmentClass getEnchantmentClass(ItemStack stack);
 }

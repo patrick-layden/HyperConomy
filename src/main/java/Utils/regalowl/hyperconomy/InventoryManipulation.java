@@ -350,6 +350,19 @@ public class InventoryManipulation {
 		}
 	}
 	
+	
+	
+	public ArrayList<HyperObject> getEnchantmentObjects (ItemStack stack, String economy) {
+		ArrayList<HyperObject> enchantmentObjects = new ArrayList<HyperObject>();
+		for(String enchantment:convertEnchantmentMapToNames(getEnchantmentMap(stack))) {
+			HyperObject eo = hc.getDataFunctions().getHyperObject(enchantment, economy);
+			if (eo != null) {
+				enchantmentObjects.add(eo);
+			}
+		}
+		return enchantmentObjects;
+	}
+	
 	/**
 	 * @param stack An ItemStack
 	 * @return ArrayList of all enchantments as String on the ItemStack
@@ -465,6 +478,10 @@ public class InventoryManipulation {
 			new HyperError(e, info);
 			return 0;
 		}
+	}
+	
+	public EnchantmentClass getEnchantmentClass(ItemStack stack) {
+		return EnchantmentClass.fromString(stack.getType().name());
 	}
 	
 	
