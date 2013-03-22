@@ -7920,3 +7920,343 @@ netherbrickslab:
   initiation:
     initiation: true
     startprice: 20.0    
+activatorrail:
+  information:
+    type: item
+    category: unknown
+    material: ACTIVATOR_RAIL
+    id: 157
+    data: 0
+  value: 42.0
+  price:
+    static: false
+    staticprice: 84.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 84.0
+redstoneblock:
+  information:
+    type: item
+    category: unknown
+    material: REDSTONE_BLOCK
+    id: 152
+    data: 0
+  value: 60.0
+  price:
+    static: false
+    staticprice: 120.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 120.0
+daylightsensor:
+  information:
+    type: item
+    category: unknown
+    material: DAYLIGHT_DETECTOR
+    id: 151
+    data: 0
+  value: 53.0
+  price:
+    static: false
+    staticprice: 106.0
+  stock:
+    stock: 0
+    median: 2500
+  initiation:
+    initiation: true
+    startprice: 106.0
+dropper:
+  information:
+    type: item
+    category: unknown
+    material: DROPPER
+    id: 158
+    data: 0
+  value: 14.0
+  price:
+    static: false
+    staticprice: 28.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 28.0
+hopper:
+  information:
+    type: item
+    category: unknown
+    material: HOPPER
+    id: 154
+    data: 0
+  value: 165.0
+  price:
+    static: false
+    staticprice: 330.0
+  stock:
+    stock: 0
+    median: 2500
+  initiation:
+    initiation: true
+    startprice: 330.0
+minecartwithhopper:
+  information:
+    type: item
+    category: unknown
+    material: HOPPER_MINECART
+    id: 408
+    data: 0
+  value: 325.0
+  price:
+    static: false
+    staticprice: 650.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 650.0
+minecartwithtnt:
+  information:
+    type: item
+    category: unknown
+    material: EXPLOSIVE_MINECART
+    id: 407
+    data: 0
+  value: 435.0
+  price:
+    static: false
+    staticprice: 870.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 870.0
+comparator:
+  information:
+    type: item
+    category: unknown
+    material: REDSTONE_COMPARATOR
+    id: 404
+    data: 0
+  value: 53.0
+  price:
+    static: false
+    staticprice: 106.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 106.0
+trappedchest:
+  information:
+    type: item
+    category: unknown
+    material: TRAPPED_CHEST
+    id: 146
+    data: 0
+  value: 22.0
+  price:
+    static: false
+    staticprice: 44.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 44.0
+goldpressureplate:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_PLATE
+    id: 147
+    data: 0
+  value: 266.66
+  price:
+    static: false
+    staticprice: 533.33
+  stock:
+    stock: 0
+    median: 2500
+  initiation:
+    initiation: true
+    startprice: 533.33
+ironpressureplate:
+  information:
+    type: item
+    category: unknown
+    material: IRON_PLATE
+    id: 148
+    data: 0
+  value: 64.0
+  price:
+    static: false
+    staticprice: 128.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 128.0
+singlenetherbrick:
+  information:
+    type: item
+    category: unknown
+    material: NETHER_BRICK_ITEM
+    id: 405
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 10.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 10.0
+netherquartz:
+  information:
+    type: item
+    category: unknown
+    material: QUARTZ
+    id: 406
+    data: 0
+  value: 20.0
+  price:
+    static: false
+    staticprice: 40.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 40.0
+netherquartzore:
+  information:
+    type: item
+    category: unknown
+    material: QUARTZ_ORE
+    id: 153
+    data: 0
+  value: 200.0
+  price:
+    static: false
+    staticprice: 400.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 400.0
+quartzblock:
+  information:
+    type: item
+    category: unknown
+    material: QUARTZ_BLOCK
+    id: 155
+    data: 0
+  value: 80.0
+  price:
+    static: false
+    staticprice: 160.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 160.0
+quartzslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 7
+  value: 40.0
+  price:
+    static: false
+    staticprice: 80.0
+  stock:
+    stock: 0
+    median: 15000
+  initiation:
+    initiation: true
+    startprice: 80.0
+quartzstairs:
+  information:
+    type: item
+    category: unknown
+    material: QUARTZ_STAIRS
+    id: 156
+    data: 0
+  value: 120.0
+  price:
+    static: false
+    staticprice: 240.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 240.0
+chiseledquartzblock:
+  information:
+    type: item
+    category: unknown
+    material: QUARTZ_BLOCK
+    id: 155
+    data: 1
+  value: 80.0
+  price:
+    static: false
+    staticprice: 160.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 160.0
+pillarquartzblock:
+  information:
+    type: item
+    category: unknown
+    material: QUARTZ_BLOCK
+    id: 155
+    data: 2
+  value: 160.0
+  price:
+    static: false
+    staticprice: 320.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 320.0
+snow:
+  information:
+    type: item
+    category: unknown
+    material: SNOW
+    id: 78
+    data: 0
+  value: 5.0
+  price:
+    static: false
+    staticprice: 10.0
+  stock:
+    stock: 0
+    median: 20000
+  initiation:
+    initiation: true
+    startprice: 10.0
