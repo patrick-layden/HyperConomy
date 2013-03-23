@@ -431,7 +431,7 @@ public class ChestShop implements Listener{
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPlaceEventTekkit(BlockPlaceEvent bpevent) {
-		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops") && hc.getYaml().getConfig().getBoolean("config.tekkit")) {
+		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
 			Player p = bpevent.getPlayer();
 			Block block = bpevent.getBlock();
 			for (BlockFace bf:allfaces) {

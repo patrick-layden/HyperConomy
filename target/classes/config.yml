@@ -32,7 +32,6 @@ config:
   language: english
   log-errors: false
   log-sqlwrite-errors: false
-  tekkit: false
   use-external-economy-plugin: true
   use-shops: true
   allow-scrolling-transaction-signs: true

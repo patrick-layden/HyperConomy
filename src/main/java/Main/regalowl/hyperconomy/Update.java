@@ -177,10 +177,6 @@ public class Update {
 	    	if (t39 == null) {
 	    		yaml.getConfig().set("config.log-sqlwrite-errors", false);
 	    	}
-	    	String t40 = yaml.getConfig().getString("config.tekkit");
-	    	if (t40 == null) {
-	    		yaml.getConfig().set("config.tekkit", false);
-	    	}
 	    	String t41 = yaml.getConfig().getString("config.use-external-economy-plugin");
 	    	if (t41 == null) {
 	    		yaml.getConfig().set("config.use-external-economy-plugin", true);
