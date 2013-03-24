@@ -30,6 +30,7 @@ public class HyperPlayer {
 	
 	HyperPlayer(String player) {
 		hc = HyperConomy.hc;
+		tp = new TransactionProcessor(this);
 		SQLWrite sw = hc.getSQLWrite();
 		for (Player p:Bukkit.getOnlinePlayers()) {
 			if (p.getName().equalsIgnoreCase(player)) {
