@@ -115,8 +115,11 @@ public class Hyperlog {
 	    	    			if (m > 100) {
 	    	    				m = 100;
 	    	    			}
-	    	    			for (int k = 0; k < m; k++) {
-	    	    				sender.sendMessage(result.get(k));
+	    	    			for (String message:result) {
+	    	    				sender.sendMessage(message);
+	    	    			}
+	    	    			if (result.size() == 0) {
+	    	    				sender.sendMessage(hc.getLanguageFile().get("HYPERLOG_NORESULT"));
 	    	    			}
 	    	    		}
 	    	    	});

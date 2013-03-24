@@ -215,6 +215,7 @@ EVALUE_CLASS_PURCHASE: &b%n &9on a &b%e &9item can be bought for: &a%c%p
 EVALUE_CLASS_SALE: &b%n &9on a &b%e &9item can be sold for: &a%c%p
 EVALUE_SALE: &b%n &9can be sold for: &a%c%p
 EVALUE_PURCHASE: &b%n &9can be purchased for: &a%c%p
+HYPERLOG_NORESULT: &9No results were found for your search.
 HYPERLOG_INVALID: &4Invalid Parameters.  Use /hyperlog [Please read about this command's arguments on bukkit.]
 HYPERLOG_INVALID_INCREMENT: &4Invalid increment.  Valid time increments are 'm', 'h', and 'd' such as '3d' or '1h'
 ITEMSETTINGS_INVALID: &4Invalid parameters. Hold an item and use /itemsettings (id) (damage value)
