@@ -6,6 +6,7 @@ public class Deleteeconomy {
 	Deleteeconomy(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
+		ShopFactory sf = hc.getShopFactory();
 		try {
 			if (args.length == 1) {
 				String economy = args[0];
@@ -16,6 +17,11 @@ public class Deleteeconomy {
 				if (hc.getDataFunctions().testEconomy(economy)) {
 					if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 						new Backup();
+					}
+					for (Shop shop:sf.getShops()) {
+						if (shop.getEconomy().equalsIgnoreCase(economy)) {
+							shop.setEconomy("default");
+						}
 					}
 					hc.getSQLEconomy().deleteEconomy(economy);
 					sender.sendMessage(L.get("ECONOMY_DELETED"));

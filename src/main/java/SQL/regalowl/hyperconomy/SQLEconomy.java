@@ -315,6 +315,7 @@ public class SQLEconomy {
 	}
 	public void deleteEconomy(String economy) {
 		hc.getSQLWrite().executeSQL("DELETE FROM hyperconomy_objects WHERE ECONOMY='" + economy + "'");
+		hc.getDataFunctions().load();
 	}
 	public ArrayList<String> loadNewItems(String economy) {
 		FileConfiguration itemsyaml = hc.getYaml().getItems();

@@ -198,6 +198,14 @@ public class ShopFactory {
 		return nam;
 	}
 	
+	public ArrayList<Shop> getShops() {
+		ArrayList<Shop> shopList = new ArrayList<Shop>();
+		for (Shop shop:shops.values()) {
+			shopList.add(shop);
+		}
+		return shopList;
+	}
+	
 
 	
 }
