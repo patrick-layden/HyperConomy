@@ -489,7 +489,8 @@ public class HyperObjectValue {
 	 * 
 	 */
 	public boolean isDurable() {
-		if ((Material.getMaterial(ho.getId()).getMaxDurability() > 0)) {
+		Material m = Material.getMaterial(ho.getId());
+		if (m != null && m.getMaxDurability() > 0) {
 			return true;
 		}
 		return false;

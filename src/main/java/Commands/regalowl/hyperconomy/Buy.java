@@ -24,12 +24,9 @@ public class Buy {
 					int amount = 0;
 					if (sf.itemTest(name)) {
 						HyperObject ho = sf.getHyperObject(name, playerecon);
-						int txpid = ho.getId();
-						int txpdata = ho.getData();
-						if (txpid == -1 && txpdata == -1) {
+						if (ho.getType() == HyperObjectType.EXPERIENCE) {
 							xp = true;
 						}
-
 
 						id = ho.getId();
 						data = ho.getData();
