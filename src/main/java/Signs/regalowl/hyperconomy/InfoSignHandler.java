@@ -89,7 +89,7 @@ public class InfoSignHandler implements Listener {
 					sns.set(signKey + ".economy", economy);
 					sns.set(signKey + ".enchantclass", enchantClass.toString());
 					infoSigns.put(signCounter.getAndIncrement(), new InfoSign(signKey, type, objectName, multiplier, economy, enchantClass, lines));
-					updateSigns();
+					startSignUpdate();
 				}
 			}
 		}
@@ -107,18 +107,16 @@ public class InfoSignHandler implements Listener {
 				is.deleteSign();
 				infoSigns.remove(signKey);
 			}
-			updateSigns();
+			startSignUpdate();
 		}
 	}
 
-	
-	public void updateSigns() {
-		startSignUpdate();
-	}
-	
-	
+
 	
 	public void startSignUpdate() {
+		if (hc.fullLock() || !hc.enabled()) {
+			return;
+		}
 		signUpdateActive = true;
 		currentSign = 0;
 		signsToUpdate.clear();
