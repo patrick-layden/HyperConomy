@@ -112,7 +112,7 @@ public class History {
     }
     
 	public void clearHistory() {
-		String statement = "TRUNCATE TABLE hyperconomy_history";
+		String statement = "DELETE FROM hyperconomy_history";
 		hc.getSQLWrite().executeSQL(statement);
 	}
 	
