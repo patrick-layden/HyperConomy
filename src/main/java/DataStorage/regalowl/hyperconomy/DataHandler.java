@@ -22,11 +22,13 @@ public class DataHandler implements Listener {
 	private BukkitTask waitToLoad;
 	private BukkitTask waitForLoad;
 	private ArrayList<String> economies = new ArrayList<String>();
+	private boolean loadActive;
 
 	DataHandler() {
 		hc = HyperConomy.hc;
 		sr = hc.getSQLRead();
 		objectsLoaded = false;
+		loadActive = false;
 		hc.getServer().getPluginManager().registerEvents(this, hc);
 	}
 	
@@ -152,18 +154,21 @@ public class DataHandler implements Listener {
 	}
 
 	public void load() {
-		objectsLoaded = false;
-		hc.lockHyperConomy(true);
-		waitToLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
-			public void run() {
-				SQLWrite sw = hc.getSQLWrite();
-				if (sw.getBuffer().size() == 0 && !sw.initialWrite()) {
-					loadSQL();
-					waitForLoad();
-					waitToLoad.cancel();
+		if (!loadActive) {
+			loadActive = true;
+			objectsLoaded = false;
+			hc.lockHyperConomy(true);
+			waitToLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
+				public void run() {
+					SQLWrite sw = hc.getSQLWrite();
+					if (sw.getBuffer().size() == 0 && !sw.initialWrite()) {
+						loadSQL();
+						waitForLoad();
+						waitToLoad.cancel();
+					}
 				}
-			}
-		}, 0L, 10L);
+			}, 0L, 10L);
+		}
 	}
 	
 	
@@ -179,6 +184,7 @@ public class DataHandler implements Listener {
 							addPlayer(p.getName());
 						}
 					}
+					loadActive = false;
 				}
 			}
 		}, 3L, 3L);
@@ -390,7 +396,7 @@ public class DataHandler implements Listener {
 	
 	public boolean itemTest(String name) {
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getName().equals(name) && (ho.getType() == HyperObjectType.ITEM || ho.getType() == HyperObjectType.EXPERIENCE)) {
+			if (ho.getName().equals(name) && ho.getType() != HyperObjectType.ENCHANTMENT) {
 				return true;
 			}
 		}

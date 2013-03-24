@@ -78,107 +78,7 @@ public class HyperWebPrices extends AbstractHandler {
         //response.getWriter().println(testpage);
     }
     
-	/**
-	 * 
-	 * 
-	 * This function calculates the theoretical value for items, ignoring durability.
-	 * 
-	 */
-    /*
-		public double getThreadSafeValue(String name, String playerecon){
-			DataHandler sf = hc.getDataFunctions();
-			try {
-				double cost = 0.0;
-				HyperObject ho = sf.getHyperObject(name, playerecon);
-				if (ho == null) {
-					return 99999999;
-				}
-				boolean initial = Boolean.parseBoolean(ho.getInitiation());
-				boolean isstatic = Boolean.parseBoolean(ho.getIsstatic());
-				if (isstatic) {
-					double statprice = ho.getStaticprice();
-					cost = calc.applyCeilingFloor(name, playerecon, statprice);
-					return cost;
-				} else {
-					double shopstock = 0;
-					double value = 0;
-					double median = 0;
-					double icost = 0;
-					shopstock = ho.getStock();
-					value = ho.getValue();
-					median = ho.getMedian();
-					icost = ho.getStartprice();
-					double rawcost = ((median * value)/shopstock);
-					cost = calc.applyCeilingFloor(name, playerecon, rawcost);
-					if (initial == true){
-						cost = calc.applyCeilingFloor(name, playerecon, icost);
-					}
-					if (cost < Math.pow(10, 10)) {
-						cost = calc.twoDecimals(cost);
-					} else {
-						cost = 3235624645000.7;
-					}
-					return cost;
-				}
-			} catch (Exception e) {				
-				new HyperError(e);
-				double cost = 99999999;
-				return cost;			
-			}
-		}
-		*/
-		
-		/**
-		 * 
-		 * 
-		 * This function calculates the theoretical value for items, ignoring durability.
-		 * 
-		 */
-		/*
-			public double getThreadSafeCost(String name, String playerecon){
-				DataHandler sf = hc.getDataFunctions();
-				try {
-					double cost = 0.0;
-					HyperObject ho = sf.getHyperObject(name, playerecon);
-					if (ho == null) {
-						return -1;
-					}
-					boolean initial = Boolean.parseBoolean(ho.getInitiation());
-					boolean isstatic = Boolean.parseBoolean(ho.getIsstatic());
-					if (isstatic) {
-						double statprice = ho.getStaticprice();
-						cost = calc.applyCeilingFloor(name, playerecon, statprice);
-						return cost;
-					} else {
-						double shopstock = 0;
-						double value = 0;
-						double median = 0;
-						double icost = 0;
-						shopstock = ho.getStock() - 1;
-						value = ho.getValue();
-						median = ho.getMedian();
-						icost = ho.getStartprice();
-						double rawcost = ((median * value)/shopstock);
-						cost = calc.applyCeilingFloor(name, playerecon, rawcost);
-						if (initial == true){
-							cost = calc.applyCeilingFloor(name, playerecon, icost);
-						}
-						if (cost < Math.pow(10, 10)) {
-							cost = calc.twoDecimals(cost);
-						} else {
-							cost = 3235624645000.7;
-						}
-						
-						return cost;
-					}
-				} catch (Exception e) {				
-					new HyperError(e);
-					double cost = -1;
-					return cost;			
-				}
-			}
-		
-		*/
+	
 		
 		private String buildPage(String economy) {
 			
@@ -197,47 +97,20 @@ public class HyperWebPrices extends AbstractHandler {
 				
 				page += "<html>\n";
 				page += "<head>\n";
-				
 				page += "<script type='text/javascript'>\n";
-				
-				/*
-				page += "window.onload = setupRefresh();\n";
-				page += "function setupRefresh() {\n";
-				page += "setTimeout('refreshPage();', 60000);}\n";
-				page += "function refreshPage() {\n";
-				page += "window.location = location.href;}\n";
-				*/
-				
 				page += "</script>\n";
-				
-				
 				page += "<style>\n";
-				
-				
-				
 				page += "* {font-family:verdana;font-size:12px;color:" + hws.getFontColor() + ";}\n";
 				page += "body {background:" + hws.getBackgroundColor() + ";}\n";
 				page += "td {vertical-align:top;border:1px solid " + hws.getBorderColor() + ";}\n";
 				page += "td.red {vertical-align:top;border:1px solid " + hws.getBorderColor() + ";background:" + hws.getDecreaseColor() + ";}\n";
 				page += "td.green {vertical-align:top;border:1px solid " + hws.getBorderColor() + ";background:" + hws.getIncreaseColor() + ";}\n";
-				//page += "td.blue {vertical-align:top;border:1px solid #D8DFE4;background:#E0E0FC;}\n";
 				page += "th {border:1px solid " + hws.getBorderColor() + ";padding:3px;cursor:pointer;}\n";
 				page += "th.header {background:" + hws.getHeaderColor() + ";}\n";
 				page += "tr:hover {background:" + hws.getHighlightColor() + ";}\n";
 				page += "td:hover {background:" + hws.getHighlightColor() + ";}\n";
 				page += "</style>\n";
-				/*
-				page += "* {font-family:verdana;font-size:12px;color:#333333;}\n";
-				page += "body {background:#EEEEF6;}\n";
-				page += "td {vertical-align:top;border:1px solid #D8DFE4;}\n";
-				page += "td.red {vertical-align:top;border:1px solid #D8DFE4;background:#FFA0A0;}\n";
-				page += "td.green {vertical-align:top;border:1px solid #D8DFE4;background:#A0FFB0;}\n";
-				page += "td.blue {vertical-align:top;border:1px solid #D8DFE4;background:#E0E0FC;}\n";
-				page += "th {border:1px solid #D8DFE4;padding:3px;cursor:pointer;}\n";
-				page += "tr:hover {background:#B4FAF9;}\n";
-				page += "td:hover {background:#B4FAF9;}\n";
-				page += "</style>\n";
-				*/
+				
 				
 				page += "</head>\n";
 				page += "<body>\n";
@@ -261,12 +134,7 @@ public class HyperWebPrices extends AbstractHandler {
 				page += "<TH class='header'>\n";
 				page += "ID\n";
 				page += "</TH>\n";
-				//page += "<TH>\n";
-				//page += "Status\n";
-				//page += "</TH>\n";
-				//page += "<TH>\n";
-				//page += "Type\n";
-				//page += "</TH>\n";
+
 				
 				if (hws.getUseHistory()) {
 					page += "<TH class='header'>\n";
@@ -325,9 +193,7 @@ public class HyperWebPrices extends AbstractHandler {
 					}
 					double scost = ho.getValue(1);
 					double bcost = ho.getCost(1);
-					
-					
-					
+
 					page += "<TR>\n";
 					page += "<TD>\n";
 					page += names.get(i) + "\n";
@@ -344,15 +210,7 @@ public class HyperWebPrices extends AbstractHandler {
 					page += "<TD>\n";
 					page += ho.getId() + "\n";
 					page += "</TD>\n";
-					/*
-					page += "<TD>\n";
-					page += type + "\n";
-					page += "</TD>\n";
-					page += "<TD>\n";
-					page += otype + "\n";
-					page += "</TD>\n";
-					*/
-					
+
 					if (hws.getUseHistory()) {
 						for (int j = 0; j < timevalues.size(); j++) {
 							String pc = hist.getPercentChange(ho, timevalues.get(j));

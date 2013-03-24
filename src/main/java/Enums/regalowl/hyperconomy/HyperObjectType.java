@@ -11,7 +11,7 @@ public enum HyperObjectType {
 			return HyperObjectType.ITEM;
 		} else if (type.equalsIgnoreCase("enchantment")) {
 			return HyperObjectType.ENCHANTMENT;
-		} else if (type.equalsIgnoreCase("stock")) {
+		} else if (type.equalsIgnoreCase("experience")) {
 			return HyperObjectType.EXPERIENCE;
 		} else {
 			return null;
