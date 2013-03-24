@@ -12,20 +12,7 @@ public class Setmessage {
 				if (args[0].equalsIgnoreCase("1")) {
 					String message = args[1];
 					message = message.replace("%s", " ");
-					int counter = 2;
-					String name = "";
-					while (counter < args.length) {
-						if (counter == 2) {
-							name = args[2];
-						} else {
-							name = name + "_" + args[counter];
-						}
-						counter++;
-					}
-					String teststring = hc.getYaml().getShops().getString(name);
-					if (teststring == null) {
-						name = s.fixShopName(name);
-					}
+					String name = s.fixShopName(args[2]);
 					if (s.shopExists(name)) {
 						s.getShop(name).setMessage1(message);
 						sender.sendMessage(L.get("MESSAGE1_SET"));
@@ -35,20 +22,7 @@ public class Setmessage {
 				} else if (args[0].equalsIgnoreCase("2")) {
 					String message = args[1];
 					message = message.replace("%s", " ");
-					int counter = 2;
-					String name = "";
-					while (counter < args.length) {
-						if (counter == 2) {
-							name = args[2];
-						} else {
-							name = name + "_" + args[counter];
-						}
-						counter++;
-					}
-					String teststring = hc.getYaml().getShops().getString(name);
-					if (teststring == null) {
-						name = s.fixShopName(name);
-					}
+					String name = s.fixShopName(args[2]);
 					if (s.shopExists(name)) {
 						s.getShop(name).setMessage2(message);
 						sender.sendMessage(L.get("MESSAGE2_SET"));

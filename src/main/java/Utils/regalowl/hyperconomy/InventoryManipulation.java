@@ -163,9 +163,11 @@ public class InventoryManipulation {
 	 * player and the item's id and data.
 	 * 
 	 */
-	public boolean removeItems(int id, int data, int amount, Inventory inventory) {
+	public double removeItems(int id, int data, int amount, Inventory inventory) {
 		try {
-			int oamount = amount;
+			int remainingAmount = 0;
+			double amountRemoved = 0;
+			remainingAmount = amount;
 			Calculation calc = hc.getCalculation();
 			data = calc.newData(id, data);
 			if (inventory.getType() == InventoryType.PLAYER) {
@@ -175,12 +177,14 @@ public class InventoryManipulation {
 					int stackid = hstack.getTypeId();
 					int stackdata = calc.getDamageValue(hstack);
 					if (stackid == id && stackdata == data) {
-						if (amount >= hstack.getAmount()) {
-							amount -= hstack.getAmount();
+						if (remainingAmount >= hstack.getAmount()) {
+							remainingAmount -= hstack.getAmount();
+							amountRemoved += hstack.getAmount() * getDurabilityMultiplier(hstack);
 							inventory.clear(p.getInventory().getHeldItemSlot());
 						} else {
-							hstack.setAmount(hstack.getAmount() - amount);
-							return true;
+							amountRemoved += remainingAmount * getDurabilityMultiplier(hstack);
+							hstack.setAmount(hstack.getAmount() - remainingAmount);
+							return amountRemoved;
 						}
 					}
 				}
@@ -191,26 +195,28 @@ public class InventoryManipulation {
 					int stackid = stack.getTypeId();
 					int stackdata = calc.getDamageValue(stack);
 					if (stackid == id && stackdata == data) {
-						if (amount >= stack.getAmount()) {
-							amount -= stack.getAmount();
+						if (remainingAmount >= stack.getAmount()) {
+							remainingAmount -= stack.getAmount();
+							amountRemoved += stack.getAmount() * getDurabilityMultiplier(stack);
 							inventory.clear(i);
 						} else {
-							stack.setAmount(stack.getAmount() - amount);
-							return true;
+							amountRemoved += remainingAmount * getDurabilityMultiplier(stack);
+							stack.setAmount(stack.getAmount() - remainingAmount);
+							return amountRemoved;
 						}
 					}
 				}
 			}
-			if (amount != 0) {
-				new HyperError("removesoldItems() failure.  Items not successfully removed.  Passed id = '" + id + "', data = '" + data + "', amount = '" + oamount + "'");
-				return false;	
+			if (remainingAmount != 0) {
+				new HyperError("removesoldItems() failure.  Items not successfully removed.  Passed id = '" + id + "', data = '" + data + "', amount = '" + amount + "'");
+				return amountRemoved;	
 			} else {
-				return true;
+				return amountRemoved;
 			}
 		} catch (Exception e) {
 			String info = "Transaction removeSoldItems() passed values inventory='" + inventory.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
 			new HyperError(e, info);
-			return false;
+			return -1;
 		}
 	}
 	
@@ -466,17 +472,14 @@ public class InventoryManipulation {
 	 * 
 	 */
 	
-	public double getDuramult(Player p) {
-		try {
-			double dura = p.getItemInHand().getDurability();
-			double maxdura = p.getItemInHand().getType().getMaxDurability();
-			double duramult = (1 - dura / maxdura);
-			return duramult;
-		} catch (Exception e) {
-			String info = "ETransaction getDuramult() passed values player='" + p.getName() + "'";
-			new HyperError(e, info);
-			return 0;
+	public double getDurabilityMultiplier(ItemStack stack) {
+		double duramult = 1;
+		if (isDurable(stack)) {
+			double dura = stack.getDurability();
+			double maxdura = stack.getType().getMaxDurability();
+			duramult = (1 - dura / maxdura);
 		}
+		return duramult;
 	}
 	
 	public EnchantmentClass getEnchantmentClass(ItemStack stack) {
@@ -484,6 +487,14 @@ public class InventoryManipulation {
 	}
 	
 	
+	
+	public boolean isDurable(ItemStack stack) {
+		Material m = stack.getType();
+		if (m != null && m.getMaxDurability() > 0) {
+			return true;
+		}
+		return false;
+	}
 	
 	
 }

@@ -228,11 +228,11 @@ public class TransactionProcessor {
 								if (maxi == 0) {
 									price = hyperObject.getValue(amount, hp);
 								}
-								im.removeItems(id, data, amount, giveInventory);
+								double amountRemoved = im.removeItems(id, data, amount, giveInventory);
 								double shopstock = 0;
 								shopstock = hyperObject.getStock();
 								if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-									hyperObject.setStock(shopstock + amount);
+									hyperObject.setStock(shopstock + amountRemoved);
 								}
 								int maxi2 = hyperObject.getMaxInitial();
 								if (maxi2 == 0) {

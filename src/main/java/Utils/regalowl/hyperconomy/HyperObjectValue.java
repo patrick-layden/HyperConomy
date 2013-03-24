@@ -221,7 +221,7 @@ public class HyperObjectValue {
 			double classvalue = im.getclassValue(eclass);
 			boolean stax;
 			stax = Boolean.parseBoolean(ho.getIsstatic());
-			double duramult = im.getDuramult(hp.getPlayer());
+			double duramult = im.getDurabilityMultiplier(hp.getPlayer().getItemInHand());
 			if (hp.getPlayer().getItemInHand().getType().equals(Material.ENCHANTED_BOOK)) {
 				duramult = 1;
 			}
