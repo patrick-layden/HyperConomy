@@ -115,6 +115,7 @@ public class Hyperlog {
 	    	    			if (m > 100) {
 	    	    				m = 100;
 	    	    			}
+	    	    			sender.sendMessage(hc.getLanguageFile().get("LINE_BREAK"));
 	    	    			for (String message:result) {
 	    	    				sender.sendMessage(message);
 	    	    			}
