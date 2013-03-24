@@ -21,7 +21,7 @@ public class Browseshop {
 		//try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
     		if (player != null) {
-    			if ((requireShop && s.inAnyShop(player)) && !player.hasPermission("hyperconomy.admin")) {
+    			if ((requireShop && !s.inAnyShop(player)) && !player.hasPermission("hyperconomy.admin")) {
     				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
     				return;
     			}			
@@ -61,7 +61,7 @@ public class Browseshop {
 			}
     		String nameshop = null;
     		if (player != null) {
-    			if (s.inAnyShop(player)) {
+    			if (!s.inAnyShop(player)) {
     				nameshop = null;
     			} else {
     				nameshop = s.getShop(player).getName();
