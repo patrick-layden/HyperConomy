@@ -468,7 +468,7 @@ public class TransactionProcessor {
 								String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
 								acc.setBalance(0, globalaccount);
 							}
-							response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), calc.twoDecimals(price - salestax)), calc.twoDecimals(price), hyperObject);
+							response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), salestax), calc.twoDecimals(price), hyperObject);
 							response.setSuccessful();
 							String type = "dynamic";
 							if (Boolean.parseBoolean(hyperObject.getInitiation())) {
