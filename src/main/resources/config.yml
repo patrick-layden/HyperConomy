@@ -34,7 +34,7 @@ config:
   log-sqlwrite-errors: false
   use-external-economy-plugin: true
   use-shops: true
-  allow-scrolling-transaction-signs: true
+  allow-scrolling-transaction-signs: false
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

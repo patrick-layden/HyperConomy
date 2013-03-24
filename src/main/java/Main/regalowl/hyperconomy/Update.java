@@ -208,7 +208,7 @@ public class Update {
 	    	}
 	    	String t48 = yaml.getConfig().getString("config.allow-scrolling-transaction-signs");
 	    	if (t48 == null) {
-	    		yaml.getConfig().set("config.allow-scrolling-transaction-signs", true);
+	    		yaml.getConfig().set("config.allow-scrolling-transaction-signs", false);
 	    	}	    
 	    	
 	    	double dversion = Double.parseDouble(configversion);
