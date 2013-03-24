@@ -102,7 +102,6 @@ public class InventoryManipulation {
 	 * 
 	 */
 	@SuppressWarnings("deprecation")
-	
 	public void addItems(int amount, int id, int data, Inventory inventory) {
 		Calculation calc = hc.getCalculation();
 		try {

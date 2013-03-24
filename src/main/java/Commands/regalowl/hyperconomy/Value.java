@@ -28,11 +28,11 @@ public class Value {
 					amount = 1;
 				}
 				if (sf.itemTest(name)) {
-					HyperPlayer hp = dh.getHyperPlayer(player);
-					HyperObject ho = dh.getHyperObject(name, hp.getEconomy());
+					HyperObject ho = dh.getHyperObject(name, playerecon);
 					double val = ho.getValue(amount);
 					double salestax = 0;
 					if (player != null) {
+						HyperPlayer hp = dh.getHyperPlayer(player);
 						salestax = hp.getSalesTax(val);
 					}
 					val = calc.twoDecimals(val - salestax);
