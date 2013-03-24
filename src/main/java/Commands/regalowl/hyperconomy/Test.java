@@ -21,21 +21,21 @@ public class Test {
 						InfoSign isign = infoSigns.get(0);
 						String key = isign.getKey();
 						isign.setData(key, SignType.BUY, "emerald", "default");
-						hc.getInfoSignHandler().startSignUpdate();
+						hc.getInfoSignHandler().updateSigns();
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 						isign.setData(key, SignType.HISTORY, "diamond", "default");
-						hc.getInfoSignHandler().startSignUpdate();
+						hc.getInfoSignHandler().updateSigns();
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 						isign.setData(key, SignType.HISTORY, "diamond", "default");
-						hc.getInfoSignHandler().startSignUpdate();
+						hc.getInfoSignHandler().updateSigns();
 					}
 				}
 			});
