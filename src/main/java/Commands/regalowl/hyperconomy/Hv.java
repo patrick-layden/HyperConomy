@@ -26,6 +26,7 @@ public class Hv {
 					} else {
 						amount = Integer.parseInt(args[0]);
 					}
+					if (!im.hasenchants(iinhand)) {
 					int itd = player.getItemInHand().getTypeId();
 					int da = calc.getDamageValue(player.getItemInHand());
 					HyperObject ho = sf.getHyperObject(itd, da, hp.getEconomy());
@@ -57,12 +58,10 @@ public class Hv {
 						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, nam));
 						player.sendMessage(L.get("LINE_BREAK"));
 					}
-				if (im.hasenchants(iinhand)) {
-					Account acc = hc.getAccount();
+					} else {
 					player.getItemInHand().getEnchantments().keySet().toArray();
 					Iterator<Enchantment> ite = player.getItemInHand().getEnchantments().keySet().iterator();
 					player.sendMessage(L.get("LINE_BREAK"));
-					double duramult = im.getDuramult(player);
 					while (ite.hasNext()) {
 						String rawstring = ite.next().toString();
 						String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
@@ -72,24 +71,14 @@ public class Hv {
 						String enam = sf.getEnchantNameWithoutLevel(enchname);
 						String fnam = enam + lvl;
 						String mater = player.getItemInHand().getType().name();
-						double value = ho.getValue(EnchantmentClass.fromString(mater)) * duramult;
+						HyperObject ho = sf.getHyperObject(fnam, playerecon);
+						double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
 						double cost = ho.getCost(EnchantmentClass.fromString(mater));
 						cost = cost + ho.getPurchaseTax(cost);
 						value = calc.twoDecimals(value);
 						cost = calc.twoDecimals(cost);
 						double salestax = 0;
-						if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
-							double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
-							double cbal = acc.getBalance(player.getName());
-							if (cbal >= moneycap) {
-								salestax = value * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent") / 100);
-							} else {
-								salestax = value * (cbal / moneycap);
-							}
-						} else {
-							double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
-							salestax = (salestaxpercent / 100) * value;
-						}
+						salestax = hp.getSalesTax(value);
 						value = calc.twoDecimals(value - salestax);
 						player.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 						player.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));

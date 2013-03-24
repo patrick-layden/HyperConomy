@@ -621,8 +621,8 @@ public class TransactionProcessor {
 					duramult = 1;
 				}
 				String mater = p.getItemInHand().getType().toString();
-				double price = hyperObject.getValue(EnchantmentClass.fromString(mater));
-				double fprice = duramult * price;
+				double price = hyperObject.getValue(EnchantmentClass.fromString(mater), hp);
+				double fprice = price;
 				boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
 				if (acc.checkshopBalance(fprice) || sunlimited) {
 					im.removeEnchantment(p.getItemInHand(), ench);
@@ -766,7 +766,7 @@ public class TransactionProcessor {
 			nenchant = hyperObject.getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			String mater = p.getItemInHand().getType().toString();
-			double price = hyperObject.getValue(EnchantmentClass.fromString(mater));
+			double price = hyperObject.getValue(EnchantmentClass.fromString(mater), hp);
 			if (price != 123456789) {
 				if (!im.containsEnchantment(p.getItemInHand(), ench)) {
 					if (im.canAcceptEnchantment(p.getItemInHand(), ench) && p.getItemInHand().getAmount() == 1) {

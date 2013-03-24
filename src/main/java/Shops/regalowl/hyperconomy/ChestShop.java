@@ -647,20 +647,15 @@ public class ChestShop implements Listener{
 			
 						    			}
 					    			} else {
-
-					    				//HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
-						    				
-							    			if (slot < 27) {
-							    				
+							    			if (slot < 27) {			
 							    				if (buy) {
-				
 							    						double price = 0;
 								    					for (Enchantment enchantment : im.listEnchantments(icevent.getCurrentItem())) {
 								    						int lvl = im.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
 								    						String nam = dh.getEnchantNameWithoutLevel(enchantment.getName());
 								        					String fnam = nam + lvl;
 								        					HyperObject ho = dh.getHyperObject(fnam, hp.getEconomy());
-								        					price += ho.getValue(EnchantmentClass.fromString(p.getItemInHand().getType().name()));
+								        					price += ho.getValue(EnchantmentClass.fromString(p.getItemInHand().getType().name()), hp);
 									    					if (setprice) {
 									    						price = staticprice;
 									    					}

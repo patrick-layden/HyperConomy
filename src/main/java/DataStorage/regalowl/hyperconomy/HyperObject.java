@@ -245,6 +245,7 @@ public class HyperObject {
 	public double getValue(int amount, HyperPlayer hp) {
 		return hov.getValue(amount, hp);
 	}
+	
 	public double getValue(EnchantmentClass enchantClass) {
 		return hov.getTheoreticalEnchantValue(enchantClass);
 	}
@@ -252,6 +253,7 @@ public class HyperObject {
 	public double getValue(EnchantmentClass enchantClass, HyperPlayer hp) {
 		return hov.getEnchantValue(enchantClass, hp);
 	}
+	
 
 	public double getPurchaseTax(double cost) {
 		return hov.getPurchaseTax(cost);

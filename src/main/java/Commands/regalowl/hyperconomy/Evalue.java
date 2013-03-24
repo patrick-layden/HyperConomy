@@ -80,10 +80,7 @@ public class Evalue {
 					if (im.hasenchants(player.getItemInHand())) {
 						Iterator<Enchantment> ite = im.getEnchantmentMap(player.getItemInHand()).keySet().iterator();
 						player.sendMessage(L.get("LINE_BREAK"));
-						double duramult = im.getDuramult(player);
-						if (player.getItemInHand().getType().equals(Material.ENCHANTED_BOOK)) {
-							duramult = 1;
-						}
+
 						while (ite.hasNext()) {
 							String rawstring = ite.next().toString();
 							String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
@@ -94,7 +91,7 @@ public class Evalue {
 							String fnam = nam + lvl;
 							HyperObject ho = sf.getHyperObject(fnam, hp.getEconomy());
 							String mater = player.getItemInHand().getType().name();
-							double value = ho.getValue(EnchantmentClass.fromString(mater)) * duramult;
+							double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
 							double cost = ho.getCost(EnchantmentClass.fromString(mater));
 							cost = cost + ho.getPurchaseTax(cost);
 							value = calc.twoDecimals(value);
