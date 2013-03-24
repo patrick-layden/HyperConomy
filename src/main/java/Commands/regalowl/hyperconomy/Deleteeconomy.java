@@ -23,6 +23,11 @@ public class Deleteeconomy {
 							shop.setEconomy("default");
 						}
 					}
+					for (HyperPlayer hp:hc.getDataFunctions().getHyperPlayers()) {
+						if (hp.getEconomy().equalsIgnoreCase(economy)) {
+							hp.setEconomy("default");
+						}
+					}
 					hc.getSQLEconomy().deleteEconomy(economy);
 					sender.sendMessage(L.get("ECONOMY_DELETED"));
 				} else {
