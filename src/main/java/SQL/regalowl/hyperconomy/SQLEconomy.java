@@ -310,12 +310,8 @@ public class SQLEconomy {
 		}
 		SQLWrite sw = hc.getSQLWrite();
 		sw.executeSQL(statements);
-		hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
-			public void run() {
-				DataHandler sf = hc.getDataFunctions();
-				sf.load();
-			}
-		}, 100L);
+		hc.getDataFunctions().load();
+		sf.load();
 	}
 	public void deleteEconomy(String economy) {
 		hc.getSQLWrite().executeSQL("DELETE FROM hyperconomy_objects WHERE ECONOMY='" + economy + "'");
