@@ -42,12 +42,12 @@ public class HyperConomy extends JavaPlugin {
 	private Economy economy;
 	private int errorCount;
 	private boolean errorResetActive;
-	private boolean shuttingDown;
 	private boolean useExternalEconomy;
 	private boolean logerrors;
 	private String serverVersion;
 	private int errorcount;
 	private double apiVersion;
+	private boolean enabled;
 
 	@Override
 	public void onEnable() {
@@ -80,10 +80,12 @@ public class HyperConomy extends JavaPlugin {
 		itdi = new ItemDisplayFactory();
 		hws = new HyperWebStart();
 		isign.updateSigns();
+		enabled = true;
 		//log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 	}
 
 	public void initialize() {
+		enabled = false;
 		HandlerList.unregisterAll(this);
 		hc = this;
 		playerLock = false;
@@ -95,7 +97,6 @@ public class HyperConomy extends JavaPlugin {
 		yaml = yam;
 		loadErrorCount();
 		errorResetActive = false;
-		shuttingDown = true;
 		L = new LanguageFile();
 		if (!brokenfile) {
 			new Update();
@@ -154,6 +155,7 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public void shutDown(boolean protect) {
+		enabled = false;
 		if (df != null) {
 			df.shutDown();
 		}
@@ -319,12 +321,9 @@ public class HyperConomy extends JavaPlugin {
 		errorCount++;
 		if (errorCount > 20) {
 			getServer().getScheduler().cancelTasks(this);
-			if (!shuttingDown) {
-				shuttingDown = true;
-				log.severe("HyperConomy is experiencing a massive amount of errors...shutting down....");
-				shutDown(true);
-				getPluginLoader().disablePlugin(this);
-			}
+			log.severe("HyperConomy is experiencing a massive amount of errors...shutting down....");
+			shutDown(true);
+			getPluginLoader().disablePlugin(this);
 		}
 		if (!errorResetActive) {
 			errorResetActive = true;
@@ -495,6 +494,10 @@ public class HyperConomy extends JavaPlugin {
 	
 	public double getApiVersion() {
 		return apiVersion;
+	}
+	
+	public boolean enabled() {
+		return enabled;
 	}
 
 }

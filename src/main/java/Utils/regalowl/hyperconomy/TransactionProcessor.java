@@ -23,7 +23,7 @@ public class TransactionProcessor {
 	private Inventory giveInventory;
 	private Inventory receiveInventory;
 	private double money;
-	private boolean chargeTax;
+	//private boolean chargeTax;
 	private boolean setPrice;
 	private ItemStack giveItem;
 	
@@ -47,7 +47,7 @@ public class TransactionProcessor {
 		giveInventory = pt.getGiveInventory();
 		receiveInventory = pt.getReceiveInventory();
 		money = pt.getMoney();
-		chargeTax = pt.isChargeTax();
+		//chargeTax = pt.isChargeTax();
 		setPrice = pt.isSetPrice();
 		giveItem = pt.getGiveItem();
 		

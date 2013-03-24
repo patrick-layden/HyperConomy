@@ -83,7 +83,7 @@ public class HyperWebPrices extends AbstractHandler {
 		private String buildPage(String economy) {
 			
 			String page = "";
-			if (!hc.fullLock()) {
+			if (!hc.fullLock() && hc.enabled()) {
 				DataHandler sf = hc.getDataFunctions();
 				ArrayList<String> names = sf.getNames();
 				ArrayList<Integer> timevalues = new ArrayList<Integer>();
@@ -156,7 +156,9 @@ public class HyperWebPrices extends AbstractHandler {
 				}
 				
 				for (int i = 0; i < names.size(); i++) {
-					
+					if (!hc.enabled()) {
+						return "";
+					}
 					
 					String type = "";
 					HyperObject ho = sf.getHyperObject(names.get(i), economy);

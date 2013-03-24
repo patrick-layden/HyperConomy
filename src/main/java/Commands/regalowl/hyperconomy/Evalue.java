@@ -1,8 +1,6 @@
 package regalowl.hyperconomy;
 
 import java.util.Iterator;
-
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
