@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import org.bukkit.scheduler.BukkitTask;
 
 public class SQLiteConnection extends DatabaseConnection {
@@ -14,8 +15,6 @@ public class SQLiteConnection extends DatabaseConnection {
 
 	
 	private HyperConomy hc;
-	private SQLRead sr;
-
 	private String sqlitePath;
 	private Connection connection;
 	private String statement;
@@ -30,7 +29,6 @@ public class SQLiteConnection extends DatabaseConnection {
 	
 	SQLiteConnection() {
 		hc = HyperConomy.hc;
-		sr = hc.getSQLRead();
 		FileTools ft = new FileTools();
 		sqlitePath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
 		openConnection();
@@ -73,14 +71,14 @@ public class SQLiteConnection extends DatabaseConnection {
 			resultSet.close();
 			state.close();
 			statement = null;
-			if (sr != null) {
-				sr.returnConnection(this);
+			if (hc.getSQLRead() != null) {
+				hc.getSQLRead().returnConnection(this);
 			}
 			return qr;
 		} catch (SQLException e) {
 			new HyperError(e, "The failed SQL statement is in the following brackets: [" + statement + "]");
-			if (sr != null) {
-				sr.returnConnection(this);
+			if (hc.getSQLRead() != null) {
+				hc.getSQLRead().returnConnection(this);
 			}
 			return qr;
 		}

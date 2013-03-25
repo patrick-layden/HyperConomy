@@ -2,56 +2,27 @@ package regalowl.hyperconomy;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class SQLRead {
 
 	private HyperConomy hc;
 	private int threadlimit;
-	private ArrayList<DatabaseConnection> available = new ArrayList<DatabaseConnection>();
-    
-    
-	public void returnConnection(DatabaseConnection dc) {
-		available.add(dc);
 
-	}
+    private Queue<DatabaseConnection> connections = new LinkedList<DatabaseConnection>();
+    private Lock lock = new ReentrantLock();
+    private Condition notFull = lock.newCondition();
+    private Condition notEmpty = lock.newCondition();
 
-
-	
-	public DatabaseConnection getDatabaseConnection() {
-		try {
-			while (available.size() == 0) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					new HyperError(e);
-				}
-			}
-			DatabaseConnection dc = available.get(0);
-			available.remove(dc);
-			if (dc == null) {
-				if (hc.useMySQL()) {
-					dc = new MySQLConnection();
-				} else {
-					dc = new SQLiteConnection();
-				}
-			}
-			return dc;
-		} catch (Exception e) {
-			new HyperError(e);
-			if (hc.useMySQL()) {
-				return new MySQLConnection();
-			} else {
-				return new SQLiteConnection();
-			}
-		}
-	}
-    
-    
     
 	SQLRead() {
 		hc = HyperConomy.hc;
-		threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads") * 2;
+		threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads");
 		for (int i = 0; i < threadlimit; i++) {
 			hc.getServer().getScheduler().runTaskLaterAsynchronously(hc, new Runnable() {
 	    		public void run() {
@@ -61,15 +32,49 @@ public class SQLRead {
 	    			} else {
 		    			dc = new SQLiteConnection();
 	    			}
-	    			available.add(dc);
+	    			returnConnection(dc);
 	    		}
 	    	}, i);
 		}
 	}
 	
 
-    
+    public void returnConnection(DatabaseConnection connection) {
+        lock.lock();
+        try {
+            while(connections.size() == threadlimit) {
+                try {
+					notFull.await();
+				} catch (InterruptedException e) {
+					new HyperError(e);
+				}
+            }
+            connections.add(connection);
+            notEmpty.signal();
+        } finally {
+            lock.unlock();
+        }
+    }
 
+    public DatabaseConnection getDatabaseConnection() {
+        lock.lock();
+        try {
+            while(connections.isEmpty()) {
+                try {
+					notEmpty.await();
+				} catch (InterruptedException e) {
+					new HyperError(e);
+				}
+            }
+            DatabaseConnection connect = connections.remove();
+            notFull.signal();
+            return connect;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    
     
 	public ArrayList<String> getStringColumn(String statement) {
 		ArrayList<String> data = new ArrayList<String>();
@@ -155,7 +160,7 @@ public class SQLRead {
 
 	
 	public int getActiveReadConnections() {
-		return (threadlimit - available.size());
+		return (threadlimit - connections.size());
 	}
 
 }
