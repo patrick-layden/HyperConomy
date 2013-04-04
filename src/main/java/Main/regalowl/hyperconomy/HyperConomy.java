@@ -176,6 +176,9 @@ public class HyperConomy extends JavaPlugin {
 		if (sw != null) {
 			sw.shutDown();
 		}
+		if (sr != null) {
+			sr.shutDown();
+		}
 		if (yaml != null) {
 			yaml.saveYamls();
 		}

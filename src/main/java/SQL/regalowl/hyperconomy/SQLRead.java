@@ -37,43 +37,45 @@ public class SQLRead {
 	    	}, i);
 		}
 	}
-	
 
-    public void returnConnection(DatabaseConnection connection) {
-        lock.lock();
-        try {
-            while(connections.size() == threadlimit) {
-                try {
+	public void returnConnection(DatabaseConnection connection) {
+		lock.lock();
+		try {
+			while (connections.size() == threadlimit) {
+				try {
 					notFull.await();
 				} catch (InterruptedException e) {
 					new HyperError(e);
 				}
-            }
-            connections.add(connection);
-            notEmpty.signal();
-        } finally {
-            lock.unlock();
-        }
-    }
+			}
+			connections.add(connection);
+			notEmpty.signal();
+		} finally {
+			lock.unlock();
+		}
+	}
 
-    public DatabaseConnection getDatabaseConnection() {
-        lock.lock();
-        try {
-            while(connections.isEmpty()) {
-                try {
+	/**
+	 * This method must be called from an asynchronous thread!
+	 * @return DatabaseConnection
+	 */
+	public DatabaseConnection getDatabaseConnection() {
+		lock.lock();
+		try {
+			while (connections.isEmpty()) {
+				try {
 					notEmpty.await();
 				} catch (InterruptedException e) {
 					new HyperError(e);
 				}
-            }
-            DatabaseConnection connect = connections.remove();
-            notFull.signal();
-            return connect;
-        } finally {
-            lock.unlock();
-        }
-    }
-
+			}
+			DatabaseConnection connect = connections.remove();
+			notFull.signal();
+			return connect;
+		} finally {
+			lock.unlock();
+		}
+	}
     
     
 	public ArrayList<String> getStringColumn(String statement) {
@@ -161,6 +163,13 @@ public class SQLRead {
 	
 	public int getActiveReadConnections() {
 		return (threadlimit - connections.size());
+	}
+	
+	
+	public void shutDown() {
+		for (DatabaseConnection dc:connections) {
+			dc.closeConnection();
+		}
 	}
 
 }
