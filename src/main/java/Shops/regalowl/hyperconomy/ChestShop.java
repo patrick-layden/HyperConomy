@@ -525,13 +525,6 @@ public class ChestShop implements Listener{
 					    				
 						    			if (slot < 27 && ho != null) {
 						    				if (buy) {
-						    					/*
-								    			if (setprice) {
-								    				tran.buyChest(name, id, data, line34, p, camount, icevent.getView().getTopInventory(), calc.twoDecimals((camount * staticprice)));
-								    			} else {
-								    				tran.buyChest(name, id, data, line34, p, camount, icevent.getView().getTopInventory());
-								    			}
-								    			*/
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
 												pt.setHyperObject(ho);
 												pt.setTradePartner(dh.getHyperPlayer(line34));
@@ -539,6 +532,7 @@ public class ChestShop implements Listener{
 												pt.setGiveInventory(icevent.getView().getTopInventory());
 								    			if (setprice) {
 								    				pt.setMoney(calc.twoDecimals((camount * staticprice)));
+								    				pt.setSetPrice(true);
 								    			}
 												TransactionResponse response = hp.processTransaction(pt);
 												response.sendMessages();
@@ -561,13 +555,6 @@ public class ChestShop implements Listener{
 								    						}
 								    						
 								    						if (bal >= cost) {
-								    							/*
-												    			if (setprice) {
-												    				tran.sellChest(name, id, data, camount, line34, p, icevent.getView().getTopInventory(), calc.twoDecimals(cost));
-												    			} else {
-												    				tran.sellChest(name, id, data, camount, line34, p, icevent.getView().getTopInventory());
-												    			}
-												    			*/
 																PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
 																pt.setHyperObject(ho);
 																pt.setTradePartner(dh.getHyperPlayer(line34));
@@ -575,11 +562,11 @@ public class ChestShop implements Listener{
 																pt.setReceiveInventory(icevent.getView().getTopInventory());
 												    			if (setprice) {
 												    				pt.setMoney(calc.twoDecimals(cost));
+												    				pt.setSetPrice(true);
 												    			}
 																TransactionResponse response = hp.processTransaction(pt);
 																response.sendMessages();
 								    						} else {
-								    							//p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
 								    							L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), line34);
 								    						}
 								    					}
@@ -695,13 +682,6 @@ public class ChestShop implements Listener{
 					    				
 						    			if (slot < 27 && ho != null) {
 						    				if (buy) {
-						    					/*
-						    					if (setprice) {
-						    						tran.buyChest(name, id, data, line34, p, 1, icevent.getView().getTopInventory(), staticprice);
-						    					} else {
-						    						tran.buyChest(name, id, data, line34, p, 1, icevent.getView().getTopInventory());
-						    					}
-						    					*/
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
 												pt.setHyperObject(ho);
 												pt.setTradePartner(dh.getHyperPlayer(line34));
@@ -709,6 +689,7 @@ public class ChestShop implements Listener{
 												pt.setGiveInventory(icevent.getView().getTopInventory());
 								    			if (setprice) {
 								    				pt.setMoney(staticprice);
+								    				pt.setSetPrice(true);
 								    			}
 												TransactionResponse response = hp.processTransaction(pt);
 												response.sendMessages();
@@ -732,13 +713,6 @@ public class ChestShop implements Listener{
 								    							cost = staticprice;
 								    						}
 								    						if (bal >= cost) {
-								    							/*
-								    							if (setprice) {
-								    								tran.sellChest(name, id, data, 1, line34, p, icevent.getView().getTopInventory(), cost);
-								    							} else {
-								    								tran.sellChest(name, id, data, 1, line34, p, icevent.getView().getTopInventory());
-								    							}
-								    							*/
 																PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
 																pt.setHyperObject(ho);
 																pt.setTradePartner(dh.getHyperPlayer(line34));
@@ -746,11 +720,11 @@ public class ChestShop implements Listener{
 																pt.setReceiveInventory(icevent.getView().getTopInventory());
 												    			if (setprice) {
 												    				pt.setMoney(cost);
+												    				pt.setSetPrice(true);
 												    			}
 																TransactionResponse response = hp.processTransaction(pt);
 																response.sendMessages();
 								    						} else {
-								    							//p.sendMessage(ChatColor.BLUE + line34 + " doesn't have enough money for this transaction.");
 								    							p.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), line34));
 								    						}
 							    						}
@@ -781,6 +755,7 @@ public class ChestShop implements Listener{
 														pt.setGiveItem(icevent.getCurrentItem());
 										    			if (setprice) {
 										    				pt.setMoney(staticprice);
+										    				pt.setSetPrice(true);
 										    			}
 														TransactionResponse response = hp.processTransaction(pt);
 														response.sendMessages();
@@ -792,9 +767,6 @@ public class ChestShop implements Listener{
 							    				p.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
 							    			}
 					    			}
-					
-					    			
-					    			
 					    			icevent.setCancelled(true);
 					    			return;
 					    		}

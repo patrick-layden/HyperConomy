@@ -766,7 +766,12 @@ public class TransactionProcessor {
 			nenchant = hyperObject.getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
 			String mater = p.getItemInHand().getType().toString();
-			double price = hyperObject.getValue(EnchantmentClass.fromString(mater), hp);
+			double price;
+			if (setPrice) {
+				price = money;
+			} else {
+				price = hyperObject.getValue(EnchantmentClass.fromString(mater), hp);
+			}
 			if (price != 123456789) {
 				if (!im.containsEnchantment(p.getItemInHand(), ench)) {
 					if (im.canAcceptEnchantment(p.getItemInHand(), ench) && p.getItemInHand().getAmount() == 1) {
