@@ -461,7 +461,7 @@ public class TransactionProcessor {
 							if (maxi2 == 0) {
 								hyperObject.setInitiation("false");
 							}
-							double salestax = hp.getSalesTax(price);
+							double salestax = calc.twoDecimals(hp.getSalesTax(price));
 							acc.deposit(price - salestax, hp.getPlayer());
 							acc.withdrawShop(price - salestax);
 							if (sunlimited) {
