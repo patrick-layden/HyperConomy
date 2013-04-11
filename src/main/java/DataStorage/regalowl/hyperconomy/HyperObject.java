@@ -1,7 +1,7 @@
 package regalowl.hyperconomy;
 
 
-public class HyperObject {
+public class HyperObject implements Comparable<HyperObject> {
 	
 	private HyperConomy hc;
 	private HyperObjectValue hov;
@@ -55,6 +55,9 @@ public class HyperObject {
 		hov = new HyperObjectValue(this);
 	}
 	
+	public int compareTo(HyperObject ho) {
+		return name.compareTo(ho.getName());
+	}
 	
 	public String getName() {
 		return name;
@@ -266,5 +269,5 @@ public class HyperObject {
 	public boolean isDurable() {
 		return hov.isDurable();
 	}
-	
+
 }

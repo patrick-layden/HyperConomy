@@ -139,26 +139,6 @@ public class SQLRead {
 	}
 	
 	
-	
-	public double getHistoricValue(String name, String economy, int count) {
-		try {
-			count -= 1;
-			ArrayList<Double> data = new ArrayList<Double>();
-			QueryResult result = getDatabaseConnection().read("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '" + name + "' AND ECONOMY = '" + economy + "' ORDER BY TIME DESC");
-			while (result.next()) {
-				data.add(Double.parseDouble(result.getString("PRICE")));
-			}
-			result.close();
-			if (count < data.size()) {
-				return data.get(count);
-			} else {
-				return -1.0;
-			}
-		} catch (Exception e) {
-			new HyperError(e, "getHistoricValue() passed arguments: name = '" + name + "', economy = '" + economy + "', count = '" + count + "'");
-			return -999999.0;
-		}
-	}
 
 	
 	public int getActiveReadConnections() {

@@ -1,6 +1,7 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -116,6 +117,27 @@ public class History {
 		hc.getSQLWrite().executeSQL(statement);
 	}
 	
+	
+	
+	public double getHistoricValue(String name, String economy, int count) {
+		try {
+			count -= 1;
+			QueryResult result = sr.getDatabaseConnection().read("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '" + name + "' AND ECONOMY = '" + economy + "' ORDER BY TIME DESC");
+			int c = 0;
+			while (result.next()) {
+				if (c == count) {
+					return Double.parseDouble(result.getString("PRICE"));
+				}
+				c++;
+			}
+			result.close();
+			return -1.0;
+		} catch (Exception e) {
+			new HyperError(e, "getHistoricValue() passed arguments: name = '" + name + "', economy = '" + economy + "', count = '" + count + "'");
+			return -999999.0;
+		}
+	}
+	
 	/**
 	 * This function must be called from an asynchronous thread!
 	 * @param object
@@ -129,7 +151,7 @@ public class History {
 		}
 		Calculation calc = hc.getCalculation();
 		double percentChange = 0.0;
-		double historicvalue = sr.getHistoricValue(ho.getName(), ho.getEconomy(), timevalue);
+		double historicvalue = getHistoricValue(ho.getName(), ho.getEconomy(), timevalue);
 		if (historicvalue == -1.0) {
 			return "?";
 		}
@@ -142,6 +164,63 @@ public class History {
 		percentChange = ((currentvalue - historicvalue) / historicvalue) * 100;
 		percentChange = calc.round(percentChange, 3);
 		return percentChange + "";
+	}
+	
+	
+	/**
+	 * This function must be called from an asynchronous thread!
+	 * @param object
+	 * @param timevalue
+	 * @param economy
+	 * @return The percentage change in theoretical price for the given object and timevalue in hours
+	 */
+	public HashMap<HyperObject, String> getPercentChange(String economy, int timevalue) {
+		if (sr == null) {
+			return null;
+		}
+
+		HashMap<HyperObject, ArrayList<Double>> allValues = new HashMap<HyperObject, ArrayList<Double>>();
+		QueryResult result = sr.getDatabaseConnection().read("SELECT OBJECT, PRICE FROM hyperconomy_history WHERE ECONOMY = '" + economy + "' ORDER BY TIME DESC");
+		while (result.next()) {
+			HyperObject ho = hc.getDataFunctions().getHyperObject(result.getString("OBJECT"), economy);
+			double price = result.getDouble("PRICE");
+			if (!allValues.containsKey(ho)) {
+				ArrayList<Double> values = new ArrayList<Double>();
+				values.add(price);
+				allValues.put(ho, values);
+			} else {
+				ArrayList<Double> values = allValues.get(ho);
+				values.add(price);
+				allValues.put(ho, values);
+			}
+		}
+		result.close();
+		
+		ArrayList<HyperObject> hobjects = hc.getDataFunctions().getHyperObjects(economy);
+		HashMap<HyperObject, String> relevantValues = new HashMap<HyperObject, String>();
+		for (HyperObject ho:hobjects) {
+			if (allValues.containsKey(ho)) {
+				ArrayList<Double> historicValues = allValues.get(ho);
+				if (historicValues.size() >= timevalue) {
+					double historicValue = historicValues.get(timevalue);
+					double currentvalue = 0.0;
+					if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+						currentvalue = ho.getValue(EnchantmentClass.DIAMOND);
+					} else {
+						currentvalue = ho.getValue(1);
+					}
+					double percentChange = ((currentvalue - historicValue) / historicValue) * 100;
+					percentChange = hc.getCalculation().round(percentChange, 3);
+					String stringValue = percentChange + "";
+					relevantValues.put(ho, stringValue);
+				} else {
+					relevantValues.put(ho, "?");
+				}
+			} else {
+				relevantValues.put(ho, "?");
+			}
+		}
+		return relevantValues;
 	}
 
   	

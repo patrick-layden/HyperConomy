@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -85,14 +86,15 @@ public class HyperWebPrices extends AbstractHandler {
 			String page = "";
 			if (!hc.fullLock() && hc.enabled()) {
 				DataHandler sf = hc.getDataFunctions();
-				ArrayList<String> names = sf.getNames();
-				ArrayList<Integer> timevalues = new ArrayList<Integer>();
-				timevalues.add(1);
-				timevalues.add(6);
-				timevalues.add(24);
-				timevalues.add(72);
-				timevalues.add(168);
-				Collections.sort(names, String.CASE_INSENSITIVE_ORDER);
+				ArrayList<HyperObject> objects = sf.getHyperObjects(economy);
+				Collections.sort(objects);
+				
+				
+				HashMap<HyperObject, String> hour = hist.getPercentChange(economy, 1);
+				HashMap<HyperObject, String> sixHours = hist.getPercentChange(economy, 6);
+				HashMap<HyperObject, String> day = hist.getPercentChange(economy, 24);
+				HashMap<HyperObject, String> threeDay = hist.getPercentChange(economy, 72);
+				HashMap<HyperObject, String> week = hist.getPercentChange(economy, 168);
 				
 				
 				page += "<html>\n";
@@ -155,13 +157,12 @@ public class HyperWebPrices extends AbstractHandler {
 					page += "</TR>\n";
 				}
 				
-				for (int i = 0; i < names.size(); i++) {
+				for (HyperObject ho:objects) {
 					if (!hc.enabled()) {
 						return "";
 					}
 					
 					String type = "";
-					HyperObject ho = sf.getHyperObject(names.get(i), economy);
 					if (ho == null) {
 						continue;
 					}
@@ -198,7 +199,7 @@ public class HyperWebPrices extends AbstractHandler {
 
 					page += "<TR>\n";
 					page += "<TD>\n";
-					page += names.get(i) + "\n";
+					page += ho.getName() + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
 					page += hws.getCurrencySymbol() + calc.twoDecimals(scost - (scost * (stax/100))) + "\n";
@@ -214,20 +215,70 @@ public class HyperWebPrices extends AbstractHandler {
 					page += "</TD>\n";
 
 					if (hws.getUseHistory()) {
-						for (int j = 0; j < timevalues.size(); j++) {
-							String pc = hist.getPercentChange(ho, timevalues.get(j));
-							String iclass = "";
-							if (pc.indexOf("-") != -1) {
-								iclass = "red";
-							} else if (pc.indexOf("?") != -1 || pc.equalsIgnoreCase("0.0")) {
-								iclass = "none";
-							} else {
-								iclass = "green";
-							}
-							page += "<TD " + "class='" + iclass + "'>\n";
-							page += hist.getPercentChange(ho, timevalues.get(j)) + "%\n";
-							page += "</TD>\n";
+						String pc = hour.get(ho);
+						String iclass = "";
+						if (pc.indexOf("-") != -1) {
+							iclass = "red";
+						} else if (pc.indexOf("?") != -1 || pc.equalsIgnoreCase("0.0")) {
+							iclass = "none";
+						} else {
+							iclass = "green";
 						}
+						page += "<TD " + "class='" + iclass + "'>\n";
+						page += hour.get(ho) + "%\n";
+						page += "</TD>\n";
+						
+						pc = sixHours.get(ho);
+						iclass = "";
+						if (pc.indexOf("-") != -1) {
+							iclass = "red";
+						} else if (pc.indexOf("?") != -1 || pc.equalsIgnoreCase("0.0")) {
+							iclass = "none";
+						} else {
+							iclass = "green";
+						}
+						page += "<TD " + "class='" + iclass + "'>\n";
+						page += sixHours.get(ho) + "%\n";
+						page += "</TD>\n";
+						
+						pc = day.get(ho);
+						iclass = "";
+						if (pc.indexOf("-") != -1) {
+							iclass = "red";
+						} else if (pc.indexOf("?") != -1 || pc.equalsIgnoreCase("0.0")) {
+							iclass = "none";
+						} else {
+							iclass = "green";
+						}
+						page += "<TD " + "class='" + iclass + "'>\n";
+						page += day.get(ho) + "%\n";
+						page += "</TD>\n";
+						
+						pc = threeDay.get(ho);
+						iclass = "";
+						if (pc.indexOf("-") != -1) {
+							iclass = "red";
+						} else if (pc.indexOf("?") != -1 || pc.equalsIgnoreCase("0.0")) {
+							iclass = "none";
+						} else {
+							iclass = "green";
+						}
+						page += "<TD " + "class='" + iclass + "'>\n";
+						page += threeDay.get(ho) + "%\n";
+						page += "</TD>\n";
+						
+						pc = week.get(ho);
+						iclass = "";
+						if (pc.indexOf("-") != -1) {
+							iclass = "red";
+						} else if (pc.indexOf("?") != -1 || pc.equalsIgnoreCase("0.0")) {
+							iclass = "none";
+						} else {
+							iclass = "green";
+						}
+						page += "<TD " + "class='" + iclass + "'>\n";
+						page += week.get(ho) + "%\n";
+						page += "</TD>\n";
 					}
 				}
 
