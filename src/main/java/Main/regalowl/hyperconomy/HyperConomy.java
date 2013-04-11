@@ -36,6 +36,7 @@ public class HyperConomy extends JavaPlugin {
 	private YamlFile yaml;
 	private boolean playerLock;
 	private boolean fullLock;
+	private boolean loadLock;
 	private boolean brokenfile;
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
@@ -81,10 +82,12 @@ public class HyperConomy extends JavaPlugin {
 		hws = new HyperWebStart();
 		isign.updateSigns();
 		enabled = true;
+		loadLock = false;
 		//log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 	}
 
 	public void initialize() {
+		loadLock = true;
 		enabled = false;
 		HandlerList.unregisterAll(this);
 		hc = this;
@@ -222,6 +225,10 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (loadLock) {
+			sender.sendMessage(L.get("HYPERCONOMY_LOADING"));
+			return true;
+		}
 		try {
 			if (cmd.getName().equalsIgnoreCase("lockshop") && !fullLock) {
 				try {

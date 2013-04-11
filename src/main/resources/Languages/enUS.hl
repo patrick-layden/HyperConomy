@@ -162,6 +162,7 @@ NOTIFICATION: &9The &9economy now has &a%a &b%n &9priced at &a%c%p &9each.
 YOU_DONT_HAVE_PERMISSION: &4You don't have permission to do this.
 TRANSACTION_SIGN_MUST_BE_IN_SHOP: &4You must be in a shop to use transaction signs!
 GLOBAL_SHOP_LOCKED: &cHyperConomy is currently locked!
+HYPERCONOMY_LOADING: &cHyperConomy is currently loading, please wait!
 SHOP_UNLOCKED: &6The global shop has been unlocked!
 SHOP_LOCKED: &6The global shop has been locked!
 FIX_YML_FILE: &4You must first fix your bad yml file!
