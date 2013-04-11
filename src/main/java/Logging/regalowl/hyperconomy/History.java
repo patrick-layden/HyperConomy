@@ -202,7 +202,7 @@ public class History {
 			if (allValues.containsKey(ho)) {
 				ArrayList<Double> historicValues = allValues.get(ho);
 				if (historicValues.size() >= timevalue) {
-					double historicValue = historicValues.get(timevalue);
+					double historicValue = historicValues.get(timevalue - 1);
 					double currentvalue = 0.0;
 					if (ho.getType() == HyperObjectType.ENCHANTMENT) {
 						currentvalue = ho.getValue(EnchantmentClass.DIAMOND);
