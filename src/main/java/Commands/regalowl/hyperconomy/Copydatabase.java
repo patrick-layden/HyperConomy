@@ -43,7 +43,7 @@ public class Copydatabase {
 						if (hc.useMySQL()) {
 							boolean databaseOk = se.checkSQLLite();
 							if (databaseOk) {
-								hc.lockHyperConomy(true);
+								hc.loadLock(true);
 
 								hc.setUseMySQL(false);
 								tempWrite = new SQLWrite();
@@ -103,7 +103,7 @@ public class Copydatabase {
 						} else {
 							boolean databaseOk = se.checkMySQL();
 							if (databaseOk) {
-								hc.lockHyperConomy(true);
+								hc.loadLock(true);
 								hc.setUseMySQL(true);
 								tempWrite = new SQLWrite();
 								tempWrite.executeSQL("DELETE FROM hyperconomy_objects");
@@ -169,6 +169,7 @@ public class Copydatabase {
 			return;
 		} catch (Exception e) {
 			sender.sendMessage(L.get("COPYDATABASE_INVALID"));
+			hc.loadLock(false);
 			return;
 		}
 	}
@@ -191,7 +192,7 @@ public class Copydatabase {
 		    	});
     			if (tempWrite == null || tempWrite.getBufferSize() == 0) {
     				hc.setUseMySQL(!hc.useMySQL());
-    				hc.lockHyperConomy(false);
+    				hc.loadLock(false);
     				hc.getServer().getScheduler().runTask(hc, new Runnable() {
     		    		public void run() {
     		    			if (hc.useMySQL()) {

@@ -65,7 +65,7 @@ public class HyperConomy extends JavaPlugin {
 			public void run() {
 				onLateStart();
 			}
-		}, 60L);
+		}, 20L);
 	}
 	
 	private void onLateStart() {
@@ -83,7 +83,6 @@ public class HyperConomy extends JavaPlugin {
 		isign.updateSigns();
 		enabled = true;
 		loadLock = false;
-		//log.info("HyperConomy " + getDescription().getVersion() + " has been enabled.");
 	}
 
 	public void initialize() {
@@ -367,8 +366,12 @@ public class HyperConomy extends JavaPlugin {
 	}
 	*/
 	
-	public void lockHyperConomy(boolean lockState) {
-		fullLock = lockState;
+	//public void lockHyperConomy(boolean lockState) {
+	//	fullLock = lockState;
+	//}
+	
+	public void loadLock(boolean lockState) {
+		loadLock = lockState;
 	}
 	
 	public boolean fullLock() {

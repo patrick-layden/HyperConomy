@@ -157,7 +157,8 @@ public class DataHandler implements Listener {
 		if (!loadActive) {
 			loadActive = true;
 			objectsLoaded = false;
-			hc.lockHyperConomy(true);
+			hc.loadLock(true);
+			//hc.lockHyperConomy(true);
 			waitToLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 				public void run() {
 					SQLWrite sw = hc.getSQLWrite();
@@ -176,7 +177,7 @@ public class DataHandler implements Listener {
 		waitForLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 			public void run() {
 				if (objectsLoaded) {
-					hc.lockHyperConomy(false);
+					//hc.lockHyperConomy(false);
 					hc.onDataLoad();
 					waitForLoad.cancel();
 					for (Player p : Bukkit.getOnlinePlayers()) {
