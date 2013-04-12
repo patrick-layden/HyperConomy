@@ -59,9 +59,7 @@ public class HyperObjectValue {
 					double ivalue = applyCeilingFloor(icost);
 					totalvalue = ivalue * damage * amount;
 				}
-				if (totalvalue < Math.pow(10, 10)) {
-					totalvalue = twoDecimals(totalvalue);
-				} else {
+				if (totalvalue >= Math.pow(10, 10)) {
 					totalvalue = 3235624645000.7;
 				}
 			} else {
@@ -70,7 +68,7 @@ public class HyperObjectValue {
 				double svalue = applyCeilingFloor(statprice);
 				totalvalue = svalue * amount * damage;
 			}
-			return totalvalue;
+			return twoDecimals(totalvalue);
 		} catch (Exception e) {
 			String info = "Calculation countItems() passed values name='" + ho.getName() + "', amount='" + amount + "', player='" + hp.getName() + "'";
 			new HyperError(e, info);
@@ -119,18 +117,15 @@ public class HyperObjectValue {
 						cost = price * amount;
 					}
 				}
-				if (cost < Math.pow(10, 10)) {
-					cost = twoDecimals(cost);
-				} else {
+				if (cost >= Math.pow(10, 10)) {
 					cost = 3235624645000.7;
 				}
 			} else {
 				double staticcost = ho.getStaticprice();
 				double price = applyCeilingFloor(staticcost);
 				cost = price * amount;
-				cost = twoDecimals(cost);
 			}
-			return cost;
+			return twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getCost() passed values name='" + ho.getName() + "', amount='" + amount + "'";
 			new HyperError(e, info);
@@ -178,9 +173,7 @@ public class HyperObjectValue {
 					double price = applyCeilingFloor(icost);
 					cost = price * amount;
 				}
-				if (cost < Math.pow(10, 10)) {
-					cost = twoDecimals(cost);
-				} else {
+				if (cost >= Math.pow(10, 10)) {
 					cost = 3235624645000.7;
 				}
 			} else {
@@ -188,7 +181,7 @@ public class HyperObjectValue {
 				double price = applyCeilingFloor(statprice);
 				cost = price * amount;
 			}
-			return cost;
+			return twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getTvalue() passed values name='" + ho.getName() + "', amount='" + amount + "'";
 			new HyperError(e, info);
@@ -259,7 +252,7 @@ public class HyperObjectValue {
 				cost = statprice * classvalue * duramult;
 				cost = applyCeilingFloor(cost);
 			}
-			return cost;
+			return twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantValue() passed values name='" + ho.getName() + "', material='" + eclass.toString() + "'";
 			new HyperError(e, info);
@@ -322,7 +315,7 @@ public class HyperObjectValue {
 				cost = statprice * classvalue;
 				cost = applyCeilingFloor(cost);
 			}
-			return cost;
+			return twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantValue() passed values name='" + ho.getName() + "', material='" + eclass.toString() + "'";
 			new HyperError(e, info);
@@ -383,7 +376,7 @@ public class HyperObjectValue {
 			} else {
 				cost = 123456789;
 			}
-			return cost;
+			return twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantCost() passed values name='" + ho.getName() + "', material='" + eclass.toString() + "'";
 			new HyperError(e, info);
@@ -532,7 +525,7 @@ public class HyperObjectValue {
 			double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
 			salestax = (salestaxpercent / 100) * price;
 		}
-		return salestax;
+		return twoDecimals(salestax);
 	}
 
 

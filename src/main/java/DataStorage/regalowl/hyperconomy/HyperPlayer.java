@@ -166,6 +166,7 @@ public class HyperPlayer {
 	
 	public double getSalesTax(Double price) {
 		Account acc = hc.getAccount();
+		Calculation calc = hc.getCalculation();
 		double salestax = 0;
 		if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
 			double moneyfloor = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-floor");
@@ -185,7 +186,7 @@ public class HyperPlayer {
 			}
 		} else {
 			double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
-			salestax = (salestaxpercent / 100) * price;
+			salestax = calc.twoDecimals((salestaxpercent / 100) * price);
 		}
 		return salestax;
 	}

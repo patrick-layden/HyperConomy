@@ -246,7 +246,7 @@ public class TransactionProcessor {
 									acc.setBalance(0, globalaccount);
 								}
 								
-								response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)), price - salestax, hyperObject);
+								response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)), calc.twoDecimals(price - salestax), hyperObject);
 								response.setSuccessful();
 								String type = "dynamic";
 								if (Boolean.parseBoolean(hyperObject.getInitiation())) {
