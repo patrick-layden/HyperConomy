@@ -37,27 +37,27 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-continuation</artifactId>
-			<version>9.0.0.v20130308</version>
+			<version>8.1.5.v20120716</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-http</artifactId>
-			<version>9.0.0.v20130308</version>
+			<version>8.1.5.v20120716</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-io</artifactId>
-			<version>9.0.0.v20130308</version>
+			<version>8.1.5.v20120716</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>9.0.0.v20130308</version>
+			<version>8.1.5.v20120716</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-util</artifactId>
-			<version>9.0.0.v20130308</version>
+			<version>8.1.5.v20120716</version>
 		</dependency>
 	    <dependency>
 	    	<groupId>org.xerial</groupId>
