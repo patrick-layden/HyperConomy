@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -204,6 +205,24 @@ public class ItemDisplay {
 								}
 							}
 						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	
+	public boolean blockEntityPickup(Entity entity) {
+		if (entity.getType() == EntityType.SKELETON || entity.getType() == EntityType.ZOMBIE || entity.getType() == EntityType.PIG_ZOMBIE) {
+			Location el = entity.getLocation();	
+			World ew = el.getWorld();
+			double ex = el.getX();
+			double ez = el.getZ();
+			if (w.equals(ew)) {
+				if (Math.abs(ex - x) < 1000) {
+					if (Math.abs(ez - z) < 1000) {
+						return true;
 					}
 				}
 			}

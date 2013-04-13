@@ -19,6 +19,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -322,6 +323,14 @@ public class ItemDisplayFactory implements Listener {
 			}
 		}
 	}
-
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onCreatureSpawnEvent(CreatureSpawnEvent event) {
+		for (ItemDisplay display:displays.values()) {
+			if (display.blockEntityPickup(event.getEntity())) {
+				event.getEntity().setCanPickupItems(false);
+			}
+		}
+	}
+	
 	
 }
