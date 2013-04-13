@@ -142,7 +142,7 @@ public class HyperAPI implements HyperInterface {
 	}
 
 	public double getAPIVersion() {
-		return HyperConomy.hc.getApiVersion();
+		return HyperConomy.hc.s().getApiVersion();
 	}
 
 	public String getShopEconomy(String shop) {

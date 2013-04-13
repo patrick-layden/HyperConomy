@@ -12,18 +12,18 @@ public class Toggleeconomy {
 		Economy economy = hc.getEconomy();
 		try {
 			if (economy != null && economy.getName().equalsIgnoreCase("HyperConomy")) {
-				hc.setUseExternalEconomy(false);
+				hc.s().setUseExternalEconomy(false);
 				sender.sendMessage(L.get("TOGGLEECONOMY_HYPERCONOMY"));
 				return;
 			}
-			if (hc.useExternalEconomy()) {
+			if (hc.s().useExternalEconomy()) {
 				hc.getYaml().getConfig().set("config.use-external-economy-plugin", false);
-				hc.setUseExternalEconomy(false);
+				hc.s().setUseExternalEconomy(false);
 				hc.getAccount().checkshopAccount();
 				sender.sendMessage(L.get("TOGGLEECONOMY_DISABLED"));
 			} else {
 				hc.getYaml().getConfig().set("config.use-external-economy-plugin", true);
-				hc.setUseExternalEconomy(true);
+				hc.s().setUseExternalEconomy(true);
 				hc.getAccount().checkshopAccount();
 				sender.sendMessage(L.get("TOGGLEECONOMY_ENABLED"));
 			}

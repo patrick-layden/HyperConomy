@@ -1,7 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
@@ -15,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class HyperConomy extends JavaPlugin {
 	public static HyperConomy hc;
 	public static String currency;
+	private HyperSettings hs;
 	private Calculation calc;
 	private Log l;
 	private ShopFactory s;
@@ -30,31 +29,22 @@ public class HyperConomy extends JavaPlugin {
 	private SQLRead sr;
 	private SQLEconomy sqe;
 	private HyperWebStart hws;
-	private boolean usemysql;
-	private long saveinterval;
-	private int savetaskid;
+
 	private YamlFile yaml;
 	private boolean playerLock;
 	private boolean fullLock;
 	private boolean loadLock;
-	private boolean brokenfile;
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
 	private Economy economy;
-	private int errorCount;
-	private boolean errorResetActive;
-	private boolean useExternalEconomy;
-	private boolean logerrors;
-	private String serverVersion;
-	private int errorcount;
-	private double apiVersion;
+
 	private boolean enabled;
 
 	@Override
 	public void onEnable() {
 		initialize();
 	}
-	
+
 	@Override
 	public void onDisable() {
 		shutDown(false);
@@ -67,14 +57,14 @@ public class HyperConomy extends JavaPlugin {
 			}
 		}, 20L);
 	}
-	
+
 	private void onLateStart() {
 		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
 		if (x != null & x instanceof Vault) {
 			this.setupEconomy();
-		} else if (useExternalEconomy) {
+		} else if (hs.useExternalEconomy()) {
 			log.warning(L.get("VAULT_NOT_FOUND"));
-			useExternalEconomy = false;
+			hs.setUseExternalEconomy(false);
 		}
 		acc.checkshopAccount();
 		hist = new History();
@@ -92,68 +82,55 @@ public class HyperConomy extends JavaPlugin {
 		hc = this;
 		playerLock = false;
 		fullLock = false;
-		brokenfile = false;
 		boolean migrate = false;
-		YamlFile yam = new YamlFile(this);
-		yam.YamlEnable();
-		yaml = yam;
-		loadErrorCount();
-		errorResetActive = false;
+		yaml = new YamlFile();
+		yaml.YamlEnable();
 		L = new LanguageFile();
-		if (!brokenfile) {
-			new Update();
-			saveinterval = yaml.getConfig().getLong("config.saveinterval");
-			usemysql = yaml.getConfig().getBoolean("config.sql-connection.use-mysql");
-			apiVersion = yaml.getConfig().getDouble("api-version");
-			currency = L.get("CURRENCY");
-			useExternalEconomy = yaml.getConfig().getBoolean("config.use-external-economy-plugin");
-			logerrors = this.getYaml().getConfig().getBoolean("config.log-errors");
-			serverVersion = this.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
-			new Update();
-			
-			sqe = new SQLEconomy();
-			boolean databaseOk = false;
-			if (usemysql) {
-				databaseOk = sqe.checkMySQL();
-				if (!databaseOk) {
-					usemysql = false;
-					databaseOk = sqe.checkSQLLite();
-					log.severe(L.get("SWITCH_TO_SQLITE"));
-				}
-			} else {
+		hs = new HyperSettings();
+		currency = L.get("CURRENCY");
+		sqe = new SQLEconomy();
+		boolean databaseOk = false;
+		if (hs.useMySQL()) {
+			databaseOk = sqe.checkMySQL();
+			if (!databaseOk) {
+				hs.setUseMySQL(false);
 				databaseOk = sqe.checkSQLLite();
+				log.severe(L.get("SWITCH_TO_SQLITE"));
 			}
-			if (databaseOk) {
-				sw = new SQLWrite();
-				sr = new SQLRead();
-				df = new DataHandler();
-				migrate = sqe.checkData();
-			} else {
-				log.severe(L.get("LOG_BREAK"));
-				log.severe(L.get("LOG_BREAK"));
-				log.severe(L.get("DATABASE_CONNECTION_ERROR"));
-				log.severe(L.get("LOG_BREAK"));
-				log.severe(L.get("LOG_BREAK"));
-				getServer().getScheduler().cancelTasks(this);
-				getPluginLoader().disablePlugin(this);
-				return;
-			}
-			s = new ShopFactory();
-			l = new Log(this);
-			im = new InventoryManipulation();
-			calc = new Calculation();
-			acc = new Account();
-			commandhandler = new _Command();
-			not = new Notification();
-			isign = new InfoSignHandler();
-			new TransactionSign();
-			if (!migrate) {
-				df.load();
-			}
-			s.startshopCheck();
-			startSave();
-			new ChestShop();
+		} else {
+			databaseOk = sqe.checkSQLLite();
 		}
+		if (databaseOk) {
+			sw = new SQLWrite();
+			sr = new SQLRead();
+			df = new DataHandler();
+			migrate = sqe.checkData();
+		} else {
+			log.severe(L.get("LOG_BREAK"));
+			log.severe(L.get("LOG_BREAK"));
+			log.severe(L.get("DATABASE_CONNECTION_ERROR"));
+			log.severe(L.get("LOG_BREAK"));
+			log.severe(L.get("LOG_BREAK"));
+			getServer().getScheduler().cancelTasks(this);
+			getPluginLoader().disablePlugin(this);
+			return;
+		}
+		s = new ShopFactory();
+		l = new Log(this);
+		im = new InventoryManipulation();
+		calc = new Calculation();
+		acc = new Account();
+		commandhandler = new _Command();
+		not = new Notification();
+		isign = new InfoSignHandler();
+		new TransactionSign();
+		if (!migrate) {
+			df.load();
+		}
+		s.startshopCheck();
+		hs.startSave();
+		new ChestShop();
+
 	}
 
 	public void shutDown(boolean protect) {
@@ -167,7 +144,7 @@ public class HyperConomy extends JavaPlugin {
 		}
 		if (s != null) {
 			s.stopshopCheck();
-			stopSave();
+			hs.stopSave();
 		}
 		if (hist != null) {
 			hist.stopHistoryLog();
@@ -185,42 +162,22 @@ public class HyperConomy extends JavaPlugin {
 			yaml.saveYamls();
 		}
 		getServer().getScheduler().cancelTasks(this);
-		clearData();
+		if (df != null) {
+			df.clearData();
+		}
 		if (protect) {
 			new DisabledProtection();
 		}
 	}
-	
-	public void clearData() {
-		if (df != null) {
-			df.clearData();
-		}
-		calc= null;
-		l= null;
-		s= null;
-		acc= null;
-		isign= null;
-		commandhandler= null;
-		hist= null;
-		not= null;
-		itdi= null;
-		df= null;
-		sw = null;
-		sr = null;
-		sqe= null;
-		hws= null;
-		yaml= null;
-		economy= null;
-	}
-	
+
 	public void disableWebPage() {
 		hws.endServer();
 		hws = null;
 	}
-	
+
 	public void enableWebPage() {
 		hws = null;
-		hws = new HyperWebStart();	
+		hws = new HyperWebStart();
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -232,7 +189,7 @@ public class HyperConomy extends JavaPlugin {
 			if (cmd.getName().equalsIgnoreCase("lockshop") && !fullLock) {
 				try {
 					if (args.length == 0) {
-						if (playerLock && !brokenfile) {
+						if (playerLock) {
 							playerLock = false;
 							sender.sendMessage(L.get("SHOP_UNLOCKED"));
 							return true;
@@ -293,101 +250,22 @@ public class HyperConomy extends JavaPlugin {
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
 			if (economy.getName().equalsIgnoreCase("HyperConomy")) {
-				hc.setUseExternalEconomy(false);
+				hs.setUseExternalEconomy(false);
 			}
 		}
 		return (economy != null);
 	}
 
-	public void startSave() {
-		savetaskid = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-			public void run() {
-				if (!brokenfile) {
-					yaml.saveYamls();
-				}
-			}
-		}, saveinterval, saveinterval);
-	}
-
-	public void stopSave() {
-		this.getServer().getScheduler().cancelTask(savetaskid);
-	}
-
-	public void ymlCheck(int failcount) {
-		if (failcount == 0) {
-			brokenfile = false;
-		} else {
-			brokenfile = true;
-			log.info(L.get("BAD_YMLFILE_DETECTED"));
-			playerLock = true;
-			fullLock = true;
-			shutDown(true);
-		}
-	}
-
-
-	public void incrementErrorCount() {
-		errorCount++;
-		if (errorCount > 20) {
-			getServer().getScheduler().cancelTasks(this);
-			log.severe("HyperConomy is experiencing a massive amount of errors...shutting down....");
-			shutDown(true);
-			getPluginLoader().disablePlugin(this);
-		}
-		if (!errorResetActive) {
-			errorResetActive = true;
-			getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-			    public void run() {
-			    	errorCount = 0;
-	    		    errorResetActive = false;
-			    }
-			}, 20L);
-		}
-	}
-
-
-
 	public boolean isLocked() {
 		return playerLock;
 	}
 
-	/*
-	public void sqllockShop() {
-		sqllock = true;
-	}
-
-	
-	public void sqlunlockShop() {
-		sqllock = false;
-	}
-
-	public boolean sqlLock() {
-		return sqllock;
-	}
-	*/
-	
-	//public void lockHyperConomy(boolean lockState) {
-	//	fullLock = lockState;
-	//}
-	
 	public void loadLock(boolean lockState) {
 		loadLock = lockState;
 	}
-	
+
 	public boolean fullLock() {
 		return fullLock;
-	}
-
-	public boolean useMySQL() {
-		return usemysql;
-	}
-
-	public long getsaveInterval() {
-		return saveinterval;
-	}
-
-	public void setSaveInterval(long interval) {
-		saveinterval = interval;
 	}
 
 	public YamlFile getYaml() {
@@ -429,7 +307,7 @@ public class HyperConomy extends JavaPlugin {
 	public SQLWrite getSQLWrite() {
 		return sw;
 	}
-	
+
 	public SQLRead getSQLRead() {
 		return sr;
 	}
@@ -441,11 +319,11 @@ public class HyperConomy extends JavaPlugin {
 	public ItemDisplayFactory getItemDisplay() {
 		return itdi;
 	}
-	
+
 	public History getHistory() {
 		return hist;
 	}
-	
+
 	public InventoryManipulation getInventoryManipulation() {
 		return im;
 	}
@@ -453,62 +331,15 @@ public class HyperConomy extends JavaPlugin {
 	public LanguageFile getLanguageFile() {
 		return L;
 	}
-	
-	public boolean useExternalEconomy() {
-		return useExternalEconomy;
+
+	public Logger log() {
+		return log;
 	}
-	
-	public void setUseExternalEconomy(boolean state) {
-		useExternalEconomy = state;
+
+	public HyperSettings s() {
+		return hs;
 	}
-	
-	public boolean logErrors() {
-		return logerrors;
-	}
-	
-	public String getServerVersion() {
-		return serverVersion;
-	}
-	
-	public int getErrorCount() {
-		return errorcount;
-	}
-	
-	public void raiseErrorCount() {
-		errorcount++;
-	}
-	
-	public void setUseMySQL(boolean usemysql) {
-		this.usemysql = usemysql;
-	}
-	
-	public void loadErrorCount() {
-		FileTools ft = new FileTools();
-		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "errors";
-		ft.makeFolder(path);
-		ArrayList<String> contents = ft.getFolderContents(path);
-		if (contents.size() == 0) {
-			errorcount = 0;
-		} else {
-			int max = 0;
-			for (String folder:contents) {
-				try {
-					int cnum = Integer.parseInt(folder);
-					if (cnum > max) {
-						max = cnum;
-					}
-				} catch (Exception e) {
-					continue;
-				}
-			}
-			errorcount = max + 1;
-		}
-	}
-	
-	public double getApiVersion() {
-		return apiVersion;
-	}
-	
+
 	public boolean enabled() {
 		return enabled;
 	}

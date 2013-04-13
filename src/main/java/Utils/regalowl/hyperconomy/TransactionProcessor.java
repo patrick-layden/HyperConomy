@@ -195,90 +195,82 @@ public class TransactionProcessor {
 			if (giveInventory == null) {
 				giveInventory = hp.getPlayer().getInventory();
 			}
-			if (amount > 0) {
-				if (id >= 0) {
-					int totalitems = im.countItems(id, data, giveInventory);
-					if (totalitems < amount) {
-						boolean sellRemaining = hc.getYaml().getConfig().getBoolean("config.sell-remaining-if-less-than-requested-amount");
-						if (sellRemaining) {
-							amount = totalitems;
-						} else {	
-							response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), hyperObject);
-							return response;	
-						}
-					}
-					if (amount > 0) {
-						double price = hyperObject.getValue(amount, hp);
-						Boolean toomuch = false;
-						if (price == 3235624645000.7) {
-							toomuch = true;
-						}
-						if (!toomuch) {
-							int maxi = hyperObject.getMaxInitial();
-							boolean isstatic = false;
-							boolean isinitial = false;
-							isinitial = Boolean.parseBoolean(hyperObject.getInitiation());
-							isstatic = Boolean.parseBoolean(hyperObject.getIsstatic());
-							if ((amount > maxi) && !isstatic && isinitial) {
-								amount = maxi;
-								price = hyperObject.getValue(amount, hp);
-							}
-							boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
-							if (acc.checkshopBalance(price) || sunlimited) {
-								if (maxi == 0) {
-									price = hyperObject.getValue(amount, hp);
-								}
-								double amountRemoved = im.removeItems(id, data, amount, giveInventory);
-								double shopstock = 0;
-								shopstock = hyperObject.getStock();
-								if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-									hyperObject.setStock(shopstock + amountRemoved);
-								}
-								int maxi2 = hyperObject.getMaxInitial();
-								if (maxi2 == 0) {
-									hyperObject.setInitiation("false");
-								}
-								double salestax = hp.getSalesTax(price);
-								acc.deposit(price - salestax, hp.getPlayer());
-								acc.withdrawShop(price - salestax);
-								if (sunlimited) {
-									String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
-									acc.setBalance(0, globalaccount);
-								}
-								
-								response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)), calc.twoDecimals(price - salestax), hyperObject);
-								response.setSuccessful();
-								String type = "dynamic";
-								if (Boolean.parseBoolean(hyperObject.getInitiation())) {
-									type = "initial";
-								} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
-									type = "static";
-								}
-								log.writeSQLLog(hp.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
-								isign.updateSigns();
-								not.setNotify(name, null, playerecon);
-								not.sendNotification();
-								return response;
-							} else {
-								response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
-								return response;	
-							}
-						} else {
-							response.addFailed(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), hyperObject.getStock(), name), hyperObject);
-							return response;	
-						}
-					} else {
-						response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), hyperObject);
-						return response;	
-					}
-				} else {
-					response.addFailed(L.f(L.get("CANNOT_BE_SOLD_WITH"), name), hyperObject);
-					return response;	
-				}
-			} else {
+			if (amount <= 0) {
 				response.addFailed(L.f(L.get("CANT_SELL_LESS_THAN_ONE"), name), hyperObject);
-				return response;	
+				return response;
 			}
+			if (id < 0) {
+				response.addFailed(L.f(L.get("CANNOT_BE_SOLD_WITH"), name), hyperObject);
+				return response;
+			}
+			int totalitems = im.countItems(id, data, giveInventory);
+			if (totalitems < amount) {
+				boolean sellRemaining = hc.getYaml().getConfig().getBoolean("config.sell-remaining-if-less-than-requested-amount");
+				if (sellRemaining) {
+					amount = totalitems;
+				} else {
+					response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), hyperObject);
+					return response;
+				}
+			}
+			if (amount <= 0) {
+				response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), hyperObject);
+				return response;
+			}
+			double price = hyperObject.getValue(amount, hp);
+			if (price == 3235624645000.7) {
+				response.addFailed(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), hyperObject.getStock(), name), hyperObject);
+				return response;
+			}
+			int maxi = hyperObject.getMaxInitial();
+			boolean isstatic = false;
+			boolean isinitial = false;
+			isinitial = Boolean.parseBoolean(hyperObject.getInitiation());
+			isstatic = Boolean.parseBoolean(hyperObject.getIsstatic());
+			if ((amount > maxi) && !isstatic && isinitial) {
+				amount = maxi;
+				price = hyperObject.getValue(amount, hp);
+			}
+			boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
+			if (!acc.checkshopBalance(price) && !sunlimited) {
+				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
+				return response;
+			}
+			if (maxi == 0) {
+				price = hyperObject.getValue(amount, hp);
+			}
+			double amountRemoved = im.removeItems(id, data, amount, giveInventory);
+			double shopstock = 0;
+			shopstock = hyperObject.getStock();
+			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+				hyperObject.setStock(shopstock + amountRemoved);
+			}
+			int maxi2 = hyperObject.getMaxInitial();
+			if (maxi2 == 0) {
+				hyperObject.setInitiation("false");
+			}
+			double salestax = hp.getSalesTax(price);
+			acc.deposit(price - salestax, hp.getPlayer());
+			acc.withdrawShop(price - salestax);
+			if (sunlimited) {
+				String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+				acc.setBalance(0, globalaccount);
+			}
+
+			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)), calc.twoDecimals(price - salestax), hyperObject);
+			response.setSuccessful();
+			String type = "dynamic";
+			if (Boolean.parseBoolean(hyperObject.getInitiation())) {
+				type = "initial";
+			} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
+				type = "static";
+			}
+			log.writeSQLLog(hp.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
+			isign.updateSigns();
+			not.setNotify(name, null, playerecon);
+			not.sendNotification();
+			return response;
+
 		} catch (Exception e) {
 			String info = "Transaction sell() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', id='" + hyperObject.getId() + "', data='" + hyperObject.getData() + "', amount='" + amount + "'";
 			new HyperError(e, info);

@@ -10,7 +10,7 @@ import java.sql.Statement;
 
 import org.bukkit.scheduler.BukkitTask;
 
-public class SQLiteConnection extends DatabaseConnection {
+public class SQLiteConnection implements DatabaseConnection {
 
 
 	
@@ -85,7 +85,7 @@ public class SQLiteConnection extends DatabaseConnection {
 	}
 	
 	
-	protected void openConnection() {
+	private void openConnection() {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:" + sqlitePath);
@@ -104,7 +104,7 @@ public class SQLiteConnection extends DatabaseConnection {
 	
 
 
-	protected void writeThread() {
+	private void writeThread() {
 		writeTask = hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				try {
@@ -135,7 +135,7 @@ public class SQLiteConnection extends DatabaseConnection {
 		});
 	}
 
-	protected void scheduleRetry(long wait) {
+	private void scheduleRetry(long wait) {
 		retryWriteTask = hc.getServer().getScheduler().runTaskLaterAsynchronously(hc, new Runnable() {
 			public void run() {
 				writeThread();

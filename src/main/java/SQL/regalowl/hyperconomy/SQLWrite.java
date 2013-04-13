@@ -23,7 +23,7 @@ public class SQLWrite {
 		bufferCounter.set(0);
 		processNext.set(0);
 		hc = HyperConomy.hc;
-		if (hc.useMySQL()) {
+		if (hc.s().useMySQL()) {
 			threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads");
 		} else {
 			threadlimit = 1;
@@ -33,7 +33,7 @@ public class SQLWrite {
 			hc.getServer().getScheduler().runTaskLaterAsynchronously(hc, new Runnable() {
 	    		public void run() {
 	    			DatabaseConnection dc = null;
-	    			if (hc.useMySQL()) {
+	    			if (hc.s().useMySQL()) {
 	    				dc = new MySQLConnection();
 	    			} else {
 		    			dc = new SQLiteConnection();
@@ -121,7 +121,7 @@ public class SQLWrite {
 
 
 	public void addSetting(String setting, String value) {
-		if (hc.useMySQL()) {
+		if (hc.s().useMySQL()) {
 			executeSQL("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('"+setting+"', '"+value+"', NOW() )");
 		} else {
 			executeSQL("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('"+setting+"', '"+value+"', datetime('NOW', 'localtime'))");

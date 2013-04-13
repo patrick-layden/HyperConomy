@@ -21,9 +21,9 @@ public class Setinterval {
     			} else if (args[0].equalsIgnoreCase("save")) {
     				long saveinterval = Long.parseLong(args[1]);
 	    			yaml.getConfig().set("config.saveinterval", saveinterval);	
-	    			hc.setSaveInterval(saveinterval);
-	    			hc.stopSave();
-	    			hc.startSave();	
+	    			hc.s().setSaveInterval(saveinterval);
+	    			hc.s().stopSave();
+	    			hc.s().startSave();	
 	    			sender.sendMessage(L.get("SAVE_INTERVAL_SET"));
     			} else if (args[0].equalsIgnoreCase("sign")) {
     				

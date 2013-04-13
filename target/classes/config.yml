@@ -35,6 +35,7 @@ config:
   use-external-economy-plugin: true
   use-shops: true
   allow-scrolling-transaction-signs: false
+  block-selling-in-creative-mode: false
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

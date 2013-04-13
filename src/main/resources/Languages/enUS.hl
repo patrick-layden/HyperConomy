@@ -392,3 +392,4 @@ ECONOMY_IMPORTED: &6All objects successfully imported from YML!
 IMPORT_PROCEED: &cThe will erase all object data in your HyperConomy database (hyperconomy_objects table), type '/importfromyml [economy] confirm' to proceed!
 IMPORTFROMYML_INVALID: &4Invalid parameters.  Use /importfromyml [economy]
 SOLD_ITEMS_FOR: &9&oYou sold your items for &a&o%c%v&9.
+CANT_SELL_CREATIVE: &4You're not allowed to sell items in creative mode.

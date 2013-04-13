@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -542,6 +543,11 @@ public class ChestShop implements Listener{
 
 						    			} else if (slot >= 27 && ho != null){
 						    				if (sell) {
+						    					if (p.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
+						    						p.sendMessage(L.get("CANT_SELL_CREATIVE"));
+						    						icevent.setCancelled(true);
+						    						return;
+						    					}
 						    					int itemamount = im.countItems(id, data, icevent.getView().getTopInventory());
 						    					
 						    					if (itemamount > 0) {
@@ -701,6 +707,11 @@ public class ChestShop implements Listener{
 						    				
 						    			} else if (slot >= 27 && ho != null) {
 						    				if (sell) {
+						    					if (p.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
+						    						p.sendMessage(L.get("CANT_SELL_CREATIVE"));
+						    						icevent.setCancelled(true);
+						    						return;
+						    					}
 						    					int itemamount = im.countItems(id, data, icevent.getView().getTopInventory());
 						    					
 						    					if (itemamount > 0) {

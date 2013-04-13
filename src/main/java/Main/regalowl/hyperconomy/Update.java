@@ -210,6 +210,10 @@ public class Update {
 	    	if (t48 == null) {
 	    		yaml.getConfig().set("config.allow-scrolling-transaction-signs", false);
 	    	}	    
+	    	String t49 = yaml.getConfig().getString("config.block-selling-in-creative-mode");
+	    	if (t49 == null) {
+	    		yaml.getConfig().set("config.block-selling-in-creative-mode", false);
+	    	}	    
 	    	
 	    	double dversion = Double.parseDouble(configversion);
 	    	if (dversion < .952) {

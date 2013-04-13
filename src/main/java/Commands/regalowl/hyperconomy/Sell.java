@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 public class Sell {
@@ -12,6 +13,10 @@ public class Sell {
 		ShopFactory s = hc.getShopFactory();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
+			if (player.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
+				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
+				return;
+			}
 			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
 					String name = sf.fixName(args[0]);

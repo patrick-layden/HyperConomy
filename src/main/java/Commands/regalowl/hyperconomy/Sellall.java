@@ -1,18 +1,19 @@
 package regalowl.hyperconomy;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 public class Sellall {
-	private HyperConomy hc;
-	private ShopFactory s;
-	private Player player;
 
-	Sellall(String args[], Player p) {
-		hc = HyperConomy.hc;
-		s = hc.getShopFactory();
+	Sellall(String args[], Player player) {
+		HyperConomy hc = HyperConomy.hc;
+		ShopFactory s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
-		player = p;
+		if (player.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
+			player.sendMessage(L.get("CANT_SELL_CREATIVE"));
+			return;
+		}
 		try {
 			if (s.inAnyShop(player)) {
 				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {

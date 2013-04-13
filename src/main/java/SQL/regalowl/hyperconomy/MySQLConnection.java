@@ -10,7 +10,7 @@ import java.sql.Statement;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitTask;
 
-public class MySQLConnection extends DatabaseConnection {
+public class MySQLConnection implements DatabaseConnection {
 
 
 
@@ -96,7 +96,7 @@ public class MySQLConnection extends DatabaseConnection {
 	
 	
 	
-	protected void openConnection() {
+	private void openConnection() {
 		try {
 			connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 		} catch (Exception e) {
@@ -111,7 +111,7 @@ public class MySQLConnection extends DatabaseConnection {
 	
 	
 
-	protected void writeThread() {
+	private void writeThread() {
 		writeTask = hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				try {
@@ -142,7 +142,7 @@ public class MySQLConnection extends DatabaseConnection {
 		});
 	}
 
-	protected void scheduleRetry(long wait) {
+	private void scheduleRetry(long wait) {
 		retryWriteTask = hc.getServer().getScheduler().runTaskLaterAsynchronously(hc, new Runnable() {
 			public void run() {
 				writeThread();

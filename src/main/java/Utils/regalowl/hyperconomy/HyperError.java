@@ -20,8 +20,8 @@ public class HyperError {
 		hc = HyperConomy.hc;
 		e = null;
 		info = infor;
-		errornumber = hc.getErrorCount();
-		hc.raiseErrorCount();
+		errornumber = hc.s().getErrorCount();
+		hc.s().raiseErrorCount();
 		handleError();
 	}
 	
@@ -30,8 +30,8 @@ public class HyperError {
 		hc = HyperConomy.hc;
 		e = ex;
 		info = infor;
-		errornumber = hc.getErrorCount();
-		hc.raiseErrorCount();
+		errornumber = hc.s().getErrorCount();
+		hc.s().raiseErrorCount();
 		handleError();
 	}
 	
@@ -40,8 +40,8 @@ public class HyperError {
 		hc = HyperConomy.hc;
 		e = ex;
 		info = "";
-		errornumber = hc.getErrorCount();
-		hc.raiseErrorCount();
+		errornumber = hc.s().getErrorCount();
+		hc.s().raiseErrorCount();
 		handleError();
 	}
 	
@@ -55,8 +55,8 @@ public class HyperError {
 		info += "Method: " + methodName + "\r\n";
 		info += "Called by: " + callerMethod + "\r\n";
 		info += "Called by class:" + callerClass + "\r\n";
-		errornumber = hc.getErrorCount();
-		hc.raiseErrorCount();
+		errornumber = hc.s().getErrorCount();
+		hc.s().raiseErrorCount();
 		handleError();
 	}
 	
@@ -71,8 +71,8 @@ public class HyperError {
 		info += "Called by: " + callerMethod + "\r\n";
 		info += "Called by class:" + callerClass + "\r\n";
 		info += infor;
-		errornumber = hc.getErrorCount();
-		hc.raiseErrorCount();
+		errornumber = hc.s().getErrorCount();
+		hc.s().raiseErrorCount();
 		handleError();
 	}
 
@@ -80,9 +80,9 @@ public class HyperError {
 	@SuppressWarnings("deprecation")
 	private void handleError() {
 		try {
-			boolean logError = hc.logErrors();
+			boolean logError = hc.s().logErrors();
 			if (logError) {
-				hc.incrementErrorCount();
+				hc.s().incrementErrorCount();
 				hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
 					public void run() {
 						FileTools ft = new FileTools();
@@ -106,9 +106,9 @@ public class HyperError {
 							objectsLoaded = sf.objectsLoaded();
 						}
 						info = ft.getTimeStamp() + "\r\n"
-						+ "HyperConomy version: " + hc.getServerVersion() + "\r\n"
+						+ "HyperConomy version: " + hc.s().getServerVersion() + "\r\n"
 						+ Bukkit.getName() + " version: " + Bukkit.getServer().getBukkitVersion() + "\r\n"
-						+ "UseMySQL='" + hc.useMySQL() + "'\r\nObjects Loaded='" + objectsLoaded
+						+ "UseMySQL='" + hc.s().useMySQL() + "'\r\nObjects Loaded='" + objectsLoaded
 						+ "'\r\n" + info;
 						ft.writeStringToFile(info, path + File.separator + "info.txt");
 						LanguageFile L = hc.getLanguageFile();

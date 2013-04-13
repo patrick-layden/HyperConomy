@@ -16,7 +16,7 @@ public class Intervals {
 				SQLRead sr = hc.getSQLRead();
 				sender.sendMessage(L.get("LINE_BREAK"));
 				sender.sendMessage(ChatColor.GREEN + "" + s.getshopInterval() + ChatColor.BLUE + " tick (" + ChatColor.GREEN + "" + s.getshopInterval() / 20 + ChatColor.BLUE + " second) shop update interval.");
-				sender.sendMessage(ChatColor.GREEN + "" + hc.getsaveInterval() + ChatColor.BLUE + " tick (" + ChatColor.GREEN + "" + hc.getsaveInterval() / 20 + ChatColor.BLUE + " second) save interval.");
+				sender.sendMessage(ChatColor.GREEN + "" + hc.s().getsaveInterval() + ChatColor.BLUE + " tick (" + ChatColor.GREEN + "" + hc.s().getsaveInterval() / 20 + ChatColor.BLUE + " second) save interval.");
 				sender.sendMessage(ChatColor.GREEN + "" + isign.getUpdateInterval() + ChatColor.BLUE + " tick (" + ChatColor.GREEN + "" + isign.getUpdateInterval() / 20 + ChatColor.BLUE + " second) sign update interval.");
 				sender.sendMessage(ChatColor.GREEN + "" + isign.signsWaitingToUpdate() + ChatColor.BLUE + " signs waiting to update.");
 				//TODO Make async

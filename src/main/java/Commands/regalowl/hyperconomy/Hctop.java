@@ -10,7 +10,7 @@ public class Hctop {
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
 		try {
-			if (hc.useExternalEconomy()) {
+			if (hc.s().useExternalEconomy()) {
 				sender.sendMessage(L.get("ONLY_AVAILABLE_INTERNAL"));
 				return;
 			}

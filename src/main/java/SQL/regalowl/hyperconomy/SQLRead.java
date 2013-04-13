@@ -27,7 +27,7 @@ public class SQLRead {
 			hc.getServer().getScheduler().runTaskLaterAsynchronously(hc, new Runnable() {
 	    		public void run() {
 	    			DatabaseConnection dc = null;
-	    			if (hc.useMySQL()) {
+	    			if (hc.s().useMySQL()) {
 	    				dc = new MySQLConnection();
 	    			} else {
 		    			dc = new SQLiteConnection();

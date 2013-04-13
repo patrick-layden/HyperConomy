@@ -41,9 +41,9 @@ public class YamlFile {
     
     HyperConomy hc;
     
-    YamlFile(HyperConomy hyperc) {
+    YamlFile() {
+    	hc = HyperConomy.hc;
     	brokenfile = false;
-    	hc = hyperc;
     }
 	
     
@@ -211,10 +211,18 @@ public class YamlFile {
         }
         if (failcount != 0) {
         	brokenfile = true;
+        	hc.log().info(hc.getLanguageFile().get("BAD_YMLFILE_DETECTED"));
+			hc.shutDown(true);
         }
-        hc.ymlCheck(failcount);
+
 
     }
+    
+    public boolean broken() {
+    	return brokenfile;
+    }
+
+    
 
 	/**
 	 * 

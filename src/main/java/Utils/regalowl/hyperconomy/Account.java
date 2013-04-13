@@ -29,7 +29,7 @@ public class Account {
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		
 		if (useExternalEconomy) {
@@ -70,7 +70,7 @@ public class Account {
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		
 		if (useExternalEconomy) {
@@ -112,7 +112,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -145,7 +145,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -176,7 +176,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -210,7 +210,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -244,7 +244,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -278,7 +278,7 @@ public class Account {
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		Log l = hc.getLog();
 		if (useExternalEconomy) {
@@ -316,7 +316,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -353,7 +353,7 @@ public class Account {
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			boolean hasaccount = false;
@@ -385,7 +385,7 @@ public class Account {
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -428,7 +428,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -466,7 +466,7 @@ public class Account {
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
@@ -499,7 +499,7 @@ public class Account {
 		HyperConomy hc = HyperConomy.hc;
 		Economy economy = hc.getEconomy();
 		LanguageFile L = hc.getLanguageFile();
-		boolean useExternalEconomy = hc.useExternalEconomy();
+		boolean useExternalEconomy = hc.s().useExternalEconomy();
 		DataHandler df = hc.getDataFunctions();
 		if (useExternalEconomy) {
 			if (economy != null) {
