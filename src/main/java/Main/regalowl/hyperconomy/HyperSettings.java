@@ -18,6 +18,7 @@ public class HyperSettings {
 	private String serverVersion;
 	private long saveinterval;
 	private boolean usemysql;
+	private boolean useShopPermissions;
 
 	
 	private int savetaskid;
@@ -36,6 +37,7 @@ public class HyperSettings {
 		serverVersion = HyperConomy.hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
 		saveinterval = config.getLong("config.saveinterval");
 		usemysql = config.getBoolean("config.sql-connection.use-mysql");
+		useShopPermissions = config.getBoolean("config.use-shop-permissions");
 		
 		errorResetActive = false;
 		loadErrorCount();
@@ -80,6 +82,10 @@ public class HyperSettings {
 
 	public void setSaveInterval(long interval) {
 		saveinterval = interval;
+	}
+	
+	public boolean useShopPermissions() {
+		return useShopPermissions;
 	}
 	
 	

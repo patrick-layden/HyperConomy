@@ -195,4 +195,39 @@ public class HyperPlayer {
 		return tp.processTransaction(playerTransaction);
 	}
 	
+	
+	public boolean hasSellPermission(Shop s) {
+		if (!hc.s().useShopPermissions()) {
+			return true;
+		}
+		boolean hasPermission = false;
+		if (getPlayer().isPermissionSet("hyperconomy.shop")) {
+			hasPermission = getPlayer().hasPermission("hyperconomy.shop");
+		}
+		if (getPlayer().isPermissionSet("hyperconomy.shop." + s.getName())) {
+			hasPermission = getPlayer().hasPermission("hyperconomy.shop." + s.getName());
+		}
+		if (getPlayer().isPermissionSet("hyperconomy.shop." + s.getName() + ".sell")) {
+			hasPermission = getPlayer().hasPermission("hyperconomy.shop." + s.getName() + ".sell");
+		}
+		return hasPermission;
+	}
+	
+	public boolean hasBuyPermission(Shop s) {
+		if (!hc.s().useShopPermissions()) {
+			return true;
+		}
+		boolean hasPermission = false;
+		if (getPlayer().isPermissionSet("hyperconomy.shop")) {
+			hasPermission = getPlayer().hasPermission("hyperconomy.shop");
+		}
+		if (getPlayer().isPermissionSet("hyperconomy.shop." + s.getName())) {
+			hasPermission = getPlayer().hasPermission("hyperconomy.shop." + s.getName());
+		}
+		if (getPlayer().isPermissionSet("hyperconomy.shop." + s.getName() + ".buy")) {
+			hasPermission = getPlayer().hasPermission("hyperconomy.shop." + s.getName() + ".buy");
+		}
+		return hasPermission;
+	}
+	
 }

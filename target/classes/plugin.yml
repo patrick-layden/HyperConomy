@@ -418,7 +418,7 @@ permissions:
             hyperconomy.scalebypercent: true
             hyperconomy.createsign: true
             hyperconomy.notify: true
-            hyperconomy.shop.*: true
+            hyperconomy.shop: true
             hyperconomy.balanceall: true
             hyperconomy.topbalance: true
     hyperconomy.use:
@@ -494,7 +494,7 @@ permissions:
     hyperconomy.chestshop:
         description: Allows the creation of chest shops.
         default: false
-    hyperconomy.shop.*:
+    hyperconomy.shop:
         description: Allows access to all functions at all shops.
         default: false
     hyperconomy.buysign:

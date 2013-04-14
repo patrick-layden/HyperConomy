@@ -19,7 +19,7 @@ public class Esell {
 			}
 			if (s.inAnyShop(player)) {
 				HyperPlayer hp = dh.getHyperPlayer(player);
-				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName()) || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName() + ".sell")) {
+				if (hp.hasSellPermission(s.getShop(player))) {
 					String name = args[0];
 					if (args[0].equalsIgnoreCase("max")) {
 						if (!im.hasenchants(player.getItemInHand())) {

@@ -12,7 +12,7 @@ public class Ebuy {
 		try {
 			if (s.inAnyShop(player)) {
 				HyperPlayer hp = dh.getHyperPlayer(player);
-				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName()) || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName() + ".buy")) {
+				if (hp.hasBuyPermission(s.getShop(player))) {
 					String name = args[0];
 					if (hc.getDataFunctions().enchantTest(name)) {
 						if (s.getShop(player).has(name)) {

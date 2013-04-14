@@ -18,7 +18,7 @@ public class Sell {
 				return;
 			}
 			if (s.inAnyShop(player)) {
-				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName()) || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName() + ".sell")) {
+				if (sf.getHyperPlayer(player).hasSellPermission(s.getShop(player))) {
 					String name = sf.fixName(args[0]);
 					int amount = 0;
 					boolean xp = false;

@@ -16,7 +16,7 @@ public class Sellall {
 		}
 		try {
 			if (s.inAnyShop(player)) {
-				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName()) || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName() + ".sell")) {
+				if (dh.getHyperPlayer(player).hasSellPermission(s.getShop(player))) {
 					if (args.length == 0) {
 						PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_ALL);
 						TransactionResponse response = dh.getHyperPlayer(player).processTransaction(pt);
