@@ -14,7 +14,7 @@ public class Buyid {
 			String playerecon = hc.getDataFunctions().getHyperPlayer(player).getEconomy();
 			if (s.inAnyShop(player)) {
 				HyperPlayer hp = hc.getDataFunctions().getHyperPlayer(player);
-				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".buy")) {
+				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName()) || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName() + ".buy")) {
 					if (args.length == 2) {
 						amount = Integer.parseInt(args[0]);
 						itd = Integer.parseInt(args[1]);

@@ -20,7 +20,7 @@ public class Hs {
 			}
 			HyperPlayer hp = dh.getHyperPlayer(player);
 			if (s.inAnyShop(player)) {
-				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player)) || player.hasPermission("hyperconomy.shop." + s.getShop(player) + ".sell")) {
+				if (!hc.getYaml().getConfig().getBoolean("config.use-shop-permissions") || player.hasPermission("hyperconomy.shop.*") || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName()) || player.hasPermission("hyperconomy.shop." + s.getShop(player).getName() + ".sell")) {
 					if (args.length == 0) {
 						amount = 1;
 					} else {
