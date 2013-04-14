@@ -97,7 +97,7 @@ public class InfoSignHandler implements Listener {
 	
 	
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onSignRemoval(BlockBreakEvent bbevent) {
 		Block b = bbevent.getBlock();
 		if (b != null && (b.getType().equals(Material.WALL_SIGN) || b.getType().equals(Material.SIGN_POST))) {
@@ -189,7 +189,7 @@ public class InfoSignHandler implements Listener {
 	
 	public InfoSign getInfoSign(String key) {
 		for (InfoSign isign:infoSigns.values()) {
-			if (isign != null && isign.getKey().equalsIgnoreCase(key)) {
+			if (isign != null && isign.getKey() != null && isign.getKey().equalsIgnoreCase(key)) {
 				return isign;
 			}
 		}
