@@ -1,5 +1,7 @@
 package regalowl.hyperconomy;
 
+import org.bukkit.entity.Item;
+
 
 
 public interface HyperInterface {
@@ -29,5 +31,5 @@ public interface HyperInterface {
 	 */
 	String getSalt(String player);
 	double getAPIVersion();
-	
+	boolean isItemDisplay(Item item);
 }

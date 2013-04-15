@@ -246,6 +246,7 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 	
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
 		Block bb = event.getBlock();
@@ -330,6 +331,16 @@ public class ItemDisplayFactory implements Listener {
 				event.getEntity().setCanPickupItems(false);
 			}
 		}
+	}
+	
+	
+	public boolean isDisplay(Item item) {
+		for (ItemDisplay display:displays.values()) {
+			if (item.equals(display.getItem())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	

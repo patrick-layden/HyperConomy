@@ -1,6 +1,7 @@
 package regalowl.hyperconomy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 
 public class HyperAPI implements HyperInterface {
@@ -159,6 +160,8 @@ public class HyperAPI implements HyperInterface {
 		return HyperConomy.hc.getYaml().getConfig().getString("config.global-shop-account");
 	}
 	
-	
+	public boolean isItemDisplay(Item item) {
+		return HyperConomy.hc.getItemDisplay().isDisplay(item);
+	}
 
 }
