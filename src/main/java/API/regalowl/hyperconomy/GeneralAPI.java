@@ -4,7 +4,7 @@ import org.bukkit.entity.Item;
 
 
 
-public interface HyperInterface {
+public interface GeneralAPI {
 
 	String listShops();
 	String listEconomies();

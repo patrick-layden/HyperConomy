@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 //UNDER CONSTRUCTION
 
-public interface HyperObjectInterface
+public interface ObjectAPI
 {
 
 	/**

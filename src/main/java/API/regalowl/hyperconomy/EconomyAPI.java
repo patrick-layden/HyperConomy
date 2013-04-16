@@ -3,7 +3,7 @@ package regalowl.hyperconomy;
 import org.bukkit.entity.Player;
 
 
-public interface HyperEconInterface {
+public interface EconomyAPI {
 
 	boolean checkFunds(double money, Player player);
 	boolean checkFunds(double money, String name);

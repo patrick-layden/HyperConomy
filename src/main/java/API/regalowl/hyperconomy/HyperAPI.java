@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 
-public class HyperAPI implements HyperInterface {
+public class HyperAPI implements GeneralAPI {
 
 	public String listShops() {
 		HyperConomy hc = HyperConomy.hc;

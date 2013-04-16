@@ -2,7 +2,7 @@ package regalowl.hyperconomy;
 
 import org.bukkit.entity.Player;
 
-public class HyperEconAPI implements HyperEconInterface {
+public class HyperEconAPI implements EconomyAPI {
 
 	public boolean checkFunds(double money, Player player) {
 		HyperConomy hc = HyperConomy.hc;

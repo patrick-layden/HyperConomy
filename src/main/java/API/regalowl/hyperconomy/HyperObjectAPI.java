@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class HyperObjectAPI implements HyperObjectInterface {
+public class HyperObjectAPI implements ObjectAPI {
 	public double getTheoreticalPurchasePrice(int id, int durability, int amount, String economy) {
 		if (economy == null) {
 			economy = "default";
