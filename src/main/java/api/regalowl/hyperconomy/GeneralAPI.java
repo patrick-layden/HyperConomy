@@ -31,5 +31,9 @@ public interface GeneralAPI {
 	 */
 	String getSalt(String player);
 	double getAPIVersion();
+	/**
+	 * @param Item entity
+	 * @return Returns true if the given Item is being used as an ItemDisplay and false if it is not.
+	 */
 	boolean isItemDisplay(Item item);
 }

@@ -16,19 +16,23 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="src/main/java/Main"/>
-	<classpathentry kind="src" path="src/main/java/Signs"/>
-	<classpathentry kind="src" path="src/main/java/Logging"/>
-	<classpathentry kind="src" path="src/main/java/Utils"/>
-	<classpathentry kind="src" path="src/main/java/Messaging"/>
-	<classpathentry kind="src" path="src/main/java/DataStorage"/>
-	<classpathentry kind="src" path="src/main/java/Commands"/>
-	<classpathentry kind="src" path="src/main/java/Web"/>
-	<classpathentry kind="src" path="src/main/java/API"/>
-	<classpathentry kind="src" path="src/main/java/Shops"/>
-	<classpathentry kind="src" path="src/main/java/Backups"/>
-	<classpathentry kind="src" path="src/main/java/SQL"/>
-	<classpathentry kind="src" path="src/main/java/Enums"/>
+	<classpathentry kind="src" path="src/main/java/main"/>
+	<classpathentry kind="src" path="src/main/java/signs"/>
+	<classpathentry kind="src" path="src/main/java/logging"/>
+	<classpathentry kind="src" path="src/main/java/utils"/>
+	<classpathentry kind="src" path="src/main/java/messaging"/>
+	<classpathentry kind="src" path="src/main/java/commands"/>
+	<classpathentry kind="src" path="src/main/java/web"/>
+	<classpathentry kind="src" path="src/main/java/api"/>
+	<classpathentry kind="src" path="src/main/java/shops"/>
+	<classpathentry kind="src" path="src/main/java/backup"/>
+	<classpathentry kind="src" path="src/main/java/sql"/>
+	<classpathentry kind="src" path="src/main/java/enums"/>
+	<classpathentry kind="src" path="src/main/java/displays"/>
+	<classpathentry kind="src" path="src/main/java/yml"/>
+	<classpathentry kind="src" path="src/main/java/transactions"/>
+	<classpathentry kind="src" path="src/main/java/accounts"/>
+	<classpathentry kind="src" path="src/main/java/hyperobjects"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
