@@ -13,6 +13,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class HyperConomy extends JavaPlugin {
 	public static HyperConomy hc;
 	public static String currency;
+	public static HyperAPI hyperAPI;
+	public static HyperEconAPI hyperEconAPI;
+	public static HyperObjectAPI hyperObjectAPI;
 	private HyperSettings hs;
 	private Calculation calc;
 	private Log l;
@@ -51,14 +54,6 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public void onDataLoad() {
-		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-			public void run() {
-				onLateStart();
-			}
-		}, 20L);
-	}
-
-	private void onLateStart() {
 		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
 		if (x != null & x instanceof Vault) {
 			this.setupEconomy();
@@ -71,9 +66,11 @@ public class HyperConomy extends JavaPlugin {
 		itdi = new ItemDisplayFactory();
 		hws = new HyperWebStart();
 		isign.updateSigns();
+		
 		enabled = true;
 		loadLock = false;
 	}
+
 
 	public void initialize() {
 		loadLock = true;
@@ -130,7 +127,9 @@ public class HyperConomy extends JavaPlugin {
 		s.startshopCheck();
 		hs.startSave();
 		new ChestShop();
-
+		hyperAPI = new HyperAPI();
+		hyperEconAPI = new HyperEconAPI();
+		hyperObjectAPI = new HyperObjectAPI();
 	}
 
 	public void shutDown(boolean protect) {
