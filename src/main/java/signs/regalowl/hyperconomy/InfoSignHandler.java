@@ -63,7 +63,11 @@ public class InfoSignHandler implements Listener {
 		if (p.hasPermission("hyperconomy.createsign")) {
 			String[] lines = scevent.getLines();
 			String economy = "default";
-			economy = df.getHyperPlayer(p).getEconomy();
+			HyperPlayer hp = df.getHyperPlayer(p);
+			economy = "default";
+			if (hp != null && hp.getEconomy() != null) {
+				economy = hp.getEconomy();
+			}
 			String objectName = lines[0].trim() + lines[1].trim();
 			objectName = df.fixName(objectName);
 			int multiplier = 1;

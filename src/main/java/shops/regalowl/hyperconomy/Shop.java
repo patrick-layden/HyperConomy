@@ -192,6 +192,21 @@ public class Shop {
 		return true;
 	}
 	
+	public boolean has (HyperObject ho) {
+		return has(ho.getName());
+	}
+	
+	public ArrayList<HyperObject> getAvailableObjects() {
+		ArrayList<HyperObject> allEconomy = hc.getDataFunctions().getHyperObjects(economy);
+		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
+		for (HyperObject ho : allEconomy) {
+			if (has(ho)) {
+				available.add(ho);
+			}
+		}
+		return available;
+	}
+	
 	
 	public void addAllObjects() {
 		FileConfiguration sh = hc.getYaml().getShops();

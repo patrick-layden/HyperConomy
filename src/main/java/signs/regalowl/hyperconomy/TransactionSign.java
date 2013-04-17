@@ -16,7 +16,6 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 public class TransactionSign implements Listener {
 	private HyperConomy hc;
 	private DataHandler sf;
-	private String playerecon;
 
 	TransactionSign() {
 		hc = HyperConomy.hc;
@@ -127,8 +126,6 @@ public class TransactionSign implements Listener {
 			if (p == null) {
 				return;
 			}
-			HyperPlayer hp = sf.getHyperPlayer(p);
-			playerecon = hp.getEconomy();
 			boolean sneak = false;
 			if (p.isSneaking()) {
 				sneak = true;
@@ -167,8 +164,13 @@ public class TransactionSign implements Listener {
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.buysign")) {
 									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
+										HyperPlayer hp = sf.getHyperPlayer(p);
+										if (hp == null) {
+											ievent.setCancelled(true);
+											return;
+										}
 										if (!requireShop || hp.hasBuyPermission(shop.getShop(p))) {
-											HyperObject ho = sf.getHyperObject(line12, playerecon);
+											HyperObject ho = sf.getHyperObject(line12, hp.getEconomy());
 											if (!hc.isLocked()) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 												pt.setAmount(amount);
@@ -202,13 +204,18 @@ public class TransactionSign implements Listener {
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
 									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
+										HyperPlayer hp = sf.getHyperPlayer(p);
+										if (hp == null) {
+											ievent.setCancelled(true);
+											return;
+										}
 										if (!requireShop || hp.hasSellPermission(shop.getShop(p))) {
 											if (p.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
 												p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 												ievent.setCancelled(true);
 												return;
 											}
-											HyperObject ho = sf.getHyperObject(line12, playerecon);
+											HyperObject ho = sf.getHyperObject(line12, hp.getEconomy());
 											if (!hc.isLocked()) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 												pt.setAmount(amount);

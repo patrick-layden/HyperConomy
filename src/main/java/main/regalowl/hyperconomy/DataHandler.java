@@ -54,6 +54,9 @@ public class DataHandler implements Listener {
 			addPlayer(name);
 		}
 		HyperPlayer hp = hyperPlayers.get(name);
+		if (hp == null) {
+			return;
+		}
 		hp.setX(l.getX());
 		hp.setY(l.getY());
 		hp.setZ(l.getZ());
@@ -241,7 +244,13 @@ public class DataHandler implements Listener {
 		if (!hyperPlayers.containsKey(player)) {
 			return hyperPlayers.put(player, new HyperPlayer(player));
 		} else {
-			return hyperPlayers.get(player);
+			HyperPlayer hp = hyperPlayers.get(player);
+			if (hp != null) {
+				return hp;
+			} else {
+				hyperPlayers.remove(player);
+				return hyperPlayers.put(player, new HyperPlayer(player));
+			}
 		}
 	}
 
