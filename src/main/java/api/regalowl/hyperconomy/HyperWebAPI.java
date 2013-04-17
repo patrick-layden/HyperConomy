@@ -10,21 +10,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 
-public class HyperWebAPI extends AbstractHandler {
+public class HyperWebAPI extends HttpServlet {
 	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1467231980254743516L;
 	/** Classes which must be called by the API */
 	private static Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
 
@@ -42,11 +44,9 @@ public class HyperWebAPI extends AbstractHandler {
 	/**
 	 * A request must be treated
 	 */
-    public void handle(String pTarget, Request pBaseRequest, HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException, ServletException {
+    public void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException, ServletException {
         pResponse.setContentType("text/html;charset=utf-8");
         pResponse.setStatus(HttpServletResponse.SC_OK);
-        pBaseRequest.setHandled(true);
-
     	String lUri = pRequest.getRequestURI();
     	String lReturn  = "";
     	try {

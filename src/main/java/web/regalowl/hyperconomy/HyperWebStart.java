@@ -1,88 +1,30 @@
 package regalowl.hyperconomy;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.scheduler.BukkitTask;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 
 
 
 public class HyperWebStart {
 
-	//private Logger log = Logger.getLogger("Minecraft");
+
 	private HyperConomy hc;
 	private HyperWebStart hws;
-	private int serverid;
+	private BukkitTask serverTask;
 	private Server server;
 	private int port;
-	//private LanguageFile L;
-	
-	
-	
-	HyperWebStart() {
-		hc = HyperConomy.hc;
-		hws = this;
-		//L = hc.getLanguageFile();
-		
-		FileConfiguration conf = hc.getYaml().getConfig();
-		useWebPage = conf.getBoolean("config.web-page.use-web-page");
-		backgroundColor = "#" + conf.getString("config.web-page.background-color");
-		fontColor = "#" + conf.getString("config.web-page.font-color");
-		borderColor = "#" + conf.getString("config.web-page.border-color");
-		backgroundColor = "#" + conf.getString("config.web-page.background-color");
-		increaseColor = "#" + conf.getString("config.web-page.increase-value-color");
-		decreaseColor = "#" + conf.getString("config.web-page.decrease-value-color");
-		highlightColor = "#" + conf.getString("config.web-page.highlight-row-color");
-		headerColor = "#" + conf.getString("config.web-page.header-color");
-		tax = conf.getDouble("config.purchasetaxpercent");
-		enchanttax = conf.getDouble("config.enchanttaxpercent");
-		salestax = conf.getDouble("config.sales-tax-percent");
-		initialtax = conf.getDouble("config.initialpurchasetaxpercent");
-		statictax = conf.getDouble("config.statictaxpercent");
-		currencySymbol = HyperConomy.currency;
-		port = conf.getInt("config.web-page.port");
-		useHistory = conf.getBoolean("config.store-price-history");
-		pageEconomy = conf.getString("config.web-page.web-page-economy");
-		
-		if (useWebPage) {
-			startServer();
-	    	//log.info(L.get("WEB_PAGE_ENABLED"));
-		}
-	}
-	
-	@SuppressWarnings("deprecation")
-	private void startServer() {
-		try {
-    		serverid = hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
-    			public void run() {
-    			System.setProperty("org.eclipse.jetty.LEVEL", "WARN");
-	            server = new Server(port);
-	            server.setHandler(new HyperWebPrices(hws));
-	            try {
-					server.start();
-					server.join();
-				} catch (Exception e) {
-					endServer();
-				}
-            
-    			}
-    		}, 0L);
-		} catch (Exception e) {
-			new HyperError(e);
-		}
-	}
-	
-	public void endServer() {
-		if (server != null) {
-			try {
-				server.stop();
-			} catch (Exception e) {
-				//SILENCE
-			}
-		}
-		hc.getServer().getScheduler().cancelTask(serverid);
-	}
+	private ShopFactory sf;
 
-
+	
+	
+	
+	
+	
+	
 	private boolean useWebPage;
 	private String backgroundColor;
 	private String fontColor;
@@ -146,4 +88,80 @@ public class HyperWebStart {
 	public String getPageEconomy() {
 		return pageEconomy;
 	}
+	
+	
+	HyperWebStart() {
+		hc = HyperConomy.hc;
+		sf = hc.getShopFactory();
+		hws = this;
+	
+		FileConfiguration conf = hc.getYaml().getConfig();
+		useWebPage = conf.getBoolean("config.web-page.use-web-page");
+		backgroundColor = "#" + conf.getString("config.web-page.background-color");
+		fontColor = "#" + conf.getString("config.web-page.font-color");
+		borderColor = "#" + conf.getString("config.web-page.border-color");
+		backgroundColor = "#" + conf.getString("config.web-page.background-color");
+		increaseColor = "#" + conf.getString("config.web-page.increase-value-color");
+		decreaseColor = "#" + conf.getString("config.web-page.decrease-value-color");
+		highlightColor = "#" + conf.getString("config.web-page.highlight-row-color");
+		headerColor = "#" + conf.getString("config.web-page.header-color");
+		tax = conf.getDouble("config.purchasetaxpercent");
+		enchanttax = conf.getDouble("config.enchanttaxpercent");
+		salestax = conf.getDouble("config.sales-tax-percent");
+		initialtax = conf.getDouble("config.initialpurchasetaxpercent");
+		statictax = conf.getDouble("config.statictaxpercent");
+		currencySymbol = HyperConomy.currency;
+		port = conf.getInt("config.web-page.port");
+		useHistory = conf.getBoolean("config.store-price-history");
+		pageEconomy = conf.getString("config.web-page.web-page-economy");
+		
+		if (useWebPage) {
+			startServer();
+		}
+	}
+	
+	private void startServer() {
+		try {
+			serverTask = hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+    			public void run() {
+    			System.setProperty("org.eclipse.jetty.LEVEL", "WARN");
+    			server = new Server(port);
+    			
+    			
+    	        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+    	        context.setContextPath("/");
+    	        server.setHandler(context);
+    	 
+    	        context.addServlet(new ServletHolder(new HyperWebAPI()),"/API/*");
+    	        for (Shop s:sf.getShops()) {
+    	        	context.addServlet(new ServletHolder(new ShopPage(hws, s)),"/" + s.getName() + "/*");
+    	        }
+    	        
+
+	            try {
+					server.start();
+					server.join();
+				} catch (Exception e) {
+					endServer();
+				}
+            
+    			}
+    		});
+		} catch (Exception e) {
+			new HyperError(e);
+		}
+	}
+	
+	public void endServer() {
+		if (server != null) {
+			try {
+				server.stop();
+			} catch (Exception e) {
+				//SILENCE
+			}
+		}
+		serverTask.cancel();
+	}
+
+
 	}
