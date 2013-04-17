@@ -117,8 +117,7 @@ public class DataHandler implements Listener {
 			if (hyperPlayers.get(player) == null) {
 				hyperPlayers.remove(player);
 			}
-			addPlayer(player);
-			return hyperPlayers.get(player);
+			return addPlayer(player);
 		}
 	}
 	
@@ -131,8 +130,7 @@ public class DataHandler implements Listener {
 			if (hyperPlayers.get(name) == null) {
 				hyperPlayers.remove(name);
 			}
-			addPlayer(name);
-			return hyperPlayers.get(name);
+			return addPlayer(name);
 		}
 	}
 	
@@ -158,7 +156,6 @@ public class DataHandler implements Listener {
 			loadActive = true;
 			objectsLoaded = false;
 			hc.loadLock(true);
-			//hc.lockHyperConomy(true);
 			waitToLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 				public void run() {
 					SQLWrite sw = hc.getSQLWrite();
@@ -177,7 +174,6 @@ public class DataHandler implements Listener {
 		waitForLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 			public void run() {
 				if (objectsLoaded) {
-					//hc.lockHyperConomy(false);
 					hc.onDataLoad();
 					waitForLoad.cancel();
 					for (Player p : Bukkit.getOnlinePlayers()) {
@@ -240,10 +236,12 @@ public class DataHandler implements Listener {
 
 
 
-	public void addPlayer(String player) {
+	public HyperPlayer addPlayer(String player) {
 		player = fixpN(player);
 		if (!hyperPlayers.containsKey(player)) {
-			hyperPlayers.put(player, new HyperPlayer(player));
+			return hyperPlayers.put(player, new HyperPlayer(player));
+		} else {
+			return hyperPlayers.get(player);
 		}
 	}
 
