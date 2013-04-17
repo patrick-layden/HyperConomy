@@ -225,7 +225,7 @@ stickypiston:
     category: unknown
     material: PISTON_STICKY_BASE
     id: 29
-    data: 7
+    data: 0
   value: 100.0
   price:
     static: false
@@ -310,7 +310,7 @@ piston:
     category: unknown
     material: PISTON_BASE
     id: 33
-    data: 7
+    data: 0
   value: 50.0
   price:
     static: false
