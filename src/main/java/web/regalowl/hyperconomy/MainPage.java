@@ -1,8 +1,6 @@
 package regalowl.hyperconomy;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.servlet.ServletException;
@@ -20,19 +18,19 @@ public class MainPage extends HttpServlet {
 	private HyperConomy hc;
 	private ShopFactory sf;
 	private String page = "Loading...";
-	private String mainPage;
+	//private String mainPage;
 	
 	
 	@SuppressWarnings("deprecation")
 	public MainPage() {
 		hc = HyperConomy.hc;
 		sf = hc.getShopFactory();
-		try {
-			InetAddress addr = InetAddress.getLocalHost();
-			mainPage = addr.getAddress() + ":" + hc.s().getPort() + "/";
-		} catch (UnknownHostException e1) {
-			new HyperError(e1);
-		}
+		//try {
+			//InetAddress addr = InetAddress.getLocalHost();
+			//mainPage = addr.getAddress() + ":" + hc.s().getPort() + "/";
+		//} catch (UnknownHostException e1) {
+		//	new HyperError(e1);
+		//}
 
 		
 		hc.getServer().getScheduler().scheduleAsyncRepeatingTask(hc, new Runnable() {
@@ -75,7 +73,7 @@ public class MainPage extends HttpServlet {
 			page += "<style>\n";
 			page += "* {font-family:"+hc.s().getFont()+";font-size:"+(hc.s().getFontSize()*2)+"px;color:" + hc.s().getFontColor() + ";}\n";
 			page += "body {background:" + hc.s().getBackgroundColor() +  ";}\n";
-			page += "td {vertical-align:top;text-align:center;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getTableDataColor() + ";}\n";
+			page += "td {vertical-align:top;text-align:center;padding: 3px;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getTableDataColor() + ";}\n";
 			page += "td.red {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getDecreaseColor() + ";}\n";
 			page += "td.green {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getIncreaseColor() + ";}\n";
 			page += "th {border:1px solid " + hc.s().getBorderColor() + ";padding:3px;cursor:pointer;}\n";
@@ -106,7 +104,7 @@ public class MainPage extends HttpServlet {
 				}
 				page += "<TR>\n";
 				page += "<TD>\n";
-				page += "<a href=\""+s.getName()+"\" style=\"display:block\";>"+s.getName()+"</a>\n";
+				page += "<a href=\""+s.getName()+"\" style=\"display:block;text-decoration:none;\">"+s.getDisplayName()+"</a>\n";
 				page += "</TD>\n";
 				page += "</TR>\n";
 			}

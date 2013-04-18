@@ -16,6 +16,7 @@ public class HyperConomy extends JavaPlugin {
 	public static HyperAPI hyperAPI;
 	public static HyperEconAPI hyperEconAPI;
 	public static HyperObjectAPI hyperObjectAPI;
+	
 	private HyperSettings hs;
 	private Calculation calc;
 	private Log l;
@@ -341,6 +342,10 @@ public class HyperConomy extends JavaPlugin {
 
 	public boolean enabled() {
 		return enabled;
+	}
+	
+	public HyperWebStart getHyperWebStart() {
+		return hws;
 	}
 
 }

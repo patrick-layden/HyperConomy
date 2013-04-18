@@ -145,6 +145,7 @@ public class ShopFactory {
 	
 	public void addShop(Shop shop) {
 		shops.put(shop.getName(), shop);
+		hc.getHyperWebStart().addShop(shop);
 	}
 	
 	public void removeShop(String name) {

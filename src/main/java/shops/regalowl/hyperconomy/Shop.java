@@ -171,6 +171,10 @@ public class Shop implements Comparable<Shop>{
 		return name;
 	}
 	
+	public String getDisplayName() {
+		return name.replace("_", " ");
+	}
+	
 	
 	public boolean has(String item) {
 		FileConfiguration sh = hc.getYaml().getShops();

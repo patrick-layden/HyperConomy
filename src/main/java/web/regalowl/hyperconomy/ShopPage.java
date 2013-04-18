@@ -23,24 +23,12 @@ public class ShopPage extends HttpServlet {
 	private Shop s;
 	private String page = "Loading...";
 	
-	
-	@SuppressWarnings("deprecation")
+
 	public ShopPage(Shop shop) {
 		hc = HyperConomy.hc;
 		calc = hc.getCalculation();
 		hist = hc.getHistory();
 		s = shop;
-		hc.getServer().getScheduler().scheduleAsyncRepeatingTask(hc, new Runnable() {
-			public void run() {
-				try {
-					page = buildPage(s.getEconomy());
-				} catch (Exception e) {
-					new HyperError(e);
-				}
-			}
-		}, 400L, 6000L);
-		
-
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,13 +39,22 @@ public class ShopPage extends HttpServlet {
     
     
     
-    
+    public void updatePage() {
+		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			public void run() {
+				page = buildPage(s.getEconomy());
+			}
+		});
+    }
     
     
     private String buildPage(String economy) {
 		
 		String page = "";
 		if (!hc.fullLock() && hc.enabled()) {
+			if (s == null) {
+				return "";
+			}
 			ArrayList<HyperObject> objects = s.getAvailableObjects();
 			Collections.sort(objects);
 			

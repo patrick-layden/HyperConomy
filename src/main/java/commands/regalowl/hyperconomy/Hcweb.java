@@ -22,6 +22,21 @@ public class Hcweb {
 				hc.disableWebPage();
 				hc.enableWebPage();
 				sender.sendMessage(L.get("WEB_PAGE_SET"));
+			} else if (args[0].equalsIgnoreCase("tabledata")) {
+				hc.getYaml().getConfig().set("config.web-page.table-data-color", args[1]);
+				hc.disableWebPage();
+				hc.enableWebPage();
+				sender.sendMessage(L.get("WEB_PAGE_SET"));
+			} else if (args[0].equalsIgnoreCase("fontsize")) {
+				hc.getYaml().getConfig().set("config.web-page.font-size", args[1]);
+				hc.disableWebPage();
+				hc.enableWebPage();
+				sender.sendMessage(L.get("WEB_PAGE_SET"));
+			} else if (args[0].equalsIgnoreCase("font")) {
+				hc.getYaml().getConfig().set("config.web-page.font", args[1]);
+				hc.disableWebPage();
+				hc.enableWebPage();
+				sender.sendMessage(L.get("WEB_PAGE_SET"));
 			} else if (args[0].equalsIgnoreCase("port")) {
 				hc.getYaml().getConfig().set("config.web-page.port", Integer.parseInt(args[1]));
 				hc.disableWebPage();
@@ -62,6 +77,8 @@ public class Hcweb {
 				hc.disableWebPage();
 				hc.enableWebPage();
 				sender.sendMessage(L.get("WEB_PAGE_SET"));
+			} else if (args[0].equalsIgnoreCase("refresh")) {
+				hc.getHyperWebStart().updatePages();
 			} else {
 				sender.sendMessage(L.get("HCWEB_INVALID"));
 			}
