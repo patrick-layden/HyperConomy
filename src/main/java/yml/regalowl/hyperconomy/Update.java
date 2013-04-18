@@ -135,7 +135,7 @@ public class Update {
 	    	}
 	    	String t30 = yaml.getConfig().getString("config.web-page.port");
 	    	if (t30 == null) {
-	    		yaml.getConfig().set("config.web-page.port", 8765);
+	    		yaml.getConfig().set("config.web-page.port", 7777);
 	    	}
 	    	String t50 = yaml.getConfig().getString("config.web-page.table-data-color");
 	    	if (t50 == null) {

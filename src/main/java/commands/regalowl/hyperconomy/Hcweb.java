@@ -79,6 +79,19 @@ public class Hcweb {
 				sender.sendMessage(L.get("WEB_PAGE_SET"));
 			} else if (args[0].equalsIgnoreCase("refresh")) {
 				hc.getHyperWebStart().updatePages();
+			} else if (args[0].equalsIgnoreCase("setdefault")) {
+	    		hc.getYaml().getConfig().set("config.web-page.background-color", "8FA685");
+	    		hc.getYaml().getConfig().set("config.web-page.font-color", "F2F2F2");
+	    		hc.getYaml().getConfig().set("config.web-page.border-color", "091926");
+	    		hc.getYaml().getConfig().set("config.web-page.increase-value-color", "C8D9B0");
+	    		hc.getYaml().getConfig().set("config.web-page.decrease-value-color", "F2B2A8");
+	    		hc.getYaml().getConfig().set("config.web-page.highlight-row-color", "8FA685");
+	    		hc.getYaml().getConfig().set("config.web-page.header-color", "091926");
+	    		hc.getYaml().getConfig().set("config.web-page.table-data-color", "314A59");
+	    		hc.getYaml().getConfig().set("config.web-page.font-size", 12);
+	    		hc.getYaml().getConfig().set("config.web-page.font", "verdana");
+	    		hc.getYaml().getConfig().set("config.web-page.port", 7777);
+	    		sender.sendMessage(L.get("WEB_PAGE_SET"));
 			} else {
 				sender.sendMessage(L.get("HCWEB_INVALID"));
 			}
