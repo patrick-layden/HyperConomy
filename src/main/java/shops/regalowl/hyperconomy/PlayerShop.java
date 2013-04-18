@@ -1,16 +1,17 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class ServerShop implements Shop, Comparable<Shop>{
-	
+public class PlayerShop implements Shop, Comparable<Shop> {
+
 	private String name;
 	private String world;
 	private String economy;
-	//private String account;
+	private HyperPlayer owner;
 	private String message1;
 	private String message2;
 	private int p1x;
@@ -23,15 +24,14 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	private HyperConomy hc;
 	private LanguageFile L;
 	private FileConfiguration shopFile;
+
 	
-	private boolean globalShop;
-	
-	ServerShop(String name, String economy) {
+	PlayerShop(String name, String economy, HyperPlayer owner) {
 		this.name = name;
 		this.economy = economy;
+		this.owner = owner;
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		globalShop = false;
 		shopFile = hc.getYaml().getShops();
 		shopFile.set(name + ".economy", economy);
 	}
@@ -60,12 +60,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		shopFile.set(name + ".p2.x", x);
 		shopFile.set(name + ".p2.y", y);
 		shopFile.set(name + ".p2.z", z);
-	}
-	
-	public void setGlobal() {
-		globalShop = true;
-		setMessage1("");
-		setMessage1("");
 	}
 	
 	
@@ -125,9 +119,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	
 	
 	public boolean inShop(int x, int y, int z, String world) {
-		if (globalShop) {
-			return true;
-		}
 		if (world.equalsIgnoreCase(this.world)) {
 			int rangex = Math.abs(p1x - p2x);
 			if (Math.abs(x - p1x) <= rangex && Math.abs(x - p2x) <= rangex) {
@@ -150,9 +141,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	public void sendEntryMessage(Player player) {
-		if (globalShop) {
-			return;
-		}
 		if (message1 == null || message2 == null) {
 			message1 = "&aWelcome to %n";
 			message2 = "&9Type &b/hc &9for help.";
@@ -198,21 +186,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 			}
 		}
 		return true;
-	}
-	
-	public boolean has (HyperObject ho) {
-		return has(ho.getName());
-	}
-	
-	public ArrayList<HyperObject> getAvailableObjects() {
-		ArrayList<HyperObject> allEconomy = hc.getDataFunctions().getHyperObjects(economy);
-		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
-		for (HyperObject ho : allEconomy) {
-			if (has(ho)) {
-				available.add(ho);
-			}
-		}
-		return available;
 	}
 	
 	
@@ -283,4 +256,11 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return p2z;
 	}
 	
+	public HyperPlayer getOwner() {
+		return owner;
+	}
+	
+	public void setOwner(HyperPlayer owner) {
+		this.owner = owner;
+	}
 }
