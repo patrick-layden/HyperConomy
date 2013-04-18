@@ -161,7 +161,20 @@ public class HyperAPI implements GeneralAPI {
 	}
 	
 	public boolean isItemDisplay(Item item) {
-		return HyperConomy.hc.getItemDisplay().isDisplay(item);
+		try {
+			if (item == null) {
+				return false;
+			}
+			ItemDisplayFactory idf = HyperConomy.hc.getItemDisplay();
+			if (idf == null) {
+				return false;
+			} else {
+				return idf.isDisplay(item);
+			}
+		} catch (Exception e) {
+			new HyperError(e);
+			return false;
+		}
 	}
 
 }
