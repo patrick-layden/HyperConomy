@@ -196,7 +196,7 @@ public class HyperPlayer {
 	}
 	
 	
-	public boolean hasSellPermission(Shop s) {
+	public boolean hasSellPermission(ServerShop s) {
 		if (!hc.s().useShopPermissions()) {
 			return true;
 		}
@@ -213,7 +213,7 @@ public class HyperPlayer {
 		return hasPermission;
 	}
 	
-	public boolean hasBuyPermission(Shop s) {
+	public boolean hasBuyPermission(ServerShop s) {
 		if (!hc.s().useShopPermissions()) {
 			return true;
 		}

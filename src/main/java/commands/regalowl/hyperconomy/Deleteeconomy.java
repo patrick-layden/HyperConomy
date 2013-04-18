@@ -18,7 +18,7 @@ public class Deleteeconomy {
 					if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 						new Backup();
 					}
-					for (Shop shop:sf.getShops()) {
+					for (ServerShop shop:sf.getShops()) {
 						if (shop.getEconomy().equalsIgnoreCase(economy)) {
 							shop.setEconomy("default");
 						}

@@ -20,11 +20,11 @@ public class ShopPage extends HttpServlet {
 	private HyperConomy hc;
 	private Calculation calc;
 	private History hist;
-	private Shop s;
+	private ServerShop s;
 	private String page = "Loading...";
 	
 
-	public ShopPage(Shop shop) {
+	public ShopPage(ServerShop shop) {
 		hc = HyperConomy.hc;
 		calc = hc.getCalculation();
 		hist = hc.getHistory();

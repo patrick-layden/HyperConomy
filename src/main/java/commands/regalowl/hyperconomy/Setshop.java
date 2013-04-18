@@ -13,7 +13,7 @@ public class Setshop {
 				if (s.shopExists(name)) {
 					s.getShop(name).setPoint1(player);
 				} else {
-					Shop shop = new Shop(name, "default");
+					ServerShop shop = new ServerShop(name, "default");
 					shop.setPoint1(player);
 					shop.setPoint2(player);
 					shop.setDefaultMessages();
@@ -25,7 +25,7 @@ public class Setshop {
 				if (s.shopExists(name)) {
 					s.getShop(name).setPoint2(player);
 				} else {
-					Shop shop = new Shop(name, "default");
+					ServerShop shop = new ServerShop(name, "default");
 					shop.setPoint1(player);
 					shop.setPoint2(player);
 					shop.setDefaultMessages();

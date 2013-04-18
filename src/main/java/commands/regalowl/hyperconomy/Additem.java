@@ -15,7 +15,7 @@ public class Additem {
 				String shopname = s.fixShopName(args[1]);
 				if (hc.getDataFunctions().objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
     				if (s.shopExists(shopname)) {
-    					Shop shop = s.getShop(shopname);
+    					ServerShop shop = s.getShop(shopname);
 	    				if (!shop.has(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
 	    						ArrayList<String> add = new ArrayList<String>();

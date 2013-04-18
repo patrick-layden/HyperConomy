@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class Shop implements Comparable<Shop>{
+public class ServerShop implements Comparable<ServerShop>{
 	
 	private String name;
 	private String world;
@@ -26,7 +26,7 @@ public class Shop implements Comparable<Shop>{
 	
 	private boolean globalShop;
 	
-	Shop(String name, String economy) {
+	ServerShop(String name, String economy) {
 		this.name = name;
 		this.economy = economy;
 		hc = HyperConomy.hc;
@@ -36,7 +36,7 @@ public class Shop implements Comparable<Shop>{
 		shopFile.set(name + ".economy", economy);
 	}
 	
-	public int compareTo(Shop s) {
+	public int compareTo(ServerShop s) {
 		return name.compareTo(s.getName());
 	}
 	
