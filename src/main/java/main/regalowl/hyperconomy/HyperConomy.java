@@ -32,7 +32,7 @@ public class HyperConomy extends JavaPlugin {
 	private SQLWrite sw;
 	private SQLRead sr;
 	private SQLEconomy sqe;
-	private HyperWebStart hws;
+	private WebHandler hws;
 
 	private YamlFile yaml;
 	private boolean playerLock;
@@ -65,7 +65,7 @@ public class HyperConomy extends JavaPlugin {
 		acc.checkshopAccount();
 		hist = new History();
 		itdi = new ItemDisplayFactory();
-		hws = new HyperWebStart();
+		hws = new WebHandler();
 		isign.updateSigns();
 		
 		enabled = true;
@@ -177,7 +177,7 @@ public class HyperConomy extends JavaPlugin {
 
 	public void enableWebPage() {
 		hws = null;
-		hws = new HyperWebStart();
+		hws = new WebHandler();
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -344,7 +344,7 @@ public class HyperConomy extends JavaPlugin {
 		return enabled;
 	}
 	
-	public HyperWebStart getHyperWebStart() {
+	public WebHandler getHyperWebStart() {
 		return hws;
 	}
 

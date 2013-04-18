@@ -29,6 +29,7 @@ public class ShopPage extends HttpServlet {
 		calc = hc.getCalculation();
 		hist = hc.getHistory();
 		s = shop;
+		page = buildLoadPage();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -260,4 +261,37 @@ public class ShopPage extends HttpServlet {
 		return page;
 	}
     
+    
+	private String buildLoadPage() {
+		String page = "";
+		page += "<html>\n";
+		page += "<head>\n";
+		page += "<script type='text/javascript'>\n";
+		page += "</script>\n";
+		page += "<style>\n";
+		page += "* {font-family:" + hc.s().getFont() + ";font-size:" + hc.s().getFontSize() + "px;color:" + hc.s().getFontColor() + ";}\n";
+		page += "body {background:" + hc.s().getBackgroundColor() + ";}\n";
+		page += "td {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getTableDataColor() + ";}\n";
+		page += "td.red {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getDecreaseColor() + ";}\n";
+		page += "td.green {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getIncreaseColor() + ";}\n";
+		page += "th {border:1px solid " + hc.s().getBorderColor() + ";padding:3px;cursor:pointer;}\n";
+		page += "th.header {background:" + hc.s().getHeaderColor() + ";}\n";
+		page += "tr:hover {background:" + hc.s().getHighlightColor() + ";}\n";
+		page += "td:hover {background:" + hc.s().getHighlightColor() + ";}\n";
+		page += "</style>\n";
+		page += "</head>\n";
+		page += "<body>\n";
+		page += "<div align='center' id='results'>\n";
+		page += "<TABLE BORDER='0'>\n";
+		page += "<TR>\n";
+		page += "<TH class='header'>\n";
+		page += "...HyperConomy Loading...\n";
+		page += "</TH>\n";
+		page += "</TR>\n";
+		page += "</TABLE>\n";
+		page += "</div>\n";
+		page += "</body>\n";
+		page += "</html>\n";
+		return page;
+	}
 }

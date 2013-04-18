@@ -7,7 +7,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-public class HyperWebStart {
+public class WebHandler {
 
 	private HyperConomy hc;
 	private BukkitTask updateTask;
@@ -17,7 +17,7 @@ public class HyperWebStart {
 	private ArrayList<ShopPage> shopPages = new ArrayList<ShopPage>();
 	private Shop s;
 
-	HyperWebStart() {
+	WebHandler() {
 		hc = HyperConomy.hc;
 		sf = hc.getShopFactory();
 		startServer();
@@ -63,7 +63,7 @@ public class HyperWebStart {
 						new HyperError(e);
 					}
 				}
-			}, 0L, 6000L);
+			}, 400L, 6000L);
 		} catch (Exception e) {
 			new HyperError(e);
 		}
