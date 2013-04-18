@@ -61,16 +61,15 @@ config:
     database: minecraft
     max-sql-threads: 4
   web-page:
-    port: 8765
+    port: 7777
     use-web-page: false
-    web-page-economy: default
-    background-color: EEEEEE
-    font-color: 333333
-    border-color: D8DFE4
-    increase-value-color: A0FFB0
-    decrease-value-color: FFA0A0
-    highlight-row-color: B4FAF9
-    header-color: B8B4FF
-    table-data-color: EEEEEE
-    font: verdana
+    background-color: 8FA685
+    font-color: F2F2F2
+    border-color: "091926"
+    increase-value-color: C8D9B0
+    decrease-value-color: F2B2A8
+    highlight-row-color: 8FA685
+    header-color: "091926"
+    table-data-color: 314A59
     font-size: 12
+    font: verdana

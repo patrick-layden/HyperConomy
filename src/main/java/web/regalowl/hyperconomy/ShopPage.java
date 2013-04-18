@@ -21,7 +21,7 @@ public class ShopPage extends HttpServlet {
 	private Calculation calc;
 	private History hist;
 	private Shop s;
-	private String page = "Please wait, the price page is loading...  Refresh your page in a few seconds.";
+	private String page = "Loading...";
 	
 	
 	@SuppressWarnings("deprecation")
@@ -33,7 +33,7 @@ public class ShopPage extends HttpServlet {
 		hc.getServer().getScheduler().scheduleAsyncRepeatingTask(hc, new Runnable() {
 			public void run() {
 				try {
-					page = buildPage(hc.s().getPageEconomy());
+					page = buildPage(s.getEconomy());
 				} catch (Exception e) {
 					new HyperError(e);
 				}

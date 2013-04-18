@@ -49,7 +49,6 @@ public class HyperSettings {
 	private double enchanttax;
 	private double initialtax;
 	private boolean useHistory;
-	private String pageEconomy;
 	private int port;
 	
 
@@ -94,7 +93,6 @@ public class HyperSettings {
 		statictax = config.getDouble("config.statictaxpercent");
 		port = config.getInt("config.web-page.port");
 		useHistory = config.getBoolean("config.store-price-history");
-		pageEconomy = config.getString("config.web-page.web-page-economy");
 		
 		
 		errorResetActive = false;
@@ -207,9 +205,6 @@ public class HyperSettings {
 	}
 	public boolean getUseHistory() {
 		return useHistory;
-	}
-	public String getPageEconomy() {
-		return pageEconomy;
 	}
 	public int getPort() {
 		return port;

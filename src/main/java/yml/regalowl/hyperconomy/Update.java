@@ -125,13 +125,13 @@ public class Update {
 	    	String t28 = yaml.getConfig().getString("config.web-page.use-web-page");
 	    	if (t28 == null) {
 	    		yaml.getConfig().set("config.web-page.use-web-page", false);
-	    		yaml.getConfig().set("config.web-page.background-color", "EEEEF6");
-	    		yaml.getConfig().set("config.web-page.font-color", "333333");
-	    		yaml.getConfig().set("config.web-page.border-color", "D8DFE4");
-	    		yaml.getConfig().set("config.web-page.increase-value-color", "A0FFB0");
-	    		yaml.getConfig().set("config.web-page.decrease-value-color", "FFA0A0");
-	    		yaml.getConfig().set("config.web-page.highlight-row-color", "B4FAF9");
-	    		yaml.getConfig().set("config.web-page.header-color", "B8B4FF");
+	    		yaml.getConfig().set("config.web-page.background-color", "8FA685");
+	    		yaml.getConfig().set("config.web-page.font-color", "F2F2F2");
+	    		yaml.getConfig().set("config.web-page.border-color", "091926");
+	    		yaml.getConfig().set("config.web-page.increase-value-color", "C8D9B0");
+	    		yaml.getConfig().set("config.web-page.decrease-value-color", "F2B2A8");
+	    		yaml.getConfig().set("config.web-page.highlight-row-color", "8FA685");
+	    		yaml.getConfig().set("config.web-page.header-color", "091926");
 	    	}
 	    	String t30 = yaml.getConfig().getString("config.web-page.port");
 	    	if (t30 == null) {
@@ -139,7 +139,7 @@ public class Update {
 	    	}
 	    	String t50 = yaml.getConfig().getString("config.web-page.table-data-color");
 	    	if (t50 == null) {
-	    		yaml.getConfig().set("config.web-page.table-data-color", "EEEEF6");
+	    		yaml.getConfig().set("config.web-page.table-data-color", "314A59");
 	    	}	    
 	    	String t51 = yaml.getConfig().getString("config.web-page.font-size");
 	    	if (t51 == null) {
@@ -160,10 +160,6 @@ public class Update {
 	    	String t32 = yaml.getConfig().getString("config.error-count");
 	    	if (t32 == null) {
 	    		yaml.getConfig().set("config.error-count", 0);
-	    	}
-	    	String t33 = yaml.getConfig().getString("config.web-page.web-page-economy");
-	    	if (t33 == null) {
-	    		yaml.getConfig().set("config.web-page.web-page-economy", "default");
 	    	}
 	    	String t34 = yaml.getConfig().getString("config.require-transaction-signs-to-be-in-shop");
 	    	if (t34 == null) {

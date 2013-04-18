@@ -19,7 +19,7 @@ public class MainPage extends HttpServlet {
 	private static final long serialVersionUID = 699465359999143309L;
 	private HyperConomy hc;
 	private ShopFactory sf;
-	private String page = "Please wait, the HyperConomy web page is loading...  Refresh your page in a few seconds.";
+	private String page = "Loading...";
 	private String mainPage;
 	
 	
@@ -73,9 +73,9 @@ public class MainPage extends HttpServlet {
 			page += "<script type='text/javascript'>\n";
 			page += "</script>\n";
 			page += "<style>\n";
-			page += "* {font-family:"+hc.s().getFont()+";font-size:"+hc.s().getFontSize()+"px;color:" + hc.s().getFontColor() + ";}\n";
+			page += "* {font-family:"+hc.s().getFont()+";font-size:"+(hc.s().getFontSize()*2)+"px;color:" + hc.s().getFontColor() + ";}\n";
 			page += "body {background:" + hc.s().getBackgroundColor() +  ";}\n";
-			page += "td {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getTableDataColor() + ";}\n";
+			page += "td {vertical-align:top;text-align:center;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getTableDataColor() + ";}\n";
 			page += "td.red {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getDecreaseColor() + ";}\n";
 			page += "td.green {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getIncreaseColor() + ";}\n";
 			page += "th {border:1px solid " + hc.s().getBorderColor() + ";padding:3px;cursor:pointer;}\n";
@@ -106,7 +106,7 @@ public class MainPage extends HttpServlet {
 				}
 				page += "<TR>\n";
 				page += "<TD>\n";
-				page += "<a href="+s.getName()+">"+s.getName()+"</a>\n";
+				page += "<a href=\""+s.getName()+"\" style=\"display:block\";>"+s.getName()+"</a>\n";
 				page += "</TD>\n";
 				page += "</TR>\n";
 			}
