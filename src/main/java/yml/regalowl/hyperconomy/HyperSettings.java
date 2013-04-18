@@ -26,6 +26,41 @@ public class HyperSettings {
 	private boolean errorResetActive;
 	
 	
+	
+	
+	
+	
+	
+	
+	private boolean useWebPage;
+	private String backgroundColor;
+	private String fontColor;
+	private String borderColor;
+	private String increaseColor;
+	private String decreaseColor;
+	private String highlightColor;
+	private String headerColor;
+	private String tableDataColor;
+	private String font;
+	private int fontSize;
+	private double salestax;
+	private double tax;
+	private double statictax;
+	private double enchanttax;
+	private double initialtax;
+	private boolean useHistory;
+	private String pageEconomy;
+	private int port;
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
 	HyperSettings() {
 		new Update();
 		hc = HyperConomy.hc;
@@ -38,6 +73,29 @@ public class HyperSettings {
 		saveinterval = config.getLong("config.saveinterval");
 		usemysql = config.getBoolean("config.sql-connection.use-mysql");
 		useShopPermissions = config.getBoolean("config.use-shop-permissions");
+		
+		
+		useWebPage = config.getBoolean("config.web-page.use-web-page");
+		backgroundColor = "#" + config.getString("config.web-page.background-color");
+		fontColor = "#" + config.getString("config.web-page.font-color");
+		borderColor = "#" + config.getString("config.web-page.border-color");
+		backgroundColor = "#" + config.getString("config.web-page.background-color");
+		increaseColor = "#" + config.getString("config.web-page.increase-value-color");
+		decreaseColor = "#" + config.getString("config.web-page.decrease-value-color");
+		highlightColor = "#" + config.getString("config.web-page.highlight-row-color");
+		headerColor = "#" + config.getString("config.web-page.header-color");
+		tableDataColor = "#" + config.getString("config.web-page.table-data-color");
+		font = config.getString("config.web-page.font");
+		fontSize = config.getInt("config.web-page.font-size");
+		tax = config.getDouble("config.purchasetaxpercent");
+		enchanttax = config.getDouble("config.enchanttaxpercent");
+		salestax = config.getDouble("config.sales-tax-percent");
+		initialtax = config.getDouble("config.initialpurchasetaxpercent");
+		statictax = config.getDouble("config.statictaxpercent");
+		port = config.getInt("config.web-page.port");
+		useHistory = config.getBoolean("config.store-price-history");
+		pageEconomy = config.getString("config.web-page.web-page-economy");
+		
 		
 		errorResetActive = false;
 		loadErrorCount();
@@ -87,6 +145,85 @@ public class HyperSettings {
 	public boolean useShopPermissions() {
 		return useShopPermissions;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public String getBackgroundColor() {
+		return backgroundColor;
+	}
+	public String getFontColor() {
+		return fontColor;
+	}
+	public String getBorderColor() {
+		return borderColor;
+	}
+	public String getIncreaseColor() {
+		return increaseColor;
+	}
+	public String getDecreaseColor() {
+		return decreaseColor;
+	}
+	public String getHighlightColor() {
+		return highlightColor;
+	}
+	public String getHeaderColor() {
+		return headerColor;
+	}
+	public String getTableDataColor() {
+		return tableDataColor;
+	}
+	public String getFont() {
+		return font;
+	}
+	public int getFontSize() {
+		return fontSize;
+	}
+	public double getSalesTax() {
+		return salestax;
+	}
+	public double getTax() {
+		return tax;
+	}
+	public double getStaticTax() {
+		return statictax;
+	}
+	public double getEnchantTax() {
+		return enchanttax;
+	}
+	public double getInitialTax() {
+		return initialtax;
+	}
+	public String getCurrencySymbol() {
+		return HyperConomy.currency;
+	}
+	public boolean getUseHistory() {
+		return useHistory;
+	}
+	public String getPageEconomy() {
+		return pageEconomy;
+	}
+	public int getPort() {
+		return port;
+	}
+	public boolean useWebPage() {
+		return useWebPage;
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

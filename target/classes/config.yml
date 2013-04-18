@@ -71,3 +71,6 @@ config:
     decrease-value-color: FFA0A0
     highlight-row-color: B4FAF9
     header-color: B8B4FF
+    table-data-color: EEEEEE
+    font: verdana
+    font-size: 12

@@ -133,13 +133,25 @@ public class Update {
 	    		yaml.getConfig().set("config.web-page.highlight-row-color", "B4FAF9");
 	    		yaml.getConfig().set("config.web-page.header-color", "B8B4FF");
 	    	}
-	    	String t29 = yaml.getConfig().getString("config.sql-connection.max-sql-threads");
-	    	if (t29 == null) {
-	    		yaml.getConfig().set("config.sql-connection.max-sql-threads", 4);
-	    	}
 	    	String t30 = yaml.getConfig().getString("config.web-page.port");
 	    	if (t30 == null) {
 	    		yaml.getConfig().set("config.web-page.port", 8765);
+	    	}
+	    	String t50 = yaml.getConfig().getString("config.web-page.table-data-color");
+	    	if (t50 == null) {
+	    		yaml.getConfig().set("config.web-page.table-data-color", "EEEEF6");
+	    	}	    
+	    	String t51 = yaml.getConfig().getString("config.web-page.font-size");
+	    	if (t51 == null) {
+	    		yaml.getConfig().set("config.web-page.font-size", 12);
+	    	}	    
+	    	String t52 = yaml.getConfig().getString("config.web-page.font");
+	    	if (t52 == null) {
+	    		yaml.getConfig().set("config.web-page.font", "verdana");
+	    	}
+	    	String t29 = yaml.getConfig().getString("config.sql-connection.max-sql-threads");
+	    	if (t29 == null) {
+	    		yaml.getConfig().set("config.sql-connection.max-sql-threads", 4);
 	    	}
 	    	String t31 = yaml.getConfig().getString("config.run-automatic-backups");
 	    	if (t31 == null) {
@@ -214,6 +226,7 @@ public class Update {
 	    	if (t49 == null) {
 	    		yaml.getConfig().set("config.block-selling-in-creative-mode", false);
 	    	}	    
+
 	    	
 	    	double dversion = Double.parseDouble(configversion);
 	    	if (dversion < .952) {

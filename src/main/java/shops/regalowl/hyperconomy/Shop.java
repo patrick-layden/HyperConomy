@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class Shop {
+public class Shop implements Comparable<Shop>{
 	
 	private String name;
 	private String world;
@@ -34,6 +34,10 @@ public class Shop {
 		globalShop = false;
 		shopFile = hc.getYaml().getShops();
 		shopFile.set(name + ".economy", economy);
+	}
+	
+	public int compareTo(Shop s) {
+		return name.compareTo(s.getName());
 	}
 	
 	public void setPoint1(String world, int x, int y, int z) {

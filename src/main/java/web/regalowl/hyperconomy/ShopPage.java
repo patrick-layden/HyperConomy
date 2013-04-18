@@ -20,22 +20,20 @@ public class ShopPage extends HttpServlet {
 	private HyperConomy hc;
 	private Calculation calc;
 	private History hist;
-	private HyperWebStart hws;
 	private Shop s;
 	private String page = "Please wait, the price page is loading...  Refresh your page in a few seconds.";
 	
 	
 	@SuppressWarnings("deprecation")
-	public ShopPage(HyperWebStart hyperws, Shop shop) {
+	public ShopPage(Shop shop) {
 		hc = HyperConomy.hc;
 		calc = hc.getCalculation();
 		hist = hc.getHistory();
-		hws = hyperws;
 		s = shop;
 		hc.getServer().getScheduler().scheduleAsyncRepeatingTask(hc, new Runnable() {
 			public void run() {
 				try {
-					page = buildPage(hws.getPageEconomy());
+					page = buildPage(hc.s().getPageEconomy());
 				} catch (Exception e) {
 					new HyperError(e);
 				}
@@ -76,15 +74,15 @@ public class ShopPage extends HttpServlet {
 			page += "<script type='text/javascript'>\n";
 			page += "</script>\n";
 			page += "<style>\n";
-			page += "* {font-family:verdana;font-size:12px;color:" + hws.getFontColor() + ";}\n";
-			page += "body {background:" + hws.getBackgroundColor() + ";}\n";
-			page += "td {vertical-align:top;border:1px solid " + hws.getBorderColor() + ";}\n";
-			page += "td.red {vertical-align:top;border:1px solid " + hws.getBorderColor() + ";background:" + hws.getDecreaseColor() + ";}\n";
-			page += "td.green {vertical-align:top;border:1px solid " + hws.getBorderColor() + ";background:" + hws.getIncreaseColor() + ";}\n";
-			page += "th {border:1px solid " + hws.getBorderColor() + ";padding:3px;cursor:pointer;}\n";
-			page += "th.header {background:" + hws.getHeaderColor() + ";}\n";
-			page += "tr:hover {background:" + hws.getHighlightColor() + ";}\n";
-			page += "td:hover {background:" + hws.getHighlightColor() + ";}\n";
+			page += "* {font-family:"+hc.s().getFont()+";font-size:"+hc.s().getFontSize()+"px;color:" + hc.s().getFontColor() + ";}\n";
+			page += "body {background:" + hc.s().getBackgroundColor() +  ";}\n";
+			page += "td {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getTableDataColor() + ";}\n";
+			page += "td.red {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getDecreaseColor() + ";}\n";
+			page += "td.green {vertical-align:top;border:1px solid " + hc.s().getBorderColor() + ";background:" + hc.s().getIncreaseColor() + ";}\n";
+			page += "th {border:1px solid " + hc.s().getBorderColor() + ";padding:3px;cursor:pointer;}\n";
+			page += "th.header {background:" + hc.s().getHeaderColor() + ";}\n";
+			page += "tr:hover {background:" + hc.s().getHighlightColor() + ";}\n";
+			page += "td:hover {background:" + hc.s().getHighlightColor() + ";}\n";
 			page += "</style>\n";
 			
 			
@@ -111,8 +109,7 @@ public class ShopPage extends HttpServlet {
 			page += "ID\n";
 			page += "</TH>\n";
 
-			
-			if (hws.getUseHistory()) {
+			if (hc.s().getUseHistory()) {
 				page += "<TH class='header'>\n";
 				page += "1 Hour\n";
 				page += "</TH>\n";
@@ -128,8 +125,8 @@ public class ShopPage extends HttpServlet {
 				page += "<TH class='header'>\n";
 				page += "1 Week";
 				page += "</TH>\n";
-				page += "</TR>\n";
-			}
+			} 
+			page += "</TR>\n";
 			
 			for (HyperObject ho:objects) {
 				if (!hc.enabled()) {
@@ -151,21 +148,21 @@ public class ShopPage extends HttpServlet {
 				HyperObjectType otype = ho.getType();
 				
 				double tax = 0.0;
-				double stax = hws.getSalesTax();
+				double stax = hc.s().getSalesTax();
 				
 				if (type.equalsIgnoreCase("static")) {
-					tax = hws.getStaticTax();
+					tax = hc.s().getStaticTax();
 				} else if (type.equalsIgnoreCase("initial")) {
 					if (otype == HyperObjectType.ENCHANTMENT) {
-						tax = hws.getEnchantTax();
+						tax = hc.s().getEnchantTax();
 					} else {
-						tax = hws.getInitialTax();
+						tax = hc.s().getInitialTax();
 					}
 				} else if (type.equalsIgnoreCase("dynamic")) {
 					if (otype == HyperObjectType.ENCHANTMENT) {
-						tax = hws.getEnchantTax();
+						tax = hc.s().getEnchantTax();
 					} else {
-						tax = hws.getTax();
+						tax = hc.s().getTax();
 					}
 				}
 				double scost = ho.getValue(1);
@@ -176,10 +173,10 @@ public class ShopPage extends HttpServlet {
 				page += ho.getName() + "\n";
 				page += "</TD>\n";
 				page += "<TD>\n";
-				page += hws.getCurrencySymbol() + calc.twoDecimals(scost - (scost * (stax/100))) + "\n";
+				page += hc.s().getCurrencySymbol() + calc.twoDecimals(scost - (scost * (stax/100))) + "\n";
 				page += "</TD>\n";
 				page += "<TD>\n";
-				page += hws.getCurrencySymbol() + calc.twoDecimals(((bcost * (tax/100)) + bcost)) + "\n";
+				page += hc.s().getCurrencySymbol() + calc.twoDecimals(((bcost * (tax/100)) + bcost)) + "\n";
 				page += "</TD>\n";
 				page += "<TD>\n";
 				page += ho.getStock() + "\n";
@@ -188,7 +185,7 @@ public class ShopPage extends HttpServlet {
 				page += ho.getId() + "\n";
 				page += "</TD>\n";
 
-				if (hws.getUseHistory()) {
+				if (hc.s().getUseHistory()) {
 					String pc = hour.get(ho);
 					String iclass = "";
 					if (pc.indexOf("-") != -1) {
