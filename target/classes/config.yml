@@ -1,4 +1,4 @@
-version: 0.967
+version: 0.968
 api-version: 1.0
 config:
   shopcheckinterval: 6
