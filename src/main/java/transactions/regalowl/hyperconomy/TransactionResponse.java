@@ -95,4 +95,8 @@ public class TransactionResponse {
 		return success;
 	}
 	
+	public void setFailed() {
+		success = false;
+	}
+	
 }

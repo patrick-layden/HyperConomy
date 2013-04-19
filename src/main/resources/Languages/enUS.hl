@@ -393,3 +393,4 @@ IMPORT_PROCEED: &cThe will erase all object data in your HyperConomy database (h
 IMPORTFROMYML_INVALID: &4Invalid parameters.  Use /importfromyml [economy]
 SOLD_ITEMS_FOR: &9&oYou sold your items for &a&o%c%v&9.
 CANT_SELL_CREATIVE: &4You're not allowed to sell items in creative mode.
+TRANSACTION_FAILED: &4Sorry, this transaction could not be completed.

@@ -96,6 +96,11 @@ public class TransactionProcessor {
 	public TransactionResponse buy() {
 		try {
 			TransactionResponse response = new TransactionResponse(hp);
+			if (hp == null || hyperObject == null) {
+				response.setFailed();
+				response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+				return response;
+			}
 			Calculation calc = hc.getCalculation();
 			LanguageFile L = hc.getLanguageFile();
 			Account acc = hc.getAccount();
@@ -182,6 +187,11 @@ public class TransactionProcessor {
 	public TransactionResponse sell() {
 		try {
 			TransactionResponse response = new TransactionResponse(hp);
+			if (hp == null || hyperObject == null) {
+				response.setFailed();
+				response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+				return response;
+			}
 			Calculation calc = hc.getCalculation();
 			Account acc = hc.getAccount();
 			LanguageFile L = hc.getLanguageFile();
@@ -285,6 +295,11 @@ public class TransactionProcessor {
 			Calculation calc = hc.getCalculation();
 			LanguageFile L = hc.getLanguageFile();
 			TransactionResponse response = new TransactionResponse(hp);
+			if (hp == null) {
+				response.setFailed();
+				response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+				return response;
+			}
 			response.setSuccessful();
 			ShopFactory s = hc.getShopFactory();
 			Inventory invent = null;
@@ -339,6 +354,11 @@ public class TransactionProcessor {
 	 */
 	public TransactionResponse buyXP() {
 		TransactionResponse response = new TransactionResponse(hp);
+		if (hp == null || hyperObject == null) {
+			response.setFailed();
+			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			return response;
+		}
 		try {
 			Calculation calc = hc.getCalculation();
 			Account acc = hc.getAccount();
@@ -408,6 +428,11 @@ public class TransactionProcessor {
 	 */
 	public TransactionResponse sellXP() {
 		TransactionResponse response = new TransactionResponse(hp);
+		if (hp == null || hyperObject == null) {
+			response.setFailed();
+			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			return response;
+		}
 		try {
 			DataHandler sf = hc.getDataFunctions();
 			Calculation calc = hc.getCalculation();
@@ -498,6 +523,11 @@ public class TransactionProcessor {
 	
 	public TransactionResponse buyFromInventory() {
 		TransactionResponse response = new TransactionResponse(hp);
+		if (hp == null || tradePartner == null || hyperObject == null) {
+			response.setFailed();
+			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			return response;
+		}
 		try {
 			Calculation calc = hc.getCalculation();
 			Account acc = hc.getAccount();
@@ -544,6 +574,11 @@ public class TransactionProcessor {
 	 */
 	public TransactionResponse sellToInventory() {
 		TransactionResponse response = new TransactionResponse(hp);
+		if (hp == null || tradePartner == null || hyperObject == null) {
+			response.setFailed();
+			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			return response;
+		}
 		try {
 			DataHandler sf = hc.getDataFunctions();
 			Calculation calc = hc.getCalculation();
@@ -592,6 +627,11 @@ public class TransactionProcessor {
 	 */
 	public TransactionResponse sellEnchant() {
 		TransactionResponse response = new TransactionResponse(hp);
+		if (hp == null || hyperObject == null) {
+			response.setFailed();
+			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			return response;
+		}
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
 		Log log = hc.getLog();
@@ -663,6 +703,11 @@ public class TransactionProcessor {
 	 */
 	public TransactionResponse buyEnchant() {
 		TransactionResponse response = new TransactionResponse(hp);
+		if (hp == null || hyperObject == null) {
+			response.setFailed();
+			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			return response;
+		}
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
 		Log log = hc.getLog();
@@ -749,6 +794,11 @@ public class TransactionProcessor {
 	 */
 	public TransactionResponse buyEnchantFromItem() {
 		TransactionResponse response = new TransactionResponse(hp);
+		if (hp == null || hyperObject == null || tradePartner == null || giveItem == null) {
+			response.setFailed();
+			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			return response;
+		}
 		Calculation calc = hc.getCalculation();
 		Account acc = hc.getAccount();
 		Log log = hc.getLog();
