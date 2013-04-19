@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.Potion;
 
@@ -268,9 +269,14 @@ public class InventoryManipulation {
 			if (stack != null && !stack.getType().equals(Material.AIR)) {
 				if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
 					EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)stack.getItemMeta();
-					hasenchants = emeta.hasStoredEnchants();
+					if (emeta != null) {
+						hasenchants = emeta.hasStoredEnchants();
+					}
 				} else {
-					hasenchants = stack.getItemMeta().hasEnchants();
+					ItemMeta imeta = stack.getItemMeta();
+					if (imeta != null) {
+						hasenchants = imeta.hasEnchants();
+					}
 				}
 			}
 			return hasenchants;
