@@ -309,7 +309,7 @@ public class InventoryManipulation {
 			} else if (eclass.equals(EnchantmentClass.BOW)) {
 				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.bow"));
 			} else {
-				value = 0;
+				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.diamond"));
 			}
 			return value;
 		} catch (Exception e) {

@@ -167,7 +167,6 @@ public class FileTools {
 
 	public String getStringFromFile(String path) {
 		try {
-			//BufferedReader input = new BufferedReader(new FileReader(path));
 			BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF8"));
 			String text = "";
 			String string;
@@ -183,22 +182,13 @@ public class FileTools {
 
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	public ArrayList<String> getStringArrayFromFile(String path) {
 		ArrayList<String> text = new ArrayList<String>();
 		try {
 			BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF8"));
-			//BufferedReader input = new BufferedReader(new FileReader(path));
 			String string;
 			while ((string = input.readLine()) != null) {
 				text.add(string);

@@ -1,9 +1,12 @@
 package regalowl.hyperconomy;
 
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +25,7 @@ public class ShopPage extends HttpServlet {
 	private History hist;
 	private ServerShop s;
 	private String page = "Loading...";
+	private String webFolder;
 	
 
 	public ShopPage(ServerShop shop) {
@@ -30,6 +34,8 @@ public class ShopPage extends HttpServlet {
 		hist = hc.getHistory();
 		s = shop;
 		page = buildLoadPage();
+		FileTools ft = new FileTools();
+		webFolder = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "web" + File.separator;
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -167,6 +173,24 @@ public class ShopPage extends HttpServlet {
 				double bcost = ho.getCost(1);
 
 				page += "<TR>\n";
+				/*
+				page += "<TD>\n";
+				
+				if (ho.getId() == 1) {
+					File sourceimage = new File(webFolder+ho.getId()+".png");
+					try {
+						Image image = ImageIO.read(sourceimage);
+						image.
+						page += "<img src=\""+webFolder+ho.getId()+".png\">\n";
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+		
+				page += "</TD>\n";
+				*/
 				page += "<TD>\n";
 				page += ho.getName() + "\n";
 				page += "</TD>\n";
