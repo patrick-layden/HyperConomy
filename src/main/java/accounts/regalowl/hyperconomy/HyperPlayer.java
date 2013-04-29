@@ -22,12 +22,6 @@ public class HyperPlayer {
 	private String salt;
 	
 	
-	HyperPlayer() {
-		hc = HyperConomy.hc;
-		tp = new TransactionProcessor(this);
-	}
-	
-	
 	HyperPlayer(String player) {
 		hc = HyperConomy.hc;
 		tp = new TransactionProcessor(this);
@@ -50,6 +44,21 @@ public class HyperPlayer {
 		balance = 0.0;
 		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','','')");
 		
+	}
+	
+	
+	HyperPlayer(String name, String economy, double balance, double x, double y, double z, String world, String hash, String salt) {
+		hc = HyperConomy.hc;
+		tp = new TransactionProcessor(this);
+		this.name = name;
+		this.economy = economy;
+		this.balance = balance;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.world = world;
+		this.hash = hash;
+		this.salt = salt;
 	}
 	
 	

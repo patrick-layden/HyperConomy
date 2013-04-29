@@ -137,7 +137,11 @@ public class InfoSignHandler implements Listener {
 					if (currentSign < signsToUpdate.size()) {
 						InfoSign infoSign = signsToUpdate.get(currentSign);
 						if (infoSign.testData()) {
-							infoSign.update();
+							boolean success = infoSign.update();
+							if (!success) {
+								infoSign.repair();
+								infoSign.update();
+							}
 						} else {
 							infoSign.deleteSign();
 							infoSigns.remove(currentSign);

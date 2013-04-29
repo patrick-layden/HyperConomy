@@ -209,16 +209,9 @@ public class DataHandler implements Listener {
 
 				result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_players");
 				while (result.next()) {
-					HyperPlayer hplayer = new HyperPlayer();
-					hplayer.setName(result.getString("PLAYER"));
-					hplayer.setEconomy(result.getString("ECONOMY"));
-					hplayer.setBalance(result.getDouble("BALANCE"));
-					hplayer.setX(result.getDouble("X"));
-					hplayer.setY(result.getDouble("Y"));
-					hplayer.setZ(result.getDouble("Z"));
-					hplayer.setWorld(result.getString("WORLD"));
-					hplayer.setHash(result.getString("HASH"));
-					hplayer.setSalt(result.getString("SALT"));
+					HyperPlayer hplayer = new HyperPlayer(result.getString("PLAYER"), result.getString("ECONOMY"), result.getDouble("BALANCE"), 
+							result.getDouble("X"), result.getDouble("Y"), result.getDouble("Z"), result.getString("WORLD"),
+							result.getString("HASH"), result.getString("SALT"));
 					hyperPlayers.put(hplayer.getName(), hplayer);
 				}
 				result.close();

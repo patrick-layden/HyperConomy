@@ -272,7 +272,7 @@ public class InfoSign {
 					break;
 			}
 		} catch (Exception e) {
-			dataOk = false;
+			new HyperError(e);
 			return false;
 		}
 		if (!type.equals(SignType.HISTORY)) {
@@ -335,8 +335,19 @@ public class InfoSign {
 	
 	
 	public void deleteSign() {
+		//Bukkit.broadcastMessage(signKey + " sign deleted [" + ho.getName() + "]");
 		if (signKey != null && !signKey.equalsIgnoreCase("")) {
 			hc.getYaml().getSigns().set(signKey, null);
+		}
+	}
+	
+	public boolean repair() {
+		Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
+		if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
+			s = (Sign) signblock.getState();
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
