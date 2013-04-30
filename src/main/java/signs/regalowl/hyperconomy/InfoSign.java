@@ -82,13 +82,13 @@ public class InfoSign {
 			signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
 			this.z = Integer.parseInt(signKey);
 			this.type = type;
-			this.objectName = objectName;
+			this.objectName = hc.getDataFunctions().fixName(objectName);
 			if (economy != null) {
 				this.economy = economy;
 			}
 			isEnchantment = dh.enchantTest(this.objectName);
 			Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
-			ho = hc.getDataFunctions().getHyperObject(objectName, economy);
+			ho = hc.getDataFunctions().getHyperObject(this.objectName, economy);
 			if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
 				s = (Sign) signblock.getState();
 				return true;
@@ -151,6 +151,15 @@ public class InfoSign {
 	public boolean update() {
 		if (!dataOk) {
 			return false;
+		}
+		if (s == null) {
+			refresh();
+		}
+		if (ho == null) {
+			ho = hc.getDataFunctions().getHyperObject(objectName, economy);
+			if (ho == null) {
+				return false;
+			}
 		}
 		Calculation calc = hc.getCalculation();
 		try {
@@ -335,19 +344,15 @@ public class InfoSign {
 	
 	
 	public void deleteSign() {
-		//Bukkit.broadcastMessage(signKey + " sign deleted [" + ho.getName() + "]");
 		if (signKey != null && !signKey.equalsIgnoreCase("")) {
 			hc.getYaml().getSigns().set(signKey, null);
 		}
 	}
 	
-	public boolean repair() {
+	public void refresh() {
 		Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
 		if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
 			s = (Sign) signblock.getState();
-			return true;
-		} else {
-			return false;
 		}
 	}
 	
