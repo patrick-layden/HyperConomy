@@ -35,7 +35,7 @@ public class WebHandler {
 					server.setHandler(context);
 
 					if (hc.s().useWebPage()) {
-						context.addServlet(new ServletHolder(new HyperWebAPI()), "/API/*");
+						//context.addServlet(new ServletHolder(new HyperWebAPI()), "/API/*");
 						context.addServlet(new ServletHolder(new MainPage()), "/");
 						for (ServerShop s : sf.getShops()) {
 							ShopPage sp = new ShopPage(s);
