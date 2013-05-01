@@ -169,12 +169,16 @@ public class ItemDisplayFactory implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
-		Item droppedItem = event.getItemDrop();
-		for (ItemDisplay display:displays.values()) {
-			if (display.blockItemDrop(droppedItem)) {
-				event.setCancelled(true);
-				return;
+		try {
+			Item droppedItem = event.getItemDrop();
+			for (ItemDisplay display:displays.values()) {
+				if (display.blockItemDrop(droppedItem)) {
+					event.setCancelled(true);
+					return;
+				}
 			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
 	
@@ -225,30 +229,34 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 	
-	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
-		Item item = event.getItem();
-		if (!event.isCancelled()) {
-			List<MetadataValue> meta = item.getMetadata("HyperConomy");
-			for (MetadataValue cmeta: meta) {
-				if (cmeta.asString().equalsIgnoreCase("item_display")) {
+		try {
+			Item item = event.getItem();
+			if (!event.isCancelled()) {
+				List<MetadataValue> meta = item.getMetadata("HyperConomy");
+				for (MetadataValue cmeta : meta) {
+					if (cmeta.asString().equalsIgnoreCase("item_display")) {
+						event.setCancelled(true);
+						break;
+					}
+				}
+			}
+			for (ItemDisplay display : displays.values()) {
+				if (display.getEntityId() == item.getEntityId() || item.equals(display.getItem())) {
 					event.setCancelled(true);
 					break;
 				}
 			}
-		}
-		for (ItemDisplay display:displays.values()) {
-			if (display.getEntityId() == item.getEntityId() || item.equals(display.getItem())) {
-				event.setCancelled(true);
-				break;
-			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
 	
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
+		try {
 		Block bb = event.getBlock();
 		for (ItemDisplay display:displays.values()) {
 			if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
@@ -256,65 +264,66 @@ public class ItemDisplayFactory implements Listener {
 				display.removeItem();
 				display.makeDisplay();
 			}
+		}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPlaceEvent(BlockPlaceEvent event) {
-		Block bb = event.getBlock();
-		for (ItemDisplay display:displays.values()) {
-			if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
-				event.setCancelled(true);
-				display.removeItem();
-				display.makeDisplay();
-			}
-		}
-		if (bb.getType().equals(Material.GRAVEL) || bb.getType().equals(Material.SAND)) {
-			Block below = bb.getRelative(BlockFace.DOWN);
-			while (below.getType().equals(Material.AIR)) {
-				below = below.getRelative(BlockFace.DOWN);
-			}
-			for (ItemDisplay display:displays.values()) {
+		try {
+			Block bb = event.getBlock();
+			for (ItemDisplay display : displays.values()) {
 				if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
 					event.setCancelled(true);
 					display.removeItem();
 					display.makeDisplay();
 				}
 			}
+			if (bb.getType().equals(Material.GRAVEL) || bb.getType().equals(Material.SAND)) {
+				Block below = bb.getRelative(BlockFace.DOWN);
+				while (below.getType().equals(Material.AIR)) {
+					below = below.getRelative(BlockFace.DOWN);
+				}
+				for (ItemDisplay display : displays.values()) {
+					if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
+						event.setCancelled(true);
+						display.removeItem();
+						display.makeDisplay();
+					}
+				}
+			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonRetractEvent(BlockPistonRetractEvent event) {
-		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
-			Location l = event.getRetractLocation();
-			Block b = l.getBlock();
-			for (ItemDisplay display:displays.values()) {
-				if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
-					event.setCancelled(true);
-					display.removeItem();
-					display.makeDisplay();
+		try {
+			if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
+				Location l = event.getRetractLocation();
+				Block b = l.getBlock();
+				for (ItemDisplay display : displays.values()) {
+					if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
+						event.setCancelled(true);
+						display.removeItem();
+						display.makeDisplay();
+					}
 				}
 			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonExtendEvent(BlockPistonExtendEvent event) {
-		List<Block> blocks = event.getBlocks();
-		for (Block cblock:blocks) {
-			for (ItemDisplay display:displays.values()) {
-				if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
-					event.setCancelled(true);
-					display.removeItem();
-					display.makeDisplay();
-				}
-			}
-		}
-	}
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onEntityExplodeEvent(EntityExplodeEvent event) {
-		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
-			List<Block> blocks = event.blockList();
-			for (Block cblock:blocks) {
-				for (ItemDisplay display:displays.values()) {
+		try {
+			List<Block> blocks = event.getBlocks();
+			for (Block cblock : blocks) {
+				for (ItemDisplay display : displays.values()) {
 					if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
 						event.setCancelled(true);
 						display.removeItem();
@@ -322,26 +331,56 @@ public class ItemDisplayFactory implements Listener {
 					}
 				}
 			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onEntityExplodeEvent(EntityExplodeEvent event) {
+		try {
+			if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
+				List<Block> blocks = event.blockList();
+				for (Block cblock : blocks) {
+					for (ItemDisplay display : displays.values()) {
+						if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
+							event.setCancelled(true);
+							display.removeItem();
+							display.makeDisplay();
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			new HyperError(e);
+		}
+	}
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onCreatureSpawnEvent(CreatureSpawnEvent event) {
-		for (ItemDisplay display:displays.values()) {
-			if (display.blockEntityPickup(event.getEntity())) {
-				event.getEntity().setCanPickupItems(false);
+		try {
+			for (ItemDisplay display : displays.values()) {
+				if (display.blockEntityPickup(event.getEntity())) {
+					event.getEntity().setCanPickupItems(false);
+				}
 			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
-	
-	
+
 	public boolean isDisplay(Item item) {
-		for (ItemDisplay display:displays.values()) {
-			if (item.equals(display.getItem())) {
-				return true;
+		try {
+			for (ItemDisplay display : displays.values()) {
+				if (item.equals(display.getItem())) {
+					return true;
+				}
 			}
+			return false;
+		} catch (Exception e) {
+			new HyperError(e);
+			return false;
 		}
-		return false;
 	}
-	
-	
+
 }

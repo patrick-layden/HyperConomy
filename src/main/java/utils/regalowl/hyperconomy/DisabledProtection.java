@@ -40,127 +40,139 @@ public class DisabledProtection implements Listener {
 		HyperConomy.hc.getServer().getPluginManager().registerEvents(this, HyperConomy.hc);
 	}
 
-
-	
-	
 	public boolean isTransactionSign(Block b) {
-		if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
-			Sign s = (Sign) b.getState();
-			String line3 = ChatColor.stripColor(s.getLine(2)).trim();
-			if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
-				return true;
+		try {
+			if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
+				Sign s = (Sign) b.getState();
+				String line3 = ChatColor.stripColor(s.getLine(2)).trim();
+				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
+					return true;
+				}
 			}
-		}
-		return false;
-	}
-	
-	
-	public boolean isInfoSign(Block b) {
-		if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
-			Sign s = (Sign) b.getState();
-			String type = ChatColor.stripColor(s.getLine(2)).trim().replace(":", "").replace(" ", "");
-			if (type.equalsIgnoreCase("buy")) {
-				return true;
-			} else if (type.equalsIgnoreCase("sell")) {
-				return true;
-			} else if (type.equalsIgnoreCase("stock")) {
-				return true;
-			} else if (type.equalsIgnoreCase("value")) {
-				return true;
-			} else if (type.equalsIgnoreCase("status")) {
-				return true;
-			} else if (type.equalsIgnoreCase("staticprice")) {
-				return true;
-			} else if (type.equalsIgnoreCase("startprice")) {
-				return true;
-			} else if (type.equalsIgnoreCase("median")) {
-				return true;
-			} else if (type.equalsIgnoreCase("history")) {
-				return true;
-			} else if (type.equalsIgnoreCase("tax")) {
-				return true;
-			} else if (type.equalsIgnoreCase("s")) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
-	
-	
-	
-	public boolean isChestShop(Block b) {
-		if (b == null) {
+			return false;
+		} catch (Exception e) {
+			new HyperError(e);
 			return false;
 		}
-		if (b.getState() instanceof Chest) {
-			Chest chest = (Chest) b.getState();
-			String world = chest.getBlock().getWorld().getName();
-			BlockState signblock = Bukkit.getWorld(world).getBlockAt(chest.getX(), chest.getY() + 1, chest.getZ()).getState();
-			if (signblock instanceof Sign) {
-				Sign s = (Sign) signblock;
-				String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-				if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
+	}
+
+	public boolean isInfoSign(Block b) {
+		try {
+			if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
+				Sign s = (Sign) b.getState();
+				String type = ChatColor.stripColor(s.getLine(2)).trim().replace(":", "").replace(" ", "");
+				if (type.equalsIgnoreCase("buy")) {
 					return true;
+				} else if (type.equalsIgnoreCase("sell")) {
+					return true;
+				} else if (type.equalsIgnoreCase("stock")) {
+					return true;
+				} else if (type.equalsIgnoreCase("value")) {
+					return true;
+				} else if (type.equalsIgnoreCase("status")) {
+					return true;
+				} else if (type.equalsIgnoreCase("staticprice")) {
+					return true;
+				} else if (type.equalsIgnoreCase("startprice")) {
+					return true;
+				} else if (type.equalsIgnoreCase("median")) {
+					return true;
+				} else if (type.equalsIgnoreCase("history")) {
+					return true;
+				} else if (type.equalsIgnoreCase("tax")) {
+					return true;
+				} else if (type.equalsIgnoreCase("s")) {
+					return true;
+				} else {
+					return false;
 				}
 			}
-		} else if (b.getType().equals(Material.WALL_SIGN)) {
-			Sign s = (Sign) b.getState();
-			String line2 = s.getLine(1).trim();
-			if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
-				BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
-				if (chestblock instanceof Chest) {
-					s.update();
-					return true;
-				}
+			return false;
+		} catch (Exception e) {
+			new HyperError(e);
+			return false;
+		}
+	}
+
+	public boolean isChestShop(Block b) {
+		try {
+			if (b == null) {
+				return false;
 			}
-		} else {
-			for (BlockFace cface:faces) {
-				Block relative = b.getRelative(cface);
-				if (relative.getType().equals(Material.WALL_SIGN)) {
-					Sign s = (Sign) relative.getState();
-					String line2 = s.getLine(1).trim();
-					if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
-						org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
-						BlockFace attachedface = sign.getFacing();
-						if (attachedface == cface) {
-							return true;
+			if (b.getState() instanceof Chest) {
+				Chest chest = (Chest) b.getState();
+				String world = chest.getBlock().getWorld().getName();
+				BlockState signblock = Bukkit.getWorld(world).getBlockAt(chest.getX(), chest.getY() + 1, chest.getZ()).getState();
+				if (signblock instanceof Sign) {
+					Sign s = (Sign) signblock;
+					String line2 = ChatColor.stripColor(s.getLine(1)).trim();
+					if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
+						return true;
+					}
+				}
+			} else if (b.getType().equals(Material.WALL_SIGN)) {
+				Sign s = (Sign) b.getState();
+				String line2 = s.getLine(1).trim();
+				if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
+					BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
+					if (chestblock instanceof Chest) {
+						s.update();
+						return true;
+					}
+				}
+			} else {
+				for (BlockFace cface : faces) {
+					Block relative = b.getRelative(cface);
+					if (relative.getType().equals(Material.WALL_SIGN)) {
+						Sign s = (Sign) relative.getState();
+						String line2 = s.getLine(1).trim();
+						if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
+							org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
+							BlockFace attachedface = sign.getFacing();
+							if (attachedface == cface) {
+								return true;
+							}
 						}
 					}
 				}
 			}
+			return false;
+		} catch (Exception e) {
+			new HyperError(e);
+			return false;
 		}
-		return false;
 	}
-	
-	
+
 	public boolean isChestShop(InventoryHolder ih) {
-		if (ih instanceof Chest) {
-			Chest chest = (Chest) ih;
-			int x = chest.getX();
-			int y = chest.getY() + 1;
-			int z = chest.getZ();
-			String world = chest.getBlock().getWorld().getName();
-			BlockState signblock = Bukkit.getWorld(world).getBlockAt(x, y, z).getState();
-			if (signblock instanceof Sign) {
-				Sign s = (Sign) signblock;
-				String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-				if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
-					return true;
+		try {
+			if (ih instanceof Chest) {
+				Chest chest = (Chest) ih;
+				int x = chest.getX();
+				int y = chest.getY() + 1;
+				int z = chest.getZ();
+				String world = chest.getBlock().getWorld().getName();
+				BlockState signblock = Bukkit.getWorld(world).getBlockAt(x, y, z).getState();
+				if (signblock instanceof Sign) {
+					Sign s = (Sign) signblock;
+					String line2 = ChatColor.stripColor(s.getLine(1)).trim();
+					if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
+						return true;
+					}
 				}
 			}
+			return false;
+		} catch (Exception e) {
+			new HyperError(e);
+			return false;
 		}
-		return false;
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteractEvent(PlayerInteractEvent ievent) {
 		if (isTransactionSign(ievent.getClickedBlock()) || isInfoSign(ievent.getClickedBlock())) {
 			ievent.setCancelled(true);
 		}
 	}
-	
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onInventoryClickEvent(InventoryClickEvent icevent) {
@@ -188,16 +200,16 @@ public class DisabledProtection implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityExplodeEvent(EntityExplodeEvent eeevent) {
-		for (Block b:eeevent.blockList()) {
+		for (Block b : eeevent.blockList()) {
 			if (isChestShop(b)) {
 				eeevent.setCancelled(true);
-			} 
+			}
 		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonExtendEvent(BlockPistonExtendEvent bpeevent) {
-		for (Block b:bpeevent.getBlocks()) {
+		for (Block b : bpeevent.getBlocks()) {
 			if (isChestShop(b)) {
 				bpeevent.setCancelled(true);
 			}

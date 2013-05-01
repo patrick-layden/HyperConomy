@@ -34,33 +34,41 @@ public class DataHandler implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (!objectsLoaded) {
-			return;
-		}
-		String name = event.getPlayer().getName();
-		if (!hasAccount(name)) {
-			addPlayer(name);
+		try {
+			if (!objectsLoaded) {
+				return;
+			}
+			String name = event.getPlayer().getName();
+			if (!hasAccount(name)) {
+				addPlayer(name);
+			}
+		} catch (Exception e) {
+			new HyperError(e);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		if (!objectsLoaded) {
-			return;
+		try {
+			if (!objectsLoaded) {
+				return;
+			}
+			Location l = event.getPlayer().getLocation();
+			String name = event.getPlayer().getName();
+			if (!hasAccount(name)) {
+				addPlayer(name);
+			}
+			HyperPlayer hp = hyperPlayers.get(name);
+			if (hp == null) {
+				return;
+			}
+			hp.setX(l.getX());
+			hp.setY(l.getY());
+			hp.setZ(l.getZ());
+			hp.setWorld(l.getWorld().getName());
+		} catch (Exception e) {
+			new HyperError(e);
 		}
-		Location l = event.getPlayer().getLocation();
-		String name = event.getPlayer().getName();
-		if (!hasAccount(name)) {
-			addPlayer(name);
-		}
-		HyperPlayer hp = hyperPlayers.get(name);
-		if (hp == null) {
-			return;
-		}
-		hp.setX(l.getX());
-		hp.setY(l.getY());
-		hp.setZ(l.getZ());
-		hp.setWorld(l.getWorld().getName());
 	}
 
 	/*
