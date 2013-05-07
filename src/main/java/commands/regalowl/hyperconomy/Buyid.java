@@ -26,6 +26,9 @@ public class Buyid {
 						player.sendMessage(L.get("BUYID_INVALID"));
 						return;
 					}
+					if (amount > 10000) {
+						amount = 10000;
+					}
 					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, playerecon);
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));

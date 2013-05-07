@@ -25,6 +25,9 @@ public class Hv {
 						amount = 1;
 					} else {
 						amount = Integer.parseInt(args[0]);
+						if (amount > 10000) {
+							amount = 10000;
+						}
 					}
 					if (!im.hasenchants(iinhand)) {
 					int itd = player.getItemInHand().getTypeId();

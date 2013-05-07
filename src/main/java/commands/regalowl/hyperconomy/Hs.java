@@ -26,6 +26,9 @@ public class Hs {
 					} else {
 						try {
 							amount = Integer.parseInt(args[0]);
+							if (amount > 10000) {
+								amount = 10000;
+							}
 						} catch (Exception e) {
 							String max = args[0];
 							if (max.equalsIgnoreCase("max")) {

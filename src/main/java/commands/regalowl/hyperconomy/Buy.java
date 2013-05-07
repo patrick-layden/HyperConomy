@@ -35,6 +35,9 @@ public class Buy {
 						} else {
 							try {
 								amount = Integer.parseInt(args[1]);
+								if (amount > 10000) {
+									amount = 10000;
+								}
 							} catch (Exception e) {
 								String max = args[1];
 								if (max.equalsIgnoreCase("max")) {

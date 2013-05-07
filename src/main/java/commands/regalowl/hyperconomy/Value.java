@@ -24,6 +24,9 @@ public class Value {
 				int amount;
 				if (args.length == 2) {
 					amount = Integer.parseInt(args[1]);
+					if (amount > 10000) {
+						amount = 10000;
+					}
 				} else {
 					amount = 1;
 				}
