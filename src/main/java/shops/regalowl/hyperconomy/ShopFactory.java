@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
 public class ShopFactory {
 	
 
-	private ConcurrentHashMap<Player, Boolean> shopStatus;
+	private ConcurrentHashMap<String, Boolean> shopStatus;
 	private ConcurrentHashMap<String, ServerShop> shops = new ConcurrentHashMap<String, ServerShop>();
 	
 	private boolean useshopexitmessage;
@@ -35,7 +35,7 @@ public class ShopFactory {
 
 	ShopFactory() {
 		hc = HyperConomy.hc;	
-		shopStatus = new ConcurrentHashMap<Player, Boolean>();	
+		shopStatus = new ConcurrentHashMap<String, Boolean>();	
 		useShops = hc.getYaml().getConfig().getBoolean("config.use-shops");
 		shopinterval = hc.getYaml().getConfig().getLong("config.shopcheckinterval");
 		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
@@ -107,15 +107,15 @@ public class ShopFactory {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			ServerShop currentShop = getShop(p);
 			boolean inShop = false;
-			if (shopStatus.containsKey(p)) {
-				inShop = shopStatus.get(p);
+			if (shopStatus.containsKey(p.getName())) {
+				inShop = shopStatus.get(p.getName());
 			}
 			if (inShop == false) {
 				if (currentShop == null) {
 					continue;
 				} else {
 					currentShop.sendEntryMessage(p);
-					shopStatus.put(p, true);
+					shopStatus.put(p.getName(), true);
 					String shopecon = currentShop.getEconomy();
 					if (shopecon == null) {
 						shopecon = "default";
@@ -129,7 +129,7 @@ public class ShopFactory {
 				}
 			} else if (inShop == true) {
 				if (currentShop == null) {
-					shopStatus.put(p, false);
+					shopStatus.put(p.getName(), false);
 					if (useshopexitmessage) {
 						p.sendMessage(L.get("SHOP_EXIT_MESSAGE"));
 					}		
