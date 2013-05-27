@@ -65,6 +65,9 @@ public class HyperConomy extends JavaPlugin {
 		acc.checkshopAccount();
 		hist = new History();
 		itdi = new ItemDisplayFactory();
+		if (hws != null) {
+			hws.endServer();
+		}
 		hws = new WebHandler();
 		isign.updateSigns();
 		
