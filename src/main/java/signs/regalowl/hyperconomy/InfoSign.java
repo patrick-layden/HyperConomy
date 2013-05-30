@@ -154,10 +154,15 @@ public class InfoSign {
 		}
 		if (s == null) {
 			refresh();
+			if (s == null) {
+				new HyperError("InfoSign Sign null after refresh: " + x + "," + y + "," + z + "," + world);
+				return false;
+			}
 		}
 		if (ho == null) {
 			ho = hc.getDataFunctions().getHyperObject(objectName, economy);
 			if (ho == null) {
+				new HyperError("InfoSign HyperObject null after retry: " + objectName + "," + economy);
 				return false;
 			}
 		}
@@ -191,21 +196,21 @@ public class InfoSign {
 					break;
 				case STOCK:
 					line3 = ChatColor.WHITE + "Stock:";
-					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getHyperObject(objectName, economy).getStock();
+					line4 = ChatColor.GREEN + "" + ho.getStock();
 					break;
 				case VALUE:
 					line3 = ChatColor.WHITE + "Value:";
-					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getHyperObject(objectName, economy).getValue() * multiplier;
+					line4 = ChatColor.GREEN + "" + ho.getValue() * multiplier;
 					break;
 				case STATUS:
 					boolean staticstatus;
-					staticstatus = Boolean.parseBoolean(hc.getDataFunctions().getHyperObject(objectName, economy).getIsstatic());
+					staticstatus = Boolean.parseBoolean(ho.getIsstatic());
 					line3 = ChatColor.WHITE + "Status:";
 					if (staticstatus) {
 						line4 = ChatColor.GREEN + "Static";
 					} else {
 						boolean initialstatus;
-						initialstatus = Boolean.parseBoolean(hc.getDataFunctions().getHyperObject(objectName, economy).getInitiation());
+						initialstatus = Boolean.parseBoolean(ho.getInitiation());
 						if (initialstatus) {
 							line4 = ChatColor.GREEN + "Initial";
 						} else {
@@ -215,15 +220,15 @@ public class InfoSign {
 					break;
 				case STATICPRICE:
 					line3 = ChatColor.WHITE + "Static Price:";
-					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getHyperObject(objectName, economy).getStaticprice() * multiplier;
+					line4 = ChatColor.GREEN + "" + ho.getStaticprice() * multiplier;
 					break;
 				case STARTPRICE:
 					line3 = ChatColor.WHITE + "Start Price:";
-					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getHyperObject(objectName, economy).getStartprice() * multiplier;
+					line4 = ChatColor.GREEN + "" + ho.getStartprice() * multiplier;
 					break;
 				case MEDIAN:
 					line3 = ChatColor.WHITE + "Median:";
-					line4 = ChatColor.GREEN + "" + hc.getDataFunctions().getHyperObject(objectName, economy).getMedian();
+					line4 = ChatColor.GREEN + "" + ho.getMedian();
 					break;
 				case HISTORY:
 					String increment = ChatColor.stripColor(line4.replace(" ", "")).toUpperCase().replaceAll("[0-9]", "");
