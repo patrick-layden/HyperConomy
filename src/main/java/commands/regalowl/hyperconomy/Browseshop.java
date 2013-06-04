@@ -18,7 +18,7 @@ public class Browseshop {
 		for (int i = 0; i < args.length; i++) {
 			aargs.add(args[i]);
 		}
-		//try {
+		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
     		if (player != null) {
     			if ((requireShop && !s.inAnyShop(player)) && !player.hasPermission("hyperconomy.admin")) {
@@ -122,8 +122,8 @@ public class Browseshop {
 				}
 				count++;
 			}
-		//} catch (Exception e) {
-		//	sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
-		//}
+		} catch (Exception e) {
+			sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
+		}
 	}
 }
