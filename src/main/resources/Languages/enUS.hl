@@ -68,7 +68,7 @@ COPYDATABASE_STARTED: &6Database copy started successfully...this may take some 
 COPYDATABASE_SQLITE: &6SQLite database successfully copied to MySQL database.
 LISTCATEGORIES_INVALID: &4Invalid Parameters.  Use /listcategories
 ALREADY_IN_DATABASE: &9That item is already in the database.
-ITEM_ADDED: &6Item added to items.yml.  Use /reloadfiles or restart your server for it to become active.
+ITEM_ADDED: &6Item added to items.yml.  Use /hc disable followed by /hc enable or restart your server for it to become active.
 YMLADDITEM_INVALID: &4Hold the item you'd like to add and type /ymladditem [name] [value] [median] [start price]
 ALL_BACKED_UP: &6All files have been backed up!
 HCBACKUP_INVALID: &4Invalid Parameters.  Use /hcbackup
@@ -169,7 +169,6 @@ FIX_YML_FILE: &4You must first fix your bad yml file!
 LOCKSHOP_INVALID: &4Invalid parameters.  Use /lockshop
 FILES_RELOADED: &6All files have been reloaded.
 FIRST_LOCK_SHOP: &4You must first lock the shop!
-RELOADFILES_INVALID: Invalid Parameters.  Use /reloadfiles.
 NEW_ECONOMY_CREATED: &6New economy created!
 ECONOMY_ALREADY_EXISTS: &4That economy already exists!
 CREATEECONOMY_INVALID: &4Invalid Parameters.  Use /createeconomy [name]
