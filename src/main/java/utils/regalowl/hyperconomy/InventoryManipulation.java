@@ -42,8 +42,8 @@ public class InventoryManipulation {
 			int totalitems = 0;
 			Calculation calc = hc.getCalculation();
 			data = calc.newData(id, data);
-			ItemStack[] stacks = inventory.getContents();
-			for (ItemStack stack:stacks) {
+			for (int slot = 0; slot < inventory.getSize(); slot++) {
+				ItemStack stack = inventory.getItem(slot);
 				if (stack != null && !hasenchants(stack)) {
 					int stackid = stack.getTypeId();
 					int stackdata = calc.getDamageValue(stack);
