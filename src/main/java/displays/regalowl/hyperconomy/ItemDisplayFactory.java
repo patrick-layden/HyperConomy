@@ -97,7 +97,9 @@ public class ItemDisplayFactory implements Listener {
 	public void startRefreshThread() {
 		refreshthreadid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
 			public void run() {
-				loadDisplays();
+				for (ItemDisplay display:displays.values()) {
+					display.refresh();
+				}
 			}
 		}, 4800L, 4800L);
 	}

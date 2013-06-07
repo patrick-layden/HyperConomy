@@ -143,6 +143,11 @@ public class ItemDisplay {
 		return item;
 	}
 	
+	public void refresh() {
+		item.remove();
+		makeDisplay();
+	}
+	
 	public void storeDisplay() {
 		Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
 		int numdisplays = 0;
