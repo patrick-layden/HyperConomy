@@ -62,6 +62,7 @@ public class MainPage extends HttpServlet {
 		String page = "";
 		if (!hc.fullLock() && hc.enabled()) {
 			ArrayList<ServerShop> shops = sf.getShops();
+
 			Collections.sort(shops);
 
 			
@@ -97,16 +98,18 @@ public class MainPage extends HttpServlet {
 
 			
 
-			
-			for (ServerShop s:shops) {
-				if (!hc.enabled()) {
-					return "";
+			if (shops != null && shops.size() > 0) {
+
+				for (ServerShop s : shops) {
+					if (!hc.enabled()) {
+						return "";
+					}
+					page += "<TR>\n";
+					page += "<TD>\n";
+					page += "<a href=\"" + s.getName() + "\" style=\"display:block;text-decoration:none;\">" + s.getDisplayName() + "</a>\n";
+					page += "</TD>\n";
+					page += "</TR>\n";
 				}
-				page += "<TR>\n";
-				page += "<TD>\n";
-				page += "<a href=\""+s.getName()+"\" style=\"display:block;text-decoration:none;\">"+s.getDisplayName()+"</a>\n";
-				page += "</TD>\n";
-				page += "</TR>\n";
 			}
 
 			page += "</TABLE>\n";
