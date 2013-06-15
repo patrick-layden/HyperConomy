@@ -41,8 +41,15 @@ public class InfoSign {
 		}
 		dataOk = setData(signKey, type, objectName, economy);
 		if (s != null) {
-			line1 = ChatColor.DARK_BLUE + ChatColor.stripColor(s.getLine(0).trim());
-			line2 = ChatColor.DARK_BLUE + ChatColor.stripColor(s.getLine(1).trim());
+			line1 = ChatColor.stripColor(s.getLine(0).trim());
+			line2 = ChatColor.stripColor(s.getLine(1).trim());
+			if (line1.length() > 13) {
+				line2 = ChatColor.DARK_BLUE + line1.substring(13, line1.length()) + line2;
+				line1 = ChatColor.DARK_BLUE + line1.substring(0, 13);
+			} else {
+				line1 = ChatColor.DARK_BLUE + line1;
+				line2 = ChatColor.DARK_BLUE + line2;
+			}
 			line3 = s.getLine(2);
 			line4 = s.getLine(3);
 		}
@@ -57,8 +64,15 @@ public class InfoSign {
 		}
 		dataOk = setData(signKey, type, objectName, economy);
 		if (s != null) {
-			line1 = ChatColor.DARK_BLUE + ChatColor.stripColor(lines[0].trim());
-			line2 = ChatColor.DARK_BLUE + ChatColor.stripColor(lines[1].trim());
+			line1 = ChatColor.stripColor(lines[0].trim());
+			line2 = ChatColor.stripColor(lines[1].trim());
+			if (line1.length() > 13) {
+				line2 = ChatColor.DARK_BLUE + line1.substring(13, line1.length()) + line2;
+				line1 = ChatColor.DARK_BLUE + line1.substring(0, 13);			
+			} else {
+				line1 = ChatColor.DARK_BLUE + line1;
+				line2 = ChatColor.DARK_BLUE + line2;
+			}
 			line3 = lines[2];
 			line4 = lines[3];
 		}
