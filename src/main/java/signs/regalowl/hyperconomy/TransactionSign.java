@@ -94,8 +94,17 @@ public class TransactionSign implements Listener {
 					line12 = sf.fixName(line12);
 					if (sf.objectTest(line12)) {
 						if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
-							scevent.setLine(0, "\u00A71" + scevent.getLine(0));
-							scevent.setLine(1, "\u00A71" + scevent.getLine(1));
+							String line1 = ChatColor.stripColor(scevent.getLine(0).trim());
+							String line2 = ChatColor.stripColor(scevent.getLine(1).trim());
+							if (line1.length() > 13) {
+								line2 = ChatColor.DARK_BLUE + line1.substring(13, line1.length()) + line2;
+								line1 = ChatColor.DARK_BLUE + line1.substring(0, 13);
+							} else {
+								line1 = ChatColor.DARK_BLUE + line1;
+								line2 = ChatColor.DARK_BLUE + line2;
+							}
+							scevent.setLine(0, line1);
+							scevent.setLine(1, line2);
 							if (line3.equalsIgnoreCase("[sell:buy]")) {
 								scevent.setLine(2, "\u00A7f[Sell:Buy]");
 							} else if (line3.equalsIgnoreCase("[sell]")) {
