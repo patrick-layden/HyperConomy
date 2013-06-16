@@ -82,6 +82,7 @@ public class InfoSign {
 			DataHandler dh = hc.getDataFunctions();
 			L = hc.getLanguageFile();
 			if (signKey == null || type == null || objectName == null) {
+				new HyperError("DEBUG: infosign initialization null: " + signKey + ", " + objectName + ", " + economy);
 				return false;
 			}
 			this.economy = "default";
@@ -104,6 +105,7 @@ public class InfoSign {
 			if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
 				return true;
 			}
+			new HyperError("DEBUG: infosign initialization failed: " + x + "," + y + "," + z + "," + world);
 			return false;
 		} catch (Exception e) {
 			new HyperError(e, "InfoSign setData() passed signKey='" + signKey + "', SignType='" + type.toString() + "', objectName='" + objectName + "', economy='" + economy + "'");
@@ -366,6 +368,7 @@ public class InfoSign {
 			Sign s = (Sign) signblock.getState();
 			return s;
 		} else {
+			new HyperError("DEBUG: getSign failed: " + x + "," + y + "," + z + "," + world);
 			dataOk = false;
 			return null;
 		}
