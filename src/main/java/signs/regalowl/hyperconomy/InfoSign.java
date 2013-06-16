@@ -18,7 +18,6 @@ public class InfoSign {
 	private int y;
 	private int z;
 	private String world;
-	private Sign s;
 	private HyperConomy hc;
 	private boolean isEnchantment;
 	private LanguageFile L;
@@ -40,6 +39,7 @@ public class InfoSign {
 			this.enchantClass = enchantClass;
 		}
 		dataOk = setData(signKey, type, objectName, economy);
+		Sign s = getSign();
 		if (s != null) {
 			line1 = ChatColor.stripColor(s.getLine(0).trim());
 			line2 = ChatColor.stripColor(s.getLine(1).trim());
@@ -63,19 +63,17 @@ public class InfoSign {
 			this.enchantClass = enchantClass;
 		}
 		dataOk = setData(signKey, type, objectName, economy);
-		if (s != null) {
-			line1 = ChatColor.stripColor(lines[0].trim());
-			line2 = ChatColor.stripColor(lines[1].trim());
-			if (line1.length() > 13) {
-				line2 = ChatColor.DARK_BLUE + line1.substring(13, line1.length()) + line2;
-				line1 = ChatColor.DARK_BLUE + line1.substring(0, 13);			
-			} else {
-				line1 = ChatColor.DARK_BLUE + line1;
-				line2 = ChatColor.DARK_BLUE + line2;
-			}
-			line3 = lines[2];
-			line4 = lines[3];
+		line1 = ChatColor.stripColor(lines[0].trim());
+		line2 = ChatColor.stripColor(lines[1].trim());
+		if (line1.length() > 13) {
+			line2 = ChatColor.DARK_BLUE + line1.substring(13, line1.length()) + line2;
+			line1 = ChatColor.DARK_BLUE + line1.substring(0, 13);
+		} else {
+			line1 = ChatColor.DARK_BLUE + line1;
+			line2 = ChatColor.DARK_BLUE + line2;
 		}
+		line3 = lines[2];
+		line4 = lines[3];
 	}
 
 	public boolean setData(String signKey, SignType type, String objectName, String economy) {
@@ -104,7 +102,6 @@ public class InfoSign {
 			Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
 			ho = hc.getDataFunctions().getHyperObject(this.objectName, economy);
 			if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
-				s = (Sign) signblock.getState();
 				return true;
 			}
 			return false;
@@ -154,30 +151,20 @@ public class InfoSign {
 		return enchantClass;
 	}
 
-	public Sign getBlockSign() {
-		return s;
-	}
-
 	public boolean testData() {
+		getSign();
 		return dataOk;
 	}
 
-	public boolean update() {
+	public void update() {
 		if (!dataOk) {
-			return false;
-		}
-		if (s == null) {
-			refresh();
-			if (s == null) {
-				new HyperError("InfoSign Sign null after refresh: " + x + "," + y + "," + z + "," + world);
-				return false;
-			}
+			return;
 		}
 		if (ho == null) {
 			ho = hc.getDataFunctions().getHyperObject(objectName, economy);
 			if (ho == null) {
 				new HyperError("InfoSign HyperObject null after retry: " + objectName + "," + economy);
-				return false;
+				return;
 			}
 		}
 		Calculation calc = hc.getCalculation();
@@ -299,18 +286,19 @@ public class InfoSign {
 				default:
 					break;
 			}
+			if (!type.equals(SignType.HISTORY)) {
+				Sign s = getSign();
+				if (s != null) {
+					s.setLine(0, line1);
+					s.setLine(1, line2);
+					s.setLine(2, line3);
+					s.setLine(3, line4);
+					s.update();
+				}
+			}
 		} catch (Exception e) {
 			new HyperError(e);
-			return false;
 		}
-		if (!type.equals(SignType.HISTORY)) {
-			s.setLine(0, line1);
-			s.setLine(1, line2);
-			s.setLine(2, line3);
-			s.setLine(3, line4);
-			s.update();
-		}
-		return true;
 	}
 	
 	
@@ -331,11 +319,14 @@ public class InfoSign {
 					}
 					hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
 						public void run() {
-							s.setLine(0, line1);
-							s.setLine(1, line2);
-							s.setLine(2, line3);
-							s.setLine(3, line4);
-							s.update();
+							Sign s = getSign();
+							if (s != null) {
+								s.setLine(0, line1);
+								s.setLine(1, line2);
+								s.setLine(2, line3);
+								s.setLine(3, line4);
+								s.update();
+							}
 						}
 					}, 0L);
 				}
@@ -368,10 +359,15 @@ public class InfoSign {
 		}
 	}
 	
-	public void refresh() {
+	
+	public Sign getSign() {
 		Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
 		if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
-			s = (Sign) signblock.getState();
+			Sign s = (Sign) signblock.getState();
+			return s;
+		} else {
+			dataOk = false;
+			return null;
 		}
 	}
 	
