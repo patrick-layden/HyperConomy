@@ -18,6 +18,9 @@ public class WebHandler {
 	private ServerShop s;
 
 	WebHandler() {
+		if (!hc.s().useWebPage()) {
+			return;
+		}
 		hc = HyperConomy.hc;
 		sf = hc.getShopFactory();
 		startServer();
@@ -27,6 +30,9 @@ public class WebHandler {
 		try {
 			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 				public void run() {
+					if (!hc.s().useWebPage()) {
+						return;
+					}
 					System.setProperty("org.eclipse.jetty.LEVEL", "WARN");
 					server = new Server(hc.s().getPort());
 
@@ -34,14 +40,13 @@ public class WebHandler {
 					context.setContextPath("/");
 					server.setHandler(context);
 
-					if (hc.s().useWebPage()) {
-						//context.addServlet(new ServletHolder(new HyperWebAPI()), "/API/*");
-						context.addServlet(new ServletHolder(new MainPage()), "/");
-						for (ServerShop s : sf.getShops()) {
-							ShopPage sp = new ShopPage(s);
-							shopPages.add(sp);
-							context.addServlet(new ServletHolder(sp), "/" + s.getName() + "/*");
-						}
+					// context.addServlet(new ServletHolder(new HyperWebAPI()),
+					// "/API/*");
+					context.addServlet(new ServletHolder(new MainPage()), "/");
+					for (ServerShop s : sf.getShops()) {
+						ShopPage sp = new ShopPage(s);
+						shopPages.add(sp);
+						context.addServlet(new ServletHolder(sp), "/" + s.getName() + "/*");
 					}
 
 					try {

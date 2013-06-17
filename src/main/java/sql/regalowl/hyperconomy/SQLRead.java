@@ -22,7 +22,11 @@ public class SQLRead {
     
 	SQLRead() {
 		hc = HyperConomy.hc;
-		threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads");
+		if (hc.s().useMySQL()) {
+			threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads");
+		} else {
+			threadlimit = 1;
+		}
 		for (int i = 0; i < threadlimit; i++) {
 			hc.getServer().getScheduler().runTaskLaterAsynchronously(hc, new Runnable() {
 	    		public void run() {
