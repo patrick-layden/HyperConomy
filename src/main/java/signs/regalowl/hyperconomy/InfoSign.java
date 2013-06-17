@@ -2,6 +2,8 @@ package regalowl.hyperconomy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -100,6 +102,11 @@ public class InfoSign {
 				this.economy = economy;
 			}
 			isEnchantment = dh.enchantTest(this.objectName);
+			Location l = new Location(Bukkit.getWorld(world), x, y, z);
+			Chunk c = l.getChunk();
+			if (!c.isLoaded()) {
+				c.load();
+			}
 			Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
 			ho = hc.getDataFunctions().getHyperObject(this.objectName, economy);
 			if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
@@ -363,6 +370,11 @@ public class InfoSign {
 	
 	
 	public Sign getSign() {
+		Location l = new Location(Bukkit.getWorld(world), x, y, z);
+		Chunk c = l.getChunk();
+		if (!c.isLoaded()) {
+			c.load();
+		}
 		Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
 		if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
 			Sign s = (Sign) signblock.getState();
