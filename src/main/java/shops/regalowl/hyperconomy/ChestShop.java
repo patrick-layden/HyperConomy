@@ -777,6 +777,9 @@ public class ChestShop implements Listener {
 										}
 										icevent.setCancelled(true);
 										return;
+									} else {
+										icevent.setCancelled(true);
+										return;
 									}
 								}
 							}

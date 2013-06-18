@@ -12,27 +12,21 @@ public class WebHandler {
 	private HyperConomy hc;
 	private BukkitTask updateTask;
 	private Server server;
-	private ShopFactory sf;
 	private ServletContextHandler context;
 	private ArrayList<ShopPage> shopPages = new ArrayList<ShopPage>();
 	private ServerShop s;
 
 	WebHandler() {
+		hc = HyperConomy.hc;
+	}
+
+	public void startServer() {
 		if (!hc.s().useWebPage()) {
 			return;
 		}
-		hc = HyperConomy.hc;
-		sf = hc.getShopFactory();
-		startServer();
-	}
-
-	private void startServer() {
 		try {
 			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 				public void run() {
-					if (!hc.s().useWebPage()) {
-						return;
-					}
 					System.setProperty("org.eclipse.jetty.LEVEL", "WARN");
 					server = new Server(hc.s().getPort());
 
@@ -43,7 +37,7 @@ public class WebHandler {
 					// context.addServlet(new ServletHolder(new HyperWebAPI()),
 					// "/API/*");
 					context.addServlet(new ServletHolder(new MainPage()), "/");
-					for (ServerShop s : sf.getShops()) {
+					for (ServerShop s : hc.getShopFactory().getShops()) {
 						ShopPage sp = new ShopPage(s);
 						shopPages.add(sp);
 						context.addServlet(new ServletHolder(sp), "/" + s.getName() + "/*");
@@ -76,6 +70,9 @@ public class WebHandler {
 	
 	
 	public void updatePages() {
+		if (!hc.s().useWebPage()) {
+			return;
+		}
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				try {
@@ -90,6 +87,9 @@ public class WebHandler {
 	}
 	
 	public void addShop(ServerShop shop) {
+		if (!hc.s().useWebPage()) {
+			return;
+		}
 		s = shop;
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
@@ -104,13 +104,29 @@ public class WebHandler {
 
 	public void endServer() {
 		updateTask.cancel();
+		if (context != null) {
+			try {
+				context.stop();
+				if (!context.isStopped()) {
+					new HyperError("Context failed to stop.");
+				}
+				context = null;
+			} catch (Exception e) {
+				new HyperError(e);
+			}
+		}
 		if (server != null) {
 			try {
 				server.stop();
+				if (!server.isStopped()) {
+					new HyperError("Server failed to stop.");
+				}
+				server = null;
 			} catch (Exception e) {
 				new HyperError(e);
 			}
 		}
 	}
+
 
 }
