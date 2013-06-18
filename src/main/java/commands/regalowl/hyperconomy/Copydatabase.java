@@ -35,6 +35,10 @@ public class Copydatabase {
 				if (args.length == 2 && args[1].equalsIgnoreCase("history")) {
 					includeHistory = true;
 				}
+				if (hc.getSQLWrite().getBufferSize() != 0) {
+					sender.sendMessage(L.get("WAIT_FOR_QUEUE"));
+					return;
+				}
 				hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 		    		public void run() {
 						SQLEconomy se = hc.getSQLEconomy();

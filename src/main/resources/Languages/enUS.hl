@@ -393,3 +393,4 @@ IMPORTFROMYML_INVALID: &4Invalid parameters.  Use /importfromyml [economy]
 SOLD_ITEMS_FOR: &9&oYou sold your items for &a&o%c%v&9.
 CANT_SELL_CREATIVE: &4You're not allowed to sell items in creative mode.
 TRANSACTION_FAILED: &4Sorry, this transaction could not be completed.
+WAIT_FOR_QUEUE: &4Please wait for the SQL write queue to empty before using this command.
