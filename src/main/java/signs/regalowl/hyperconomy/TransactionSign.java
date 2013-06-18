@@ -30,7 +30,14 @@ public class TransactionSign implements Listener {
 		try {
 			if (hc.getYaml().getConfig().getBoolean("config.allow-scrolling-transaction-signs")) {
 				Player p = event.getPlayer();
-				Block b = p.getTargetBlock(null, 500);
+				Block b = null;
+				try {
+					b = p.getTargetBlock(null, 500);
+				} catch (Exception e) {
+					//do nothing, this method seems to be bugged in bukkit
+					return;
+				}
+				
 				if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
 					Sign s = (Sign) b.getState();
 					String line3 = ChatColor.stripColor(s.getLine(2)).trim();
