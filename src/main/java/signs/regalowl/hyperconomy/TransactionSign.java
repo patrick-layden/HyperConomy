@@ -233,7 +233,7 @@ public class TransactionSign implements Listener {
 												return;
 											}
 											if (!requireShop || hp.hasSellPermission(shop.getShop(p))) {
-												if (p.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
+												if (p.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 													p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 													ievent.setCancelled(true);
 													return;

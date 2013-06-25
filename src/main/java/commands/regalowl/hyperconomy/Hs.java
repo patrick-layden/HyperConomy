@@ -14,7 +14,7 @@ public class Hs {
 		InventoryManipulation im = hc.getInventoryManipulation();
 		int amount;
 		try {
-			if (player.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
+			if (player.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 				return;
 			}

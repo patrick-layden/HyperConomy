@@ -58,9 +58,9 @@ public class HyperConomy extends JavaPlugin {
 		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
 		if (x != null & x instanceof Vault) {
 			this.setupEconomy();
-		} else if (hs.useExternalEconomy()) {
+		} else if (s().gB("use-external-economy-plugin")) {
 			log.warning(L.get("VAULT_NOT_FOUND"));
-			hs.setUseExternalEconomy(false);
+			s().sB("use-external-economy-plugin", false);
 		}
 		acc.checkshopAccount();
 		hist = new History();
@@ -94,10 +94,10 @@ public class HyperConomy extends JavaPlugin {
 		currency = L.get("CURRENCY");
 		sqe = new SQLEconomy();
 		boolean databaseOk = false;
-		if (hs.useMySQL()) {
+		if (hc.s().gB("sql-connection.use-mysql")) {
 			databaseOk = sqe.checkMySQL();
 			if (!databaseOk) {
-				hs.setUseMySQL(false);
+				hc.s().sB("sql-connection.use-mysql", false);
 				databaseOk = sqe.checkSQLLite();
 				log.severe(L.get("SWITCH_TO_SQLITE"));
 			}
@@ -247,7 +247,7 @@ public class HyperConomy extends JavaPlugin {
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
 			if (economy.getName().equalsIgnoreCase("HyperConomy")) {
-				hs.setUseExternalEconomy(false);
+				s().sB("use-external-economy-plugin", false);
 			}
 		}
 		return (economy != null);

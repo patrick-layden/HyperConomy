@@ -394,3 +394,9 @@ SOLD_ITEMS_FOR: &9&oYou sold your items for &a&o%c%v&9.
 CANT_SELL_CREATIVE: &4You're not allowed to sell items in creative mode.
 TRANSACTION_FAILED: &4Sorry, this transaction could not be completed.
 WAIT_FOR_QUEUE: &4Please wait for the SQL write queue to empty before using this command.
+SERVER_RUNNING: &6The web server is running.
+SERVER_STOPPPED: &9The web server is stopped.
+SERVER_NULL: &4The web server is null.
+SERVER_STARTING: &dThe web server is starting.
+SERVER_STOPPING: &dThe web server is stopping.
+SERVER_FAILED: &4The web server is failed.

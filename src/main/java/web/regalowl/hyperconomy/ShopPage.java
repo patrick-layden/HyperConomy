@@ -195,10 +195,10 @@ public class ShopPage extends HttpServlet {
 				page += ho.getName() + "\n";
 				page += "</TD>\n";
 				page += "<TD>\n";
-				page += hc.s().getCurrencySymbol() + calc.twoDecimals(scost - (scost * (stax/100))) + "\n";
+				page += hc.getLanguageFile().get("CURRENCY") + calc.twoDecimals(scost - (scost * (stax/100))) + "\n";
 				page += "</TD>\n";
 				page += "<TD>\n";
-				page += hc.s().getCurrencySymbol() + calc.twoDecimals(((bcost * (tax/100)) + bcost)) + "\n";
+				page += hc.getLanguageFile().get("CURRENCY") + calc.twoDecimals(((bcost * (tax/100)) + bcost)) + "\n";
 				page += "</TD>\n";
 				page += "<TD>\n";
 				page += ho.getStock() + "\n";

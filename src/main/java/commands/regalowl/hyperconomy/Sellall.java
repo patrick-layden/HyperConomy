@@ -10,7 +10,7 @@ public class Sellall {
 		ShopFactory s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
-		if (player.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
+		if (player.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 			player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 			return;
 		}

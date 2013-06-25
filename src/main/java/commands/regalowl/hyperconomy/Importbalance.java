@@ -14,7 +14,7 @@ public class Importbalance {
 		Economy econ = hc.getEconomy();
 		Log l = hc.getLog();
 		try {
-			if (hc.s().useExternalEconomy()) {
+			if (hc.s().gB("use-external-economy-plugin")) {
 				ArrayList<String> players = df.getEconPlayers();
 				if (args.length == 0) {
 					

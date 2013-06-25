@@ -23,7 +23,7 @@ public class Log {
 	
 	public void writeSQLLog(String playername, String action, String object, Double amount, Double money, Double tax, String store, String type) {
 		String statement = "";
-		if (hc.s().useMySQL()) {
+		if (hc.s().gB("sql-connection.use-mysql")) {
 			statement = "Insert Into hyperconomy_log (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE)"
 		            + " Values (NOW(),'" + playername + "','" + action + "','" + object + "','" + amount + "','" + hc.getCalculation().twoDecimals(money) + "','" + hc.getCalculation().twoDecimals(tax) + "','" + store + 
 		        "','" + type + "')";
@@ -37,7 +37,7 @@ public class Log {
 	
 	public void writeAuditLog(String account, String action, Double amount, String economy) {
 		String statement = "";
-		if (hc.s().useMySQL()) {
+		if (hc.s().gB("sql-connection.use-mysql")) {
 			statement = "Insert Into hyperconomy_audit_log (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) Values (NOW(),'" + account + "','" + action + "','" + amount + "','" + economy + "')";
 		} else {
 			statement = "Insert Into hyperconomy_audit_log (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) Values (datetime('NOW', 'localtime'),'" + account + "','" + action + "','" + amount + "','" + economy + "')";

@@ -47,7 +47,7 @@ public class WebHandler {
 						server.start();
 						server.join();
 					} catch (Exception e) {
-						endServer();
+						new HyperError(e);
 					}
 
 				}
@@ -103,14 +103,15 @@ public class WebHandler {
 	
 
 	public void endServer() {
-		updateTask.cancel();
+		if (updateTask != null) {
+			updateTask.cancel();
+		}
 		if (context != null) {
 			try {
 				context.stop();
 				if (!context.isStopped()) {
 					new HyperError("Context failed to stop.");
 				}
-				context = null;
 			} catch (Exception e) {
 				new HyperError(e);
 			}
@@ -121,11 +122,14 @@ public class WebHandler {
 				if (!server.isStopped()) {
 					new HyperError("Server failed to stop.");
 				}
-				server = null;
 			} catch (Exception e) {
 				new HyperError(e);
 			}
 		}
+	}
+	
+	public Server getServer() {
+		return server;
 	}
 
 

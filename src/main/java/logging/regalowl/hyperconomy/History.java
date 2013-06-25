@@ -92,13 +92,13 @@ public class History {
   	
 	private void writeHistoryData(String object, String economy, double price) {
 		String statement = "";
-		if (hc.s().useMySQL()) {
+		if (hc.s().gB("sql-connection.use-mysql")) {
 			statement = "Insert Into hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " Values ('" + object + "','" + economy + "', NOW() ,'" + price + "')";
 		} else {
 			statement = "Insert Into hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " Values ('" + object + "','" + economy + "', datetime('NOW', 'localtime') ,'" + price + "')";
 		}
 		sw.executeSQL(statement);
-		if (hc.s().useMySQL()) {
+		if (hc.s().gB("sql-connection.use-mysql")) {
 			statement = "DELETE FROM hyperconomy_history WHERE TIME < DATE_SUB(NOW(), INTERVAL " + daysToSaveHistory + " DAY)";
 		} else {
 			statement = "DELETE FROM hyperconomy_history WHERE TIME < date('now','" + df.formatSQLiteTime(daysToSaveHistory * -1) + " day')";

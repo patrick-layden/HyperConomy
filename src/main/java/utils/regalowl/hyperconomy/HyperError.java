@@ -80,7 +80,7 @@ public class HyperError {
 	@SuppressWarnings("deprecation")
 	private void handleError() {
 		try {
-			boolean logError = hc.s().logErrors();
+			boolean logError = hc.s().gB("log-errors");
 			if (logError) {
 				hc.s().incrementErrorCount();
 				hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
@@ -108,7 +108,7 @@ public class HyperError {
 						info = ft.getTimeStamp() + "\r\n"
 						+ "HyperConomy version: " + hc.s().getServerVersion() + "\r\n"
 						+ Bukkit.getName() + " version: " + Bukkit.getServer().getBukkitVersion() + "\r\n"
-						+ "UseMySQL='" + hc.s().useMySQL() + "'\r\nObjects Loaded='" + objectsLoaded
+						+ "UseMySQL='" + hc.s().gB("sql-connection.use-mysql") + "'\r\nObjects Loaded='" + objectsLoaded
 						+ "'\r\n" + info;
 						ft.writeStringToFile(info, path + File.separator + "info.txt");
 						LanguageFile L = hc.getLanguageFile();

@@ -22,7 +22,7 @@ public class SQLRead {
     
 	SQLRead() {
 		hc = HyperConomy.hc;
-		if (hc.s().useMySQL()) {
+		if (hc.s().gB("sql-connection.use-mysql")) {
 			threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads");
 		} else {
 			threadlimit = 1;
@@ -31,7 +31,7 @@ public class SQLRead {
 			hc.getServer().getScheduler().runTaskLaterAsynchronously(hc, new Runnable() {
 	    		public void run() {
 	    			DatabaseConnection dc = null;
-	    			if (hc.s().useMySQL()) {
+	    			if (hc.s().gB("sql-connection.use-mysql")) {
 	    				dc = new MySQLConnection();
 	    			} else {
 		    			dc = new SQLiteConnection();

@@ -26,7 +26,7 @@ public class Copydatabase {
 			mysqlMessage = L.get("COPYDATABASE_MYSQL");
 			sqliteMessage = L.get("COPYDATABASE_SQLITE");
 			if (args.length == 0) {
-				if (hc.s().useMySQL()) {
+				if (hc.s().gB("sql-connection.use-mysql")) {
 					sender.sendMessage(L.get("COPYDATABASE_MYSQL_WARNING"));
 				} else {
 					sender.sendMessage(L.get("COPYDATABASE_SQLITE_WARNING"));
@@ -44,12 +44,12 @@ public class Copydatabase {
 						SQLEconomy se = hc.getSQLEconomy();
 						DataHandler dh = hc.getDataFunctions();
 						SQLRead sr = hc.getSQLRead();
-						if (hc.s().useMySQL()) {
+						if (hc.s().gB("sql-connection.use-mysql")) {
 							boolean databaseOk = se.checkSQLLite();
 							if (databaseOk) {
 								hc.loadLock(true);
 
-								hc.s().setUseMySQL(false);
+								hc.s().sB("sql-connection.use-mysql", false);
 								tempWrite = new SQLWrite();
 								tempWrite.executeSQL("DELETE FROM hyperconomy_objects");
 								tempWrite.executeSQL("DELETE FROM hyperconomy_players");
@@ -108,7 +108,7 @@ public class Copydatabase {
 							boolean databaseOk = se.checkMySQL();
 							if (databaseOk) {
 								hc.loadLock(true);
-								hc.s().setUseMySQL(true);
+								hc.s().sB("sql-connection.use-mysql", true);
 								tempWrite = new SQLWrite();
 								tempWrite.executeSQL("DELETE FROM hyperconomy_objects");
 								tempWrite.executeSQL("DELETE FROM hyperconomy_players");
@@ -195,11 +195,11 @@ public class Copydatabase {
 		    		}
 		    	});
     			if (tempWrite == null || tempWrite.getBufferSize() == 0) {
-    				hc.s().setUseMySQL(!hc.s().useMySQL());
+    				hc.s().sB("sql-connection.use-mysql", !hc.s().gB("sql-connection.use-mysql"));
     				hc.loadLock(false);
     				hc.getServer().getScheduler().runTask(hc, new Runnable() {
     		    		public void run() {
-    		    			if (hc.s().useMySQL()) {
+    		    			if (hc.s().gB("sql-connection.use-mysql")) {
     		    				sender.sendMessage(mysqlMessage);
     		    			} else {
     		    				sender.sendMessage(sqliteMessage);

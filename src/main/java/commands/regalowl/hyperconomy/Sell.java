@@ -13,7 +13,7 @@ public class Sell {
 		ShopFactory s = hc.getShopFactory();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
-			if (player.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
+			if (player.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 				return;
 			}

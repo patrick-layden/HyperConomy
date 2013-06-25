@@ -9,29 +9,15 @@ public class HyperSettings {
 
 	private HyperConomy hc;
 	private FileConfiguration config;
-	
+
 	private int errorCount;
-	private boolean blockCreativeSales;
 	private double apiVersion;
-	private boolean useExternalEconomy;
-	private boolean logerrors;
 	private String serverVersion;
 	private long saveinterval;
-	private boolean usemysql;
-	private boolean useShopPermissions;
-
-	
 	private int savetaskid;
 	private int tempErrorCounter;
 	private boolean errorResetActive;
-	
-	
-	
-	
-	
-	
-	
-	
+
 	private boolean useWebPage;
 	private String backgroundColor;
 	private String fontColor;
@@ -43,37 +29,37 @@ public class HyperSettings {
 	private String tableDataColor;
 	private String font;
 	private int fontSize;
+	private int port;
+	
 	private double salestax;
 	private double tax;
 	private double statictax;
 	private double enchanttax;
 	private double initialtax;
 	private boolean useHistory;
-	private int port;
 	
 
-	
-	
-	
-	
-	
-	
-	
-	
 	HyperSettings() {
 		new Update();
 		hc = HyperConomy.hc;
 		config = HyperConomy.hc.getYaml().getConfig();
-		blockCreativeSales = config.getBoolean("config.block-selling-in-creative-mode");
+
+		loadData();
+		errorResetActive = false;
+		loadErrorCount();
+	}
+	
+	
+	public void loadData() {
+		//blockCreativeSales = config.getBoolean("config.block-selling-in-creative-mode");
 		apiVersion = config.getDouble("api-version");
-		useExternalEconomy = config.getBoolean("config.use-external-economy-plugin");
-		logerrors = config.getBoolean("config.log-errors");
+		//useExternalEconomy = config.getBoolean("config.use-external-economy-plugin");
+		//logerrors = config.getBoolean("config.log-errors");
 		serverVersion = HyperConomy.hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
 		saveinterval = config.getLong("config.saveinterval");
-		usemysql = config.getBoolean("config.sql-connection.use-mysql");
-		useShopPermissions = config.getBoolean("config.use-shop-permissions");
-		
-		
+		//usemysql = config.getBoolean("config.sql-connection.use-mysql");
+		//useShopPermissions = config.getBoolean("config.use-shop-permissions");
+
 		useWebPage = config.getBoolean("config.web-page.use-web-page");
 		backgroundColor = "#" + config.getString("config.web-page.background-color");
 		fontColor = "#" + config.getString("config.web-page.font-color");
@@ -86,6 +72,7 @@ public class HyperSettings {
 		tableDataColor = "#" + config.getString("config.web-page.table-data-color");
 		font = config.getString("config.web-page.font");
 		fontSize = config.getInt("config.web-page.font-size");
+		
 		tax = config.getDouble("config.purchasetaxpercent");
 		enchanttax = config.getDouble("config.enchanttaxpercent");
 		salestax = config.getDouble("config.sales-tax-percent");
@@ -93,122 +80,149 @@ public class HyperSettings {
 		statictax = config.getDouble("config.statictaxpercent");
 		port = config.getInt("config.web-page.port");
 		useHistory = config.getBoolean("config.store-price-history");
-		
-		
-		errorResetActive = false;
-		loadErrorCount();
+	}
+	
+	public String gS(String path) {
+		return config.getString("config." + path);
+	}
+	public int gI(String path) {
+		return config.getInt("config." + path);
+	}
+	public double gD(String path) {
+		return config.getDouble("config." + path);
+	}
+	public boolean gB(String path) {
+		return config.getBoolean("config." + path);
 	}
 	
 	
-	public boolean blockCreative() {
-		return blockCreativeSales;
+	public void sS(String path, String value) {
+		config.set("config." + path, value);
+	}
+	public void sI(String path, int value) {
+		config.set("config." + path, value);
+	}
+	public void sD(String path, double value) {
+		config.set("config." + path, value);
+	}
+	public void sB(String path, boolean value) {
+		config.set("config." + path, value);
 	}
 	
+	
+	
+	
+	
+	
+	//public boolean blockCreative() {
+	//	return blockCreativeSales;
+	//}
+
 	public double getApiVersion() {
 		return apiVersion;
 	}
-	
-	public boolean useExternalEconomy() {
-		return useExternalEconomy;
-	}
-	
+
+	//public boolean useExternalEconomy() {
+	//	return useExternalEconomy;
+	//}
+
+	/*
 	public void setUseExternalEconomy(boolean state) {
 		useExternalEconomy = state;
 	}
-	
-	public boolean logErrors() {
-		return logerrors;
-	}
-	
+	*/
+
+	//public boolean logErrors() {
+	//	return logerrors;
+	//}
+
 	public String getServerVersion() {
 		return serverVersion;
 	}
-	
+
+	/*
 	public boolean useMySQL() {
 		return usemysql;
 	}
-	
+*/
+	/*
 	public void setUseMySQL(boolean usemysql) {
 		this.usemysql = usemysql;
 	}
+	 */
 
-	public long getsaveInterval() {
-		return saveinterval;
-	}
+	//public boolean useShopPermissions() {
+	//	return useShopPermissions;
+	//}
 
-	public void setSaveInterval(long interval) {
-		saveinterval = interval;
-	}
-	
-	public boolean useShopPermissions() {
-		return useShopPermissions;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public String getBackgroundColor() {
 		return backgroundColor;
 	}
+
 	public String getFontColor() {
 		return fontColor;
 	}
+
 	public String getBorderColor() {
 		return borderColor;
 	}
+
 	public String getIncreaseColor() {
 		return increaseColor;
 	}
+
 	public String getDecreaseColor() {
 		return decreaseColor;
 	}
+
 	public String getHighlightColor() {
 		return highlightColor;
 	}
+
 	public String getHeaderColor() {
 		return headerColor;
 	}
+
 	public String getTableDataColor() {
 		return tableDataColor;
 	}
+
 	public String getFont() {
 		return font;
 	}
+
 	public int getFontSize() {
 		return fontSize;
 	}
+
 	public double getSalesTax() {
 		return salestax;
 	}
+
 	public double getTax() {
 		return tax;
 	}
+
 	public double getStaticTax() {
 		return statictax;
 	}
+
 	public double getEnchantTax() {
 		return enchanttax;
 	}
+
 	public double getInitialTax() {
 		return initialtax;
 	}
-	public String getCurrencySymbol() {
-		return HyperConomy.currency;
-	}
+
 	public boolean getUseHistory() {
 		return useHistory;
 	}
+
 	public int getPort() {
 		return port;
 	}
+
 	public boolean useWebPage() {
 		return useWebPage;
 	}
@@ -218,14 +232,14 @@ public class HyperSettings {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
+	public long getsaveInterval() {
+		return saveinterval;
+	}
+
+	public void setSaveInterval(long interval) {
+		saveinterval = interval;
+	}
+
 	public void startSave() {
 		savetaskid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
 			public void run() {
@@ -239,18 +253,15 @@ public class HyperSettings {
 	public void stopSave() {
 		hc.getServer().getScheduler().cancelTask(savetaskid);
 	}
-	
-	
+
 	public int getErrorCount() {
 		return errorCount;
 	}
-	
+
 	public void raiseErrorCount() {
 		errorCount++;
 	}
-	
 
-	
 	private void loadErrorCount() {
 		FileTools ft = new FileTools();
 		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "errors";
@@ -260,7 +271,7 @@ public class HyperSettings {
 			errorCount = 0;
 		} else {
 			int max = 0;
-			for (String folder:contents) {
+			for (String folder : contents) {
 				try {
 					int cnum = Integer.parseInt(folder);
 					if (cnum > max) {
@@ -273,8 +284,7 @@ public class HyperSettings {
 			errorCount = max + 1;
 		}
 	}
-	
-	
+
 	public void incrementErrorCount() {
 		tempErrorCounter++;
 		if (tempErrorCounter > 20) {
@@ -286,12 +296,12 @@ public class HyperSettings {
 		if (!errorResetActive) {
 			errorResetActive = true;
 			hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
-			    public void run() {
-			    	tempErrorCounter = 0;
-	    		    errorResetActive = false;
-			    }
+				public void run() {
+					tempErrorCounter = 0;
+					errorResetActive = false;
+				}
 			}, 20L);
 		}
 	}
-	
+
 }

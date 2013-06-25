@@ -549,7 +549,7 @@ public class ChestShop implements Listener {
 
 											} else if (slot >= 27 && ho != null) {
 												if (sell) {
-													if (p.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
+													if (p.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 														p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 														icevent.setCancelled(true);
 														return;
@@ -706,7 +706,7 @@ public class ChestShop implements Listener {
 
 											} else if (slot >= 27 && ho != null) {
 												if (sell) {
-													if (p.getGameMode() == GameMode.CREATIVE && hc.s().blockCreative()) {
+													if (p.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 														p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 														icevent.setCancelled(true);
 														return;

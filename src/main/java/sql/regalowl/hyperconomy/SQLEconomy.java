@@ -34,7 +34,7 @@ public class SQLEconomy {
 	
 	private Connection getConnection() {
 		try {
-			if (hc.s().useMySQL()) {
+			if (hc.s().gB("sql-connection.use-mysql")) {
 				return DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 			} else {
 				FileTools ft = new FileTools();
