@@ -470,7 +470,7 @@ public class ChestShop implements Listener {
 	public void onInventoryClickEvent(InventoryClickEvent icevent) {
 		try {
 			if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
-				if (!hc.isLocked()) {
+				if (!hc.isLocked() && !hc.loadLock()) {
 					if (icevent.getInventory().getHolder() instanceof Chest) {
 						Chest invchest = (Chest) icevent.getInventory().getHolder();
 						int x = invchest.getX();

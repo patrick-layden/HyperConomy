@@ -264,6 +264,10 @@ public class HyperConomy extends JavaPlugin {
 	public boolean fullLock() {
 		return fullLock;
 	}
+	
+	public boolean loadLock() {
+		return loadLock;
+	}
 
 	public YamlFile getYaml() {
 		return yaml;
