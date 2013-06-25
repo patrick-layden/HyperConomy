@@ -306,7 +306,7 @@ ALL_STOCKS_SET: &6All stocks set!
 SETSTOCKMEDIANALL_WARNING: &cAre you sure you wish to do this? All item and enchantment stocks will be set to their median with initial pricing disabled. Type '/setstockmedianall' confirm to proceed.
 SETSTOCKMEDIANALL_SUCCESS: &6Shop stocks of all items/enchantments have been set to their medians and initial pricing has been disabled.
 SETSTOCKMEDIANALL_INVALID: &4Invalid Parameters.  Use /setstockmedianall
-SETTAX_INVALID: &4Use /settax [puchase/sales/static/initial/enchant] [percent]
+SETTAX_INVALID: &4Use /settax [purchase/sales/static/initial/enchant] [percent]
 ENCHANT_TAX_SET: &6The enchantment tax rate has been set!
 INITIAL_TAX_SET: &6The initial tax rate has been set!
 STATIC_TAX_SET: &6The static tax rate has been set!
