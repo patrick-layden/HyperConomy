@@ -182,16 +182,15 @@ public class ItemDisplay {
 	}
 	
 	public boolean blockItemDrop(Item droppedItem) {
-		Calculation calc = hc.getCalculation();
 		Location l = droppedItem.getLocation();
 		int dropid = droppedItem.getItemStack().getType().getId();
-		int dropda = calc.getDamageValue(droppedItem.getItemStack());
+		int dropda = hc.getInventoryManipulation().getDamageValue(droppedItem.getItemStack());
 		double dropx = l.getX();
 		double dropy = l.getY();
 		double dropz = l.getZ();
 		World dropworld = l.getWorld();
 		int id = item.getItemStack().getType().getId();
-		int da = calc.getDamageValue(item.getItemStack());
+		int da = hc.getInventoryManipulation().getDamageValue(item.getItemStack());
 		if (id == dropid) {
 			if (da == dropda) {
 				if (dropworld.equals(location.getWorld())) {
@@ -240,7 +239,6 @@ public class ItemDisplay {
 		if (item == null) {
 			return;
 		}
-		Calculation calc = hc.getCalculation();
 		List<Entity> nearbyEntities = item.getNearbyEntities(7, 7, 7);
 		for (Entity entity : nearbyEntities) {
 			if (entity instanceof Item) {
@@ -254,7 +252,7 @@ public class ItemDisplay {
 				}
 				if (!nearbyItem.equals(item) && !display) {
 					if (nearbyItem.getItemStack().getType().getId() == item.getItemStack().getType().getId()) {
-						if (calc.getDamageValue(nearbyItem.getItemStack()) == calc.getDamageValue(item.getItemStack())) {
+						if (hc.getInventoryManipulation().getDamageValue(nearbyItem.getItemStack()) == hc.getInventoryManipulation().getDamageValue(item.getItemStack())) {
 							entity.remove();
 						}
 					}

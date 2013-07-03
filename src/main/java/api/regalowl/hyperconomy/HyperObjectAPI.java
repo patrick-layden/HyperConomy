@@ -334,22 +334,20 @@ public class HyperObjectAPI implements ObjectAPI {
 
 	public HyperObject getHyperObject(ItemStack stack, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		Calculation calc = hc.getCalculation();
 		DataHandler dh = hc.getDataFunctions();
 		String economy = dh.getHyperPlayer(player).getEconomy();
 		int id = stack.getTypeId();
-		int damageValue = calc.getDamageValue(stack);
+		int damageValue = hc.getInventoryManipulation().getDamageValue(stack);
 		HyperObject ho = dh.getHyperObject(id, damageValue, economy);
 		return ho;
 	}
 	
 	public HyperObject getHyperObject(ItemStack stack, String player) {
 		HyperConomy hc = HyperConomy.hc;
-		Calculation calc = hc.getCalculation();
 		DataHandler dh = hc.getDataFunctions();
 		String economy = dh.getHyperPlayer(player).getEconomy();
 		int id = stack.getTypeId();
-		int damageValue = calc.getDamageValue(stack);
+		int damageValue = hc.getInventoryManipulation().getDamageValue(stack);
 		HyperObject ho = dh.getHyperObject(id, damageValue, economy);
 		return ho;
 	}

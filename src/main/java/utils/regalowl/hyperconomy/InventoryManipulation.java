@@ -40,13 +40,12 @@ public class InventoryManipulation {
 	public int countItems(int id, int data, Inventory inventory) {
 		try {
 			int totalitems = 0;
-			Calculation calc = hc.getCalculation();
-			data = calc.newData(id, data);
+			data = cleanDamageValue(id, data);
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				ItemStack stack = inventory.getItem(slot);
 				if (stack != null && !hasenchants(stack)) {
 					int stackid = stack.getTypeId();
-					int stackdata = calc.getDamageValue(stack);
+					int stackdata = getDamageValue(stack);
 					if (stackid == id && stackdata == data) {
 						totalitems += stack.getAmount();
 					}
@@ -71,7 +70,6 @@ public class InventoryManipulation {
 	 */
 	public int getAvailableSpace(int id, int data, Inventory inventory) {
 		try {
-			Calculation calc = hc.getCalculation();
 			MaterialData md = new MaterialData(id, (byte) data);
 			ItemStack stack = md.toItemStack();
 			int maxstack = stack.getMaxStackSize();
@@ -80,7 +78,7 @@ public class InventoryManipulation {
 				ItemStack citem = inventory.getItem(slot);
 				if (citem == null) {
 					availablespace += maxstack;
-				} else if (citem.getTypeId() == id && calc.getDamageValue(citem) == data) {
+				} else if (citem.getTypeId() == id && getDamageValue(citem) == data) {
 					availablespace += (maxstack - citem.getAmount());
 				}
 			}
@@ -104,7 +102,6 @@ public class InventoryManipulation {
 	 */
 	@SuppressWarnings("deprecation")
 	public void addItems(int amount, int id, int data, Inventory inventory) {
-		Calculation calc = hc.getCalculation();
 		try {
 			MaterialData md = new MaterialData(id, (byte) data);
 			ItemStack stack = md.toItemStack();
@@ -112,7 +109,7 @@ public class InventoryManipulation {
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				int pamount = 0;
 				ItemStack citem = inventory.getItem(slot);
-				if (citem != null && citem.getTypeId() == id && data == calc.getDamageValue(citem)) {
+				if (citem != null && citem.getTypeId() == id && data == getDamageValue(citem)) {
 					int currentamount = citem.getAmount();
 					if ((maxstack - currentamount) >= amount) {
 						pamount = amount;
@@ -169,14 +166,13 @@ public class InventoryManipulation {
 			int remainingAmount = 0;
 			double amountRemoved = 0;
 			remainingAmount = amount;
-			Calculation calc = hc.getCalculation();
-			data = calc.newData(id, data);
+			data = cleanDamageValue(id, data);
 			if (inventory.getType() == InventoryType.PLAYER) {
 				Player p = (Player) inventory.getHolder();
 				ItemStack hstack = p.getItemInHand();
 				if (hstack != null && !hasenchants(hstack)) {
 					int stackid = hstack.getTypeId();
-					int stackdata = calc.getDamageValue(hstack);
+					int stackdata = getDamageValue(hstack);
 					if (stackid == id && stackdata == data) {
 						if (remainingAmount >= hstack.getAmount()) {
 							remainingAmount -= hstack.getAmount();
@@ -194,7 +190,7 @@ public class InventoryManipulation {
 				ItemStack stack = inventory.getItem(i);
 				if (stack != null && !hasenchants(stack)) {
 					int stackid = stack.getTypeId();
-					int stackdata = calc.getDamageValue(stack);
+					int stackdata = getDamageValue(stack);
 					if (stackid == id && stackdata == data) {
 						if (remainingAmount >= stack.getAmount()) {
 							remainingAmount -= stack.getAmount();
@@ -500,6 +496,42 @@ public class InventoryManipulation {
 			return true;
 		}
 		return false;
+	}
+	
+	
+	public int getDamageValue(ItemStack item) {
+		try {
+			if (item == null) {return 0;}
+			return cleanDamageValue(item.getTypeId(), getpotionDV(item));
+		} catch (Exception e) {
+			String info = "Calculation getDamageValue() passed values ItemStack='" + item.getType() + "'";
+			new HyperError(e, info);
+			int da = 0;
+			return da;
+		}
+	}
+
+	
+	public int getpotionDV(ItemStack item) {
+		try {
+			if (item == null) {return 0;}
+			if (item.getTypeId() != 373) {return item.getData().getData();}
+			try {
+				Potion p = Potion.fromItemStack(item);
+				return p.toDamageValue();
+			} catch (Exception IllegalArgumentException) {
+				return item.getData().getData();
+			}
+		} catch (Exception e) {
+			String info = "Calculation getpotionDV() passed values ItemStack='" + item + "'";
+			new HyperError(e, info);
+			return 0;
+		}
+	}
+	
+	public int cleanDamageValue(int id, int data) {
+		if (Material.getMaterial(id).getMaxDurability() > 0) {return 0;}
+		return data;
 	}
 	
 	

@@ -8,7 +8,6 @@ public class Hs {
 	Hs(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		ShopFactory s = hc.getShopFactory();
-		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
 		InventoryManipulation im = hc.getInventoryManipulation();
@@ -33,7 +32,7 @@ public class Hs {
 							String max = args[0];
 							if (max.equalsIgnoreCase("max")) {
 								int itmid = player.getItemInHand().getTypeId();
-								int da = calc.getDamageValue(player.getItemInHand());
+								int da = im.getDamageValue(player.getItemInHand());
 								amount = im.countItems(itmid, da, player.getInventory());
 							} else {
 								player.sendMessage(L.get("HS_INVALID"));
@@ -42,7 +41,7 @@ public class Hs {
 						}
 					}
 					int itd = player.getItemInHand().getTypeId();
-					int da = calc.getDamageValue(player.getItemInHand());
+					int da = im.getDamageValue(player.getItemInHand());
 					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, hp.getEconomy());
 					if (ho == null) {
 						player.sendMessage(L.get("CANT_BE_TRADED"));

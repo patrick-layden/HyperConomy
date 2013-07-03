@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 public class Ymladditem {
 	Ymladditem(Player player, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
-		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
 		try {
@@ -16,7 +15,7 @@ public class Ymladditem {
 			int median = Integer.parseInt(args[2]);
 			double startprice = Double.parseDouble(args[3]);
 			int itd = player.getItemInHand().getTypeId();
-			int da = calc.getDamageValue(player.getItemInHand());
+			int da = hc.getInventoryManipulation().getDamageValue(player.getItemInHand());
 			String playerecon = dh.getHyperPlayer(player).getEconomy();
 			HyperObject ho =  hc.getDataFunctions().getHyperObject(itd, da, playerecon);
 			if (ho != null) {

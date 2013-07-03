@@ -11,7 +11,6 @@ public class Hb {
 		hc = HyperConomy.hc;
 		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
-		Calculation calc = hc.getCalculation();
 		ShopFactory s = hc.getShopFactory();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		double amount;
@@ -33,7 +32,7 @@ public class Hb {
 								String max = args[0];
 								if (max.equalsIgnoreCase("max")) {
 									ma = true;
-									int space = im.getAvailableSpace(player.getItemInHand().getTypeId(), calc.getDamageValue(player.getItemInHand()), player.getInventory());
+									int space = im.getAvailableSpace(player.getItemInHand().getTypeId(), im.getDamageValue(player.getItemInHand()), player.getInventory());
 									amount = space;
 								} else {
 									player.sendMessage(L.get("HB_INVALID"));
@@ -42,7 +41,7 @@ public class Hb {
 							}
 						}
 						int itd = player.getItemInHand().getTypeId();
-						int da = calc.getDamageValue(player.getItemInHand());
+						int da = im.getDamageValue(player.getItemInHand());
 						HyperObject ho = sf.getHyperObject(itd, da, playerecon);
 						if (ho == null) {
 							player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));

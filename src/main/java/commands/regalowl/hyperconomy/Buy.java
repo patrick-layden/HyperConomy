@@ -10,7 +10,6 @@ public class Buy {
 	Buy(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
 		DataHandler sf = hc.getDataFunctions();
-		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
 		try {
@@ -48,7 +47,7 @@ public class Buy {
 										ItemStack damagestack = damagemd.toItemStack();
 										int space = 0;
 										if (id >= 0) {
-											space = hc.getInventoryManipulation().getAvailableSpace(id, calc.getDamageValue(damagestack), player.getInventory());
+											space = hc.getInventoryManipulation().getAvailableSpace(id, hc.getInventoryManipulation().getDamageValue(damagestack), player.getInventory());
 										}
 										amount = space;
 										int shopstock = (int) ho.getStock();

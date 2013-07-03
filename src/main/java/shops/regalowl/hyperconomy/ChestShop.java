@@ -525,9 +525,7 @@ public class ChestShop implements Listener {
 										HyperPlayer hp = dh.getHyperPlayer(p);
 										if (!im.hasenchants(icevent.getCurrentItem())) {
 
-											HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
-											int id = icevent.getCurrentItem().getTypeId();
-											int data = icevent.getCurrentItem().getDurability();
+											HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()), hp.getEconomy());
 											int camount = icevent.getCurrentItem().getAmount();
 
 											if (slot < 27 && ho != null) {
@@ -554,10 +552,10 @@ public class ChestShop implements Listener {
 														icevent.setCancelled(true);
 														return;
 													}
-													int itemamount = im.countItems(id, data, icevent.getView().getTopInventory());
+													int itemamount = im.countItems(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 
 													if (itemamount > 0) {
-														int space = im.getAvailableSpace(id, data, icevent.getView().getTopInventory());
+														int space = im.getAvailableSpace(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 														if (space >= camount) {
 															if (acc.checkAccount(line34)) {
 																double bal = acc.getBalance(line34);
@@ -602,9 +600,7 @@ public class ChestShop implements Listener {
 										Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 										HyperPlayer hp = dh.getHyperPlayer(p);
 										if (!im.hasenchants(icevent.getCurrentItem())) {
-											HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
-											int id = icevent.getCurrentItem().getTypeId();
-											int data = icevent.getCurrentItem().getDurability();
+											HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()), hp.getEconomy());
 
 											if (slot < 27 && ho != null) {
 												String name = ho.getName();
@@ -623,7 +619,7 @@ public class ChestShop implements Listener {
 											} else if (slot >= 27 && ho != null) {
 												String name = ho.getName();
 												if (sell) {
-													int itemamount = im.countItems(id, data, icevent.getView().getTopInventory());
+													int itemamount = im.countItems(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 
 													if (itemamount > 0) {
 														double price = ho.getValue(1);
@@ -681,10 +677,7 @@ public class ChestShop implements Listener {
 										Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 										HyperPlayer hp = dh.getHyperPlayer(p);
 										if (!im.hasenchants(icevent.getCurrentItem())) {
-											HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), icevent.getCurrentItem().getDurability(), hp.getEconomy());
-
-											int id = icevent.getCurrentItem().getTypeId();
-											int data = icevent.getCurrentItem().getDurability();
+											HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()), hp.getEconomy());
 
 											if (slot < 27 && ho != null) {
 												if (buy) {
@@ -711,10 +704,10 @@ public class ChestShop implements Listener {
 														icevent.setCancelled(true);
 														return;
 													}
-													int itemamount = im.countItems(id, data, icevent.getView().getTopInventory());
+													int itemamount = im.countItems(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 
 													if (itemamount > 0) {
-														int space = im.getAvailableSpace(id, data, icevent.getView().getTopInventory());
+														int space = im.getAvailableSpace(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 														if (space >= 1) {
 															if (acc.checkAccount(line34)) {
 																double bal = acc.getBalance(line34);

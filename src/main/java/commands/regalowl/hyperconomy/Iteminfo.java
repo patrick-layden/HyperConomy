@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 public class Iteminfo {
 	Iteminfo(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
 		InventoryManipulation im = hc.getInventoryManipulation();
@@ -20,7 +19,7 @@ public class Iteminfo {
 			if (args.length == 1) {
 				int givenid = Integer.parseInt(args[0]);
 				int dv = 0;
-				int newdat = calc.newData(givenid, dv);
+				int newdat = im.cleanDamageValue(givenid, dv);
 				HyperObject ho = dh.getHyperObject(givenid, newdat, hp.getEconomy());
 				String nam = "";
 				if (ho == null) {
@@ -35,7 +34,7 @@ public class Iteminfo {
 			} else if (args.length == 2) {
 				int givenid = Integer.parseInt(args[0]);;
 				int givendam = Integer.parseInt(args[1]);
-				int newdat = calc.newData(givenid, givendam);
+				int newdat = im.cleanDamageValue(givenid, givendam);
 				HyperObject ho = dh.getHyperObject(givenid, newdat, hp.getEconomy());
 				String nam = "";
 				if (ho == null) {
@@ -50,7 +49,7 @@ public class Iteminfo {
 			}
 			String mat = player.getItemInHand().getType().toString();
 			int itemid = player.getItemInHand().getTypeId();
-			int dv = calc.getDamageValue(player.getItemInHand());
+			int dv = im.getDamageValue(player.getItemInHand());
 			HyperObject ho = dh.getHyperObject(itemid, dv, hp.getEconomy());
 			String nam = "";
 			if (ho == null) {

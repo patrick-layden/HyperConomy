@@ -31,7 +31,7 @@ public class Hv {
 					}
 					if (!im.hasenchants(iinhand)) {
 					int itd = player.getItemInHand().getTypeId();
-					int da = calc.getDamageValue(player.getItemInHand());
+					int da = im.getDamageValue(player.getItemInHand());
 					HyperObject ho = sf.getHyperObject(itd, da, hp.getEconomy());
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));

@@ -6,14 +6,13 @@ import org.bukkit.entity.Player;
 public class Itemsettings {
 	Itemsettings(String args[], CommandSender sender, Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		Calculation calc = hc.getCalculation();
 		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0 && player != null) {
 				HyperPlayer hp = sf.getHyperPlayer(player);
 				int itd = player.getItemInHand().getTypeId();
-				int da = calc.getDamageValue(player.getItemInHand());
+				int da = hc.getInventoryManipulation().getDamageValue(player.getItemInHand());
 				HyperObject hob = hc.getDataFunctions().getHyperObject(itd, da, hp.getEconomy());
 				if (hob == null) {
 					sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));

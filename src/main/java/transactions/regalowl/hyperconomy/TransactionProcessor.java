@@ -292,7 +292,6 @@ public class TransactionProcessor {
 	
 	public TransactionResponse sellAll() {
 		try {
-			Calculation calc = hc.getCalculation();
 			LanguageFile L = hc.getLanguageFile();
 			TransactionResponse response = new TransactionResponse(hp);
 			if (hp == null) {
@@ -314,7 +313,7 @@ public class TransactionProcessor {
 				if (invent.getItem(slot) != null) {
 					id = invent.getItem(slot).getTypeId();
 					ItemStack stack = invent.getItem(slot);
-					int da = calc.getDamageValue(invent.getItem(slot));
+					int da = im.getDamageValue(invent.getItem(slot));
 					hyperObject = hc.getDataFunctions().getHyperObject(id, da, playerecon);
 					if (im.hasenchants(stack) == false) {
 						if (hyperObject != null) {
