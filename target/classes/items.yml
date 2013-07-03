@@ -1467,16 +1467,16 @@ chiseledstonebrick:
     material: SMOOTH_BRICK
     id: 98
     data: 3
-  value: 8000.0
+  value: 40000.0
   price:
     static: false
-    staticprice: 16000.0
+    staticprice: 80000.0
   stock:
     stock: 0.0
     median: 1000.0
   initiation:
     initiation: true
-    startprice: 16000.0
+    startprice: 80000.0
 hugebrownmushroom0:
   information:
     type: item
