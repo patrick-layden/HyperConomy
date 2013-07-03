@@ -396,16 +396,16 @@ yellowwool:
     material: WOOL
     id: 35
     data: 4
-  value: 1.0
+  value: 15.0
   price:
     static: false
-    staticprice: 16.0
+    staticprice: 30.0
   stock:
     stock: 0.0
     median: 1000.0
   initiation:
     initiation: true
-    startprice: 16.0
+    startprice: 30.0
 limewool:
   information:
     type: item
