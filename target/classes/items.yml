@@ -8260,3 +8260,700 @@ snow:
   initiation:
     initiation: true
     startprice: 10.0
+diamondhorsearmor:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_BARDING
+    id: 419
+    data: 0
+  value: 20000.0
+  price:
+    static: false
+    staticprice: 40000.0
+  stock:
+    stock: 0
+    median: 100
+  initiation:
+    initiation: true
+    startprice: 40000.0
+goldhorsearmor:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_BARDING
+    id: 418
+    data: 0
+  value: 15000.0
+  price:
+    static: false
+    staticprice: 30000.0
+  stock:
+    stock: 0
+    median: 150
+  initiation:
+    initiation: true
+    startprice: 30000.0
+ironhorsearmor:
+  information:
+    type: item
+    category: unknown
+    material: IRON_BARDING
+    id: 417
+    data: 0
+  value: 8000.0
+  price:
+    static: false
+    staticprice: 16000.0
+  stock:
+    stock: 0
+    median: 200
+  initiation:
+    initiation: true
+    startprice: 16000.0
+horse:
+  information:
+    type: item
+    category: unknown
+    material: MONSTER_EGG
+    id: 383
+    data: 100
+  value: 1.0
+  price:
+    static: false
+    staticprice: 100.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 100.0
+haybale:
+  information:
+    type: item
+    category: unknown
+    material: HAY_BLOCK
+    id: 170
+    data: 0
+  value: 45.0
+  price:
+    static: false
+    staticprice: 90.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 90.0
+lead:
+  information:
+    type: item
+    category: unknown
+    material: LEASH
+    id: 420
+    data: 0
+  value: 27.0
+  price:
+    static: false
+    staticprice: 54.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 54.0
+nametag:
+  information:
+    type: item
+    category: unknown
+    material: NAME_TAG
+    id: 421
+    data: 0
+  value: 10000.0
+  price:
+    static: false
+    staticprice: 20000.0
+  stock:
+    stock: 0
+    median: 100
+  initiation:
+    initiation: true
+    startprice: 20000.0
+hardenedclay:
+  information:
+    type: item
+    category: unknown
+    material: HARD_CLAY
+    id: 172
+    data: 0
+  value: 24.0
+  price:
+    static: false
+    staticprice: 48.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 48.0
+coalblock:
+  information:
+    type: item
+    category: unknown
+    material: COAL_BLOCK
+    id: 173
+    data: 0
+  value: 60.0
+  price:
+    static: false
+    staticprice: 120.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 120.0
+whiteclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 0
+  value: 20.5
+  price:
+    static: false
+    staticprice: 41.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 41.0
+orangeclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 1
+  value: 21.0
+  price:
+    static: false
+    staticprice: 42.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 42.0
+magentaclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 2
+  value: 30.0
+  price:
+    static: false
+    staticprice: 60.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 60.0
+lightblueclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 3
+  value: 29.0
+  price:
+    static: false
+    staticprice: 58.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 58.0
+yellowclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 4
+  value: 21.0
+  price:
+    static: false
+    staticprice: 42.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 42.0
+limeclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 5
+  value: 22.0
+  price:
+    static: false
+    staticprice: 44.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 44.0
+pinkclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 6
+  value: 22.0
+  price:
+    static: false
+    staticprice: 44.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 44.0
+grayclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 7
+  value: 22.0
+  price:
+    static: false
+    staticprice: 44.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 44.0
+lightgrayclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 8
+  value: 23.0
+  price:
+    static: false
+    staticprice: 26.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 26.0
+cyanclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 9
+  value: 29.0
+  price:
+    static: false
+    staticprice: 58.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 58.0
+purpleclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 10
+  value: 29.0
+  price:
+    static: false
+    staticprice: 58.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 58.0
+blueclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 11
+  value: 23.0
+  price:
+    static: false
+    staticprice: 26.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 26.0
+brownclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 12
+  value: 20.5
+  price:
+    static: false
+    staticprice: 41.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 41.0
+greenclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 13
+  value: 20.5
+  price:
+    static: false
+    staticprice: 41.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 41.0
+redclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 14
+  value: 21.0
+  price:
+    static: false
+    staticprice: 42.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 42.0
+blackclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 15
+  value: 22.0
+  price:
+    static: false
+    staticprice: 44.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 44.0
+carpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 0
+  value: 3.33
+  price:
+    static: false
+    staticprice: 6.66
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 6.66
+orangecarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 1
+  value: 6.66
+  price:
+    static: false
+    staticprice: 13.33
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 13.33
+magentacarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 2
+  value: 25.33
+  price:
+    static: false
+    staticprice: 50.66
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 50.66
+lightbluecarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 3
+  value: 22.0
+  price:
+    static: false
+    staticprice: 44.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 44.0
+yellowcarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 4
+  value: 10.0
+  price:
+    static: false
+    staticprice: 20.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 20.0
+limecarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 5
+  value: 6.66
+  price:
+    static: false
+    staticprice: 13.33
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 13.33
+pinkcarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 6
+  value: 8.0
+  price:
+    static: false
+    staticprice: 16.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 16.0
+graycarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 7
+  value: 10.0
+  price:
+    static: false
+    staticprice: 20.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 20.0
+lightgraycarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 8
+  value: 10.66
+  price:
+    static: false
+    staticprice: 21.33
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 21.33
+cyancarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 9
+  value: 24.66
+  price:
+    static: false
+    staticprice: 49.33
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 49.33
+purplecarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 10
+  value: 22.0
+  price:
+    static: false
+    staticprice: 44.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 44.0
+bluecarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 11
+  value: 20.0
+  price:
+    static: false
+    staticprice: 40.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 40.0
+browncarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 12
+  value: 6.66
+  price:
+    static: false
+    staticprice: 13.33
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 13.33
+greencarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 13
+  value: 6.66
+  price:
+    static: false
+    staticprice: 13.33
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 13.33
+redcarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 14
+  value: 8.0
+  price:
+    static: false
+    staticprice: 16.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 16.0
+blackcarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 15
+  value: 6.66
+  price:
+    static: false
+    staticprice: 13.33
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 13.33
