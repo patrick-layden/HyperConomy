@@ -43,7 +43,6 @@ public class HyperPlayer {
 		economy = "default";
 		balance = 0.0;
 		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','','')");
-		
 	}
 	
 	
@@ -61,7 +60,7 @@ public class HyperPlayer {
 		this.salt = salt;
 	}
 	
-	
+	/*
 	public void create() {
 		SQLWrite sw = hc.getSQLWrite();
 		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) VALUES ('" + name + "','" + economy + "','" + balance + "','" + x + "','" + y + "','" + z + "','" + world + "','" + hash + "','" + salt + "')");
@@ -74,7 +73,7 @@ public class HyperPlayer {
 				"', WORLD='" + this.world + "', SALT='" + this.salt + "', HASH='" + this.hash + "' WHERE PLAYER = '" + this.name + "'");
 		
 	}
-	
+	*/
 	
 	public String getName() {
 		return name;

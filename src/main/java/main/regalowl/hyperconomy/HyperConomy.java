@@ -141,9 +141,6 @@ public class HyperConomy extends JavaPlugin {
 
 	public void shutDown(boolean protect) {
 		enabled = false;
-		if (df != null) {
-			df.shutDown();
-		}
 		HandlerList.unregisterAll(this);
 		if (itdi != null) {
 			itdi.unloadDisplays();

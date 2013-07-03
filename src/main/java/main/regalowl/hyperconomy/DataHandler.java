@@ -441,18 +441,4 @@ public class DataHandler implements Listener {
 		return null;
 	}
 	
-	public void shutDown() {
-		QueryResult result = sr.getDatabaseConnection().read("SELECT PLAYER FROM hyperconomy_players");
-		ArrayList<String> inDatabase = new ArrayList<String>();
-		while (result.next()) {
-			inDatabase.add(result.getString("PLAYER"));
-		}
-		result.close();
-		for (String player:hyperPlayers.keySet()) {
-			if (!inDatabase.contains(player)) {
-				hyperPlayers.get(player).save();
-			}
-		}
-	}
-
 }
