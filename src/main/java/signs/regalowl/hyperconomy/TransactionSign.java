@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -34,10 +35,10 @@ public class TransactionSign implements Listener {
 				try {
 					b = p.getTargetBlock(null, 500);
 				} catch (Exception e) {
-					//do nothing, this method seems to be bugged in bukkit
+					// do nothing, this method seems to be bugged in bukkit
 					return;
 				}
-				
+
 				if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
 					Sign s = (Sign) b.getState();
 					String line3 = ChatColor.stripColor(s.getLine(2)).trim();
@@ -141,146 +142,145 @@ public class TransactionSign implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteractEvent(PlayerInteractEvent ievent) {
 		try {
+			if (!hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {return;}
+			Player p = ievent.getPlayer();
+			if (p == null) {return;}
+			if (p.isSneaking() && p.hasPermission("hyperconomy.admin")) {return;}
 			LanguageFile L = hc.getLanguageFile();
 			ShopFactory shop = hc.getShopFactory();
 			boolean requireShop = hc.getYaml().getConfig().getBoolean("config.require-transaction-signs-to-be-in-shop");
-			if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
-				Player p = ievent.getPlayer();
-				if (p == null) {
-					return;
-				}
-				boolean sneak = false;
-				if (p.isSneaking()) {
-					sneak = true;
-				}
-				if (sneak && p.hasPermission("hyperconomy.admin")) {
-					return;
-				}
-				Block b = ievent.getClickedBlock();
-				if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
-					Sign s = (Sign) b.getState();
-					String line3 = ChatColor.stripColor(s.getLine(2)).trim();
-					if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
-						String line4 = ChatColor.stripColor(s.getLine(3)).trim();
-						int amount = 0;
-						try {
-							amount = Integer.parseInt(line4);
-						} catch (Exception e) {
-							return;
+
+			Block b = null;
+			if (!ievent.hasBlock()) {
+				b = ievent.getPlayer().getTargetBlock(null, 5);
+			} else {
+				b = ievent.getClickedBlock();
+			}
+			if (b == null) {return;}
+			if (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
+				Sign s = (Sign) b.getState();
+				String line3 = ChatColor.stripColor(s.getLine(2)).trim();
+				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
+					String line4 = ChatColor.stripColor(s.getLine(3)).trim();
+					int amount = 0;
+					try {
+						amount = Integer.parseInt(line4);
+					} catch (Exception e) {
+						return;
+					}
+					String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
+					line12 = sf.fixName(line12);
+					if (sf.objectTest(line12)) {
+						if (!s.getLine(0).startsWith("\u00A7")) {
+							s.setLine(0, "\u00A71" + s.getLine(0));
+							s.setLine(1, "\u00A71" + s.getLine(1));
+							s.setLine(2, "\u00A7f" + s.getLine(2));
+							s.setLine(3, "\u00A7a" + s.getLine(3));
+							s.update();
 						}
-						String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
-						line12 = sf.fixName(line12);
-						if (sf.objectTest(line12)) {
-							if (!s.getLine(0).startsWith("\u00A7")) {
-								s.setLine(0, "\u00A71" + s.getLine(0));
-								s.setLine(1, "\u00A71" + s.getLine(1));
-								s.setLine(2, "\u00A7f" + s.getLine(2));
-								s.setLine(3, "\u00A7a" + s.getLine(3));
+						Action action = ievent.getAction();
+						if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
+							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[buy]")) {
+								String l1 = s.getLine(0);
+								String l2 = s.getLine(1);
+								String l3 = s.getLine(2);
+								String l4 = s.getLine(3);
+								if (p.hasPermission("hyperconomy.buysign")) {
+									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
+										HyperPlayer hp = sf.getHyperPlayer(p);
+										if (hp == null) {
+											ievent.setCancelled(true);
+											return;
+										}
+										if (!requireShop || hp.hasBuyPermission(shop.getShop(p))) {
+											HyperObject ho = sf.getHyperObject(line12, hp.getEconomy());
+											if (!hc.isLocked()) {
+												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+												pt.setAmount(amount);
+												pt.setHyperObject(ho);
+												TransactionResponse response = hp.processTransaction(pt);
+												response.sendMessages();
+											} else {
+												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+											}
+										} else {
+											p.sendMessage(L.get("NO_TRADE_PERMISSION"));
+										}
+									} else {
+										p.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
+									}
+								} else {
+									p.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+								}
+								ievent.setCancelled(true);
+								s.setLine(0, l1);
+								s.setLine(1, l2);
+								s.setLine(2, l3);
+								s.setLine(3, l4);
 								s.update();
 							}
-							String action = ievent.getAction().name();
-							if (action.equalsIgnoreCase("RIGHT_CLICK_BLOCK")) {
-								if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[buy]")) {
-									String l1 = s.getLine(0);
-									String l2 = s.getLine(1);
-									String l3 = s.getLine(2);
-									String l4 = s.getLine(3);
-									if (p.hasPermission("hyperconomy.buysign")) {
-										if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
-											HyperPlayer hp = sf.getHyperPlayer(p);
-											if (hp == null) {
-												ievent.setCancelled(true);
-												return;
-											}
-											if (!requireShop || hp.hasBuyPermission(shop.getShop(p))) {
-												HyperObject ho = sf.getHyperObject(line12, hp.getEconomy());
-												if (!hc.isLocked()) {
-													PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
-													pt.setAmount(amount);
-													pt.setHyperObject(ho);
-													TransactionResponse response = hp.processTransaction(pt);
-													response.sendMessages();
-												} else {
-													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-												}
-											} else {
-												p.sendMessage(L.get("NO_TRADE_PERMISSION"));
-											}
-										} else {
-											p.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
+						} else if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
+							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]")) {
+								String l1 = s.getLine(0);
+								String l2 = s.getLine(1);
+								String l3 = s.getLine(2);
+								String l4 = s.getLine(3);
+								if (p.hasPermission("hyperconomy.sellsign")) {
+									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
+										HyperPlayer hp = sf.getHyperPlayer(p);
+										if (hp == null) {
+											ievent.setCancelled(true);
+											return;
 										}
-									} else {
-										p.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
-									}
-									ievent.setCancelled(true);
-									s.setLine(0, l1);
-									s.setLine(1, l2);
-									s.setLine(2, l3);
-									s.setLine(3, l4);
-									s.update();
-								}
-							} else if (action.equalsIgnoreCase("LEFT_CLICK_BLOCK")) {
-								if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]")) {
-									String l1 = s.getLine(0);
-									String l2 = s.getLine(1);
-									String l3 = s.getLine(2);
-									String l4 = s.getLine(3);
-									if (p.hasPermission("hyperconomy.sellsign")) {
-										if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
-											HyperPlayer hp = sf.getHyperPlayer(p);
-											if (hp == null) {
+										if (!requireShop || hp.hasSellPermission(shop.getShop(p))) {
+											if (p.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
+												p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 												ievent.setCancelled(true);
 												return;
 											}
-											if (!requireShop || hp.hasSellPermission(shop.getShop(p))) {
-												if (p.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
-													p.sendMessage(L.get("CANT_SELL_CREATIVE"));
-													ievent.setCancelled(true);
-													return;
-												}
-												HyperObject ho = sf.getHyperObject(line12, hp.getEconomy());
-												if (!hc.isLocked()) {
-													PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-													pt.setAmount(amount);
-													pt.setHyperObject(ho);
-													TransactionResponse response = hp.processTransaction(pt);
-													response.sendMessages();
-												} else {
-													p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-												}
+											HyperObject ho = sf.getHyperObject(line12, hp.getEconomy());
+											if (!hc.isLocked()) {
+												PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+												pt.setAmount(amount);
+												pt.setHyperObject(ho);
+												TransactionResponse response = hp.processTransaction(pt);
+												response.sendMessages();
+											} else {
+												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+											}
 
-											} else {
-												p.sendMessage(L.get("NO_TRADE_PERMISSION"));
-											}
 										} else {
-											p.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
+											p.sendMessage(L.get("NO_TRADE_PERMISSION"));
 										}
 									} else {
-										p.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+										p.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
 									}
-									ievent.setCancelled(true);
-									s.setLine(0, l1);
-									s.setLine(1, l2);
-									s.setLine(2, l3);
-									s.setLine(3, l4);
-									s.update();
-								} else if (line3.equalsIgnoreCase("[buy]")) {
-									String l1 = s.getLine(0);
-									String l2 = s.getLine(1);
-									String l3 = s.getLine(2);
-									String l4 = s.getLine(3);
-									ievent.setCancelled(true);
-									s.setLine(0, l1);
-									s.setLine(1, l2);
-									s.setLine(2, l3);
-									s.setLine(3, l4);
-									s.update();
+								} else {
+									p.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
 								}
+								ievent.setCancelled(true);
+								s.setLine(0, l1);
+								s.setLine(1, l2);
+								s.setLine(2, l3);
+								s.setLine(3, l4);
+								s.update();
+							} else if (line3.equalsIgnoreCase("[buy]")) {
+								String l1 = s.getLine(0);
+								String l2 = s.getLine(1);
+								String l3 = s.getLine(2);
+								String l4 = s.getLine(3);
+								ievent.setCancelled(true);
+								s.setLine(0, l1);
+								s.setLine(1, l2);
+								s.setLine(2, l3);
+								s.setLine(3, l4);
+								s.update();
 							}
 						}
 					}
 				}
 			}
+
 		} catch (Exception e) {
 			new HyperError(e);
 		}
