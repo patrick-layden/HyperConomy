@@ -33,7 +33,7 @@ public class HyperConomy extends JavaPlugin {
 	private SQLRead sr;
 	private SQLEconomy sqe;
 	private WebHandler wh;
-
+	private ChestShop cs;
 	private YamlFile yaml;
 	private boolean playerLock;
 	private boolean fullLock;
@@ -133,7 +133,7 @@ public class HyperConomy extends JavaPlugin {
 		}
 		s.startshopCheck();
 		hs.startSave();
-		new ChestShop();
+		cs = new ChestShop();
 		hyperAPI = new HyperAPI();
 		hyperEconAPI = new HyperEconAPI();
 		hyperObjectAPI = new HyperObjectAPI();
@@ -345,5 +345,8 @@ public class HyperConomy extends JavaPlugin {
 	public WebHandler getWebHandler() {
 		return wh;
 	}
-
+	
+	public ChestShop getChestShop() {
+		return cs;
+	}
 }
