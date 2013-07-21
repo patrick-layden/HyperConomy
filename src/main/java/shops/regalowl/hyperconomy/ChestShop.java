@@ -65,23 +65,10 @@ public class ChestShop implements Listener {
 
 	}
 
-	public boolean isChestShop(Block b) {
+	public boolean isChestShopSign(Block b) {
 		try {
-			if (b == null) {
-				return false;
-			}
-			if (b.getState() instanceof Chest) {
-				Chest chest = (Chest) b.getState();
-				String world = chest.getBlock().getWorld().getName();
-				BlockState signblock = Bukkit.getWorld(world).getBlockAt(chest.getX(), chest.getY() + 1, chest.getZ()).getState();
-				if (signblock instanceof Sign) {
-					Sign s = (Sign) signblock;
-					String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-					if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
-						return true;
-					}
-				}
-			} else if (b.getType().equals(Material.WALL_SIGN)) {
+			if (b == null) {return false;}
+			if (b.getType().equals(Material.WALL_SIGN)) {
 				Sign s = (Sign) b.getState();
 				String line2 = s.getLine(1).trim();
 				if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
@@ -106,6 +93,30 @@ public class ChestShop implements Listener {
 						}
 					}
 				}
+			}
+			return false;
+		} catch (Exception e) {
+			new HyperError(e);
+			return false;
+		}
+	}
+	
+	public boolean isChestShop(Block b) {
+		try {
+			if (b == null) {return false;}
+			if (b.getState() instanceof Chest) {
+				Chest chest = (Chest) b.getState();
+				String world = chest.getBlock().getWorld().getName();
+				BlockState signblock = Bukkit.getWorld(world).getBlockAt(chest.getX(), chest.getY() + 1, chest.getZ()).getState();
+				if (signblock instanceof Sign) {
+					Sign s = (Sign) signblock;
+					String line2 = ChatColor.stripColor(s.getLine(1)).trim();
+					if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
+						return true;
+					}
+				}
+			} else if (isChestShopSign(b)) {
+				return true;
 			}
 			return false;
 		} catch (Exception e) {
@@ -165,6 +176,9 @@ public class ChestShop implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreakEvent(BlockBreakEvent bbevent) {
 		if (isChestShop(bbevent.getBlock())) {
+			if (isChestShopSign(bbevent.getBlock()) && bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) {
+				return;
+			}
 			bbevent.setCancelled(true);
 		}
 	}
