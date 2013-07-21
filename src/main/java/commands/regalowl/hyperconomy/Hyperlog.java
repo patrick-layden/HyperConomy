@@ -142,6 +142,7 @@ public class Hyperlog {
 	private ArrayList<String> getHyperLog(String statement) {
 		SQLRead sr = HyperConomy.hc.getSQLRead();
 		ArrayList<String> entries = new ArrayList<String>();
+		LanguageFile L = hc.getLanguageFile();
 		QueryResult result = sr.getDatabaseConnection().read(statement);
 		while (result.next()) {
 			// int id = result.getInt(1);
@@ -158,9 +159,9 @@ public class Hyperlog {
 			time = time.substring(0, time.indexOf(" "));
 			time = time.substring(time.indexOf("-") + 1, time.length());
 			if (action.equalsIgnoreCase("purchase")) {
-				entry = "[" + ChatColor.RED + time + ChatColor.WHITE + "]" + ChatColor.YELLOW + store + ChatColor.WHITE + "->" + ChatColor.AQUA + customer + ChatColor.WHITE + "[" + ChatColor.BLUE + amount + " " + ChatColor.BLUE + object + ChatColor.WHITE + "]" + "[" + ChatColor.GREEN + HyperConomy.currency + money + ChatColor.WHITE + "]";
+				entry = "[" + ChatColor.RED + time + ChatColor.WHITE + "]" + ChatColor.YELLOW + store + ChatColor.WHITE + "->" + ChatColor.AQUA + customer + ChatColor.WHITE + "[" + ChatColor.BLUE + amount + " " + ChatColor.BLUE + object + ChatColor.WHITE + "]" + "[" + ChatColor.GREEN + L.fC(money) + ChatColor.WHITE + "]";
 			} else if (action.equalsIgnoreCase("sale")) {
-				entry = "[" + ChatColor.RED + time + ChatColor.WHITE + "]" + ChatColor.AQUA + customer + ChatColor.WHITE + "->" + ChatColor.YELLOW + store + ChatColor.WHITE + "[" + ChatColor.BLUE + amount + " " + ChatColor.BLUE + object + ChatColor.WHITE + "]" + "[" + ChatColor.GREEN + HyperConomy.currency + money + ChatColor.WHITE + "]";
+				entry = "[" + ChatColor.RED + time + ChatColor.WHITE + "]" + ChatColor.AQUA + customer + ChatColor.WHITE + "->" + ChatColor.YELLOW + store + ChatColor.WHITE + "[" + ChatColor.BLUE + amount + " " + ChatColor.BLUE + object + ChatColor.WHITE + "]" + "[" + ChatColor.GREEN + L.fC(money) + ChatColor.WHITE + "]";
 			}
 			entries.add(entry);
 		}

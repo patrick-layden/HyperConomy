@@ -221,6 +221,10 @@ public class Update {
 	    	String t49 = yaml.getConfig().getString("config.block-selling-in-creative-mode");
 	    	if (t49 == null) {
 	    		yaml.getConfig().set("config.block-selling-in-creative-mode", false);
+	    	}	  
+	    	String t53 = yaml.getConfig().getString("config.show-currency-symbol-after-price");
+	    	if (t53 == null) {
+	    		yaml.getConfig().set("config.show-currency-symbol-after-price", false);
 	    	}	    
 
 	    	

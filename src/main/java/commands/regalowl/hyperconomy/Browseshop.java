@@ -114,7 +114,7 @@ public class Browseshop {
 							cost = cost + ho.getPurchaseTax(cost);
 							stock = sf.getHyperObject(iname, playerecon).getStock();
 						}
-						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + L.get("AVAILABLE") + ": \u00A7a" + L.get("CURRENCY") + cost + " \u00A79" + L.get("EACH") + ".]");
+						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + L.get("AVAILABLE") + ": \u00A7a" + L.fC(cost) + " \u00A79" + L.get("EACH") + ".]");
 					} else {
 						sender.sendMessage(L.get("REACHED_END"));
 						break;

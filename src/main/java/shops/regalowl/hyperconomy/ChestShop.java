@@ -84,7 +84,7 @@ public class ChestShop implements Listener {
 			} else if (b.getType().equals(Material.WALL_SIGN)) {
 				Sign s = (Sign) b.getState();
 				String line2 = s.getLine(1).trim();
-				if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
+				if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
 					BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
 					if (chestblock instanceof Chest) {
 						s.update();
@@ -97,7 +97,7 @@ public class ChestShop implements Listener {
 					if (relative.getType().equals(Material.WALL_SIGN)) {
 						Sign s = (Sign) relative.getState();
 						String line2 = s.getLine(1).trim();
-						if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {
+						if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
 							org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
 							BlockFace attachedface = sign.getFacing();
 							if (attachedface == cface) {
@@ -237,18 +237,18 @@ public class ChestShop implements Listener {
 			BlockState pchest3 = cblock.getRelative(BlockFace.NORTH).getState();
 			BlockState pchest4 = cblock.getRelative(BlockFace.SOUTH).getState();
 			if ((pchest1 instanceof Chest) || (pchest2 instanceof Chest) || (pchest3 instanceof Chest) || (pchest4 instanceof Chest)) {
-				scevent.setLine(0, "\u00A74You can't");
-				scevent.setLine(1, "\u00A74use a");
-				scevent.setLine(2, "\u00A74double");
-				scevent.setLine(3, "\u00A74chest.");
+				scevent.setLine(0, ChatColor.DARK_RED + "You can't");
+				scevent.setLine(1, ChatColor.DARK_RED + "use a");
+				scevent.setLine(2, ChatColor.DARK_RED + "double");
+				scevent.setLine(3, ChatColor.DARK_RED + "chest.");
 				return;
 			}
 
 			if (hc.getYaml().getConfig().getBoolean("config.require-chest-shops-to-be-in-shop") && !s.inAnyShop(scevent.getPlayer())) {
-				scevent.setLine(0, "\u00A74You must");
-				scevent.setLine(1, "\u00A74place your");
-				scevent.setLine(2, "\u00A74chest shop");
-				scevent.setLine(3, "\u00A74in a shop.");
+				scevent.setLine(0, ChatColor.DARK_RED + "You must");
+				scevent.setLine(1, ChatColor.DARK_RED + "place your");
+				scevent.setLine(2, ChatColor.DARK_RED + "chest shop");
+				scevent.setLine(3, ChatColor.DARK_RED + "in a shop.");
 				return;
 			}
 
@@ -262,27 +262,27 @@ public class ChestShop implements Listener {
 				count++;
 			}
 			if (emptyslots != 27) {
-				scevent.setLine(0, "\u00A74You must");
-				scevent.setLine(1, "\u00A74use an");
-				scevent.setLine(2, "\u00A74empty");
-				scevent.setLine(3, "\u00A74chest.");
+				scevent.setLine(0, ChatColor.DARK_RED + "You must");
+				scevent.setLine(1, ChatColor.DARK_RED + "use an");
+				scevent.setLine(2, ChatColor.DARK_RED + "empty");
+				scevent.setLine(3, ChatColor.DARK_RED + "chest.");
 				return;
 			}
 
 			if (am == Material.ICE || am == Material.LEAVES || am == Material.SAND || am == Material.GRAVEL || am == Material.SIGN || am == Material.SIGN_POST || am == Material.TNT) {
-				scevent.setLine(0, "\u00A74You can't");
-				scevent.setLine(1, "\u00A74attach your");
-				scevent.setLine(2, "\u00A74sign to that");
-				scevent.setLine(3, "\u00A74block!");
+				scevent.setLine(0, ChatColor.DARK_RED + "You can't");
+				scevent.setLine(1, ChatColor.DARK_RED + "attach your");
+				scevent.setLine(2, ChatColor.DARK_RED + "sign to that");
+				scevent.setLine(3, ChatColor.DARK_RED + "block!");
 				return;
 			}
 
 			String line1 = scevent.getLine(0);
-			if (line1.startsWith(HyperConomy.currency)) {
+			if (line1.startsWith(L.gC())) {
 				try {
 					String price = line1.substring(1, line1.length());
 					Double.parseDouble(price);
-					scevent.setLine(0, "\u00A7a$" + price);
+					scevent.setLine(0, ChatColor.GREEN + L.fC(price));
 				} catch (Exception e) {
 					scevent.setLine(0, "");
 				}
@@ -290,12 +290,12 @@ public class ChestShop implements Listener {
 				try {
 					String price = line1.substring(0, line1.length());
 					Double.parseDouble(price);
-					scevent.setLine(0, "\u00A7a$" + price);
+					scevent.setLine(0, ChatColor.GREEN + L.fC(price));
 				} catch (Exception e) {
 					try {
 						String price = line1.substring(0, line1.length() - 1);
 						Double.parseDouble(price);
-						scevent.setLine(0, "\u00A7a$" + price);
+						scevent.setLine(0, ChatColor.GREEN + L.fC(price));
 					} catch (Exception e2) {
 						scevent.setLine(0, "");
 					}
@@ -320,9 +320,9 @@ public class ChestShop implements Listener {
 				line3 = pname;
 			}
 
-			scevent.setLine(1, "\u00A7b" + fline);
-			scevent.setLine(2, "\u00A7f" + line3);
-			scevent.setLine(3, "\u00A7f" + line4);
+			scevent.setLine(1, ChatColor.AQUA + fline);
+			scevent.setLine(2, ChatColor.WHITE + line3);
+			scevent.setLine(3, ChatColor.WHITE + line4);
 
 			if (scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.SIGN_POST) || scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.WALL_SIGN)) {
 				Sign s = (Sign) scevent.getBlock().getState();
@@ -377,9 +377,17 @@ public class ChestShop implements Listener {
 			boolean setprice = false;
 			double staticprice = 0.0;
 			String line1 = ChatColor.stripColor(s.getLine(0)).trim();
-			if (line1.startsWith(HyperConomy.currency)) {
+			if (line1.startsWith(L.gC())) {
 				try {
 					String price = line1.substring(1, line1.length());
+					staticprice = calc.twoDecimals(Double.parseDouble(price));
+					setprice = true;
+				} catch (Exception e) {
+					setprice = false;
+				}
+			} else if (line1.endsWith(L.gC())) {
+				try {
+					String price = line1.substring(0, line1.length() - 1);
 					staticprice = calc.twoDecimals(Double.parseDouble(price));
 					setprice = true;
 				} catch (Exception e) {

@@ -36,6 +36,7 @@ config:
   use-shops: true
   allow-scrolling-transaction-signs: false
   block-selling-in-creative-mode: false
+  show-currency-symbol-after-price: false
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

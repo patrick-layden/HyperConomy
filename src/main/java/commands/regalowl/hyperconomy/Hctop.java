@@ -68,7 +68,6 @@ public class Hctop {
 					return;
 				}
 				sender.sendMessage(L.f(L.get("TOP_BALANCE_BALANCE"), splayers.get(i), calc.formatMoney(sbalances.get(i)), (i + 1)));
-				//sender.sendMessage(ChatColor.WHITE + "" + (i + 1) + ". " + ChatColor.AQUA + splayers.get(i) + ChatColor.BLUE + ": " + ChatColor.GREEN + L.get("CURRENCY") + calc.formatMoney(sbalances.get(i)));
 			}
 		} catch (Exception e) {
 			sender.sendMessage(L.get("HCTOP_INVALID"));

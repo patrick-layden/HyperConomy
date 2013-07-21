@@ -166,7 +166,26 @@ public class LanguageFile {
 		return language;
 	}
 	
-	
+	public String gC() {
+		String currency = get("CURRENCY");
+		if (currency == null) {currency = "$";}
+		if (currency.length() > 1) {currency = currency.substring(0, 1);}
+		return currency;
+	}
+	public String fC(double amount) {
+		String formatted = gC() + amount;
+		if (HyperConomy.hc.getConfig().getBoolean("config.show-currency-symbol-after-price")) {
+			formatted = amount + gC();
+		}
+		return formatted;
+	}
+	public String fC(String amount) {
+		String formatted = gC() + amount;
+		if (HyperConomy.hc.getConfig().getBoolean("config.show-currency-symbol-after-price")) {
+			formatted = amount + gC();
+		}
+		return formatted;
+	}
 	
 	public String formatMessage(String message) {
 		message = message.replace("&0", ChatColor.BLACK+"");

@@ -12,7 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class HyperConomy extends JavaPlugin {
 	public static HyperConomy hc;
-	public static String currency;
 	public static HyperAPI hyperAPI;
 	public static HyperEconAPI hyperEconAPI;
 	public static HyperObjectAPI hyperObjectAPI;
@@ -91,7 +90,6 @@ public class HyperConomy extends JavaPlugin {
 		yaml.YamlEnable();
 		L = new LanguageFile();
 		hs = new HyperSettings();
-		currency = L.get("CURRENCY");
 		sqe = new SQLEconomy();
 		boolean databaseOk = false;
 		if (hc.s().gB("sql-connection.use-mysql")) {

@@ -184,11 +184,11 @@ public class InfoSign {
 						double cost = ho.getCost(enchantClass);
 						cost = calc.twoDecimals((cost + ho.getPurchaseTax(cost)) * multiplier);
 						line3 = ChatColor.WHITE + "Buy:";
-						line4 = ChatColor.GREEN + L.get("CURRENCY") + cost;
+						line4 = ChatColor.GREEN + L.fC(cost);
 					} else {
 						double pcost = ho.getCost(1);
 						line3 = ChatColor.WHITE + "Buy:";
-						line4 = ChatColor.GREEN + L.get("CURRENCY") + (calc.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
+						line4 = ChatColor.GREEN + L.fC(calc.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
 					}
 					break;
 				case SELL:
@@ -196,12 +196,12 @@ public class InfoSign {
 						double value = ho.getValue(enchantClass);
 						value = calc.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "Sell:";
-						line4 = ChatColor.GREEN + L.get("CURRENCY") + value;
+						line4 = ChatColor.GREEN + L.fC(value);
 					} else {
 						double value = ho.getValue(1);
 						value = calc.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "Sell:";
-						line4 = ChatColor.GREEN + L.get("CURRENCY") + value;
+						line4 = ChatColor.GREEN + L.fC(value);
 					}
 					break;
 				case STOCK:
@@ -270,26 +270,26 @@ public class InfoSign {
 						double price = ho.getCost(enchantClass);
 						double taxpaid = calc.twoDecimals(ho.getPurchaseTax(price) * multiplier);
 						line3 = ChatColor.WHITE + "Tax:";
-						line4 = ChatColor.GREEN + "" + L.get("CURRENCY") + taxpaid;
+						line4 = ChatColor.GREEN + "" + L.fC(taxpaid);
 					} else {
 						line3 = ChatColor.WHITE + "Tax:";
-						line4 = ChatColor.GREEN + L.get("CURRENCY") + calc.twoDecimals(ho.getPurchaseTax(ho.getCost(1) * multiplier));
+						line4 = ChatColor.GREEN + L.fC(calc.twoDecimals(ho.getPurchaseTax(ho.getCost(1) * multiplier)));
 					}
 					break;
 				case SB:
 					if (isEnchantment) {
 						double cost = ho.getCost(enchantClass);
 						cost = calc.twoDecimals((cost + ho.getPurchaseTax(cost)) * multiplier);
-						line4 = ChatColor.WHITE + "B:" + "\u00A7a" + L.get("CURRENCY") + cost;
+						line4 = ChatColor.WHITE + "B:" + "\u00A7a" + L.fC(cost);
 						double value = ho.getValue(enchantClass);
 						value = calc.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
-						line3 = ChatColor.WHITE + "S:" + ChatColor.GREEN + L.get("CURRENCY") + value;
+						line3 = ChatColor.WHITE + "S:" + ChatColor.GREEN + L.fC(value);
 					} else {
 						double pcost = ho.getCost(1);
-						line4 = ChatColor.WHITE + "B:" + ChatColor.GREEN + L.get("CURRENCY") + (calc.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
+						line4 = ChatColor.WHITE + "B:" + ChatColor.GREEN + L.fC(calc.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
 						double value = ho.getValue(1);
 						value = calc.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
-						line3 = ChatColor.WHITE + "S:" + ChatColor.GREEN + L.get("CURRENCY") + value;
+						line3 = ChatColor.WHITE + "S:" + ChatColor.GREEN + L.fC(value);
 					}
 					break;
 				default:

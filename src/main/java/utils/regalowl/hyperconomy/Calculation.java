@@ -36,11 +36,7 @@ public class Calculation {
 		LanguageFile L = hc.getLanguageFile();
 		BigDecimal bd = new BigDecimal(money);
 		BigDecimal rounded = bd.setScale(2, RoundingMode.HALF_DOWN);
-		String currency = L.get("CURRENCY");
-		if (currency.length() > 1 || currency == null) {
-			currency = "";
-		}
-		return currency + rounded.toPlainString();
+		return L.fC(rounded.toPlainString());
 	}
 	
 	public String sha256Digest(String string) {
