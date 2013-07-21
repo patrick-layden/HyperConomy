@@ -370,12 +370,16 @@ public class InfoSign {
 	
 	
 	public Sign getSign() {
+		if (world == null) {
+			new HyperError("DEBUG: getSign failed: " + x + "," + y + "," + z + "," + world);
+			return null;
+		}
 		Location l = new Location(Bukkit.getWorld(world), x, y, z);
 		Chunk c = l.getChunk();
 		if (!c.isLoaded()) {
 			c.load();
 		}
-		Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
+		Block signblock = l.getBlock();
 		if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
 			Sign s = (Sign) signblock.getState();
 			return s;
@@ -384,6 +388,7 @@ public class InfoSign {
 			dataOk = false;
 			return null;
 		}
+
 	}
 	
 }
