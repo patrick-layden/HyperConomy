@@ -226,7 +226,10 @@ public class Update {
 	    	if (t53 == null) {
 	    		yaml.getConfig().set("config.show-currency-symbol-after-price", false);
 	    	}	    
-
+	    	String t54 = yaml.getConfig().getString("config.starting-player-account-balance");
+	    	if (t54 == null) {
+	    		yaml.getConfig().set("config.starting-player-account-balance", 0.0);
+	    	}	    
 	    	
 	    	double dversion = Double.parseDouble(configversion);
 	    	if (dversion < .952) {

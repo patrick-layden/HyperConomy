@@ -26,11 +26,16 @@ public class HyperPlayer {
 		hc = HyperConomy.hc;
 		tp = new TransactionProcessor(this);
 		SQLWrite sw = hc.getSQLWrite();
+		try {
+			balance = hc.getConfig().getDouble("config.starting-player-account-balance");
+		} catch (Exception e) {
+			new HyperError(e);
+			balance = 0;
+		}
+		economy = "default";
 		for (Player p:Bukkit.getOnlinePlayers()) {
 			if (p.getName().equalsIgnoreCase(player)) {
 				name = p.getName();
-				economy = "default";
-				balance = 0.0;
 				x = p.getLocation().getX();
 				y = p.getLocation().getY();
 				z = p.getLocation().getZ();
@@ -40,8 +45,6 @@ public class HyperPlayer {
 			}
 		}
 		name = player;
-		economy = "default";
-		balance = 0.0;
 		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','','')");
 	}
 	
