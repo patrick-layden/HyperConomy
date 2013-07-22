@@ -292,11 +292,11 @@ public class ChestShop implements Listener {
 			}
 
 			String line1 = scevent.getLine(0);
-			if (line1.startsWith(L.gC())) {
+			if (line1.startsWith(L.gC(false))) {
 				try {
 					String price = line1.substring(1, line1.length());
 					Double.parseDouble(price);
-					scevent.setLine(0, ChatColor.GREEN + L.fC(price));
+					scevent.setLine(0, ChatColor.GREEN + L.fCS(price));
 				} catch (Exception e) {
 					scevent.setLine(0, "");
 				}
@@ -304,12 +304,12 @@ public class ChestShop implements Listener {
 				try {
 					String price = line1.substring(0, line1.length());
 					Double.parseDouble(price);
-					scevent.setLine(0, ChatColor.GREEN + L.fC(price));
+					scevent.setLine(0, ChatColor.GREEN + L.fCS(price));
 				} catch (Exception e) {
 					try {
 						String price = line1.substring(0, line1.length() - 1);
 						Double.parseDouble(price);
-						scevent.setLine(0, ChatColor.GREEN + L.fC(price));
+						scevent.setLine(0, ChatColor.GREEN + L.fCS(price));
 					} catch (Exception e2) {
 						scevent.setLine(0, "");
 					}
@@ -391,7 +391,7 @@ public class ChestShop implements Listener {
 			boolean setprice = false;
 			double staticprice = 0.0;
 			String line1 = ChatColor.stripColor(s.getLine(0)).trim();
-			if (line1.startsWith(L.gC())) {
+			if (line1.startsWith(L.gC(false))) {
 				try {
 					String price = line1.substring(1, line1.length());
 					staticprice = calc.twoDecimals(Double.parseDouble(price));
@@ -399,7 +399,7 @@ public class ChestShop implements Listener {
 				} catch (Exception e) {
 					setprice = false;
 				}
-			} else if (line1.endsWith(L.gC())) {
+			} else if (line1.endsWith(L.gC(false))) {
 				try {
 					String price = line1.substring(0, line1.length() - 1);
 					staticprice = calc.twoDecimals(Double.parseDouble(price));

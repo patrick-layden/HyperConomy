@@ -166,23 +166,41 @@ public class LanguageFile {
 		return language;
 	}
 	
-	public String gC() {
+	public String gC(boolean fullName) {
 		String currency = get("CURRENCY");
 		if (currency == null) {currency = "$";}
-		if (currency.length() > 1) {currency = currency.substring(0, 1);}
+		if (!fullName && currency.length() > 1) {
+			currency = currency.trim();
+			currency = currency.substring(0, 1);
+		}
 		return currency;
 	}
-	public String fC(double amount) {
-		String formatted = gC() + amount;
+	
+	public String fC(String amount) {
+		String formatted = gC(true) + amount;
 		if (HyperConomy.hc.getYaml().getConfig().getBoolean("config.show-currency-symbol-after-price")) {
-			formatted = amount + gC();
+			formatted = amount + gC(true);
 		}
 		return formatted;
 	}
-	public String fC(String amount) {
-		String formatted = gC() + amount;
+	public String fC(double amount) {
+		String formatted = gC(true) + amount;
 		if (HyperConomy.hc.getYaml().getConfig().getBoolean("config.show-currency-symbol-after-price")) {
-			formatted = amount + gC();
+			formatted = amount + gC(true);
+		}
+		return formatted;
+	}
+	public String fCS(double amount) {
+		String formatted = gC(false) + amount;
+		if (HyperConomy.hc.getYaml().getConfig().getBoolean("config.show-currency-symbol-after-price")) {
+			formatted = amount + gC(false);
+		}
+		return formatted;
+	}
+	public String fCS(String amount) {
+		String formatted = gC(false) + amount;
+		if (HyperConomy.hc.getYaml().getConfig().getBoolean("config.show-currency-symbol-after-price")) {
+			formatted = amount + gC(false);
 		}
 		return formatted;
 	}
