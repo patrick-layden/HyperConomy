@@ -181,7 +181,7 @@ public class LanguageFile {
 	}
 	public String fC(String amount) {
 		String formatted = gC() + amount;
-		if (HyperConomy.hc.getConfig().getBoolean("config.show-currency-symbol-after-price")) {
+		if (HyperConomy.hc.getYaml().getConfig().getBoolean("config.show-currency-symbol-after-price")) {
 			formatted = amount + gC();
 		}
 		return formatted;
