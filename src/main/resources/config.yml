@@ -31,7 +31,7 @@ config:
   sell-remaining-if-less-than-requested-amount: true
   language: english
   log-errors: false
-  use-external-economy-plugin: true
+  use-external-economy-plugin: false
   use-shops: true
   allow-scrolling-transaction-signs: false
   block-selling-in-creative-mode: false
