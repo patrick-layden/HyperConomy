@@ -60,7 +60,6 @@ config:
     password: default
     host: localhost
     database: minecraft
-    max-sql-threads: 4
   web-page:
     port: 7777
     use-web-page: false
