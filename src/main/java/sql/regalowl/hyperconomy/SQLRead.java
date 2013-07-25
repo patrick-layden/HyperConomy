@@ -23,7 +23,7 @@ public class SQLRead {
 	SQLRead() {
 		hc = HyperConomy.hc;
 		if (hc.s().gB("sql-connection.use-mysql")) {
-			threadlimit = hc.getYaml().getConfig().getInt("config.sql-connection.max-sql-threads");
+			threadlimit = 3;
 		} else {
 			threadlimit = 1;
 		}

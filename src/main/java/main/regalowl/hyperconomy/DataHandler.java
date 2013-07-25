@@ -170,13 +170,13 @@ public class DataHandler implements Listener {
 			waitToLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 				public void run() {
 					SQLWrite sw = hc.getSQLWrite();
-					if (sw.getBuffer().size() == 0 && !sw.initialWrite()) {
+					if (sw.getBuffer().size() == 0) {
 						loadSQL();
 						waitForLoad();
 						waitToLoad.cancel();
 					}
 				}
-			}, 0L, 10L);
+			}, 0L, 5L);
 		}
 	}
 	

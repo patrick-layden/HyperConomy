@@ -3,11 +3,13 @@ package regalowl.hyperconomy;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.scheduler.BukkitTask;
 
 public class SQLiteConnection implements DatabaseConnection {
@@ -17,12 +19,10 @@ public class SQLiteConnection implements DatabaseConnection {
 	private HyperConomy hc;
 	private String sqlitePath;
 	private Connection connection;
-	private String statement;
-	private boolean logErrors;
-	private int sqlRetryCount;
-	
+	private CopyOnWriteArrayList<String> statements = new CopyOnWriteArrayList<String>();
 	private BukkitTask writeTask;
-	private BukkitTask retryWriteTask;
+	private String currentStatement;
+	private PreparedStatement preparedStatement;
 	
 	private boolean inUse;
 	
@@ -32,16 +32,80 @@ public class SQLiteConnection implements DatabaseConnection {
 		FileTools ft = new FileTools();
 		sqlitePath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "HyperConomy.db";
 		openConnection();
-		logErrors = hc.getYaml().getConfig().getBoolean("config.log-sqlwrite-errors");
-		sqlRetryCount = 0;
 		inUse = false;
 	}
 	
 	
-	public void write(String statement) {
+	public void write(List<String> sql) {
 		inUse = true;
-		this.statement = statement;
-		writeThread();
+		statements.clear();
+		for (String csql:sql) {
+			statements.add(csql);
+		}
+		writeTask = hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			public void run() {
+				try {
+					if (connection == null || connection.isClosed()) {
+						openConnection();
+					}
+					connection.setAutoCommit(false);
+					for (String statement:statements) {
+						currentStatement = statement;
+						preparedStatement = connection.prepareStatement(currentStatement);
+						preparedStatement.executeUpdate();
+					}
+					connection.commit();
+					statements.clear();
+					inUse = false;
+				} catch (SQLException e) {
+					try {
+						connection.rollback();
+						new HyperError(e, "SQL write failed.  The failing SQL statement is in the following brackets: [" + currentStatement + "]");
+					} catch (SQLException e1) {
+						new HyperError(e, "Rollback failed.  Cannot recover.");
+						return;
+					}
+					statements.remove(currentStatement);
+					hc.getSQLWrite().executeSQL(statements);
+					statements.clear();
+					inUse = false;
+				}
+			}
+		});
+	}
+	
+	public void syncWrite(List<String> sql) {
+		inUse = true;
+		statements.clear();
+		for (String csql:sql) {
+			statements.add(csql);
+		}
+		try {
+			if (connection == null || connection.isClosed()) {
+				openConnection();
+			}
+			connection.setAutoCommit(false);
+			for (String statement:statements) {
+				currentStatement = statement;
+				preparedStatement = connection.prepareStatement(currentStatement);
+				preparedStatement.executeUpdate();
+			}
+			connection.commit();
+			statements.clear();
+			inUse = false;
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+				new HyperError(e, "SQL write failed.  The failing SQL statement is in the following brackets: [" + currentStatement + "]");
+			} catch (SQLException e1) {
+				new HyperError(e, "Rollback failed.  Cannot recover.");
+				return;
+			}
+			statements.remove(currentStatement);
+			hc.getSQLWrite().executeSQL(statements);
+			statements.clear();
+			inUse = false;
+		}
 	}
 	
 	
@@ -99,64 +163,25 @@ public class SQLiteConnection implements DatabaseConnection {
 			}
 		}
 	}
-	
-	
-	
 
-
-	private void writeThread() {
-		writeTask = hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
-			public void run() {
-				try {
-					if (connection == null || connection.isClosed()) {
-						openConnection();
-					}
-					Statement state = connection.createStatement();
-					state.execute(statement);
-					state.close();
-					statement = null;
-					inUse = false;
-				} catch (SQLException e) {
-					sqlRetryCount++;
-					if (sqlRetryCount == 0) {
-						scheduleRetry(20L);
-					} else if (sqlRetryCount == 1) {
-						scheduleRetry(60L);
-					} else {
-						if (logErrors) {
-							new HyperError(e, "3 attempts have been made to write to the database.  The failing SQL statement is in the following brackets: [" + statement + "]");
-						}
-						sqlRetryCount = 0;
-						statement = null;
-						inUse = false;
-					}
-				}
-			}
-		});
-	}
-
-	private void scheduleRetry(long wait) {
-		retryWriteTask = hc.getServer().getScheduler().runTaskLaterAsynchronously(hc, new Runnable() {
-			public void run() {
-				writeThread();
-			}
-		}, wait);
-	}
-	
-
-	public String closeConnection() {
-		inUse = true;
+	public List<String> closeConnection() {
 		if (writeTask != null) {
 			writeTask.cancel();
-		}
-		if (retryWriteTask != null) {
-			retryWriteTask.cancel();
+			if (inUse) {
+				try {
+					connection.rollback();
+				} catch (SQLException e) {
+					new HyperError(e);
+				}
+			}
 		}
 		try {
 			connection.close();
-		} catch (SQLException e) {
+		} catch (SQLException e) {}
+		if (!inUse) {
+			statements.clear();
 		}
-		return statement;
+		return statements;
 	}
 	
 	public boolean inUse() {

@@ -149,10 +149,6 @@ public class Update {
 	    	if (t52 == null) {
 	    		yaml.getConfig().set("config.web-page.font", "verdana");
 	    	}
-	    	String t29 = yaml.getConfig().getString("config.sql-connection.max-sql-threads");
-	    	if (t29 == null) {
-	    		yaml.getConfig().set("config.sql-connection.max-sql-threads", 4);
-	    	}
 	    	String t31 = yaml.getConfig().getString("config.run-automatic-backups");
 	    	if (t31 == null) {
 	    		yaml.getConfig().set("config.run-automatic-backups", true);
@@ -180,10 +176,6 @@ public class Update {
 	    	String t38 = yaml.getConfig().getString("config.log-errors");
 	    	if (t38 == null) {
 	    		yaml.getConfig().set("config.log-errors", false);
-	    	}
-	    	String t39 = yaml.getConfig().getString("config.log-sqlwrite-errors");
-	    	if (t39 == null) {
-	    		yaml.getConfig().set("config.log-sqlwrite-errors", false);
 	    	}
 	    	String t41 = yaml.getConfig().getString("config.use-external-economy-plugin");
 	    	if (t41 == null) {
@@ -235,9 +227,8 @@ public class Update {
 	    	if (dversion < .952) {
 	    		yaml.getConfig().set("config.log-errors", false);
 	    	}
-	    	if (dversion < .957) {
-	    		yaml.getConfig().set("config.sql-connection.max-sql-threads", 5);
-	    	}
+	    	yaml.getConfig().set("config.sql-connection.max-sql-threads", null);
+	    	yaml.getConfig().set("config.log-sqlwrite-errors", null);
 		}
 		Double newversion = Double.parseDouble(hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion());
 		yaml.getConfig().set("version", newversion);
