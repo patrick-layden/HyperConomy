@@ -16,7 +16,7 @@ config:
   use-notifications: true
   use-info-signs: true
   use-transaction-signs: true
-  store-price-history: false
+  store-price-history: true
   use-chest-shops: true
   use-item-displays: true
   use-shop-permissions: false
