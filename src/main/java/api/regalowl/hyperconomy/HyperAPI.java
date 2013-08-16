@@ -117,6 +117,17 @@ public class HyperAPI implements GeneralAPI {
 		}
 	}
 
+	public String getPlayerShop(Player player) {
+		HyperConomy hc = HyperConomy.hc;
+		ShopFactory sf = hc.getShopFactory();
+		ServerShop shop = sf.getShop(player);
+		if (null == shop){
+			return "";
+		} else {
+			return shop.getName();
+		}
+	}
+
 	public boolean checkHash(String player, String SHA256Hash) {
 		HyperConomy hc = HyperConomy.hc;
 		DataHandler dh = hc.getDataFunctions();
