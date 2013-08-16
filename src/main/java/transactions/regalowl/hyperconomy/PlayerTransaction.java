@@ -17,7 +17,7 @@ public class PlayerTransaction {
 	private ItemStack giveItem;
 	
 	
-	PlayerTransaction(TransactionType type) {
+	public PlayerTransaction(TransactionType type) {
 		transactionType = type;
 	}
 	

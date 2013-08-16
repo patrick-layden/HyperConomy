@@ -152,7 +152,12 @@ public class TransactionSign implements Listener {
 
 			Block b = null;
 			if (!ievent.hasBlock()) {
-				b = ievent.getPlayer().getTargetBlock(null, 5);
+				try {
+					b = ievent.getPlayer().getTargetBlock(null, 5);
+				} catch (Exception e) {
+					//silence bukkit IllegalStateException: start block missed in iterator
+					return;
+				}
 			} else {
 				b = ievent.getClickedBlock();
 			}
