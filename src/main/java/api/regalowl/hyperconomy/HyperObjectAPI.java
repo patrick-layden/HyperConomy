@@ -381,6 +381,15 @@ public class HyperObjectAPI implements ObjectAPI {
 		pt.setAmount(amount);
 		return hp.processTransaction(pt);
 	}
+	
+	public TransactionResponse sell(Player p, HyperObject o, int amount ) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperPlayer hp = hc.getDataFunctions().getHyperPlayer(p);
+		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+		pt.setHyperObject(o);
+		pt.setAmount(amount);
+		return hp.processTransaction(pt);
+	}
 
 	public TransactionResponse sellAll(Player p) {
 		HyperConomy hc = HyperConomy.hc;
