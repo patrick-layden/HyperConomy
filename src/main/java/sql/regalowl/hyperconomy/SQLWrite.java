@@ -4,14 +4,16 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.bukkit.scheduler.BukkitTask;
 
 public class SQLWrite {
 
 	private HyperConomy hc;
 	private ConcurrentHashMap<Integer, String> buffer = new ConcurrentHashMap<Integer, String>();
-	ArrayList<String> writeStatements = new ArrayList<String>();
+	CopyOnWriteArrayList<String> writeStatements = new CopyOnWriteArrayList<String>();
 	private BukkitTask writeTask;
 	private boolean writeActive;
 	private AtomicInteger bufferCounter = new AtomicInteger();
@@ -54,7 +56,7 @@ public class SQLWrite {
 					buffer.remove(processNext.getAndIncrement());
 				}
 				if (writeStatements.size() > 0) {
-					db.write(writeStatements);
+					db.aSyncWrite(getWriteStatements());
 				}
 				writeStatements.clear();
 				if (buffer.size() == 0) {
@@ -63,6 +65,14 @@ public class SQLWrite {
 				}
 			}
 		}, 0L, 1L);
+	}
+	
+	private CopyOnWriteArrayList<String> getWriteStatements() {
+		CopyOnWriteArrayList<String> write = new CopyOnWriteArrayList<String>();
+		for(String statement:writeStatements) {
+			write.add(statement);
+		}
+		return write;
 	}
 
 	private void cancelWrite() {
@@ -133,7 +143,7 @@ public class SQLWrite {
 			for (String s:buffer.values()) {
 				writeStatements.add(s);
 			}
-			db.syncWrite(writeStatements);
+			db.syncWrite(getWriteStatements());
 			buffer.clear();
 			writeStatements.clear();
 		}
