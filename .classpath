@@ -16,7 +16,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="src/main/java/plugin"/>
 	<classpathentry kind="src" path="src/main/java/signs"/>
 	<classpathentry kind="src" path="src/main/java/logging"/>
 	<classpathentry kind="src" path="src/main/java/utils"/>
@@ -33,6 +32,8 @@
 	<classpathentry kind="src" path="src/main/java/transactions"/>
 	<classpathentry kind="src" path="src/main/java/accounts"/>
 	<classpathentry kind="src" path="src/main/java/hyperobjects"/>
+	<classpathentry kind="src" path="src/main/java/main"/>
+	<classpathentry kind="src" path="src/main/java/plugin"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

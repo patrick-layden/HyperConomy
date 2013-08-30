@@ -11,9 +11,9 @@
 			<id>bukkit-repo</id>
 			<url>http://repo.bukkit.org/content/groups/public</url>
 		</repository>
-		<repository>
-			<id>vault-repo</id>
-			<url>http://ci.herocraftonline.com/plugin/repository/everything</url>
+    	<repository>
+			<id>regalowl-repo</id>
+			<url>http://www.regalowl.net:8080/archiva/repository/snapshots/</url>
 		</repository>
 	</repositories>
 	<scm>
@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
-			<version>1.2.25-SNAPSHOT</version>
+			<version>1.2.26</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
