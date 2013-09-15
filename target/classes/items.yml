@@ -678,23 +678,6 @@ goldblock:
   initiation:
     initiation: true
     startprice: 2400.0
-ironblock:
-  information:
-    type: item
-    category: unknown
-    material: IRON_BLOCK
-    id: 42
-    data: 0
-  value: 288.0
-  price:
-    static: false
-    staticprice: 576.0
-  stock:
-    stock: 0.0
-    median: 2000.0
-  initiation:
-    initiation: true
-    startprice: 576.0
 stoneslab:
   information:
     type: item
@@ -831,23 +814,6 @@ tnt:
   initiation:
     initiation: true
     startprice: 550.0
-bookshelf:
-  information:
-    type: item
-    category: unknown
-    material: BOOKSHELF
-    id: 47
-    data: 0
-  value: 55.0
-  price:
-    static: false
-    staticprice: 110.0
-  stock:
-    stock: 0.0
-    median: 1000.0
-  initiation:
-    initiation: true
-    startprice: 110.0
 mossstone:
   information:
     type: item
@@ -3551,40 +3517,6 @@ sugarcane:
   initiation:
     initiation: true
     startprice: 10.0
-paper:
-  information:
-    type: item
-    category: unknown
-    material: PAPER
-    id: 339
-    data: 0
-  value: 5.0
-  price:
-    static: false
-    staticprice: 10.0
-  stock:
-    stock: 0.0
-    median: 10000.0
-  initiation:
-    initiation: true
-    startprice: 10.0
-book:
-  information:
-    type: item
-    category: unknown
-    material: BOOK
-    id: 340
-    data: 0
-  value: 15.0
-  price:
-    static: false
-    staticprice: 30.0
-  stock:
-    stock: 0.0
-    median: 10000.0
-  initiation:
-    initiation: true
-    startprice: 30.0
 slimeball:
   information:
     type: item
@@ -7135,23 +7067,6 @@ cobblestone:
   stock:
     stock: 0.0
     median: 25000.0
-  initiation:
-    initiation: true
-    startprice: 2.0
-oakwood:
-  information:
-    type: item
-    category: unknown
-    material: WOOD
-    id: 5
-    data: 0
-  value: 1.0
-  price:
-    static: false
-    staticprice: 2.0
-  stock:
-    stock: 0.0
-    median: 10000.0
   initiation:
     initiation: true
     startprice: 2.0

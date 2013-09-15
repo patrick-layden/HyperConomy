@@ -28,6 +28,7 @@ public class YamlFile {
     FileConfiguration signs;
     FileConfiguration categories;
     FileConfiguration displays;
+    FileConfiguration composites;
     File configFile;
     File itemsFile;      
     File enchantsFile;  
@@ -35,6 +36,7 @@ public class YamlFile {
     File signsFile;
     File categoryFile;
     File displaysFile;
+    File compositesFile;
     
     private boolean brokenfile;
     
@@ -62,6 +64,7 @@ public class YamlFile {
         signsFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "signs.yml");
         categoryFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "categories.yml");
         displaysFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "displays.yml");
+        compositesFile = new File(Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder(), "composites.yml");
         
         try {
             firstRun();
@@ -77,6 +80,7 @@ public class YamlFile {
         signs = new YamlConfiguration();
         categories = new YamlConfiguration();
         displays = new YamlConfiguration();
+        composites = new YamlConfiguration();
         loadYamls();
 		
 	}
@@ -115,6 +119,10 @@ public class YamlFile {
         if(!displaysFile.exists()){
             displaysFile.getParentFile().mkdirs();
             copy(this.getClass().getResourceAsStream("/displays.yml"), displaysFile);
+        }
+        if(!compositesFile.exists()){
+        	compositesFile.getParentFile().mkdirs();
+            copy(this.getClass().getResourceAsStream("/composites.yml"), compositesFile);
         }
     }
 
@@ -209,6 +217,15 @@ public class YamlFile {
 			Bukkit.broadcast(ChatColor.DARK_RED + "Bad displays.yml file.", "hyperconomy.error");
 			failcount++;
         }
+        try {
+        	composites.load(compositesFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+	    	Logger log = Logger.getLogger("Minecraft");
+	    	log.info("Bad composites.yml file.");
+			Bukkit.broadcast(ChatColor.DARK_RED + "Bad composites.yml file.", "hyperconomy.error");
+			failcount++;
+        }
         if (failcount != 0) {
         	brokenfile = true;
         	hc.log().info(hc.getLanguageFile().get("BAD_YMLFILE_DETECTED"));
@@ -239,6 +256,7 @@ public class YamlFile {
                 signs.save(signsFile);
                 categories.save(categoryFile);
                 displays.save(displaysFile);
+                composites.save(compositesFile);
         	}
         } catch (IOException e) {
             e.printStackTrace();
@@ -317,6 +335,15 @@ public class YamlFile {
 	 */
 	public FileConfiguration getDisplays(){
 		return displays;
+	}
+	
+	/**
+	 * 
+	 * This gets the composites FileConfiguration.
+	 * 
+	 */
+	public FileConfiguration getComposites(){
+		return composites;
 	}
 	
 

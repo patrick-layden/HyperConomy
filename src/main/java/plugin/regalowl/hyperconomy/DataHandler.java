@@ -2,7 +2,9 @@ package regalowl.hyperconomy;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -185,17 +187,34 @@ public class DataHandler implements Listener {
 		waitForLoad = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 			public void run() {
 				if (objectsLoaded) {
+					loadComposites();
 					hc.onDataLoad();
-					waitForLoad.cancel();
 					for (Player p : Bukkit.getOnlinePlayers()) {
 						if (!hasAccount(p.getName())) {
 							addPlayer(p.getName());
 						}
 					}
 					loadActive = false;
+					waitForLoad.cancel();
 				}
 			}
 		}, 3L, 3L);
+	}
+	
+	private void loadComposites() {
+		for (int tier=0; tier<10; tier++) {
+			Iterator<String> it = hc.getYaml().getComposites().getKeys(false).iterator();
+			while (it.hasNext()) {
+				String name = it.next().toString();
+				int ttier = hc.getYaml().getComposites().getInt(name + ".tier");
+				if (tier == ttier) {
+					for (String economy:getEconomyList()) {
+						HyperObject hobj = new CompositeObject(name, economy);
+						hyperObjects.put(hobj.getName() + ":" + hobj.getEconomy(), hobj);
+					}
+				}
+			}
+		}
 	}
 
 	private void loadSQL() {
@@ -205,7 +224,7 @@ public class DataHandler implements Listener {
 			public void run() {
 				QueryResult result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_objects");
 				while (result.next()) {
-					HyperObject hobj = new HyperObject(result.getString("NAME"), result.getString("ECONOMY"), 
+					HyperObject hobj = new ComponentObject(result.getString("NAME"), result.getString("ECONOMY"), 
 							result.getString("TYPE"), result.getString("CATEGORY"), result.getString("MATERIAL"), 
 							result.getInt("ID"), result.getInt("DATA"), result.getInt("DURABILITY"), result.getDouble("VALUE"), 
 							result.getString("STATIC"), result.getDouble("STATICPRICE"), result.getDouble("STOCK"),

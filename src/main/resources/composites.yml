@@ -1,0 +1,45 @@
+ironblock:
+  information:
+    type: item
+    category: unknown
+    material: IRON_BLOCK
+    id: 42
+    data: 0
+  components: ironingot,9;
+  tier: 1
+paper:
+  information:
+    type: item
+    category: unknown
+    material: PAPER
+    id: 339
+    data: 0
+  components: sugarcane,1;
+  tier: 1
+book:
+  information:
+    type: item
+    category: unknown
+    material: BOOK
+    id: 340
+    data: 0
+  components: leather,1;paper,3;
+  tier: 2
+oakwood:
+  information:
+    type: item
+    category: unknown
+    material: WOOD
+    id: 5
+    data: 0
+  components: oaklog,1/4;
+  tier: 1
+bookshelf:
+  information:
+    type: item
+    category: unknown
+    material: BOOKSHELF
+    id: 47
+    data: 0
+  components: oakwood,6;book,3;
+  tier: 3

@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import org.bukkit.command.CommandSender;
 
 public class Writeitems {
@@ -19,7 +20,7 @@ public class Writeitems {
     			if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("column")) {
 						ArrayList<String> inames = dh.getItemNames();
-						String output = sal.stringArrayToStringNL(inames);
+						String output = sal.implode(inames, "\n");
 						ft.writeStringToFile(output, path + File.separator + "items.txt");
 						sender.sendMessage(L.get("ITEM_NAMES_WRITTEN"));
 					} else if (args[0].equalsIgnoreCase("row")) {
@@ -31,7 +32,7 @@ public class Writeitems {
 				} else if (args.length == 2 && args[1].equalsIgnoreCase("e")) {
 					if (args[0].equalsIgnoreCase("column")) {
 						ArrayList<String> enames = dh.getEnchantNames();
-						String output = sal.stringArrayToStringNL(enames);
+						String output = sal.implode(enames, "\n");
 						ft.writeStringToFile(output, path + File.separator + "enchants.txt");
 						sender.sendMessage(L.get("ENCHANT_NAMES_WRITTEN"));
 					} else if (args[0].equalsIgnoreCase("row")) {

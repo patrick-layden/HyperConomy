@@ -34,16 +34,18 @@ public class Scalebypercent {
 						for (int c = 0; c < names.size(); c++) {
 							String cname = names.get(c);
 							HyperObject ho = sf.getHyperObject(cname, playerecon);
-							if (type.equalsIgnoreCase("value")) {
-								ho.setValue(calc.twoDecimals(ho.getValue() * percent));
-							} else if (type.equalsIgnoreCase("staticprice")) {
-								ho.setStaticprice(calc.twoDecimals(ho.getStaticprice() * percent));
-							} else if (type.equalsIgnoreCase("stock")) {
-								ho.setStock(Math.floor(ho.getStock() * percent + .5));
-							} else if (type.equalsIgnoreCase("median")) {
-								ho.setMedian(calc.twoDecimals(ho.getMedian() * percent));
-							} else if (type.equalsIgnoreCase("startprice")) {
-								ho.setStartprice(calc.twoDecimals(ho.getStartprice() * percent));
+							if (ho instanceof ComponentObject) {
+								if (type.equalsIgnoreCase("value")) {
+									ho.setValue(calc.twoDecimals(ho.getValue() * percent));
+								} else if (type.equalsIgnoreCase("staticprice")) {
+									ho.setStaticprice(calc.twoDecimals(ho.getStaticprice() * percent));
+								} else if (type.equalsIgnoreCase("stock")) {
+									ho.setStock(Math.floor(ho.getStock() * percent + .5));
+								} else if (type.equalsIgnoreCase("median")) {
+									ho.setMedian(calc.twoDecimals(ho.getMedian() * percent));
+								} else if (type.equalsIgnoreCase("startprice")) {
+									ho.setStartprice(calc.twoDecimals(ho.getStartprice() * percent));
+								}
 							}
 						}
 						sender.sendMessage(L.get("ADJUSTMENT_SUCCESSFUL"));

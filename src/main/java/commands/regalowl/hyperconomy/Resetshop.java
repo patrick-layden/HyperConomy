@@ -22,9 +22,11 @@ public class Resetshop {
 				for (int c = 0; c < names.size(); c++) {
 					String cname = names.get(c);
 					HyperObject ho = sf.getHyperObject(cname, playerecon);
-					ho.setStock(0);
-					ho.setIsstatic("false");
-					ho.setInitiation("true");
+					if (ho instanceof ComponentObject) {
+						ho.setStock(0);
+						ho.setIsstatic("false");
+						ho.setInitiation("true");
+					}
 				}
 				sender.sendMessage(L.get("RESETSHOP_SUCCESS"));
 				isign.updateSigns();
