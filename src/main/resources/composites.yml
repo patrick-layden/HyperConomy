@@ -6,7 +6,6 @@ ironblock:
     id: 42
     data: 0
   components: ironingot,9;
-  tier: 1
 paper:
   information:
     type: item
@@ -15,7 +14,6 @@ paper:
     id: 339
     data: 0
   components: sugarcane,1;
-  tier: 1
 book:
   information:
     type: item
@@ -24,7 +22,6 @@ book:
     id: 340
     data: 0
   components: leather,1;paper,3;
-  tier: 2
 oakwood:
   information:
     type: item
@@ -33,7 +30,6 @@ oakwood:
     id: 5
     data: 0
   components: oaklog,1/4;
-  tier: 1
 bookshelf:
   information:
     type: item
@@ -42,4 +38,35 @@ bookshelf:
     id: 47
     data: 0
   components: oakwood,6;book,3;
-  tier: 3
+lapisblock:
+  information:
+    type: item
+    category: unknown
+    material: LAPIS_BLOCK
+    id: 22
+    data: 0
+  components: lapislazuli,9;
+stick:
+  information:
+    type: item
+    category: unknown
+    material: STICK
+    id: 280
+    data: 0
+  components: oakwood,1/2;
+bow:
+  information:
+    type: item
+    category: unknown
+    material: BOW
+    id: 261
+    data: 0
+  components: string,3;stick,3;
+dispenser:
+  information:
+    type: item
+    category: unknown
+    material: DISPENSER
+    id: 23
+    data: 0
+  components: cobblestone,7;redstone,1;bow,1;

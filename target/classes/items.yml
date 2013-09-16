@@ -83,40 +83,6 @@ lapisore:
   initiation:
     initiation: true
     startprice: 500.0
-lapisblock:
-  information:
-    type: item
-    category: unknown
-    material: LAPIS_BLOCK
-    id: 22
-    data: 0
-  value: 250.0
-  price:
-    static: false
-    staticprice: 500.0
-  stock:
-    stock: 0.0
-    median: 1000.0
-  initiation:
-    initiation: true
-    startprice: 500.0
-dispenser:
-  information:
-    type: item
-    category: unknown
-    material: DISPENSER
-    id: 23
-    data: 0
-  value: 20.0
-  price:
-    static: false
-    staticprice: 40.0
-  stock:
-    stock: 0.0
-    median: 100.0
-  initiation:
-    initiation: true
-    startprice: 40.0
 sandstone:
   information:
     type: item
@@ -2174,23 +2140,6 @@ apple:
   initiation:
     initiation: true
     startprice: 300.0
-bow:
-  information:
-    type: item
-    category: unknown
-    material: BOW
-    id: 261
-    data: 0
-  value: 5.0
-  price:
-    static: false
-    staticprice: 10.0
-  stock:
-    stock: 0.0
-    median: 5000.0
-  initiation:
-    initiation: true
-    startprice: 10.0
 arrow:
   information:
     type: item
@@ -2514,23 +2463,6 @@ diamondaxe:
   initiation:
     initiation: true
     startprice: 12200.0
-stick:
-  information:
-    type: item
-    category: unknown
-    material: STICK
-    id: 280
-    data: 0
-  value: 1.0
-  price:
-    static: false
-    staticprice: 1.0
-  stock:
-    stock: 0.0
-    median: 10000.0
-  initiation:
-    initiation: true
-    startprice: 1.0
 bowl:
   information:
     type: item
