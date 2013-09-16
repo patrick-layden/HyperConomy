@@ -70,3 +70,35 @@ dispenser:
     id: 23
     data: 0
   components: cobblestone,7;redstone,1;bow,1;
+noteblock:
+  information:
+    type: item
+    category: unknown
+    material: NOTE_BLOCK
+    id: 25
+    data: 0
+  components: oakwood,8;redstone,1;
+piston:
+  information:
+    type: item
+    category: unknown
+    material: PISTON_BASE
+    id: 33
+    data: 0
+  components: cobblestone,4;redstone,1;ironingot,1;oakwood,3;
+stickypiston:
+  information:
+    type: item
+    category: unknown
+    material: PISTON_STICKY_BASE
+    id: 29
+    data: 0
+  components: piston,1;slimeball,1;
+fence:
+  information:
+    type: item
+    category: unknown
+    material: FENCE
+    id: 85
+    data: 0
+  components: stick,3;

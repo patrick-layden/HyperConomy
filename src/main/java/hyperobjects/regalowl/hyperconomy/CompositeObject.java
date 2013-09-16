@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -95,7 +94,7 @@ public class CompositeObject implements HyperObject {
 		    Double qty = entry.getValue();
 		    value += (ho.getValue() * qty);
 		}
-		return twoDecimals(value);
+		return value;
 	}
 	public String getIsstatic() {
 		String isstatic = "true";
@@ -114,14 +113,14 @@ public class CompositeObject implements HyperObject {
 		    Double qty = entry.getValue();
 		    staticprice += (ho.getStaticprice() * qty);
 		}
-		return twoDecimals(staticprice);
+		return staticprice;
 	}
 	public double getStock() {
 		double stock = 999999999;
 		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
 		    HyperObject ho = entry.getKey();
 		    Double qty = entry.getValue();
-		    double cs = twoDecimals((ho.getStock() / qty));
+		    double cs = (ho.getStock() / qty);
 		    if (cs < stock) {
 		    	stock = cs;
 		    }
@@ -168,7 +167,7 @@ public class CompositeObject implements HyperObject {
 		    Double qty = entry.getValue();
 		    startprice += (ho.getStartprice() * qty);
 		}
-		return twoDecimals(startprice);
+		return startprice;
 	}
 	public double getCeiling() {
 		double ceiling = 9999999999999.99;
@@ -182,7 +181,7 @@ public class CompositeObject implements HyperObject {
 		if (ceiling <= 0) {
 			return 9999999999999.99;
 		}
-		return twoDecimals(ceiling);
+		return ceiling;
 	}
 	public double getFloor() {
 		double floor = 0;
@@ -196,7 +195,7 @@ public class CompositeObject implements HyperObject {
 		if (floor < 0) {
 			return 0.0;
 		}
-		return twoDecimals(floor);
+		return floor;
 	}
 	public double getMaxstock() {
 		double maxstock = 999999999;
@@ -207,7 +206,7 @@ public class CompositeObject implements HyperObject {
 		    	maxstock = cm;
 		    }
 		}
-		return twoDecimals(maxstock);
+		return maxstock;
 	}
 	
 
@@ -313,7 +312,7 @@ public class CompositeObject implements HyperObject {
 		    Double qty = entry.getValue();
 		    cost += (ho.getCost(amount) * qty);
 		}
-		return twoDecimals(cost);
+		return cost;
 	}
 	public double getCost(EnchantmentClass enchantClass) {
 		double cost = 0;
@@ -322,7 +321,7 @@ public class CompositeObject implements HyperObject {
 		    Double qty = entry.getValue();
 		    cost += (ho.getCost(enchantClass) * qty);
 		}
-		return twoDecimals(cost);
+		return cost;
 	}
 	
 	public double getValue(int amount) {
@@ -332,7 +331,7 @@ public class CompositeObject implements HyperObject {
 		    Double qty = entry.getValue();
 		    value += (ho.getValue(amount) * qty);
 		}
-		return twoDecimals(value);
+		return value;
 	}
 	public double getValue(int amount, HyperPlayer hp) {
 		double value = 0;
@@ -341,7 +340,7 @@ public class CompositeObject implements HyperObject {
 		    Double qty = entry.getValue();
 		    value += (ho.getValue(amount, hp) * qty);
 		}
-		return twoDecimals(value);
+		return value;
 	}
 	
 	public double getValue(EnchantmentClass enchantClass) {
@@ -351,7 +350,7 @@ public class CompositeObject implements HyperObject {
 		    Double qty = entry.getValue();
 		    value += (ho.getValue(enchantClass) * qty);
 		}
-		return twoDecimals(value);
+		return value;
 	}
 	
 	public double getValue(EnchantmentClass enchantClass, HyperPlayer hp) {
@@ -361,7 +360,7 @@ public class CompositeObject implements HyperObject {
 		    Double qty = entry.getValue();
 		    value += (ho.getValue(enchantClass, hp) * qty);
 		}
-		return twoDecimals(value);
+		return value;
 	}
 	
 
@@ -402,98 +401,12 @@ public class CompositeObject implements HyperObject {
 		return false;
 	}
 	
+	
 	private double twoDecimals(double input) {
 		int nodecimals = (int) Math.ceil((input * 100) - .5);
 		double twodecimals = (double) nodecimals / 100.0;
 		return twodecimals;
 	}
-	
-	/*
-ironblock:
-  information:
-    type: item
-    category: unknown
-    material: IRON_BLOCK
-    id: 42
-    data: 0
-  value: 288.0
-  price:
-    static: false
-    staticprice: 576.0
-  stock:
-    stock: 0.0
-    median: 2000.0
-  initiation:
-    initiation: true
-    startprice: 576.0
-book:
-  information:
-    type: item
-    category: unknown
-    material: BOOK
-    id: 340
-    data: 0
-  value: 15.0
-  price:
-    static: false
-    staticprice: 30.0
-  stock:
-    stock: 0.0
-    median: 10000.0
-  initiation:
-    initiation: true
-    startprice: 30.0
-paper:
-  information:
-    type: item
-    category: unknown
-    material: PAPER
-    id: 339
-    data: 0
-  value: 5.0
-  price:
-    static: false
-    staticprice: 10.0
-  stock:
-    stock: 0.0
-    median: 10000.0
-  initiation:
-    initiation: true
-    startprice: 10.0
-oakwood:
-  information:
-    type: item
-    category: unknown
-    material: WOOD
-    id: 5
-    data: 0
-  value: 1.0
-  price:
-    static: false
-    staticprice: 2.0
-  stock:
-    stock: 0.0
-    median: 10000.0
-  initiation:
-    initiation: true
-    startprice: 2.0
-bookshelf:
-  information:
-    type: item
-    category: unknown
-    material: BOOKSHELF
-    id: 47
-    data: 0
-  value: 55.0
-  price:
-    static: false
-    staticprice: 110.0
-  stock:
-    stock: 0.0
-    median: 1000.0
-  initiation:
-    initiation: true
-    startprice: 110.0
-	 */
+	 
 	
 }

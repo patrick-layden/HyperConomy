@@ -134,23 +134,6 @@ smoothsandstone:
   initiation:
     initiation: true
     startprice: 44.0
-noteblock:
-  information:
-    type: item
-    category: unknown
-    material: NOTE_BLOCK
-    id: 25
-    data: 0
-  value: 15.0
-  price:
-    static: false
-    staticprice: 30.0
-  stock:
-    stock: 0.0
-    median: 100.0
-  initiation:
-    initiation: true
-    startprice: 30.0
 poweredrail:
   information:
     type: item
@@ -185,23 +168,6 @@ detectorrail:
   initiation:
     initiation: true
     startprice: 80.0
-stickypiston:
-  information:
-    type: item
-    category: unknown
-    material: PISTON_STICKY_BASE
-    id: 29
-    data: 0
-  value: 100.0
-  price:
-    static: false
-    staticprice: 200.0
-  stock:
-    stock: 0.0
-    median: 4000.0
-  initiation:
-    initiation: true
-    startprice: 200.0
 web:
   information:
     type: item
@@ -270,23 +236,6 @@ deadbush:
   initiation:
     initiation: true
     startprice: 2.0
-piston:
-  information:
-    type: item
-    category: unknown
-    material: PISTON_BASE
-    id: 33
-    data: 0
-  value: 50.0
-  price:
-    static: false
-    staticprice: 100.0
-  stock:
-    stock: 0.0
-    median: 1000.0
-  initiation:
-    initiation: true
-    startprice: 100.0
 wool:
   information:
     type: item
@@ -1205,23 +1154,6 @@ jukebox:
   initiation:
     initiation: true
     startprice: 4100.0
-fence:
-  information:
-    type: item
-    category: unknown
-    material: FENCE
-    id: 85
-    data: 0
-  value: 2.0
-  price:
-    static: false
-    staticprice: 4.0
-  stock:
-    stock: 0.0
-    median: 10000.0
-  initiation:
-    initiation: true
-    startprice: 4.0
 pumpkin:
   information:
     type: item

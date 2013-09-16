@@ -204,52 +204,15 @@ public class DataHandler implements Listener {
 		}, 3L, 3L);
 	}
 	
-	/*
-	HashMap<String,String> tempComponents = sal.explodeMap(composites.getString(this.name + ".components"));
-	for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
-	    String oname = entry.getKey();
-	    String amountString = entry.getValue();
-	    double amount = 0.0;
-	    if (amountString.contains("/")) {
-			int top = Integer.parseInt(amountString.substring(0, amountString.indexOf("/")));
-			int bottom = Integer.parseInt(amountString.substring(amountString.indexOf("/") + 1, amountString.length()));
-			amount = ((double)top/(double)bottom);
-	    } else {
-	    	int number = Integer.parseInt(amountString);
-	    	amount = (double)number;
-	    }
-	    HyperObject ho = hc.getDataFunctions().getHyperObject(oname, economy);
-	    this.components.put(ho, amount);
-	}
-	
-	
-	private void loadComposites() {
-		for (int tier=0; tier<10; tier++) {
-			Iterator<String> it = hc.getYaml().getComposites().getKeys(false).iterator();
-			while (it.hasNext()) {
-				String name = it.next().toString();
-				int ttier = hc.getYaml().getComposites().getInt(name + ".tier");
-				if (tier == ttier) {
-					for (String economy:getEconomyList()) {
-						HyperObject hobj = new CompositeObject(name, economy);
-						hyperObjects.put(hobj.getName() + ":" + hobj.getEconomy(), hobj);
-					}
-				}
-			}
-		}
-	}
-	 */
 	
 	private void loadComposites() {
 		boolean loaded = false;
-		int passcount = 0;
 		FileConfiguration composites = hc.getYaml().getComposites();
 		while (!loaded) {
 			loaded = true;
 			Iterator<String> it = composites.getKeys(false).iterator();
 			while (it.hasNext()) {
 				String name = it.next().toString();
-
 				for (String economy:getEconomyList()) {
 					if (!componentsLoaded(name, economy)) {
 						loaded = false;
@@ -259,11 +222,8 @@ public class DataHandler implements Listener {
 					hyperObjects.put(ho.getName() + ":" + ho.getEconomy(), ho);
 				}
 			}
-			passcount++;
-			hc.getLogger().severe("Composite Load Pass: " + passcount);
 		}
 	}
-	
 	private boolean componentsLoaded(String name, String economy) {
 		HashMap<String,String> tempComponents = hc.getSerializeArrayList().explodeMap(hc.getYaml().getComposites().getString(name + ".components"));
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
