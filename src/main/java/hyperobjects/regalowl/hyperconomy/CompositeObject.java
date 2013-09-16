@@ -3,7 +3,6 @@ package regalowl.hyperconomy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -116,7 +115,7 @@ public class CompositeObject implements HyperObject {
 		return staticprice;
 	}
 	public double getStock() {
-		double stock = 999999999;
+		double stock = 999999999.99;
 		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
 		    HyperObject ho = entry.getKey();
 		    Double qty = entry.getValue();
@@ -128,19 +127,6 @@ public class CompositeObject implements HyperObject {
 		return stock;
 	}
 	public double getMedian() {
-		/*
-		double median = 0;
-		int totalQty = 0;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
-		    Double qty = entry.getValue();
-		    totalQty += qty;
-		    median += (ho.getMedian() * qty);
-		    Bukkit.broadcastMessage("getMedian:Name[" + ho.getName() + "]Qty[" + qty + "]Median[" + ho.getMedian() + "]");
-		}
-		median /= totalQty;
-		return twoDecimals(median);
-		*/
 		double median = 999999999;
 		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
 		    HyperObject ho = entry.getKey();
@@ -257,7 +243,8 @@ public class CompositeObject implements HyperObject {
 		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
 		    HyperObject ho = entry.getKey();
 		    Double qty = entry.getValue();
-		    ho.setStock(ho.getStock() + (difference * qty));
+		    double newStock = ho.getStock() + (difference * qty);
+		    ho.setStock(newStock);
 		}
 	}
 	public void setMedian(double median) {

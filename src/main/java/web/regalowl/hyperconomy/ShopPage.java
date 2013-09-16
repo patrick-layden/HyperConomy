@@ -193,7 +193,7 @@ public class ShopPage extends HttpServlet {
 					page += hc.getLanguageFile().fC(calc.twoDecimals(((bcost * (tax / 100)) + bcost))) + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
-					page += ho.getStock() + "\n";
+					page += calc.twoDecimals(ho.getStock()) + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
 					page += ho.getId() + "\n";

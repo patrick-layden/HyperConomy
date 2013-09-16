@@ -206,7 +206,7 @@ public class InfoSign {
 					break;
 				case STOCK:
 					line3 = ChatColor.WHITE + "Stock:";
-					line4 = ChatColor.GREEN + "" + ho.getStock();
+					line4 = ChatColor.GREEN + "" + calc.twoDecimals(ho.getStock());
 					break;
 				case VALUE:
 					line3 = ChatColor.WHITE + "Value:";

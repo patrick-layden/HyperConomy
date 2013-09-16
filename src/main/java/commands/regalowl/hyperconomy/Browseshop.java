@@ -108,11 +108,11 @@ public class Browseshop {
 							cost = ho.getCost(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = calc.twoDecimals(cost + taxpaid);
-							stock = sf.getHyperObject(iname, playerecon).getStock();
+							stock = calc.twoDecimals(sf.getHyperObject(iname, playerecon).getStock());
 						} else if (sf.enchantTest(iname)) {
 							cost = ho.getCost(EnchantmentClass.DIAMOND);
 							cost = cost + ho.getPurchaseTax(cost);
-							stock = sf.getHyperObject(iname, playerecon).getStock();
+							stock = calc.twoDecimals(sf.getHyperObject(iname, playerecon).getStock());
 						}
 						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + L.get("AVAILABLE") + ": \u00A7a" + L.fC(cost) + " \u00A79" + L.get("EACH") + ".]");
 					} else {

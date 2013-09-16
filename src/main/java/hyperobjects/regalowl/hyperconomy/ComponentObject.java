@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+
 public class ComponentObject implements HyperObject {
 	private HyperConomy hc;
 	private HyperObjectValue hov;
@@ -179,8 +180,6 @@ public class ComponentObject implements HyperObject {
 		this.staticprice = staticprice;
 	}
 	public void setStock(double stock) {
-		Calculation calc = hc.getCalculation();
-		stock = calc.round(stock, 2);
 		String statement = "UPDATE hyperconomy_objects SET STOCK='" + stock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().executeSQL(statement);
 		this.stock = stock;
