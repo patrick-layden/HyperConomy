@@ -61,23 +61,14 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * 
 	 */
 	public int getMaxInitial();
-
-	
 	public double getCost(int amount);
 	public double getCost(EnchantmentClass enchantClass);
-	
 	public double getValue(int amount);
 	public double getValue(int amount, HyperPlayer hp);
-	
 	public double getValue(EnchantmentClass enchantClass);
-	
 	public double getValue(EnchantmentClass enchantClass, HyperPlayer hp);
-	
-
 	public double getPurchaseTax(double cost);
-	
 	public double getSalesTaxEstimate(double value);
-	
 	public boolean isDurable();
 
 }

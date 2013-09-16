@@ -181,7 +181,7 @@ spotionofregen2:
     material: POTION
     id: 373
     data: 16417
-  components: glowstone,1;gunpowder,1;potionofregen,1;
+  components: glowstonedust,1;gunpowder,1;potionofregen,1;
 spotionofregen2ext:
   information:
     type: item
@@ -189,4 +189,4 @@ spotionofregen2ext:
     material: POTION
     id: 373
     data: 16481
-  components: glowstone,1;gunpowder,1;redstone,1;potionofregen,1;
+  components: glowstonedust,1;gunpowder,1;redstone,1;potionofregen,1;
