@@ -102,3 +102,91 @@ fence:
     id: 85
     data: 0
   components: stick,3;
+glassbottle:
+  information:
+    type: item
+    category: unknown
+    material: GLASS_BOTTLE
+    id: 374
+    data: 0
+  components: glass,1;
+waterbottle:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 0
+  components: glassbottle,1;
+awkwardpotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16
+  components: netherwarts,1;waterbottle,1;
+potionofregen:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 1
+  components: awkwardpotion,1;ghasttear,1;
+potionofregen2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 33
+  components: glowstonedust,1;potionofregen,1;
+potionofregenext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 65
+  components: redstone,1;potionofregen,1;
+potionofregen2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 97
+  components: redstone,1;glowstonedust,1;potionofregen,1;
+spotionofregen:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16385
+  components: gunpowder,1;potionofregen,1;
+spotionofregenext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16449
+  components: redstone,1;gunpowder,1;potionofregen,1;
+spotionofregen2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16417
+  components: glowstone,1;gunpowder,1;potionofregen,1;
+spotionofregen2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16481
+  components: glowstone,1;gunpowder,1;redstone,1;potionofregen,1;
