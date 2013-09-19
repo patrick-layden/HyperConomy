@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 
 public class Audit {
 	
-	private Account acc;
 	private String account;
 	private CommandSender sender;
 	private LanguageFile L;
@@ -13,22 +12,23 @@ public class Audit {
 	private double cbalance;
 	private double logbalance;
 	private double auditbalance;
+	private DataHandler dh;
 	
 	Audit(String args[], CommandSender csender) {
 		sender = csender;
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		acc = hc.getAccount();
+		dh = hc.getDataFunctions();
 		try {
 			account = args[0];
-			if (!acc.checkAccount(account)) {
+			if (!dh.hasAccount(account)) {
 				sender.sendMessage(L.get("ACCOUNT_NOT_FOUND"));
 				return;
 			}
 
 			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 	    		public void run() {
-	    			cbalance = acc.getBalance(account);
+	    			cbalance = hc.getDataFunctions().getHyperPlayer(account).getBalance();
 	    			logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
 	    			auditbalance = getAuditLogTotal(account);
 	    			hc.getServer().getScheduler().runTask(hc, new Runnable() {

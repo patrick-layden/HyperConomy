@@ -9,7 +9,6 @@ public class Evalue {
 	Evalue(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		Account acc = hc.getAccount();
 		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		ShopFactory s = hc.getShopFactory();
@@ -97,7 +96,7 @@ public class Evalue {
 							double salestax = 0;
 							if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
 								double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
-								double cbal = acc.getBalance(player.getName());
+								double cbal = sf.getHyperPlayer(player.getName()).getBalance();
 								if (cbal >= moneycap) {
 									salestax = value * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent") / 100);
 								} else {

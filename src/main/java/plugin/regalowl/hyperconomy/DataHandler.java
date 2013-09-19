@@ -3,6 +3,10 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -131,8 +135,6 @@ public class DataHandler implements Listener {
 			return addPlayer(player);
 		}
 	}
-	
-	
 	public HyperPlayer getHyperPlayer(Player player) {
 		String name = player.getName();
 		if (hyperPlayers.containsKey(name) && hyperPlayers.get(name) != null) {
@@ -144,6 +146,7 @@ public class DataHandler implements Listener {
 			return addPlayer(name);
 		}
 	}
+	
 	
 	public ArrayList<HyperPlayer> getHyperPlayers() {
 		ArrayList<HyperPlayer> hps = new ArrayList<HyperPlayer>();
@@ -258,9 +261,21 @@ public class DataHandler implements Listener {
 
 
 	public boolean hasAccount(String name) {
-		return hyperPlayers.containsKey(fixpN(name));
+		if (hc.s().gB("use-external-economy-plugin")) {
+			Economy economy = hc.getEconomy();
+			if (economy.hasAccount(name)) {
+				if (!hyperPlayers.containsKey(fixpN(name))) {
+					addPlayer(name);
+				}
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return hyperPlayers.containsKey(fixpN(name));
+		}
 	}
-
+	
 
 
 	public boolean createPlayerAccount(String player) {
@@ -439,6 +454,38 @@ public class DataHandler implements Listener {
 			}
 		}
 		return null;
+	}
+	
+	public void createGlobalShopAccount(){		
+		HyperConomy hc = HyperConomy.hc;
+		Economy economy = hc.getEconomy();
+		LanguageFile L = hc.getLanguageFile();
+		Log l = hc.getLog();
+		boolean useExternalEconomy = hc.s().gB("use-external-economy-plugin");
+		String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+		DataHandler df = hc.getDataFunctions();
+		if (useExternalEconomy) {
+			if (economy != null) {
+				if (!economy.hasAccount(globalaccount)) {
+					hc.getDataFunctions().getHyperPlayer(globalaccount).setBalance(hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
+					l.writeAuditLog(globalaccount, "initialization", hc.getYaml().getConfig().getDouble("config.initialshopbalance"), economy.getName());
+				}
+			} else {
+				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
+		    	Logger log = Logger.getLogger("Minecraft");
+		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+			}
+		} else {
+			if (!df.hasAccount(globalaccount)) {
+				df.createPlayerAccount(globalaccount);
+				df.getHyperPlayer(globalaccount).setBalance(hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
+				l.writeAuditLog(globalaccount, "initialization", hc.getYaml().getConfig().getDouble("config.initialshopbalance"), "HyperConomy");
+			}
+		}
+	}
+	
+	public HyperPlayer getGlobalShopAccount() {
+		return getHyperPlayer(hc.getYaml().getConfig().getString("config.global-shop-account"));
 	}
 	
 }

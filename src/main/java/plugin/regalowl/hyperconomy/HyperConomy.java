@@ -20,7 +20,6 @@ public class HyperConomy extends JavaPlugin {
 	private Calculation calc;
 	private Log l;
 	private ShopFactory s;
-	private Account acc;
 	private InfoSignHandler isign;
 	private _Command commandhandler;
 	private History hist;
@@ -61,7 +60,7 @@ public class HyperConomy extends JavaPlugin {
 			log.warning(L.get("VAULT_NOT_FOUND"));
 			s().sB("use-external-economy-plugin", false);
 		}
-		acc.checkshopAccount();
+		df.createGlobalShopAccount();
 		hist = new History();
 		itdi = new ItemDisplayFactory();
 		if (wh == null) {
@@ -121,7 +120,6 @@ public class HyperConomy extends JavaPlugin {
 		l = new Log(this);
 		im = new InventoryManipulation();
 		calc = new Calculation();
-		acc = new Account();
 		commandhandler = new _Command();
 		not = new Notification();
 		isign = new InfoSignHandler();
@@ -290,10 +288,6 @@ public class HyperConomy extends JavaPlugin {
 
 	public Notification getNotify() {
 		return not;
-	}
-
-	public Account getAccount() {
-		return acc;
 	}
 
 	public InfoSignHandler getInfoSignHandler() {

@@ -6,15 +6,15 @@ public class Hcpay {
 	Hcpay(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		Account acc = hc.getAccount();
+		DataHandler dh = hc.getDataFunctions();
 		try {
 			if (args.length == 2) {
 				String recipient = args[0];
 				Double amount = Double.parseDouble(args[1]);
-				if (acc.checkAccount(recipient)) {
-					if (acc.checkFunds(amount, player)) {
-						acc.withdraw(amount, player);
-						acc.depositAccount(amount, recipient);
+				if (dh.hasAccount(recipient)) {
+					if (hc.getDataFunctions().getHyperPlayer(player.getName()).hasBalance(amount)) {
+						hc.getDataFunctions().getHyperPlayer(player.getName()).withdraw(amount);
+						hc.getDataFunctions().getHyperPlayer(recipient).deposit(amount);
 						player.sendMessage(L.f(L.get("MONEY_PAYED"), amount, recipient));
 					} else {
 						player.sendMessage(L.get("INSUFFICIENT_FUNDS"));

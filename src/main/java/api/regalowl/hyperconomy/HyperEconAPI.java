@@ -6,112 +6,98 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public boolean checkFunds(double money, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		if (!acc.checkAccount(player.getName())) {
+		if (!hc.getDataFunctions().hasAccount(player.getName())) {
 			return false;
 		}
-		return acc.checkFunds(money, player);
+		return hc.getDataFunctions().getHyperPlayer(player.getName()).hasBalance(money);
 	}
 	
 	public boolean checkFunds(double money, String name) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		if (!acc.checkAccount(name)) {
+		if (!hc.getDataFunctions().hasAccount(name)) {
 			return false;
 		}
-		return acc.checkFunds(money, name);
+		return hc.getDataFunctions().getHyperPlayer(name).hasBalance(money);
 	}
 
 	public void withdraw(double money, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		if (!acc.checkAccount(player.getName())) {
+		if (!hc.getDataFunctions().hasAccount(player.getName())) {
 			return;
 		}
-		acc.withdraw(money, player);
+		hc.getDataFunctions().getHyperPlayer(player.getName()).withdraw(money);
 	}
 
 	public void withdrawAccount(double money, String name) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		if (!acc.checkAccount(name)) {
+		if (!hc.getDataFunctions().hasAccount(name)) {
 			return;
 		}
-		acc.withdrawAccount(money, name);
+		hc.getDataFunctions().getHyperPlayer(name).withdraw(money);
 	}
 
 	public void deposit(double money, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		if (!acc.checkAccount(player.getName())) {
+		if (!hc.getDataFunctions().hasAccount(player.getName())) {
 			return;
 		}
-		acc.deposit(money, player);
+		hc.getDataFunctions().getHyperPlayer(player.getName()).deposit(money);
 	}
 
 	public void depositAccount(double money, String name) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		if (!acc.checkAccount(name)) {
+		if (!hc.getDataFunctions().hasAccount(name)) {
 			return;
 		}
-		acc.depositAccount(money, name);
+		hc.getDataFunctions().getHyperPlayer(name).deposit(money);
 	}
 
 	public void withdrawShop(double money) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		if (acc.checkshopBalance(money)) {
-			acc.withdrawShop(money);
+		if (hc.getDataFunctions().getGlobalShopAccount().hasBalance(money)) {
+			hc.getDataFunctions().getGlobalShopAccount().withdraw(money);
 		}
 	}
 
 	public void depositShop(double money) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.depositShop(money);
+		hc.getDataFunctions().getGlobalShopAccount().deposit(money);
 	}
 
 	public void setBalance(double balance, String name) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		if (!acc.checkAccount(name)) {
+		if (!hc.getDataFunctions().hasAccount(name)) {
 			return;
 		}
-		acc.setBalance(balance, name);
+		hc.getDataFunctions().getHyperPlayer(name).setBalance(balance);
 	}
 
 	public boolean checkAccount(String name) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		return acc.checkAccount(name);
+		return hc.getDataFunctions().hasAccount(name);
 	}
 
 	public boolean checkshopBalance(double money) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		return acc.checkshopBalance(money);
+		return hc.getDataFunctions().getGlobalShopAccount().hasBalance(money);
 	}
 
 	public void checkshopAccount() {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		acc.checkshopAccount();
+		hc.getDataFunctions().createGlobalShopAccount();
 	}
 
 	public double getBalance(String account) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		if (!acc.checkAccount(account)) {
+		if (!hc.getDataFunctions().hasAccount(account)) {
 			return 0.0;
 		}
-		return acc.getBalance(account);
+		return hc.getDataFunctions().getHyperPlayer(account).getBalance();
 	}
 
 	public boolean createAccount(String account) {
 		HyperConomy hc = HyperConomy.hc;
-		Account acc = hc.getAccount();
-		return acc.createAccount(account);
+		return hc.getDataFunctions().createPlayerAccount(account);
 	}
 	
 	public String formatMoney(double money) {

@@ -28,7 +28,6 @@ public class ChestShop implements Listener {
 
 	private HyperConomy hc;
 	private Calculation calc;
-	private Account acc;
 	private ShopFactory s;
 	private LanguageFile L;
 	private DataHandler dh;
@@ -43,7 +42,6 @@ public class ChestShop implements Listener {
 		im = hc.getInventoryManipulation();
 		dh = hc.getDataFunctions();
 		calc = hc.getCalculation();
-		acc = hc.getAccount();
 		s = hc.getShopFactory();
 		L = hc.getLanguageFile();
 
@@ -454,8 +452,8 @@ public class ChestShop implements Listener {
 						if (itemamount > 0) {
 							int space = im.getAvailableSpace(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 							if (space >= camount) {
-								if (acc.checkAccount(line34)) {
-									double bal = acc.getBalance(line34);
+								if (dh.hasAccount(line34)) {
+									double bal = dh.getHyperPlayer(line34).getBalance();
 									double cost = ho.getValue(camount);
 									if (setprice) {
 										cost = staticprice * camount;
@@ -606,8 +604,8 @@ public class ChestShop implements Listener {
 							if (itemamount > 0) {
 								int space = im.getAvailableSpace(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 								if (space >= 1) {
-									if (acc.checkAccount(line34)) {
-										double bal = acc.getBalance(line34);
+									if (dh.hasAccount(line34)) {
+										double bal = dh.getHyperPlayer(line34).getBalance();
 										double cost = ho.getValue(1);
 										if (setprice) {
 											cost = staticprice;

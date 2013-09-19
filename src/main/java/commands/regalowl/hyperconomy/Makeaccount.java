@@ -6,12 +6,12 @@ public class Makeaccount {
 	Makeaccount(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		Account acc = hc.getAccount();
+		DataHandler dh = hc.getDataFunctions();
 		try {
 			if (args.length == 1) {
 				String account = args[0];
-				if (!acc.checkAccount(account)) {
-					boolean success = acc.createAccount(account);
+				if (!dh.hasAccount(account)) {
+					boolean success = hc.getDataFunctions().createPlayerAccount(account);
 					if (success) {
 						sender.sendMessage(L.get("MAKEACCOUNT_SUCCESS"));
 					} else {
