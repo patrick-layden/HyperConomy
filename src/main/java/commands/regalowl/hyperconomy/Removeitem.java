@@ -16,7 +16,7 @@ public class Removeitem {
 				String shopname = s.fixShopName(args[1]);
 				if (dh.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
     				if (s.shopExists(shopname)) {
-    					ServerShop shop = s.getShop(shopname);
+    					Shop shop = s.getShop(shopname);
 	    				if (shop.has(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
 	    						ArrayList<String> remove = new ArrayList<String>();

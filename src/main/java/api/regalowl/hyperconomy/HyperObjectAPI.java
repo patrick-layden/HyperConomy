@@ -406,7 +406,7 @@ public class HyperObjectAPI implements ObjectAPI {
 		String economy = hp.getEconomy();
 		ArrayList<HyperObject> hyperObjects = dh.getHyperObjects(economy);
 		ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
-		ServerShop s = sf.getShop(p);
+		Shop s = sf.getShop(p);
 		if (s != null) {
 			for (HyperObject ho:hyperObjects) {
 				if (s.has(ho.getName())) {

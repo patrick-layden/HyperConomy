@@ -23,7 +23,7 @@ public class Removecategory {
 			if (args.length == 2) {
 				String shopname = s.fixShopName(args[1]);
 				if (s.shopExists(shopname)) {
-					ServerShop shop = s.getShop(shopname);
+					Shop shop = s.getShop(shopname);
 					shop.removeObjects(objects);
 					sender.sendMessage(L.f(L.get("REMOVED_FROM"), args[0], shopname.replace("_", " ")));
 				} else {

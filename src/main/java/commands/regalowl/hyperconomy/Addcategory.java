@@ -25,7 +25,7 @@ public class Addcategory {
 			if (args.length == 2) {
 				String shopname = s.fixShopName(args[1]);
 				if (s.shopExists(shopname)) {
-					ServerShop shop = s.getShop(shopname);
+					Shop shop = s.getShop(shopname);
 					shop.addObjects(objects);
 					sender.sendMessage(ChatColor.GOLD + args[0] + " " + L.get("ADDED_TO") + " " + shopname.replace("_", " "));
 				} else {

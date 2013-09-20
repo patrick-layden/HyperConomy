@@ -120,7 +120,7 @@ public class HyperAPI implements GeneralAPI {
 	public String getPlayerShop(Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		ShopFactory sf = hc.getShopFactory();
-		ServerShop shop = sf.getShop(player);
+		Shop shop = sf.getShop(player);
 		if (null == shop){
 			return "";
 		} else {

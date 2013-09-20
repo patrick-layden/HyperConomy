@@ -14,7 +14,7 @@ public class WebHandler {
 	private Server server;
 	private ServletContextHandler context;
 	private ArrayList<ShopPage> shopPages = new ArrayList<ShopPage>();
-	private ServerShop s;
+	private Shop s;
 
 	WebHandler() {
 		hc = HyperConomy.hc;
@@ -37,7 +37,7 @@ public class WebHandler {
 					// context.addServlet(new ServletHolder(new HyperWebAPI()),
 					// "/API/*");
 					context.addServlet(new ServletHolder(new MainPage()), "/");
-					for (ServerShop s : hc.getShopFactory().getShops()) {
+					for (Shop s : hc.getShopFactory().getShops()) {
 						ShopPage sp = new ShopPage(s);
 						shopPages.add(sp);
 						context.addServlet(new ServletHolder(sp), "/" + s.getName() + "/*");
@@ -86,7 +86,7 @@ public class WebHandler {
 		});
 	}
 	
-	public void addShop(ServerShop shop) {
+	public void addShop(Shop shop) {
 		if (!hc.s().useWebPage()) {
 			return;
 		}

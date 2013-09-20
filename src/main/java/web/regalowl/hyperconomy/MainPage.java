@@ -61,7 +61,7 @@ public class MainPage extends HttpServlet {
 		
 		String page = "";
 		if (!hc.fullLock() && hc.enabled()) {
-			ArrayList<ServerShop> shops = sf.getShops();
+			ArrayList<Shop> shops = sf.getShops();
 
 			Collections.sort(shops);
 
@@ -100,7 +100,7 @@ public class MainPage extends HttpServlet {
 
 			if (shops != null && shops.size() > 0) {
 
-				for (ServerShop s : shops) {
+				for (Shop s : shops) {
 					if (!hc.enabled()) {
 						return "";
 					}

@@ -20,7 +20,7 @@ public class ShopFactory {
 	
 
 	private ConcurrentHashMap<String, Boolean> shopStatus;
-	private ConcurrentHashMap<String, ServerShop> shops = new ConcurrentHashMap<String, ServerShop>();
+	private ConcurrentHashMap<String, Shop> shops = new ConcurrentHashMap<String, Shop>();
 	
 	private boolean useshopexitmessage;
 	
@@ -48,7 +48,7 @@ public class ShopFactory {
 		clearAll();
 		FileConfiguration sh = hc.getYaml().getShops();
 		if (!useShops) {
-			ServerShop shop = new ServerShop("GlobalShop", "default");
+			Shop shop = new Shop("GlobalShop", "default");
 			shop.setGlobal();
 			shops.put("GlobalShop", shop);
 		}
@@ -57,7 +57,7 @@ public class ShopFactory {
 			Object element = it.next();
 			String name = element.toString(); 
 			if (!name.equalsIgnoreCase("GlobalShop")) {
-				ServerShop shop = new ServerShop(name, sh.getString(name + ".economy"));
+				Shop shop = new Shop(name, sh.getString(name + ".economy"));
 				shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
 				shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
 				shop.setMessage1(sh.getString(name + ".shopmessage1"));
@@ -74,8 +74,8 @@ public class ShopFactory {
 	}
 	
 	
-	ServerShop getShop(Player player) {
-		for (ServerShop shop : shops.values()) {
+	Shop getShop(Player player) {
+		for (Shop shop : shops.values()) {
 			if (shop.inShop(player)) {
 				return shop;
 			}
@@ -84,7 +84,7 @@ public class ShopFactory {
 	}
 	
 	
-	public ServerShop getShop(String shop) {
+	public Shop getShop(String shop) {
 		if (shops.containsKey(shop)) {
 			return shops.get(shop);
 		} else {
@@ -94,7 +94,7 @@ public class ShopFactory {
 	
 	
 	public boolean inAnyShop(Player player) {
-		for (ServerShop shop : shops.values()) {
+		for (Shop shop : shops.values()) {
 			if (shop.inShop(player)) {
 				return true;
 			}
@@ -105,7 +105,7 @@ public class ShopFactory {
 	
 	public void shopThread() {
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			ServerShop currentShop = getShop(p);
+			Shop currentShop = getShop(p);
 			boolean inShop = false;
 			if (shopStatus.containsKey(p.getName())) {
 				inShop = shopStatus.get(p.getName());
@@ -143,7 +143,7 @@ public class ShopFactory {
 	}
 	
 	
-	public void addShop(ServerShop shop) {
+	public void addShop(Shop shop) {
 		shops.put(shop.getName(), shop);
 		hc.getWebHandler().addShop(shop);
 	}
@@ -155,7 +155,7 @@ public class ShopFactory {
 	
 	
 	public void renameShop(String name, String newName) {
-		ServerShop shop = shops.get(name);
+		Shop shop = shops.get(name);
 		shop.setName(newName);
 		shops.put(newName, shop);
 		shops.remove(name);
@@ -163,7 +163,7 @@ public class ShopFactory {
 	
 	public ArrayList<String> listShops() {
 		ArrayList<String> names = new ArrayList<String>();
-		for (ServerShop shop : shops.values()) {
+		for (Shop shop : shops.values()) {
 			names.add(shop.getName());
 		}
 		return names;
@@ -202,9 +202,9 @@ public class ShopFactory {
 		return nam;
 	}
 	
-	public ArrayList<ServerShop> getShops() {
-		ArrayList<ServerShop> shopList = new ArrayList<ServerShop>();
-		for (ServerShop shop:shops.values()) {
+	public ArrayList<Shop> getShops() {
+		ArrayList<Shop> shopList = new ArrayList<Shop>();
+		for (Shop shop:shops.values()) {
 			shopList.add(shop);
 		}
 		return shopList;

@@ -23,12 +23,12 @@ public class ShopPage extends HttpServlet {
 	private HyperConomy hc;
 	private Calculation calc;
 	private History hist;
-	private ServerShop s;
+	private Shop s;
 	private String page = "Loading...";
 	private String webFolder;
 	
 
-	public ShopPage(ServerShop shop) {
+	public ShopPage(Shop shop) {
 		hc = HyperConomy.hc;
 		calc = hc.getCalculation();
 		hist = hc.getHistory();
