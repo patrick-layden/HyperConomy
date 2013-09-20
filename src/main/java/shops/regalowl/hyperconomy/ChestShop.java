@@ -101,6 +101,53 @@ public class ChestShop implements Listener {
 		}
 	}
 	
+	public Sign getChestShopSign(Block b) {
+		try {
+			if (b == null) {return null;}
+			if (b.getState() instanceof Chest) {
+				Chest chest = (Chest) b.getState();
+				String world = chest.getBlock().getWorld().getName();
+				BlockState signblock = Bukkit.getWorld(world).getBlockAt(chest.getX(), chest.getY() + 1, chest.getZ()).getState();
+				if (signblock instanceof Sign) {
+					Sign s = (Sign) signblock;
+					String line2 = ChatColor.stripColor(s.getLine(1)).trim();
+					if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
+						return s;
+					}
+				}
+			} else  if (b.getType().equals(Material.WALL_SIGN)) {
+				Sign s = (Sign) b.getState();
+				String line2 = s.getLine(1).trim();
+				if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
+					BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
+					if (chestblock instanceof Chest) {
+						s.update();
+						return s;
+					}
+				}
+			} else {
+				for (BlockFace cface : faces) {
+					Block relative = b.getRelative(cface);
+					if (relative.getType().equals(Material.WALL_SIGN)) {
+						Sign s = (Sign) relative.getState();
+						String line2 = s.getLine(1).trim();
+						if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
+							org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
+							BlockFace attachedface = sign.getFacing();
+							if (relative.getRelative(attachedface.getOppositeFace()).equals(b)) {
+								return s;
+							}
+						}
+					}
+				}
+			}
+			return null;
+		} catch (Exception e) {
+			new HyperError(e);
+			return null;
+		}
+	}
+	
 	public boolean isChestShop(Block b, boolean includeSign) {
 		try {
 			if (b == null) {return false;}
@@ -179,6 +226,11 @@ public class ChestShop implements Listener {
 	public void onBlockBreakEvent(BlockBreakEvent bbevent) {
 		if (isChestShop(bbevent.getBlock(), true)) {
 			if (isChestShopSign(bbevent.getBlock()) && bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) {
+				return;
+			}
+			Sign s = getChestShopSign(bbevent.getBlock());
+			String line34 = ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim();
+			if (bbevent.getPlayer().getName().equalsIgnoreCase(line34) && bbevent.getPlayer().isSneaking()) {
 				return;
 			}
 			bbevent.setCancelled(true);
