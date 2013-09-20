@@ -26,7 +26,6 @@ public class TransactionProcessor {
 	//private boolean chargeTax;
 	private boolean setPrice;
 	private ItemStack giveItem;
-	private HyperPlayer globalAccount;
 	
 	
 	
@@ -36,7 +35,6 @@ public class TransactionProcessor {
 		L = hc.getLanguageFile();
 		this.hp = hp;
 		im = hc.getInventoryManipulation();
-		globalAccount = hc.getDataFunctions().getGlobalShopAccount();
 	}
 	
 	
@@ -132,7 +130,7 @@ public class TransactionProcessor {
 								hp.withdraw(price);
 								hc.getDataFunctions().getGlobalShopAccount().deposit(price);
 								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
-									globalAccount.setBalance(0);
+									hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
 								}
 								
 								response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, name, calc.twoDecimals(taxpaid)), price, hyperObject);
@@ -262,7 +260,7 @@ public class TransactionProcessor {
 			hp.deposit(price - salestax);
 			hc.getDataFunctions().getGlobalShopAccount().withdraw(price - salestax);
 			if (sunlimited) {
-				globalAccount.setBalance(0);
+				hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
 			}
 
 			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)), calc.twoDecimals(price - salestax), hyperObject);
@@ -384,7 +382,7 @@ public class TransactionProcessor {
 						hp.withdraw(price);
 						hc.getDataFunctions().getGlobalShopAccount().deposit(price);
 						if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
-							globalAccount.setBalance(0);
+							hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
 						}
 						response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), calc.twoDecimals(taxpaid)), calc.twoDecimals(price), hyperObject);
 						response.setSuccessful();
@@ -476,7 +474,7 @@ public class TransactionProcessor {
 							hp.deposit(price - salestax);
 							hc.getDataFunctions().getGlobalShopAccount().withdraw(price - salestax);
 							if (sunlimited) {
-								globalAccount.setBalance(0);
+								hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
 							}
 							response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), salestax), calc.twoDecimals(price), hyperObject);
 							response.setSuccessful();
@@ -654,7 +652,7 @@ public class TransactionProcessor {
 					hp.deposit(fprice - salestax);
 					hc.getDataFunctions().getGlobalShopAccount().withdraw(fprice - salestax);
 					if (sunlimited) {
-						globalAccount.setBalance(0);
+						hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
 					}
 					fprice = calc.twoDecimals(fprice);
 					response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, calc.twoDecimals(fprice), hyperObject.getName(), calc.twoDecimals(salestax)), calc.twoDecimals(fprice - salestax), hyperObject);
@@ -720,7 +718,7 @@ public class TransactionProcessor {
 								hp.withdraw(price);
 								hc.getDataFunctions().getGlobalShopAccount().deposit(price);
 								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
-									globalAccount.setBalance(0);
+									hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
 								}
 								int l = hyperObject.getName().length();
 								String lev = hyperObject.getName().substring(l - 1, l);
