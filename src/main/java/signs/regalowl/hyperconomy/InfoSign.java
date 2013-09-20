@@ -371,7 +371,6 @@ public class InfoSign {
 	
 	public Sign getSign() {
 		if (world == null) {
-			new HyperError("DEBUG: getSign failed: " + x + "," + y + "," + z + "," + world);
 			return null;
 		}
 		Location l = new Location(Bukkit.getWorld(world), x, y, z);
@@ -384,7 +383,6 @@ public class InfoSign {
 			Sign s = (Sign) signblock.getState();
 			return s;
 		} else {
-			new HyperError("DEBUG: getSign failed: " + x + "," + y + "," + z + "," + world);
 			dataOk = false;
 			return null;
 		}
