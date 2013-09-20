@@ -147,7 +147,7 @@ public class TransactionSign implements Listener {
 			if (p == null) {return;}
 			if (p.isSneaking() && p.hasPermission("hyperconomy.admin")) {return;}
 			LanguageFile L = hc.getLanguageFile();
-			ShopFactory shop = hc.getShopFactory();
+			HyperEconomy shop = hc.getShopFactory();
 			boolean requireShop = hc.getYaml().getConfig().getBoolean("config.require-transaction-signs-to-be-in-shop");
 
 			Block b = null;

@@ -6,7 +6,7 @@ public class Removeshop {
 	Removeshop(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		try {
 			if (args.length == 1) {
 				String name = s.fixShopName(args[0]);

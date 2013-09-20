@@ -9,7 +9,7 @@ public class Removecategory {
 
 	Removecategory(String args[], CommandSender sender) {
 		hc = HyperConomy.hc;
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		SerializeArrayList sal = new SerializeArrayList();
 		try {

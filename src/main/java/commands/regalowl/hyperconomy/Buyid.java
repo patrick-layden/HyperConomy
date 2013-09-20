@@ -6,7 +6,7 @@ public class Buyid {
 	Buyid(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		int amount;
 		int itd;
 		int da = 0;

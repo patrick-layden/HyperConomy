@@ -12,7 +12,7 @@ public class Value {
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		Player player = null;
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		DataHandler dh = hc.getDataFunctions();
 		try {
 			if (sender instanceof Player) {

@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 public class Listshops {
 	Listshops(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0) {

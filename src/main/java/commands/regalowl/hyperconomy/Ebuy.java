@@ -7,7 +7,7 @@ public class Ebuy {
 	Ebuy(Player player, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		DataHandler dh = hc.getDataFunctions();
 		try {
 			if (s.inAnyShop(player)) {

@@ -12,7 +12,7 @@ public class Hv {
 		DataHandler sf = hc.getDataFunctions();
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		DataHandler dh = hc.getDataFunctions();
 		int amount;

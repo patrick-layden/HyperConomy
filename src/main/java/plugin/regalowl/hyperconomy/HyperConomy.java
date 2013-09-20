@@ -19,7 +19,7 @@ public class HyperConomy extends JavaPlugin {
 	private HyperSettings hs;
 	private Calculation calc;
 	private Log l;
-	private ShopFactory s;
+	private HyperEconomy s;
 	private InfoSignHandler isign;
 	private _Command commandhandler;
 	private History hist;
@@ -116,7 +116,7 @@ public class HyperConomy extends JavaPlugin {
 			getPluginLoader().disablePlugin(this);
 			return;
 		}
-		s = new ShopFactory();
+		s = new HyperEconomy();
 		l = new Log(this);
 		im = new InventoryManipulation();
 		calc = new Calculation();
@@ -127,7 +127,7 @@ public class HyperConomy extends JavaPlugin {
 		if (!migrate) {
 			df.load();
 		}
-		s.startshopCheck();
+		s.startShopCheck();
 		hs.startSave();
 		cs = new ChestShop();
 		hyperAPI = new HyperAPI();
@@ -142,7 +142,7 @@ public class HyperConomy extends JavaPlugin {
 			itdi.unloadDisplays();
 		}
 		if (s != null) {
-			s.stopshopCheck();
+			s.stopShopCheck();
 			hs.stopSave();
 		}
 		if (hist != null) {
@@ -274,7 +274,7 @@ public class HyperConomy extends JavaPlugin {
 		return calc;
 	}
 
-	public ShopFactory getShopFactory() {
+	public HyperEconomy getShopFactory() {
 		return s;
 	}
 

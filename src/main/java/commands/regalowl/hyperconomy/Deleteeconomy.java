@@ -6,7 +6,7 @@ public class Deleteeconomy {
 	Deleteeconomy(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory sf = hc.getShopFactory();
+		HyperEconomy sf = hc.getShopFactory();
 		try {
 			if (args.length == 1) {
 				String economy = args[0];

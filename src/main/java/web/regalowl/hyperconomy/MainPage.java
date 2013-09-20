@@ -16,7 +16,7 @@ public class MainPage extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 699465359999143309L;
 	private HyperConomy hc;
-	private ShopFactory sf;
+	private HyperEconomy sf;
 	private String page = "Loading...";
 	//private String mainPage;
 	

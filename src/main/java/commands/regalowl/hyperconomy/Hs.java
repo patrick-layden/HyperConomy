@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 public class Hs {
 	Hs(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
 		InventoryManipulation im = hc.getInventoryManipulation();

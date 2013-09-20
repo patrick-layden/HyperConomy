@@ -10,7 +10,7 @@ public class Sell {
 		hc = HyperConomy.hc;
 		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
 			if (player.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {

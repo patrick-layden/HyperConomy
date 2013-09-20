@@ -11,7 +11,7 @@ public class Buy {
 		hc = HyperConomy.hc;
 		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		try {
 			if (s.inAnyShop(player)) {
 				HyperPlayer hp = sf.getHyperPlayer(player);

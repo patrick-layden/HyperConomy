@@ -296,7 +296,7 @@ public class TransactionProcessor {
 				return response;
 			}
 			response.setSuccessful();
-			ShopFactory s = hc.getShopFactory();
+			HyperEconomy s = hc.getShopFactory();
 			Inventory invent = null;
 			String playerecon = hp.getEconomy();
 			int id = 0;

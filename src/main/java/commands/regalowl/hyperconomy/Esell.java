@@ -9,7 +9,7 @@ public class Esell {
 	Esell(Player player, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		DataHandler dh = hc.getDataFunctions();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		try {

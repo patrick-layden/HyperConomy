@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class Topenchants {
 	Topenchants(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
 		try {

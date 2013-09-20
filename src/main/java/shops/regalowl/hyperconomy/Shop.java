@@ -1,6 +1,8 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -20,11 +22,15 @@ public class Shop implements Comparable<Shop>{
 	private int p2y;
 	private int p2z;
 	
+	private ArrayList<String> inShop = new ArrayList<String>();
+	private boolean useshopexitmessage;
+	
 	private HyperConomy hc;
 	private LanguageFile L;
 	private FileConfiguration shopFile;
 	
 	private boolean globalShop;
+	
 	
 	Shop(String name, String economy) {
 		this.name = name;
@@ -34,6 +40,7 @@ public class Shop implements Comparable<Shop>{
 		globalShop = false;
 		shopFile = hc.getYaml().getShops();
 		shopFile.set(name + ".economy", economy);
+		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
 	}
 	
 	public int compareTo(Shop s) {
@@ -281,6 +288,25 @@ public class Shop implements Comparable<Shop>{
 
 	public int getP2z() {
 		return p2z;
+	}
+	
+	public void updatePlayerStatus() {
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			if (inShop.contains(p.getName())) {
+				if (!inShop(p)) {
+					inShop.remove(p.getName());
+					if (useshopexitmessage) {
+						p.sendMessage(L.get("SHOP_EXIT_MESSAGE"));
+					}
+				}
+			} else {
+				if (inShop(p)) {
+					inShop.add(p.getName());
+					sendEntryMessage(p);
+					hc.getDataFunctions().getHyperPlayer(p).setEconomy(economy);
+				}
+			}
+		}
 	}
 	
 }

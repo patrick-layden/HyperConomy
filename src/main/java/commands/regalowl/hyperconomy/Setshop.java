@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 public class Setshop {
 	Setshop(String[] args, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		if (args.length >= 2) {
 			if (args[0].equalsIgnoreCase("p1")) {

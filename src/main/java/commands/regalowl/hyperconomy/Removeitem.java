@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class Removeitem {
 	Removeitem(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		DataHandler dh = hc.getDataFunctions();
 		try {

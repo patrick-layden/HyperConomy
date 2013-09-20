@@ -11,7 +11,7 @@ public class Evalue {
 		Calculation calc = hc.getCalculation();
 		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
 			HyperPlayer hp = sf.getHyperPlayer(player);

@@ -11,7 +11,7 @@ public class Hb {
 		hc = HyperConomy.hc;
 		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		double amount;
 		boolean ma = false;

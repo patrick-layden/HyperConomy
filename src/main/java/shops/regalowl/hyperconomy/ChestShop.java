@@ -28,7 +28,7 @@ public class ChestShop implements Listener {
 
 	private HyperConomy hc;
 	private Calculation calc;
-	private ShopFactory s;
+	private HyperEconomy s;
 	private LanguageFile L;
 	private DataHandler dh;
 	private InventoryManipulation im;

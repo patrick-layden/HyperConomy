@@ -401,7 +401,7 @@ public class HyperObjectAPI implements ObjectAPI {
 	public ArrayList<HyperObject> getAvailableObjects(Player p) {
 		HyperConomy hc = HyperConomy.hc;
 		DataHandler dh = hc.getDataFunctions();
-		ShopFactory sf = hc.getShopFactory();
+		HyperEconomy sf = hc.getShopFactory();
 		HyperPlayer hp = dh.getHyperPlayer(p);
 		String economy = hp.getEconomy();
 		ArrayList<HyperObject> hyperObjects = dh.getHyperObjects(economy);

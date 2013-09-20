@@ -6,7 +6,7 @@ public class Setshopeconomy {
 	Setshopeconomy(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		ShopFactory s = hc.getShopFactory();
+		HyperEconomy s = hc.getShopFactory();
 		try {
 			if (args.length == 2) {
 				String name = args[0];
