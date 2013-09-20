@@ -64,7 +64,7 @@ public class ChestShop implements Listener {
 		}
 
 	}
-
+	
 	public boolean isChestShopSign(Block b) {
 		try {
 			if (b == null) {return false;}
@@ -87,7 +87,7 @@ public class ChestShop implements Listener {
 						if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
 							org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
 							BlockFace attachedface = sign.getFacing();
-							if (attachedface == cface) {
+							if (relative.getRelative(attachedface.getOppositeFace()).equals(b)) {
 								return true;
 							}
 						}
@@ -101,7 +101,7 @@ public class ChestShop implements Listener {
 		}
 	}
 	
-	public boolean isChestShop(Block b) {
+	public boolean isChestShop(Block b, boolean includeSign) {
 		try {
 			if (b == null) {return false;}
 			if (b.getState() instanceof Chest) {
@@ -115,8 +115,10 @@ public class ChestShop implements Listener {
 						return true;
 					}
 				}
-			} else if (isChestShopSign(b)) {
-				return true;
+			} else {
+				if (includeSign && isChestShopSign(b)) {
+					return true;
+				}
 			}
 			return false;
 		} catch (Exception e) {
@@ -175,7 +177,7 @@ public class ChestShop implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreakEvent(BlockBreakEvent bbevent) {
-		if (isChestShop(bbevent.getBlock())) {
+		if (isChestShop(bbevent.getBlock(), true)) {
 			if (isChestShopSign(bbevent.getBlock()) && bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) {
 				return;
 			}
@@ -186,7 +188,7 @@ public class ChestShop implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityExplodeEvent(EntityExplodeEvent eeevent) {
 		for (Block b : eeevent.blockList()) {
-			if (isChestShop(b)) {
+			if (isChestShop(b, true)) {
 				eeevent.setCancelled(true);
 			}
 		}
@@ -195,7 +197,7 @@ public class ChestShop implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonExtendEvent(BlockPistonExtendEvent bpeevent) {
 		for (Block b : bpeevent.getBlocks()) {
-			if (isChestShop(b)) {
+			if (isChestShop(b, true)) {
 				bpeevent.setCancelled(true);
 			}
 		}
@@ -203,7 +205,7 @@ public class ChestShop implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonRetractEvent(BlockPistonRetractEvent bprevent) {
-		if (isChestShop(bprevent.getRetractLocation().getBlock())) {
+		if (isChestShop(bprevent.getRetractLocation().getBlock(), true)) {
 			bprevent.setCancelled(true);
 		}
 	}
@@ -211,11 +213,8 @@ public class ChestShop implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPlaceEvent(BlockPlaceEvent bpevent) {
 		Block block = bpevent.getBlock();
-		if (isChestShop(block)) {
-			bpevent.setCancelled(true);
-		}
 		for (BlockFace bf : allfaces) {
-			if (isChestShop(block.getRelative(bf))) {
+			if (isChestShop(block.getRelative(bf), false)) {
 				bpevent.setCancelled(true);
 			}
 		}

@@ -112,7 +112,7 @@ public class DisabledProtection implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreakEvent(BlockBreakEvent bbevent) {
-		if (cs.isChestShop(bbevent.getBlock())) {
+		if (cs.isChestShop(bbevent.getBlock(), true)) {
 			bbevent.setCancelled(true);
 		}
 	}
@@ -120,7 +120,7 @@ public class DisabledProtection implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityExplodeEvent(EntityExplodeEvent eeevent) {
 		for (Block b : eeevent.blockList()) {
-			if (cs.isChestShop(b)) {
+			if (cs.isChestShop(b, true)) {
 				eeevent.setCancelled(true);
 			}
 		}
@@ -129,7 +129,7 @@ public class DisabledProtection implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonExtendEvent(BlockPistonExtendEvent bpeevent) {
 		for (Block b : bpeevent.getBlocks()) {
-			if (cs.isChestShop(b)) {
+			if (cs.isChestShop(b, true)) {
 				bpeevent.setCancelled(true);
 			}
 		}
@@ -137,7 +137,7 @@ public class DisabledProtection implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonRetractEvent(BlockPistonRetractEvent bprevent) {
-		if (cs.isChestShop(bprevent.getRetractLocation().getBlock())) {
+		if (cs.isChestShop(bprevent.getRetractLocation().getBlock(), true)) {
 			bprevent.setCancelled(true);
 		}
 	}
@@ -146,12 +146,9 @@ public class DisabledProtection implements Listener {
 	public void onBlockPlaceEvent(BlockPlaceEvent bpevent) {
 		Block block = bpevent.getBlock();
 		for (BlockFace bf : allfaces) {
-			if (cs.isChestShop(block.getRelative(bf))) {
+			if (cs.isChestShop(block.getRelative(bf), false)) {
 				bpevent.setCancelled(true);
 			}
-		}
-		if (cs.isChestShop(block)) {
-			bpevent.setCancelled(true);
 		}
 	}
 
