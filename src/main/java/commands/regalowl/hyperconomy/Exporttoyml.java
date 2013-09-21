@@ -7,16 +7,16 @@ public class Exporttoyml {
 	Exporttoyml(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
+		EconomyManager em = hc.getEconomyManager();
 		try {
 			if (args.length == 1 || args.length == 2) {
 				String economy = args[0];
-				if (hc.getDataFunctions().testEconomy(economy)) {
+				if (em.testEconomy(economy)) {
 					if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
 						if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 							new Backup();
 						}
-						SQLEconomy sqe = hc.getSQLEconomy();
-						sqe.exportToYml(economy);
+						em.getEconomy(economy).exportToYml();
 						sender.sendMessage(L.get("ECONOMY_EXPORTED"));
 					} else {
 						sender.sendMessage(L.get("EXPORT_PROCEED"));

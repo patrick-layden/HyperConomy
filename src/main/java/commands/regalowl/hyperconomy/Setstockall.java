@@ -7,8 +7,8 @@ import org.bukkit.command.CommandSender;
 public class Setstockall {
 	Setstockall(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		ArrayList<String> names = hc.getDataFunctions().getNames();
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
+		ArrayList<String> names = he.getNames();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
@@ -25,7 +25,7 @@ public class Setstockall {
 		}
 		for (int i = 0; i < names.size(); i++) {
 			name = names.get(i);
-			sf.getHyperObject(name, playerecon).setStock(stock);
+			he.getHyperObject(name).setStock(stock);
 		}
 		isign.updateSigns();
 		sender.sendMessage(L.get("ALL_STOCKS_SET"));

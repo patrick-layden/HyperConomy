@@ -30,7 +30,7 @@ public class ChestShop implements Listener {
 	private Calculation calc;
 	private HyperEconomy s;
 	private LanguageFile L;
-	private DataHandler dh;
+	private EconomyManager em;
 	private InventoryManipulation im;
 
 	private ArrayList<BlockFace> faces = new ArrayList<BlockFace>();
@@ -40,9 +40,8 @@ public class ChestShop implements Listener {
 
 		hc = HyperConomy.hc;
 		im = hc.getInventoryManipulation();
-		dh = hc.getDataFunctions();
+		em = hc.getEconomyManager();
 		calc = hc.getCalculation();
-		s = hc.getShopFactory();
 		L = hc.getLanguageFile();
 
 		faces.add(BlockFace.EAST);
@@ -460,13 +459,14 @@ public class ChestShop implements Listener {
 			if (icevent.isShiftClick()) {
 
 				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
-				HyperPlayer hp = dh.getHyperPlayer(p);
+				HyperPlayer hp = em.getHyperPlayer(p.getName());
+				HyperEconomy he = em.getEconomy(hp.getEconomy());
 				if (im.hasenchants(icevent.getCurrentItem())) {
 					icevent.setCancelled(true);
 					return;
 				}
 
-				HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()), hp.getEconomy());
+				HyperObject ho = he.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()));
 				if (ho == null) {
 					icevent.setCancelled(true);
 					return;
@@ -478,7 +478,7 @@ public class ChestShop implements Listener {
 					if (buy) {
 						PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
 						pt.setHyperObject(ho);
-						pt.setTradePartner(dh.getHyperPlayer(line34));
+						pt.setTradePartner(em.getHyperPlayer(line34));
 						pt.setAmount(camount);
 						pt.setGiveInventory(icevent.getView().getTopInventory());
 						if (setprice) {
@@ -503,8 +503,8 @@ public class ChestShop implements Listener {
 						if (itemamount > 0) {
 							int space = im.getAvailableSpace(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 							if (space >= camount) {
-								if (dh.hasAccount(line34)) {
-									double bal = dh.getHyperPlayer(line34).getBalance();
+								if (em.hyperPlayerExists(line34)) {
+									double bal = em.getHyperPlayer(line34).getBalance();
 									double cost = ho.getValue(camount);
 									if (setprice) {
 										cost = staticprice * camount;
@@ -513,7 +513,7 @@ public class ChestShop implements Listener {
 									if (bal >= cost) {
 										PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
 										pt.setHyperObject(ho);
-										pt.setTradePartner(dh.getHyperPlayer(line34));
+										pt.setTradePartner(em.getHyperPlayer(line34));
 										pt.setAmount(camount);
 										pt.setReceiveInventory(icevent.getView().getTopInventory());
 										if (setprice) {
@@ -544,9 +544,10 @@ public class ChestShop implements Listener {
 
 			} else if (icevent.isLeftClick()) {
 				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
-				HyperPlayer hp = dh.getHyperPlayer(p);
+				HyperPlayer hp = em.getHyperPlayer(p.getName());
+				HyperEconomy he = em.getEconomy(hp.getEconomy());
 				if (!im.hasenchants(icevent.getCurrentItem())) {
-					HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()), hp.getEconomy());
+					HyperObject ho = he.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()));
 
 					if (slot < 27 && ho != null) {
 						String name = ho.getName();
@@ -589,9 +590,9 @@ public class ChestShop implements Listener {
 							double price = 0;
 							for (Enchantment enchantment : im.listEnchantments(icevent.getCurrentItem())) {
 								int lvl = im.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
-								String nam = dh.getEnchantNameWithoutLevel(enchantment.getName());
+								String nam = he.getEnchantNameWithoutLevel(enchantment.getName());
 								String fnam = nam + lvl;
-								HyperObject ho = dh.getHyperObject(fnam, hp.getEconomy());
+								HyperObject ho = he.getHyperObject(fnam);
 								price += ho.getValue(EnchantmentClass.fromString(p.getItemInHand().getType().name()), hp);
 								if (setprice) {
 									price = staticprice;
@@ -621,15 +622,16 @@ public class ChestShop implements Listener {
 				return;
 			} else if (icevent.isRightClick()) {
 				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
-				HyperPlayer hp = dh.getHyperPlayer(p);
+				HyperPlayer hp = em.getHyperPlayer(p.getName());
+				HyperEconomy he = em.getEconomy(hp.getEconomy());
 				if (!im.hasenchants(icevent.getCurrentItem())) {
-					HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()), hp.getEconomy());
+					HyperObject ho = he.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()));
 
 					if (slot < 27 && ho != null) {
 						if (buy) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
 							pt.setHyperObject(ho);
-							pt.setTradePartner(dh.getHyperPlayer(line34));
+							pt.setTradePartner(em.getHyperPlayer(line34));
 							pt.setAmount(1);
 							pt.setGiveInventory(icevent.getView().getTopInventory());
 							if (setprice) {
@@ -655,8 +657,8 @@ public class ChestShop implements Listener {
 							if (itemamount > 0) {
 								int space = im.getAvailableSpace(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 								if (space >= 1) {
-									if (dh.hasAccount(line34)) {
-										double bal = dh.getHyperPlayer(line34).getBalance();
+									if (em.hyperPlayerExists(line34)) {
+										double bal = em.getHyperPlayer(line34).getBalance();
 										double cost = ho.getValue(1);
 										if (setprice) {
 											cost = staticprice;
@@ -664,7 +666,7 @@ public class ChestShop implements Listener {
 										if (bal >= cost) {
 											PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
 											pt.setHyperObject(ho);
-											pt.setTradePartner(dh.getHyperPlayer(line34));
+											pt.setTradePartner(em.getHyperPlayer(line34));
 											pt.setAmount(1);
 											pt.setReceiveInventory(icevent.getView().getTopInventory());
 											if (setprice) {
@@ -693,12 +695,12 @@ public class ChestShop implements Listener {
 						if (buy) {
 							for (Enchantment enchantment : im.listEnchantments(icevent.getCurrentItem())) {
 								int lvl = im.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
-								String nam = dh.getEnchantNameWithoutLevel(enchantment.getName());
+								String nam = he.getEnchantNameWithoutLevel(enchantment.getName());
 								String fnam = nam + lvl;
-								HyperObject ho = dh.getHyperObject(fnam, hp.getEconomy());
+								HyperObject ho = he.getHyperObject(fnam);
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_ITEM);
 								pt.setHyperObject(ho);
-								pt.setTradePartner(dh.getHyperPlayer(line34));
+								pt.setTradePartner(em.getHyperPlayer(line34));
 								pt.setGiveItem(icevent.getCurrentItem());
 								if (setprice) {
 									pt.setMoney(staticprice);

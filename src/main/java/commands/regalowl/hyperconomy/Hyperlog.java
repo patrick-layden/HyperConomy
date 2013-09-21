@@ -2,6 +2,7 @@ package regalowl.hyperconomy;
 
 
 import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -16,7 +17,6 @@ public class Hyperlog {
 		sender = csender;
 		hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler df = hc.getDataFunctions();
 		try {
 			if (args.length % 2 != 0 || args.length == 0) {
 				sender.sendMessage(L.get("HYPERLOG_INVALID"));
@@ -51,7 +51,7 @@ public class Hyperlog {
 					if (hc.s().gB("sql-connection.use-mysql")) {
 						statement += " TIME > DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
 					} else {
-						statement += " TIME > date('now','" + df.formatSQLiteTime(quantity * -1) + " minute')";
+						statement += " TIME > date('now','" + formatSQLiteTime(quantity * -1) + " minute')";
 					}
 					
 				} else if (type.equalsIgnoreCase("before") || type.equalsIgnoreCase("b")) {
@@ -71,7 +71,7 @@ public class Hyperlog {
 					if (hc.s().gB("sql-connection.use-mysql")) {
 						statement += " TIME < DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
 					} else {
-						statement += " TIME < date('now','" + df.formatSQLiteTime(quantity * -1) + " minute')";
+						statement += " TIME < date('now','" + formatSQLiteTime(quantity * -1) + " minute')";
 					}
 				} else if (type.equalsIgnoreCase("action") || type.equalsIgnoreCase("a")) {
 					statement += " ACTION LIKE '%" + value + "%'";
@@ -167,6 +167,16 @@ public class Hyperlog {
 		}
 		result.close();
 		return entries;
+	}
+	
+	public String formatSQLiteTime(int time) {
+		if (time < 0) {
+			return "-" + Math.abs(time);
+		} else if (time > 0) {
+			return "+" + time;
+		} else {
+			return "0";
+		}
 	}
 
 }

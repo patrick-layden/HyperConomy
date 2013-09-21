@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 public class _Command {
 	private Player player;
 	private HyperConomy hc;
-	private DataHandler sf;
+	private EconomyManager em;
 	private String playerecon;
 	private String nonPlayerEconomy;
 
@@ -17,7 +17,7 @@ public class _Command {
 
 	public boolean handleCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		hc = HyperConomy.hc;
-		sf = hc.getDataFunctions();
+		em = hc.getEconomyManager();
 		player = null;
 		if (sender instanceof Player) {
 			player = (Player) sender;
@@ -25,7 +25,7 @@ public class _Command {
 			playerecon = nonPlayerEconomy;
 		}
 		if (player != null) {
-			playerecon = sf.getHyperPlayer(player).getEconomy();
+			playerecon = em.getHyperPlayer(player.getName()).getEconomy();
 		}
 		if (cmd.getName().equalsIgnoreCase("buy") && (player != null)) {
 			new Buy(args, player, playerecon);

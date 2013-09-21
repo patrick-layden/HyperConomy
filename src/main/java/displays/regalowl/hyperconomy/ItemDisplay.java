@@ -37,12 +37,12 @@ public class ItemDisplay {
 	ItemDisplay(String key, Location location, String name, String economy) {
 		this.hc = HyperConomy.hc;
 		this.location = location;
-		DataHandler dh = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 		this.x = this.location.getX();
 		this.y = this.location.getY();
 		this.z = this.location.getZ();
 		this.w = this.location.getWorld();
-		this.name = dh.fixName(name);
+		this.name = he.fixName(name);
 		this.economy = economy;
 		this.key = key;
 		setProtectedBlocks();
@@ -51,12 +51,12 @@ public class ItemDisplay {
 	ItemDisplay(Location location, String name, String economy) {
 		this.hc = HyperConomy.hc;
 		this.location = location;
-		DataHandler dh = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 		this.x = this.location.getX();
 		this.y = this.location.getY();
 		this.z = this.location.getZ();
 		this.w = this.location.getWorld();
-		this.name = dh.fixName(name);
+		this.name = he.fixName(name);
 		this.economy = economy;
 		storeDisplay();
 		setProtectedBlocks();
@@ -132,10 +132,10 @@ public class ItemDisplay {
 	}
 	
 	public Item makeDisplay() {
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 		Location l = new Location(w, x, y + 1, z);
-		ItemStack dropstack = new ItemStack(sf.getHyperObject(name, economy).getId());
-		dropstack.setDurability((short) sf.getHyperObject(name, economy).getDurability());
+		ItemStack dropstack = new ItemStack(he.getHyperObject(name).getId());
+		dropstack.setDurability((short) he.getHyperObject(name).getDurability());
 		this.item = w.dropItem(l, dropstack);
 		this.entityId = item.getEntityId();
 		item.setVelocity(new Vector(0, 0, 0));

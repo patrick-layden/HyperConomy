@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 public class Enchantsettings {
 	Enchantsettings(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			String nam = args[0];
@@ -19,7 +19,7 @@ public class Enchantsettings {
 				double med = 0;
 				boolean init = false;
 				double starprice = 0;
-				HyperObject ho = sf.getHyperObject(nam, playerecon);
+				HyperObject ho = em.getEconomy(playerecon).getHyperObject(nam);
 				val = ho.getValue();
 				stat = Boolean.parseBoolean(ho.getIsstatic());
 				statprice = ho.getStaticprice();

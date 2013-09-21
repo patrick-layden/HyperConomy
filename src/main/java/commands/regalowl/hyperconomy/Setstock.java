@@ -5,17 +5,17 @@ import org.bukkit.command.CommandSender;
 public class Setstock {
 	Setstock(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
 		String name = "";
 		try {
 			if (args.length == 2) {
-				name = sf.fixName(args[0]);
+				name = he.fixName(args[0]);
 				double stock = calc.round(Double.parseDouble(args[1]), 2);
-				if (sf.itemTest(name)) {
-					sf.getHyperObject(name, playerecon).setStock(stock);
+				if (he.itemTest(name)) {
+					he.getHyperObject(name).setStock(stock);
 					sender.sendMessage(L.f(L.get("STOCK_SET"), name));
 					isign.updateSigns();
 				} else {
@@ -26,8 +26,8 @@ public class Setstock {
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
 					double stock = calc.round(Double.parseDouble(args[1]), 2);
-					if (sf.enchantTest(name)) {
-						sf.getHyperObject(name, playerecon).setStock(stock);
+					if (he.enchantTest(name)) {
+						he.getHyperObject(name).setStock(stock);
 						sender.sendMessage(L.f(L.get("STOCK_SET"), name));
 						isign.updateSigns();
 					} else {

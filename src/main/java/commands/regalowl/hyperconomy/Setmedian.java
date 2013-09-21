@@ -5,16 +5,16 @@ import org.bukkit.command.CommandSender;
 public class Setmedian {
 	Setmedian(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
 			if (args.length == 2) {
-				name = sf.fixName(args[0]);
+				name = he.fixName(args[0]);
 				int median = Integer.parseInt(args[1]);
-				if (sf.itemTest(name)) {
-					sf.getHyperObject(name, playerecon).setMedian(median);
+				if (he.itemTest(name)) {
+					he.getHyperObject(name).setMedian(median);
 					sender.sendMessage(L.f(L.get("MEDIAN_SET"), name));
 					isign.updateSigns();
 				} else {
@@ -25,8 +25,8 @@ public class Setmedian {
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
 					int median = Integer.parseInt(args[1]);
-					if (sf.enchantTest(name)) {
-						sf.getHyperObject(name, playerecon).setMedian(median);
+					if (he.enchantTest(name)) {
+						he.getHyperObject(name).setMedian(median);
 						sender.sendMessage(L.f(L.get("MEDIAN_SET"), name));
 						isign.updateSigns();
 					} else {

@@ -58,18 +58,18 @@ public class InfoSignHandler implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChangeEvent(SignChangeEvent scevent) {
 		try {
-			DataHandler df = hc.getDataFunctions();
+			EconomyManager em = hc.getEconomyManager();
 			Player p = scevent.getPlayer();
 			if (p.hasPermission("hyperconomy.createsign")) {
 				String[] lines = scevent.getLines();
 				String economy = "default";
-				HyperPlayer hp = df.getHyperPlayer(p);
+				HyperPlayer hp = em.getHyperPlayer(p.getName());
 				economy = "default";
 				if (hp != null && hp.getEconomy() != null) {
 					economy = hp.getEconomy();
 				}
 				String objectName = lines[0].trim() + lines[1].trim();
-				objectName = df.fixName(objectName);
+				objectName = em.getEconomy(hp.getEconomy()).fixName(objectName);
 				int multiplier = 1;
 				try {
 					multiplier = Integer.parseInt(lines[3]);
@@ -80,10 +80,10 @@ public class InfoSignHandler implements Listener {
 				if (EnchantmentClass.fromString(lines[3]) != null) {
 					enchantClass = EnchantmentClass.fromString(lines[3]);
 				}
-				if (df.enchantTest(objectName) && enchantClass == EnchantmentClass.NONE) {
+				if (em.getEconomy(hp.getEconomy()).enchantTest(objectName) && enchantClass == EnchantmentClass.NONE) {
 					enchantClass = EnchantmentClass.DIAMOND;
 				}
-				if (df.objectTest(objectName)) {
+				if (em.getEconomy(hp.getEconomy()).objectTest(objectName)) {
 					SignType type = SignType.fromString(lines[2]);
 					if (type != null) {
 						String signKey = scevent.getBlock().getWorld().getName() + "|" + scevent.getBlock().getX() + "|" + scevent.getBlock().getY() + "|" + scevent.getBlock().getZ();

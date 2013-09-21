@@ -6,14 +6,15 @@ import org.bukkit.entity.Player;
 public class Itemsettings {
 	Itemsettings(String args[], CommandSender sender, Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0 && player != null) {
-				HyperPlayer hp = sf.getHyperPlayer(player);
+				HyperPlayer hp = em.getHyperPlayer(player.getName());
+				HyperEconomy he = hp.getHyperEconomy();
 				int itd = player.getItemInHand().getTypeId();
 				int da = hc.getInventoryManipulation().getDamageValue(player.getItemInHand());
-				HyperObject hob = hc.getDataFunctions().getHyperObject(itd, da, hp.getEconomy());
+				HyperObject hob = he.getHyperObject(itd, da);
 				if (hob == null) {
 					sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 				} else {
@@ -25,7 +26,7 @@ public class Itemsettings {
 					double med = 0;
 					boolean init = false;
 					double starprice = -0;
-					HyperObject ho = sf.getHyperObject(nam, playerecon);
+					HyperObject ho = he.getHyperObject(nam);
 					val = ho.getValue();
 					stat = Boolean.parseBoolean(ho.getIsstatic());
 					statprice = ho.getStaticprice();
@@ -52,8 +53,9 @@ public class Itemsettings {
     				sender.sendMessage(L.get("LINE_BREAK"));
 				}
 			} else if (args.length == 1) {
-				String nam = sf.fixName(args[0]);
-				if (sf.itemTest(nam)) {
+				HyperEconomy he = em.getEconomy(playerecon);
+				String nam = he.fixName(args[0]);
+				if (he.itemTest(nam)) {
 					double val = 0;
 					boolean stat = false;
 					double statprice = 0;
@@ -61,7 +63,7 @@ public class Itemsettings {
 					double med = 0;
 					boolean init = false;
 					double starprice = 0;
-					HyperObject ho = sf.getHyperObject(nam, playerecon);
+					HyperObject ho = he.getHyperObject(nam);
 					val = ho.getValue();
 					stat = Boolean.parseBoolean(ho.getIsstatic());
 					statprice = ho.getStaticprice();

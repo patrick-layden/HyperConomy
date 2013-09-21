@@ -7,8 +7,8 @@ import org.bukkit.command.CommandSender;
 public class Setstaticall {
 	Setstaticall(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		ArrayList<String> names = hc.getDataFunctions().getNames();
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
+		ArrayList<String> names = he.getNames();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		if (!(args.length == 1)) {
@@ -31,13 +31,13 @@ public class Setstaticall {
 		if (setting.equalsIgnoreCase("copy")) {
 			for (int i = 0; i < names.size(); i++) {
 				String name = names.get(i);
-				sf.getHyperObject(name, playerecon).setStaticprice(sf.getHyperObject(name, playerecon).getStartprice());
-				sf.getHyperObject(name, playerecon).setIsstatic("true");
+				he.getHyperObject(name).setStaticprice(he.getHyperObject(name).getStartprice());
+				he.getHyperObject(name).setIsstatic("true");
 			}
 			setting = "true + dynamic prices copied";
 		} else {
 			for (int i = 0; i < names.size(); i++) {
-				sf.getHyperObject(names.get(i), playerecon).setIsstatic(setting);
+				he.getHyperObject(names.get(i)).setIsstatic(setting);
 			}
 		}
 		isign.updateSigns();

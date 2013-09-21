@@ -18,7 +18,7 @@ public class Repairsigns {
 	Repairsigns(String[] args, Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler dh = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		FileConfiguration sns = hc.getYaml().getSigns();
 		
 		if (args.length == 3 || args.length == 1) {
@@ -57,8 +57,8 @@ public class Repairsigns {
 							if (cb != null && cb.getType().equals(Material.SIGN_POST) || cb != null && cb.getType().equals(Material.WALL_SIGN)) {
 								Sign s = (Sign) cb.getState();
 								String objectName = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
-								objectName = dh.fixName(objectName);
-								if (dh.objectTest(objectName)) {
+								objectName = em.getEconomy("default").fixName(objectName);
+								if (em.getEconomy("default").objectTest(objectName)) {
 									String ttype = ChatColor.stripColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
 									if (ttype.startsWith("s:")) {
 										ttype = "SB";
@@ -71,14 +71,14 @@ public class Repairsigns {
 									if (type != null) {
 										String signKey = s.getBlock().getWorld().getName() + "|" + s.getBlock().getX() + "|" + s.getBlock().getY() + "|" + s.getBlock().getZ();
 											sns.set(signKey + ".itemname", objectName);
-											if (dh.enchantTest(objectName)) {
+											if (em.getEconomy("default").enchantTest(objectName)) {
 												sns.set(signKey + ".enchantclass", EnchantmentClass.DIAMOND.toString());
 											} else {
 												sns.set(signKey + ".enchantclass", EnchantmentClass.NONE.toString());
 											}
 											sns.set(signKey + ".multiplier", 1.0);
 											sns.set(signKey + ".type", type);
-											sns.set(signKey + ".economy", hc.getDataFunctions().getHyperPlayer(player).getEconomy());
+											sns.set(signKey + ".economy", em.getHyperPlayer(player.getName()).getEconomy());
 											signsRepaired++;
 									}
 								}

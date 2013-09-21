@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 public class TransactionProcessor {
 
 	private HyperConomy hc;
+	private EconomyManager em;
 	private LanguageFile L;
 	private HyperPlayer hp;
 	private InventoryManipulation im;
@@ -32,6 +33,7 @@ public class TransactionProcessor {
 	
 	TransactionProcessor(HyperPlayer hp) {
 		hc = HyperConomy.hc;
+		em = hc.getEconomyManager();
 		L = hc.getLanguageFile();
 		this.hp = hp;
 		im = hc.getInventoryManipulation();
@@ -128,9 +130,9 @@ public class TransactionProcessor {
 									hyperObject.setStock(shopstock - amount);
 								}
 								hp.withdraw(price);
-								hc.getDataFunctions().getGlobalShopAccount().deposit(price);
+								em.getGlobalShopAccount().deposit(price);
 								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
-									hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
+									em.getGlobalShopAccount().setBalance(0);
 								}
 								
 								response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, name, calc.twoDecimals(taxpaid)), price, hyperObject);
@@ -239,7 +241,7 @@ public class TransactionProcessor {
 				price = hyperObject.getValue(amount, hp);
 			}
 			boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
-			if (!hc.getDataFunctions().getGlobalShopAccount().hasBalance(price) && !sunlimited) {
+			if (!em.getGlobalShopAccount().hasBalance(price) && !sunlimited) {
 				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
 				return response;
 			}
@@ -258,9 +260,9 @@ public class TransactionProcessor {
 			}
 			double salestax = hp.getSalesTax(price);
 			hp.deposit(price - salestax);
-			hc.getDataFunctions().getGlobalShopAccount().withdraw(price - salestax);
+			em.getGlobalShopAccount().withdraw(price - salestax);
 			if (sunlimited) {
-				hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
+				em.getGlobalShopAccount().setBalance(0);
 			}
 
 			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)), calc.twoDecimals(price - salestax), hyperObject);
@@ -296,9 +298,8 @@ public class TransactionProcessor {
 				return response;
 			}
 			response.setSuccessful();
-			HyperEconomy s = hc.getShopFactory();
+			HyperEconomy econ = em.getEconomy(hp.getEconomy());
 			Inventory invent = null;
-			String playerecon = hp.getEconomy();
 			int id = 0;
 			if (giveInventory == null) {
 				invent = hp.getPlayer().getInventory();
@@ -310,10 +311,10 @@ public class TransactionProcessor {
 					id = invent.getItem(slot).getTypeId();
 					ItemStack stack = invent.getItem(slot);
 					int da = im.getDamageValue(invent.getItem(slot));
-					hyperObject = hc.getDataFunctions().getHyperObject(id, da, playerecon);
+					hyperObject = econ.getHyperObject(id, da);
 					if (im.hasenchants(stack) == false) {
 						if (hyperObject != null) {
-							if (s.getShop(hp.getPlayer()).has(hyperObject.getName())) {
+							if (econ.getShop(hp.getPlayer()).has(hyperObject.getName())) {
 								amount = im.countItems(id, da, hp.getInventory());
 								TransactionResponse sresponse = sell();
 								if (sresponse.successful()) {
@@ -380,9 +381,9 @@ public class TransactionProcessor {
 							hyperObject.setStock(shopstock - amount);
 						}
 						hp.withdraw(price);
-						hc.getDataFunctions().getGlobalShopAccount().deposit(price);
+						em.getGlobalShopAccount().deposit(price);
 						if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
-							hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
+							em.getGlobalShopAccount().setBalance(0);
 						}
 						response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), calc.twoDecimals(taxpaid)), calc.twoDecimals(price), hyperObject);
 						response.setSuccessful();
@@ -427,7 +428,6 @@ public class TransactionProcessor {
 			return response;
 		}
 		try {
-			DataHandler sf = hc.getDataFunctions();
 			Calculation calc = hc.getCalculation();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
@@ -453,7 +453,7 @@ public class TransactionProcessor {
 							price = hyperObject.getValue(amount, hp);
 						}
 						boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
-						if (hc.getDataFunctions().getGlobalShopAccount().hasBalance(price) || sunlimited) {
+						if (em.getGlobalShopAccount().hasBalance(price) || sunlimited) {
 							if (maxi == 0) {
 								price = hyperObject.getValue(amount, hp);
 							}
@@ -472,9 +472,9 @@ public class TransactionProcessor {
 							}
 							double salestax = calc.twoDecimals(hp.getSalesTax(price));
 							hp.deposit(price - salestax);
-							hc.getDataFunctions().getGlobalShopAccount().withdraw(price - salestax);
+							em.getGlobalShopAccount().withdraw(price - salestax);
 							if (sunlimited) {
-								hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
+								em.getGlobalShopAccount().setBalance(0);
 							}
 							response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), salestax), calc.twoDecimals(price), hyperObject);
 							response.setSuccessful();
@@ -493,7 +493,7 @@ public class TransactionProcessor {
 							response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
 						}
 					} else {
-						response.addFailed(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), sf.getHyperObject(hyperObject.getName(), playerecon).getStock(), hyperObject.getName()), hyperObject);
+						response.addFailed(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), hyperObject.getStock(), hyperObject.getName()), hyperObject);
 					}
 				} else {
 					response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), hyperObject.getName()), hyperObject);
@@ -570,11 +570,9 @@ public class TransactionProcessor {
 			return response;
 		}
 		try {
-			DataHandler sf = hc.getDataFunctions();
 			Calculation calc = hc.getCalculation();
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();
-			String playerecon = tradePartner.getEconomy();
 			double price = 0.0;
 			if (setPrice) {
 				price = money;
@@ -595,7 +593,7 @@ public class TransactionProcessor {
 				log.writeSQLLog(hp.getName(), "sale", hyperObject.getName(), (double) amount, calc.twoDecimals(price), 0.0, tradePartner.getName(), "chestshop");
 				tradePartner.sendMessage(L.f(L.get("CHEST_SELL_NOTIFICATION"), amount, calc.twoDecimals(price), hyperObject.getName(), hp.getPlayer()));
 			} else {
-				response.addFailed(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), sf.getHyperObject(hyperObject.getName(), playerecon).getStock(), hyperObject.getName()), hyperObject);
+				response.addFailed(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), hyperObject.getStock(), hyperObject.getName()), hyperObject);
 			}
 			return response;
 		} catch (Exception e) {
@@ -644,15 +642,15 @@ public class TransactionProcessor {
 				double price = hyperObject.getValue(EnchantmentClass.fromString(mater), hp);
 				double fprice = price;
 				boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
-				if (hc.getDataFunctions().getGlobalShopAccount().hasBalance(fprice) || sunlimited) {
+				if (em.getGlobalShopAccount().hasBalance(fprice) || sunlimited) {
 					im.removeEnchantment(p.getItemInHand(), ench);
 					double shopstock = hyperObject.getStock();
 					hyperObject.setStock(shopstock + duramult);
 					double salestax = hp.getSalesTax(fprice);
 					hp.deposit(fprice - salestax);
-					hc.getDataFunctions().getGlobalShopAccount().withdraw(fprice - salestax);
+					em.getGlobalShopAccount().withdraw(fprice - salestax);
 					if (sunlimited) {
-						hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
+						em.getGlobalShopAccount().setBalance(0);
 					}
 					fprice = calc.twoDecimals(fprice);
 					response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, calc.twoDecimals(fprice), hyperObject.getName(), calc.twoDecimals(salestax)), calc.twoDecimals(fprice - salestax), hyperObject);
@@ -716,9 +714,9 @@ public class TransactionProcessor {
 							if (im.canAcceptEnchantment(p.getItemInHand(), ench) && p.getItemInHand().getAmount() == 1) {
 								hyperObject.setStock(shopstock - 1);
 								hp.withdraw(price);
-								hc.getDataFunctions().getGlobalShopAccount().deposit(price);
+								em.getGlobalShopAccount().deposit(price);
 								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
-									hc.getDataFunctions().getGlobalShopAccount().setBalance(0);
+									em.getGlobalShopAccount().setBalance(0);
 								}
 								int l = hyperObject.getName().length();
 								String lev = hyperObject.getName().substring(l - 1, l);

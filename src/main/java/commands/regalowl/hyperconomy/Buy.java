@@ -9,20 +9,19 @@ public class Buy {
 	HyperConomy hc;
 	Buy(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		LanguageFile L = hc.getLanguageFile();
-		HyperEconomy s = hc.getShopFactory();
 		try {
-			if (s.inAnyShop(player)) {
-				HyperPlayer hp = sf.getHyperPlayer(player);
-				if (hp.hasBuyPermission(s.getShop(player))) {
-					String name = sf.fixName(args[0]);
+			if (he.inAnyShop(player)) {
+				HyperPlayer hp = he.getHyperPlayer(player);
+				if (hp.hasBuyPermission(he.getShop(player))) {
+					String name = he.fixName(args[0]);
 					boolean xp = false;
 					int id = 0;
 					int data = 0;
 					int amount = 0;
-					if (sf.itemTest(name)) {
-						HyperObject ho = sf.getHyperObject(name, playerecon);
+					if (he.itemTest(name)) {
+						HyperObject ho = he.getHyperObject(name);
 						if (ho.getType() == HyperObjectType.EXPERIENCE) {
 							xp = true;
 						}
@@ -62,9 +61,9 @@ public class Buy {
 							}
 						}
 					}
-					if (sf.itemTest(name)) {
-						HyperObject ho = sf.getHyperObject(name, playerecon);
-						if (s.getShop(player).has(name)) {
+					if (he.itemTest(name)) {
+						HyperObject ho = he.getHyperObject(name);
+						if (he.getShop(player).has(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(ho);
 							pt.setAmount(amount);

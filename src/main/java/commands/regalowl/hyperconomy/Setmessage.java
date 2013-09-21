@@ -5,16 +5,15 @@ import org.bukkit.command.CommandSender;
 public class Setmessage {
 	Setmessage(String[] args, CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length >= 3) {
 				if (args[0].equalsIgnoreCase("1")) {
 					String message = args[1];
 					message = message.replace("%s", " ");
-					String name = s.fixShopName(args[2]);
-					if (s.shopExists(name)) {
-						s.getShop(name).setMessage1(message);
+					String name = args[2];
+					if (hc.getEconomyManager().shopExists(name)) {
+						hc.getEconomyManager().getShop(name).setMessage1(message);
 						sender.sendMessage(L.get("MESSAGE1_SET"));
 						return;
 					}
@@ -22,9 +21,9 @@ public class Setmessage {
 				} else if (args[0].equalsIgnoreCase("2")) {
 					String message = args[1];
 					message = message.replace("%s", " ");
-					String name = s.fixShopName(args[2]);
-					if (s.shopExists(name)) {
-						s.getShop(name).setMessage2(message);
+					String name = args[2];
+					if (hc.getEconomyManager().shopExists(name)) {
+						hc.getEconomyManager().getShop(name).setMessage2(message);
 						sender.sendMessage(L.get("MESSAGE2_SET"));
 						return;
 					}

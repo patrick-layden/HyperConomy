@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 public class Setceiling {
 	Setceiling(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
@@ -13,8 +13,8 @@ public class Setceiling {
 			if (args.length == 2) {
 				name = args[0];
 				double ceiling = Double.parseDouble(args[1]);
-				if (sf.objectTest(name)) {
-					sf.getHyperObject(name, playerecon).setCeiling(ceiling);
+				if (he.objectTest(name)) {
+					he.getHyperObject(name).setCeiling(ceiling);
 					sender.sendMessage(L.f(L.get("CEILING_SET"), name));
 					isign.updateSigns();
 				} else {

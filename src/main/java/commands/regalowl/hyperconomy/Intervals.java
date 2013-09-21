@@ -8,13 +8,13 @@ public class Intervals {
 	Intervals(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		InfoSignHandler isign = hc.getInfoSignHandler();
-		HyperEconomy s = hc.getShopFactory();
+		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0) {
 				SQLWrite sw = hc.getSQLWrite();
 				sender.sendMessage(L.get("LINE_BREAK"));
-				sender.sendMessage(ChatColor.GREEN + "" + s.getShopCheckInterval() + ChatColor.BLUE + " tick (" + ChatColor.GREEN + "" + s.getShopCheckInterval() / 20 + ChatColor.BLUE + " second) shop update interval.");
+				sender.sendMessage(ChatColor.GREEN + "" + em.getEconomy("default").getShopCheckInterval() + ChatColor.BLUE + " tick (" + ChatColor.GREEN + "" + em.getEconomy("default").getShopCheckInterval() / 20 + ChatColor.BLUE + " second) shop update interval.");
 				sender.sendMessage(ChatColor.GREEN + "" + hc.s().getsaveInterval() + ChatColor.BLUE + " tick (" + ChatColor.GREEN + "" + hc.s().getsaveInterval() / 20 + ChatColor.BLUE + " second) save interval.");
 				sender.sendMessage(ChatColor.GREEN + "" + isign.getUpdateInterval() + ChatColor.BLUE + " tick (" + ChatColor.GREEN + "" + isign.getUpdateInterval() / 20 + ChatColor.BLUE + " second) sign update interval.");
 				sender.sendMessage(ChatColor.GREEN + "" + isign.signsWaitingToUpdate() + ChatColor.BLUE + " signs waiting to update.");

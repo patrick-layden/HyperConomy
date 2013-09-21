@@ -9,17 +9,17 @@ public class Esell {
 	Esell(Player player, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		HyperEconomy s = hc.getShopFactory();
-		DataHandler dh = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
 			if (player.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 				return;
 			}
-			if (s.inAnyShop(player)) {
-				HyperPlayer hp = dh.getHyperPlayer(player);
-				if (hp.hasSellPermission(s.getShop(player))) {
+			HyperPlayer hp = em.getHyperPlayer(player.getName());
+			HyperEconomy he = hp.getHyperEconomy();
+			if (he.inAnyShop(player)) {
+				if (hp.hasSellPermission(he.getShop(player))) {
 					String name = args[0];
 					if (args[0].equalsIgnoreCase("max")) {
 						if (!im.hasenchants(player.getItemInHand())) {
@@ -27,9 +27,9 @@ public class Esell {
 						}
 						ArrayList<String> enchants = im.getEnchantments(player.getItemInHand());
 						for (String e:enchants) {
-							if (s.getShop(player).has(e)) {
+							if (he.getShop(player).has(e)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-								pt.setHyperObject(dh.getHyperObject(e, hp.getEconomy()));
+								pt.setHyperObject(he.getHyperObject(e));
 								TransactionResponse response = hp.processTransaction(pt);
 								response.sendMessages();
 							} else {
@@ -38,10 +38,10 @@ public class Esell {
 						}
 
 					} else {
-						if (hc.getDataFunctions().enchantTest(name)) {
-							if (s.getShop(player).has(name)) {
+						if (he.enchantTest(name)) {
+							if (he.getShop(player).has(name)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-								pt.setHyperObject(dh.getHyperObject(name, hp.getEconomy()));
+								pt.setHyperObject(he.getHyperObject(name));
 								TransactionResponse response = hp.processTransaction(pt);
 								response.sendMessages();
 							} else {

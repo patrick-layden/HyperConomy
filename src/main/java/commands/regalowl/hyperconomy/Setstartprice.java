@@ -5,16 +5,16 @@ import org.bukkit.command.CommandSender;
 public class Setstartprice {
 	Setstartprice(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
 		try {
 			if (args.length == 2) {
-				name = sf.fixName(args[0]);
+				name = he.fixName(args[0]);
 				double startprice = Double.parseDouble(args[1]);
-				if (sf.itemTest(name)) {
-					sf.getHyperObject(name, playerecon).setStartprice(startprice);
+				if (he.itemTest(name)) {
+					he.getHyperObject(name).setStartprice(startprice);
 					sender.sendMessage(L.f(L.get("START_PRICE_SET"), name));
 					isign.updateSigns();
 				} else {
@@ -25,8 +25,8 @@ public class Setstartprice {
 				if (ench.equalsIgnoreCase("e")) {
 					name = args[0];
 					double startprice = Double.parseDouble(args[1]);
-					if (sf.enchantTest(name)) {
-						sf.getHyperObject(name, playerecon).setStartprice(startprice);
+					if (he.enchantTest(name)) {
+						he.getHyperObject(name).setStartprice(startprice);
 						sender.sendMessage(L.f(L.get("START_PRICE_SET"), name));
 						isign.updateSigns();
 					} else {

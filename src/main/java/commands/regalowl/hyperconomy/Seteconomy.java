@@ -6,14 +6,14 @@ import org.bukkit.entity.Player;
 public class Seteconomy {
 	Seteconomy(_Command command, String args[], CommandSender sender, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 1) {
 				String economy = args[0];
-				if (hc.getDataFunctions().testEconomy(economy)) {
+				if (em.testEconomy(economy)) {
 					if (player != null) {
-						sf.getHyperPlayer(player).setEconomy(economy);
+						em.getHyperPlayer(player.getName()).setEconomy(economy);
 						sender.sendMessage(L.get("ECONOMY_SET"));
 					} else {
 						command.setNonPlayerEconomy(economy);

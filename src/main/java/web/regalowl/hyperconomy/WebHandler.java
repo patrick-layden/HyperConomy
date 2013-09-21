@@ -37,7 +37,7 @@ public class WebHandler {
 					// context.addServlet(new ServletHolder(new HyperWebAPI()),
 					// "/API/*");
 					context.addServlet(new ServletHolder(new MainPage()), "/");
-					for (Shop s : hc.getShopFactory().getShops()) {
+					for (Shop s : hc.getEconomyManager().getShops()) {
 						ShopPage sp = new ShopPage(s);
 						shopPages.add(sp);
 						context.addServlet(new ServletHolder(sp), "/" + s.getName() + "/*");

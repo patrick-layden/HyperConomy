@@ -9,15 +9,16 @@ public class Hb {
 
 	Hb(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
-		HyperEconomy s = hc.getShopFactory();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		double amount;
 		boolean ma = false;
 		try {
-			if (s.inAnyShop(player)) {
-				if (sf.getHyperPlayer(player).hasBuyPermission(s.getShop(player))) {
+			HyperPlayer hp = em.getHyperPlayer(player.getName());
+			HyperEconomy he = hp.getHyperEconomy();
+			if (he.inAnyShop(player)) {
+				if (hp.hasBuyPermission(he.getShop(player))) {
 					ItemStack iinhand = player.getItemInHand();
 					if (im.hasenchants(iinhand) == false) {
 						if (args.length == 0) {
@@ -42,7 +43,7 @@ public class Hb {
 						}
 						int itd = player.getItemInHand().getTypeId();
 						int da = im.getDamageValue(player.getItemInHand());
-						HyperObject ho = sf.getHyperObject(itd, da, playerecon);
+						HyperObject ho = he.getHyperObject(itd, da);
 						if (ho == null) {
 							player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 						} else {
@@ -54,8 +55,7 @@ public class Hb {
 							if (amount > shopstock && ma) {
 								amount = shopstock;
 							}
-							HyperPlayer hp = sf.getHyperPlayer(player);
-							if (s.getShop(player).has(nam)) {
+							if (he.getShop(player).has(nam)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 								pt.setHyperObject(ho);
 								pt.setAmount((int) Math.rint(amount));

@@ -41,11 +41,10 @@ public class Copydatabase {
 				}
 				hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 		    		public void run() {
-						SQLEconomy se = hc.getSQLEconomy();
-						DataHandler dh = hc.getDataFunctions();
+		    			EconomyManager em = hc.getEconomyManager();
 						SQLRead sr = hc.getSQLRead();
 						if (hc.s().gB("sql-connection.use-mysql")) {
-							boolean databaseOk = se.checkSQLLite();
+							boolean databaseOk = em.checkSQLLite();
 							if (databaseOk) {
 								hc.loadLock(true);
 
@@ -59,12 +58,12 @@ public class Copydatabase {
 								}
 								tempWrite.executeSQL("DELETE FROM hyperconomy_log");
 								tempWrite.executeSQL("DELETE FROM hyperconomy_settings");
-								for (HyperObject ho:dh.getHyperObjects()) {
+								for (HyperObject ho:em.getHyperObjects()) {
 									tempWrite.executeSQL("INSERT INTO hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','"
 											+ ho.getDurability() + "','" + ho.getValue() + "','" + ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + ho.getStock() + "','" + ho.getMedian() + "','" + ho.getInitiation() + "','" + ho.getStartprice()
 											+ "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
 								}
-								for (HyperPlayer hp:dh.getHyperPlayers()) {
+								for (HyperPlayer hp:em.getHyperPlayers()) {
 									tempWrite.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH)" + " VALUES ('" + hp.getName() + "','" + hp.getEconomy() + "','" + hp.getBalance() + "','" + hp.getX() + "','" + hp.getY() + "','" + hp.getZ() + "','" + hp.getWorld() + "','"
 											+ hp.getHash() + "')");
 								}
@@ -105,7 +104,7 @@ public class Copydatabase {
 								return;
 							}
 						} else {
-							boolean databaseOk = se.checkMySQL();
+							boolean databaseOk = em.checkMySQL();
 							if (databaseOk) {
 								hc.loadLock(true);
 								hc.s().sB("sql-connection.use-mysql", true);
@@ -118,12 +117,12 @@ public class Copydatabase {
 								}
 								tempWrite.executeSQL("DELETE FROM hyperconomy_log");
 								tempWrite.executeSQL("DELETE FROM hyperconomy_settings");
-								for (HyperObject ho:dh.getHyperObjects()) {
+								for (HyperObject ho:em.getHyperObjects()) {
 									tempWrite.executeSQL("INSERT INTO hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','"
 											+ ho.getDurability() + "','" + ho.getValue() + "','" + ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + ho.getStock() + "','" + ho.getMedian() + "','" + ho.getInitiation() + "','" + ho.getStartprice()
 											+ "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
 								}
-								for (HyperPlayer hp:dh.getHyperPlayers()) {
+								for (HyperPlayer hp:em.getHyperPlayers()) {
 									tempWrite.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH)" + " VALUES ('" + hp.getName() + "','" + hp.getEconomy() + "','" + hp.getBalance() + "','" + hp.getX() + "','" + hp.getY() + "','" + hp.getZ() + "','" + hp.getWorld() + "','"
 											+ hp.getHash() + "')");
 								}

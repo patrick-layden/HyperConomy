@@ -81,13 +81,14 @@ public class SQLRead {
 		}
 	}
     
-    
+	
 	public ArrayList<String> getStringColumn(String statement) {
 		ArrayList<String> data = new ArrayList<String>();
 		QueryResult result = getDatabaseConnection().read(statement);
 		while (result.next()) {
 			data.add(result.getString(1));
 		}
+		result.close();
 		return data;
 	}
 

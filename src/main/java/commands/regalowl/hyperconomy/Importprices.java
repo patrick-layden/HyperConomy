@@ -10,12 +10,12 @@ public class Importprices {
 	Importprices(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler sf = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 
 		try {
 			if (args.length == 1) {
 				String economy = args[0];
-				if (sf.testEconomy(economy)) {
+				if (em.testEconomy(economy)) {
 					new Backup();
 					FileConfiguration itemsyaml = hc.getYaml().getItems();
 					Iterator<String> it = itemsyaml.getKeys(false).iterator();
@@ -24,7 +24,7 @@ public class Importprices {
 						double value = itemsyaml.getDouble(name + ".value");
 						double staticprice = itemsyaml.getDouble(name + ".price.staticprice");
 						double startprice = itemsyaml.getDouble(name + ".initiation.startprice");
-						HyperObject ho = sf.getHyperObject(name, economy);
+						HyperObject ho = em.getEconomy(economy).getHyperObject(name);
 						ho.setValue(value);
 						ho.setStartprice(startprice);
 						ho.setStaticprice(staticprice);
@@ -36,7 +36,7 @@ public class Importprices {
 						double value = enchantsyaml.getDouble(name + ".value");
 						double staticprice = enchantsyaml.getDouble(name + ".price.staticprice");
 						double startprice = enchantsyaml.getDouble(name + ".initiation.startprice");
-						HyperObject ho = sf.getHyperObject(name, economy);
+						HyperObject ho = em.getEconomy(economy).getHyperObject(name);
 						ho.setValue(value);
 						ho.setStartprice(startprice);
 						ho.setStaticprice(staticprice);

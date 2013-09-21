@@ -7,8 +7,8 @@ import org.bukkit.command.CommandSender;
 public class Setinitiationall {
 	Setinitiationall(String args[], CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		ArrayList<String> names = hc.getDataFunctions().getNames();
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
+		ArrayList<String> names = he.getNames();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		String name = "";
@@ -28,7 +28,7 @@ public class Setinitiationall {
 		new Backup();
 		for (int i = 0; i < names.size(); i++) {
 			name = names.get(i);
-			sf.getHyperObject(name, playerecon).setInitiation(setting);
+			he.getHyperObject(name).setInitiation(setting);
 		}
 		isign.updateSigns();
 		sender.sendMessage(L.f(L.get("ALL_OBJECTS_SET_TO"), setting));

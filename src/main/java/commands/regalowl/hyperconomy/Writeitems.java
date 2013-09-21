@@ -12,30 +12,30 @@ public class Writeitems {
 		SerializeArrayList sal = new SerializeArrayList();
 		FileTools ft = new FileTools();
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler dh = hc.getDataFunctions();
+		HyperEconomy defaultEcon = hc.getEconomyManager().getEconomy("default");
 		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";
 		try {
     		if (args[0].equalsIgnoreCase("row") || args[0].equalsIgnoreCase("column")) {
     			if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("column")) {
-						ArrayList<String> inames = dh.getItemNames();
+						ArrayList<String> inames = defaultEcon.getItemNames();
 						String output = sal.stringArrayToStringNL(inames);
 						ft.writeStringToFile(output, path + File.separator + "items.txt");
 						sender.sendMessage(L.get("ITEM_NAMES_WRITTEN"));
 					} else if (args[0].equalsIgnoreCase("row")) {
-						ArrayList<String> inames = dh.getItemNames();
+						ArrayList<String> inames = defaultEcon.getItemNames();
 						String output = sal.stringArrayToString(inames);
 						ft.writeStringToFile(output, path + File.separator + "items.txt");
 						sender.sendMessage(L.get("ITEM_NAMES_WRITTEN"));
 					}
 				} else if (args.length == 2 && args[1].equalsIgnoreCase("e")) {
 					if (args[0].equalsIgnoreCase("column")) {
-						ArrayList<String> enames = dh.getEnchantNames();
+						ArrayList<String> enames = defaultEcon.getEnchantNames();
 						String output = sal.stringArrayToStringNL(enames);
 						ft.writeStringToFile(output, path + File.separator + "enchants.txt");
 						sender.sendMessage(L.get("ENCHANT_NAMES_WRITTEN"));
 					} else if (args[0].equalsIgnoreCase("row")) {
-						ArrayList<String> enames = dh.getEnchantNames();
+						ArrayList<String> enames = defaultEcon.getEnchantNames();
 						String output = sal.stringArrayToString(enames);
 						ft.writeStringToFile(output, path + File.separator + "enchants.txt");
 						sender.sendMessage(L.get("ENCHANT_NAMES_WRITTEN"));

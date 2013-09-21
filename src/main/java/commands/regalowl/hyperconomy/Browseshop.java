@@ -2,6 +2,7 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,8 +11,7 @@ public class Browseshop {
 	
 	Browseshop(String args[], CommandSender sender, Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy s = hc.getShopFactory();
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		ArrayList<String> aargs = new ArrayList<String>();
@@ -21,7 +21,7 @@ public class Browseshop {
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
     		if (player != null) {
-    			if ((requireShop && !s.inAnyShop(player)) && !player.hasPermission("hyperconomy.admin")) {
+    			if ((requireShop && !he.inAnyShop(player)) && !player.hasPermission("hyperconomy.admin")) {
     				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
     				return;
     			}			
@@ -61,13 +61,13 @@ public class Browseshop {
 			}
     		String nameshop = null;
     		if (player != null) {
-    			if (!s.inAnyShop(player)) {
+    			if (!he.inAnyShop(player)) {
     				nameshop = null;
     			} else {
-    				nameshop = s.getShop(player).getName();
+    				nameshop = he.getShop(player).getName();
     			}		
     		}
-			ArrayList<String> names = sf.getNames();
+			ArrayList<String> names = he.getNames();
 			ArrayList<String> rnames = new ArrayList<String>();
 			int i = 0;
 			while(i < names.size()) {
@@ -75,14 +75,14 @@ public class Browseshop {
 				if (alphabetic) {
 					if (cname.startsWith(input)) {
 						String itemname = cname;
-						if (nameshop == null || s.getShop(nameshop).has(itemname)) {
+						if (nameshop == null || he.getShop(nameshop).has(itemname)) {
 							rnames.add(cname);
 						}
 					}
 				} else {
 					if (cname.contains(input)) {
 						String itemname = cname;
-						if (nameshop == null || s.getShop(nameshop).has(itemname)) {
+						if (nameshop == null || he.getShop(nameshop).has(itemname)) {
 							rnames.add(cname);
 						}
 					}
@@ -100,19 +100,19 @@ public class Browseshop {
 			while (count < numberpage) {
 				if (count > ((page * 10) - 11)) {
 					if (count < rsize) {
-						String iname = sf.fixName(rnames.get(count));
+						String iname = he.fixName(rnames.get(count));
 			            Double cost = 0.0;
 			            double stock = 0;
-			            HyperObject ho = sf.getHyperObject(iname, playerecon);
-			            if (sf.itemTest(iname)) {
+			            HyperObject ho = he.getHyperObject(iname);
+			            if (he.itemTest(iname)) {
 							cost = ho.getCost(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = calc.twoDecimals(cost + taxpaid);
-							stock = sf.getHyperObject(iname, playerecon).getStock();
-						} else if (sf.enchantTest(iname)) {
+							stock = he.getHyperObject(iname).getStock();
+						} else if (he.enchantTest(iname)) {
 							cost = ho.getCost(EnchantmentClass.DIAMOND);
 							cost = cost + ho.getPurchaseTax(cost);
-							stock = sf.getHyperObject(iname, playerecon).getStock();
+							stock = he.getHyperObject(iname).getStock();
 						}
 						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + L.get("AVAILABLE") + ": \u00A7a" + L.fC(cost) + " \u00A79" + L.get("EACH") + ".]");
 					} else {

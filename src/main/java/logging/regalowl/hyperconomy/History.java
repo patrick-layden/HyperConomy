@@ -13,8 +13,8 @@ import java.util.HashMap;
 public class History {
 	
 	private HyperConomy hc;
+	private EconomyManager em;
 	private InfoSignHandler isign;
-	private DataHandler df;
 	private SQLWrite sw;
 	private SQLRead sr;
 
@@ -27,9 +27,9 @@ public class History {
 	
 	History() {
 		hc = HyperConomy.hc;
+		em = hc.getEconomyManager();
 		isign = hc.getInfoSignHandler();
 		sw = hc.getSQLWrite();
-		df = hc.getDataFunctions();
 		sr = hc.getSQLRead();
 		daysToSaveHistory = hc.getYaml().getConfig().getInt("config.daystosavehistory");
 		lastTime = System.currentTimeMillis();
@@ -77,7 +77,7 @@ public class History {
 
 	
 	private void writeHistoryThread() {
-		ArrayList<HyperObject> objects = df.getHyperObjects();
+		ArrayList<HyperObject> objects = em.getHyperObjects();
 		for (HyperObject object : objects) {
 			if (object.getType() == HyperObjectType.ENCHANTMENT) {
 				writeHistoryData(object.getName(), object.getEconomy(), object.getValue(EnchantmentClass.DIAMOND));
@@ -101,7 +101,7 @@ public class History {
 		if (hc.s().gB("sql-connection.use-mysql")) {
 			statement = "DELETE FROM hyperconomy_history WHERE TIME < DATE_SUB(NOW(), INTERVAL " + daysToSaveHistory + " DAY)";
 		} else {
-			statement = "DELETE FROM hyperconomy_history WHERE TIME < date('now','" + df.formatSQLiteTime(daysToSaveHistory * -1) + " day')";
+			statement = "DELETE FROM hyperconomy_history WHERE TIME < date('now','" + formatSQLiteTime(daysToSaveHistory * -1) + " day')";
 		}
 		sw.executeSQL(statement);
 	}
@@ -182,7 +182,7 @@ public class History {
 		HashMap<HyperObject, ArrayList<Double>> allValues = new HashMap<HyperObject, ArrayList<Double>>();
 		QueryResult result = sr.getDatabaseConnection().read("SELECT OBJECT, PRICE FROM hyperconomy_history WHERE ECONOMY = '" + economy + "' ORDER BY TIME DESC");
 		while (result.next()) {
-			HyperObject ho = hc.getDataFunctions().getHyperObject(result.getString("OBJECT"), economy);
+			HyperObject ho = em.getEconomy(economy).getHyperObject(result.getString("OBJECT"));
 			double price = result.getDouble("PRICE");
 			if (!allValues.containsKey(ho)) {
 				ArrayList<Double> values = new ArrayList<Double>();
@@ -196,7 +196,7 @@ public class History {
 		}
 		result.close();
 		
-		ArrayList<HyperObject> hobjects = hc.getDataFunctions().getHyperObjects(economy);
+		ArrayList<HyperObject> hobjects =  em.getEconomy(economy).getHyperObjects();
 		HashMap<HyperObject, String> relevantValues = new HashMap<HyperObject, String>();
 		for (HyperObject ho:hobjects) {
 			if (allValues.containsKey(ho)) {
@@ -223,5 +223,14 @@ public class History {
 		return relevantValues;
 	}
 
+	public String formatSQLiteTime(int time) {
+		if (time < 0) {
+			return "-" + Math.abs(time);
+		} else if (time > 0) {
+			return "+" + time;
+		} else {
+			return "0";
+		}
+	}
   	
 }

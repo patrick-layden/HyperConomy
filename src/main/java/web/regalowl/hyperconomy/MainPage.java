@@ -16,7 +16,6 @@ public class MainPage extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 699465359999143309L;
 	private HyperConomy hc;
-	private HyperEconomy sf;
 	private String page = "Loading...";
 	//private String mainPage;
 	
@@ -24,7 +23,6 @@ public class MainPage extends HttpServlet {
 	@SuppressWarnings("deprecation")
 	public MainPage() {
 		hc = HyperConomy.hc;
-		sf = hc.getShopFactory();
 		//try {
 			//InetAddress addr = InetAddress.getLocalHost();
 			//mainPage = addr.getAddress() + ":" + hc.s().getPort() + "/";
@@ -61,7 +59,7 @@ public class MainPage extends HttpServlet {
 		
 		String page = "";
 		if (!hc.fullLock() && hc.enabled()) {
-			ArrayList<Shop> shops = sf.getShops();
+			ArrayList<Shop> shops = hc.getEconomyManager().getShops();
 
 			Collections.sort(shops);
 

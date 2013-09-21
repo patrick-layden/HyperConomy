@@ -9,10 +9,9 @@ public class Setpassword {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler dh = hc.getDataFunctions();
-		
+
 		if (args.length == 1 && player != null) {
-			HyperPlayer hp = dh.getHyperPlayer(player);
+			HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(player.getName());
 			String salt = calc.generateSecureSalt();
 			hp.setSalt(salt);
 			String hash = calc.sha256Digest(args[0] + salt);

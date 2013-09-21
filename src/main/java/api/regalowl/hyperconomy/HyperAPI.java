@@ -9,19 +9,19 @@ public class HyperAPI implements GeneralAPI {
 	public String listShops() {
 		HyperConomy hc = HyperConomy.hc;
 		SerializeArrayList sal = new SerializeArrayList();
-		return sal.stringArrayToString(hc.getShopFactory().listShops());
+		return sal.stringArrayToString(hc.getEconomyManager().getShopList());
 	}
 
 	public String listEconomies() {
 		HyperConomy hc = HyperConomy.hc;
 		SerializeArrayList sal = new SerializeArrayList();
-		return sal.stringArrayToString(hc.getDataFunctions().getEconomyList());
+		return sal.stringArrayToString(hc.getEconomyManager().getEconomyList());
 	}
 
 	public int getShopP1X(String shop) {
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getShopFactory().shopExists(shop)) {
-			return hc.getShopFactory().getShop(shop).getP1x();
+		if (hc.getEconomyManager().shopExists(shop)) {
+			return hc.getEconomyManager().getShop(shop).getP1x();
 		} else {
 			return 0;
 		}
@@ -29,8 +29,8 @@ public class HyperAPI implements GeneralAPI {
 
 	public int getShopP1Y(String shop) {
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getShopFactory().shopExists(shop)) {
-			return hc.getShopFactory().getShop(shop).getP1y();
+		if (hc.getEconomyManager().shopExists(shop)) {
+			return hc.getEconomyManager().getShop(shop).getP1y();
 		} else {
 			return 0;
 		}
@@ -38,8 +38,8 @@ public class HyperAPI implements GeneralAPI {
 
 	public int getShopP1Z(String shop) {
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getShopFactory().shopExists(shop)) {
-			return hc.getShopFactory().getShop(shop).getP1z();
+		if (hc.getEconomyManager().shopExists(shop)) {
+			return hc.getEconomyManager().getShop(shop).getP1z();
 		} else {
 			return 0;
 		}
@@ -47,8 +47,8 @@ public class HyperAPI implements GeneralAPI {
 
 	public int getShopP2X(String shop) {
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getShopFactory().shopExists(shop)) {
-			return hc.getShopFactory().getShop(shop).getP2x();
+		if (hc.getEconomyManager().shopExists(shop)) {
+			return hc.getEconomyManager().getShop(shop).getP2x();
 		} else {
 			return 0;
 		}
@@ -56,8 +56,8 @@ public class HyperAPI implements GeneralAPI {
 
 	public int getShopP2Y(String shop) {
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getShopFactory().shopExists(shop)) {
-			return hc.getShopFactory().getShop(shop).getP2y();
+		if (hc.getEconomyManager().shopExists(shop)) {
+			return hc.getEconomyManager().getShop(shop).getP2y();
 		} else {
 			return 0;
 		}
@@ -65,8 +65,8 @@ public class HyperAPI implements GeneralAPI {
 
 	public int getShopP2Z(String shop) {
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getShopFactory().shopExists(shop)) {
-			return hc.getShopFactory().getShop(shop).getP2z();
+		if (hc.getEconomyManager().shopExists(shop)) {
+			return hc.getEconomyManager().getShop(shop).getP2z();
 		} else {
 			return 0;
 		}
@@ -79,9 +79,9 @@ public class HyperAPI implements GeneralAPI {
 			}
 		}
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler dh = hc.getDataFunctions();
-		if (dh.hasAccount(player)) {
-			return dh.getHyperPlayer(player).getX();
+		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
+		if (he.hasAccount(player)) {
+			return he.getHyperPlayer(player).getX();
 		} else {
 			return 0.0;
 		}
@@ -94,9 +94,9 @@ public class HyperAPI implements GeneralAPI {
 			}
 		}
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler dh = hc.getDataFunctions();
-		if (dh.hasAccount(player)) {
-			return dh.getHyperPlayer(player).getY();
+		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
+		if (he.hasAccount(player)) {
+			return he.getHyperPlayer(player).getY();
 		} else {
 			return 0.0;
 		}
@@ -109,9 +109,9 @@ public class HyperAPI implements GeneralAPI {
 			}
 		}
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler dh = hc.getDataFunctions();
-		if (dh.hasAccount(player)) {
-			return dh.getHyperPlayer(player).getZ();
+		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
+		if (he.hasAccount(player)) {
+			return he.getHyperPlayer(player).getZ();
 		} else {
 			return 0.0;
 		}
@@ -119,8 +119,8 @@ public class HyperAPI implements GeneralAPI {
 
 	public String getPlayerShop(Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy sf = hc.getShopFactory();
-		Shop shop = sf.getShop(player);
+		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player.getName()).getHyperEconomy();
+		Shop shop = he.getShop(player);
 		if (null == shop){
 			return "";
 		} else {
@@ -130,9 +130,9 @@ public class HyperAPI implements GeneralAPI {
 
 	public boolean checkHash(String player, String SHA256Hash) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler dh = hc.getDataFunctions();
-		if (dh.hasAccount(player)) {
-			if (dh.getHyperPlayer(player).getHash().equals(SHA256Hash)) {
+		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
+		if (he.hasAccount(player)) {
+			if (he.getHyperPlayer(player).getHash().equals(SHA256Hash)) {
 				return true;
 			} else {
 				return false;
@@ -145,9 +145,9 @@ public class HyperAPI implements GeneralAPI {
 	
 	public String getSalt(String player) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler dh = hc.getDataFunctions();
-		if (dh.hasAccount(player)) {
-			return dh.getHyperPlayer(player).getSalt();
+		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
+		if (he.hasAccount(player)) {
+			return he.getHyperPlayer(player).getSalt();
 		} else {
 			return "";
 		}
@@ -159,9 +159,8 @@ public class HyperAPI implements GeneralAPI {
 
 	public String getShopEconomy(String shop) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy sf = hc.getShopFactory();
-		if (sf.shopExists(shop)) {
-			return sf.getShop(shop).getEconomy();
+		if (hc.getEconomyManager().shopExists(shop)) {
+			return hc.getEconomyManager().getShop(shop).getEconomy();
 		} else {
 			return "";
 		}

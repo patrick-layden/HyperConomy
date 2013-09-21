@@ -1,6 +1,7 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -9,7 +10,7 @@ public class Removecategory {
 
 	Removecategory(String args[], CommandSender sender) {
 		hc = HyperConomy.hc;
-		HyperEconomy s = hc.getShopFactory();
+		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		SerializeArrayList sal = new SerializeArrayList();
 		try {
@@ -21,9 +22,9 @@ public class Removecategory {
 			}
 			ArrayList<String> objects = sal.stringToArray(testcategory);
 			if (args.length == 2) {
-				String shopname = s.fixShopName(args[1]);
-				if (s.shopExists(shopname)) {
-					Shop shop = s.getShop(shopname);
+				String shopname = args[1];
+				if (em.shopExists(shopname)) {
+					Shop shop = em.getShop(shopname);
 					shop.removeObjects(objects);
 					sender.sendMessage(L.f(L.get("REMOVED_FROM"), args[0], shopname.replace("_", " ")));
 				} else {

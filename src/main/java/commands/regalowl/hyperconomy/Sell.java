@@ -8,23 +8,22 @@ public class Sell {
 
 	Sell(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		LanguageFile L = hc.getLanguageFile();
-		HyperEconomy s = hc.getShopFactory();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
 			if (player.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 				return;
 			}
-			if (s.inAnyShop(player)) {
-				if (sf.getHyperPlayer(player).hasSellPermission(s.getShop(player))) {
-					String name = sf.fixName(args[0]);
+			if (he.inAnyShop(player)) {
+				if (he.getHyperPlayer(player).hasSellPermission(he.getShop(player))) {
+					String name = he.fixName(args[0]);
 					int amount = 0;
 					boolean xp = false;
 
-					if (sf.itemTest(name)) {
-						HyperObject ho = sf.getHyperObject(name, playerecon);
+					if (he.itemTest(name)) {
+						HyperObject ho = he.getHyperObject(name);
 						if (ho.getType() == HyperObjectType.EXPERIENCE) {
 							xp = true;
 						}
@@ -52,13 +51,13 @@ public class Sell {
 							}
 						}
 					}
-					if (sf.itemTest(name)) {
-						HyperObject ho = sf.getHyperObject(name, playerecon);
-						if (s.getShop(player).has(name)) {
+					if (he.itemTest(name)) {
+						HyperObject ho = he.getHyperObject(name);
+						if (he.getShop(player).has(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 							pt.setHyperObject(ho);
 							pt.setAmount(amount);
-							TransactionResponse response = sf.getHyperPlayer(player).processTransaction(pt);
+							TransactionResponse response = he.getHyperPlayer(player).processTransaction(pt);
 							response.sendMessages();
 						} else {
 							player.sendMessage(L.get("CANT_BE_TRADED"));

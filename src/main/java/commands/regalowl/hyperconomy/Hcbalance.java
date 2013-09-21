@@ -8,24 +8,19 @@ public class Hcbalance {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
-		DataHandler dh = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		try {
 			if (args.length == 0 && player != null) {
 				double balance = 0;
-				if (dh.hasAccount(player.getName())) {
-					balance = dh.getHyperPlayer(player.getName()).getBalance();
-				} else {
-        			sender.sendMessage(L.get("PLAYER_NOT_FOUND"));
-        			return;
-				}
+				balance = em.getHyperPlayer(player.getName()).getBalance();
 				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
 				sender.sendMessage(L.f(L.get("PLAYER_BALANCE_MESSAGE"), "", calc.formatMoney(balance)));
 				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
     		} else if (args.length == 1 && sender.hasPermission("hyperconomy.balanceall")) {
-    			if (!dh.hasAccount(args[0])) {
+    			if (!em.hyperPlayerExists(args[0])) {
         			sender.sendMessage(L.get("PLAYER_NOT_FOUND"));
     			} else {
-    				Double balance = dh.getHyperPlayer(args[0]).getBalance();
+    				Double balance = em.getHyperPlayer(args[0]).getBalance();
     				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
         			sender.sendMessage(L.f(L.get("BALANCE_MESSAGE"), args[0], calc.formatMoney(balance)));
     				sender.sendMessage(L.get("SHOP_LINE_BREAK"));

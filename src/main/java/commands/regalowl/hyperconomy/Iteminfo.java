@@ -1,6 +1,7 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,15 +13,16 @@ public class Iteminfo {
 	Iteminfo(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler dh = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		try {		
-			HyperPlayer hp = dh.getHyperPlayer(player);
+			HyperPlayer hp = em.getHyperPlayer(player.getName());
+			HyperEconomy he = hp.getHyperEconomy();
 			if (args.length == 1) {
 				int givenid = Integer.parseInt(args[0]);
 				int dv = 0;
 				int newdat = im.cleanDamageValue(givenid, dv);
-				HyperObject ho = dh.getHyperObject(givenid, newdat, hp.getEconomy());
+				HyperObject ho = he.getHyperObject(givenid, newdat);
 				String nam = "";
 				if (ho == null) {
 					nam = "Item not in database.";
@@ -35,7 +37,7 @@ public class Iteminfo {
 				int givenid = Integer.parseInt(args[0]);;
 				int givendam = Integer.parseInt(args[1]);
 				int newdat = im.cleanDamageValue(givenid, givendam);
-				HyperObject ho = dh.getHyperObject(givenid, newdat, hp.getEconomy());
+				HyperObject ho = he.getHyperObject(givenid, newdat);
 				String nam = "";
 				if (ho == null) {
 					nam = "Item not in database.";
@@ -50,7 +52,7 @@ public class Iteminfo {
 			String mat = player.getItemInHand().getType().toString();
 			int itemid = player.getItemInHand().getTypeId();
 			int dv = im.getDamageValue(player.getItemInHand());
-			HyperObject ho = dh.getHyperObject(itemid, dv, hp.getEconomy());
+			HyperObject ho = he.getHyperObject(itemid, dv);
 			String nam = "";
 			if (ho == null) {
 				nam = "Item not in database.";

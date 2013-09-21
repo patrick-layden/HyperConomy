@@ -6,13 +6,13 @@ public class Renameshop {
 	Renameshop(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		HyperEconomy s = hc.getShopFactory();
+		EconomyManager em = hc.getEconomyManager();
 		try {
 			if (args.length == 2) {
-				String name = s.fixShopName(args[0]);
+				String name = args[0];
 				String newname = args[1];
-				if (s.shopExists(name)) {
-					s.getShop(name).setName(newname);
+				if (em.shopExists(name)) {
+					em.getShop(name).setName(newname);
 					sender.sendMessage(L.get("SHOP_RENAMED"));
 				} else {
 					sender.sendMessage(L.get("SHOP_NOT_EXIST"));

@@ -16,11 +16,10 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 
 public class TransactionSign implements Listener {
 	private HyperConomy hc;
-	private DataHandler sf;
-
+	private EconomyManager em;
 	TransactionSign() {
 		hc = HyperConomy.hc;
-		sf = hc.getDataFunctions();
+		em = hc.getEconomyManager();
 		if (hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
 		}
@@ -31,6 +30,7 @@ public class TransactionSign implements Listener {
 		try {
 			if (hc.getYaml().getConfig().getBoolean("config.allow-scrolling-transaction-signs")) {
 				Player p = event.getPlayer();
+				HyperEconomy he = em.getHyperPlayer(p.getName()).getHyperEconomy();
 				Block b = null;
 				try {
 					b = p.getTargetBlock(null, 500);
@@ -44,8 +44,8 @@ public class TransactionSign implements Listener {
 					String line3 = ChatColor.stripColor(s.getLine(2)).trim();
 					if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
 						String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
-						line12 = sf.fixName(line12);
-						if (sf.objectTest(line12)) {
+						line12 = he.fixName(line12);
+						if (he.objectTest(line12)) {
 							String line4 = ChatColor.stripColor(s.getLine(3)).trim();
 							int amount = 0;
 							try {
@@ -99,8 +99,8 @@ public class TransactionSign implements Listener {
 						amount = 0;
 					}
 					String line12 = ChatColor.stripColor(scevent.getLine(0)).trim() + ChatColor.stripColor(scevent.getLine(1)).trim();
-					line12 = sf.fixName(line12);
-					if (sf.objectTest(line12)) {
+					line12 = em.getEconomy("default").fixName(line12);
+					if (em.getEconomy("default").objectTest(line12)) {
 						if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
 							String line1 = ChatColor.stripColor(scevent.getLine(0).trim());
 							String line2 = ChatColor.stripColor(scevent.getLine(1).trim());
@@ -145,9 +145,9 @@ public class TransactionSign implements Listener {
 			if (!hc.getYaml().getConfig().getBoolean("config.use-transaction-signs")) {return;}
 			Player p = ievent.getPlayer();
 			if (p == null) {return;}
+			HyperEconomy he = em.getHyperPlayer(p.getName()).getHyperEconomy();
 			if (p.isSneaking() && p.hasPermission("hyperconomy.admin")) {return;}
 			LanguageFile L = hc.getLanguageFile();
-			HyperEconomy shop = hc.getShopFactory();
 			boolean requireShop = hc.getYaml().getConfig().getBoolean("config.require-transaction-signs-to-be-in-shop");
 
 			Block b = null;
@@ -174,8 +174,8 @@ public class TransactionSign implements Listener {
 						return;
 					}
 					String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
-					line12 = sf.fixName(line12);
-					if (sf.objectTest(line12)) {
+					line12 = he.fixName(line12);
+					if (he.objectTest(line12)) {
 						if (!s.getLine(0).startsWith("\u00A7")) {
 							s.setLine(0, "\u00A71" + s.getLine(0));
 							s.setLine(1, "\u00A71" + s.getLine(1));
@@ -191,14 +191,14 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.buysign")) {
-									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
-										HyperPlayer hp = sf.getHyperPlayer(p);
+									if ((he.inAnyShop(p) && requireShop) || !requireShop) {
+										HyperPlayer hp = he.getHyperPlayer(p);
 										if (hp == null) {
 											ievent.setCancelled(true);
 											return;
 										}
-										if (!requireShop || hp.hasBuyPermission(shop.getShop(p))) {
-											HyperObject ho = sf.getHyperObject(line12, hp.getEconomy());
+										if (!requireShop || hp.hasBuyPermission(he.getShop(p))) {
+											HyperObject ho = he.getHyperObject(line12);
 											if (!hc.isLocked()) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 												pt.setAmount(amount);
@@ -231,19 +231,19 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
-									if ((shop.inAnyShop(p) && requireShop) || !requireShop) {
-										HyperPlayer hp = sf.getHyperPlayer(p);
+									if ((he.inAnyShop(p) && requireShop) || !requireShop) {
+										HyperPlayer hp = he.getHyperPlayer(p);
 										if (hp == null) {
 											ievent.setCancelled(true);
 											return;
 										}
-										if (!requireShop || hp.hasSellPermission(shop.getShop(p))) {
+										if (!requireShop || hp.hasSellPermission(he.getShop(p))) {
 											if (p.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 												p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 												ievent.setCancelled(true);
 												return;
 											}
-											HyperObject ho = sf.getHyperObject(line12, hp.getEconomy());
+											HyperObject ho = he.getHyperObject(line12);
 											if (!hc.isLocked()) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 												pt.setAmount(amount);

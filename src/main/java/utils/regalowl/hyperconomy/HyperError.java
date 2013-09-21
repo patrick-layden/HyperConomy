@@ -100,10 +100,10 @@ public class HyperError {
 						} catch (FileNotFoundException e1) {
 							e1.printStackTrace();
 						}
-						DataHandler sf = hc.getDataFunctions();
+						EconomyManager em = hc.getEconomyManager();
 						boolean objectsLoaded = false;
-						if (sf != null) {
-							objectsLoaded = sf.objectsLoaded();
+						if (em != null) {
+							objectsLoaded = em.economiesLoaded();
 						}
 						info = ft.getTimeStamp() + "\r\n"
 						+ "HyperConomy version: " + hc.s().getServerVersion() + "\r\n"

@@ -19,12 +19,12 @@ public class Toggleeconomy {
 			if (hc.s().gB("use-external-economy-plugin")) {
 				hc.getYaml().getConfig().set("config.use-external-economy-plugin", false);
 				hc.s().sB("use-external-economy-plugin", false);
-				hc.getDataFunctions().createGlobalShopAccount();
+				hc.getEconomyManager().getEconomy("default").createGlobalShopAccount();
 				sender.sendMessage(L.get("TOGGLEECONOMY_DISABLED"));
 			} else {
 				hc.getYaml().getConfig().set("config.use-external-economy-plugin", true);
 				hc.s().sB("use-external-economy-plugin", true);
-				hc.getDataFunctions().createGlobalShopAccount();
+				hc.getEconomyManager().getEconomy("default").createGlobalShopAccount();
 				sender.sendMessage(L.get("TOGGLEECONOMY_ENABLED"));
 			}
 		} catch (Exception e) {

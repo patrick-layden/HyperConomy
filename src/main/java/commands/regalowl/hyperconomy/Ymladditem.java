@@ -8,7 +8,7 @@ public class Ymladditem {
 	Ymladditem(Player player, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler dh = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		try {
 			String name = args[0];
 			double value = Double.parseDouble(args[1]);
@@ -16,8 +16,8 @@ public class Ymladditem {
 			double startprice = Double.parseDouble(args[3]);
 			int itd = player.getItemInHand().getTypeId();
 			int da = hc.getInventoryManipulation().getDamageValue(player.getItemInHand());
-			String playerecon = dh.getHyperPlayer(player).getEconomy();
-			HyperObject ho =  hc.getDataFunctions().getHyperObject(itd, da, playerecon);
+			HyperEconomy econ = em.getEconomy(em.getHyperPlayer(player.getName()).getEconomy());
+			HyperObject ho =  econ.getHyperObject(itd, da);
 			if (ho != null) {
 				player.sendMessage(L.get("ALREADY_IN_DATABASE"));
 				return;

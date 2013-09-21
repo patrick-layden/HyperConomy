@@ -10,32 +10,30 @@ public class Importbalance {
 	Importbalance(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler df = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		Economy econ = hc.getEconomy();
 		Log l = hc.getLog();
 		try {
 			if (hc.s().gB("use-external-economy-plugin")) {
-				ArrayList<String> players = df.getEconPlayers();
+				
+				ArrayList<String> players = new ArrayList<String>();
+				for (HyperPlayer hp:em.getHyperPlayers()) {
+					players.add(hp.getName());
+				}
 				if (args.length == 0) {
 					
 					for (String player:players) {
 						if (econ.hasAccount(player)) {
-							df.getHyperPlayer(player).setBalance(econ.getBalance(player));
+							em.getHyperPlayer(player).setBalance(econ.getBalance(player));
 							l.writeAuditLog(player, "initialization", econ.getBalance(player), "HyperConomy");
 						}
 					}
 					sender.sendMessage(L.get("PLAYERS_IMPORTED"));
 				} else if (args.length > 0) {
 					for (int i = 0; i < args.length; i++) {
-						String player = df.fixpN(args[i]);
+						String player = args[i];
 						if (econ.hasAccount(player)) {
-							if (players.contains(player)) {
-								df.getHyperPlayer(player).setBalance(econ.getBalance(player));
-							} else {
-								df.addPlayer(player);
-								df.getHyperPlayer(player).setBalance(econ.getBalance(player));
-								l.writeAuditLog(player, "initialization", econ.getBalance(player), "HyperConomy");
-							}
+							em.getHyperPlayer(player).setBalance(econ.getBalance(player));
 						}
 					}
 					sender.sendMessage(L.get("PLAYERS_IMPORTED"));

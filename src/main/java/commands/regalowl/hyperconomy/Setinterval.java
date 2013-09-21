@@ -6,17 +6,19 @@ public class Setinterval {
 
 	Setinterval(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy s = hc.getShopFactory();
+		EconomyManager em = hc.getEconomyManager();
 		YamlFile yaml = hc.getYaml();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		try {
     		if (args.length == 2) {
     			if (args[0].equalsIgnoreCase("shop")) {
-	    			s.setShopCheckInterval(Long.parseLong(args[1]));
-	    			yaml.getConfig().set("config.shopcheckinterval", s.getShopCheckInterval());
-	    			s.stopShopCheck();
-	    			s.startShopCheck();
+    				for (HyperEconomy he:em.getEconomies()) {
+    	    			he.setShopCheckInterval(Long.parseLong(args[1]));
+    	    			yaml.getConfig().set("config.shopcheckinterval", he.getShopCheckInterval());
+    	    			he.stopShopCheck();
+    	    			he.startShopCheck();
+    				}
 	    			sender.sendMessage(L.get("SHOP_INTERVAL_SET"));
     			} else if (args[0].equalsIgnoreCase("save")) {
     				long saveinterval = Long.parseLong(args[1]);

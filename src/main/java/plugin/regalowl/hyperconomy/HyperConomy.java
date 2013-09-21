@@ -16,20 +16,18 @@ public class HyperConomy extends JavaPlugin {
 	public static HyperEconAPI hyperEconAPI;
 	public static HyperObjectAPI hyperObjectAPI;
 	
+	private EconomyManager em;
 	private HyperSettings hs;
 	private Calculation calc;
 	private Log l;
-	private HyperEconomy s;
 	private InfoSignHandler isign;
 	private _Command commandhandler;
 	private History hist;
 	private InventoryManipulation im;
 	private Notification not;
 	private ItemDisplayFactory itdi;
-	private DataHandler df;
 	private SQLWrite sw;
 	private SQLRead sr;
-	private SQLEconomy sqe;
 	private WebHandler wh;
 	private ChestShop cs;
 	private YamlFile yaml;
@@ -39,7 +37,6 @@ public class HyperConomy extends JavaPlugin {
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
 	private Economy economy;
-
 	private boolean enabled;
 
 	@Override
@@ -51,7 +48,7 @@ public class HyperConomy extends JavaPlugin {
 	public void onDisable() {
 		shutDown(false);
 	}
-
+	
 	public void onDataLoad() {
 		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
 		if (x != null & x instanceof Vault) {
@@ -60,7 +57,6 @@ public class HyperConomy extends JavaPlugin {
 			log.warning(L.get("VAULT_NOT_FOUND"));
 			s().sB("use-external-economy-plugin", false);
 		}
-		df.createGlobalShopAccount();
 		hist = new History();
 		itdi = new ItemDisplayFactory();
 		if (wh == null) {
@@ -71,7 +67,6 @@ public class HyperConomy extends JavaPlugin {
 			wh.startServer();
 		}
 		isign.updateSigns();
-		
 		enabled = true;
 		loadLock = false;
 	}
@@ -84,28 +79,26 @@ public class HyperConomy extends JavaPlugin {
 		hc = this;
 		playerLock = false;
 		fullLock = false;
-		boolean migrate = false;
 		yaml = new YamlFile();
 		yaml.YamlEnable();
 		L = new LanguageFile();
 		hs = new HyperSettings();
-		sqe = new SQLEconomy();
+		em = new EconomyManager();
 		boolean databaseOk = false;
 		if (hc.s().gB("sql-connection.use-mysql")) {
-			databaseOk = sqe.checkMySQL();
+			databaseOk = em.checkMySQL();
 			if (!databaseOk) {
 				hc.s().sB("sql-connection.use-mysql", false);
-				databaseOk = sqe.checkSQLLite();
+				databaseOk = em.checkSQLLite();
 				log.severe(L.get("SWITCH_TO_SQLITE"));
 			}
 		} else {
-			databaseOk = sqe.checkSQLLite();
+			databaseOk = em.checkSQLLite();
 		}
 		if (databaseOk) {
 			sw = new SQLWrite();
 			sr = new SQLRead();
-			df = new DataHandler();
-			migrate = sqe.checkData();
+			em.load();
 		} else {
 			log.severe(L.get("LOG_BREAK"));
 			log.severe(L.get("LOG_BREAK"));
@@ -116,7 +109,7 @@ public class HyperConomy extends JavaPlugin {
 			getPluginLoader().disablePlugin(this);
 			return;
 		}
-		s = new HyperEconomy();
+		//s = new HyperEconomy();
 		l = new Log(this);
 		im = new InventoryManipulation();
 		calc = new Calculation();
@@ -124,10 +117,6 @@ public class HyperConomy extends JavaPlugin {
 		not = new Notification();
 		isign = new InfoSignHandler();
 		new TransactionSign();
-		if (!migrate) {
-			df.load();
-		}
-		s.startShopCheck();
 		hs.startSave();
 		cs = new ChestShop();
 		hyperAPI = new HyperAPI();
@@ -141,8 +130,7 @@ public class HyperConomy extends JavaPlugin {
 		if (itdi != null) {
 			itdi.unloadDisplays();
 		}
-		if (s != null) {
-			s.stopShopCheck();
+		if (hs != null) {
 			hs.stopSave();
 		}
 		if (hist != null) {
@@ -161,8 +149,8 @@ public class HyperConomy extends JavaPlugin {
 			yaml.saveYamls();
 		}
 		getServer().getScheduler().cancelTasks(this);
-		if (df != null) {
-			df.clearData();
+		if (em != null) {
+			em.clearData();
 		}
 		if (protect) {
 			new DisabledProtection();
@@ -265,18 +253,22 @@ public class HyperConomy extends JavaPlugin {
 	public YamlFile getYaml() {
 		return yaml;
 	}
-
-	public DataHandler getDataFunctions() {
-		return df;
+	
+	public EconomyManager getEconomyManager() {
+		return em;
 	}
+
+	//public DataHandler getDataFunctions() {
+	//	return df;
+	//}
 
 	public Calculation getCalculation() {
 		return calc;
 	}
 
-	public HyperEconomy getShopFactory() {
-		return s;
-	}
+	//public HyperEconomy getShopFactory() {
+	//	return s;
+	//}
 
 	public Economy getEconomy() {
 		return economy;
@@ -300,10 +292,6 @@ public class HyperConomy extends JavaPlugin {
 
 	public SQLRead getSQLRead() {
 		return sr;
-	}
-
-	public SQLEconomy getSQLEconomy() {
-		return sqe;
 	}
 
 	public ItemDisplayFactory getItemDisplay() {

@@ -12,7 +12,6 @@ public class Shop implements Comparable<Shop>{
 	private String name;
 	private String world;
 	private String economy;
-	//private String account;
 	private String message1;
 	private String message2;
 	private int p1x;
@@ -26,6 +25,7 @@ public class Shop implements Comparable<Shop>{
 	private boolean useshopexitmessage;
 	
 	private HyperConomy hc;
+	private EconomyManager em;
 	private LanguageFile L;
 	private FileConfiguration shopFile;
 	
@@ -36,6 +36,7 @@ public class Shop implements Comparable<Shop>{
 		this.name = name;
 		this.economy = economy;
 		hc = HyperConomy.hc;
+		em = hc.getEconomyManager();
 		L = hc.getLanguageFile();
 		globalShop = false;
 		shopFile = hc.getYaml().getShops();
@@ -174,6 +175,10 @@ public class Shop implements Comparable<Shop>{
 		return economy;
 	}
 	
+	public HyperEconomy getHyperEconomy() {
+		return em.getEconomy(economy);
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -192,7 +197,7 @@ public class Shop implements Comparable<Shop>{
 		if (unavailableS.equalsIgnoreCase("all")) {
 			return false;
 		}
-		item = hc.getDataFunctions().fixNameTest(item);
+		item = em.getEconomy(economy).fixNameTest(item);
 		if (item == null) {
 			return false;
 		}
@@ -212,7 +217,7 @@ public class Shop implements Comparable<Shop>{
 	}
 	
 	public ArrayList<HyperObject> getAvailableObjects() {
-		ArrayList<HyperObject> allEconomy = hc.getDataFunctions().getHyperObjects(economy);
+		ArrayList<HyperObject> allEconomy = em.getEconomy(economy).getHyperObjects();
 		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
 		for (HyperObject ho : allEconomy) {
 			if (has(ho)) {
@@ -234,15 +239,15 @@ public class Shop implements Comparable<Shop>{
 	}
 	
 	public void addObjects(ArrayList<String> objects) {
-		DataHandler dh = hc.getDataFunctions();
+		HyperEconomy he = em.getEconomy(economy);
 		FileConfiguration sh = hc.getYaml().getShops();
 		SerializeArrayList sal = new SerializeArrayList();
 		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
 		if (unavailable.size() == 1 && unavailable.get(0).equalsIgnoreCase("all")) {
-			unavailable = dh.getNames();
+			unavailable = he.getNames();
 		}
 		for (String object:objects) {
-			if (unavailable.contains(dh.fixName(object))) {
+			if (unavailable.contains(he.fixName(object))) {
 				unavailable.remove(object);
 			}
 		}
@@ -250,7 +255,7 @@ public class Shop implements Comparable<Shop>{
 	}
 	
 	public void removeObjects(ArrayList<String> objects) {
-		DataHandler dh = hc.getDataFunctions();
+		HyperEconomy he = em.getEconomy(economy);
 		FileConfiguration sh = hc.getYaml().getShops();
 		SerializeArrayList sal = new SerializeArrayList();
 		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
@@ -258,7 +263,7 @@ public class Shop implements Comparable<Shop>{
 			return;
 		}
 		for (String object:objects) {
-			if (!unavailable.contains(dh.fixName(object))) {
+			if (!unavailable.contains(he.fixName(object))) {
 				unavailable.add(object);
 			}
 		}
@@ -303,7 +308,7 @@ public class Shop implements Comparable<Shop>{
 				if (inShop(p)) {
 					inShop.add(p.getName());
 					sendEntryMessage(p);
-					hc.getDataFunctions().getHyperPlayer(p).setEconomy(economy);
+					em.getHyperPlayer(p.getName()).setEconomy(economy);
 				}
 			}
 		}

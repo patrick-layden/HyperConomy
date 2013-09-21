@@ -6,15 +6,14 @@ public class Buyid {
 	Buyid(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		HyperEconomy s = hc.getShopFactory();
 		int amount;
 		int itd;
 		int da = 0;
 		try {
-			String playerecon = hc.getDataFunctions().getHyperPlayer(player).getEconomy();
-			if (s.inAnyShop(player)) {
-				HyperPlayer hp = hc.getDataFunctions().getHyperPlayer(player);
-				if (hp.hasBuyPermission(s.getShop(player))) {
+			HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player.getName()).getHyperEconomy();
+			if (he.inAnyShop(player)) {
+				HyperPlayer hp = he.getHyperPlayer(player);
+				if (hp.hasBuyPermission(he.getShop(player))) {
 					if (args.length == 2) {
 						amount = Integer.parseInt(args[0]);
 						itd = Integer.parseInt(args[1]);
@@ -29,12 +28,12 @@ public class Buyid {
 					if (amount > 10000) {
 						amount = 10000;
 					}
-					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, playerecon);
+					HyperObject ho = he.getHyperObject(itd, da);
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
 						String nam = ho.getName();
-						if (s.getShop(player).has(nam)) {
+						if (he.getShop(player).has(nam)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(ho);
 							pt.setAmount(amount);

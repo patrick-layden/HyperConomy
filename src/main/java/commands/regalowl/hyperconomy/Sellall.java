@@ -7,19 +7,20 @@ public class Sellall {
 
 	Sellall(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler dh = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		if (player.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 			player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 			return;
 		}
 		try {
-			if (s.inAnyShop(player)) {
-				if (dh.getHyperPlayer(player).hasSellPermission(s.getShop(player))) {
+			HyperPlayer hp = em.getHyperPlayer(player.getName());
+			HyperEconomy he = hp.getHyperEconomy();
+			if (he.inAnyShop(player)) {
+				if (he.getHyperPlayer(player).hasSellPermission(he.getShop(player))) {
 					if (args.length == 0) {
 						PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_ALL);
-						TransactionResponse response = dh.getHyperPlayer(player).processTransaction(pt);
+						TransactionResponse response = he.getHyperPlayer(player).processTransaction(pt);
 						response.sendMessages();
 						if (response.getFailedObjects().size() == 0) {
 							player.sendMessage(L.get("LINE_BREAK"));

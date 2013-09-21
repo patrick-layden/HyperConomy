@@ -12,23 +12,23 @@ public class Audit {
 	private double cbalance;
 	private double logbalance;
 	private double auditbalance;
-	private DataHandler dh;
+	private EconomyManager em;
 	
 	Audit(String args[], CommandSender csender) {
 		sender = csender;
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		dh = hc.getDataFunctions();
+		em = hc.getEconomyManager();
 		try {
 			account = args[0];
-			if (!dh.hasAccount(account)) {
+			if (!em.hyperPlayerExists(account)) {
 				sender.sendMessage(L.get("ACCOUNT_NOT_FOUND"));
 				return;
 			}
 
 			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 	    		public void run() {
-	    			cbalance = hc.getDataFunctions().getHyperPlayer(account).getBalance();
+	    			cbalance = em.getHyperPlayer(account).getBalance();
 	    			logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
 	    			auditbalance = getAuditLogTotal(account);
 	    			hc.getServer().getScheduler().runTask(hc, new Runnable() {

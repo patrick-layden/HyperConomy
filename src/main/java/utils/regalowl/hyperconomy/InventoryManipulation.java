@@ -362,7 +362,7 @@ public class InventoryManipulation {
 	public ArrayList<HyperObject> getEnchantmentObjects (ItemStack stack, String economy) {
 		ArrayList<HyperObject> enchantmentObjects = new ArrayList<HyperObject>();
 		for(String enchantment:convertEnchantmentMapToNames(getEnchantmentMap(stack))) {
-			HyperObject eo = hc.getDataFunctions().getHyperObject(enchantment, economy);
+			HyperObject eo = hc.getEconomyManager().getEconomy(economy).getHyperObject(enchantment);
 			if (eo != null) {
 				enchantmentObjects.add(eo);
 			}
@@ -386,7 +386,7 @@ public class InventoryManipulation {
 		Iterator<Enchantment> ite = enchants.keySet().iterator();
 		while (ite.hasNext()) {
 			Enchantment e = ite.next();
-			enchantments.add(hc.getDataFunctions().getEnchantNameWithoutLevel(e.getName()) + enchants.get(e));
+			enchantments.add(hc.getEconomyManager().getEconomy("default").getEnchantNameWithoutLevel(e.getName()) + enchants.get(e));
 		}
 		return enchantments;
 	}

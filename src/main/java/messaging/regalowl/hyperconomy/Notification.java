@@ -61,13 +61,13 @@ public class Notification {
     }
 
 	public void send() {
-		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(econ);
 		if (checkNotify(name.get(0))) {
 			double cost = 0.0;
 			int stock = 0;
-			HyperObject ho = sf.getHyperObject(name.get(0), econ);
-			if (sf.itemTest(name.get(0))) {
+			HyperObject ho = he.getHyperObject(name.get(0));
+			if (he.itemTest(name.get(0))) {
 				stock = (int) ho.getStock();
 				cost = ho.getCost(1);
 
@@ -77,10 +77,10 @@ public class Notification {
 					manualNotify(message);
 					previousmessage = message;
 				}
-			} else if (sf.enchantTest(name.get(0))) {
+			} else if (he.enchantTest(name.get(0))) {
 				cost = ho.getCost(EnchantmentClass.fromString(eclass.get(0)));
 				cost = cost + ho.getPurchaseTax(cost);
-				stock = (int) sf.getHyperObject(name.get(0), econ).getStock();
+				stock = (int) he.getHyperObject(name.get(0)).getStock();
 				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, name.get(0), econ);
 
 				if (!message.equalsIgnoreCase(previousmessage)) {

@@ -6,7 +6,7 @@ public class Deleteeconomy {
 	Deleteeconomy(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		HyperEconomy sf = hc.getShopFactory();
+		EconomyManager em = hc.getEconomyManager();
 		try {
 			if (args.length == 1) {
 				String economy = args[0];
@@ -14,21 +14,21 @@ public class Deleteeconomy {
 					sender.sendMessage(L.get("CANT_DELETE_DEFAULT_ECONOMY"));
 					return;
 				}
-				if (hc.getDataFunctions().testEconomy(economy)) {
+				if (em.testEconomy(economy)) {
 					if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 						new Backup();
 					}
-					for (Shop shop:sf.getShops()) {
+					for (Shop shop:em.getShops()) {
 						if (shop.getEconomy().equalsIgnoreCase(economy)) {
 							shop.setEconomy("default");
 						}
 					}
-					for (HyperPlayer hp:hc.getDataFunctions().getHyperPlayers()) {
+					for (HyperPlayer hp:em.getHyperPlayers()) {
 						if (hp.getEconomy().equalsIgnoreCase(economy)) {
 							hp.setEconomy("default");
 						}
 					}
-					hc.getSQLEconomy().deleteEconomy(economy);
+					em.deleteEconomy(economy);
 					sender.sendMessage(L.get("ECONOMY_DELETED"));
 				} else {
 					sender.sendMessage(L.get("ECONOMY_DOESNT_EXIST"));

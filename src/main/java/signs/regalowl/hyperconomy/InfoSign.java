@@ -81,7 +81,7 @@ public class InfoSign {
 	public boolean setData(String signKey, SignType type, String objectName, String economy) {
 		try {
 			hc = HyperConomy.hc;
-			DataHandler dh = hc.getDataFunctions();
+			HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 			L = hc.getLanguageFile();
 			if (signKey == null || type == null || objectName == null) {
 				new HyperError("DEBUG: infosign initialization null: " + signKey + ", " + objectName + ", " + economy);
@@ -97,18 +97,18 @@ public class InfoSign {
 			signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
 			this.z = Integer.parseInt(signKey);
 			this.type = type;
-			this.objectName = hc.getDataFunctions().fixName(objectName);
+			this.objectName = he.fixName(objectName);
 			if (economy != null) {
 				this.economy = economy;
 			}
-			isEnchantment = dh.enchantTest(this.objectName);
+			isEnchantment = he.enchantTest(this.objectName);
 			Location l = new Location(Bukkit.getWorld(world), x, y, z);
 			Chunk c = l.getChunk();
 			if (!c.isLoaded()) {
 				c.load();
 			}
 			Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
-			ho = hc.getDataFunctions().getHyperObject(this.objectName, economy);
+			ho = he.getHyperObject(this.objectName);
 			if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
 				return true;
 			}
@@ -170,7 +170,8 @@ public class InfoSign {
 			return;
 		}
 		if (ho == null) {
-			ho = hc.getDataFunctions().getHyperObject(objectName, economy);
+			HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+			ho = he.getHyperObject(objectName);
 			if (ho == null) {
 				new HyperError("InfoSign HyperObject null after retry: " + objectName + "," + economy);
 				return;

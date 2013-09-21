@@ -9,8 +9,8 @@ public class Createeconomy {
 		try {
 			if (args.length == 1) {
 				String economy = args[0];
-				if (!hc.getDataFunctions().testEconomy(economy)) {
-					hc.getSQLEconomy().createNewEconomy(economy);
+				if (!hc.getEconomyManager().testEconomy(economy)) {
+					hc.getEconomyManager().createNewEconomy(economy);
 					sender.sendMessage(L.get("NEW_ECONOMY_CREATED"));
 				} else {
 					sender.sendMessage(L.get("ECONOMY_ALREADY_EXISTS"));

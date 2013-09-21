@@ -1,12 +1,13 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+
 import org.bukkit.command.CommandSender;
 
 public class Hctop {
 	Hctop(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler df = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
 		try {
@@ -26,7 +27,7 @@ public class Hctop {
 			
 			ArrayList<String> players = new ArrayList<String>();
 			ArrayList<Double> balances = new ArrayList<Double>();
-			for (HyperPlayer hp:df.getHyperPlayers()) {
+			for (HyperPlayer hp:em.getHyperPlayers()) {
 				players.add(hp.getName());
 				balances.add(hp.getBalance());
 			}

@@ -8,12 +8,13 @@ public class Notify {
 	Notify(String[] args, CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler dh = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		try {
-			String itemname = dh.fixName(args[0]);
+			HyperEconomy he = em.getEconomy("default");
+			String itemname = he.fixName(args[0]);
 			if (args.length == 1) {
 				if (hc.getYaml().getConfig().getBoolean("config.use-notifications")) {
-					if (dh.itemTest(itemname) || dh.enchantTest(itemname) || itemname.equalsIgnoreCase("all")) {
+					if (he.itemTest(itemname) || he.enchantTest(itemname) || itemname.equalsIgnoreCase("all")) {
 						if (!itemname.equalsIgnoreCase("all")) {
 							boolean note = false;
 							String notify = hc.getYaml().getConfig().getString("config.notify-for");
@@ -40,7 +41,7 @@ public class Notify {
 								sender.sendMessage(L.f(L.get("RECEIVE_NOTIFICATIONS_S"), itemname));
 							}
 						} else {
-							ArrayList<String> items = dh.getNames();
+							ArrayList<String> items = he.getNames();
 							String namelist = "";
 							int i = 0;
 							while (i < items.size()) {

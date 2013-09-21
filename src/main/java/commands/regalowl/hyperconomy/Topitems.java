@@ -12,8 +12,7 @@ public class Topitems {
 	Topitems(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		HyperEconomy s = hc.getShopFactory();
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			if (args.length > 1) {
@@ -23,10 +22,10 @@ public class Topitems {
 			// Gets the shop name if the player is in a shop.
 			String nameshop = "";
 			if (player != null) {
-				if (s.inAnyShop(player)) {
-					nameshop = s.getShop(player).getName();
+				if (he.inAnyShop(player)) {
+					nameshop = he.getShop(player).getName();
 				} 
-				if (requireShop && s.getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
+				if (requireShop && he.getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
 					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
 					return;
 				}
@@ -38,17 +37,17 @@ public class Topitems {
 				page = Integer.parseInt(args[0]);
 			}
 			SortedMap<Double, String> itemstocks = new TreeMap<Double, String>();
-			ArrayList<String> inames = sf.getItemNames();
+			ArrayList<String> inames = he.getItemNames();
 			for (int c = 0; c < inames.size(); c++) {
 				String elst = inames.get(c);
 				boolean unavailable = false;
 				if (nameshop != "") {
-					if (!s.getShop(nameshop).has(elst)) {
+					if (!he.getShop(nameshop).has(elst)) {
 						unavailable = true;
 					}
 				}
 				if (!unavailable) {
-					double samount = sf.getHyperObject(elst, playerecon).getStock();
+					double samount = he.getHyperObject(elst).getStock();
 					if (samount > 0) {
 						while (itemstocks.containsKey(samount * 100)) {
 							samount = samount + .0000001;

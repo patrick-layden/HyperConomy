@@ -1,6 +1,7 @@
 package regalowl.hyperconomy;
 
 import java.util.Iterator;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -9,18 +10,18 @@ public class Evalue {
 	Evalue(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
-		DataHandler sf = hc.getDataFunctions();
 		LanguageFile L = hc.getLanguageFile();
-		HyperEconomy s = hc.getShopFactory();
+		EconomyManager em = hc.getEconomyManager();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
-			HyperPlayer hp = sf.getHyperPlayer(player);
+			HyperPlayer hp = em.getHyperPlayer(player.getName());
+			HyperEconomy he = hp.getHyperEconomy();
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			if ((requireShop && s.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if ((requireShop && he.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				if (args.length == 2) {
 					String nam = args[0];
-					if (sf.enchantTest(nam)) {
-						HyperObject ho = sf.getHyperObject(nam, hp.getEconomy());
+					if (he.enchantTest(nam)) {
+						HyperObject ho = he.getHyperObject(nam);
 						String type = args[1];
 						if (type.equalsIgnoreCase("s")) {
 							String[] classtype = new String[9];
@@ -65,7 +66,7 @@ public class Evalue {
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else if (type.equalsIgnoreCase("a")) {
 							sender.sendMessage(L.get("LINE_BREAK"));
-							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), sf.getHyperObject(nam, playerecon).getStock(), nam));
+							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), he.getHyperObject(nam).getStock(), nam));
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else {
 							sender.sendMessage(L.get("EVALUE_INVALID"));
@@ -84,9 +85,9 @@ public class Evalue {
 							Enchantment en = null;
 							en = Enchantment.getByName(enchname);
 							int lvl = im.getEnchantmentLevel(player.getItemInHand(), en);
-							String nam = sf.getEnchantNameWithoutLevel(enchname);
+							String nam = he.getEnchantNameWithoutLevel(enchname);
 							String fnam = nam + lvl;
-							HyperObject ho = sf.getHyperObject(fnam, hp.getEconomy());
+							HyperObject ho = he.getHyperObject(fnam);
 							String mater = player.getItemInHand().getType().name();
 							double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
 							double cost = ho.getCost(EnchantmentClass.fromString(mater));
@@ -96,7 +97,7 @@ public class Evalue {
 							double salestax = 0;
 							if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
 								double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
-								double cbal = sf.getHyperPlayer(player.getName()).getBalance();
+								double cbal = he.getHyperPlayer(player.getName()).getBalance();
 								if (cbal >= moneycap) {
 									salestax = value * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent") / 100);
 								} else {
@@ -109,7 +110,7 @@ public class Evalue {
 							value = calc.twoDecimals(value - salestax);
 							sender.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 							sender.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), sf.getHyperObject(fnam, playerecon).getStock(), fnam));
+							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), he.getHyperObject(fnam).getStock(), fnam));
 						}
 						player.sendMessage(L.get("LINE_BREAK"));
 					} else {

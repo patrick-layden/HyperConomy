@@ -7,9 +7,8 @@ import org.bukkit.inventory.ItemStack;
 public class Hs {
 	Hs(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler dh = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		InventoryManipulation im = hc.getInventoryManipulation();
 		int amount;
 		try {
@@ -17,9 +16,10 @@ public class Hs {
 				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 				return;
 			}
-			HyperPlayer hp = dh.getHyperPlayer(player);
-			if (s.inAnyShop(player)) {
-				if (dh.getHyperPlayer(player).hasSellPermission(s.getShop(player))) {
+			HyperPlayer hp = em.getHyperPlayer(player.getName());
+			HyperEconomy he = hp.getHyperEconomy();
+			if (he.inAnyShop(player)) {
+				if (hp.hasSellPermission(he.getShop(player))) {
 					if (args.length == 0) {
 						amount = 1;
 					} else {
@@ -42,14 +42,14 @@ public class Hs {
 					}
 					int itd = player.getItemInHand().getTypeId();
 					int da = im.getDamageValue(player.getItemInHand());
-					HyperObject ho = hc.getDataFunctions().getHyperObject(itd, da, hp.getEconomy());
+					HyperObject ho = he.getHyperObject(itd, da);
 					if (ho == null) {
 						player.sendMessage(L.get("CANT_BE_TRADED"));
 					} else {
 						String nam = ho.getName();
 						ItemStack iinhand = player.getItemInHand();
 						if (im.hasenchants(iinhand) == false) {
-							if (s.getShop(player).has(nam)) {
+							if (he.getShop(player).has(nam)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 								pt.setHyperObject(ho);
 								pt.setAmount(amount);

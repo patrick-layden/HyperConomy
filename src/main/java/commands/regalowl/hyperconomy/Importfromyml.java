@@ -6,18 +6,19 @@ public class Importfromyml {
 	Importfromyml(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
+		EconomyManager em = hc.getEconomyManager();
 		try {
 			if (args.length == 1 || args.length == 2) {
 				String economy = args[0];
-				if (hc.getDataFunctions().testEconomy(economy)) {
+				if (em.testEconomy(economy)) {
 					if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
 						if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 							new Backup();
 						}
-						SQLEconomy sqe = hc.getSQLEconomy();
 						SQLWrite sw = hc.getSQLWrite();
 						sw.executeSQL("DELETE FROM hyperconomy_objects WHERE ECONOMY = '" + economy + "'");
-						sqe.migrate(economy);
+						em.createEconomyFromYml(economy);
+						em.load();
 						sender.sendMessage(L.get("ECONOMY_IMPORTED"));
 					} else {
 						sender.sendMessage(L.get("IMPORT_PROCEED"));

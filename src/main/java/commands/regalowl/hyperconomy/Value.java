@@ -8,19 +8,19 @@ public class Value {
 
 	Value(String args[], CommandSender sender, String playerecon) {
 		hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		Player player = null;
-		HyperEconomy s = hc.getShopFactory();
-		DataHandler dh = hc.getDataFunctions();
+
+		
 		try {
 			if (sender instanceof Player) {
 				player = (Player) sender;
 			}
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			if (player == null || (requireShop && s.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
-				String name = sf.fixName(args[0]);
+			if (player == null || (requireShop && he.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+				String name = he.fixName(args[0]);
 				int amount;
 				if (args.length == 2) {
 					amount = Integer.parseInt(args[1]);
@@ -30,12 +30,12 @@ public class Value {
 				} else {
 					amount = 1;
 				}
-				if (sf.itemTest(name)) {
-					HyperObject ho = dh.getHyperObject(name, playerecon);
+				if (he.itemTest(name)) {
+					HyperObject ho = he.getHyperObject(name);
 					double val = ho.getValue(amount);
 					double salestax = 0;
 					if (player != null) {
-						HyperPlayer hp = dh.getHyperPlayer(player);
+						HyperPlayer hp = he.getHyperPlayer(player);
 						salestax = hp.getSalesTax(val);
 					}
 					val = calc.twoDecimals(val - salestax);
@@ -48,7 +48,7 @@ public class Value {
 						cost = -1;
 					}
 					double stock = 0;
-					stock = sf.getHyperObject(name, playerecon).getStock();
+					stock = he.getHyperObject(name).getStock();
 					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, name));
 					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, name));
 					sender.sendMessage(L.get("LINE_BREAK"));

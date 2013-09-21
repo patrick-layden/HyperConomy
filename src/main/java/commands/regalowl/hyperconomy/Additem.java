@@ -7,15 +7,15 @@ import org.bukkit.command.CommandSender;
 public class Additem {
 	Additem(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy s = hc.getShopFactory();
+		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 2) {
-				String itemname = hc.getDataFunctions().fixName(args[0]);
-				String shopname = s.fixShopName(args[1]);
-				if (hc.getDataFunctions().objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
-    				if (s.shopExists(shopname)) {
-    					Shop shop = s.getShop(shopname);
+				String itemname = em.getEconomy("default").fixName(args[0]);
+				String shopname = args[1];
+				if (em.getEconomy("default").objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
+    				if (em.shopExists(shopname)) {
+    					Shop shop = em.getShop(shopname);
 	    				if (!shop.has(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
 	    						ArrayList<String> add = new ArrayList<String>();

@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class Setstockmedianall {
 	Setstockmedianall(CommandSender sender, String[] args, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		try {
@@ -17,10 +17,10 @@ public class Setstockmedianall {
 				if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 					new Backup();
 				}
-				ArrayList<String> names = hc.getDataFunctions().getNames();
+				ArrayList<String> names = he.getNames();
 				for (int c = 0; c < names.size(); c++) {
-					sf.getHyperObject(names.get(c), playerecon).setStock(sf.getHyperObject(names.get(c), playerecon).getMedian());
-					sf.getHyperObject(names.get(c), playerecon).setInitiation("false");
+					he.getHyperObject(names.get(c)).setStock(he.getHyperObject(names.get(c)).getMedian());
+					he.getHyperObject(names.get(c)).setInitiation("false");
 				}
 				sender.sendMessage(L.get("SETSTOCKMEDIANALL_SUCCESS"));
 				isign.updateSigns();

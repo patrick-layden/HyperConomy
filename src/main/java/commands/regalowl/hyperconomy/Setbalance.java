@@ -6,13 +6,13 @@ public class Setbalance {
 	Setbalance(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler dh = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		try {
 			if (args.length == 2) {
 				String accountname = args[0];
-				if (dh.hasAccount(accountname)) {
+				if (em.hyperPlayerExists(accountname)) {
 					Double balance = Double.parseDouble(args[1]);
-					dh.getHyperPlayer(accountname).setBalance(balance);
+					em.getHyperPlayer(accountname).setBalance(balance);
 					sender.sendMessage(L.get("BALANCE_SET"));
 				} else {
 					sender.sendMessage(L.get("ACCOUNT_NOT_EXIST"));

@@ -1,9 +1,8 @@
 package regalowl.hyperconomy;
 
+
 import java.util.logging.Logger;
-
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -14,6 +13,7 @@ public class HyperPlayer {
 
 	private HyperConomy hc;
 	private TransactionProcessor tp;
+	private EconomyManager em;
 	private Economy econ;
 	private LanguageFile L;
 	
@@ -31,6 +31,7 @@ public class HyperPlayer {
 	HyperPlayer(String player) {
 		hc = HyperConomy.hc;
 		tp = new TransactionProcessor(this);
+		em = hc.getEconomyManager();
 		SQLWrite sw = hc.getSQLWrite();
 		try {
 			balance = hc.getConfig().getDouble("config.starting-player-account-balance");
@@ -60,6 +61,7 @@ public class HyperPlayer {
 	HyperPlayer(String name, String economy, double balance, double x, double y, double z, String world, String hash, String salt) {
 		hc = HyperConomy.hc;
 		tp = new TransactionProcessor(this);
+		em = hc.getEconomyManager();
 		this.name = name;
 		this.economy = economy;
 		this.balance = balance;
@@ -78,6 +80,9 @@ public class HyperPlayer {
 	}
 	public String getEconomy() {
 		return economy;
+	}
+	public HyperEconomy getHyperEconomy() {
+		return em.getEconomy(economy);
 	}
 	public double getBalance() {
 		if (hc.s().gB("use-external-economy-plugin")) {
@@ -122,6 +127,15 @@ public class HyperPlayer {
 		String statement = "UPDATE hyperconomy_players SET ECONOMY='" + economy + "' WHERE PLAYER = '" + name + "'";
 		hc.getSQLWrite().executeSQL(statement);
 		this.economy = economy;
+		for (HyperEconomy he : em.getEconomies()) {
+			if (he.hasAccount(name)) {
+				if (!he.hasAccount(name)) {
+					he.removeHyperPlayer(this);
+				}
+				em.getEconomy(economy).addHyperPlayer(this);
+			}
+		}
+		
 	}
 	public void setX(double x) {
 		String statement = "UPDATE hyperconomy_players SET X='" + x + "' WHERE PLAYER = '" + name + "'";

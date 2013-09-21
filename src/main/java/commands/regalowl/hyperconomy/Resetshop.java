@@ -8,7 +8,7 @@ public class Resetshop {
 	
 	Resetshop(CommandSender sender, String[] args, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		DataHandler sf = hc.getDataFunctions();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		try {
@@ -18,10 +18,10 @@ public class Resetshop {
 				if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
 					new Backup();
 				}
-				ArrayList<String> names = sf.getNames();
+				ArrayList<String> names = he.getNames();
 				for (int c = 0; c < names.size(); c++) {
 					String cname = names.get(c);
-					HyperObject ho = sf.getHyperObject(cname, playerecon);
+					HyperObject ho = he.getHyperObject(cname);
 					ho.setStock(0);
 					ho.setIsstatic("false");
 					ho.setInitiation("true");

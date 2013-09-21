@@ -7,16 +7,19 @@ import org.bukkit.command.CommandSender;
 public class Removeitem {
 	Removeitem(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy s = hc.getShopFactory();
 		LanguageFile L = hc.getLanguageFile();
-		DataHandler dh = hc.getDataFunctions();
+		EconomyManager em = hc.getEconomyManager();
 		try {
 			if (args.length == 2) {
-				String itemname = dh.fixName(args[0]);
-				String shopname = s.fixShopName(args[1]);
-				if (dh.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
-    				if (s.shopExists(shopname)) {
-    					Shop shop = s.getShop(shopname);
+				String itemname = args[0];
+				String shopname = args[1];
+				if (!em.shopExists(shopname)) {
+					sender.sendMessage(L.get("SHOP_NOT_EXIST"));
+					return;
+				}
+				Shop shop = em.getShop(shopname);
+				HyperEconomy he = shop.getHyperEconomy();
+				if (he.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
 	    				if (shop.has(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
 	    						ArrayList<String> remove = new ArrayList<String>();
@@ -30,9 +33,6 @@ public class Removeitem {
 	    				} else {
 	    					sender.sendMessage(L.get("ALREADY_BEEN_REMOVED"));
 	    				}
-    				} else {
-    					sender.sendMessage(L.get("SHOP_NOT_EXIST"));
-    				}
     			} else {
     				sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
     			}
