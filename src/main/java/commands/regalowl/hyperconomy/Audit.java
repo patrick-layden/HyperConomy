@@ -3,6 +3,9 @@ package regalowl.hyperconomy;
 
 import org.bukkit.command.CommandSender;
 
+import regalowl.databukkit.QueryResult;
+import regalowl.databukkit.SQLRead;
+
 public class Audit {
 	
 	private String account;
@@ -28,7 +31,9 @@ public class Audit {
 
 			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 	    		public void run() {
-	    			cbalance = em.getHyperPlayer(account).getBalance();
+	    			HyperPlayer hp = em.getHyperPlayer(account);
+	    			account = hp.getName();
+	    			cbalance = hp.getBalance();
 	    			logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
 	    			auditbalance = getAuditLogTotal(account);
 	    			hc.getServer().getScheduler().runTask(hc, new Runnable() {
@@ -70,7 +75,7 @@ public class Audit {
 		} else if (type.equalsIgnoreCase("purchase")) {
 			query = "SELECT SUM(MONEY) AS total FROM hyperconomy_log WHERE CUSTOMER = '" + account + "' AND ACTION = 'purchase'";
 		}
-		QueryResult result = sr.getDatabaseConnection().read(query);
+		QueryResult result = sr.aSyncSelect(query);
 		double amount = 0.0;
 		if (result.next()) {
 			amount = result.getDouble("total");
@@ -88,7 +93,7 @@ public class Audit {
 	private Double getAuditLogTotal(String account) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLRead sr = hc.getSQLRead();
-		QueryResult result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
+		QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
 		double tBalance = 0.0;
 		//double lastSetBalance = -1;
 		while (result.next()) {

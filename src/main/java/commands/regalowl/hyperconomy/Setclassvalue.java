@@ -13,9 +13,9 @@ public class Setclassvalue {
 				sender.sendMessage(L.get("SETCLASSVALUE_INVALID"));
 			} else {
 				String classtype = args[0];
-				if (hc.getYaml().getConfig().get("config.enchantment.classvalue." + classtype) != null) {
+				if (hc.gYH().gFC("config").get("config.enchantment.classvalue." + classtype) != null) {
 					double value = Double.parseDouble(args[1]);
-					hc.getYaml().getConfig().set("config.enchantment.classvalue." + classtype, value);
+					hc.gYH().gFC("config").set("config.enchantment.classvalue." + classtype, value);
 					sender.sendMessage(L.f(L.get("CLASSVALUE_SET"), classtype));
 					isign.updateSigns();
 				} else {

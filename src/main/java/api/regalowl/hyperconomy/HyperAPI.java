@@ -167,7 +167,7 @@ public class HyperAPI implements GeneralAPI {
 	}
 
 	public String getGlobalShopAccount() {
-		return HyperConomy.hc.getYaml().getConfig().getString("config.global-shop-account");
+		return HyperConomy.hc.gYH().gFC("config").getString("config.global-shop-account");
 	}
 	
 	public boolean isItemDisplay(Item item) {
@@ -182,7 +182,7 @@ public class HyperAPI implements GeneralAPI {
 				return idf.isDisplay(item);
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			HyperConomy.hc.gDB().writeError(e);
 			return false;
 		}
 	}

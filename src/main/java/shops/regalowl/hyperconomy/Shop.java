@@ -39,9 +39,9 @@ public class Shop implements Comparable<Shop>{
 		em = hc.getEconomyManager();
 		L = hc.getLanguageFile();
 		globalShop = false;
-		shopFile = hc.getYaml().getShops();
+		shopFile = hc.gYH().gFC("shops");
 		shopFile.set(name + ".economy", economy);
-		useshopexitmessage = hc.getYaml().getConfig().getBoolean("config.use-shop-exit-message");	
+		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
 	}
 	
 	public int compareTo(Shop s) {
@@ -127,8 +127,10 @@ public class Shop implements Comparable<Shop>{
 	}
 	
 	public void setEconomy(String economy) {
+		em.getEconomy(this.economy).removeShop(name);
 		this.economy = economy;
 		shopFile.set(name + ".economy", economy);
+		em.getEconomy(this.economy).addShop(this);
 	}
 	
 	
@@ -189,7 +191,7 @@ public class Shop implements Comparable<Shop>{
 	
 	
 	public boolean has(String item) {
-		FileConfiguration sh = hc.getYaml().getShops();
+		FileConfiguration sh = hc.gYH().gFC("shops");
 		String unavailableS = sh.getString(name + ".unavailable");
 		if (unavailableS == null || unavailableS.equalsIgnoreCase("")) {
 			return true;
@@ -229,18 +231,18 @@ public class Shop implements Comparable<Shop>{
 	
 	
 	public void addAllObjects() {
-		FileConfiguration sh = hc.getYaml().getShops();
+		FileConfiguration sh = hc.gYH().gFC("shops");
 		sh.set(name + ".unavailable", null);
 	}
 	
 	public void removeAllObjects() {
-		FileConfiguration sh = hc.getYaml().getShops();
+		FileConfiguration sh = hc.gYH().gFC("shops");
 		sh.set(name + ".unavailable", "all");
 	}
 	
 	public void addObjects(ArrayList<String> objects) {
 		HyperEconomy he = em.getEconomy(economy);
-		FileConfiguration sh = hc.getYaml().getShops();
+		FileConfiguration sh = hc.gYH().gFC("shops");
 		SerializeArrayList sal = new SerializeArrayList();
 		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
 		if (unavailable.size() == 1 && unavailable.get(0).equalsIgnoreCase("all")) {
@@ -256,7 +258,7 @@ public class Shop implements Comparable<Shop>{
 	
 	public void removeObjects(ArrayList<String> objects) {
 		HyperEconomy he = em.getEconomy(economy);
-		FileConfiguration sh = hc.getYaml().getShops();
+		FileConfiguration sh = hc.gYH().gFC("shops");
 		SerializeArrayList sal = new SerializeArrayList();
 		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
 		if (unavailable.size() == 1 && unavailable.get(0).equalsIgnoreCase("all")) {
@@ -308,7 +310,7 @@ public class Shop implements Comparable<Shop>{
 				if (inShop(p)) {
 					inShop.add(p.getName());
 					sendEntryMessage(p);
-					em.getHyperPlayer(p.getName()).setEconomy(economy);
+					hc.getEconomyManager().getHyperPlayer(p.getName()).setEconomy(economy);
 				}
 			}
 		}

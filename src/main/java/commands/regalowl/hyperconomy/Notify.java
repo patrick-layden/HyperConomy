@@ -13,11 +13,11 @@ public class Notify {
 			HyperEconomy he = em.getEconomy("default");
 			String itemname = he.fixName(args[0]);
 			if (args.length == 1) {
-				if (hc.getYaml().getConfig().getBoolean("config.use-notifications")) {
+				if (hc.gYH().gFC("config").getBoolean("config.use-notifications")) {
 					if (he.itemTest(itemname) || he.enchantTest(itemname) || itemname.equalsIgnoreCase("all")) {
 						if (!itemname.equalsIgnoreCase("all")) {
 							boolean note = false;
-							String notify = hc.getYaml().getConfig().getString("config.notify-for");
+							String notify = hc.gYH().gFC("config").getString("config.notify-for");
 							if (notify != null) {
 								if (notify.contains("," + itemname + ",")) {
 									note = true;
@@ -31,12 +31,12 @@ public class Notify {
 								if (itemname.equalsIgnoreCase(notify.substring(0, itemname.length()))) {
 									notify = notify.substring(itemname.length() + 1, notify.length());
 								}
-								hc.getYaml().getConfig().set("config.notify-for", notify);
+								hc.gYH().gFC("config").set("config.notify-for", notify);
 								//sender.sendMessage(ChatColor.GOLD + "You will no longer receive notifications for " + itemname);
 								sender.sendMessage(L.f(L.get("NOT_RECEIVE_NOTIFICATIONS_S"), itemname));
 							} else {
 								notify = notify + itemname + ",";
-								hc.getYaml().getConfig().set("config.notify-for", notify);
+								hc.gYH().gFC("config").set("config.notify-for", notify);
 								//sender.sendMessage(ChatColor.GOLD + "You will now receive notifications for " + itemname);
 								sender.sendMessage(L.f(L.get("RECEIVE_NOTIFICATIONS_S"), itemname));
 							}
@@ -48,12 +48,12 @@ public class Notify {
 								namelist = namelist + items.get(i) + ",";
 								i++;
 							}
-							String notify = hc.getYaml().getConfig().getString("config.notify-for");
+							String notify = hc.gYH().gFC("config").getString("config.notify-for");
 							if (notify.equalsIgnoreCase(namelist)) {
-								hc.getYaml().getConfig().set("config.notify-for", "");
+								hc.gYH().gFC("config").set("config.notify-for", "");
 								sender.sendMessage(L.get("NOT_RECEIVE_NOTIFICATIONS"));
 							} else {
-								hc.getYaml().getConfig().set("config.notify-for", namelist);
+								hc.gYH().gFC("config").set("config.notify-for", namelist);
 								sender.sendMessage(L.get("RECEIVE_NOTIFICATIONS"));
 							}
 						}

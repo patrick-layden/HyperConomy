@@ -12,7 +12,7 @@ public class Removeshop {
 				String name = args[0];
 				if (em.shopExists(name)) {
 					Shop shop = em.getShop(name);
-					shop.getHyperEconomy().removeShop(name);
+					shop.getHyperEconomy().deleteShop(name);
 					sender.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), name));
 				} else {
 					sender.sendMessage(L.get("SHOP_NOT_EXIST"));

@@ -19,7 +19,7 @@ public class Repairsigns {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
-		FileConfiguration sns = hc.getYaml().getSigns();
+		FileConfiguration sns = hc.gYH().gFC("signs");
 		
 		if (args.length == 3 || args.length == 1) {
 			int xrad = Math.abs(Integer.parseInt(args[0]));

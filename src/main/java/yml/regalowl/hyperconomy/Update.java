@@ -1,237 +1,239 @@
 package regalowl.hyperconomy;
 
+import regalowl.databukkit.YamlHandler;
+
 
 public class Update {
 	
 	
 	Update() {
 		HyperConomy hc = HyperConomy.hc;
-		YamlFile yaml = hc.getYaml();
+		YamlHandler yh = hc.getYamlHandler();
 		
 		String version = hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
-		String configversion = yaml.getConfig().getString("version");
+		String configversion = yh.gFC("config").getString("version");
 		
 		if (configversion == null || !configversion.equalsIgnoreCase(version)) {
 			LanguageFile L = hc.getLanguageFile();
 			L.updateBackup();
-			if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
+			if (yh.gFC("config").getBoolean("config.run-automatic-backups")) {
 				new Backup();
 			}
-	    	String t = yaml.getConfig().getString("config.signupdateinterval");
+	    	String t = yh.gFC("config").getString("config.signupdateinterval");
 	    	if (t == null) {
-	    		yaml.getConfig().set("config.signupdateinterval", 13);
+	    		yh.gFC("config").set("config.signupdateinterval", 13);
 	    	}
-	    	String t2 = yaml.getConfig().getString("config.daystosavehistory");
+	    	String t2 = yh.gFC("config").getString("config.daystosavehistory");
 	    	if (t2 == null) {
-	    		yaml.getConfig().set("config.daystosavehistory", 30);
+	    		yh.gFC("config").set("config.daystosavehistory", 30);
 	    	}
-	    	String t3 = yaml.getConfig().getString("config.initialshopbalance");
+	    	String t3 = yh.gFC("config").getString("config.initialshopbalance");
 	    	if (t3 == null) {
-	    		yaml.getConfig().set("config.initialshopbalance", 20000000);
+	    		yh.gFC("config").set("config.initialshopbalance", 20000000);
 	    	}
-	    	String t4 = yaml.getConfig().getString("config.shop-has-unlimited-money");
+	    	String t4 = yh.gFC("config").getString("config.shop-has-unlimited-money");
 	    	if (t4 == null) {
-	    		yaml.getConfig().set("config.shop-has-unlimited-money", false);
+	    		yh.gFC("config").set("config.shop-has-unlimited-money", false);
 	    	}
-	    	String t5 = yaml.getConfig().getString("config.use-shop-exit-message");
+	    	String t5 = yh.gFC("config").getString("config.use-shop-exit-message");
 	    	if (t5 == null) {
-	    		yaml.getConfig().set("config.use-shop-exit-message", true);
+	    		yh.gFC("config").set("config.use-shop-exit-message", true);
 	    	}
-	    	String t6 = yaml.getConfig().getString("config.use-notifications");
+	    	String t6 = yh.gFC("config").getString("config.use-notifications");
 	    	if (t6 == null) {
-	    		yaml.getConfig().set("config.use-notifications", true);
+	    		yh.gFC("config").set("config.use-notifications", true);
 	    	}
-	    	String t7 = yaml.getConfig().getString("config.notify-for");
+	    	String t7 = yh.gFC("config").getString("config.notify-for");
 	    	if (t7 == null) {
-	    		yaml.getConfig().set("config.notify-for", "diamond,diamondblock,");
+	    		yh.gFC("config").set("config.notify-for", "diamond,diamondblock,");
 	    	}
-	    	String t8 = yaml.getConfig().getString("config.use-info-signs");
+	    	String t8 = yh.gFC("config").getString("config.use-info-signs");
 	    	if (t8 == null) {
-	    		yaml.getConfig().set("config.use-info-signs", true);
+	    		yh.gFC("config").set("config.use-info-signs", true);
 	    	}
-	    	String t9 = yaml.getConfig().getString("config.store-price-history");
+	    	String t9 = yh.gFC("config").getString("config.store-price-history");
 	    	if (t9 == null) {
-	    		yaml.getConfig().set("config.store-price-history", true);
+	    		yh.gFC("config").set("config.store-price-history", true);
 	    	}
-	    	String t10 = yaml.getConfig().getString("version");
+	    	String t10 = yh.gFC("config").getString("version");
 	    	if (t10 == null) {
 	    		Double newversion = Double.parseDouble(hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion());
-	    		yaml.getConfig().set("version", newversion);
+	    		yh.gFC("config").set("version", newversion);
 	    	}
-	    	String t11 = yaml.getConfig().getString("config.use-transaction-signs");
+	    	String t11 = yh.gFC("config").getString("config.use-transaction-signs");
 	    	if (t11 == null) {
-	    		yaml.getConfig().set("config.use-transaction-signs", true);
+	    		yh.gFC("config").set("config.use-transaction-signs", true);
 	    	}
-	    	String t12 = yaml.getConfig().getString("config.global-shop-account");
+	    	String t12 = yh.gFC("config").getString("config.global-shop-account");
 	    	if (t12 == null) {
-	    		yaml.getConfig().set("config.global-shop-account", "hyperconomy");
+	    		yh.gFC("config").set("config.global-shop-account", "hyperconomy");
 	    	}
-	    	String t13 = yaml.getConfig().getString("config.use-chest-shops");
+	    	String t13 = yh.gFC("config").getString("config.use-chest-shops");
 	    	if (t13 == null) {
-	    		yaml.getConfig().set("config.use-chest-shops", true);
+	    		yh.gFC("config").set("config.use-chest-shops", true);
 	    	}
-	    	String t14 = yaml.getConfig().getString("config.use-shop-permissions");
+	    	String t14 = yh.gFC("config").getString("config.use-shop-permissions");
 	    	if (t14 == null) {
-	    		yaml.getConfig().set("config.use-shop-permissions", false);
+	    		yh.gFC("config").set("config.use-shop-permissions", false);
 	    	}
-	    	String t15 = yaml.getConfig().getString("config.require-chest-shops-to-be-in-shop");
+	    	String t15 = yh.gFC("config").getString("config.require-chest-shops-to-be-in-shop");
 	    	if (t15 == null) {
-	    		yaml.getConfig().set("config.require-chest-shops-to-be-in-shop", false);
+	    		yh.gFC("config").set("config.require-chest-shops-to-be-in-shop", false);
 	    	}
-	    	String t17 = yaml.getConfig().getString("config.sql-connection.use-mysql");
+	    	String t17 = yh.gFC("config").getString("config.sql-connection.use-mysql");
 	    	if (t17 == null) {
-	    		yaml.getConfig().set("config.sql-connection.use-mysql", false);
+	    		yh.gFC("config").set("config.sql-connection.use-mysql", false);
 	    	}
-	    	String t18 = yaml.getConfig().getString("config.sql-connection.username");
+	    	String t18 = yh.gFC("config").getString("config.sql-connection.username");
 	    	if (t18 == null) {
-	    		yaml.getConfig().set("config.sql-connection.username", "default");
+	    		yh.gFC("config").set("config.sql-connection.username", "default");
 	    	}
-	    	String t19 = yaml.getConfig().getString("config.sql-connection.port");
+	    	String t19 = yh.gFC("config").getString("config.sql-connection.port");
 	    	if (t19 == null) {
-	    		yaml.getConfig().set("config.sql-connection.port", 3306);
+	    		yh.gFC("config").set("config.sql-connection.port", 3306);
 	    	}
-	    	String t20 = yaml.getConfig().getString("config.sql-connection.password");
+	    	String t20 = yh.gFC("config").getString("config.sql-connection.password");
 	    	if (t20 == null) {
-	    		yaml.getConfig().set("config.sql-connection.password", "default");
+	    		yh.gFC("config").set("config.sql-connection.password", "default");
 	    	}
-	    	String t21 = yaml.getConfig().getString("config.sql-connection.host");
+	    	String t21 = yh.gFC("config").getString("config.sql-connection.host");
 	    	if (t21 == null) {
-	    		yaml.getConfig().set("config.sql-connection.host", "localhost");
+	    		yh.gFC("config").set("config.sql-connection.host", "localhost");
 	    	}
-	    	String t22 = yaml.getConfig().getString("config.sql-connection.database");
+	    	String t22 = yh.gFC("config").getString("config.sql-connection.database");
 	    	if (t22 == null) {
-	    		yaml.getConfig().set("config.sql-connection.database", "minecraft");
+	    		yh.gFC("config").set("config.sql-connection.database", "minecraft");
 	    	}
-	    	String t23 = yaml.getConfig().getString("config.sales-tax-percent");
+	    	String t23 = yh.gFC("config").getString("config.sales-tax-percent");
 	    	if (t23 == null) {
-	    		yaml.getConfig().set("config.sales-tax-percent", 0);
+	    		yh.gFC("config").set("config.sales-tax-percent", 0);
 	    	}
-	    	String t24 = yaml.getConfig().getString("config.dynamic-tax.use-dynamic-tax");
+	    	String t24 = yh.gFC("config").getString("config.dynamic-tax.use-dynamic-tax");
 	    	if (t24 == null) {
-	    		yaml.getConfig().set("config.dynamic-tax.use-dynamic-tax", false);
+	    		yh.gFC("config").set("config.dynamic-tax.use-dynamic-tax", false);
 	    	}
-	    	String t25 = yaml.getConfig().getString("config.dynamic-tax.money-cap");
+	    	String t25 = yh.gFC("config").getString("config.dynamic-tax.money-cap");
 	    	if (t25 == null) {
-	    		yaml.getConfig().set("config.dynamic-tax.money-cap", 1000000);
+	    		yh.gFC("config").set("config.dynamic-tax.money-cap", 1000000);
 	    	}
-	    	String t26 = yaml.getConfig().getString("config.dynamic-tax.max-tax-percent");
+	    	String t26 = yh.gFC("config").getString("config.dynamic-tax.max-tax-percent");
 	    	if (t26 == null) {
-	    		yaml.getConfig().set("config.dynamic-tax.max-tax-percent", 100);
+	    		yh.gFC("config").set("config.dynamic-tax.max-tax-percent", 100);
 	    	}
-	    	String t27 = yaml.getConfig().getString("config.dynamic-tax.money-floor");
+	    	String t27 = yh.gFC("config").getString("config.dynamic-tax.money-floor");
 	    	if (t27 == null) {
-	    		yaml.getConfig().set("config.dynamic-tax.money-floor", 0);
+	    		yh.gFC("config").set("config.dynamic-tax.money-floor", 0);
 	    	}
-	    	String t28 = yaml.getConfig().getString("config.web-page.use-web-page");
+	    	String t28 = yh.gFC("config").getString("config.web-page.use-web-page");
 	    	if (t28 == null) {
-	    		yaml.getConfig().set("config.web-page.use-web-page", false);
-	    		yaml.getConfig().set("config.web-page.background-color", "8FA685");
-	    		yaml.getConfig().set("config.web-page.font-color", "F2F2F2");
-	    		yaml.getConfig().set("config.web-page.border-color", "091926");
-	    		yaml.getConfig().set("config.web-page.increase-value-color", "C8D9B0");
-	    		yaml.getConfig().set("config.web-page.decrease-value-color", "F2B2A8");
-	    		yaml.getConfig().set("config.web-page.highlight-row-color", "8FA685");
-	    		yaml.getConfig().set("config.web-page.header-color", "091926");
+	    		yh.gFC("config").set("config.web-page.use-web-page", false);
+	    		yh.gFC("config").set("config.web-page.background-color", "8FA685");
+	    		yh.gFC("config").set("config.web-page.font-color", "F2F2F2");
+	    		yh.gFC("config").set("config.web-page.border-color", "091926");
+	    		yh.gFC("config").set("config.web-page.increase-value-color", "C8D9B0");
+	    		yh.gFC("config").set("config.web-page.decrease-value-color", "F2B2A8");
+	    		yh.gFC("config").set("config.web-page.highlight-row-color", "8FA685");
+	    		yh.gFC("config").set("config.web-page.header-color", "091926");
 	    	}
-	    	String t30 = yaml.getConfig().getString("config.web-page.port");
+	    	String t30 = yh.gFC("config").getString("config.web-page.port");
 	    	if (t30 == null) {
-	    		yaml.getConfig().set("config.web-page.port", 7777);
+	    		yh.gFC("config").set("config.web-page.port", 7777);
 	    	}
-	    	String t50 = yaml.getConfig().getString("config.web-page.table-data-color");
+	    	String t50 = yh.gFC("config").getString("config.web-page.table-data-color");
 	    	if (t50 == null) {
-	    		yaml.getConfig().set("config.web-page.table-data-color", "314A59");
+	    		yh.gFC("config").set("config.web-page.table-data-color", "314A59");
 	    	}	    
-	    	String t51 = yaml.getConfig().getString("config.web-page.font-size");
+	    	String t51 = yh.gFC("config").getString("config.web-page.font-size");
 	    	if (t51 == null) {
-	    		yaml.getConfig().set("config.web-page.font-size", 12);
+	    		yh.gFC("config").set("config.web-page.font-size", 12);
 	    	}	    
-	    	String t52 = yaml.getConfig().getString("config.web-page.font");
+	    	String t52 = yh.gFC("config").getString("config.web-page.font");
 	    	if (t52 == null) {
-	    		yaml.getConfig().set("config.web-page.font", "verdana");
+	    		yh.gFC("config").set("config.web-page.font", "verdana");
 	    	}
-	    	String t31 = yaml.getConfig().getString("config.run-automatic-backups");
+	    	String t31 = yh.gFC("config").getString("config.run-automatic-backups");
 	    	if (t31 == null) {
-	    		yaml.getConfig().set("config.run-automatic-backups", true);
+	    		yh.gFC("config").set("config.run-automatic-backups", true);
 	    	}
-	    	String t32 = yaml.getConfig().getString("config.error-count");
+	    	String t32 = yh.gFC("config").getString("config.error-count");
 	    	if (t32 == null) {
-	    		yaml.getConfig().set("config.error-count", 0);
+	    		yh.gFC("config").set("config.error-count", 0);
 	    	}
-	    	String t34 = yaml.getConfig().getString("config.require-transaction-signs-to-be-in-shop");
+	    	String t34 = yh.gFC("config").getString("config.require-transaction-signs-to-be-in-shop");
 	    	if (t34 == null) {
-	    		yaml.getConfig().set("config.require-transaction-signs-to-be-in-shop", false);
+	    		yh.gFC("config").set("config.require-transaction-signs-to-be-in-shop", false);
 	    	}
-	    	String t35 = yaml.getConfig().getString("config.unlimited-stock-for-static-items");
+	    	String t35 = yh.gFC("config").getString("config.unlimited-stock-for-static-items");
 	    	if (t35 == null) {
-	    		yaml.getConfig().set("config.unlimited-stock-for-static-items", false);
+	    		yh.gFC("config").set("config.unlimited-stock-for-static-items", false);
 	    	}
-	    	String t36 = yaml.getConfig().getString("config.use-item-displays");
+	    	String t36 = yh.gFC("config").getString("config.use-item-displays");
 	    	if (t36 == null) {
-	    		yaml.getConfig().set("config.use-item-displays", true);
+	    		yh.gFC("config").set("config.use-item-displays", true);
 	    	}
-	    	String t37 = yaml.getConfig().getString("config.language");
+	    	String t37 = yh.gFC("config").getString("config.language");
 	    	if (t37 == null) {
-	    		yaml.getConfig().set("config.language", "english");
+	    		yh.gFC("config").set("config.language", "english");
 	    	}
-	    	String t38 = yaml.getConfig().getString("config.log-errors");
+	    	String t38 = yh.gFC("config").getString("config.log-errors");
 	    	if (t38 == null) {
-	    		yaml.getConfig().set("config.log-errors", false);
+	    		yh.gFC("config").set("config.log-errors", false);
 	    	}
-	    	String t41 = yaml.getConfig().getString("config.use-external-economy-plugin");
+	    	String t41 = yh.gFC("config").getString("config.use-external-economy-plugin");
 	    	if (t41 == null) {
-	    		yaml.getConfig().set("config.use-external-economy-plugin", false);
+	    		yh.gFC("config").set("config.use-external-economy-plugin", false);
 	    	}
-	    	String t42 = yaml.getConfig().getString("config.limit-info-commands-to-shops");
+	    	String t42 = yh.gFC("config").getString("config.limit-info-commands-to-shops");
 	    	if (t42 == null) {
-	    		yaml.getConfig().set("config.limit-info-commands-to-shops", false);
+	    		yh.gFC("config").set("config.limit-info-commands-to-shops", false);
 	    	}
-	    	String t43 = yaml.getConfig().getString("config.sell-remaining-if-less-than-requested-amount");
+	    	String t43 = yh.gFC("config").getString("config.sell-remaining-if-less-than-requested-amount");
 	    	if (t43 == null) {
-	    		yaml.getConfig().set("config.sell-remaining-if-less-than-requested-amount", true);
+	    		yh.gFC("config").set("config.sell-remaining-if-less-than-requested-amount", true);
 	    	}
-	    	String t44 = yaml.getConfig().getString("config.enchantment.classvalue.book");
+	    	String t44 = yh.gFC("config").getString("config.enchantment.classvalue.book");
 	    	if (t44 == null) {
-	    		yaml.getConfig().set("config.enchantment.classvalue.book", 1);
+	    		yh.gFC("config").set("config.enchantment.classvalue.book", 1);
 	    	}
-	    	String t45 = yaml.getConfig().getString("config.use-shops");
+	    	String t45 = yh.gFC("config").getString("config.use-shops");
 	    	if (t45 == null) {
-	    		yaml.getConfig().set("config.use-shops", true);
+	    		yh.gFC("config").set("config.use-shops", true);
 	    	}
-	    	String t46 = yaml.getConfig().getString("api-version");
+	    	String t46 = yh.gFC("config").getString("api-version");
 	    	if (t46 == null) {
-	    		yaml.getConfig().set("api-version", 1.0);
+	    		yh.gFC("config").set("api-version", 1.0);
 	    	}	    
-	    	String t47 = yaml.getConfig().getString("config.sql-connection.use-sql");
+	    	String t47 = yh.gFC("config").getString("config.sql-connection.use-sql");
 	    	if (t47 != null) {
-	    		yaml.getConfig().set("config.sql-connection.use-mysql", yaml.getConfig().getBoolean("config.sql-connection.use-sql"));
-	    		yaml.getConfig().set("config.sql-connection.use-sql", null);
+	    		yh.gFC("config").set("config.sql-connection.use-mysql", yh.gFC("config").getBoolean("config.sql-connection.use-sql"));
+	    		yh.gFC("config").set("config.sql-connection.use-sql", null);
 	    	}
-	    	String t48 = yaml.getConfig().getString("config.allow-scrolling-transaction-signs");
+	    	String t48 = yh.gFC("config").getString("config.allow-scrolling-transaction-signs");
 	    	if (t48 == null) {
-	    		yaml.getConfig().set("config.allow-scrolling-transaction-signs", false);
+	    		yh.gFC("config").set("config.allow-scrolling-transaction-signs", false);
 	    	}	    
-	    	String t49 = yaml.getConfig().getString("config.block-selling-in-creative-mode");
+	    	String t49 = yh.gFC("config").getString("config.block-selling-in-creative-mode");
 	    	if (t49 == null) {
-	    		yaml.getConfig().set("config.block-selling-in-creative-mode", false);
+	    		yh.gFC("config").set("config.block-selling-in-creative-mode", false);
 	    	}	  
-	    	String t53 = yaml.getConfig().getString("config.show-currency-symbol-after-price");
+	    	String t53 = yh.gFC("config").getString("config.show-currency-symbol-after-price");
 	    	if (t53 == null) {
-	    		yaml.getConfig().set("config.show-currency-symbol-after-price", false);
+	    		yh.gFC("config").set("config.show-currency-symbol-after-price", false);
 	    	}	    
-	    	String t54 = yaml.getConfig().getString("config.starting-player-account-balance");
+	    	String t54 = yh.gFC("config").getString("config.starting-player-account-balance");
 	    	if (t54 == null) {
-	    		yaml.getConfig().set("config.starting-player-account-balance", 0.0);
+	    		yh.gFC("config").set("config.starting-player-account-balance", 0.0);
 	    	}	    
 	    	
 	    	double dversion = Double.parseDouble(configversion);
 	    	if (dversion < .952) {
-	    		yaml.getConfig().set("config.log-errors", false);
+	    		yh.gFC("config").set("config.log-errors", false);
 	    	}
-	    	yaml.getConfig().set("config.sql-connection.max-sql-threads", null);
-	    	yaml.getConfig().set("config.log-sqlwrite-errors", null);
+	    	yh.gFC("config").set("config.sql-connection.max-sql-threads", null);
+	    	yh.gFC("config").set("config.log-sqlwrite-errors", null);
 		}
 		Double newversion = Double.parseDouble(hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion());
-		yaml.getConfig().set("version", newversion);
+		yh.gFC("config").set("version", newversion);
 	}
 	
 

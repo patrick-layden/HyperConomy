@@ -71,7 +71,7 @@ public class HyperObjectValue {
 			return twoDecimals(totalvalue);
 		} catch (Exception e) {
 			String info = "Calculation countItems() passed values name='" + ho.getName() + "', amount='" + amount + "', player='" + hp.getName() + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			double totalvalue = 0;
 			return totalvalue;
 		}
@@ -128,7 +128,7 @@ public class HyperObjectValue {
 			return twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getCost() passed values name='" + ho.getName() + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			double cost = 99999999;
 			return cost;
 		}
@@ -184,7 +184,7 @@ public class HyperObjectValue {
 			return twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getTvalue() passed values name='" + ho.getName() + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			double cost = 99999999;
 			return cost;
 		}
@@ -255,7 +255,7 @@ public class HyperObjectValue {
 			return twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantValue() passed values name='" + ho.getName() + "', material='" + eclass.toString() + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			double value = 0;
 			return value;
 		}
@@ -318,7 +318,7 @@ public class HyperObjectValue {
 			return twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantValue() passed values name='" + ho.getName() + "', material='" + eclass.toString() + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			double value = 0;
 			return value;
 		}
@@ -379,7 +379,7 @@ public class HyperObjectValue {
 			return twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantCost() passed values name='" + ho.getName() + "', material='" + eclass.toString() + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			double cost = 99999999;
 			return cost;
 		}
@@ -425,7 +425,7 @@ public class HyperObjectValue {
 			return damage;
 		} catch (Exception e) {
 			String info = "Calculation getDamage() passed values id='" + id + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			double damage = 0;
 			return damage;
 		}
@@ -466,7 +466,7 @@ public class HyperObjectValue {
 			return durabilitypercent;
 		} catch (Exception e) {
 			String info = "Calculation getdurabilityPercent() passed values ItemStack='" + i + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			double durabilitypercent = 1;
 			return durabilitypercent;
 		}
@@ -501,15 +501,15 @@ public class HyperObjectValue {
 	public double getPurchaseTax(double cost) {
 		double tax = 0.0;
 		if (Boolean.parseBoolean(ho.getIsstatic())) {
-			tax = hc.getYaml().getConfig().getDouble("config.statictaxpercent") / 100.0;
+			tax = hc.gYH().gFC("config").getDouble("config.statictaxpercent") / 100.0;
 		} else {
 			if (ho.getType() == HyperObjectType.ENCHANTMENT) {
-				tax = hc.getYaml().getConfig().getDouble("config.enchanttaxpercent") / 100.0;
+				tax = hc.gYH().gFC("config").getDouble("config.enchanttaxpercent") / 100.0;
 			} else {
 				if (Boolean.parseBoolean(ho.getInitiation())) {
-					tax = hc.getYaml().getConfig().getDouble("config.initialpurchasetaxpercent") / 100.0;
+					tax = hc.gYH().gFC("config").getDouble("config.initialpurchasetaxpercent") / 100.0;
 				} else {
-					tax = hc.getYaml().getConfig().getDouble("config.purchasetaxpercent") / 100.0;
+					tax = hc.gYH().gFC("config").getDouble("config.purchasetaxpercent") / 100.0;
 				}
 			}
 		}
@@ -519,10 +519,10 @@ public class HyperObjectValue {
 	
 	public double getSalesTaxEstimate(Double price) {
 		double salestax = 0;
-		if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+		if (hc.gYH().gFC("config").getBoolean("config.dynamic-tax.use-dynamic-tax")) {
 			return 0.0;
 		} else {
-			double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
+			double salestaxpercent = hc.gYH().gFC("config").getDouble("config.sales-tax-percent");
 			salestax = (salestaxpercent / 100) * price;
 		}
 		return twoDecimals(salestax);

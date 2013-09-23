@@ -7,7 +7,6 @@ public class Setinterval {
 	Setinterval(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		EconomyManager em = hc.getEconomyManager();
-		YamlFile yaml = hc.getYaml();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		try {
@@ -15,14 +14,14 @@ public class Setinterval {
     			if (args[0].equalsIgnoreCase("shop")) {
     				for (HyperEconomy he:em.getEconomies()) {
     	    			he.setShopCheckInterval(Long.parseLong(args[1]));
-    	    			yaml.getConfig().set("config.shopcheckinterval", he.getShopCheckInterval());
+    	    			hc.gYH().gFC("config").set("config.shopcheckinterval", he.getShopCheckInterval());
     	    			he.stopShopCheck();
     	    			he.startShopCheck();
     				}
 	    			sender.sendMessage(L.get("SHOP_INTERVAL_SET"));
     			} else if (args[0].equalsIgnoreCase("save")) {
     				long saveinterval = Long.parseLong(args[1]);
-	    			yaml.getConfig().set("config.saveinterval", saveinterval);	
+    				hc.gYH().gFC("config").set("config.saveinterval", saveinterval);	
 	    			hc.s().setSaveInterval(saveinterval);
 	    			hc.s().stopSave();
 	    			hc.s().startSave();	
@@ -30,7 +29,7 @@ public class Setinterval {
     			} else if (args[0].equalsIgnoreCase("sign")) {
     				
     				isign.setInterval(Long.parseLong(args[1]));
-	    			yaml.getConfig().set("config.signupdateinterval", isign.getUpdateInterval());		    		
+    				hc.gYH().gFC("config").set("config.signupdateinterval", isign.getUpdateInterval());		    		
 	    			sender.sendMessage(L.get("SIGN_INTERVAL_SET"));
     			} else {
     				sender.sendMessage(L.get("SETINTERVAL_INVALID"));

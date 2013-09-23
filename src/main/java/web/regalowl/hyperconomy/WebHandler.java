@@ -47,7 +47,7 @@ public class WebHandler {
 						server.start();
 						server.join();
 					} catch (Exception e) {
-						new HyperError(e);
+						hc.gDB().writeError(e);
 					}
 
 				}
@@ -59,12 +59,12 @@ public class WebHandler {
 							sp.updatePage();
 						}
 					} catch (Exception e) {
-						new HyperError(e);
+						hc.gDB().writeError(e);
 					}
 				}
 			}, 400L, 6000L);
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 	
@@ -80,7 +80,7 @@ public class WebHandler {
 						sp.updatePage();
 					}
 				} catch (Exception e) {
-					new HyperError(e);
+					hc.gDB().writeError(e);
 				}
 			}
 		});
@@ -110,20 +110,20 @@ public class WebHandler {
 			try {
 				context.stop();
 				if (!context.isStopped()) {
-					new HyperError("Context failed to stop.");
+					hc.gDB().writeError("Context failed to stop.");
 				}
 			} catch (Exception e) {
-				new HyperError(e);
+				hc.gDB().writeError(e);
 			}
 		}
 		if (server != null) {
 			try {
 				server.stop();
 				if (!server.isStopped()) {
-					new HyperError("Server failed to stop.");
+					hc.gDB().writeError("Server failed to stop.");
 				}
 			} catch (Exception e) {
-				new HyperError(e);
+				hc.gDB().writeError(e);
 			}
 		}
 	}

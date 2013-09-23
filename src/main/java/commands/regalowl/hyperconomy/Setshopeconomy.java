@@ -14,7 +14,7 @@ public class Setshopeconomy {
 					return;
 				}
 				String economy = args[1];
-				if (hc.getEconomyManager().testEconomy(economy)) {
+				if (hc.getEconomyManager().economyExists(economy)) {
 					hc.getEconomyManager().getShop(name).setEconomy(economy);
 					sender.sendMessage(L.get("SHOP_ECONOMY_SET"));
 				} else {

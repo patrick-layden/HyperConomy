@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import regalowl.databukkit.QueryResult;
+import regalowl.databukkit.SQLRead;
+
 public class Hyperlog {
 
 	private CommandSender sender;
@@ -143,7 +146,7 @@ public class Hyperlog {
 		SQLRead sr = HyperConomy.hc.getSQLRead();
 		ArrayList<String> entries = new ArrayList<String>();
 		LanguageFile L = hc.getLanguageFile();
-		QueryResult result = sr.getDatabaseConnection().read(statement);
+		QueryResult result = sr.aSyncSelect(statement);
 		while (result.next()) {
 			// int id = result.getInt(1);
 			String time = result.getString(2);

@@ -4,6 +4,8 @@ package regalowl.hyperconomy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import regalowl.databukkit.SQLWrite;
+
 public class Intervals {
 	Intervals(CommandSender sender, String[] args) {
 		HyperConomy hc = HyperConomy.hc;

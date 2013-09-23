@@ -10,11 +10,11 @@ public class Renameeconomyaccount {
 		try {
 			if (args.length == 1) {
 				String newaccount = args[0];
-				String oldaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+				String oldaccount = hc.gYH().gFC("config").getString("config.global-shop-account");
 				em.getHyperPlayer(newaccount);
 				em.getHyperPlayer(newaccount).setBalance(em.getHyperPlayer(oldaccount).getBalance());
 				em.getHyperPlayer(oldaccount).setBalance(0);
-				hc.getYaml().getConfig().set("config.global-shop-account", newaccount);
+				hc.gYH().gFC("config").set("config.global-shop-account", newaccount);
 				sender.sendMessage(L.get("GLOBAL_SHOP_RENAMED"));
 			} else {
 				sender.sendMessage(L.get("RENAMEECONOMYACCOUNT_INVALID"));

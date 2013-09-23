@@ -95,16 +95,16 @@ public class Evalue {
 							value = calc.twoDecimals(value);
 							cost = calc.twoDecimals(cost);
 							double salestax = 0;
-							if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
-								double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
+							if (hc.gYH().gFC("config").getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+								double moneycap = hc.gYH().gFC("config").getDouble("config.dynamic-tax.money-cap");
 								double cbal = he.getHyperPlayer(player.getName()).getBalance();
 								if (cbal >= moneycap) {
-									salestax = value * (hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent") / 100);
+									salestax = value * (hc.gYH().gFC("config").getDouble("config.dynamic-tax.max-tax-percent") / 100);
 								} else {
 									salestax = value * (cbal / moneycap);
 								}
 							} else {
-								double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
+								double salestaxpercent = hc.gYH().gFC("config").getDouble("config.sales-tax-percent");
 								salestax = (salestaxpercent / 100) * value;
 							}
 							value = calc.twoDecimals(value - salestax);

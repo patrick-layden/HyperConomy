@@ -14,7 +14,7 @@ public class Setstockmedianall {
 			if (args.length == 0) {
 				sender.sendMessage(L.get("SETSTOCKMEDIANALL_WARNING"));
 			} else if (args[0].equalsIgnoreCase("confirm")) {
-				if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
+				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
 					new Backup();
 				}
 				ArrayList<String> names = he.getNames();

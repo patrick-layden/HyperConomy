@@ -11,7 +11,7 @@ public class Seteconomy {
 		try {
 			if (args.length == 1) {
 				String economy = args[0];
-				if (em.testEconomy(economy)) {
+				if (em.economyExists(economy)) {
 					if (player != null) {
 						em.getHyperPlayer(player.getName()).setEconomy(economy);
 						sender.sendMessage(L.get("ECONOMY_SET"));

@@ -17,12 +17,12 @@ public class Toggleeconomy {
 				return;
 			}
 			if (hc.s().gB("use-external-economy-plugin")) {
-				hc.getYaml().getConfig().set("config.use-external-economy-plugin", false);
+				hc.gYH().gFC("config").set("config.use-external-economy-plugin", false);
 				hc.s().sB("use-external-economy-plugin", false);
 				hc.getEconomyManager().getEconomy("default").createGlobalShopAccount();
 				sender.sendMessage(L.get("TOGGLEECONOMY_DISABLED"));
 			} else {
-				hc.getYaml().getConfig().set("config.use-external-economy-plugin", true);
+				hc.gYH().gFC("config").set("config.use-external-economy-plugin", true);
 				hc.s().sB("use-external-economy-plugin", true);
 				hc.getEconomyManager().getEconomy("default").createGlobalShopAccount();
 				sender.sendMessage(L.get("TOGGLEECONOMY_ENABLED"));

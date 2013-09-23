@@ -3,6 +3,10 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import regalowl.databukkit.QueryResult;
+import regalowl.databukkit.SQLRead;
+import regalowl.databukkit.SQLWrite;
+
 
 /**
  * 
@@ -31,28 +35,44 @@ public class History {
 		isign = hc.getInfoSignHandler();
 		sw = hc.getSQLWrite();
 		sr = hc.getSQLRead();
-		daysToSaveHistory = hc.getYaml().getConfig().getInt("config.daystosavehistory");
+		daysToSaveHistory = hc.gYH().gFC("config").getInt("config.daystosavehistory");
 		lastTime = System.currentTimeMillis();
-		String tc = sr.getSettingValue("history_time_counter");
+		String tc = getSettingValue("history_time_counter");
 		if (tc == null) {
-			sw.addSetting("history_time_counter", "0");
+			addSetting("history_time_counter", "0");
 			timeCounter = 0;
 		} else {
 			try {
 				timeCounter = Long.parseLong(tc);
 			} catch (Exception e) {
-				new HyperError(e);
+				hc.gDB().writeError(e);
 			}
 		}
 		startTimer();
 	}
 	
 
+	public String getSettingValue(String setting) {
+		String value = null;
+		QueryResult result = sr.aSyncSelect("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = '" + setting + "'");
+		if (result.next()) {
+			value = result.getString("VALUE");
+		}
+		result.close();
+		return value;
+	}
 
+	public void addSetting(String setting, String value) {
+		sw.convertExecuteSQL("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('" + setting + "', '" + value + "', NOW() )");
+	}
+
+	public void updateSetting(String setting, String value) {
+		sw.executeSQL("UPDATE hyperconomy_settings SET VALUE='" + value + "' WHERE SETTING = '" + setting + "'");
+	}
 
 	
     private void startTimer() {
-    	if (hc.getYaml().getConfig().getBoolean("config.store-price-history")) {
+    	if (hc.gYH().gFC("config").getBoolean("config.store-price-history")) {
 			historylogtaskid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
 			    public void run() {
 			    	long currentTime = System.currentTimeMillis();
@@ -68,7 +88,7 @@ public class History {
 						    }
 						}, 1200L);
 			    	}
-			    	sw.updateSetting("history_time_counter", timeCounter + "");
+			    	updateSetting("history_time_counter", timeCounter + "");
 			    }
 			}, 600, 600);
     	}
@@ -122,7 +142,7 @@ public class History {
 	public double getHistoricValue(String name, String economy, int count) {
 		try {
 			count -= 1;
-			QueryResult result = sr.getDatabaseConnection().read("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '" + name + "' AND ECONOMY = '" + economy + "' ORDER BY TIME DESC");
+			QueryResult result = sr.aSyncSelect("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '" + name + "' AND ECONOMY = '" + economy + "' ORDER BY TIME DESC");
 			int c = 0;
 			while (result.next()) {
 				if (c == count) {
@@ -133,7 +153,7 @@ public class History {
 			result.close();
 			return -1.0;
 		} catch (Exception e) {
-			new HyperError(e, "getHistoricValue() passed arguments: name = '" + name + "', economy = '" + economy + "', count = '" + count + "'");
+			hc.gDB().writeError(e, "getHistoricValue() passed arguments: name = '" + name + "', economy = '" + economy + "', count = '" + count + "'");
 			return -999999.0;
 		}
 	}
@@ -180,7 +200,7 @@ public class History {
 		}
 
 		HashMap<HyperObject, ArrayList<Double>> allValues = new HashMap<HyperObject, ArrayList<Double>>();
-		QueryResult result = sr.getDatabaseConnection().read("SELECT OBJECT, PRICE FROM hyperconomy_history WHERE ECONOMY = '" + economy + "' ORDER BY TIME DESC");
+		QueryResult result = sr.aSyncSelect("SELECT OBJECT, PRICE FROM hyperconomy_history WHERE ECONOMY = '" + economy + "' ORDER BY TIME DESC");
 		while (result.next()) {
 			HyperObject ho = em.getEconomy(economy).getHyperObject(result.getString("OBJECT"));
 			double price = result.getDouble("PRICE");

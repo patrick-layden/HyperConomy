@@ -55,7 +55,7 @@ public class InventoryManipulation {
 		} catch (Exception e) {
 			int totalitems = 0;
 			String info = "Transaction countItems() passed values inventory='" + inventory.getName() + "', id='" + id + "', data='" + data + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return totalitems;
 		}
 	}
@@ -85,7 +85,7 @@ public class InventoryManipulation {
 			return availablespace;
 		} catch (Exception e) {
 			String info = "Transaction getAvailableSpace() passed values inventory='" + inventory.getName() + "', id='" + id + "', data='" + data + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			int availablespace = 0;
 			return availablespace;
 		}
@@ -140,7 +140,7 @@ public class InventoryManipulation {
 			}
 			if (amount != 0) {
 				String info = "Error adding items to inventory; + '" + amount + "' remaining. Transaction addBoughtItems() passed values inventory='" + inventory.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
-				new HyperError(info);
+				hc.gDB().writeError(info);
 			}
 			if (inventory.getType() == InventoryType.PLAYER) {
 				Player p = (Player) inventory.getHolder();
@@ -148,7 +148,7 @@ public class InventoryManipulation {
 			}
 		} catch (Exception e) {
 			String info = "Transaction addItems() passed values inventory='" + inventory.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 		}
 	}
 	
@@ -205,14 +205,14 @@ public class InventoryManipulation {
 				}
 			}
 			if (remainingAmount != 0) {
-				new HyperError("removesoldItems() failure.  Items not successfully removed.  Passed id = '" + id + "', data = '" + data + "', amount = '" + amount + "'");
+				hc.gDB().writeError("removesoldItems() failure.  Items not successfully removed.  Passed id = '" + id + "', data = '" + data + "', amount = '" + amount + "'");
 				return amountRemoved;	
 			} else {
 				return amountRemoved;
 			}
 		} catch (Exception e) {
 			String info = "Transaction removeSoldItems() passed values inventory='" + inventory.getName() + "', id='" + id + "', data='" + data + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return -1;
 		}
 	}
@@ -277,7 +277,7 @@ public class InventoryManipulation {
 			}
 			return hasenchants;
 		} catch (Exception e) {
-			new HyperError(e, "Passed stack: type = '" + stack.getType().toString() + "', amount = '" + stack.getAmount() + "', id = '" + stack.getTypeId() + "'");
+			hc.gDB().writeError(e, "Passed stack: type = '" + stack.getType().toString() + "', amount = '" + stack.getAmount() + "', id = '" + stack.getTypeId() + "'");
 			return false;
 		}
 	}
@@ -293,30 +293,30 @@ public class InventoryManipulation {
 		try {
 			double value;
 			if (eclass.equals(EnchantmentClass.LEATHER)) {
-				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.leather"));
+				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.leather"));
 			} else if (eclass.equals(EnchantmentClass.WOOD)) {
-				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.wood"));
+				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.wood"));
 			} else if (eclass.equals(EnchantmentClass.STONE)) {
-				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.stone"));
+				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.stone"));
 			} else if (eclass.equals(EnchantmentClass.CHAINMAIL)) {
-				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.chainmail"));
+				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.chainmail"));
 			} else if (eclass.equals(EnchantmentClass.IRON)) {
-				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.iron"));
+				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.iron"));
 			} else if (eclass.equals(EnchantmentClass.GOLD)) {
-				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.gold"));
+				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.gold"));
 			} else if (eclass.equals(EnchantmentClass.DIAMOND)) {
-				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.diamond"));
+				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.diamond"));
 			} else if (eclass.equals(EnchantmentClass.BOOK)) {
-				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.book"));
+				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.book"));
 			} else if (eclass.equals(EnchantmentClass.BOW)) {
-				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.bow"));
+				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.bow"));
 			} else {
-				value = (hc.getYaml().getConfig().getDouble("config.enchantment.classvalue.diamond"));
+				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.diamond"));
 			}
 			return value;
 		} catch (Exception e) {
 			String info = "ETransaction getclassValue() passed values eclass='" + eclass.toString() + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return 0;
 		}
 	}
@@ -505,7 +505,7 @@ public class InventoryManipulation {
 			return cleanDamageValue(item.getTypeId(), getpotionDV(item));
 		} catch (Exception e) {
 			String info = "Calculation getDamageValue() passed values ItemStack='" + item.getType() + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			int da = 0;
 			return da;
 		}
@@ -524,7 +524,7 @@ public class InventoryManipulation {
 			}
 		} catch (Exception e) {
 			String info = "Calculation getpotionDV() passed values ItemStack='" + item + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return 0;
 		}
 	}

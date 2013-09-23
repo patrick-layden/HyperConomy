@@ -20,6 +20,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
+import regalowl.databukkit.QueryResult;
+import regalowl.databukkit.SQLRead;
+import regalowl.databukkit.SQLWrite;
+
 
 
 public class HyperEconomy implements Listener {
@@ -47,10 +51,9 @@ public class HyperEconomy implements Listener {
 		this.economy = economy;
 		sr = hc.getSQLRead();
 		hc.getServer().getPluginManager().registerEvents(this, hc);
-		useShops = hc.getYaml().getConfig().getBoolean("config.use-shops");
-		shopinterval = hc.getYaml().getConfig().getLong("config.shopcheckinterval");
+		useShops = hc.gYH().gFC("config").getBoolean("config.use-shops");
+		shopinterval = hc.gYH().gFC("config").getLong("config.shopcheckinterval");
 		loadShops();
-		addOnlinePlayers();
 		loadSQL();
 	}
 	
@@ -67,7 +70,7 @@ public class HyperEconomy implements Listener {
 				addPlayer(name);
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 
@@ -91,7 +94,7 @@ public class HyperEconomy implements Listener {
 				hp.setWorld(l.getWorld().getName());
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 	
@@ -107,14 +110,14 @@ public class HyperEconomy implements Listener {
 	private void loadShops() {
 		stopShopCheck();
 		shops.clear();
-		FileConfiguration sh = hc.getYaml().getShops();
-		if (!useShops) {
+		FileConfiguration sh = hc.gYH().gFC("shops");
+		if (!useShops && economy.equalsIgnoreCase("default")) {
 			Shop shop = new Shop("GlobalShop", "default");
 			shop.setGlobal();
 			shops.put("GlobalShop", shop);
 			return;
 		}
-		Iterator<String> it = hc.getYaml().getShops().getKeys(false).iterator();
+		Iterator<String> it = sh.getKeys(false).iterator();
 		while (it.hasNext()) {   			
 			Object element = it.next();
 			String name = element.toString(); 
@@ -135,7 +138,7 @@ public class HyperEconomy implements Listener {
 			public void run() {
 				hyperObjects.clear();
 				hyperPlayers.clear();
-				QueryResult result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economy+"'");
+				QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economy+"'");
 				while (result.next()) {
 					HyperObject hobj = new HyperObject(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
 							result.getString("CATEGORY"), result.getString("MATERIAL"), result.getInt("ID"), result.getInt("DATA"),
@@ -146,7 +149,7 @@ public class HyperEconomy implements Listener {
 				}
 				result.close();
 		
-				result = sr.getDatabaseConnection().read("SELECT * FROM hyperconomy_players WHERE ECONOMY = '"+economy+"'");
+				result = sr.aSyncSelect("SELECT * FROM hyperconomy_players WHERE ECONOMY = '"+economy+"'");
 				while (result.next()) {
 					HyperPlayer hplayer = new HyperPlayer(result.getString("PLAYER"), result.getString("ECONOMY"), result.getDouble("BALANCE"), result.getDouble("X"), result.getDouble("Y"), result.getDouble("Z"), result.getString("WORLD"), result.getString("HASH"), result.getString("SALT"));
 					hyperPlayers.put(hplayer.getName(), hplayer);
@@ -156,6 +159,13 @@ public class HyperEconomy implements Listener {
 					createGlobalShopAccount();
 				}
 				dataLoaded = true;
+				hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+					public void run() {
+						if (economy.equalsIgnoreCase("default")) {
+							addOnlinePlayers();
+						}
+					}
+				});
 			}
 		});
 	}
@@ -226,9 +236,15 @@ public class HyperEconomy implements Listener {
 		hc.getWebHandler().addShop(shop);
 	}
 	public void removeShop(String name) {
-		hc.getYaml().getShops().set(name, null);
 		shops.remove(name);
 	}
+	
+	public void deleteShop(String name) {
+		hc.gYH().gFC("shops").set(name, null);
+		shops.remove(name);
+	}
+
+	
 	public void renameShop(String name, String newName) {
 		Shop shop = shops.get(name);
 		shop.setName(newName);
@@ -315,6 +331,7 @@ public class HyperEconomy implements Listener {
 	}
 	
 	public HyperObject getHyperObject(String name) {
+		name = fixName(name);
 		if (hyperObjects.containsKey(name)) {
 			return hyperObjects.get(name);
 		} else {
@@ -377,14 +394,6 @@ public class HyperEconomy implements Listener {
 		return hps;
 	}
 	
-	
-	public String testName(String name) {
-		if (!hyperObjects.containsKey(name)) {
-			return null;
-		} else {
-			return name;
-		}
-	}
 
 	
 
@@ -478,9 +487,7 @@ public class HyperEconomy implements Listener {
 	public ArrayList<String> getNames() {
 		ArrayList<String> names = new ArrayList<String>();
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getEconomy().equalsIgnoreCase("default")) {
-				names.add(ho.getName());
-			}
+			names.add(ho.getName());
 		}
 		return names;
 	}
@@ -488,7 +495,7 @@ public class HyperEconomy implements Listener {
 	public ArrayList<String> getItemNames() {
 		ArrayList<String> names = new ArrayList<String>();
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getEconomy().equalsIgnoreCase("default") && (ho.getType() == HyperObjectType.ITEM || ho.getType() == HyperObjectType.EXPERIENCE)) {
+			if (ho.getType() == HyperObjectType.ITEM || ho.getType() == HyperObjectType.EXPERIENCE) {
 				names.add(ho.getName());
 			}
 		}
@@ -498,7 +505,7 @@ public class HyperEconomy implements Listener {
 	public ArrayList<String> getEnchantNames() {
 		ArrayList<String> names = new ArrayList<String>();
 		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getEconomy().equalsIgnoreCase("default") && ho.getType() == HyperObjectType.ENCHANTMENT) {
+			if (ho.getType() == HyperObjectType.ENCHANTMENT) {
 				names.add(ho.getName());
 			}
 		}
@@ -570,12 +577,12 @@ public class HyperEconomy implements Listener {
 		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
 		boolean useExternalEconomy = hc.s().gB("use-external-economy-plugin");
-		String globalaccount = hc.getYaml().getConfig().getString("config.global-shop-account");
+		String globalaccount = hc.gYH().gFC("config").getString("config.global-shop-account");
 		if (useExternalEconomy) {
 			if (economy != null) {
 				if (!economy.hasAccount(globalaccount)) {
-					getHyperPlayer(globalaccount).setBalance(hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
-					l.writeAuditLog(globalaccount, "initialization", hc.getYaml().getConfig().getDouble("config.initialshopbalance"), economy.getName());
+					getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
+					l.writeAuditLog(globalaccount, "initialization", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), economy.getName());
 				}
 			} else {
 				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
@@ -585,8 +592,8 @@ public class HyperEconomy implements Listener {
 		} else {
 			if (!hasAccount(globalaccount)) {
 				createPlayerAccount(globalaccount);
-				getHyperPlayer(globalaccount).setBalance(hc.getYaml().getConfig().getDouble("config.initialshopbalance"));
-				l.writeAuditLog(globalaccount, "initialization", hc.getYaml().getConfig().getDouble("config.initialshopbalance"), "HyperConomy");
+				getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
+				l.writeAuditLog(globalaccount, "initialization", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), "HyperConomy");
 			}
 		}
 	}
@@ -609,8 +616,8 @@ public class HyperEconomy implements Listener {
 	
 	
 	public ArrayList<String> loadNewItems() {
-		FileConfiguration itemsyaml = hc.getYaml().getItems();
-		FileConfiguration enchantsyaml = hc.getYaml().getEnchants();
+		FileConfiguration itemsyaml = hc.gYH().gFC("items");
+		FileConfiguration enchantsyaml = hc.gYH().gFC("enchants");
 		ArrayList<String> statements = new ArrayList<String>();
 		ArrayList<String> objectsAdded = new ArrayList<String>();
 		Iterator<String> it = itemsyaml.getKeys(false).iterator();
@@ -650,8 +657,8 @@ public class HyperEconomy implements Listener {
 	
 	
 	public void exportToYml() {
-		FileConfiguration items = hc.getYaml().getItems();
-		FileConfiguration enchants = hc.getYaml().getEnchants();
+		FileConfiguration items = hc.gYH().gFC("items");
+		FileConfiguration enchants = hc.gYH().gFC("enchants");
 		ArrayList<String> names = getNames();
 		Collections.sort(names, String.CASE_INSENSITIVE_ORDER);
 		for (int i = 0; i < names.size(); i++) {
@@ -752,7 +759,7 @@ public class HyperEconomy implements Listener {
 				enchants.set(name + ".stock.maxstock", newmaxstock);
 			}
 		}
-		hc.getYaml().saveYamls();
+		hc.gYH().saveYamls();
 	}
 
 	

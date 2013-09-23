@@ -2,10 +2,14 @@ package regalowl.hyperconomy;
 
 
 import java.util.logging.Logger;
+
 import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+
+import regalowl.databukkit.SQLWrite;
 
 
 
@@ -36,7 +40,7 @@ public class HyperPlayer {
 		try {
 			balance = hc.getConfig().getDouble("config.starting-player-account-balance");
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 			balance = 0;
 		}
 		economy = "default";
@@ -124,18 +128,11 @@ public class HyperPlayer {
 		this.name = name;
 	}
 	public void setEconomy(String economy) {
+		em.getEconomy(this.economy).removeHyperPlayer(this);
 		String statement = "UPDATE hyperconomy_players SET ECONOMY='" + economy + "' WHERE PLAYER = '" + name + "'";
 		hc.getSQLWrite().executeSQL(statement);
 		this.economy = economy;
-		for (HyperEconomy he : em.getEconomies()) {
-			if (he.hasAccount(name)) {
-				if (!he.hasAccount(name)) {
-					he.removeHyperPlayer(this);
-				}
-				em.getEconomy(economy).addHyperPlayer(this);
-			}
-		}
-		
+		em.getEconomy(this.economy).addHyperPlayer(this);
 	}
 	public void setX(double x) {
 		String statement = "UPDATE hyperconomy_players SET X='" + x + "' WHERE PLAYER = '" + name + "'";
@@ -193,11 +190,11 @@ public class HyperPlayer {
 	public double getSalesTax(Double price) {
 		Calculation calc = hc.getCalculation();
 		double salestax = 0;
-		if (hc.getYaml().getConfig().getBoolean("config.dynamic-tax.use-dynamic-tax")) {
-			double moneyfloor = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-floor");
-			double moneycap = hc.getYaml().getConfig().getDouble("config.dynamic-tax.money-cap");
+		if (hc.gYH().gFC("config").getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+			double moneyfloor = hc.gYH().gFC("config").getDouble("config.dynamic-tax.money-floor");
+			double moneycap = hc.gYH().gFC("config").getDouble("config.dynamic-tax.money-cap");
 			double cbal = getBalance();
-			double maxtaxrate = hc.getYaml().getConfig().getDouble("config.dynamic-tax.max-tax-percent") / 100.0;
+			double maxtaxrate = hc.gYH().gFC("config").getDouble("config.dynamic-tax.max-tax-percent") / 100.0;
 			if (cbal >= moneycap) {
 				salestax = price * maxtaxrate;
 			} else if (cbal <= moneyfloor) {
@@ -210,7 +207,7 @@ public class HyperPlayer {
 				salestax = price * taxrate;
 			}
 		} else {
-			double salestaxpercent = hc.getYaml().getConfig().getDouble("config.sales-tax-percent");
+			double salestaxpercent = hc.gYH().gFC("config").getDouble("config.sales-tax-percent");
 			salestax = calc.twoDecimals((salestaxpercent / 100) * price);
 		}
 		return salestax;

@@ -21,11 +21,9 @@ public class _Command {
 		player = null;
 		if (sender instanceof Player) {
 			player = (Player) sender;
+			playerecon = em.getHyperPlayer(player.getName()).getEconomy();
 		} else {
 			playerecon = nonPlayerEconomy;
-		}
-		if (player != null) {
-			playerecon = em.getHyperPlayer(player.getName()).getEconomy();
 		}
 		if (cmd.getName().equalsIgnoreCase("buy") && (player != null)) {
 			new Buy(args, player, playerecon);

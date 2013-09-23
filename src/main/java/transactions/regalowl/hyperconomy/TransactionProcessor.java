@@ -131,7 +131,7 @@ public class TransactionProcessor {
 								}
 								hp.withdraw(price);
 								em.getGlobalShopAccount().deposit(price);
-								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
+								if (hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money")) {
 									em.getGlobalShopAccount().setBalance(0);
 								}
 								
@@ -171,7 +171,7 @@ public class TransactionProcessor {
 			}
 		} catch (Exception e) {
 			String info = "Transaction buy() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', id='" + hyperObject.getId() + "', data='" + hyperObject.getData() + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return new TransactionResponse(hp);
 		}
 	}
@@ -214,7 +214,7 @@ public class TransactionProcessor {
 			}
 			int totalitems = im.countItems(id, data, giveInventory);
 			if (totalitems < amount) {
-				boolean sellRemaining = hc.getYaml().getConfig().getBoolean("config.sell-remaining-if-less-than-requested-amount");
+				boolean sellRemaining = hc.gYH().gFC("config").getBoolean("config.sell-remaining-if-less-than-requested-amount");
 				if (sellRemaining) {
 					amount = totalitems;
 				} else {
@@ -240,7 +240,7 @@ public class TransactionProcessor {
 				amount = maxi;
 				price = hyperObject.getValue(amount, hp);
 			}
-			boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
+			boolean sunlimited = hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money");
 			if (!em.getGlobalShopAccount().hasBalance(price) && !sunlimited) {
 				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
 				return response;
@@ -281,7 +281,7 @@ public class TransactionProcessor {
 
 		} catch (Exception e) {
 			String info = "Transaction sell() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', id='" + hyperObject.getId() + "', data='" + hyperObject.getData() + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return new TransactionResponse(hp);
 		}
 	}
@@ -335,7 +335,7 @@ public class TransactionProcessor {
 			}
 			return response;
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 			return new TransactionResponse(hp);
 		}
 	}
@@ -382,7 +382,7 @@ public class TransactionProcessor {
 						}
 						hp.withdraw(price);
 						em.getGlobalShopAccount().deposit(price);
-						if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
+						if (hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money")) {
 							em.getGlobalShopAccount().setBalance(0);
 						}
 						response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), calc.twoDecimals(taxpaid)), calc.twoDecimals(price), hyperObject);
@@ -409,7 +409,7 @@ public class TransactionProcessor {
 			return response;
 		} catch (Exception e) {
 			String info = "Transaction buyXP() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return new TransactionResponse(hp);
 		}
 	}
@@ -452,7 +452,7 @@ public class TransactionProcessor {
 							amount = maxi;
 							price = hyperObject.getValue(amount, hp);
 						}
-						boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
+						boolean sunlimited = hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money");
 						if (em.getGlobalShopAccount().hasBalance(price) || sunlimited) {
 							if (maxi == 0) {
 								price = hyperObject.getValue(amount, hp);
@@ -504,7 +504,7 @@ public class TransactionProcessor {
 			return response;
 		} catch (Exception e) {
 			String info = "Transaction sellXP() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return new TransactionResponse(hp);
 		}
 	}
@@ -549,7 +549,7 @@ public class TransactionProcessor {
 			return response;
 		} catch (Exception e) {
 			String info = "Transaction buyChest() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return new TransactionResponse(hp);
 		}
 	}
@@ -598,7 +598,7 @@ public class TransactionProcessor {
 			return response;
 		} catch (Exception e) {
 			String info = "Transaction sellChest() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return new TransactionResponse(hp);
 		}
 	}
@@ -641,7 +641,7 @@ public class TransactionProcessor {
 				String mater = p.getItemInHand().getType().toString();
 				double price = hyperObject.getValue(EnchantmentClass.fromString(mater), hp);
 				double fprice = price;
-				boolean sunlimited = hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money");
+				boolean sunlimited = hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money");
 				if (em.getGlobalShopAccount().hasBalance(fprice) || sunlimited) {
 					im.removeEnchantment(p.getItemInHand(), ench);
 					double shopstock = hyperObject.getStock();
@@ -675,7 +675,7 @@ public class TransactionProcessor {
 			return response;
 		} catch (Exception e) {
 			String info = "ETransaction sellEnchant() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return new TransactionResponse(hp);
 		}
 	}
@@ -715,7 +715,7 @@ public class TransactionProcessor {
 								hyperObject.setStock(shopstock - 1);
 								hp.withdraw(price);
 								em.getGlobalShopAccount().deposit(price);
-								if (hc.getYaml().getConfig().getBoolean("config.shop-has-unlimited-money")) {
+								if (hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money")) {
 									em.getGlobalShopAccount().setBalance(0);
 								}
 								int l = hyperObject.getName().length();
@@ -726,9 +726,9 @@ public class TransactionProcessor {
 								stax = Boolean.parseBoolean(hyperObject.getIsstatic());
 								double taxrate;
 								if (!stax) {
-									taxrate = hc.getYaml().getConfig().getDouble("config.enchanttaxpercent");
+									taxrate = hc.gYH().gFC("config").getDouble("config.enchanttaxpercent");
 								} else {
-									taxrate = hc.getYaml().getConfig().getDouble("config.statictaxpercent");
+									taxrate = hc.gYH().gFC("config").getDouble("config.statictaxpercent");
 								}
 								double taxpaid = price - (price / (1 + taxrate / 100));
 								taxpaid = calc.twoDecimals(taxpaid);
@@ -764,7 +764,7 @@ public class TransactionProcessor {
 			return response;
 		} catch (Exception e) {
 			String info = "ETransaction buyEnchant() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return new TransactionResponse(hp);
 		}
 	}
@@ -827,7 +827,7 @@ public class TransactionProcessor {
 			return response;
 		} catch (Exception e) {
 			String info = "ETransaction buyChestEnchant() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "'";
-			new HyperError(e, info);
+			hc.gDB().writeError(e, info);
 			return new TransactionResponse(hp);
 		}
 	}

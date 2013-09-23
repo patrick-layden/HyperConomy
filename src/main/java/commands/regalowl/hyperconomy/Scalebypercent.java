@@ -28,7 +28,7 @@ public class Scalebypercent {
 				percent = percent / 100;
 				if (percent >= 0) {
 					if (type.equalsIgnoreCase("value") || type.equalsIgnoreCase("staticprice") || type.equalsIgnoreCase("stock") || type.equalsIgnoreCase("median") || type.equalsIgnoreCase("startprice")) {
-						if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
+						if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
 							new Backup();
 						}
 						for (int c = 0; c < names.size(); c++) {

@@ -38,14 +38,14 @@ public class ItemDisplayFactory implements Listener {
 	ItemDisplayFactory() {
 		try {
 			hc = HyperConomy.hc;
-			if (hc.getYaml().getConfig().getBoolean("config.use-item-displays")) {
+			if (hc.gYH().gFC("config").getBoolean("config.use-item-displays")) {
 				hc.getServer().getPluginManager().registerEvents(this, hc);
 				loadActive = false;
 				loadDisplays();
 				startRefreshThread();
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 	
@@ -56,8 +56,8 @@ public class ItemDisplayFactory implements Listener {
 			if (!loadActive) {
 				loadActive = true;
 				unloadDisplays();
-				FileConfiguration disp = hc.getYaml().getDisplays();
-				Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
+				FileConfiguration disp = hc.gYH().gFC("displays");
+				Iterator<String> it = disp.getKeys(false).iterator();
 				while (it.hasNext()) {
 					String key = it.next().toString();
 					String name = disp.getString(key + ".name");
@@ -79,7 +79,7 @@ public class ItemDisplayFactory implements Listener {
 				loadActive = false;
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 	
@@ -143,8 +143,8 @@ public class ItemDisplayFactory implements Listener {
 	public boolean testDisplay(double x, double y, double z, World w, String name, String economy) {
 		x = Math.floor(x) + .5;
 		z = Math.floor(z) + .5;	
-		FileConfiguration disp = hc.getYaml().getDisplays();
-		Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
+		FileConfiguration disp = hc.gYH().gFC("displays");
+		Iterator<String> it = disp.getKeys(false).iterator();
 		while (it.hasNext()) {
 			String key = it.next().toString();
 			double tx = disp.getDouble(key + ".x");
@@ -180,7 +180,7 @@ public class ItemDisplayFactory implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 	
@@ -205,7 +205,7 @@ public class ItemDisplayFactory implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 	
@@ -227,7 +227,7 @@ public class ItemDisplayFactory implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 	
@@ -251,7 +251,7 @@ public class ItemDisplayFactory implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 	
@@ -268,7 +268,7 @@ public class ItemDisplayFactory implements Listener {
 			}
 		}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 
@@ -297,14 +297,14 @@ public class ItemDisplayFactory implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonRetractEvent(BlockPistonRetractEvent event) {
 		try {
-			if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
+			if (hc.gYH().gFC("config").getBoolean("config.use-chest-shops")) {
 				Location l = event.getRetractLocation();
 				Block b = l.getBlock();
 				for (ItemDisplay display : displays.values()) {
@@ -316,7 +316,7 @@ public class ItemDisplayFactory implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 
@@ -334,14 +334,14 @@ public class ItemDisplayFactory implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityExplodeEvent(EntityExplodeEvent event) {
 		try {
-			if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
+			if (hc.gYH().gFC("config").getBoolean("config.use-chest-shops")) {
 				List<Block> blocks = event.blockList();
 				for (Block cblock : blocks) {
 					for (ItemDisplay display : displays.values()) {
@@ -354,7 +354,7 @@ public class ItemDisplayFactory implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 
@@ -367,7 +367,7 @@ public class ItemDisplayFactory implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 
@@ -380,7 +380,7 @@ public class ItemDisplayFactory implements Listener {
 			}
 			return false;
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 			return false;
 		}
 	}

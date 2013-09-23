@@ -18,7 +18,7 @@ public class Setlanguage {
 				String filepath = folderpath + File.separator + language + ".hl";
 				if (L.languageSupported(language) || ft.fileExists(filepath)) {
 					language = L.fixLanguage(language);
-					hc.getYaml().getConfig().set("config.language", language);
+					hc.gYH().gFC("config").set("config.language", language);
 					language = L.buildLanguageFile(false);
 					sender.sendMessage(L.f(L.get("LANGUAGE_LOADED"), language));
 				} else {
@@ -28,7 +28,7 @@ public class Setlanguage {
 				String language = args[0].toLowerCase();
 				if (L.languageSupported(language)) {
 					language = L.fixLanguage(language);
-					hc.getYaml().getConfig().set("config.language", language);
+					hc.gYH().gFC("config").set("config.language", language);
 					language = L.buildLanguageFile(true);
 					sender.sendMessage(L.f(L.get("LANGUAGE_LOADED"), language));
 				} else {

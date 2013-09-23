@@ -9,7 +9,7 @@ public class Createeconomy {
 		try {
 			if (args.length == 1) {
 				String economy = args[0];
-				if (!hc.getEconomyManager().testEconomy(economy)) {
+				if (!hc.getEconomyManager().economyExists(economy)) {
 					hc.getEconomyManager().createNewEconomy(economy);
 					sender.sendMessage(L.get("NEW_ECONOMY_CREATED"));
 				} else {

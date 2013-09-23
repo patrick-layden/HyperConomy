@@ -15,9 +15,9 @@ public class Importprices {
 		try {
 			if (args.length == 1) {
 				String economy = args[0];
-				if (em.testEconomy(economy)) {
+				if (em.economyExists(economy)) {
 					new Backup();
-					FileConfiguration itemsyaml = hc.getYaml().getItems();
+					FileConfiguration itemsyaml = hc.gYH().gFC("items");
 					Iterator<String> it = itemsyaml.getKeys(false).iterator();
 					while (it.hasNext()) {
 						String name = it.next().toString();
@@ -29,7 +29,7 @@ public class Importprices {
 						ho.setStartprice(startprice);
 						ho.setStaticprice(staticprice);
 					}
-					FileConfiguration enchantsyaml = hc.getYaml().getEnchants();
+					FileConfiguration enchantsyaml = hc.gYH().gFC("enchants");
 					Iterator<String> it2 = enchantsyaml.getKeys(false).iterator();
 					while (it2.hasNext()) {
 						String name = it2.next().toString();

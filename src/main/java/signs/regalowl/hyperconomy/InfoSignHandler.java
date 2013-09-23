@@ -28,10 +28,10 @@ public class InfoSignHandler implements Listener {
 
 	InfoSignHandler() {
 		hc = HyperConomy.hc;
-		if (hc.getYaml().getConfig().getBoolean("config.use-info-signs")) {
+		if (hc.gYH().gFC("config").getBoolean("config.use-info-signs")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
-			sns = hc.getYaml().getSigns();
-			signUpdateInterval = hc.getYaml().getConfig().getLong("config.signupdateinterval");
+			sns = hc.gYH().gFC("signs");
+			signUpdateInterval = hc.gYH().gFC("config").getLong("config.signupdateinterval");
 			signUpdateActive = false;
 			loadSigns();
 		}
@@ -98,7 +98,7 @@ public class InfoSignHandler implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 
@@ -116,7 +116,7 @@ public class InfoSignHandler implements Listener {
 				updateSigns();
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 

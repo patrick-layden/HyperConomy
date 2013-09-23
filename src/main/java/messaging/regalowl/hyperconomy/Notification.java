@@ -25,7 +25,7 @@ public class Notification {
 		hc = HyperConomy.hc;
 		previousmessage = "";
 		notifrequests = 0;
-		usenotify = hc.getYaml().getConfig().getBoolean("config.use-notifications");
+		usenotify = hc.gYH().gFC("config").getBoolean("config.use-notifications");
 	}
 	
 	
@@ -45,7 +45,7 @@ public class Notification {
 	
 	
     public void sendNotification() {
-    	usenotify = hc.getYaml().getConfig().getBoolean("config.use-notifications");
+    	usenotify = hc.gYH().gFC("config").getBoolean("config.use-notifications");
     	if (usenotify) {
 	    	notifrequests++;
 	    	hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
@@ -103,7 +103,7 @@ public class Notification {
 	
 	public boolean checkNotify(String name) {
 		boolean note = false;
-		String notify = hc.getYaml().getConfig().getString("config.notify-for");
+		String notify = hc.gYH().gFC("config").getString("config.notify-for");
 		if (notify != null && name != null) {		
 			//For everything but the first.  (Which lacks a comma.)
 			if (notify.contains("," + name + ",")) {

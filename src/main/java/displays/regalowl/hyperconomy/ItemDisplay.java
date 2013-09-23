@@ -149,7 +149,7 @@ public class ItemDisplay {
 	}
 	
 	public void storeDisplay() {
-		Iterator<String> it = hc.getYaml().getDisplays().getKeys(false).iterator();
+		Iterator<String> it = hc.gYH().gFC("displays").getKeys(false).iterator();
 		int numdisplays = 0;
 		while (it.hasNext()) {
 			String key = it.next().toString();
@@ -159,7 +159,7 @@ public class ItemDisplay {
 			}
 		}
 		numdisplays++;
-		FileConfiguration disp = hc.getYaml().getDisplays();
+		FileConfiguration disp = hc.gYH().gFC("displays");
 		key = "d" + numdisplays;
 		disp.set(key + ".name", name);
 		disp.set(key + ".economy", economy);
@@ -176,7 +176,7 @@ public class ItemDisplay {
 	}
 	
 	public void deleteDisplay() {
-		FileConfiguration disp = hc.getYaml().getDisplays();
+		FileConfiguration disp = hc.gYH().gFC("displays");
 		disp.set(key, null);
 		clearDisplay();
 	}

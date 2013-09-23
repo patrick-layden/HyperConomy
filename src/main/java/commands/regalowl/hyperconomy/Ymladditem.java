@@ -22,7 +22,7 @@ public class Ymladditem {
 				player.sendMessage(L.get("ALREADY_IN_DATABASE"));
 				return;
 			}
-			FileConfiguration items = hc.getYaml().getItems();
+			FileConfiguration items = hc.gYH().gFC("items");
 			items.set(name + ".information.type", "item");
 			items.set(name + ".information.category", "unknown");
 			items.set(name + ".information.material", player.getItemInHand().getType().toString());

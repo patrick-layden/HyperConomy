@@ -13,8 +13,8 @@ public class Importnewitems {
 		try {
 			if (args.length == 1) {
 				String economy = args[0];
-				if (em.testEconomy(economy)) {
-					if (hc.getYaml().getConfig().getBoolean("config.run-automatic-backups")) {
+				if (em.economyExists(economy)) {
+					if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
 						new Backup();
 					}
 					ArrayList<String> added = em.getEconomy(economy).loadNewItems();

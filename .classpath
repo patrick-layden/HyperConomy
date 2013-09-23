@@ -25,7 +25,6 @@
 	<classpathentry kind="src" path="src/main/java/api"/>
 	<classpathentry kind="src" path="src/main/java/shops"/>
 	<classpathentry kind="src" path="src/main/java/backup"/>
-	<classpathentry kind="src" path="src/main/java/sql"/>
 	<classpathentry kind="src" path="src/main/java/enums"/>
 	<classpathentry kind="src" path="src/main/java/displays"/>
 	<classpathentry kind="src" path="src/main/java/yml"/>

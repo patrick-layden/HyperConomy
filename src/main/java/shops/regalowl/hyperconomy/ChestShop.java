@@ -56,7 +56,7 @@ public class ChestShop implements Listener {
 		allfaces.add(BlockFace.DOWN);
 		allfaces.add(BlockFace.UP);
 
-		if (hc.getYaml().getConfig().getBoolean("config.use-chest-shops")) {
+		if (hc.gYH().gFC("config").getBoolean("config.use-chest-shops")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
 		}
 
@@ -93,7 +93,7 @@ public class ChestShop implements Listener {
 			}
 			return false;
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 			return false;
 		}
 	}
@@ -140,7 +140,7 @@ public class ChestShop implements Listener {
 			}
 			return null;
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 			return null;
 		}
 	}
@@ -166,7 +166,7 @@ public class ChestShop implements Listener {
 			}
 			return false;
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 			return false;
 		}
 	}
@@ -190,7 +190,7 @@ public class ChestShop implements Listener {
 			}
 			return false;
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 			return false;
 		}
 	}
@@ -214,7 +214,7 @@ public class ChestShop implements Listener {
 			}
 			return null;
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 			return null;
 		}
 	}
@@ -306,7 +306,7 @@ public class ChestShop implements Listener {
 				return;
 			}
 
-			if (hc.getYaml().getConfig().getBoolean("config.require-chest-shops-to-be-in-shop") && !s.inAnyShop(scevent.getPlayer())) {
+			if (hc.gYH().gFC("config").getBoolean("config.require-chest-shops-to-be-in-shop") && !s.inAnyShop(scevent.getPlayer())) {
 				scevent.setLine(0, ChatColor.DARK_RED + "You must");
 				scevent.setLine(1, ChatColor.DARK_RED + "place your");
 				scevent.setLine(2, ChatColor.DARK_RED + "chest shop");
@@ -392,7 +392,7 @@ public class ChestShop implements Listener {
 			}
 
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 
@@ -724,7 +724,7 @@ public class ChestShop implements Listener {
 			}
 
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 

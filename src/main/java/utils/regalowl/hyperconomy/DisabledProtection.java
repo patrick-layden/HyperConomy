@@ -49,7 +49,7 @@ public class DisabledProtection implements Listener {
 			}
 			return false;
 		} catch (Exception e) {
-			new HyperError(e);
+			HyperConomy.hc.gDB().writeError(e);
 			return false;
 		}
 	}
@@ -87,7 +87,7 @@ public class DisabledProtection implements Listener {
 			}
 			return false;
 		} catch (Exception e) {
-			new HyperError(e);
+			HyperConomy.hc.gDB().writeError(e);
 			return false;
 		}
 	}

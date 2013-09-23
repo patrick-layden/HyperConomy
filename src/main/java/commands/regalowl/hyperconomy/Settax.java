@@ -17,23 +17,23 @@ public class Settax {
 				String type = args[0];
 				if (type.equalsIgnoreCase("purchase")) {
 					taxrate = Double.parseDouble(args[1]);
-					hc.getYaml().getConfig().set("config.purchasetaxpercent", taxrate);
+					hc.gYH().gFC("config").set("config.purchasetaxpercent", taxrate);
 					sender.sendMessage(L.get("PURCHASE_TAX_SET"));
 				} else if (type.equalsIgnoreCase("sales")) {
 					taxrate = Double.parseDouble(args[1]);
-					hc.getYaml().getConfig().set("config.sales-tax-percent", taxrate);
+					hc.gYH().gFC("config").set("config.sales-tax-percent", taxrate);
 					sender.sendMessage(L.get("SALES_TAX_SET"));
 				} else if (type.equalsIgnoreCase("static")) {
 					taxrate = Double.parseDouble(args[1]);
-					hc.getYaml().getConfig().set("config.statictaxpercent", taxrate);
+					hc.gYH().gFC("config").set("config.statictaxpercent", taxrate);
 					sender.sendMessage(L.get("STATIC_TAX_SET"));
 				} else if (type.equalsIgnoreCase("initial")) {
 					taxrate = Double.parseDouble(args[1]);
-					hc.getYaml().getConfig().set("config.initialpurchasetaxpercent", taxrate);
+					hc.gYH().gFC("config").set("config.initialpurchasetaxpercent", taxrate);
 					sender.sendMessage(L.get("INITIAL_TAX_SET"));
 				} else if (type.equalsIgnoreCase("enchant")) {
 					taxrate = Double.parseDouble(args[1]);
-					hc.getYaml().getConfig().set("config.enchanttaxpercent", taxrate);
+					hc.gYH().gFC("config").set("config.enchanttaxpercent", taxrate);
 					sender.sendMessage(L.get("ENCHANT_TAX_SET"));
 				} else {
 					sender.sendMessage(L.get("SETTAX_INVALID"));

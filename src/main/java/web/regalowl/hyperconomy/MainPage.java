@@ -27,7 +27,7 @@ public class MainPage extends HttpServlet {
 			//InetAddress addr = InetAddress.getLocalHost();
 			//mainPage = addr.getAddress() + ":" + hc.s().getPort() + "/";
 		//} catch (UnknownHostException e1) {
-		//	new HyperError(e1);
+		//	hc.gDB().writeError(e1);
 		//}
 		page = buildLoadPage();
 		
@@ -36,7 +36,7 @@ public class MainPage extends HttpServlet {
 				try {
 					page = buildPage();
 				} catch (Exception e) {
-					new HyperError(e);
+					hc.gDB().writeError(e);
 				}
 			}
 		}, 400L, 6000L);

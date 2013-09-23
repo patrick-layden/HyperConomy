@@ -36,7 +36,7 @@ public class LanguageFile {
 	
 	public String buildLanguageFile(boolean overwrite) {
 		ft = new FileTools();
-		String lang = HyperConomy.hc.getYaml().getConfig().getString("config.language");
+		String lang = HyperConomy.hc.gYH().gFC("config").getString("config.language");
 		if (lang == null) {
 			lang = "enUS";
 		}
@@ -57,7 +57,7 @@ public class LanguageFile {
 		try {
 		ft.copyFileFromJar("Languages/enUS.hl", backuppath);
 		} catch (Exception e) {
-			new HyperError(e);
+			HyperConomy.hc.gDB().writeError(e);
 		}
 		buildBackupHashMap(backuppath);
 		
@@ -178,28 +178,28 @@ public class LanguageFile {
 	
 	public String fC(String amount) {
 		String formatted = gC(true) + amount;
-		if (HyperConomy.hc.getYaml().getConfig().getBoolean("config.show-currency-symbol-after-price")) {
+		if (HyperConomy.hc.gYH().gFC("config").getBoolean("config.show-currency-symbol-after-price")) {
 			formatted = amount + gC(true);
 		}
 		return formatted;
 	}
 	public String fC(double amount) {
 		String formatted = gC(true) + amount;
-		if (HyperConomy.hc.getYaml().getConfig().getBoolean("config.show-currency-symbol-after-price")) {
+		if (HyperConomy.hc.gYH().gFC("config").getBoolean("config.show-currency-symbol-after-price")) {
 			formatted = amount + gC(true);
 		}
 		return formatted;
 	}
 	public String fCS(double amount) {
 		String formatted = gC(false) + amount;
-		if (HyperConomy.hc.getYaml().getConfig().getBoolean("config.show-currency-symbol-after-price")) {
+		if (HyperConomy.hc.gYH().gFC("config").getBoolean("config.show-currency-symbol-after-price")) {
 			formatted = amount + gC(false);
 		}
 		return formatted;
 	}
 	public String fCS(String amount) {
 		String formatted = gC(false) + amount;
-		if (HyperConomy.hc.getYaml().getConfig().getBoolean("config.show-currency-symbol-after-price")) {
+		if (HyperConomy.hc.gYH().gFC("config").getBoolean("config.show-currency-symbol-after-price")) {
 			formatted = amount + gC(false);
 		}
 		return formatted;

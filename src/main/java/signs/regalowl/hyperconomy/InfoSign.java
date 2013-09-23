@@ -84,7 +84,7 @@ public class InfoSign {
 			HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 			L = hc.getLanguageFile();
 			if (signKey == null || type == null || objectName == null) {
-				new HyperError("DEBUG: infosign initialization null: " + signKey + ", " + objectName + ", " + economy);
+				hc.gDB().writeError("DEBUG: infosign initialization null: " + signKey + ", " + objectName + ", " + economy);
 				return false;
 			}
 			this.economy = "default";
@@ -112,10 +112,10 @@ public class InfoSign {
 			if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
 				return true;
 			}
-			new HyperError("DEBUG: infosign initialization failed: " + x + "," + y + "," + z + "," + world);
+			hc.gDB().writeError("DEBUG: infosign initialization failed: " + x + "," + y + "," + z + "," + world);
 			return false;
 		} catch (Exception e) {
-			new HyperError(e, "InfoSign setData() passed signKey='" + signKey + "', SignType='" + type.toString() + "', objectName='" + objectName + "', economy='" + economy + "'");
+			hc.gDB().writeError(e, "InfoSign setData() passed signKey='" + signKey + "', SignType='" + type.toString() + "', objectName='" + objectName + "', economy='" + economy + "'");
 			return false;
 		}
 	}
@@ -173,7 +173,7 @@ public class InfoSign {
 			HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 			ho = he.getHyperObject(objectName);
 			if (ho == null) {
-				new HyperError("InfoSign HyperObject null after retry: " + objectName + "," + economy);
+				hc.gDB().writeError("InfoSign HyperObject null after retry: " + objectName + "," + economy);
 				return;
 			}
 		}
@@ -307,7 +307,7 @@ public class InfoSign {
 				}
 			}
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 	
@@ -342,7 +342,7 @@ public class InfoSign {
 				}
 			}, 0L);
 		} catch (Exception e) {
-			new HyperError(e);
+			hc.gDB().writeError(e);
 		}
 	}
 	
@@ -365,7 +365,7 @@ public class InfoSign {
 	
 	public void deleteSign() {
 		if (signKey != null && !signKey.equalsIgnoreCase("")) {
-			hc.getYaml().getSigns().set(signKey, null);
+			hc.gYH().gFC("signs").set(signKey, null);
 		}
 	}
 	

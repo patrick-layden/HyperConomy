@@ -1,14 +1,22 @@
 package regalowl.hyperconomy;
 
 import java.util.logging.Logger;
+
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import regalowl.databukkit.DataBukkit;
+import regalowl.databukkit.SQLRead;
+import regalowl.databukkit.SQLWrite;
+import regalowl.databukkit.YamlHandler;
 
 public class HyperConomy extends JavaPlugin {
 	public static HyperConomy hc;
@@ -17,6 +25,8 @@ public class HyperConomy extends JavaPlugin {
 	public static HyperObjectAPI hyperObjectAPI;
 	
 	private EconomyManager em;
+	private DataBukkit db;
+	private YamlHandler yh;
 	private HyperSettings hs;
 	private Calculation calc;
 	private Log l;
@@ -30,7 +40,6 @@ public class HyperConomy extends JavaPlugin {
 	private SQLRead sr;
 	private WebHandler wh;
 	private ChestShop cs;
-	private YamlFile yaml;
 	private boolean playerLock;
 	private boolean fullLock;
 	private boolean loadLock;
@@ -73,43 +82,43 @@ public class HyperConomy extends JavaPlugin {
 
 
 	public void initialize() {
+		db = new DataBukkit(this);
+		yh = db.getYamlHandler();
+		yh.copyFromJar("categories");
+		yh.copyFromJar("config");
+		yh.copyFromJar("enchants");
+		yh.copyFromJar("items");
+		yh.registerFileConfiguration("categories");
+		yh.registerFileConfiguration("config");
+		yh.registerFileConfiguration("displays");
+		yh.registerFileConfiguration("enchants");
+		yh.registerFileConfiguration("items");
+		yh.registerFileConfiguration("shops");
+		yh.registerFileConfiguration("signs");
+		yh.setSaveInterval(yh.gFC("config").getLong("config.saveinterval"));
 		loadLock = true;
 		enabled = false;
 		HandlerList.unregisterAll(this);
 		hc = this;
 		playerLock = false;
 		fullLock = false;
-		yaml = new YamlFile();
-		yaml.YamlEnable();
 		L = new LanguageFile();
 		hs = new HyperSettings();
 		em = new EconomyManager();
-		boolean databaseOk = false;
-		if (hc.s().gB("sql-connection.use-mysql")) {
-			databaseOk = em.checkMySQL();
-			if (!databaseOk) {
-				hc.s().sB("sql-connection.use-mysql", false);
-				databaseOk = em.checkSQLLite();
-				log.severe(L.get("SWITCH_TO_SQLITE"));
-			}
-		} else {
-			databaseOk = em.checkSQLLite();
+		FileConfiguration config = yh.gFC("config");
+		if (config.getBoolean("config.sql-connection.use-mysql")) {
+			String username = config.getString("config.sql-connection.username");
+			String password = config.getString("config.sql-connection.password");
+			int port = config.getInt("config.sql-connection.port");
+			String host = config.getString("config.sql-connection.host");
+			String database = config.getString("config.sql-connection.database");
+			db.enableMySQL(host, database, username, password, port);
 		}
-		if (databaseOk) {
-			sw = new SQLWrite();
-			sr = new SQLRead();
-			em.load();
-		} else {
-			log.severe(L.get("LOG_BREAK"));
-			log.severe(L.get("LOG_BREAK"));
-			log.severe(L.get("DATABASE_CONNECTION_ERROR"));
-			log.severe(L.get("LOG_BREAK"));
-			log.severe(L.get("LOG_BREAK"));
-			getServer().getScheduler().cancelTasks(this);
-			getPluginLoader().disablePlugin(this);
-			return;
-		}
-		//s = new HyperEconomy();
+		db.createDatabase();
+		sw = db.getSQLWrite();
+		sr = db.getSQLRead();
+		em.load();
+
 		l = new Log(this);
 		im = new InventoryManipulation();
 		calc = new Calculation();
@@ -139,14 +148,8 @@ public class HyperConomy extends JavaPlugin {
 		if (wh != null) {
 			wh.endServer();
 		}
-		if (sw != null) {
-			sw.shutDown();
-		}
-		if (sr != null) {
-			sr.shutDown();
-		}
-		if (yaml != null) {
-			yaml.saveYamls();
+		if (db != null) {
+			db.shutDown();
 		}
 		getServer().getScheduler().cancelTasks(this);
 		if (em != null) {
@@ -218,7 +221,7 @@ public class HyperConomy extends JavaPlugin {
 				return true;
 			}
 		} catch (Exception e) {
-			new HyperError(e, "Unhandled command exception.");
+			db.writeError(e, "Unhandled command exception.");
 			return true;
 		}
 	}
@@ -250,25 +253,20 @@ public class HyperConomy extends JavaPlugin {
 		return loadLock;
 	}
 
-	public YamlFile getYaml() {
-		return yaml;
+	public YamlHandler getYamlHandler() {
+		return yh;
+	}
+	public YamlHandler gYH() {
+		return yh;
 	}
 	
 	public EconomyManager getEconomyManager() {
 		return em;
 	}
 
-	//public DataHandler getDataFunctions() {
-	//	return df;
-	//}
-
 	public Calculation getCalculation() {
 		return calc;
 	}
-
-	//public HyperEconomy getShopFactory() {
-	//	return s;
-	//}
 
 	public Economy getEconomy() {
 		return economy;
@@ -328,5 +326,12 @@ public class HyperConomy extends JavaPlugin {
 	
 	public ChestShop getChestShop() {
 		return cs;
+	}
+	
+	public DataBukkit getDataBukkit() {
+		return db;
+	}
+	public DataBukkit gDB() {
+		return db;
 	}
 }

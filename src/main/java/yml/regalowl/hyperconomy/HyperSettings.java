@@ -1,7 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.io.File;
-import java.util.ArrayList;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -15,8 +13,6 @@ public class HyperSettings {
 	private String serverVersion;
 	private long saveinterval;
 	private int savetaskid;
-	private int tempErrorCounter;
-	private boolean errorResetActive;
 
 	private boolean useWebPage;
 	private String backgroundColor;
@@ -42,24 +38,18 @@ public class HyperSettings {
 	HyperSettings() {
 		new Update();
 		hc = HyperConomy.hc;
-		config = HyperConomy.hc.getYaml().getConfig();
+		config = HyperConomy.hc.gYH().gFC("config");
 
 		loadData();
-		errorResetActive = false;
-		loadErrorCount();
+		//errorResetActive = false;
+		//loadErrorCount();
 	}
 	
 	
 	public void loadData() {
-		//blockCreativeSales = config.getBoolean("config.block-selling-in-creative-mode");
 		apiVersion = config.getDouble("api-version");
-		//useExternalEconomy = config.getBoolean("config.use-external-economy-plugin");
-		//logerrors = config.getBoolean("config.log-errors");
 		serverVersion = HyperConomy.hc.getServer().getPluginManager().getPlugin("HyperConomy").getDescription().getVersion();
 		saveinterval = config.getLong("config.saveinterval");
-		//usemysql = config.getBoolean("config.sql-connection.use-mysql");
-		//useShopPermissions = config.getBoolean("config.use-shop-permissions");
-
 		useWebPage = config.getBoolean("config.web-page.use-web-page");
 		backgroundColor = "#" + config.getString("config.web-page.background-color");
 		fontColor = "#" + config.getString("config.web-page.font-color");
@@ -112,48 +102,17 @@ public class HyperSettings {
 	
 	
 	
-	
-	
-	//public boolean blockCreative() {
-	//	return blockCreativeSales;
-	//}
 
 	public double getApiVersion() {
 		return apiVersion;
 	}
 
-	//public boolean useExternalEconomy() {
-	//	return useExternalEconomy;
-	//}
-
-	/*
-	public void setUseExternalEconomy(boolean state) {
-		useExternalEconomy = state;
-	}
-	*/
-
-	//public boolean logErrors() {
-	//	return logerrors;
-	//}
 
 	public String getServerVersion() {
 		return serverVersion;
 	}
 
-	/*
-	public boolean useMySQL() {
-		return usemysql;
-	}
-*/
-	/*
-	public void setUseMySQL(boolean usemysql) {
-		this.usemysql = usemysql;
-	}
-	 */
 
-	//public boolean useShopPermissions() {
-	//	return useShopPermissions;
-	//}
 
 	public String getBackgroundColor() {
 		return backgroundColor;
@@ -243,8 +202,8 @@ public class HyperSettings {
 	public void startSave() {
 		savetaskid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
 			public void run() {
-				if (!hc.getYaml().broken()) {
-					hc.getYaml().saveYamls();
+				if (!hc.gYH().brokenFile()) {
+					hc.gYH().saveYamls();
 				}
 			}
 		}, saveinterval, saveinterval);
@@ -260,48 +219,6 @@ public class HyperSettings {
 
 	public void raiseErrorCount() {
 		errorCount++;
-	}
-
-	private void loadErrorCount() {
-		FileTools ft = new FileTools();
-		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "errors";
-		ft.makeFolder(path);
-		ArrayList<String> contents = ft.getFolderContents(path);
-		if (contents.size() == 0) {
-			errorCount = 0;
-		} else {
-			int max = 0;
-			for (String folder : contents) {
-				try {
-					int cnum = Integer.parseInt(folder);
-					if (cnum > max) {
-						max = cnum;
-					}
-				} catch (Exception e) {
-					continue;
-				}
-			}
-			errorCount = max + 1;
-		}
-	}
-
-	public void incrementErrorCount() {
-		tempErrorCounter++;
-		if (tempErrorCounter > 20) {
-			hc.getServer().getScheduler().cancelTasks(hc);
-			hc.log().severe("HyperConomy is experiencing a massive amount of errors...shutting down....");
-			hc.shutDown(true);
-			hc.getPluginLoader().disablePlugin(hc);
-		}
-		if (!errorResetActive) {
-			errorResetActive = true;
-			hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
-				public void run() {
-					tempErrorCounter = 0;
-					errorResetActive = false;
-				}
-			}, 20L);
-		}
 	}
 
 }

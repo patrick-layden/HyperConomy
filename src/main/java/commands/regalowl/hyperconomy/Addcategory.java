@@ -15,7 +15,7 @@ public class Addcategory {
 		LanguageFile L = hc.getLanguageFile();
 		SerializeArrayList sal = new SerializeArrayList();
 		try {
-			FileConfiguration category = hc.getYaml().getCategories();
+			FileConfiguration category = hc.gYH().gFC("categories");
 			String testcategory = category.getString(args[0]);
 			if (testcategory == null) {
 				sender.sendMessage(L.get("CATEGORY_NOT_EXIST"));
