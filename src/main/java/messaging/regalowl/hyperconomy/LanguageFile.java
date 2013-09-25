@@ -23,9 +23,14 @@ public class LanguageFile {
 		languageConversions.put("français", "frFR");
 		languageConversions.put("le français", "frFR");
 		languageConversions.put("english", "enUS");
+		languageConversions.put("russian", "ruRU");
+		languageConversions.put("ру́сский язы́к", "ruRU");
+		languageConversions.put("russkij jazyk", "ruRU");
+		
 		
 		supportedLanguages.add("enUS");
 		supportedLanguages.add("frFR");
+		supportedLanguages.add("ruRU");
 		buildLanguageFile(false);
 	}
 	
