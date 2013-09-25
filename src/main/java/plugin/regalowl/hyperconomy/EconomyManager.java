@@ -33,7 +33,6 @@ public class EconomyManager {
 	public void load() {
 		if (loadActive) {return;}
 		try {
-			hc.getLogger().severe("load");
 			hc = HyperConomy.hc;
 			sr = hc.getSQLRead();
 			String query = "SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'version'";
@@ -43,28 +42,21 @@ public class EconomyManager {
 			hc.gDB().writeError(e);
 		}
 	}
+
 	public void load1(QueryResult qr) {
-		try {
-			hc.getLogger().severe("load1");
-			hc = HyperConomy.hc;
-			hc.getSQLRead().setErrorLogging(true);
-			if (qr.next()) {
-				double version = Double.parseDouble(qr.getString("VALUE"));
-				if (version == 1.1) {
-					//for next version
-				}
-			} else {
-				createTables();
+		hc = HyperConomy.hc;
+		hc.getSQLRead().setErrorLogging(true);
+		if (qr.next()) {
+			double version = Double.parseDouble(qr.getString("VALUE"));
+			if (version == 1.1) {
+				// for next version
 			}
-			hc.getSQLWrite().afterWrite(this, "load2");
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
+		} else {
 			createTables();
-			hc.getSQLWrite().afterWrite(this, "load2");
 		}
+		hc.getSQLWrite().afterWrite(this, "load2");
 	}
 	public void createTables() {
-		hc.getLogger().severe("createtables");
 		hc.getSQLWrite().convertExecuteSQL("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL, VALUE TEXT, TIME DATETIME NOT NULL, PRIMARY KEY (SETTING))");
 		hc.getSQLWrite().convertExecuteSQL("DELETE FROM hyperconomy_settings");
 		hc.getSQLWrite().convertExecuteSQL("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '1.1', NOW() )");
@@ -75,12 +67,10 @@ public class EconomyManager {
 		hc.getSQLWrite().convertExecuteSQL("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL)");
 	}
 	public void load2() {
-		hc.getLogger().severe("load2");
 		String query = "SELECT NAME FROM hyperconomy_objects WHERE ECONOMY='default'";
 		hc.getSQLRead().syncRead(this, "load3", query, null);
 	}
 	public void load3(QueryResult qr) {
-		hc.getLogger().severe("load3");
 		if (!qr.next()) {
 			HyperConomy.hc.getEconomyManager().createEconomyFromYml("default");
 		}
@@ -90,7 +80,6 @@ public class EconomyManager {
 		hc.getEconomyManager().load5();
 	}
 	public void load5() {
-		hc.getLogger().severe("load5");
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				economies.clear();
@@ -117,7 +106,6 @@ public class EconomyManager {
 					economiesLoaded = true;
 					wait.cancel();
 					hc.onDataLoad();
-					hc.getLogger().severe("wait 3 finished");
 					loadActive = false;
 				}
 			}

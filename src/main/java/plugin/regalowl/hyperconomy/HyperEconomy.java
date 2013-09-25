@@ -236,7 +236,9 @@ public class HyperEconomy implements Listener {
 		hc.getWebHandler().addShop(shop);
 	}
 	public void removeShop(String name) {
-		shops.remove(name);
+		if (shopExists(name)) {
+			shops.remove(fixShopName(name));
+		}
 	}
 	
 	public void deleteShop(String name) {
