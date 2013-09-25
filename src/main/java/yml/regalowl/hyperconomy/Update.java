@@ -155,10 +155,6 @@ public class Update {
 	    	if (t31 == null) {
 	    		yh.gFC("config").set("config.run-automatic-backups", true);
 	    	}
-	    	String t32 = yh.gFC("config").getString("config.error-count");
-	    	if (t32 == null) {
-	    		yh.gFC("config").set("config.error-count", 0);
-	    	}
 	    	String t34 = yh.gFC("config").getString("config.require-transaction-signs-to-be-in-shop");
 	    	if (t34 == null) {
 	    		yh.gFC("config").set("config.require-transaction-signs-to-be-in-shop", false);
@@ -174,10 +170,6 @@ public class Update {
 	    	String t37 = yh.gFC("config").getString("config.language");
 	    	if (t37 == null) {
 	    		yh.gFC("config").set("config.language", "english");
-	    	}
-	    	String t38 = yh.gFC("config").getString("config.log-errors");
-	    	if (t38 == null) {
-	    		yh.gFC("config").set("config.log-errors", false);
 	    	}
 	    	String t41 = yh.gFC("config").getString("config.use-external-economy-plugin");
 	    	if (t41 == null) {
@@ -224,11 +216,7 @@ public class Update {
 	    	if (t54 == null) {
 	    		yh.gFC("config").set("config.starting-player-account-balance", 0.0);
 	    	}	    
-	    	
-	    	double dversion = Double.parseDouble(configversion);
-	    	if (dversion < .952) {
-	    		yh.gFC("config").set("config.log-errors", false);
-	    	}
+
 	    	yh.gFC("config").set("config.sql-connection.max-sql-threads", null);
 	    	yh.gFC("config").set("config.log-sqlwrite-errors", null);
 		}

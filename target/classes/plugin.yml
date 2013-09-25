@@ -361,10 +361,6 @@ commands:
       description: Clears the hyperconomy_history table.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-   hcerror:
-      description: Toggles HyperConomy error logging.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
    hcbalance:
       description: Displays player balances.
       permission: hyperconomy.use

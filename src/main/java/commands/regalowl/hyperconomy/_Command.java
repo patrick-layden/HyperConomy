@@ -244,9 +244,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("hcclearhistory")) {
 			new Hcclearhistory(args, sender);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("hcerror")) {
-			new Hcerror(args, sender);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hcbalance")) {
 			new Hcbalance(args, sender, player);
 			return true;
