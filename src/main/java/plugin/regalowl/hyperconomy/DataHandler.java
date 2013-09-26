@@ -39,6 +39,11 @@ public class DataHandler implements Listener {
 				return;
 			}
 			String name = event.getPlayer().getName();
+			if (name.equalsIgnoreCase(hc.getYaml().getConfig().getString("config.global-shop-account"))) {
+				if (hc.getYaml().getConfig().getBoolean("config.block-player-with-same-name-as-global-shop-account")) {
+					event.getPlayer().kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+				}
+			}
 			if (!hasAccount(name)) {
 				addPlayer(name);
 			}
@@ -188,6 +193,11 @@ public class DataHandler implements Listener {
 					hc.onDataLoad();
 					waitForLoad.cancel();
 					for (Player p : Bukkit.getOnlinePlayers()) {
+						if (p.getName().equalsIgnoreCase(hc.getYaml().getConfig().getString("config.global-shop-account"))) {
+							if (hc.getYaml().getConfig().getBoolean("config.block-player-with-same-name-as-global-shop-account")) {
+								p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+							}
+						}
 						if (!hasAccount(p.getName())) {
 							addPlayer(p.getName());
 						}

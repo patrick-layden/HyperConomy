@@ -221,7 +221,11 @@ public class Update {
 	    	String t54 = yaml.getConfig().getString("config.starting-player-account-balance");
 	    	if (t54 == null) {
 	    		yaml.getConfig().set("config.starting-player-account-balance", 0.0);
-	    	}	    
+	    	}	   
+	    	String t55 = yaml.getConfig().getString("config.block-player-with-same-name-as-global-shop-account");
+	    	if (t55 == null) {
+	    		yaml.getConfig().set("config.block-player-with-same-name-as-global-shop-account", true);
+	    	}	  
 	    	
 	    	double dversion = Double.parseDouble(configversion);
 	    	if (dversion < .952) {
