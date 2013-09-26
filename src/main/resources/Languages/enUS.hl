@@ -400,3 +400,4 @@ SERVER_NULL: &4The web server is null.
 SERVER_STARTING: &dThe web server is starting.
 SERVER_STOPPING: &dThe web server is stopping.
 SERVER_FAILED: &4The web server is failed.
+CANT_USE_ACCOUNT: You cannot play on this server using HyperConomy's global shop account.

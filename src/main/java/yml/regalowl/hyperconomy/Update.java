@@ -215,7 +215,11 @@ public class Update {
 	    	String t54 = yh.gFC("config").getString("config.starting-player-account-balance");
 	    	if (t54 == null) {
 	    		yh.gFC("config").set("config.starting-player-account-balance", 0.0);
-	    	}	    
+	    	}	   
+	    	String t55 = yh.gFC("config").getString("config.block-player-with-same-name-as-global-shop-account");
+	    	if (t55 == null) {
+	    		yh.gFC("config").set("config.block-player-with-same-name-as-global-shop-account", true);
+	    	}	  
 
 	    	yh.gFC("config").set("config.sql-connection.max-sql-threads", null);
 	    	yh.gFC("config").set("config.log-sqlwrite-errors", null);

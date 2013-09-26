@@ -1,4 +1,4 @@
-version: 0.972
+version: 0.973
 api-version: 1.0
 config:
   shopcheckinterval: 6
@@ -35,6 +35,7 @@ config:
   block-selling-in-creative-mode: false
   show-currency-symbol-after-price: false
   starting-player-account-balance: 0.0
+  block-player-with-same-name-as-global-shop-account: true
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

@@ -66,6 +66,11 @@ public class HyperEconomy implements Listener {
 				return;
 			}
 			String name = event.getPlayer().getName();
+			if (name.equalsIgnoreCase(hc.gYH().gFC("config").getString("config.global-shop-account"))) {
+				if (hc.gYH().gFC("config").getBoolean("config.block-player-with-same-name-as-global-shop-account")) {
+					event.getPlayer().kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+				}
+			}
 			if (!em.hyperPlayerExists(name) && economy.equalsIgnoreCase("default")) {
 				addPlayer(name);
 			}
@@ -172,6 +177,11 @@ public class HyperEconomy implements Listener {
 	
 	private void addOnlinePlayers() {
 		for (Player p : Bukkit.getOnlinePlayers()) {
+			if (p.getName().equalsIgnoreCase(hc.gYH().gFC("config").getString("config.global-shop-account"))) {
+				if (hc.gYH().gFC("config").getBoolean("config.block-player-with-same-name-as-global-shop-account")) {
+					p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+				}
+			}
 			if (!hasAccount(p.getName())) {
 				addPlayer(p.getName());
 			}
