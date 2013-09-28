@@ -116,7 +116,7 @@ public class HyperEconomy implements Listener {
 		shops.clear();
 		FileConfiguration sh = hc.gYH().gFC("shops");
 		if (!useShops && economy.equalsIgnoreCase("default")) {
-			Shop shop = new Shop("GlobalShop", em.getGlobalShopAccount());
+			Shop shop = new ServerShop("GlobalShop", em.getGlobalShopAccount());
 			shop.setGlobal();
 			shops.put("GlobalShop", shop);
 			return;
@@ -131,7 +131,7 @@ public class HyperEconomy implements Listener {
 				if (owner == null && economy.equalsIgnoreCase("default")) {
 					owner = em.getGlobalShopAccount().getName();
 				}
-				Shop shop = new Shop(name, getHyperPlayer(owner));
+				Shop shop = new ServerShop(name, getHyperPlayer(owner));
 				shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
 				shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
 				shop.setMessage1(sh.getString(name + ".shopmessage1"));
