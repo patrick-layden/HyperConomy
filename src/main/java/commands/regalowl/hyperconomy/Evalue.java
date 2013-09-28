@@ -66,7 +66,7 @@ public class Evalue {
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else if (type.equalsIgnoreCase("a")) {
 							sender.sendMessage(L.get("LINE_BREAK"));
-							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), he.getHyperObject(nam).getStock(), nam));
+							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(nam).getStock()), nam));
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else {
 							sender.sendMessage(L.get("EVALUE_INVALID"));
@@ -110,7 +110,7 @@ public class Evalue {
 							value = calc.twoDecimals(value - salestax);
 							sender.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 							sender.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), he.getHyperObject(fnam).getStock(), fnam));
+							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(fnam).getStock()), fnam));
 						}
 						player.sendMessage(L.get("LINE_BREAK"));
 					} else {

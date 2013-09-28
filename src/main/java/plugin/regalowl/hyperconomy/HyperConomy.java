@@ -46,6 +46,7 @@ public class HyperConomy extends JavaPlugin {
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
 	private Economy economy;
+	private SerializeArrayList sal;
 	private boolean enabled;
 
 	@Override
@@ -88,7 +89,9 @@ public class HyperConomy extends JavaPlugin {
 		yh.copyFromJar("config");
 		yh.copyFromJar("enchants");
 		yh.copyFromJar("items");
+		yh.copyFromJar("composites");
 		yh.registerFileConfiguration("categories");
+		yh.registerFileConfiguration("composites");
 		yh.registerFileConfiguration("config");
 		yh.registerFileConfiguration("displays");
 		yh.registerFileConfiguration("enchants");
@@ -122,6 +125,7 @@ public class HyperConomy extends JavaPlugin {
 		l = new Log(this);
 		im = new InventoryManipulation();
 		calc = new Calculation();
+		sal = new SerializeArrayList();
 		commandhandler = new _Command();
 		not = new Notification();
 		isign = new InfoSignHandler();
@@ -334,4 +338,8 @@ public class HyperConomy extends JavaPlugin {
 	public DataBukkit gDB() {
 		return db;
 	}
+	public SerializeArrayList getSerializeArrayList() {
+		return sal;
+	}
+	
 }

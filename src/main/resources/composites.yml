@@ -1,0 +1,192 @@
+ironblock:
+  information:
+    type: item
+    category: unknown
+    material: IRON_BLOCK
+    id: 42
+    data: 0
+  components: ironingot,9;
+paper:
+  information:
+    type: item
+    category: unknown
+    material: PAPER
+    id: 339
+    data: 0
+  components: sugarcane,1;
+book:
+  information:
+    type: item
+    category: unknown
+    material: BOOK
+    id: 340
+    data: 0
+  components: leather,1;paper,3;
+oakwood:
+  information:
+    type: item
+    category: unknown
+    material: WOOD
+    id: 5
+    data: 0
+  components: oaklog,1/4;
+bookshelf:
+  information:
+    type: item
+    category: unknown
+    material: BOOKSHELF
+    id: 47
+    data: 0
+  components: oakwood,6;book,3;
+lapisblock:
+  information:
+    type: item
+    category: unknown
+    material: LAPIS_BLOCK
+    id: 22
+    data: 0
+  components: lapislazuli,9;
+stick:
+  information:
+    type: item
+    category: unknown
+    material: STICK
+    id: 280
+    data: 0
+  components: oakwood,1/2;
+bow:
+  information:
+    type: item
+    category: unknown
+    material: BOW
+    id: 261
+    data: 0
+  components: string,3;stick,3;
+dispenser:
+  information:
+    type: item
+    category: unknown
+    material: DISPENSER
+    id: 23
+    data: 0
+  components: cobblestone,7;redstone,1;bow,1;
+noteblock:
+  information:
+    type: item
+    category: unknown
+    material: NOTE_BLOCK
+    id: 25
+    data: 0
+  components: oakwood,8;redstone,1;
+piston:
+  information:
+    type: item
+    category: unknown
+    material: PISTON_BASE
+    id: 33
+    data: 0
+  components: cobblestone,4;redstone,1;ironingot,1;oakwood,3;
+stickypiston:
+  information:
+    type: item
+    category: unknown
+    material: PISTON_STICKY_BASE
+    id: 29
+    data: 0
+  components: piston,1;slimeball,1;
+fence:
+  information:
+    type: item
+    category: unknown
+    material: FENCE
+    id: 85
+    data: 0
+  components: stick,3;
+glassbottle:
+  information:
+    type: item
+    category: unknown
+    material: GLASS_BOTTLE
+    id: 374
+    data: 0
+  components: glass,1;
+waterbottle:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 0
+  components: glassbottle,1;
+awkwardpotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16
+  components: netherwarts,1;waterbottle,1;
+potionofregen:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 1
+  components: awkwardpotion,1;ghasttear,1;
+potionofregen2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 33
+  components: glowstonedust,1;potionofregen,1;
+potionofregenext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 65
+  components: redstone,1;potionofregen,1;
+potionofregen2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 97
+  components: redstone,1;glowstonedust,1;potionofregen,1;
+spotionofregen:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16385
+  components: gunpowder,1;potionofregen,1;
+spotionofregenext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16449
+  components: redstone,1;gunpowder,1;potionofregen,1;
+spotionofregen2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16417
+  components: glowstonedust,1;gunpowder,1;potionofregen,1;
+spotionofregen2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16481
+  components: glowstonedust,1;gunpowder,1;redstone,1;potionofregen,1;

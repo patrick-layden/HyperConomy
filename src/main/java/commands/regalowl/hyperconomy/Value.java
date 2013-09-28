@@ -48,7 +48,7 @@ public class Value {
 						cost = -1;
 					}
 					double stock = 0;
-					stock = he.getHyperObject(name).getStock();
+					stock = calc.twoDecimals(he.getHyperObject(name).getStock());
 					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, name));
 					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, name));
 					sender.sendMessage(L.get("LINE_BREAK"));

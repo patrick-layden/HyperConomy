@@ -19,8 +19,11 @@ public class Setstockmedianall {
 				}
 				ArrayList<String> names = he.getNames();
 				for (int c = 0; c < names.size(); c++) {
-					he.getHyperObject(names.get(c)).setStock(he.getHyperObject(names.get(c)).getMedian());
-					he.getHyperObject(names.get(c)).setInitiation("false");
+					HyperObject ho = he.getHyperObject(names.get(c));
+					if (ho instanceof ComponentObject) {
+						ho.setStock(ho.getMedian());
+						ho.setInitiation("false");
+					}
 				}
 				sender.sendMessage(L.get("SETSTOCKMEDIANALL_SUCCESS"));
 				isign.updateSigns();

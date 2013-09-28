@@ -3,7 +3,9 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -148,7 +150,7 @@ public class HyperEconomy implements Listener {
 				hyperPlayers.clear();
 				QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economy+"'");
 				while (result.next()) {
-					HyperObject hobj = new HyperObject(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
+					HyperObject hobj = new ComponentObject(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
 							result.getString("CATEGORY"), result.getString("MATERIAL"), result.getInt("ID"), result.getInt("DATA"),
 							result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 							result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
@@ -167,9 +169,10 @@ public class HyperEconomy implements Listener {
 					createGlobalShopAccount();
 				}
 				dataLoaded = true;
-				hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+				hc.getServer().getScheduler().runTask(hc, new Runnable() {
 					public void run() {
 						if (economy.equalsIgnoreCase("default")) {
+							loadComposites();
 							addOnlinePlayers();
 							loadShops();
 						}
@@ -177,6 +180,35 @@ public class HyperEconomy implements Listener {
 				});
 			}
 		});
+	}
+	
+	private void loadComposites() {
+		boolean loaded = false;
+		FileConfiguration composites = hc.gYH().gFC("composites");
+		while (!loaded) {
+			loaded = true;
+			Iterator<String> it = composites.getKeys(false).iterator();
+			while (it.hasNext()) {
+				String name = it.next().toString();
+				if (!componentsLoaded(name)) {
+					loaded = false;
+					continue;
+				}
+				HyperObject ho = new CompositeObject(name, economy);
+				hyperObjects.put(ho.getName(), ho);
+			}
+		}
+	}
+	private boolean componentsLoaded(String name) {
+		HashMap<String,String> tempComponents = hc.getSerializeArrayList().explodeMap(hc.gYH().gFC("composites").getString(name + ".components"));
+		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
+		    String oname = entry.getKey();
+		    HyperObject ho = getHyperObject(oname);
+		    if (ho == null) {
+		    	return false;
+		    }
+		}
+		return true;
 	}
 	
 	private void addOnlinePlayers() {

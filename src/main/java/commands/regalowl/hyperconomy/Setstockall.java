@@ -25,7 +25,10 @@ public class Setstockall {
 		}
 		for (int i = 0; i < names.size(); i++) {
 			name = names.get(i);
-			he.getHyperObject(name).setStock(stock);
+			HyperObject ho = he.getHyperObject(name);
+			if (ho instanceof ComponentObject) {
+				ho.setStock(stock);
+			}
 		}
 		isign.updateSigns();
 		sender.sendMessage(L.get("ALL_STOCKS_SET"));

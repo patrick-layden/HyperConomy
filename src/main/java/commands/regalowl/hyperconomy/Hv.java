@@ -84,7 +84,7 @@ public class Hv {
 						value = calc.twoDecimals(value - salestax);
 						player.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 						player.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-						player.sendMessage(L.f(L.get("EVALUE_STOCK"), he.getHyperObject(fnam).getStock(), fnam));
+						player.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(fnam).getStock()), fnam));
 					}
 					player.sendMessage(L.get("LINE_BREAK"));
 				}

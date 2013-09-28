@@ -31,13 +31,17 @@ public class Setstaticall {
 		if (setting.equalsIgnoreCase("copy")) {
 			for (int i = 0; i < names.size(); i++) {
 				String name = names.get(i);
-				he.getHyperObject(name).setStaticprice(he.getHyperObject(name).getStartprice());
-				he.getHyperObject(name).setIsstatic("true");
+				HyperObject ho = he.getHyperObject(name);
+				if (ho instanceof CompositeObject) {continue;}
+				ho.setStaticprice(ho.getStartprice());
+				ho.setIsstatic("true");
 			}
 			setting = "true + dynamic prices copied";
 		} else {
 			for (int i = 0; i < names.size(); i++) {
-				he.getHyperObject(names.get(i)).setIsstatic(setting);
+				HyperObject ho = he.getHyperObject(names.get(i));
+				if (ho instanceof CompositeObject) {continue;}
+				ho.setIsstatic(setting);
 			}
 		}
 		isign.updateSigns();

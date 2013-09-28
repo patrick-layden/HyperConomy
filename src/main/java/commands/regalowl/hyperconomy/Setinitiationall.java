@@ -28,7 +28,9 @@ public class Setinitiationall {
 		new Backup();
 		for (int i = 0; i < names.size(); i++) {
 			name = names.get(i);
-			he.getHyperObject(name).setInitiation(setting);
+			HyperObject ho = he.getHyperObject(name);
+			if (ho instanceof CompositeObject) {continue;}
+			ho.setInitiation(setting);
 		}
 		isign.updateSigns();
 		sender.sendMessage(L.f(L.get("ALL_OBJECTS_SET_TO"), setting));
