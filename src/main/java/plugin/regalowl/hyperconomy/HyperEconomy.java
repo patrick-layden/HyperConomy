@@ -53,8 +53,7 @@ public class HyperEconomy implements Listener {
 		hc.getServer().getPluginManager().registerEvents(this, hc);
 		useShops = hc.gYH().gFC("config").getBoolean("config.use-shops");
 		shopinterval = hc.gYH().gFC("config").getLong("config.shopcheckinterval");
-		loadShops();
-		loadSQL();
+		load();
 	}
 	
 	
@@ -117,7 +116,7 @@ public class HyperEconomy implements Listener {
 		shops.clear();
 		FileConfiguration sh = hc.gYH().gFC("shops");
 		if (!useShops && economy.equalsIgnoreCase("default")) {
-			Shop shop = new Shop("GlobalShop", "default");
+			Shop shop = new Shop("GlobalShop", em.getGlobalShopAccount());
 			shop.setGlobal();
 			shops.put("GlobalShop", shop);
 			return;
@@ -128,7 +127,11 @@ public class HyperEconomy implements Listener {
 			String name = element.toString(); 
 			if (name.equalsIgnoreCase("GlobalShop")) {continue;}
 			if (sh.getString(name + ".economy").equalsIgnoreCase(economy)) {
-				Shop shop = new Shop(name, economy);
+				String owner = sh.getString(name + ".owner");
+				if (owner == null && economy.equalsIgnoreCase("default")) {
+					owner = em.getGlobalShopAccount().getName();
+				}
+				Shop shop = new Shop(name, getHyperPlayer(owner));
 				shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
 				shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
 				shop.setMessage1(sh.getString(name + ".shopmessage1"));
@@ -138,7 +141,7 @@ public class HyperEconomy implements Listener {
 		}
 		startShopCheck();
 	}
-	private void loadSQL() {
+	private void load() {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				hyperObjects.clear();
@@ -168,6 +171,7 @@ public class HyperEconomy implements Listener {
 					public void run() {
 						if (economy.equalsIgnoreCase("default")) {
 							addOnlinePlayers();
+							loadShops();
 						}
 					}
 				});

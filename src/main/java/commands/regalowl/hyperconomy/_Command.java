@@ -274,6 +274,9 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("importfromyml")) {
 			new Importfromyml(sender, args);
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("hctest")) {
+			new Hctest(args, sender);
+			return true;
 		}
 		
 		return false;

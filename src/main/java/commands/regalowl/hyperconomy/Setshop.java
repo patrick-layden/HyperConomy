@@ -13,7 +13,7 @@ public class Setshop {
 				if (he.shopExists(name)) {
 					he.getShop(name).setPoint1(player);
 				} else {
-					Shop shop = new Shop(name, "default");
+					Shop shop = new Shop(name, hc.getEconomyManager().getHyperPlayer(player.getName()));
 					shop.setPoint1(player);
 					shop.setPoint2(player);
 					shop.setDefaultMessages();
@@ -25,7 +25,7 @@ public class Setshop {
 				if (he.shopExists(name)) {
 					he.getShop(name).setPoint2(player);
 				} else {
-					Shop shop = new Shop(name, "default");
+					Shop shop = new Shop(name, hc.getEconomyManager().getHyperPlayer(player.getName()));
 					shop.setPoint1(player);
 					shop.setPoint2(player);
 					shop.setDefaultMessages();
