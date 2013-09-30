@@ -23,7 +23,7 @@ public class Sell {
 					boolean xp = false;
 
 					if (he.itemTest(name)) {
-						HyperObject ho = he.getHyperObject(name);
+						HyperObject ho = he.getHyperObject(name, he.getShop(player));
 						if (ho.getType() == HyperObjectType.EXPERIENCE) {
 							xp = true;
 						}
@@ -52,7 +52,7 @@ public class Sell {
 						}
 					}
 					if (he.itemTest(name)) {
-						HyperObject ho = he.getHyperObject(name);
+						HyperObject ho = he.getHyperObject(name, he.getShop(player));
 						if (he.getShop(player).has(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 							pt.setHyperObject(ho);

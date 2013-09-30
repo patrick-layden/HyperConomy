@@ -17,7 +17,7 @@ public class Ebuy {
 					if (he.enchantTest(name)) {
 						if (he.getShop(player).has(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
-							pt.setHyperObject(he.getHyperObject(name));
+							pt.setHyperObject(he.getHyperObject(name, he.getShop(player)));
 							TransactionResponse response = hp.processTransaction(pt);
 							response.sendMessages();
 						} else {

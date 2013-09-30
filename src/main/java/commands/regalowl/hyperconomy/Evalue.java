@@ -21,7 +21,7 @@ public class Evalue {
 				if (args.length == 2) {
 					String nam = args[0];
 					if (he.enchantTest(nam)) {
-						HyperObject ho = he.getHyperObject(nam);
+						HyperObject ho = he.getHyperObject(nam, he.getShop(player));
 						String type = args[1];
 						if (type.equalsIgnoreCase("s")) {
 							String[] classtype = new String[9];
@@ -66,7 +66,7 @@ public class Evalue {
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else if (type.equalsIgnoreCase("a")) {
 							sender.sendMessage(L.get("LINE_BREAK"));
-							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(nam).getStock()), nam));
+							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(nam, he.getShop(player)).getStock()), nam));
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else {
 							sender.sendMessage(L.get("EVALUE_INVALID"));
@@ -87,7 +87,7 @@ public class Evalue {
 							int lvl = im.getEnchantmentLevel(player.getItemInHand(), en);
 							String nam = he.getEnchantNameWithoutLevel(enchname);
 							String fnam = nam + lvl;
-							HyperObject ho = he.getHyperObject(fnam);
+							HyperObject ho = he.getHyperObject(fnam, he.getShop(player));
 							String mater = player.getItemInHand().getType().name();
 							double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
 							double cost = ho.getCost(EnchantmentClass.fromString(mater));
@@ -110,7 +110,7 @@ public class Evalue {
 							value = calc.twoDecimals(value - salestax);
 							sender.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 							sender.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(fnam).getStock()), fnam));
+							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(fnam, he.getShop(player)).getStock()), fnam));
 						}
 						player.sendMessage(L.get("LINE_BREAK"));
 					} else {

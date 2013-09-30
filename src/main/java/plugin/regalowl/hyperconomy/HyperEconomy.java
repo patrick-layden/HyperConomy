@@ -133,12 +133,21 @@ public class HyperEconomy implements Listener {
 				if (owner == null && economy.equalsIgnoreCase("default")) {
 					owner = em.getGlobalShopAccount().getName();
 				}
-				Shop shop = new ServerShop(name, getHyperPlayer(owner));
-				shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
-				shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
-				shop.setMessage1(sh.getString(name + ".shopmessage1"));
-				shop.setMessage2(sh.getString(name + ".shopmessage2"));
-				shops.put(name, shop);
+				if (owner.equalsIgnoreCase(em.getGlobalShopAccount().getName())) {
+					Shop shop = new ServerShop(name, getHyperPlayer(owner));
+					shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
+					shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
+					shop.setMessage1(sh.getString(name + ".shopmessage1"));
+					shop.setMessage2(sh.getString(name + ".shopmessage2"));
+					shops.put(name, shop);
+				} else {
+					Shop shop = new PlayerShop(name, getHyperPlayer(owner));
+					shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
+					shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
+					shop.setMessage1(sh.getString(name + ".shopmessage1"));
+					shop.setMessage2(sh.getString(name + ".shopmessage2"));
+					shops.put(name, shop);
+				}
 			}
 		}
 		startShopCheck();
@@ -251,6 +260,9 @@ public class HyperEconomy implements Listener {
 	
 	
 	Shop getShop(Player player) {
+		if (player == null) {
+			return null;
+		}
 		for (Shop shop : shops.values()) {
 			if (shop.inShop(player)) {
 				return shop;
@@ -364,10 +376,39 @@ public class HyperEconomy implements Listener {
 	
 	
 	
-	
-	
-	
-	
+	public HyperObject getHyperObject(int id, int data, Shop s) {
+		if (s != null && s instanceof PlayerShop) {
+			for (HyperObject ho:hyperObjects.values()) {
+				if (ho.getId() == id && ho.getData() == data) {
+					return ((PlayerShop) s).getPlayerShopObject(ho);
+				}
+			}
+			return null;
+		} else {
+			for (HyperObject ho:hyperObjects.values()) {
+				if (ho.getId() == id && ho.getData() == data) {
+					return ho;
+				}
+			}
+		}
+		return null;
+	}
+	public HyperObject getHyperObject(String name, Shop s) {
+		name = fixName(name);
+		if (s != null && s instanceof PlayerShop) {
+			if (hyperObjects.containsKey(name)) {
+				return ((PlayerShop) s).getPlayerShopObject(hyperObjects.get(name));
+			} else {
+				return null;
+			}
+		} else {
+			if (hyperObjects.containsKey(name)) {
+				return hyperObjects.get(name);
+			} else {
+				return null;
+			}
+		}
+	}
 
 	public HyperObject getHyperObject(int id, int data) {
 		for (HyperObject ho:hyperObjects.values()) {
@@ -394,10 +435,7 @@ public class HyperEconomy implements Listener {
 		}
 		return hos;
 	}
-	
 
-	
-	
 	
 	public HyperPlayer getHyperPlayer(String player) {
 		player = fixpN(player);

@@ -95,6 +95,17 @@ public class ComponentObject implements HyperObject {
 	public double getStock() {
 		return stock;
 	}
+	public double getTotalStock() {
+		double totalStock = 0.0;
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		for (Shop s:he.getShops()) {
+			if (s instanceof PlayerShop && ((PlayerShop) s).hasPlayerShopObject(this)) {
+				totalStock += ((PlayerShop) s).getPlayerShopObject(this).getStock();
+			}
+		}
+		totalStock += stock;
+		return totalStock;
+	}
 	public double getMedian() {
 		return median;
 	}

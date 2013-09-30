@@ -42,7 +42,7 @@ public class Hs {
 					}
 					int itd = player.getItemInHand().getTypeId();
 					int da = im.getDamageValue(player.getItemInHand());
-					HyperObject ho = he.getHyperObject(itd, da);
+					HyperObject ho = he.getHyperObject(itd, da, he.getShop(player));
 					if (ho == null) {
 						player.sendMessage(L.get("CANT_BE_TRADED"));
 					} else {

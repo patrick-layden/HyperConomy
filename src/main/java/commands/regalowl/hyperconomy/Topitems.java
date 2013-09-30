@@ -47,7 +47,7 @@ public class Topitems {
 					}
 				}
 				if (!unavailable) {
-					double samount = he.getHyperObject(elst).getStock();
+					double samount = he.getHyperObject(elst, he.getShop(player)).getStock();
 					if (samount > 0) {
 						while (itemstocks.containsKey(samount * 100)) {
 							samount = samount + .0000001;

@@ -28,7 +28,7 @@ public class Buyid {
 					if (amount > 10000) {
 						amount = 10000;
 					}
-					HyperObject ho = he.getHyperObject(itd, da);
+					HyperObject ho = he.getHyperObject(itd, da, he.getShop(player));
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {

@@ -205,6 +205,7 @@ SETTINGS_VALUE: &9Value: &b%v
 SETTINGS_STARTPRICE: &9Use Start Price: &b%s&9, &a%v
 SETTINGS_STATICPRICE: &9Static price: &b%s&9, &a%v
 SETTINGS_STOCK: &9Stock: &b%v
+SETTINGS_TOTAL_STOCK: &9Total stock: &b%v
 SETTINGS_MEDIAN: &9Median stock: &b%v
 SETTINGS_CEILING: &9Ceiling: &b%v
 SETTINGS_FLOOR: &9Floor: &b%v

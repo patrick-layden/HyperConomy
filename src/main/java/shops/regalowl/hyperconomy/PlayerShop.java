@@ -15,6 +15,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private String name;
 	private String world;
 	private String economy;
+	private HyperEconomy he;
 	private HyperPlayer owner;
 	private String message1;
 	private String message2;
@@ -31,33 +32,42 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private LanguageFile L;
 	private FileConfiguration shopFile;
 	private EconomyManager em;
+	private PlayerShop ps;
 	
 	private CopyOnWriteArrayList<PlayerShopObject> shopContents = new CopyOnWriteArrayList<PlayerShopObject>();
 	private ArrayList<String> inShop = new ArrayList<String>();
 	
-	PlayerShop(String name, String economy, HyperPlayer owner) {
-		this.name = name;
-		this.economy = economy;
+	PlayerShop(String shopName, HyperPlayer owner) {
+		this.name = shopName;
+		this.economy = owner.getEconomy();
 		this.owner = owner;
 		hc = HyperConomy.hc;
 		em = hc.getEconomyManager();
+		he = em.getEconomy(name);
+		ps = this;
 		L = hc.getLanguageFile();
 		shopFile = hc.gYH().getFileConfiguration("shops");
 		shopFile.set(name + ".economy", economy);
 		shopFile.set(name + ".owner", owner.getName());
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
-		QueryResult result = hc.getSQLRead().aSyncSelect("SELECT * FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"'");
-		while (result.next()) {
-			double price = result.getDouble("PRICE");
-			if (price == 0.0) {
-				//PlayerShopObject pso = new PlayerShopObject(hc.getDataFunctions().getHyperObject(result.getString("HYPEROBJECT"), economy), result.getDouble("QUANTITY"), PlayerShopObjectStatus.fromString(result.getString("STATUS")));
-				//shopContents.add(pso);
-			} else {
-				//PlayerShopObject pso = new PlayerShopObject(hc.getDataFunctions().getHyperObject(result.getString("HYPEROBJECT"), economy), result.getDouble("QUANTITY"), PlayerShopObjectStatus.fromString(result.getString("STATUS")), price);
-				//shopContents.add(pso);
+		
+		
+		
+		
+		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			public void run() {
+				QueryResult result = hc.getSQLRead().aSyncSelect("SELECT * FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"'");
+				while (result.next()) {
+					double price = result.getDouble("PRICE");
+					HyperObject ho = he.getHyperObject(result.getString("HYPEROBJECT"));
+					double stock = result.getDouble("QUANTITY");
+					PlayerShopObjectStatus status = PlayerShopObjectStatus.fromString(result.getString("STATUS"));
+					PlayerShopObject pso = new PlayerShopObject(ps, ho, stock, price, status);
+					shopContents.add(pso);
+				}
+				result.close();
 			}
-		}
-		result.close();
+		});		
 	}
 	
 
@@ -307,8 +317,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		hc.getSQLWrite().executeSQL("DELETE FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"'");
 	}
 	
-	public void removeFromShop(HyperObject hyperObject) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
+	public void removePlayerShopObject(HyperObject hyperObject) {
+		HyperObject pso = getPlayerShopObject(hyperObject);
 		if (pso == null) {
 			return;
 		} else {
@@ -316,90 +326,26 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			hc.getSQLWrite().executeSQL("DELETE FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"' AND HYPEROBJECT = '"+hyperObject.getName()+"'");
 		}
 	}
-	
-	
-	public PlayerShopObject getPlayerShopObject(HyperObject hyperObject) {
+	public HyperObject getPlayerShopObject(HyperObject hyperObject) {
 		for (PlayerShopObject pso:shopContents) {
 			if (hyperObject.equals(pso.getHyperObject())) {
 				return pso;
 			}
 		}
-		return null;
+		PlayerShopObject pso = new PlayerShopObject(this, hyperObject, 0.0, 0.0, PlayerShopObjectStatus.TRADE);
+		shopContents.add(pso);
+		hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'trade')");
+		return pso;
 	}
-	
-	public double getStock(HyperObject hyperObject) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
-		if (pso == null) {
-			return 0;
-		} else {
-			return pso.getQuantity();
-		}
-	}
-	
-	public void setStock(HyperObject hyperObject, double stock) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
-		if (pso == null) {
-			pso = new PlayerShopObject(hyperObject, stock, PlayerShopObjectStatus.TRADE);
-			shopContents.add(pso);
-			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '"+stock+"', '0.0', 'trade')");
-		} else {
-			pso.setQuantity(stock);
-			hc.getSQLWrite().executeSQL("UPDATE hyperconomy_shop_objects SET QUANTITY='"+stock+"' WHERE SHOP='"+name+"' AND HYPEROBJECT='"+hyperObject.getName()+"'");
-		}
-	}
-	
-
-	
-	public double getPrice(HyperObject hyperObject, HyperPlayer hyperPlayer, EnchantmentClass enchantClass) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
-		if (pso == null) {
-			if (hyperObject.getType() == HyperObjectType.ENCHANTMENT) {
-				return hyperObject.getValue(enchantClass, hyperPlayer);
-			} else {
-				return hyperObject.getValue(1, hyperPlayer);
-			}
-			
-		} else {
-			if (pso.getPrice() == 0.0) {
-				return hyperObject.getValue(1, hyperPlayer);
-			} else {
-				return pso.getPrice();
+	public boolean hasPlayerShopObject(HyperObject ho) {
+		for (PlayerShopObject pso:shopContents) {
+			if (ho.equals(pso.getHyperObject())) {
+				return true;
 			}
 		}
+		return false;
 	}
 	
-	public void setPrice(HyperObject hyperObject, double price) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
-		if (pso == null) {
-			pso = new PlayerShopObject(hyperObject, 0, PlayerShopObjectStatus.TRADE, price);
-			shopContents.add(pso);
-			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0', '"+price+"', 'trade')");
-		} else {
-			pso.setPrice(price);
-			hc.getSQLWrite().executeSQL("UPDATE hyperconomy_shop_objects SET PRICE='"+price+"' WHERE SHOP='"+name+"' AND HYPEROBJECT='"+hyperObject.getName()+"'");
-		}
-	}
-
-	
-	public PlayerShopObjectStatus getObjectStatus(HyperObject hyperObject) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
-		if (pso == null) {
-			return PlayerShopObjectStatus.NONE;
-		} else {
-			return pso.getStatus();
-		}
-	}
-	
-	public void setObjectStatus(HyperObject hyperObject, PlayerShopObjectStatus status) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
-		if (pso == null) {
-			return;
-		} else {
-			pso.setStatus(status);
-			hc.getSQLWrite().executeSQL("UPDATE hyperconomy_shop_objects SET STATUS='"+status.toString()+"' WHERE SHOP='"+name+"' AND HYPEROBJECT='"+hyperObject.getName()+"'");
-		}
-	}
-
 
 
 	public void setGlobal() {

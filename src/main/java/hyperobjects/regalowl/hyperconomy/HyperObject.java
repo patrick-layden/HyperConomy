@@ -19,6 +19,7 @@ public interface HyperObject extends Comparable<HyperObject> {
 	public String getIsstatic();
 	public double getStaticprice();
 	public double getStock();
+	public double getTotalStock();
 	public double getMedian();
 	public String getInitiation();
 	public double getStartprice();

@@ -311,7 +311,7 @@ public class TransactionProcessor {
 					id = invent.getItem(slot).getTypeId();
 					ItemStack stack = invent.getItem(slot);
 					int da = im.getDamageValue(invent.getItem(slot));
-					hyperObject = econ.getHyperObject(id, da);
+					hyperObject = econ.getHyperObject(id, da, econ.getShop(hp.getPlayer()));
 					if (im.hasenchants(stack) == false) {
 						if (hyperObject != null) {
 							if (econ.getShop(hp.getPlayer()).has(hyperObject.getName())) {

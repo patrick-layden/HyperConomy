@@ -29,7 +29,7 @@ public class Esell {
 						for (String e:enchants) {
 							if (he.getShop(player).has(e)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-								pt.setHyperObject(he.getHyperObject(e));
+								pt.setHyperObject(he.getHyperObject(e, he.getShop(player)));
 								TransactionResponse response = hp.processTransaction(pt);
 								response.sendMessages();
 							} else {
@@ -41,7 +41,7 @@ public class Esell {
 						if (he.enchantTest(name)) {
 							if (he.getShop(player).has(name)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-								pt.setHyperObject(he.getHyperObject(name));
+								pt.setHyperObject(he.getHyperObject(name, he.getShop(player)));
 								TransactionResponse response = hp.processTransaction(pt);
 								response.sendMessages();
 							} else {

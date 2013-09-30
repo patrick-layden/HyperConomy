@@ -126,6 +126,18 @@ public class CompositeObject implements HyperObject {
 		}
 		return stock;
 	}
+	public double getTotalStock() {
+		double stock = 999999999.99;
+		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
+		    HyperObject ho = entry.getKey();
+		    Double qty = entry.getValue();
+		    double cs = (ho.getTotalStock() / qty);
+		    if (cs < stock) {
+		    	stock = cs;
+		    }
+		}
+		return stock;
+	}
 	public double getMedian() {
 		double median = 999999999;
 		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
@@ -199,7 +211,6 @@ public class CompositeObject implements HyperObject {
 	
 	
 	public void setName(String name) {
-		//TODO change yml
 		this.name = name;
 	}
 	public void setEconomy(String economy) {

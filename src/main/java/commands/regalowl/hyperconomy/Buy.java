@@ -21,7 +21,7 @@ public class Buy {
 					int data = 0;
 					int amount = 0;
 					if (he.itemTest(name)) {
-						HyperObject ho = he.getHyperObject(name);
+						HyperObject ho = he.getHyperObject(name, he.getShop(player));
 						if (ho.getType() == HyperObjectType.EXPERIENCE) {
 							xp = true;
 						}
@@ -62,7 +62,7 @@ public class Buy {
 						}
 					}
 					if (he.itemTest(name)) {
-						HyperObject ho = he.getHyperObject(name);
+						HyperObject ho = he.getHyperObject(name, he.getShop(player));
 						if (he.getShop(player).has(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(ho);

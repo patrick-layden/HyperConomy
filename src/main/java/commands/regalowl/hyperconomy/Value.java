@@ -31,7 +31,7 @@ public class Value {
 					amount = 1;
 				}
 				if (he.itemTest(name)) {
-					HyperObject ho = he.getHyperObject(name);
+					HyperObject ho = he.getHyperObject(name, he.getShop(player));
 					double val = ho.getValue(amount);
 					double salestax = 0;
 					if (player != null) {
@@ -48,7 +48,7 @@ public class Value {
 						cost = -1;
 					}
 					double stock = 0;
-					stock = calc.twoDecimals(he.getHyperObject(name).getStock());
+					stock = calc.twoDecimals(he.getHyperObject(name, he.getShop(player)).getStock());
 					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, name));
 					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, name));
 					sender.sendMessage(L.get("LINE_BREAK"));
