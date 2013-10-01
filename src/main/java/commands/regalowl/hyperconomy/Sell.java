@@ -53,10 +53,12 @@ public class Sell {
 					}
 					if (he.itemTest(name)) {
 						HyperObject ho = he.getHyperObject(name, he.getShop(player));
-						if (he.getShop(player).has(name)) {
+						Shop s = he.getShop(player);
+						if (s.has(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 							pt.setHyperObject(ho);
 							pt.setAmount(amount);
+							pt.setTradePartner(s.getOwner());
 							TransactionResponse response = he.getHyperPlayer(player).processTransaction(pt);
 							response.sendMessages();
 						} else {

@@ -2,10 +2,14 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 
+
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-public class Additem {
-	Additem(String args[], CommandSender sender) {
+public class Additem implements CommandExecutor {
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -41,5 +45,6 @@ public class Additem {
 		} catch (Exception e) {
 			sender.sendMessage(L.get("ADD_ITEM_INVALID"));
 		}
+		return true;
 	}
 }

@@ -49,10 +49,12 @@ public class Hs {
 						String nam = ho.getName();
 						ItemStack iinhand = player.getItemInHand();
 						if (im.hasenchants(iinhand) == false) {
-							if (he.getShop(player).has(nam)) {
+							Shop s = he.getShop(player);
+							if (s.has(nam)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 								pt.setHyperObject(ho);
 								pt.setAmount(amount);
+								pt.setTradePartner(s.getOwner());
 								TransactionResponse response = hp.processTransaction(pt);
 								response.sendMessages();
 							} else {

@@ -44,6 +44,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		globalShop = false;
 		shopFile = hc.gYH().gFC("shops");
 		shopFile.set(name + ".owner", owner.getName());
+		shopFile.set(name + ".economy", owner.getEconomy());
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
 	}
 	
@@ -126,6 +127,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		shopFile.set(name + ".p2.z", p2z);
 		shopFile.set(name + ".shopmessage1", message1);
 		shopFile.set(name + ".shopmessage2", message2);
+		shopFile.set(name + ".economy", owner.getEconomy());
 	}
 	
 	public void setEconomy(String economy) {
@@ -296,6 +298,9 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return p2z;
 	}
 	
+	public HyperPlayer getOwner() {
+		return owner;
+	}
 	public void updatePlayerStatus() {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			if (inShop.contains(p.getName())) {
@@ -315,4 +320,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		}
 	}
 	
+	public int getVolume() {
+		return Math.abs(p1x - p2x) * Math.abs(p1y - p2y) * Math.abs(p1z - p2z);
+	}
 }

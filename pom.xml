@@ -99,6 +99,12 @@
 									</excludes>
 								</filter>
 							</filters>
+							<relocations>
+								<relocation>
+									<pattern>regalowl.databukkit</pattern>
+									<shadedPattern>regalowl.hyperconomy.databukkit</shadedPattern>
+								</relocation>
+							</relocations>
 						</configuration>
 					</execution>
 				</executions>

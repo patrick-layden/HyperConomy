@@ -28,6 +28,7 @@ public interface Shop extends Comparable<Shop>{
 	
 	public HyperEconomy getHyperEconomy();
 	public String getName();
+	public HyperPlayer getOwner();
 	public String getDisplayName();
 	
 	public boolean has(String item);
@@ -46,5 +47,7 @@ public interface Shop extends Comparable<Shop>{
 	public int getP2y();
 	public int getP2z();
 	public void updatePlayerStatus();
+	
+	public int getVolume();
 	
 }

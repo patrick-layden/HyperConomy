@@ -400,6 +400,11 @@ commands:
       description: Sets your account password.
       permission: hyperconomy.use
       permission-message: You do not have permission.
+   manageshop:
+      description: Manages player shops.
+      permission: hyperconomy.use
+      permission-message: You do not have permission.
+      aliases: [ms]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

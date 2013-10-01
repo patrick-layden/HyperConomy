@@ -15,9 +15,11 @@ public class Ebuy {
 				if (hp.hasBuyPermission(he.getShop(player))) {
 					String name = args[0];
 					if (he.enchantTest(name)) {
-						if (he.getShop(player).has(name)) {
+						Shop s = he.getShop(player);
+						if (s.has(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(he.getHyperObject(name, he.getShop(player)));
+							pt.setTradePartner(s.getOwner());
 							TransactionResponse response = hp.processTransaction(pt);
 							response.sendMessages();
 						} else {

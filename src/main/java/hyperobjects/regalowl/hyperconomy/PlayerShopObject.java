@@ -10,10 +10,10 @@ public class PlayerShopObject implements HyperObject {
 	private HyperObject ho;
 	private double stock;
 	private double price;
-	private PlayerShopObjectStatus status;
+	private HyperObjectStatus status;
 	
 	
-	PlayerShopObject(PlayerShop playerShop, HyperObject ho, double stock, double price, PlayerShopObjectStatus status) {
+	PlayerShopObject(PlayerShop playerShop, HyperObject ho, double stock, double price, HyperObjectStatus status) {
 		hc = HyperConomy.hc;
 		sw = hc.getSQLWrite();
 		this.playerShop = playerShop;
@@ -41,7 +41,7 @@ public class PlayerShopObject implements HyperObject {
 	public double getPrice() {
 		return price;
 	}
-	public PlayerShopObjectStatus getStatus() {
+	public HyperObjectStatus getStatus() {
 		return status;
 	}
 	public void setHyperObject(HyperObject ho) {
@@ -60,7 +60,7 @@ public class PlayerShopObject implements HyperObject {
 		this.price = price;
 		sw.executeSQL("UPDATE hyperconomy_shop_objects SET PRICE='"+price+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
 	}
-	public void setStatus(PlayerShopObjectStatus status) {
+	public void setStatus(HyperObjectStatus status) {
 		this.status = status;
 		sw.executeSQL("UPDATE hyperconomy_shop_objects SET STATUS='"+status.toString()+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
 	}

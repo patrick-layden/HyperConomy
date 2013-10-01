@@ -19,7 +19,8 @@ public class Esell {
 			HyperPlayer hp = em.getHyperPlayer(player.getName());
 			HyperEconomy he = hp.getHyperEconomy();
 			if (he.inAnyShop(player)) {
-				if (hp.hasSellPermission(he.getShop(player))) {
+				Shop s = he.getShop(player);
+				if (hp.hasSellPermission(s)) {
 					String name = args[0];
 					if (args[0].equalsIgnoreCase("max")) {
 						if (!im.hasenchants(player.getItemInHand())) {
@@ -27,9 +28,10 @@ public class Esell {
 						}
 						ArrayList<String> enchants = im.getEnchantments(player.getItemInHand());
 						for (String e:enchants) {
-							if (he.getShop(player).has(e)) {
+							if (s.has(e)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-								pt.setHyperObject(he.getHyperObject(e, he.getShop(player)));
+								pt.setHyperObject(he.getHyperObject(e, s));
+								pt.setTradePartner(s.getOwner());
 								TransactionResponse response = hp.processTransaction(pt);
 								response.sendMessages();
 							} else {
@@ -39,9 +41,10 @@ public class Esell {
 
 					} else {
 						if (he.enchantTest(name)) {
-							if (he.getShop(player).has(name)) {
+							if (s.has(name)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-								pt.setHyperObject(he.getHyperObject(name, he.getShop(player)));
+								pt.setHyperObject(he.getHyperObject(name, s));
+								pt.setTradePartner(s.getOwner());
 								TransactionResponse response = hp.processTransaction(pt);
 								response.sendMessages();
 							} else {

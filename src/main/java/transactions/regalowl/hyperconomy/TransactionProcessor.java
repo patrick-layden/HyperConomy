@@ -27,7 +27,11 @@ public class TransactionProcessor {
 	//private boolean chargeTax;
 	private boolean setPrice;
 	private ItemStack giveItem;
+	private HyperObjectStatus status;
 	
+	
+	
+	private boolean shopUnlimitedMoney;
 	
 	
 	
@@ -44,7 +48,15 @@ public class TransactionProcessor {
 		
 		transactionType = pt.getTransactionType();
 		hyperObject = pt.getHyperObject();
+		if (hyperObject instanceof PlayerShopObject) {
+			status = ((PlayerShopObject) hyperObject).getStatus();
+		} else {
+			status = HyperObjectStatus.TRADE;
+		}
 		tradePartner = pt.getTradePartner();
+		if (tradePartner == null) {
+			tradePartner = em.getGlobalShopAccount();
+		}
 		amount = pt.getAmount();
 		giveInventory = pt.getGiveInventory();
 		receiveInventory = pt.getReceiveInventory();
@@ -53,6 +65,8 @@ public class TransactionProcessor {
 		setPrice = pt.isSetPrice();
 		giveItem = pt.getGiveItem();
 		
+		
+		shopUnlimitedMoney = hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money");
 
 		switch (this.transactionType) {
 			case BUY:
@@ -90,8 +104,22 @@ public class TransactionProcessor {
 	
 	
 	
+	private void resetBalanceIfUnlimited() {
+		if (shopUnlimitedMoney && tradePartner.equals(em.getGlobalShopAccount())) {
+			tradePartner.setBalance(0);
+		}
+	}
 	
-	
+	private boolean hasBalance(double price) {
+		if (!tradePartner.hasBalance(price)) {
+			if (shopUnlimitedMoney && tradePartner.equals(em.getGlobalShopAccount())) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	
 	
@@ -115,60 +143,55 @@ public class TransactionProcessor {
 			if (receiveInventory == null) {
 				receiveInventory = hp.getPlayer().getInventory();
 			}
-			if (amount > 0) {
-				double shopstock = hyperObject.getStock();
-				if (shopstock >= amount) {
-					if (id >= 0) {
-						double price = hyperObject.getCost(amount);
-						double taxpaid = hyperObject.getPurchaseTax(price);
-						price = calc.twoDecimals(price + taxpaid);
-						if (hp.hasBalance(price)) {
-							int space = im.getAvailableSpace(id, data, receiveInventory);
-							if (space >= amount) {
-								im.addItems(amount, id, data, receiveInventory);
-								if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
-									hyperObject.setStock(shopstock - amount);
-								}
-								hp.withdraw(price);
-								em.getGlobalShopAccount().deposit(price);
-								if (hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money")) {
-									em.getGlobalShopAccount().setBalance(0);
-								}
-								
-								response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, name, calc.twoDecimals(taxpaid)), price, hyperObject);
-								response.setSuccessful();
-								String type = "dynamic";
-								if (Boolean.parseBoolean(hyperObject.getInitiation())) {
-									type = "initial";
-								} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
-									type = "static";
-								}
-								log.writeSQLLog(hp.getName(), "purchase", name, (double) amount, calc.twoDecimals(price - taxpaid), calc.twoDecimals(taxpaid), playerecon, type);
-
-								isign.updateSigns();
-								not.setNotify(name, null, playerecon);
-								not.sendNotification();
-								return response;
-							} else {
-								response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, name), hyperObject);
-								return response;
-							}
-						} else {
-							response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
-							return response;
-						}
-					} else {
-						response.addFailed(L.f(L.get("CANNOT_BE_PURCHASED_WITH"), name), hyperObject);
-						return response;
-					}
-				} else {
-					response.addFailed(L.f(L.get("THE_SHOP_DOESNT_HAVE_ENOUGH"), name), hyperObject);
-					return response;
-				}
-			} else {
+			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.SELL) {
+				response.addFailed(L.f(L.get("CANT_BE_TRADED"), name), hyperObject);
+				return response;
+			}
+			if (amount == 0) {
 				response.addFailed(L.f(L.get("CANT_BUY_LESS_THAN_ONE"), name), hyperObject);
 				return response;
 			}
+			double shopstock = hyperObject.getStock();
+			if (shopstock < amount) {
+				response.addFailed(L.f(L.get("THE_SHOP_DOESNT_HAVE_ENOUGH"), name), hyperObject);
+				return response;
+			}
+			if (id < 0) {
+				response.addFailed(L.f(L.get("CANNOT_BE_PURCHASED_WITH"), name), hyperObject);
+				return response;
+			}
+			double price = hyperObject.getCost(amount);
+			double taxpaid = hyperObject.getPurchaseTax(price);
+			price = calc.twoDecimals(price + taxpaid);
+			if (!hp.hasBalance(price)) {
+				response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
+				return response;
+			}
+			int space = im.getAvailableSpace(id, data, receiveInventory);
+			if (space < amount) {
+				response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, name), hyperObject);
+				return response;
+			}
+			im.addItems(amount, id, data, receiveInventory);
+			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+				hyperObject.setStock(shopstock - amount);
+			}
+			hp.withdraw(price);
+			tradePartner.deposit(price);
+			resetBalanceIfUnlimited();
+			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, name, calc.twoDecimals(taxpaid)), price, hyperObject);
+			response.setSuccessful();
+			String type = "dynamic";
+			if (Boolean.parseBoolean(hyperObject.getInitiation())) {
+				type = "initial";
+			} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
+				type = "static";
+			}
+			log.writeSQLLog(hp.getName(), "purchase", name, (double) amount, calc.twoDecimals(price - taxpaid), calc.twoDecimals(taxpaid), playerecon, type);
+			isign.updateSigns();
+			not.setNotify(name, null, playerecon);
+			not.sendNotification();
+			return response;
 		} catch (Exception e) {
 			String info = "Transaction buy() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', id='" + hyperObject.getId() + "', data='" + hyperObject.getData() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
@@ -203,6 +226,10 @@ public class TransactionProcessor {
 			String name = hyperObject.getName();
 			if (giveInventory == null) {
 				giveInventory = hp.getPlayer().getInventory();
+			}
+			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.BUY) {
+				response.addFailed(L.f(L.get("CANT_BE_TRADED"), name), hyperObject);
+				return response;
 			}
 			if (amount <= 0) {
 				response.addFailed(L.f(L.get("CANT_SELL_LESS_THAN_ONE"), name), hyperObject);
@@ -240,8 +267,7 @@ public class TransactionProcessor {
 				amount = maxi;
 				price = hyperObject.getValue(amount, hp);
 			}
-			boolean sunlimited = hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money");
-			if (!em.getGlobalShopAccount().hasBalance(price) && !sunlimited) {
+			if (!hasBalance(price)) {
 				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
 				return response;
 			}
@@ -260,10 +286,8 @@ public class TransactionProcessor {
 			}
 			double salestax = hp.getSalesTax(price);
 			hp.deposit(price - salestax);
-			em.getGlobalShopAccount().withdraw(price - salestax);
-			if (sunlimited) {
-				em.getGlobalShopAccount().setBalance(0);
-			}
+			tradePartner.withdraw(price - salestax);
+			resetBalanceIfUnlimited();
 
 			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)), calc.twoDecimals(price - salestax), hyperObject);
 			response.setSuccessful();
@@ -362,6 +386,10 @@ public class TransactionProcessor {
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = hp.getEconomy();
+			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.SELL) {
+				response.addFailed(L.f(L.get("CANT_BE_TRADED"), hyperObject.getName()), hyperObject);
+				return response;
+			}
 			if (amount > 0) {
 				int shopstock = 0;
 				shopstock = (int) hyperObject.getStock();
@@ -381,10 +409,8 @@ public class TransactionProcessor {
 							hyperObject.setStock(shopstock - amount);
 						}
 						hp.withdraw(price);
-						em.getGlobalShopAccount().deposit(price);
-						if (hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money")) {
-							em.getGlobalShopAccount().setBalance(0);
-						}
+						tradePartner.deposit(price);
+						resetBalanceIfUnlimited();
 						response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), calc.twoDecimals(taxpaid)), calc.twoDecimals(price), hyperObject);
 						response.setSuccessful();
 						String type = "dynamic";
@@ -434,6 +460,10 @@ public class TransactionProcessor {
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = hp.getEconomy();
+			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.BUY) {
+				response.addFailed(L.f(L.get("CANT_BE_TRADED"), hyperObject.getName()), hyperObject);
+				return response;
+			}
 			if (amount > 0) {
 				int totalxp = im.gettotalxpPoints(hp.getPlayer());
 				if (totalxp >= amount) {
@@ -452,8 +482,7 @@ public class TransactionProcessor {
 							amount = maxi;
 							price = hyperObject.getValue(amount, hp);
 						}
-						boolean sunlimited = hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money");
-						if (em.getGlobalShopAccount().hasBalance(price) || sunlimited) {
+						if (hasBalance(price)) {
 							if (maxi == 0) {
 								price = hyperObject.getValue(amount, hp);
 							}
@@ -472,10 +501,8 @@ public class TransactionProcessor {
 							}
 							double salestax = calc.twoDecimals(hp.getSalesTax(price));
 							hp.deposit(price - salestax);
-							em.getGlobalShopAccount().withdraw(price - salestax);
-							if (sunlimited) {
-								em.getGlobalShopAccount().setBalance(0);
-							}
+							tradePartner.withdraw(price - salestax);
+							resetBalanceIfUnlimited();
 							response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), salestax), calc.twoDecimals(price), hyperObject);
 							response.setSuccessful();
 							String type = "dynamic";
@@ -631,6 +658,10 @@ public class TransactionProcessor {
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int lvl = Integer.parseInt(hyperObject.getName().substring(hyperObject.getName().length() - 1, hyperObject.getName().length()));
 			int truelvl = im.getEnchantmentLevel(p.getItemInHand(), ench);
+			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.BUY) {
+				response.addFailed(L.f(L.get("CANT_BE_TRADED"), hyperObject.getName()), hyperObject);
+				return response;
+			}
 			if (im.containsEnchantment(p.getItemInHand(), ench) && lvl == truelvl) {
 				double dura = p.getItemInHand().getDurability();
 				double maxdura = p.getItemInHand().getType().getMaxDurability();
@@ -641,17 +672,14 @@ public class TransactionProcessor {
 				String mater = p.getItemInHand().getType().toString();
 				double price = hyperObject.getValue(EnchantmentClass.fromString(mater), hp);
 				double fprice = price;
-				boolean sunlimited = hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money");
-				if (em.getGlobalShopAccount().hasBalance(fprice) || sunlimited) {
+				if (hasBalance(fprice)) {
 					im.removeEnchantment(p.getItemInHand(), ench);
 					double shopstock = hyperObject.getStock();
 					hyperObject.setStock(shopstock + duramult);
 					double salestax = hp.getSalesTax(fprice);
 					hp.deposit(fprice - salestax);
-					em.getGlobalShopAccount().withdraw(fprice - salestax);
-					if (sunlimited) {
-						em.getGlobalShopAccount().setBalance(0);
-					}
+					tradePartner.withdraw(fprice - salestax);
+					resetBalanceIfUnlimited();
 					fprice = calc.twoDecimals(fprice);
 					response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, calc.twoDecimals(fprice), hyperObject.getName(), calc.twoDecimals(salestax)), calc.twoDecimals(fprice - salestax), hyperObject);
 					response.setSuccessful();
@@ -704,6 +732,10 @@ public class TransactionProcessor {
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int shopstock = 0;
 			shopstock = (int) hyperObject.getStock();
+			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.SELL) {
+				response.addFailed(L.f(L.get("CANT_BE_TRADED"), hyperObject.getName()), hyperObject);
+				return response;
+			}
 			if (shopstock >= 1) {
 				String mater = p.getItemInHand().getType().toString();
 				double price = hyperObject.getCost(EnchantmentClass.fromString(mater));
@@ -714,10 +746,8 @@ public class TransactionProcessor {
 							if (im.canAcceptEnchantment(p.getItemInHand(), ench) && p.getItemInHand().getAmount() == 1) {
 								hyperObject.setStock(shopstock - 1);
 								hp.withdraw(price);
-								em.getGlobalShopAccount().deposit(price);
-								if (hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money")) {
-									em.getGlobalShopAccount().setBalance(0);
-								}
+								tradePartner.deposit(price);
+								resetBalanceIfUnlimited();
 								int l = hyperObject.getName().length();
 								String lev = hyperObject.getName().substring(l - 1, l);
 								int level = Integer.parseInt(lev);

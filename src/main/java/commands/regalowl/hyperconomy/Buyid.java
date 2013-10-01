@@ -33,10 +33,12 @@ public class Buyid {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
 						String nam = ho.getName();
-						if (he.getShop(player).has(nam)) {
+						Shop s = he.getShop(player);
+						if (s.has(nam)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(ho);
 							pt.setAmount(amount);
+							pt.setTradePartner(s.getOwner());
 							TransactionResponse response = hp.processTransaction(pt);
 							response.sendMessages();
 						} else {

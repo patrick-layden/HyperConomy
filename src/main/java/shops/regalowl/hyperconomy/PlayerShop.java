@@ -14,7 +14,6 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 	private String name;
 	private String world;
-	private String economy;
 	private HyperEconomy he;
 	private HyperPlayer owner;
 	private String message1;
@@ -39,15 +38,14 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	PlayerShop(String shopName, HyperPlayer owner) {
 		this.name = shopName;
-		this.economy = owner.getEconomy();
 		this.owner = owner;
 		hc = HyperConomy.hc;
 		em = hc.getEconomyManager();
-		he = em.getEconomy(name);
+		he = em.getEconomy(owner.getEconomy());
 		ps = this;
 		L = hc.getLanguageFile();
 		shopFile = hc.gYH().getFileConfiguration("shops");
-		shopFile.set(name + ".economy", economy);
+		shopFile.set(name + ".economy", owner.getEconomy());
 		shopFile.set(name + ".owner", owner.getName());
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
 		
@@ -61,7 +59,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 					double price = result.getDouble("PRICE");
 					HyperObject ho = he.getHyperObject(result.getString("HYPEROBJECT"));
 					double stock = result.getDouble("QUANTITY");
-					PlayerShopObjectStatus status = PlayerShopObjectStatus.fromString(result.getString("STATUS"));
+					HyperObjectStatus status = HyperObjectStatus.fromString(result.getString("STATUS"));
 					PlayerShopObject pso = new PlayerShopObject(ps, ho, stock, price, status);
 					shopContents.add(pso);
 				}
@@ -145,12 +143,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		shopFile.set(name + ".p2.z", p2z);
 		shopFile.set(name + ".shopmessage1", message1);
 		shopFile.set(name + ".shopmessage2", message2);
-		shopFile.set(name + ".economy", economy);
+		shopFile.set(name + ".economy", owner.getEconomy());
 	}
 	
 	public void setEconomy(String economy) {
-		this.economy = economy;
-		shopFile.set(name + ".economy", economy);
+		owner.setEconomy(economy);
 	}
 	
 	
@@ -188,7 +185,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public String getEconomy() {
-		return economy;
+		return owner.getEconomy();
 	}
 	
 	public String getName() {
@@ -201,8 +198,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	
 	public boolean has(String item) {
-		/*
-		FileConfiguration sh = hc.getYaml().getShops();
+		FileConfiguration sh = hc.gYH().gFC("shops");
 		String unavailableS = sh.getString(name + ".unavailable");
 		if (unavailableS == null || unavailableS.equalsIgnoreCase("")) {
 			return true;
@@ -210,7 +206,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		if (unavailableS.equalsIgnoreCase("all")) {
 			return false;
 		}
-		item = hc.getDataFunctions().fixNameTest(item);
+		item = em.getEconomy(owner.getEconomy()).fixNameTest(item);
 		if (item == null) {
 			return false;
 		}
@@ -222,13 +218,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				return false;
 			}
 		}
-		HyperObject ho = hc.getDataFunctions().getHyperObject(item, economy);
-		if (getPlayerShopObject(ho) != null) {
-			return true;
-		}
-		*/
-		return false;
-		
+		return true;
 	}
 	
 	
@@ -332,7 +322,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				return pso;
 			}
 		}
-		PlayerShopObject pso = new PlayerShopObject(this, hyperObject, 0.0, 0.0, PlayerShopObjectStatus.TRADE);
+		PlayerShopObject pso = new PlayerShopObject(this, hyperObject, 0.0, 0.0, HyperObjectStatus.TRADE);
 		shopContents.add(pso);
 		hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'trade')");
 		return pso;
@@ -356,15 +346,13 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 
 	public HyperEconomy getHyperEconomy() {
-		// TODO Auto-generated method stub
-		return null;
+		return em.getEconomy(owner.getEconomy());
 	}
 
 
 
 	public boolean has(HyperObject ho) {
-		// TODO Auto-generated method stub
-		return false;
+		return has(ho.getName());
 	}
 
 
@@ -386,5 +374,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				}
 			}
 		}
+	}
+
+
+
+	public int getVolume() {
+		return Math.abs(p1x - p2x) * Math.abs(p1y - p2y) * Math.abs(p1z - p2z);
 	}
 }

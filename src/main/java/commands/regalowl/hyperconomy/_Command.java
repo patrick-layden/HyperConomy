@@ -184,12 +184,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("setbalance")) {
 			new Setbalance(sender, args);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("additem")) {
-			new Additem(args, sender);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("addcategory")) {
-			new Addcategory(args, sender);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("removeitem")) {
 			new Removeitem(args, sender);
 			return true;

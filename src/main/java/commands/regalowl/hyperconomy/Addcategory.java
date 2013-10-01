@@ -1,16 +1,21 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
 
-public class Addcategory {
-	private HyperConomy hc;
 
-	Addcategory(String args[], CommandSender sender) {
-		hc = HyperConomy.hc;
+
+public class Addcategory implements CommandExecutor {
+	
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		HyperConomy hc = HyperConomy.hc;
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		SerializeArrayList sal = new SerializeArrayList();
@@ -19,7 +24,7 @@ public class Addcategory {
 			String testcategory = category.getString(args[0]);
 			if (testcategory == null) {
 				sender.sendMessage(L.get("CATEGORY_NOT_EXIST"));
-				return;
+				return true;
 			}
 			ArrayList<String> objects = sal.stringToArray(testcategory);
 			if (args.length == 2) {
@@ -37,5 +42,9 @@ public class Addcategory {
 		} catch (Exception e) {
 			sender.sendMessage(L.get("ADD_CATEGORY_INVALID"));
 		}
+		return true;
 	}
+	
+	
+
 }

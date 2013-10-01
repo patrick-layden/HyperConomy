@@ -17,9 +17,11 @@ public class Sellall {
 			HyperPlayer hp = em.getHyperPlayer(player.getName());
 			HyperEconomy he = hp.getHyperEconomy();
 			if (he.inAnyShop(player)) {
+				Shop s = he.getShop(player);
 				if (he.getHyperPlayer(player).hasSellPermission(he.getShop(player))) {
 					if (args.length == 0) {
 						PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_ALL);
+						pt.setTradePartner(s.getOwner());
 						TransactionResponse response = he.getHyperPlayer(player).processTransaction(pt);
 						response.sendMessages();
 						if (response.getFailedObjects().size() == 0) {

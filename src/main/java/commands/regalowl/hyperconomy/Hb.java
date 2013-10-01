@@ -55,10 +55,12 @@ public class Hb {
 							if (amount > shopstock && ma) {
 								amount = shopstock;
 							}
-							if (he.getShop(player).has(nam)) {
+							Shop s = he.getShop(player);
+							if (s.has(nam)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 								pt.setHyperObject(ho);
 								pt.setAmount((int) Math.rint(amount));
+								pt.setTradePartner(s.getOwner());
 								TransactionResponse response = hp.processTransaction(pt);
 								response.sendMessages();
 							} else {

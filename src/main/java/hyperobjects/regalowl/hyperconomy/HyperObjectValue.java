@@ -37,7 +37,7 @@ public class HyperObjectValue {
 				double value = 0;
 				double median = 0;
 				double icost = 0;
-				shopstock = ho.getStock();
+				shopstock = ho.getTotalStock();
 				value = ho.getValue();
 				median = ho.getMedian();
 				icost = ho.getStartprice();
@@ -93,7 +93,7 @@ public class HyperObjectValue {
 				double oshopstock = 0;
 				double value = 0;
 				double median = 0;
-				shopstock = ho.getStock();
+				shopstock = ho.getTotalStock();
 				oshopstock = shopstock;
 				value = ho.getValue();
 				median = ho.getMedian();
@@ -158,7 +158,7 @@ public class HyperObjectValue {
 				double value = 0;
 				double median = 0;
 				double icost = 0;
-				shopstock = ho.getStock();
+				shopstock = ho.getTotalStock();
 				value = ho.getValue();
 				median = ho.getMedian();
 				icost = ho.getStartprice();
@@ -223,7 +223,7 @@ public class HyperObjectValue {
 				double value;
 				double median;
 				double icost;
-				shopstock = ho.getStock();
+				shopstock = ho.getTotalStock();
 				value = ho.getValue();
 				median = ho.getMedian();
 				icost = ho.getStartprice();
@@ -287,7 +287,7 @@ public class HyperObjectValue {
 				double value;
 				double median;
 				double icost;
-				shopstock = ho.getStock();
+				shopstock = ho.getTotalStock();
 				value = ho.getValue();
 				median = ho.getMedian();
 				icost = ho.getStartprice();
@@ -342,7 +342,7 @@ public class HyperObjectValue {
 					double shopstock;
 					double value;
 					double median;
-					shopstock = ho.getStock();
+					shopstock = ho.getTotalStock();
 					value = ho.getValue();
 					median = ho.getMedian();
 					double oshopstock = shopstock;

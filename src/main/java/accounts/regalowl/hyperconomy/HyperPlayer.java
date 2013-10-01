@@ -213,6 +213,7 @@ public class HyperPlayer {
 		return salestax;
 	}
 	
+	
 	public TransactionResponse processTransaction(PlayerTransaction playerTransaction) {
 		return tp.processTransaction(playerTransaction);
 	}

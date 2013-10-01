@@ -63,10 +63,12 @@ public class Buy {
 					}
 					if (he.itemTest(name)) {
 						HyperObject ho = he.getHyperObject(name, he.getShop(player));
-						if (he.getShop(player).has(name)) {
+						Shop s = he.getShop(player);
+						if (s.has(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(ho);
 							pt.setAmount(amount);
+							pt.setTradePartner(s.getOwner());
 							TransactionResponse response = hp.processTransaction(pt);
 							response.sendMessages();
 						} else {

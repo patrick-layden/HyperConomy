@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -69,6 +70,7 @@ public class HyperConomy extends JavaPlugin {
 		}
 		hist = new History();
 		itdi = new ItemDisplayFactory();
+		registerCommands();
 		if (wh == null) {
 			wh = new WebHandler();
 			wh.startServer();
@@ -164,6 +166,11 @@ public class HyperConomy extends JavaPlugin {
 		}
 	}
 
+	private void registerCommands() {
+		Bukkit.getServer().getPluginCommand("addcategory").setExecutor(new Addcategory());
+		Bukkit.getServer().getPluginCommand("additem").setExecutor(new Additem());
+		Bukkit.getServer().getPluginCommand("manageshop").setExecutor(new Manageshop());
+	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (loadLock) {
