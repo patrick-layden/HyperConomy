@@ -18,6 +18,10 @@ public class Manageshop implements CommandExecutor {
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
+		int maxVolume = hc.gYH().gFC("config").getInt("config.max-player-shop-volume");
+		if (!hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {
+			return true;
+		}
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		Player player = null;
@@ -29,8 +33,8 @@ public class Manageshop implements CommandExecutor {
 		}
 		HyperPlayer hp = em.getHyperPlayer(player.getName());
 		HyperEconomy he = em.getEconomy(hp.getEconomy());
-		if (he.inAnyShop(player)) {
-			Shop s = he.getShop(player);
+		if (em.inAnyShop(player)) {
+			Shop s = em.getShop(player);
 			if (s instanceof PlayerShop && (s.getOwner().equals(hp) || player.hasPermission("hyperconomy.admin"))) {
 				currentShop.put(hp, (PlayerShop)s);
 			}
@@ -48,22 +52,23 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage("Use /manageshop select [shop]");
 				return true;
 			}
-			if (!he.shopExists(args[1])) {
+			if (!em.shopExists(args[1])) {
 				player.sendMessage(L.get("SHOP_NOT_EXIST"));
 				return true;
 			}
-			Shop s = he.getShop(args[1]);
+			Shop s = em.getShop(args[1]);
 			if ((!(s instanceof PlayerShop) || !(s.getOwner().equals(hp))) && !player.hasPermission("hyperconomy.admin")) {
 				player.sendMessage("You can only edit your own shops!");
 				return true;
 			}
 			currentShop.put(hp, (PlayerShop)s);
+			player.sendMessage("Shop selected.");
 		} else  if (args[0].equalsIgnoreCase("create")) {
 			if (args.length == 1) {
 				player.sendMessage("Use /manageshop create [shop name] (radius)");
 				return true;
 			}
-			if (he.shopExists(args[1])){
+			if (em.shopExists(args[1])){
 				player.sendMessage("A shop by that name already exists.");
 				return true;
 			}
@@ -76,25 +81,42 @@ public class Manageshop implements CommandExecutor {
 					//continue
 				}
 			}
-			PlayerShop newShop = new PlayerShop(name, hp);
+			PlayerShop newShop = new PlayerShop(name, hp.getEconomy(), hp);
 			Location l = player.getLocation();
 			newShop.setPoint1(player.getWorld().getName(), l.getBlockX() - radius, l.getBlockY() - radius, l.getBlockZ() - radius);
 			newShop.setPoint2(player.getWorld().getName(), l.getBlockX() + radius, l.getBlockY() + radius, l.getBlockZ() + radius);
-			he.addShop(newShop);
+			if (newShop.getVolume() > maxVolume) {
+				player.sendMessage("You cannot make a shop that large.");
+				newShop.deleteShop();
+				return true;
+			}
+			em.addShop(newShop);
 			player.sendMessage("Shop created.");
 		} else if (args[0].equalsIgnoreCase("set1")) {
 			if (cps == null) {
 				player.sendMessage("You don't have a shop selected.");
 				return true;
 			}
-			cps.setPoint1(player);
+			Location priorLoc = cps.getLocation1();
+			cps.setPoint1(player.getLocation());
+			if (cps.getVolume() > maxVolume) {
+				player.sendMessage("You cannot make a shop that large.");
+				cps.setPoint1(priorLoc);
+				return true;
+			}
 			player.sendMessage(L.get("P1_SET"));
 		} else if (args[0].equalsIgnoreCase("set2")) {
 			if (cps == null) {
 				player.sendMessage("You don't have a shop selected.");
 				return true;
 			}
-			cps.setPoint2(player);
+			Location priorLoc = cps.getLocation2();
+			cps.setPoint2(player.getLocation());
+			if (cps.getVolume() > maxVolume) {
+				player.sendMessage("You cannot make a shop that large.");
+				cps.setPoint2(priorLoc);
+				return true;
+			}
 			player.sendMessage(L.get("P2_SET"));
 		} else if (args[0].equalsIgnoreCase("price")) {
 			if (cps == null) {
@@ -135,22 +157,32 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			HyperObjectStatus status = HyperObjectStatus.fromString(args[2]);
-			if (status == HyperObjectStatus.NONE) {
+			if (status == HyperObjectStatus.NONE && !args[2].equalsIgnoreCase("none")) {
 				player.sendMessage("That is not a valid status.");
 				return true;
 			}
-			if (!he.itemTest(args[1])) {
+			if (!he.itemTest(args[1]) && !args[1].equalsIgnoreCase("all")) {
 				player.sendMessage("The specified object does not exist.");
 				return true;
 			}
-			HyperObject ho = he.getHyperObject(args[1], cps);
-			if (ho instanceof PlayerShopObject) {
-				((PlayerShopObject) ho).setStatus(status);
-				player.sendMessage("Status set.");
+			if (args[1].equalsIgnoreCase("all")) {
+				for (HyperObject ho:he.getHyperObjects(cps)) {
+					if (ho instanceof PlayerShopObject) {
+						((PlayerShopObject) ho).setStatus(status);
+					}
+				}
+				player.sendMessage("All statuses set.");
 				return true;
 			} else {
-				player.sendMessage("Setting the status has failed.");
-				return true;
+				HyperObject ho = he.getHyperObject(args[1], cps);
+				if (ho instanceof PlayerShopObject) {
+					((PlayerShopObject) ho).setStatus(status);
+					player.sendMessage("Status set.");
+					return true;
+				} else {
+					player.sendMessage("Setting the status has failed.");
+					return true;
+				}
 			}
 		} else if (args[0].equalsIgnoreCase("owner") && player.hasPermission("hyperconomy.admin")) {
 			if (cps == null) {
@@ -161,13 +193,16 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage("Use /manageshop owner [name]");
 				return true;
 			}
-			if (!he.hasAccount(args[1])) {
+			if (!em.hasAccount(args[1])) {
 				player.sendMessage("That account doesn't exist.");
 				return true;
 			}
-			HyperPlayer newOwner = he.getHyperPlayer(args[1]);
+			HyperPlayer newOwner = em.getHyperPlayer(args[1]);
 			cps.setOwner(newOwner);
 			player.sendMessage("Owner set.");
+			return true;
+		} else {
+			player.sendMessage("Use /manageshop [select, create, set]");
 			return true;
 		}
 

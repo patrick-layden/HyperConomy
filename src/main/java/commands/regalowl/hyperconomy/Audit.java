@@ -24,7 +24,7 @@ public class Audit {
 		em = hc.getEconomyManager();
 		try {
 			account = args[0];
-			if (!em.hyperPlayerExists(account)) {
+			if (!em.hasAccount(account)) {
 				sender.sendMessage(L.get("ACCOUNT_NOT_FOUND"));
 				return;
 			}

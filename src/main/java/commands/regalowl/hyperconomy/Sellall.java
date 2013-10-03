@@ -14,15 +14,13 @@ public class Sellall {
 			return;
 		}
 		try {
-			HyperPlayer hp = em.getHyperPlayer(player.getName());
-			HyperEconomy he = hp.getHyperEconomy();
-			if (he.inAnyShop(player)) {
-				Shop s = he.getShop(player);
-				if (he.getHyperPlayer(player).hasSellPermission(he.getShop(player))) {
+			if (em.inAnyShop(player)) {
+				Shop s = em.getShop(player);
+				if (em.getHyperPlayer(player).hasSellPermission(em.getShop(player))) {
 					if (args.length == 0) {
 						PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_ALL);
 						pt.setTradePartner(s.getOwner());
-						TransactionResponse response = he.getHyperPlayer(player).processTransaction(pt);
+						TransactionResponse response = em.getHyperPlayer(player).processTransaction(pt);
 						response.sendMessages();
 						if (response.getFailedObjects().size() == 0) {
 							player.sendMessage(L.get("LINE_BREAK"));

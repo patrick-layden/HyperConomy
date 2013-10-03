@@ -165,6 +165,11 @@ public class HyperConomy extends JavaPlugin {
 			new DisabledProtection();
 		}
 	}
+	
+	public void restart() {
+		shutDown(true);
+		initialize();
+	}
 
 	private void registerCommands() {
 		Bukkit.getServer().getPluginCommand("addcategory").setExecutor(new Addcategory());

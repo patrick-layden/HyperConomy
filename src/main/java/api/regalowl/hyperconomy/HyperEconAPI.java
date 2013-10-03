@@ -6,7 +6,7 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public boolean checkFunds(double money, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		if (!hc.getEconomyManager().hyperPlayerExists(player.getName())) {
+		if (!hc.getEconomyManager().hasAccount(player.getName())) {
 			return false;
 		}
 		return hc.getEconomyManager().getHyperPlayer(player.getName()).hasBalance(money);
@@ -14,7 +14,7 @@ public class HyperEconAPI implements EconomyAPI {
 	
 	public boolean checkFunds(double money, String name) {
 		HyperConomy hc = HyperConomy.hc;
-		if (!hc.getEconomyManager().hyperPlayerExists(name)) {
+		if (!hc.getEconomyManager().hasAccount(name)) {
 			return false;
 		}
 		return hc.getEconomyManager().getHyperPlayer(name).hasBalance(money);
@@ -22,7 +22,7 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public void withdraw(double money, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		if (!hc.getEconomyManager().hyperPlayerExists(player.getName())) {
+		if (!hc.getEconomyManager().hasAccount(player.getName())) {
 			return;
 		}
 		hc.getEconomyManager().getHyperPlayer(player.getName()).withdraw(money);
@@ -30,7 +30,7 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public void withdrawAccount(double money, String name) {
 		HyperConomy hc = HyperConomy.hc;
-		if (!hc.getEconomyManager().hyperPlayerExists(name)) {
+		if (!hc.getEconomyManager().hasAccount(name)) {
 			return;
 		}
 		hc.getEconomyManager().getHyperPlayer(name).withdraw(money);
@@ -38,7 +38,7 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public void deposit(double money, Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		if (!hc.getEconomyManager().hyperPlayerExists(player.getName())) {
+		if (!hc.getEconomyManager().hasAccount(player.getName())) {
 			return;
 		}
 		hc.getEconomyManager().getHyperPlayer(player.getName()).deposit(money);
@@ -46,7 +46,7 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public void depositAccount(double money, String name) {
 		HyperConomy hc = HyperConomy.hc;
-		if (!hc.getEconomyManager().hyperPlayerExists(name)) {
+		if (!hc.getEconomyManager().hasAccount(name)) {
 			return;
 		}
 		hc.getEconomyManager().getHyperPlayer(name).deposit(money);
@@ -66,7 +66,7 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public void setBalance(double balance, String name) {
 		HyperConomy hc = HyperConomy.hc;
-		if (!hc.getEconomyManager().hyperPlayerExists(name)) {
+		if (!hc.getEconomyManager().hasAccount(name)) {
 			return;
 		}
 		hc.getEconomyManager().getHyperPlayer(name).setBalance(balance);
@@ -74,7 +74,7 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public boolean checkAccount(String name) {
 		HyperConomy hc = HyperConomy.hc;
-		return hc.getEconomyManager().hyperPlayerExists(name);
+		return hc.getEconomyManager().hasAccount(name);
 	}
 
 	public boolean checkshopBalance(double money) {
@@ -84,12 +84,12 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public void checkshopAccount() {
 		HyperConomy hc = HyperConomy.hc;
-		hc.getEconomyManager().getEconomy("default").createGlobalShopAccount();
+		hc.getEconomyManager().createGlobalShopAccount();
 	}
 
 	public double getBalance(String account) {
 		HyperConomy hc = HyperConomy.hc;
-		if (!hc.getEconomyManager().hyperPlayerExists(account)) {
+		if (!hc.getEconomyManager().hasAccount(account)) {
 			return 0.0;
 		}
 		return hc.getEconomyManager().getHyperPlayer(account).getBalance();
@@ -97,7 +97,7 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public boolean createAccount(String account) {
 		HyperConomy hc = HyperConomy.hc;
-		return hc.getEconomyManager().getEconomy("default").createPlayerAccount(account);
+		return hc.getEconomyManager().createPlayerAccount(account);
 	}
 	
 	public String formatMoney(double money) {

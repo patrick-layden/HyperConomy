@@ -10,7 +10,7 @@ public class Setbalance {
 		try {
 			if (args.length == 2) {
 				String accountname = args[0];
-				if (em.hyperPlayerExists(accountname)) {
+				if (em.hasAccount(accountname)) {
 					Double balance = Double.parseDouble(args[1]);
 					em.getHyperPlayer(accountname).setBalance(balance);
 					sender.sendMessage(L.get("BALANCE_SET"));

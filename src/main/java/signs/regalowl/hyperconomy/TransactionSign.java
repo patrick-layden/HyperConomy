@@ -191,13 +191,13 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.buysign")) {
-									if ((he.inAnyShop(p) && requireShop) || !requireShop) {
-										HyperPlayer hp = he.getHyperPlayer(p);
+									if ((em.inAnyShop(p) && requireShop) || !requireShop) {
+										HyperPlayer hp = em.getHyperPlayer(p);
 										if (hp == null) {
 											ievent.setCancelled(true);
 											return;
 										}
-										if (!requireShop || hp.hasBuyPermission(he.getShop(p))) {
+										if (!requireShop || hp.hasBuyPermission(em.getShop(p))) {
 											HyperObject ho = he.getHyperObject(line12);
 											if (!hc.isLocked()) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
@@ -231,13 +231,13 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
-									if ((he.inAnyShop(p) && requireShop) || !requireShop) {
-										HyperPlayer hp = he.getHyperPlayer(p);
+									if ((em.inAnyShop(p) && requireShop) || !requireShop) {
+										HyperPlayer hp = em.getHyperPlayer(p);
 										if (hp == null) {
 											ievent.setCancelled(true);
 											return;
 										}
-										if (!requireShop || hp.hasSellPermission(he.getShop(p))) {
+										if (!requireShop || hp.hasSellPermission(em.getShop(p))) {
 											if (p.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 												p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 												ievent.setCancelled(true);

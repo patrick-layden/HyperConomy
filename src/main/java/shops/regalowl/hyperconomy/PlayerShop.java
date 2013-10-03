@@ -14,8 +14,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 	private String name;
 	private String world;
-	private HyperEconomy he;
 	private HyperPlayer owner;
+	private String economy;
 	private String message1;
 	private String message2;
 	private int p1x;
@@ -36,16 +36,16 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private CopyOnWriteArrayList<PlayerShopObject> shopContents = new CopyOnWriteArrayList<PlayerShopObject>();
 	private ArrayList<String> inShop = new ArrayList<String>();
 	
-	PlayerShop(String shopName, HyperPlayer owner) {
+	PlayerShop(String shopName, String econ, HyperPlayer owner) {
 		this.name = shopName;
+		this.economy = econ;
 		this.owner = owner;
 		hc = HyperConomy.hc;
 		em = hc.getEconomyManager();
-		he = em.getEconomy(owner.getEconomy());
 		ps = this;
 		L = hc.getLanguageFile();
 		shopFile = hc.gYH().getFileConfiguration("shops");
-		shopFile.set(name + ".economy", owner.getEconomy());
+		shopFile.set(name + ".economy", economy);
 		shopFile.set(name + ".owner", owner.getName());
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
 		
@@ -54,6 +54,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
+				HyperEconomy he = em.getEconomy(economy);
 				QueryResult result = hc.getSQLRead().aSyncSelect("SELECT * FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"'");
 				while (result.next()) {
 					double price = result.getDouble("PRICE");
@@ -84,7 +85,6 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		shopFile.set(name + ".p1.y", y);
 		shopFile.set(name + ".p1.z", z);
 	}
-	
 	public void setPoint2(String world, int x, int y, int z) {
 		this.world = world;
 		p2x = x;
@@ -95,15 +95,10 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		shopFile.set(name + ".p2.y", y);
 		shopFile.set(name + ".p2.z", z);
 	}
-	
-	
-	public void setPoint1(Player player) {
-		Location l = player.getLocation();
+	public void setPoint1(Location l) {
 		setPoint1(l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
-	
-	public void setPoint2(Player player) {
-		Location l = player.getLocation();
+	public void setPoint2(Location l) {
 		setPoint2(l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
 	
@@ -143,11 +138,12 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		shopFile.set(name + ".p2.z", p2z);
 		shopFile.set(name + ".shopmessage1", message1);
 		shopFile.set(name + ".shopmessage2", message2);
-		shopFile.set(name + ".economy", owner.getEconomy());
+		shopFile.set(name + ".economy", economy);
 	}
 	
 	public void setEconomy(String economy) {
-		owner.setEconomy(economy);
+		this.economy = economy;
+		shopFile.set(name + ".economy", economy);
 	}
 	
 	
@@ -185,7 +181,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public String getEconomy() {
-		return owner.getEconomy();
+		return economy;
 	}
 	
 	public String getName() {
@@ -206,7 +202,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		if (unavailableS.equalsIgnoreCase("all")) {
 			return false;
 		}
-		item = em.getEconomy(owner.getEconomy()).fixNameTest(item);
+		item = em.getEconomy(economy).fixNameTest(item);
 		if (item == null) {
 			return false;
 		}
@@ -231,7 +227,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void addObjects(ArrayList<String> objects) {
-		HyperEconomy he = em.getEconomy(owner.getEconomy());
+		HyperEconomy he = em.getEconomy(economy);
 		FileConfiguration sh = hc.gYH().gFC("shops");
 		SerializeArrayList sal = new SerializeArrayList();
 		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
@@ -247,7 +243,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void removeObjects(ArrayList<String> objects) {
-		HyperEconomy he = em.getEconomy(owner.getEconomy());
+		HyperEconomy he = em.getEconomy(economy);
 		FileConfiguration sh = hc.gYH().gFC("shops");
 		SerializeArrayList sal = new SerializeArrayList();
 		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
@@ -287,12 +283,21 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		return p2z;
 	}
 	
+	public Location getLocation1() {
+		return new Location(Bukkit.getWorld(world), p1x, p1y, p1z);
+	}
+	
+	public Location getLocation2() {
+		return new Location(Bukkit.getWorld(world), p2x, p2y, p2z);
+	}
+	
 	public HyperPlayer getOwner() {
 		return owner;
 	}
 	
 	public void setOwner(HyperPlayer owner) {
 		this.owner = owner;
+		shopFile.set(name + ".owner", owner.getName());
 	}
 
 	public ArrayList<HyperObject> getAvailableObjects() {
@@ -305,6 +310,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	public void deleteShop() {
 		hc.getSQLWrite().executeSQL("DELETE FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"'");
+		shopFile.set(name, null);
+		em.removeShop(name);
 	}
 	
 	public void removePlayerShopObject(HyperObject hyperObject) {
@@ -346,7 +353,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 
 	public HyperEconomy getHyperEconomy() {
-		return em.getEconomy(owner.getEconomy());
+		return em.getEconomy(economy);
 	}
 
 
@@ -370,7 +377,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				if (inShop(p)) {
 					inShop.add(p.getName());
 					sendEntryMessage(p);
-					hc.getEconomyManager().getHyperPlayer(p.getName()).setEconomy(owner.getEconomy());
+					hc.getEconomyManager().getHyperPlayer(p.getName()).setEconomy(economy);
 				}
 			}
 		}

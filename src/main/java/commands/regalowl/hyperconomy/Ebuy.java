@@ -8,17 +8,18 @@ public class Ebuy {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
+		
 		try {
 			HyperEconomy he = em.getHyperPlayer(player.getName()).getHyperEconomy();
-			if (he.inAnyShop(player)) {
-				HyperPlayer hp = he.getHyperPlayer(player);
-				if (hp.hasBuyPermission(he.getShop(player))) {
+			if (em.inAnyShop(player)) {
+				HyperPlayer hp = em.getHyperPlayer(player);
+				if (hp.hasBuyPermission(em.getShop(player))) {
 					String name = args[0];
 					if (he.enchantTest(name)) {
-						Shop s = he.getShop(player);
+						Shop s = em.getShop(player);
 						if (s.has(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
-							pt.setHyperObject(he.getHyperObject(name, he.getShop(player)));
+							pt.setHyperObject(he.getHyperObject(name, em.getShop(player)));
 							pt.setTradePartner(s.getOwner());
 							TransactionResponse response = hp.processTransaction(pt);
 							response.sendMessages();

@@ -12,12 +12,10 @@ public class Setinterval {
 		try {
     		if (args.length == 2) {
     			if (args[0].equalsIgnoreCase("shop")) {
-    				for (HyperEconomy he:em.getEconomies()) {
-    	    			he.setShopCheckInterval(Long.parseLong(args[1]));
-    	    			hc.gYH().gFC("config").set("config.shopcheckinterval", he.getShopCheckInterval());
-    	    			he.stopShopCheck();
-    	    			he.startShopCheck();
-    				}
+    	    		em.setShopCheckInterval(Long.parseLong(args[1]));
+    	    		hc.gYH().gFC("config").set("config.shopcheckinterval", em.getShopCheckInterval());
+    	    		em.stopShopCheck();
+    	    		em.startShopCheck();
 	    			sender.sendMessage(L.get("SHOP_INTERVAL_SET"));
     			} else if (args[0].equalsIgnoreCase("save")) {
     				long saveinterval = Long.parseLong(args[1]);

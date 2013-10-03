@@ -128,11 +128,9 @@ public class HyperPlayer {
 		this.name = name;
 	}
 	public void setEconomy(String economy) {
-		em.getEconomy(this.economy).removeHyperPlayer(this);
 		String statement = "UPDATE hyperconomy_players SET ECONOMY='" + economy + "' WHERE PLAYER = '" + name + "'";
 		hc.getSQLWrite().executeSQL(statement);
 		this.economy = economy;
-		em.getEconomy(this.economy).addHyperPlayer(this);
 	}
 	public void setX(double x) {
 		String statement = "UPDATE hyperconomy_players SET X='" + x + "' WHERE PLAYER = '" + name + "'";

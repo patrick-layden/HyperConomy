@@ -1,6 +1,8 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public interface Shop extends Comparable<Shop>{
@@ -10,8 +12,8 @@ public interface Shop extends Comparable<Shop>{
 	public void setPoint2(String world, int x, int y, int z);	
 	public void setGlobal();
 	
-	public void setPoint1(Player player);
-	public void setPoint2(Player player);
+	public void setPoint1(Location l);
+	public void setPoint2(Location l);
 	
 	public void setMessage1(String message);	
 	public void setMessage2(String message);	
@@ -29,6 +31,7 @@ public interface Shop extends Comparable<Shop>{
 	public HyperEconomy getHyperEconomy();
 	public String getName();
 	public HyperPlayer getOwner();
+	public void setOwner(HyperPlayer owner);
 	public String getDisplayName();
 	
 	public boolean has(String item);
@@ -46,8 +49,11 @@ public interface Shop extends Comparable<Shop>{
 	public int getP2x();
 	public int getP2y();
 	public int getP2z();
+	public Location getLocation1();
+	public Location getLocation2();
 	public void updatePlayerStatus();
 	
 	public int getVolume();
+	public void deleteShop();
 	
 }

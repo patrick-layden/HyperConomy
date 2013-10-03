@@ -20,7 +20,7 @@ public class Importfromyml {
 						SQLWrite sw = hc.getSQLWrite();
 						sw.executeSQL("DELETE FROM hyperconomy_objects WHERE ECONOMY = '" + economy + "'");
 						em.createEconomyFromYml(economy);
-						em.load();
+						hc.restart();
 						sender.sendMessage(L.get("ECONOMY_IMPORTED"));
 					} else {
 						sender.sendMessage(L.get("IMPORT_PROCEED"));

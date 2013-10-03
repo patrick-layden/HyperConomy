@@ -28,7 +28,6 @@ public class ChestShop implements Listener {
 
 	private HyperConomy hc;
 	private Calculation calc;
-	private HyperEconomy s;
 	private LanguageFile L;
 	private EconomyManager em;
 	private InventoryManipulation im;
@@ -306,7 +305,7 @@ public class ChestShop implements Listener {
 				return;
 			}
 
-			if (hc.gYH().gFC("config").getBoolean("config.require-chest-shops-to-be-in-shop") && !s.inAnyShop(scevent.getPlayer())) {
+			if (hc.gYH().gFC("config").getBoolean("config.require-chest-shops-to-be-in-shop") && !em.inAnyShop(scevent.getPlayer())) {
 				scevent.setLine(0, ChatColor.DARK_RED + "You must");
 				scevent.setLine(1, ChatColor.DARK_RED + "place your");
 				scevent.setLine(2, ChatColor.DARK_RED + "chest shop");
@@ -503,7 +502,7 @@ public class ChestShop implements Listener {
 						if (itemamount > 0) {
 							int space = im.getAvailableSpace(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 							if (space >= camount) {
-								if (em.hyperPlayerExists(line34)) {
+								if (em.hasAccount(line34)) {
 									double bal = em.getHyperPlayer(line34).getBalance();
 									double cost = ho.getValue(camount);
 									if (setprice) {
@@ -657,7 +656,7 @@ public class ChestShop implements Listener {
 							if (itemamount > 0) {
 								int space = im.getAvailableSpace(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 								if (space >= 1) {
-									if (em.hyperPlayerExists(line34)) {
+									if (em.hasAccount(line34)) {
 										double bal = em.getHyperPlayer(line34).getBalance();
 										double cost = ho.getValue(1);
 										if (setprice) {

@@ -18,7 +18,7 @@ public class Hv {
 			HyperPlayer hp = em.getHyperPlayer(player.getName());
 			HyperEconomy he = hp.getHyperEconomy();
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			if ((requireShop && he.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if ((requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				ItemStack iinhand = player.getItemInHand();
 					if (args.length == 0) {
 						amount = 1;
@@ -31,7 +31,7 @@ public class Hv {
 					if (!im.hasenchants(iinhand)) {
 					int itd = player.getItemInHand().getTypeId();
 					int da = im.getDamageValue(player.getItemInHand());
-					HyperObject ho = he.getHyperObject(itd, da, he.getShop(player));
+					HyperObject ho = he.getHyperObject(itd, da, em.getShop(player));
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
@@ -55,7 +55,7 @@ public class Hv {
 							cost = -1;
 						}
 						double stock = 0;
-						stock = he.getHyperObject(nam, he.getShop(player)).getStock();
+						stock = he.getHyperObject(nam, em.getShop(player)).getStock();
 						player.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, nam));
 						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, nam));
 						player.sendMessage(L.get("LINE_BREAK"));
@@ -73,7 +73,7 @@ public class Hv {
 						String enam = he.getEnchantNameWithoutLevel(enchname);
 						String fnam = enam + lvl;
 						String mater = player.getItemInHand().getType().name();
-						HyperObject ho = he.getHyperObject(fnam, he.getShop(player));
+						HyperObject ho = he.getHyperObject(fnam, em.getShop(player));
 						double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
 						double cost = ho.getCost(EnchantmentClass.fromString(mater));
 						cost = cost + ho.getPurchaseTax(cost);
@@ -84,7 +84,7 @@ public class Hv {
 						value = calc.twoDecimals(value - salestax);
 						player.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 						player.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-						player.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(fnam, he.getShop(player)).getStock()), fnam));
+						player.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(fnam, em.getShop(player)).getStock()), fnam));
 					}
 					player.sendMessage(L.get("LINE_BREAK"));
 				}

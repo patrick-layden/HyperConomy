@@ -7,158 +7,49 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
-
-import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitTask;
-
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
 
 
 
-public class HyperEconomy implements Listener {
-	private ConcurrentHashMap<String, Shop> shops = new ConcurrentHashMap<String, Shop>();
-	private ConcurrentHashMap<String, HyperObject> hyperObjects = new ConcurrentHashMap<String, HyperObject>();
-	private ConcurrentHashMap<String, HyperPlayer> hyperPlayers = new ConcurrentHashMap<String, HyperPlayer>();
-	
+public class HyperEconomy {
 
-	
+	private ConcurrentHashMap<String, HyperObject> hyperObjects = new ConcurrentHashMap<String, HyperObject>();
+
+
+	private ArrayList<String> compositeKeys = new ArrayList<String>();
+	private boolean useComposites;
 	private HyperConomy hc;
-	private EconomyManager em;
 	private SQLRead sr;
 	private String economy;
-	
-	private long shopinterval;
-	private BukkitTask shopCheckTask;
-	private boolean useShops;
 	private boolean dataLoaded;
 	
 
 	HyperEconomy(String economy) {
 		dataLoaded = false;
 		hc = HyperConomy.hc;	
-		em = hc.getEconomyManager();
 		this.economy = economy;
 		sr = hc.getSQLRead();
-		hc.getServer().getPluginManager().registerEvents(this, hc);
-		useShops = hc.gYH().gFC("config").getBoolean("config.use-shops");
-		shopinterval = hc.gYH().gFC("config").getLong("config.shopcheckinterval");
+		loadCompositeKeys();
+		useComposites = hc.gYH().gFC("config").getBoolean("config.use-composite-items");
 		load();
 	}
-	
-	
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		try {
-			if (!em.economiesLoaded()) {
-				return;
-			}
-			String name = event.getPlayer().getName();
-			if (name.equalsIgnoreCase(hc.gYH().gFC("config").getString("config.global-shop-account"))) {
-				if (hc.gYH().gFC("config").getBoolean("config.block-player-with-same-name-as-global-shop-account")) {
-					event.getPlayer().kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
-				}
-			}
-			if (!em.hyperPlayerExists(name) && economy.equalsIgnoreCase("default")) {
-				addPlayer(name);
-			}
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-		}
-	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerQuit(PlayerQuitEvent event) {
-		try {
-			if (!em.economiesLoaded()) {
-				return;
-			}
-			Location l = event.getPlayer().getLocation();
-			String name = event.getPlayer().getName();
-			if (!em.hyperPlayerExists(name) && economy.equalsIgnoreCase("default")) {
-				addPlayer(name);
-			}
-			if (hyperPlayers.containsKey(name)) {
-				HyperPlayer hp = hyperPlayers.get(name);
-				if (hp == null) {return;}
-				hp.setX(l.getX());
-				hp.setY(l.getY());
-				hp.setZ(l.getZ());
-				hp.setWorld(l.getWorld().getName());
-			}
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-		}
-	}
-	
-	
-	
 
 	public boolean dataLoaded() {
 		return dataLoaded;
 	}
-	
-	
-	
-	private void loadShops() {
-		stopShopCheck();
-		shops.clear();
-		FileConfiguration sh = hc.gYH().gFC("shops");
-		if (!useShops && economy.equalsIgnoreCase("default")) {
-			Shop shop = new ServerShop("GlobalShop", em.getGlobalShopAccount());
-			shop.setGlobal();
-			shops.put("GlobalShop", shop);
-			return;
-		}
-		Iterator<String> it = sh.getKeys(false).iterator();
-		while (it.hasNext()) {   			
-			Object element = it.next();
-			String name = element.toString(); 
-			if (name.equalsIgnoreCase("GlobalShop")) {continue;}
-			if (sh.getString(name + ".economy").equalsIgnoreCase(economy)) {
-				String owner = sh.getString(name + ".owner");
-				if (owner == null && economy.equalsIgnoreCase("default")) {
-					owner = em.getGlobalShopAccount().getName();
-				}
-				if (owner.equalsIgnoreCase(em.getGlobalShopAccount().getName())) {
-					Shop shop = new ServerShop(name, getHyperPlayer(owner));
-					shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
-					shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
-					shop.setMessage1(sh.getString(name + ".shopmessage1"));
-					shop.setMessage2(sh.getString(name + ".shopmessage2"));
-					shops.put(name, shop);
-				} else {
-					Shop shop = new PlayerShop(name, getHyperPlayer(owner));
-					shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
-					shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
-					shop.setMessage1(sh.getString(name + ".shopmessage1"));
-					shop.setMessage2(sh.getString(name + ".shopmessage2"));
-					shops.put(name, shop);
-				}
-			}
-		}
-		startShopCheck();
-	}
+
 	private void load() {
+		hc.getLogger().severe("load called," + economy);
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				hyperObjects.clear();
-				hyperPlayers.clear();
 				QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economy+"'");
 				while (result.next()) {
+					if (useComposites && compositeKeys.contains(result.getString("NAME"))) {continue;}
 					HyperObject hobj = new ComponentObject(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
 							result.getString("CATEGORY"), result.getString("MATERIAL"), result.getInt("ID"), result.getInt("DATA"),
 							result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
@@ -167,31 +58,32 @@ public class HyperEconomy implements Listener {
 					hyperObjects.put(hobj.getName(), hobj);
 				}
 				result.close();
-		
-				result = sr.aSyncSelect("SELECT * FROM hyperconomy_players WHERE ECONOMY = '"+economy+"'");
-				while (result.next()) {
-					HyperPlayer hplayer = new HyperPlayer(result.getString("PLAYER"), result.getString("ECONOMY"), result.getDouble("BALANCE"), result.getDouble("X"), result.getDouble("Y"), result.getDouble("Z"), result.getString("WORLD"), result.getString("HASH"), result.getString("SALT"));
-					hyperPlayers.put(hplayer.getName(), hplayer);
-				}
-				result.close();
-				if (economy.equalsIgnoreCase("default")) {
-					createGlobalShopAccount();
-				}
 				dataLoaded = true;
 				hc.getServer().getScheduler().runTask(hc, new Runnable() {
 					public void run() {
-						if (economy.equalsIgnoreCase("default")) {
-							loadComposites();
-							addOnlinePlayers();
-							loadShops();
-						}
+						loadComposites();
 					}
 				});
 			}
 		});
 	}
 	
+	private void loadCompositeKeys() {
+		if (!useComposites) {
+			return;
+		}
+		compositeKeys.clear();
+		FileConfiguration composites = hc.gYH().gFC("composites");
+		Iterator<String> it = composites.getKeys(false).iterator();
+		while (it.hasNext()) {
+			compositeKeys.add(it.next().toString());
+		}
+	}
+	
 	private void loadComposites() {
+		if (!useComposites) {
+			return;
+		}
 		boolean loaded = false;
 		FileConfiguration composites = hc.gYH().gFC("composites");
 		while (!loaded) {
@@ -220,159 +112,14 @@ public class HyperEconomy implements Listener {
 		return true;
 	}
 	
-	private void addOnlinePlayers() {
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			if (p.getName().equalsIgnoreCase(hc.gYH().gFC("config").getString("config.global-shop-account"))) {
-				if (hc.gYH().gFC("config").getBoolean("config.block-player-with-same-name-as-global-shop-account")) {
-					p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
-				}
-			}
-			if (!hasAccount(p.getName())) {
-				addPlayer(p.getName());
-			}
-		}
-	}
 
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	public String getEconomy() {
 		return economy;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	Shop getShop(Player player) {
-		if (player == null) {
-			return null;
-		}
-		for (Shop shop : shops.values()) {
-			if (shop.inShop(player)) {
-				return shop;
-			}
-		}
-		return null;
-	}
-	public Shop getShop(String shop) {
-		shop = fixShopName(shop);
-		if (shops.containsKey(shop)) {
-			return shops.get(shop);
-		} else {
-			return null;
-		}
-	}
-	public boolean inAnyShop(Player player) {
-		for (Shop shop : shops.values()) {
-			if (shop.inShop(player)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	public boolean shopExists(String name) {
-		return shops.containsKey(fixShopName(name));
-	}
-	public void addShop(Shop shop) {
-		shops.put(shop.getName(), shop);
-		hc.getWebHandler().addShop(shop);
-	}
-	public void removeShop(String name) {
-		if (shopExists(name)) {
-			shops.remove(fixShopName(name));
-		}
-	}
-	
-	public void deleteShop(String name) {
-		hc.gYH().gFC("shops").set(name, null);
-		shops.remove(name);
-	}
 
-	
-	public void renameShop(String name, String newName) {
-		Shop shop = shops.get(name);
-		shop.setName(newName);
-		shops.put(newName, shop);
-		shops.remove(name);
-	}
-    public void startShopCheck() {
-		shopCheckTask = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
-		    public void run() {
-				for (Shop shop:shops.values()) {
-					shop.updatePlayerStatus();
-				}
-		    }
-		}, shopinterval, shopinterval);
-    }
-    public void stopShopCheck() {
-    	if (shopCheckTask != null) {
-    		shopCheckTask.cancel();
-    	}
-    }
-    public long getShopCheckInterval() {
-    	return shopinterval;
-    }
-    public void setShopCheckInterval(long interval) {
-    	shopinterval = interval;
-    }
-	public String fixShopName(String nam) {
-		for (String shop:shops.keySet()) {
-			if (shop.equalsIgnoreCase(nam)) {
-				return shop;
-			}
-		}
-		return nam;
-	}
-	public ArrayList<Shop> getShops() {
-		ArrayList<Shop> shopList = new ArrayList<Shop>();
-		for (Shop shop:shops.values()) {
-			shopList.add(shop);
-		}
-		return shopList;
-	}
-	public ArrayList<String> listShops() {
-		ArrayList<String> names = new ArrayList<String>();
-		for (Shop shop : shops.values()) {
-			names.add(shop.getName());
-		}
-		return names;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -428,6 +175,15 @@ public class HyperEconomy implements Listener {
 		}
 	}
 	
+	public ArrayList<HyperObject> getHyperObjects(Shop s) {
+		ArrayList<HyperObject> hos = new ArrayList<HyperObject>();
+		for (HyperObject ho:hyperObjects.values()) {
+			hos.add(getHyperObject(ho.getName(), s));
+		}
+		return hos;
+	}
+	
+	
 	public ArrayList<HyperObject> getHyperObjects() {
 		ArrayList<HyperObject> hos = new ArrayList<HyperObject>();
 		for (HyperObject ho:hyperObjects.values()) {
@@ -435,53 +191,6 @@ public class HyperEconomy implements Listener {
 		}
 		return hos;
 	}
-
-	
-	public HyperPlayer getHyperPlayer(String player) {
-		player = fixpN(player);
-		if (hyperPlayers.containsKey(player) && hyperPlayers.get(player) != null) {
-			return hyperPlayers.get(player);
-		} else {
-			if (hyperPlayers.get(player) == null) {
-				hyperPlayers.remove(player);
-			}
-			return addPlayer(player);
-		}
-	}
-	public HyperPlayer getHyperPlayer(Player player) {
-		String name = player.getName();
-		if (hyperPlayers.containsKey(name) && hyperPlayers.get(name) != null) {
-			return hyperPlayers.get(name);
-		} else {
-			if (hyperPlayers.get(name) == null) {
-				hyperPlayers.remove(name);
-			}
-			return addPlayer(name);
-		}
-	}
-	
-	public void addHyperPlayer(HyperPlayer hp) {
-		if (!hyperPlayers.contains(hp)) {
-			hyperPlayers.put(hp.getName(), hp);
-		}
-	}
-	public void removeHyperPlayer(HyperPlayer hp) {
-		if (hyperPlayers.contains(hp)) {
-			hyperPlayers.remove(hp.getName());
-		}
-	}
-	
-	
-	public ArrayList<HyperPlayer> getHyperPlayers() {
-		ArrayList<HyperPlayer> hps = new ArrayList<HyperPlayer>();
-		for (HyperPlayer hp:hyperPlayers.values()) {
-			hps.add(hp);
-		}
-		return hps;
-	}
-	
-
-	
 
 
 
@@ -496,77 +205,17 @@ public class HyperEconomy implements Listener {
 
 
 
-	public HyperPlayer addPlayer(String player) {
-		player = fixpN(player);
-		if (!hyperPlayers.containsKey(player)) {
-			return hyperPlayers.put(player, new HyperPlayer(player));
-		} else {
-			HyperPlayer hp = hyperPlayers.get(player);
-			if (hp != null) {
-				return hp;
-			} else {
-				hyperPlayers.remove(player);
-				return hyperPlayers.put(player, new HyperPlayer(player));
-			}
-		}
-	}
-
-
-
-	public boolean hasAccount(String name) {
-		if (hc.s().gB("use-external-economy-plugin")) {
-			Economy economy = hc.getEconomy();
-			if (economy.hasAccount(name)) {
-				if (!hyperPlayers.containsKey(fixpN(name))) {
-					addPlayer(name);
-				}
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return hyperPlayers.containsKey(fixpN(name));
-		}
-	}
 	
 
-
-	public boolean createPlayerAccount(String player) {
-		player = fixpN(player);
-		if (!hasAccount(player)) {
-			addPlayer(player);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	
-	public ArrayList<String> getEconPlayers() {
-		ArrayList<String> econplayers = new ArrayList<String>();
-		for (String player:hyperPlayers.keySet()) {
-			econplayers.add(player);
-		}
-		return econplayers;
-	}
 
 
 	public void clearData() {
 		hyperObjects.clear();
-		hyperPlayers.clear();
-		shops.clear();
 	}
 
 
 
-	public String fixpN(String player) {
-		for (String name:hyperPlayers.keySet()) {
-			if (name.equalsIgnoreCase(player)) {
-				return name;
-			}
-		}
-		return player;
-	}
+
 	
 	
 	
@@ -657,48 +306,8 @@ public class HyperEconomy implements Listener {
 		return null;
 	}
 	
-	public void createGlobalShopAccount(){		
-		HyperConomy hc = HyperConomy.hc;
-		Economy economy = hc.getEconomy();
-		LanguageFile L = hc.getLanguageFile();
-		Log l = hc.getLog();
-		boolean useExternalEconomy = hc.s().gB("use-external-economy-plugin");
-		String globalaccount = hc.gYH().gFC("config").getString("config.global-shop-account");
-		if (useExternalEconomy) {
-			if (economy != null) {
-				if (!economy.hasAccount(globalaccount)) {
-					getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
-					l.writeAuditLog(globalaccount, "initialization", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), economy.getName());
-				}
-			} else {
-				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-		    	Logger log = Logger.getLogger("Minecraft");
-		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
-			}
-		} else {
-			if (!hasAccount(globalaccount)) {
-				createPlayerAccount(globalaccount);
-				getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
-				l.writeAuditLog(globalaccount, "initialization", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), "HyperConomy");
-			}
-		}
-	}
-	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	public ArrayList<String> loadNewItems() {
@@ -737,7 +346,7 @@ public class HyperEconomy implements Listener {
 		}
 		SQLWrite sw = hc.getSQLWrite();
 		sw.executeSQL(statements);
-		em.load();
+		hc.restart();
 		return objectsAdded;
 	}
 	

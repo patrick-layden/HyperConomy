@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 public class ServerShop implements Shop, Comparable<Shop>{
 	
 	private String name;
+	private String economy;
 	private HyperPlayer owner;
 	private String world;
 	private String message1;
@@ -32,8 +33,9 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	private boolean globalShop;
 	
 	
-	ServerShop(String name, HyperPlayer owner) {
+	ServerShop(String name, String econ, HyperPlayer owner) {
 		this.name = name;
+		this.economy = econ;
 		this.owner = owner;
 		if (owner == null) {
 			this.owner = hc.getEconomyManager().getGlobalShopAccount();
@@ -81,24 +83,17 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	
-	public void setPoint1(Player player) {
-		Location l = player.getLocation();
+	public void setPoint1(Location l) {
 		setPoint1(l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
-	
-	public void setPoint2(Player player) {
-		Location l = player.getLocation();
+	public void setPoint2(Location l) {
 		setPoint2(l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
-	
-	
-	
 	public void setMessage1(String message) {
 		message1 = message;
 		shopFile.set(name + ".shopmessage1", message1);
 		
 	}
-	
 	public void setMessage2(String message) {
 		message2 = message;
 		shopFile.set(name + ".shopmessage2", message2);
@@ -108,7 +103,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		setMessage1("&aWelcome to %n");
 		setMessage2("&9Type &b/hc &9for help.");
 	}
-	
 	public void setWorld(String world) {
 		this.world = world;
 		shopFile.set(name + ".world", world);
@@ -127,11 +121,12 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		shopFile.set(name + ".p2.z", p2z);
 		shopFile.set(name + ".shopmessage1", message1);
 		shopFile.set(name + ".shopmessage2", message2);
-		shopFile.set(name + ".economy", owner.getEconomy());
+		shopFile.set(name + ".economy", economy);
 	}
 	
 	public void setEconomy(String economy) {
-		owner.setEconomy(economy);
+		this.economy = economy;
+		shopFile.set(name + ".economy", economy);
 	}
 	
 	
@@ -175,11 +170,11 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	public String getEconomy() {
-		return owner.getEconomy();
+		return economy;
 	}
 	
 	public HyperEconomy getHyperEconomy() {
-		return em.getEconomy(owner.getEconomy());
+		return em.getEconomy(economy);
 	}
 	
 	public String getName() {
@@ -200,7 +195,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		if (unavailableS.equalsIgnoreCase("all")) {
 			return false;
 		}
-		item = em.getEconomy(owner.getEconomy()).fixNameTest(item);
+		item = em.getEconomy(economy).fixNameTest(item);
 		if (item == null) {
 			return false;
 		}
@@ -220,7 +215,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	public ArrayList<HyperObject> getAvailableObjects() {
-		ArrayList<HyperObject> allEconomy = em.getEconomy(owner.getEconomy()).getHyperObjects();
+		ArrayList<HyperObject> allEconomy = em.getEconomy(economy).getHyperObjects();
 		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
 		for (HyperObject ho : allEconomy) {
 			if (has(ho)) {
@@ -242,7 +237,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	public void addObjects(ArrayList<String> objects) {
-		HyperEconomy he = em.getEconomy(owner.getEconomy());
+		HyperEconomy he = em.getEconomy(economy);
 		FileConfiguration sh = hc.gYH().gFC("shops");
 		SerializeArrayList sal = new SerializeArrayList();
 		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
@@ -258,7 +253,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	public void removeObjects(ArrayList<String> objects) {
-		HyperEconomy he = em.getEconomy(owner.getEconomy());
+		HyperEconomy he = em.getEconomy(economy);
 		FileConfiguration sh = hc.gYH().gFC("shops");
 		SerializeArrayList sal = new SerializeArrayList();
 		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
@@ -298,6 +293,14 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return p2z;
 	}
 	
+	public Location getLocation1() {
+		return new Location(Bukkit.getWorld(world), p1x, p1y, p1z);
+	}
+	
+	public Location getLocation2() {
+		return new Location(Bukkit.getWorld(world), p2x, p2y, p2z);
+	}
+	
 	public HyperPlayer getOwner() {
 		return owner;
 	}
@@ -314,7 +317,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 				if (inShop(p)) {
 					inShop.add(p.getName());
 					sendEntryMessage(p);
-					hc.getEconomyManager().getHyperPlayer(p.getName()).setEconomy(owner.getEconomy());
+					hc.getEconomyManager().getHyperPlayer(p.getName()).setEconomy(economy);
 				}
 			}
 		}
@@ -322,5 +325,15 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	
 	public int getVolume() {
 		return Math.abs(p1x - p2x) * Math.abs(p1y - p2y) * Math.abs(p1z - p2z);
+	}
+	
+	public void deleteShop() {
+		shopFile.set(name, null);
+		em.removeShop(name);
+	}
+
+	public void setOwner(HyperPlayer owner) {
+		this.owner = owner;
+		shopFile.set(name + ".owner", owner.getName());
 	}
 }

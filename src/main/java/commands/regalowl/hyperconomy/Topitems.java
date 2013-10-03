@@ -13,6 +13,7 @@ public class Topitems {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
+		EconomyManager em = hc.getEconomyManager();
 		try {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			if (args.length > 1) {
@@ -22,10 +23,10 @@ public class Topitems {
 			// Gets the shop name if the player is in a shop.
 			String nameshop = "";
 			if (player != null) {
-				if (he.inAnyShop(player)) {
-					nameshop = he.getShop(player).getName();
+				if (em.inAnyShop(player)) {
+					nameshop = em.getShop(player).getName();
 				} 
-				if (requireShop && he.getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
+				if (requireShop && em.getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
 					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
 					return;
 				}
@@ -42,12 +43,12 @@ public class Topitems {
 				String elst = inames.get(c);
 				boolean unavailable = false;
 				if (nameshop != "") {
-					if (!he.getShop(nameshop).has(elst)) {
+					if (!em.getShop(nameshop).has(elst)) {
 						unavailable = true;
 					}
 				}
 				if (!unavailable) {
-					double samount = he.getHyperObject(elst, he.getShop(player)).getStock();
+					double samount = he.getHyperObject(elst, em.getShop(player)).getStock();
 					if (samount > 0) {
 						while (itemstocks.containsKey(samount * 100)) {
 							samount = samount + .0000001;

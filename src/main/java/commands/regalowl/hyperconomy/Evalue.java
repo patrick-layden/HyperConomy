@@ -17,11 +17,11 @@ public class Evalue {
 			HyperPlayer hp = em.getHyperPlayer(player.getName());
 			HyperEconomy he = hp.getHyperEconomy();
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			if ((requireShop && he.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if ((requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				if (args.length == 2) {
 					String nam = args[0];
 					if (he.enchantTest(nam)) {
-						HyperObject ho = he.getHyperObject(nam, he.getShop(player));
+						HyperObject ho = he.getHyperObject(nam, em.getShop(player));
 						String type = args[1];
 						if (type.equalsIgnoreCase("s")) {
 							String[] classtype = new String[9];
@@ -66,7 +66,7 @@ public class Evalue {
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else if (type.equalsIgnoreCase("a")) {
 							sender.sendMessage(L.get("LINE_BREAK"));
-							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(nam, he.getShop(player)).getStock()), nam));
+							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(nam, em.getShop(player)).getStock()), nam));
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else {
 							sender.sendMessage(L.get("EVALUE_INVALID"));
@@ -87,7 +87,7 @@ public class Evalue {
 							int lvl = im.getEnchantmentLevel(player.getItemInHand(), en);
 							String nam = he.getEnchantNameWithoutLevel(enchname);
 							String fnam = nam + lvl;
-							HyperObject ho = he.getHyperObject(fnam, he.getShop(player));
+							HyperObject ho = he.getHyperObject(fnam, em.getShop(player));
 							String mater = player.getItemInHand().getType().name();
 							double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
 							double cost = ho.getCost(EnchantmentClass.fromString(mater));
@@ -97,7 +97,7 @@ public class Evalue {
 							double salestax = 0;
 							if (hc.gYH().gFC("config").getBoolean("config.dynamic-tax.use-dynamic-tax")) {
 								double moneycap = hc.gYH().gFC("config").getDouble("config.dynamic-tax.money-cap");
-								double cbal = he.getHyperPlayer(player.getName()).getBalance();
+								double cbal = em.getHyperPlayer(player.getName()).getBalance();
 								if (cbal >= moneycap) {
 									salestax = value * (hc.gYH().gFC("config").getDouble("config.dynamic-tax.max-tax-percent") / 100);
 								} else {
@@ -110,7 +110,7 @@ public class Evalue {
 							value = calc.twoDecimals(value - salestax);
 							sender.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 							sender.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(fnam, he.getShop(player)).getStock()), fnam));
+							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(fnam, em.getShop(player)).getStock()), fnam));
 						}
 						player.sendMessage(L.get("LINE_BREAK"));
 					} else {

@@ -18,8 +18,8 @@ public class Hs {
 			}
 			HyperPlayer hp = em.getHyperPlayer(player.getName());
 			HyperEconomy he = hp.getHyperEconomy();
-			if (he.inAnyShop(player)) {
-				if (hp.hasSellPermission(he.getShop(player))) {
+			if (em.inAnyShop(player)) {
+				if (hp.hasSellPermission(em.getShop(player))) {
 					if (args.length == 0) {
 						amount = 1;
 					} else {
@@ -42,14 +42,14 @@ public class Hs {
 					}
 					int itd = player.getItemInHand().getTypeId();
 					int da = im.getDamageValue(player.getItemInHand());
-					HyperObject ho = he.getHyperObject(itd, da, he.getShop(player));
+					HyperObject ho = he.getHyperObject(itd, da, em.getShop(player));
 					if (ho == null) {
 						player.sendMessage(L.get("CANT_BE_TRADED"));
 					} else {
 						String nam = ho.getName();
 						ItemStack iinhand = player.getItemInHand();
 						if (im.hasenchants(iinhand) == false) {
-							Shop s = he.getShop(player);
+							Shop s = em.getShop(player);
 							if (s.has(nam)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 								pt.setHyperObject(ho);

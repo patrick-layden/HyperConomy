@@ -18,8 +18,8 @@ public class Esell {
 			}
 			HyperPlayer hp = em.getHyperPlayer(player.getName());
 			HyperEconomy he = hp.getHyperEconomy();
-			if (he.inAnyShop(player)) {
-				Shop s = he.getShop(player);
+			if (em.inAnyShop(player)) {
+				Shop s = em.getShop(player);
 				if (hp.hasSellPermission(s)) {
 					String name = args[0];
 					if (args[0].equalsIgnoreCase("max")) {

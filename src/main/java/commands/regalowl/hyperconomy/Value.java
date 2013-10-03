@@ -12,14 +12,14 @@ public class Value {
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		Player player = null;
-
+		EconomyManager em = hc.getEconomyManager();
 		
 		try {
 			if (sender instanceof Player) {
 				player = (Player) sender;
 			}
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
-			if (player == null || (requireShop && he.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if (player == null || (requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				String name = he.fixName(args[0]);
 				int amount;
 				if (args.length == 2) {
@@ -31,11 +31,11 @@ public class Value {
 					amount = 1;
 				}
 				if (he.itemTest(name)) {
-					HyperObject ho = he.getHyperObject(name, he.getShop(player));
+					HyperObject ho = he.getHyperObject(name, em.getShop(player));
 					double val = ho.getValue(amount);
 					double salestax = 0;
 					if (player != null) {
-						HyperPlayer hp = he.getHyperPlayer(player);
+						HyperPlayer hp = em.getHyperPlayer(player);
 						salestax = hp.getSalesTax(val);
 					}
 					val = calc.twoDecimals(val - salestax);
@@ -48,7 +48,7 @@ public class Value {
 						cost = -1;
 					}
 					double stock = 0;
-					stock = calc.twoDecimals(he.getHyperObject(name, he.getShop(player)).getStock());
+					stock = calc.twoDecimals(he.getHyperObject(name, em.getShop(player)).getStock());
 					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, name));
 					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, name));
 					sender.sendMessage(L.get("LINE_BREAK"));

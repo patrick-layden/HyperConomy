@@ -9,7 +9,7 @@ public class HyperAPI implements GeneralAPI {
 	public String listShops() {
 		HyperConomy hc = HyperConomy.hc;
 		SerializeArrayList sal = new SerializeArrayList();
-		return sal.stringArrayToString(hc.getEconomyManager().getShopList());
+		return sal.stringArrayToString(hc.getEconomyManager().listShops());
 	}
 
 	public String listEconomies() {
@@ -79,9 +79,8 @@ public class HyperAPI implements GeneralAPI {
 			}
 		}
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
-		if (he.hasAccount(player)) {
-			return he.getHyperPlayer(player).getX();
+		if (hc.getEconomyManager().hasAccount(player)) {
+			return hc.getEconomyManager().getHyperPlayer(player).getX();
 		} else {
 			return 0.0;
 		}
@@ -94,9 +93,8 @@ public class HyperAPI implements GeneralAPI {
 			}
 		}
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
-		if (he.hasAccount(player)) {
-			return he.getHyperPlayer(player).getY();
+		if (hc.getEconomyManager().hasAccount(player)) {
+			return hc.getEconomyManager().getHyperPlayer(player).getY();
 		} else {
 			return 0.0;
 		}
@@ -109,9 +107,8 @@ public class HyperAPI implements GeneralAPI {
 			}
 		}
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
-		if (he.hasAccount(player)) {
-			return he.getHyperPlayer(player).getZ();
+		if (hc.getEconomyManager().hasAccount(player)) {
+			return hc.getEconomyManager().getHyperPlayer(player).getZ();
 		} else {
 			return 0.0;
 		}
@@ -119,8 +116,7 @@ public class HyperAPI implements GeneralAPI {
 
 	public String getPlayerShop(Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player.getName()).getHyperEconomy();
-		Shop shop = he.getShop(player);
+		Shop shop = hc.getEconomyManager().getShop(player);
 		if (null == shop){
 			return "";
 		} else {
@@ -130,9 +126,8 @@ public class HyperAPI implements GeneralAPI {
 
 	public boolean checkHash(String player, String SHA256Hash) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
-		if (he.hasAccount(player)) {
-			if (he.getHyperPlayer(player).getHash().equals(SHA256Hash)) {
+		if (hc.getEconomyManager().hasAccount(player)) {
+			if (hc.getEconomyManager().getHyperPlayer(player).getHash().equals(SHA256Hash)) {
 				return true;
 			} else {
 				return false;
@@ -145,9 +140,8 @@ public class HyperAPI implements GeneralAPI {
 	
 	public String getSalt(String player) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
-		if (he.hasAccount(player)) {
-			return he.getHyperPlayer(player).getSalt();
+		if (hc.getEconomyManager().hasAccount(player)) {
+			return hc.getEconomyManager().getHyperPlayer(player).getSalt();
 		} else {
 			return "";
 		}

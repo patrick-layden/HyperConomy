@@ -220,6 +220,18 @@ public class Update {
 	    	if (t55 == null) {
 	    		yh.gFC("config").set("config.block-player-with-same-name-as-global-shop-account", true);
 	    	}	  
+	    	String t56 = yh.gFC("config").getString("config.max-player-shop-volume");
+	    	if (t56 == null) {
+	    		yh.gFC("config").set("config.max-player-shop-volume", 1000);
+	    	}	  
+	    	String t57 = yh.gFC("config").getString("config.use-player-shops");
+	    	if (t57 == null) {
+	    		yh.gFC("config").set("config.use-player-shops", true);
+	    	}	  
+	    	String t58 = yh.gFC("config").getString("config.use-composite-items");
+	    	if (t58 == null) {
+	    		yh.gFC("config").set("config.use-composite-items", true);
+	    	}	  
 
 	    	yh.gFC("config").set("config.sql-connection.max-sql-threads", null);
 	    	yh.gFC("config").set("config.log-sqlwrite-errors", null);

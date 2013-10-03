@@ -11,7 +11,7 @@ public class Hcpay {
 			if (args.length == 2) {
 				String recipient = args[0];
 				Double amount = Double.parseDouble(args[1]);
-				if (em.hyperPlayerExists(recipient)) {
+				if (em.hasAccount(recipient)) {
 					if (em.getHyperPlayer(player.getName()).hasBalance(amount)) {
 						em.getHyperPlayer(player.getName()).withdraw(amount);
 						em.getHyperPlayer(recipient).deposit(amount);
