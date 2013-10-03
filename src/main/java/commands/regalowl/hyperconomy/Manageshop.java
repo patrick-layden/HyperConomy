@@ -18,10 +18,10 @@ public class Manageshop implements CommandExecutor {
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
-		int maxVolume = hc.gYH().gFC("config").getInt("config.max-player-shop-volume");
 		if (!hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {
 			return true;
 		}
+		int maxVolume = hc.gYH().gFC("config").getInt("config.max-player-shop-volume");
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		Player player = null;
