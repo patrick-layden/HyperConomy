@@ -20,11 +20,10 @@ public class Topitems {
 				sender.sendMessage(L.get("TOPITEMS_INVALID"));
 				return;
 			}
-			// Gets the shop name if the player is in a shop.
-			String nameshop = "";
+			Shop s = null;
 			if (player != null) {
 				if (em.inAnyShop(player)) {
-					nameshop = em.getShop(player).getName();
+					s = em.getShop(player);
 				} 
 				if (requireShop && em.getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
 					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
@@ -37,23 +36,27 @@ public class Topitems {
 			} else {
 				page = Integer.parseInt(args[0]);
 			}
-			SortedMap<Double, String> itemstocks = new TreeMap<Double, String>();
-			ArrayList<String> inames = he.getItemNames();
-			for (int c = 0; c < inames.size(); c++) {
-				String elst = inames.get(c);
+			SortedMap<Double, HyperObject> itemstocks = new TreeMap<Double, HyperObject>();
+			ArrayList<HyperObject> objects = null;
+			if (s != null) {
+				objects = he.getHyperObjects(s);
+			} else {
+				objects = he.getHyperObjects();
+			}
+			for (HyperObject ho:objects) {
 				boolean unavailable = false;
-				if (nameshop != "") {
-					if (!em.getShop(nameshop).has(elst)) {
+				if (s != null) {
+					if (!s.has(ho.getName())) {
 						unavailable = true;
 					}
 				}
 				if (!unavailable) {
-					double samount = he.getHyperObject(elst, em.getShop(player)).getStock();
+					double samount = ho.getStock();
 					if (samount > 0) {
 						while (itemstocks.containsKey(samount * 100)) {
 							samount = samount + .0000001;
 						}
-						itemstocks.put(samount * 100, elst);
+						itemstocks.put(samount * 100, ho);
 					}
 				}
 			}
@@ -64,12 +67,17 @@ public class Topitems {
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int) maxpages + 1;
 			sender.sendMessage(L.f(L.get("PAGE_NUMBER"), page, maxpi));
-			//sender.sendMessage(ChatColor.RED + "Page " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
 			try {
 				while (count < numberpage) {
 					double lk = itemstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
-						sender.sendMessage(ChatColor.WHITE + itemstocks.get(lk) + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + Math.floor(lk)/100);
+						HyperObject ho = itemstocks.get(lk);
+						if (ho instanceof PlayerShopObject) {
+							PlayerShopObject pso = (PlayerShopObject)ho;
+							sender.sendMessage(L.applyColor("&f"+ho.getName() + ": &a" + Math.floor(lk)/100 + " &f(&e" + pso.getStatus().toString() + "&f)" ));
+						} else {
+							sender.sendMessage(ChatColor.WHITE + ho.getName() + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + Math.floor(lk)/100);
+						}
 					}
 					itemstocks.remove(lk);
 					count++;

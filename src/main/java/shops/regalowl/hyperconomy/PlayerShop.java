@@ -61,8 +61,13 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 					HyperObject ho = he.getHyperObject(result.getString("HYPEROBJECT"));
 					double stock = result.getDouble("QUANTITY");
 					HyperObjectStatus status = HyperObjectStatus.fromString(result.getString("STATUS"));
-					PlayerShopObject pso = new PlayerShopObject(ps, ho, stock, price, status);
-					shopContents.add(pso);
+					if (ho instanceof ComponentObject) {
+						ComponentShopObject pso = new ComponentShopObject(ps, ho, stock, price, status);
+						shopContents.add(pso);
+					} else if (ho instanceof CompositeObject) {
+						PlayerShopObject pso = new CompositeShopObject(ps, ho, stock, price, status);
+						shopContents.add(pso);
+					}
 				}
 				result.close();
 			}
@@ -329,10 +334,18 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				return pso;
 			}
 		}
-		PlayerShopObject pso = new PlayerShopObject(this, hyperObject, 0.0, 0.0, HyperObjectStatus.TRADE);
-		shopContents.add(pso);
-		hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'trade')");
-		return pso;
+		if (hyperObject instanceof ComponentObject) {
+			PlayerShopObject pso = new ComponentShopObject(this, hyperObject, 0.0, 0.0, HyperObjectStatus.TRADE);
+			shopContents.add(pso);
+			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'trade')");
+			return pso;
+		} else if (hyperObject instanceof CompositeObject) {
+			PlayerShopObject pso = new CompositeShopObject(this, hyperObject, 0.0, 0.0, HyperObjectStatus.TRADE);
+			shopContents.add(pso);
+			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'trade')");
+			return pso;
+		}
+		return null;
 	}
 	public boolean hasPlayerShopObject(HyperObject ho) {
 		for (PlayerShopObject pso:shopContents) {
@@ -346,8 +359,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 
 	public void setGlobal() {
-		// TODO Auto-generated method stub
-		
+		//do nothing
 	}
 
 

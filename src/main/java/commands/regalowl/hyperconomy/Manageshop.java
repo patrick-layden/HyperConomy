@@ -90,6 +90,11 @@ public class Manageshop implements CommandExecutor {
 				newShop.deleteShop();
 				return true;
 			}
+			for (HyperObject ho:he.getHyperObjects(newShop)) {
+				if (ho instanceof PlayerShopObject) {
+					((PlayerShopObject) ho).setStatus(HyperObjectStatus.NONE);
+				}
+			}
 			em.addShop(newShop);
 			player.sendMessage("Shop created.");
 		} else if (args[0].equalsIgnoreCase("set1")) {
@@ -184,6 +189,9 @@ public class Manageshop implements CommandExecutor {
 					return true;
 				}
 			}
+		} else if (args[0].equalsIgnoreCase("stats")) {
+			player.sendMessage("You currently have the shop " + cps.getName() + " selected.");
+			return true;	
 		} else if (args[0].equalsIgnoreCase("owner") && player.hasPermission("hyperconomy.admin")) {
 			if (cps == null) {
 				player.sendMessage("You don't have a shop selected.");

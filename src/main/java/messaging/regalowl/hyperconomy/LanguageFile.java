@@ -107,7 +107,7 @@ public class LanguageFile {
 				if (text.startsWith(" ")) {
 					text = text.substring(1, text.length());
 				}
-				text = formatMessage(text);
+				text = applyColor(text);
 				language.put(name, text);
 			}
 			language.put("CC", "\u00A7");
@@ -126,7 +126,7 @@ public class LanguageFile {
 			if (text.startsWith(" ")) {
 				text = text.substring(1, text.length());
 			}
-			text = formatMessage(text);
+			text = applyColor(text);
 			languageBackup.put(name, text);
 		}
 		languageBackup.put("CC", "\u00A7");
@@ -210,7 +210,7 @@ public class LanguageFile {
 		return formatted;
 	}
 	
-	public String formatMessage(String message) {
+	public String applyColor(String message) {
 		message = message.replace("&0", ChatColor.BLACK+"");
 		message = message.replace("&1", ChatColor.DARK_BLUE+"");
 		message = message.replace("&2", ChatColor.DARK_GREEN+"");

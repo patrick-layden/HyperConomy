@@ -115,7 +115,12 @@ public class Browseshop {
 							cost = cost + ho.getPurchaseTax(cost);
 							stock = calc.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
 						}
-						sender.sendMessage("\u00A7b" + iname + " \u00A79[\u00A7a" + stock + " \u00A79" + L.get("AVAILABLE") + ": \u00A7a" + L.fC(cost) + " \u00A79" + L.get("EACH") + ".]");
+			            if (ho instanceof PlayerShopObject) {
+			            	PlayerShopObject pso = (PlayerShopObject)ho;
+			            	sender.sendMessage(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "; (&e" + pso.getStatus().toString()+ "&9)]"));
+			            } else {
+			            	sender.sendMessage(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "]"));
+			            }			
 					} else {
 						sender.sendMessage(L.get("REACHED_END"));
 						break;

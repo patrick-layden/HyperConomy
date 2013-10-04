@@ -70,6 +70,7 @@ public class Itemsettings {
 					stat = Boolean.parseBoolean(ho.getIsstatic());
 					statprice = ho.getStaticprice();
 					sto = ho.getStock();
+					double tsto = ho.getTotalStock();
 					med = ho.getMedian();
 					init = Boolean.parseBoolean(ho.getInitiation());
 					starprice = ho.getStartprice();			
@@ -85,6 +86,7 @@ public class Itemsettings {
 					sender.sendMessage(L.f(L.get("SETTINGS_STARTPRICE"), starprice, init));
 					sender.sendMessage(L.f(L.get("SETTINGS_STATICPRICE"), statprice, stat));
 					sender.sendMessage(L.f(L.get("SETTINGS_STOCK"), sto));
+					sender.sendMessage(L.f(L.get("SETTINGS_TOTAL_STOCK"), tsto));
 					sender.sendMessage(L.f(L.get("SETTINGS_MEDIAN"), med));
 					sender.sendMessage(L.f(L.get("SETTINGS_CEILING"), ceiling));
 					sender.sendMessage(L.f(L.get("SETTINGS_FLOOR"), floor));

@@ -405,6 +405,10 @@ public class CompositeObject implements HyperObject {
 		double twodecimals = (double) nodecimals / 100.0;
 		return twodecimals;
 	}
+	
+	public ConcurrentHashMap<HyperObject,Double> getComponents() {
+		return components;
+	}
 	 
 	
 }
