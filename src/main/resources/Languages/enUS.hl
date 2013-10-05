@@ -74,6 +74,7 @@ ALL_BACKED_UP: &6All files have been backed up!
 HCBACKUP_INVALID: &4Invalid Parameters.  Use /hcbackup
 HC_BUY: &bType &a/hc buy &bfor buy commands.
 HC_SELL: &bType &a/hc sell &bfor sell commands.
+HC_SHOP: &bType &a/hc shop &bfor shop commands.
 HC_INFO: &bType &a/hc info &bfor informational commands.
 HC_PARAMS: &bType &a/hc params &bfor parameter help.
 HC_ECON: &bType &a/hc econ &bfor economy commands.
@@ -87,6 +88,7 @@ HC_BUY_HB: &a/hb &e(amount/'max')
 HC_BUY_BUYID: &a/buyid &c[amount] [id] &e(damage value)
 HC_BUY_EBUY: &a/ebuy &c[name]
 HC_BUY_MORE: &bFor more help type &a/hc buy &c[command]
+HC_SHOP_MANAGESHOP: &a/manageshop &c['select', 'create', 'set1', 'set2', 'price', or 'status']
 HC_INFO_VALUE: &a/value &c[name] &e(amount)
 HC_INFO_HV: &a/hv &e(amount)
 HC_INFO_II: &a/ii &e(id) (damage value)
@@ -116,6 +118,7 @@ HC_BUY_DETAIL: &bBuys 1 of the specified item if no parameters are given, an amo
 HC_HB_DETAIL: &bBuys 1 of the item you're holding if no parameters are given, an amount of the item, or as many as your inventory can hold if the given parameter is 'max'.
 HC_BUYID_DETAIL: &bBuys an amount of the item with the given id and damage value. (Useful if you don't know the item name.)
 HC_EBUY_DETAIL: &bBuys the given enchantment and puts it on the item you're holding.
+HC_MANAGESHOP_DETAIL: &bManages player created shops.  To select a shop either stand in it or type /ms select [shop].  Once selected you can create shops with /ms create [name], you can set the corners of the shop cuboid with /ms set1 and /ms set2, and you can set the status or price of items in the shop with /ms status [status] or /ms price [price]. Valid statuses are trade, buy, sell, and none. trade = buy or sell, buy = buy only, sell = sell only, none = not tradable.
 HC_VALUE_DETAIL: &bDisplays the value of the given item(s) name.  This value is theoretical and does not factor in item damage.
 HC_HV_DETAIL: &bDisplays the value of the item(s) you're holding. This factors in damage.  However, if you specify more of the item than you have in your inventory, the additional items will use a theoretical value.
 HC_II_DETAIL: &bDisplays information about the item you're holding.  If an id and damage value is specified it returns the name of the item, even if you're not holding it.
@@ -402,3 +405,21 @@ SERVER_STARTING: &dThe web server is starting.
 SERVER_STOPPING: &dThe web server is stopping.
 SERVER_FAILED: &4The web server is failed.
 CANT_USE_ACCOUNT: You cannot play on this server using HyperConomy's global shop account.
+MANAGESHOP_HELP: &cUse /manageshop [select, create, set1, set2, price, or status]
+MANAGESHOP_HELP2: &9You currently have the shop &a%n &9selected.
+NO_SHOP_SELECTED: &9You do not have a shop selected.
+MANAGESHOP_SELECT_HELP: &4Use /manageshop select [shop]
+ONLY_EDIT_OWN_SHOPS: &4You can only edit your own shops.
+MANAGESHOP_CREATE_HELP: &4Use /manageshop create [shop name] (radius)
+SHOP_ALREADY_EXISTS: &4A shop by that name already exists.
+SHOP_SELECTED: &aShop selected!
+CANT_MAKE_SHOP_LARGER_THAN: &4You cannot make a shop with a volume larger than &a%v &4blocks.
+MANAGESHOP_PRICE_HELP: &4Use /manageshop price [object] [price]
+MANAGESHOP_OWNER_HELP: &4Use /manageshop owner [name]
+OWNER_SET: &6Owner set.
+STATUS_SET: &6Status set.
+PRICE_SET: &6Price set.
+ALL_STATUS_SET: &6All statuses set.
+SHOP_CREATED: &6Shop created.
+INVALID_STATUS: &4That is not a valid status.
+MANAGESHOP_STATUS_HELP: &4Use /manageshop status [object] ['trade', 'sell' or 'buy']

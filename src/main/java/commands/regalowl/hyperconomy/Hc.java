@@ -12,6 +12,7 @@ public class Hc {
 				sender.sendMessage(L.get("LINE_BREAK"));
 				sender.sendMessage(L.get("HC_BUY"));
 				sender.sendMessage(L.get("HC_SELL"));
+				sender.sendMessage(L.get("HC_SHOP"));
 				sender.sendMessage(L.get("HC_INFO"));
 				sender.sendMessage(L.get("HC_ECON"));
 				sender.sendMessage(L.get("HC_PARAMS"));
@@ -32,6 +33,10 @@ public class Hc {
 					sender.sendMessage(L.get("HC_BUY_BUYID"));
 					sender.sendMessage(L.get("HC_BUY_EBUY"));
 					sender.sendMessage(L.get("HC_BUY_MORE"));
+					sender.sendMessage(L.get("LINE_BREAK"));
+				} else if (type.equalsIgnoreCase("shop")) {
+					sender.sendMessage(L.get("LINE_BREAK"));
+					sender.sendMessage(L.get("HC_SHOP_MANAGESHOP"));
 					sender.sendMessage(L.get("LINE_BREAK"));
 				} else if (type.equalsIgnoreCase("info")) {
 					sender.sendMessage(L.get("LINE_BREAK"));
@@ -106,6 +111,13 @@ public class Hc {
 						sender.sendMessage(L.get("LINE_BREAK"));
 						sender.sendMessage(L.get("HC_BUY_EBUY"));
 						sender.sendMessage(L.get("HC_EBUY_DETAIL"));
+						sender.sendMessage(L.get("LINE_BREAK"));
+					}
+				} else if (type.equalsIgnoreCase("shop")) {
+					if (subtype.equalsIgnoreCase("manageshop")) {
+						sender.sendMessage(L.get("LINE_BREAK"));
+						sender.sendMessage(L.get("HC_SHOP_MANAGESHOP"));
+						sender.sendMessage(L.get("HC_MANAGESHOP_DETAIL"));
 						sender.sendMessage(L.get("LINE_BREAK"));
 					}
 				} else if (type.equalsIgnoreCase("econ")) {

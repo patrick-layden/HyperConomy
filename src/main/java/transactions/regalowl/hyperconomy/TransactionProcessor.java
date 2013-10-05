@@ -187,7 +187,7 @@ public class TransactionProcessor {
 			} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
 				type = "static";
 			}
-			log.writeSQLLog(hp.getName(), "purchase", name, (double) amount, calc.twoDecimals(price - taxpaid), calc.twoDecimals(taxpaid), playerecon, type);
+			log.writeSQLLog(hp.getName(), "purchase", name, (double) amount, calc.twoDecimals(price - taxpaid), calc.twoDecimals(taxpaid), tradePartner.getName(), type);
 			isign.updateSigns();
 			not.setNotify(name, null, playerecon);
 			not.sendNotification();
@@ -297,7 +297,7 @@ public class TransactionProcessor {
 			} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
 				type = "static";
 			}
-			log.writeSQLLog(hp.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
+			log.writeSQLLog(hp.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), tradePartner.getName(), type);
 			isign.updateSigns();
 			not.setNotify(name, null, playerecon);
 			not.sendNotification();
@@ -419,7 +419,7 @@ public class TransactionProcessor {
 						} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
 							type = "static";
 						}
-						log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, calc.twoDecimals(price), calc.twoDecimals(taxpaid), playerecon, type);
+						log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, calc.twoDecimals(price), calc.twoDecimals(taxpaid), tradePartner.getName(), type);
 						isign.updateSigns();
 						not.setNotify(hyperObject.getName(), null, playerecon);
 						not.sendNotification();
@@ -511,7 +511,7 @@ public class TransactionProcessor {
 							} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
 								type = "static";
 							}
-							log.writeSQLLog(hp.getName(), "sale", hyperObject.getName(), (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), playerecon, type);
+							log.writeSQLLog(hp.getName(), "sale", hyperObject.getName(), (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), tradePartner.getName(), type);
 
 							isign.updateSigns();
 							not.setNotify(hyperObject.getName(), null, playerecon);
@@ -689,7 +689,7 @@ public class TransactionProcessor {
 					} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
 						type = "static";
 					}
-					log.writeSQLLog(p.getName(), "sale", hyperObject.getName(), 1.0, fprice - salestax, salestax, playerecon, type);
+					log.writeSQLLog(p.getName(), "sale", hyperObject.getName(), 1.0, fprice - salestax, salestax, tradePartner.getName(), type);
 
 					isign.updateSigns();
 					not.setNotify(hyperObject.getName(), mater, playerecon);
@@ -771,7 +771,7 @@ public class TransactionProcessor {
 								} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
 									type = "static";
 								}
-								log.writeSQLLog(p.getName(), "purchase", hyperObject.getName(), 1.0, price, taxpaid, playerecon, type);
+								log.writeSQLLog(p.getName(), "purchase", hyperObject.getName(), 1.0, price, taxpaid, tradePartner.getName(), type);
 
 								isign.updateSigns();
 								not.setNotify(hyperObject.getName(), mater, playerecon);

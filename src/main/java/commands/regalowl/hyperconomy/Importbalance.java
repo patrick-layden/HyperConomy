@@ -25,7 +25,7 @@ public class Importbalance {
 					for (String player:players) {
 						if (econ.hasAccount(player)) {
 							em.getHyperPlayer(player).setBalance(econ.getBalance(player));
-							l.writeAuditLog(player, "initialization", econ.getBalance(player), "HyperConomy");
+							l.writeAuditLog(player, "setbalance", econ.getBalance(player), "HyperConomy");
 						}
 					}
 					sender.sendMessage(L.get("PLAYERS_IMPORTED"));

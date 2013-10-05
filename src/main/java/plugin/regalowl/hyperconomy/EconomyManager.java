@@ -324,7 +324,6 @@ public class EconomyManager implements Listener {
 	
 	
 	private void loadData() {
-		hc.getLogger().severe("loadData called,");
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				hyperPlayers.clear();
@@ -332,7 +331,6 @@ public class EconomyManager implements Listener {
 				while (result.next()) {
 					HyperPlayer hplayer = new HyperPlayer(result.getString("PLAYER"), result.getString("ECONOMY"), result.getDouble("BALANCE"), result.getDouble("X"), result.getDouble("Y"), result.getDouble("Z"), result.getString("WORLD"), result.getString("HASH"), result.getString("SALT"));
 					hyperPlayers.put(hplayer.getName(), hplayer);
-					hc.getLogger().severe("load player," + "," + hplayer.getName());
 				}
 				result.close();
 				hc.getServer().getScheduler().runTask(hc, new Runnable() {
@@ -456,7 +454,6 @@ public class EconomyManager implements Listener {
 	
 
 	public HyperPlayer addPlayer(String player) {
-		hc.getLogger().severe("addplayer," + "," + player);
 		player = fixpN(player);
 		if (!hyperPlayers.containsKey(player)) {
 			return hyperPlayers.put(player, new HyperPlayer(player));
@@ -530,7 +527,7 @@ public class EconomyManager implements Listener {
 			if (economy != null) {
 				if (!economy.hasAccount(globalaccount)) {
 					getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
-					l.writeAuditLog(globalaccount, "initialization", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), economy.getName());
+					l.writeAuditLog(globalaccount, "setbalance", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), economy.getName());
 				}
 			} else {
 				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
@@ -541,7 +538,7 @@ public class EconomyManager implements Listener {
 			if (!hasAccount(globalaccount)) {
 				createPlayerAccount(globalaccount);
 				getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
-				l.writeAuditLog(globalaccount, "initialization", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), "HyperConomy");
+				l.writeAuditLog(globalaccount, "setbalance", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), "HyperConomy");
 			}
 		}
 	}
@@ -564,7 +561,6 @@ public class EconomyManager implements Listener {
 	
 	
 	private void loadShops() {
-		hc.getLogger().severe("loadshops called," );
 		stopShopCheck();
 		shops.clear();
 		FileConfiguration sh = hc.gYH().gFC("shops");
@@ -572,7 +568,6 @@ public class EconomyManager implements Listener {
 			Shop shop = new ServerShop("GlobalShop", getGlobalShopAccount().getEconomy(), getGlobalShopAccount());
 			shop.setGlobal();
 			shops.put("GlobalShop", shop);
-			hc.getLogger().severe("add global shop,");
 			return;
 		}
 		Iterator<String> it = sh.getKeys(false).iterator();
@@ -591,7 +586,6 @@ public class EconomyManager implements Listener {
 				shop.setMessage1(sh.getString(name + ".shopmessage1"));
 				shop.setMessage2(sh.getString(name + ".shopmessage2"));
 				shops.put(name, shop);
-				hc.getLogger().severe("add server shop," + "," + name);
 			} else {
 				if (hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {
 					Shop shop = new PlayerShop(name, getHyperPlayer(owner).getEconomy(), getHyperPlayer(owner));
@@ -600,7 +594,6 @@ public class EconomyManager implements Listener {
 					shop.setMessage1(sh.getString(name + ".shopmessage1"));
 					shop.setMessage2(sh.getString(name + ".shopmessage2"));
 					shops.put(name, shop);
-					hc.getLogger().severe("add player shop,"  + "," + name);
 				}
 			}
 
@@ -639,13 +632,11 @@ public class EconomyManager implements Listener {
 		return shops.containsKey(fixShopName(name));
 	}
 	public void addShop(Shop shop) {
-		hc.getLogger().severe("addshop," + "," + shop.getName());
 		shops.put(shop.getName(), shop);
 		hc.getWebHandler().addShop(shop);
 	}
 	public void removeShop(String name) {
 		if (shopExists(name)) {
-			hc.getLogger().severe("removeshop," + "," + name);
 			shops.remove(fixShopName(name));
 		}
 	}
@@ -658,7 +649,6 @@ public class EconomyManager implements Listener {
 		shops.remove(name);
 	}
     public void startShopCheck() {
-		hc.getLogger().severe("startshopcheck,");
 		shopCheckTask = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 		    public void run() {
 				for (Shop shop:shops.values()) {
@@ -668,7 +658,6 @@ public class EconomyManager implements Listener {
 		}, shopinterval, shopinterval);
     }
     public void stopShopCheck() {
-		hc.getLogger().severe("stopshopcheck,");
     	if (shopCheckTask != null) {
     		shopCheckTask.cancel();
     	}

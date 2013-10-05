@@ -77,6 +77,7 @@ public class Copydatabase {
 						sw.executeSQL("DELETE FROM hyperconomy_history");
 						sw.executeSQL("DELETE FROM hyperconomy_log");
 						sw.executeSQL("DELETE FROM hyperconomy_settings");
+						sw.executeSQL("DELETE FROM hyperconomy_shop_objects");
 						for (HyperObject ho : em.getHyperObjects()) {
 							sw.executeSQL("INSERT INTO hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','" + ho.getDurability() + "','" + ho.getValue() + "','" + ho.getIsstatic() + "','"
 									+ ho.getStaticprice() + "','" + ho.getStock() + "','" + ho.getMedian() + "','" + ho.getInitiation() + "','" + ho.getStartprice() + "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
@@ -94,6 +95,16 @@ public class Copydatabase {
 							sw.executeSQL("INSERT INTO hyperconomy_log (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE) VALUES ('" + result.getString("TIME") + "','" + result.getString("CUSTOMER") + "','" + result.getString("ACTION") + "','" + result.getString("OBJECT") + "','" + result.getDouble("AMOUNT") + "','" + result.getDouble("MONEY") + "','" + result.getDouble("TAX") + "','" + result.getString("STORE") + "','" + result.getString("TYPE") + "')");
 						}
 						result.close();
+						result = sr.aSyncSelect("SELECT * FROM hyperconomy_settings");
+						while (result.next()) {
+							sw.executeSQL("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('" + result.getString("SETTING") + "','" + result.getString("VALUE") + "','" + result.getString("TIME") + "')");
+						}
+						result.close();
+						result = sr.aSyncSelect("SELECT * FROM hyperconomy_shop_objects");
+						while (result.next()) {
+							sw.executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+result.getString("SHOP")+"', '"+result.getString("HYPEROBJECT")+"', '"+result.getDouble("QUANTITY")+"', '"+result.getDouble("PRICE")+"', '"+result.getString("STATUS")+"')");
+						}
+						result.close();
 						if (includeHistory) {
 							result = sr.aSyncSelect("SELECT * FROM hyperconomy_history");
 							while (result.next()) {
@@ -101,11 +112,6 @@ public class Copydatabase {
 							}
 							result.close();
 						}
-						result = sr.aSyncSelect("SELECT * FROM hyperconomy_settings");
-						while (result.next()) {
-							sw.executeSQL("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('" + result.getString("SETTING") + "','" + result.getString("VALUE") + "','" + result.getString("TIME") + "')");
-						}
-						result.close();
 						waitForFinish();
 						hc.getServer().getScheduler().runTask(hc, new Runnable() {
 							public void run() {

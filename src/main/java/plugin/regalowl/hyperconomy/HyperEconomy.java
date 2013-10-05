@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.configuration.file.FileConfiguration;
+
+
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
@@ -79,6 +81,32 @@ public class HyperEconomy {
 			compositeKeys.add(it.next().toString());
 		}
 	}
+	
+	
+	/* Code to display recipes from bukkit.  Doesn't include potions.
+		Iterator<Recipe> iter = hc.getServer().recipeIterator();
+		while (iter.hasNext()) {
+		  Recipe recipe = iter.next();
+		  if (recipe instanceof ShapedRecipe) {
+			  ShapedRecipe sr = (ShapedRecipe)recipe;
+			  ItemStack result = sr.getResult();
+			  hc.getLogger().severe("Result: [" + result.getType().toString() + "," + result.getAmount() + "]");
+
+			  for (Map.Entry<Character,ItemStack> entry : sr.getIngredientMap().entrySet()) {
+				  Character ch = entry.getKey();
+				  ItemStack stack = entry.getValue();
+				  hc.getLogger().severe("Char: [" + ch + "] Stack: [" + stack.getType().toString() + "," + stack.getAmount() + "]");
+			  }
+		  } else if (recipe instanceof ShapelessRecipe) {
+			  ShapelessRecipe sr = (ShapelessRecipe)recipe;
+			  ItemStack result = sr.getResult();
+			  hc.getLogger().severe("Result: [" + result.getType().toString() + "," + result.getAmount() + "]");
+			  for (ItemStack stack:sr.getIngredientList()) {
+				  hc.getLogger().severe("Stack: [" + stack.getType().toString() + "," + stack.getAmount() + "]");
+			  }
+		  }
+		}
+	 */
 	
 	private void loadComposites() {
 		if (!useComposites) {
