@@ -45,7 +45,6 @@ public class HyperEconomy {
 	}
 
 	private void load() {
-		hc.getLogger().severe("load called," + economy);
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				hyperObjects.clear();
@@ -347,8 +346,7 @@ public class HyperEconomy {
 		ArrayList<String> keys = getObjectKeys();
 		while (it.hasNext()) {
 			String itemname = it.next().toString();
-			String key = itemname + ":" + economy;
-			if (!keys.contains(key)) {
+			if (!keys.contains(itemname)) {
 				objectsAdded.add(itemname);
 				if (!itemname.equalsIgnoreCase("xp")) {
 					statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + itemname + "','" + economy + "','" + "item" + "','" + "unknown" + "','" + itemsyaml.getString(itemname + ".information.material") + "','" + itemsyaml.getInt(itemname + ".information.id") + "','" + itemsyaml.getInt(itemname + ".information.data") + "','"
@@ -364,8 +362,7 @@ public class HyperEconomy {
 		Iterator<String> it2 = enchantsyaml.getKeys(false).iterator();
 		while (it2.hasNext()) {
 			String ename = it2.next().toString();
-			String key = ename + ":" + economy;
-			if (!keys.contains(key)) {
+			if (!keys.contains(ename)) {
 				objectsAdded.add(ename);
 				statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR)" + " Values ('" + ename + "','" + economy + "','" + "enchantment" + "','" + "unknown" + "','" + enchantsyaml.getString(ename + ".information.name") + "','" + enchantsyaml.getInt(ename + ".information.id") + "','" + "-2" + "','" + "-2" + "','" + enchantsyaml.getDouble(ename + ".value") + "','"
 						+ enchantsyaml.getString(ename + ".price.static") + "','" + enchantsyaml.getDouble(ename + ".price.staticprice") + "','" + enchantsyaml.getDouble(ename + ".stock.stock") + "','" + enchantsyaml.getDouble(ename + ".stock.median") + "','" + enchantsyaml.getString(ename + ".initiation.initiation") + "','" + enchantsyaml.getDouble(ename + ".initiation.startprice") + "','" + enchantsyaml.getDouble(ename + ".price.ceiling") + "','" + enchantsyaml.getDouble(ename + ".price.floor")

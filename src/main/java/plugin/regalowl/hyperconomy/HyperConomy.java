@@ -41,9 +41,7 @@ public class HyperConomy extends JavaPlugin {
 	private SQLRead sr;
 	private WebHandler wh;
 	private ChestShop cs;
-	private boolean playerLock;
-	private boolean fullLock;
-	private boolean loadLock;
+	private HyperLock hl;
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
 	private Economy economy;
@@ -78,13 +76,15 @@ public class HyperConomy extends JavaPlugin {
 			wh.endServer();
 			wh.startServer();
 		}
+		isign = new InfoSignHandler();
 		isign.updateSigns();
 		enabled = true;
-		loadLock = false;
+		hl.setLoadLock(false);
 	}
 
 
 	public void initialize() {
+		enabled = false;
 		db = new DataBukkit(this);
 		yh = db.getYamlHandler();
 		yh.copyFromJar("categories");
@@ -101,13 +101,10 @@ public class HyperConomy extends JavaPlugin {
 		yh.registerFileConfiguration("shops");
 		yh.registerFileConfiguration("signs");
 		yh.setSaveInterval(yh.gFC("config").getLong("config.saveinterval"));
-		loadLock = true;
-		enabled = false;
 		HandlerList.unregisterAll(this);
 		hc = this;
-		playerLock = false;
-		fullLock = false;
 		L = new LanguageFile();
+		hl = new HyperLock(true, false, false);
 		hs = new HyperSettings();
 		em = new EconomyManager();
 		FileConfiguration config = yh.gFC("config");
@@ -130,7 +127,6 @@ public class HyperConomy extends JavaPlugin {
 		sal = new SerializeArrayList();
 		commandhandler = new _Command();
 		not = new Notification();
-		isign = new InfoSignHandler();
 		new TransactionSign();
 		hs.startSave();
 		cs = new ChestShop();
@@ -156,6 +152,7 @@ public class HyperConomy extends JavaPlugin {
 		}
 		if (db != null) {
 			db.shutDown();
+			db = null;
 		}
 		getServer().getScheduler().cancelTasks(this);
 		if (em != null) {
@@ -178,20 +175,20 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (loadLock) {
-			sender.sendMessage(L.get("HYPERCONOMY_LOADING"));
+		if (hl.loadLock()) {
+			hl.sendLockMessage(sender);
 			return true;
 		}
 		try {
-			if (cmd.getName().equalsIgnoreCase("lockshop") && !fullLock) {
+			if (cmd.getName().equalsIgnoreCase("lockshop") && !hl.fullLock()) {
 				try {
 					if (args.length == 0) {
-						if (playerLock) {
-							playerLock = false;
+						if (hl.playerLock()) {
+							hl.setPlayerLock(false);
 							sender.sendMessage(L.get("SHOP_UNLOCKED"));
 							return true;
-						} else if (!playerLock) {
-							playerLock = true;
+						} else if (!hl.playerLock()) {
+							hl.setPlayerLock(true);
 							sender.sendMessage(L.get("SHOP_LOCKED"));
 							return true;
 						} else {
@@ -207,29 +204,29 @@ public class HyperConomy extends JavaPlugin {
 					return true;
 				}
 			} else if (cmd.getName().equalsIgnoreCase("hc")) {
-				if ((args.length == 0 && !fullLock && !playerLock) || (args.length >= 1 && !args[0].equalsIgnoreCase("enable") && !args[0].equalsIgnoreCase("disable") && !playerLock && !fullLock)) {
+				if ((args.length == 0 && !hl.isLocked(sender)) || (args.length >= 1 && !args[0].equalsIgnoreCase("enable") && !args[0].equalsIgnoreCase("disable") && !hl.isLocked(sender))) {
 					new Hc(sender, args);
 					return true;
 				} else {
 					if (sender.hasPermission("hyperconomy.admin")) {
-						if (args.length == 1 && args[0].equalsIgnoreCase("enable") && fullLock) {
+						if (args.length == 1 && args[0].equalsIgnoreCase("enable") && hl.fullLock()) {
 							initialize();
 							sender.sendMessage(L.get("HC_HYPERCONOMY_ENABLED"));
 							sender.sendMessage(L.get("FILES_RELOADED"));
 							sender.sendMessage(L.get("SHOP_UNLOCKED"));
 							return true;
-						} else if (args.length == 1 && args[0].equalsIgnoreCase("disable") && !fullLock) {
+						} else if (args.length == 1 && args[0].equalsIgnoreCase("disable") && !hl.fullLock()) {
 							sender.sendMessage(L.get("HC_HYPERCONOMY_DISABLED"));
 							sender.sendMessage(L.get("SHOP_LOCKED"));
-							playerLock = true;
-							fullLock = true;
+							hl.setPlayerLock(true);
+							hl.setFullLock(true);
 							shutDown(true);
 							return true;
 						}
 					}
 				}
 			}
-			if ((!playerLock || sender.hasPermission("hyperconomy.admin")) && !fullLock) {
+			if ((!hl.isLocked(sender))) {
 				boolean result = commandhandler.handleCommand(sender, cmd, label, args);
 				return result;
 			} else {
@@ -253,20 +250,11 @@ public class HyperConomy extends JavaPlugin {
 		return (economy != null);
 	}
 
-	public boolean isLocked() {
-		return playerLock;
-	}
 
-	public void loadLock(boolean lockState) {
-		loadLock = lockState;
-	}
 
-	public boolean fullLock() {
-		return fullLock;
-	}
 	
-	public boolean loadLock() {
-		return loadLock;
+	public HyperLock getHyperLock() {
+		return hl;
 	}
 
 	public YamlHandler getYamlHandler() {

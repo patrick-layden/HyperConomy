@@ -15,6 +15,7 @@ public class Backup {
 		backupFiles.add("shops.yml");
 		backupFiles.add("signs.yml");
 		backupFiles.add("categories.yml");
+		backupFiles.add("composites.yml");
 		backupFiles.add("HyperConomy.db");
 		backupFiles.add("errors.log");
 		String spath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";

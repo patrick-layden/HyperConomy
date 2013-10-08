@@ -121,7 +121,7 @@ public class InfoSignHandler implements Listener {
 	}
 
 	public void updateSigns() {
-		if (hc.fullLock() || !hc.enabled()) {
+		if (hc.getHyperLock().fullLock() || !hc.enabled()) {
 			return;
 		}
 		signUpdateActive = true;

@@ -398,9 +398,10 @@ public class ChestShop implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onInventoryClickEvent(InventoryClickEvent icevent) {
 		try {
-			if (hc.isLocked() || hc.loadLock()) {
+			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
+			if (hc.getHyperLock().isLocked(p)) {
 				if (isChestShop(icevent.getInventory().getHolder())) {
-					Bukkit.getPlayer(icevent.getWhoClicked().getName()).sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+					hc.getHyperLock().sendLockMessage(p);
 					icevent.setCancelled(true);
 				}
 				return;
@@ -456,8 +457,6 @@ public class ChestShop implements Listener {
 				}
 			}
 			if (icevent.isShiftClick()) {
-
-				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 				HyperPlayer hp = em.getHyperPlayer(p.getName());
 				HyperEconomy he = em.getEconomy(hp.getEconomy());
 				if (im.hasenchants(icevent.getCurrentItem())) {
@@ -542,7 +541,6 @@ public class ChestShop implements Listener {
 				return;
 
 			} else if (icevent.isLeftClick()) {
-				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 				HyperPlayer hp = em.getHyperPlayer(p.getName());
 				HyperEconomy he = em.getEconomy(hp.getEconomy());
 				if (!im.hasenchants(icevent.getCurrentItem())) {
@@ -620,7 +618,6 @@ public class ChestShop implements Listener {
 				icevent.setCancelled(true);
 				return;
 			} else if (icevent.isRightClick()) {
-				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 				HyperPlayer hp = em.getHyperPlayer(p.getName());
 				HyperEconomy he = em.getEconomy(hp.getEconomy());
 				if (!im.hasenchants(icevent.getCurrentItem())) {

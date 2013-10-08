@@ -231,7 +231,11 @@ public class Update {
 	    	String t58 = yh.gFC("config").getString("config.use-composite-items");
 	    	if (t58 == null) {
 	    		yh.gFC("config").set("config.use-composite-items", true);
-	    	}	  
+	    	}
+	    	
+	    	if (!yh.gFC("config").isSet("config.max-shops-per-player")) {
+	    		yh.gFC("config").set("config.max-shops-per-player", 2);
+	    	}	
 
 	    	yh.gFC("config").set("config.sql-connection.max-sql-threads", null);
 	    	yh.gFC("config").set("config.log-sqlwrite-errors", null);

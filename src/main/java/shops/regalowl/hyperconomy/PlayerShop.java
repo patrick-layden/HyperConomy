@@ -313,8 +313,18 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		return available;
 	}
 	
+	public boolean isEmpty() {
+		for (PlayerShopObject pso:shopContents) {
+			if (pso.getStock() > 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public void deleteShop() {
 		hc.getSQLWrite().executeSQL("DELETE FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"'");
+		shopContents.clear();
 		shopFile.set(name, null);
 		em.removeShop(name);
 	}

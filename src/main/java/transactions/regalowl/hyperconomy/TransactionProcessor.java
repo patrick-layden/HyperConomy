@@ -143,8 +143,11 @@ public class TransactionProcessor {
 			if (receiveInventory == null) {
 				receiveInventory = hp.getPlayer().getInventory();
 			}
-			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.SELL) {
-				response.addFailed(L.f(L.get("CANT_BE_TRADED"), name), hyperObject);
+			if (status == HyperObjectStatus.NONE) {
+				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				return response;
+			} else if (status == HyperObjectStatus.SELL) {
+				response.addFailed(L.f(L.get("SELL_ONLY_ITEM"), hyperObject.getName()), hyperObject);
 				return response;
 			}
 			if (amount == 0) {
@@ -227,8 +230,11 @@ public class TransactionProcessor {
 			if (giveInventory == null) {
 				giveInventory = hp.getPlayer().getInventory();
 			}
-			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.BUY) {
-				response.addFailed(L.f(L.get("CANT_BE_TRADED"), name), hyperObject);
+			if (status == HyperObjectStatus.NONE) {
+				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				return response;
+			} else if (status == HyperObjectStatus.BUY) {
+				response.addFailed(L.f(L.get("BUY_ONLY_ITEM"), hyperObject.getName()), hyperObject);
 				return response;
 			}
 			if (amount <= 0) {
@@ -386,8 +392,11 @@ public class TransactionProcessor {
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = hp.getEconomy();
-			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.SELL) {
-				response.addFailed(L.f(L.get("CANT_BE_TRADED"), hyperObject.getName()), hyperObject);
+			if (status == HyperObjectStatus.NONE) {
+				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				return response;
+			} else if (status == HyperObjectStatus.SELL) {
+				response.addFailed(L.f(L.get("SELL_ONLY_ITEM"), hyperObject.getName()), hyperObject);
 				return response;
 			}
 			if (amount > 0) {
@@ -460,8 +469,11 @@ public class TransactionProcessor {
 			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
 			String playerecon = hp.getEconomy();
-			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.BUY) {
-				response.addFailed(L.f(L.get("CANT_BE_TRADED"), hyperObject.getName()), hyperObject);
+			if (status == HyperObjectStatus.NONE) {
+				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				return response;
+			} else if (status == HyperObjectStatus.BUY) {
+				response.addFailed(L.f(L.get("BUY_ONLY_ITEM"), hyperObject.getName()), hyperObject);
 				return response;
 			}
 			if (amount > 0) {
@@ -658,8 +670,11 @@ public class TransactionProcessor {
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int lvl = Integer.parseInt(hyperObject.getName().substring(hyperObject.getName().length() - 1, hyperObject.getName().length()));
 			int truelvl = im.getEnchantmentLevel(p.getItemInHand(), ench);
-			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.BUY) {
-				response.addFailed(L.f(L.get("CANT_BE_TRADED"), hyperObject.getName()), hyperObject);
+			if (status == HyperObjectStatus.NONE) {
+				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				return response;
+			} else if (status == HyperObjectStatus.BUY) {
+				response.addFailed(L.f(L.get("BUY_ONLY_ITEM"), hyperObject.getName()), hyperObject);
 				return response;
 			}
 			if (im.containsEnchantment(p.getItemInHand(), ench) && lvl == truelvl) {
@@ -732,8 +747,11 @@ public class TransactionProcessor {
 			Enchantment ench = Enchantment.getByName(nenchant);
 			int shopstock = 0;
 			shopstock = (int) hyperObject.getStock();
-			if (status == HyperObjectStatus.NONE || status == HyperObjectStatus.SELL) {
-				response.addFailed(L.f(L.get("CANT_BE_TRADED"), hyperObject.getName()), hyperObject);
+			if (status == HyperObjectStatus.NONE) {
+				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				return response;
+			} else if (status == HyperObjectStatus.SELL) {
+				response.addFailed(L.f(L.get("SELL_ONLY_ITEM"), hyperObject.getName()), hyperObject);
 				return response;
 			}
 			if (shopstock >= 1) {

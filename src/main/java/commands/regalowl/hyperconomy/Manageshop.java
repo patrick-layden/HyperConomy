@@ -18,12 +18,16 @@ public class Manageshop implements CommandExecutor {
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
+		if (hc.getHyperLock().isLocked(sender)) {
+			hc.getHyperLock().sendLockMessage(sender);;
+			return true;
+		}
 		if (!hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {
 			return true;
 		}
 		int maxVolume = hc.gYH().gFC("config").getInt("config.max-player-shop-volume");
 		EconomyManager em = hc.getEconomyManager();
-		LanguageFile L = hc.getLanguageFile();
 		Player player = null;
 		if (sender instanceof Player) {
 			player = (Player)sender;
@@ -77,6 +81,11 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("SHOP_ALREADY_EXISTS"));
 				return true;
 			}
+			int maxShops = hc.gYH().gFC("config").getInt("config.max-shops-per-player");
+			if (em.getShops(hp).size() > maxShops && !player.hasPermission("hyperconomy.admin")) {
+				player.sendMessage(L.f(L.get("SHOP_LIMIT_REACHED"), maxShops));
+				return true;
+			}
 			String name = args[1];
 			int radius = 2;
 			if (args.length > 2) {
@@ -102,6 +111,29 @@ public class Manageshop implements CommandExecutor {
 			}
 			em.addShop(newShop);
 			player.sendMessage(L.get("SHOP_CREATED"));
+		} else if (args[0].equalsIgnoreCase("delete")) {
+			if (cps == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			if (cps.isEmpty()) {
+				cps.deleteShop();
+				currentShop.remove(hp);
+				player.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), cps.getName()));
+				return true;
+			} else {
+				if (args.length >= 2 && args[1].equalsIgnoreCase("confirm")) {
+					cps.deleteShop();
+					currentShop.remove(hp);
+					player.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), cps.getName()));
+					return true;
+				} else {
+					player.sendMessage(L.get("MANAGESHOP_DELETE_CONFIRM"));
+					return true;
+				}
+			}
+			
+			
 		} else if (args[0].equalsIgnoreCase("set1")) {
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));

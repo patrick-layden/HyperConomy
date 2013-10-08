@@ -16,6 +16,10 @@ public class Addcategory implements CommandExecutor {
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
+		if (hc.getHyperLock().isLocked(sender)) {
+			hc.getHyperLock().sendLockMessage(sender);;
+			return true;
+		}
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		SerializeArrayList sal = new SerializeArrayList();

@@ -83,7 +83,7 @@ public class InfoSign {
 			hc = HyperConomy.hc;
 			HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 			L = hc.getLanguageFile();
-			if (signKey == null || type == null || objectName == null) {
+			if (signKey == null || type == null || objectName == null || he == null) {
 				hc.gDB().writeError("DEBUG: infosign initialization null: " + signKey + ", " + objectName + ", " + economy);
 				return false;
 			}
@@ -208,6 +208,10 @@ public class InfoSign {
 				case STOCK:
 					line3 = ChatColor.WHITE + "Stock:";
 					line4 = ChatColor.GREEN + "" + calc.twoDecimals(ho.getStock());
+					break;
+				case TOTALSTOCK:
+					line3 = ChatColor.WHITE + "Total Stock:";
+					line4 = ChatColor.GREEN + "" + calc.twoDecimals(ho.getTotalStock());
 					break;
 				case VALUE:
 					line3 = ChatColor.WHITE + "Value:";

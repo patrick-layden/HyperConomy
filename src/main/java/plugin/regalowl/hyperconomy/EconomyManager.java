@@ -138,7 +138,7 @@ public class EconomyManager implements Listener {
 					}
 				}
 				if (loaded) {
-					hc.loadLock(false);
+					hc.getHyperLock().setLoadLock(false);
 					economiesLoaded = true;
 					wait.cancel();
 					hc.onDataLoad();
@@ -680,6 +680,15 @@ public class EconomyManager implements Listener {
 		ArrayList<Shop> shopList = new ArrayList<Shop>();
 		for (Shop shop:shops.values()) {
 			shopList.add(shop);
+		}
+		return shopList;
+	}
+	public ArrayList<Shop> getShops(HyperPlayer hp) {
+		ArrayList<Shop> shopList = new ArrayList<Shop>();
+		for (Shop shop:shops.values()) {
+			if (shop.getOwner().equals(hp)) {
+				shopList.add(shop);
+			}
 		}
 		return shopList;
 	}

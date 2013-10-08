@@ -58,7 +58,7 @@ public class MainPage extends HttpServlet {
     private String buildPage() {
 		
 		String page = "";
-		if (!hc.fullLock() && hc.enabled()) {
+		if (!hc.getHyperLock().fullLock() && hc.enabled()) {
 			ArrayList<Shop> shops = hc.getEconomyManager().getShops();
 
 			Collections.sort(shops);

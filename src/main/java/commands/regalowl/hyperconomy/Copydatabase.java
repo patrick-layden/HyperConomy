@@ -70,7 +70,7 @@ public class Copydatabase {
 					public void run() {
 						EconomyManager em = hc.getEconomyManager();
 						SQLRead sr = hc.getSQLRead();
-						hc.loadLock(true);
+						hc.getHyperLock().setLoadLock(true);
 						sw.executeSQL("DELETE FROM hyperconomy_objects");
 						sw.executeSQL("DELETE FROM hyperconomy_players");
 						sw.executeSQL("DELETE FROM hyperconomy_audit_log");
@@ -127,7 +127,7 @@ public class Copydatabase {
 			return;
 		} catch (Exception e) {
 			sender.sendMessage(L.get("COPYDATABASE_INVALID"));
-			hc.loadLock(false);
+			hc.getHyperLock().setLoadLock(false);
 			return;
 		}
 	}
@@ -149,7 +149,7 @@ public class Copydatabase {
 		    		}
 		    	});
     			if (sw == null || !sw.writeActive()) {
-    				hc.loadLock(false);
+    				hc.getHyperLock().setLoadLock(false);
     				hc.getServer().getScheduler().runTask(hc, new Runnable() {
     		    		public void run() {
     		    			if (hc.s().gB("sql-connection.use-mysql")) {

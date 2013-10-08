@@ -199,7 +199,7 @@ public class TransactionSign implements Listener {
 										}
 										if (!requireShop || hp.hasBuyPermission(em.getShop(p))) {
 											HyperObject ho = he.getHyperObject(line12);
-											if (!hc.isLocked()) {
+											if (!hc.getHyperLock().isLocked(p)) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 												pt.setAmount(amount);
 												pt.setHyperObject(ho);
@@ -244,7 +244,7 @@ public class TransactionSign implements Listener {
 												return;
 											}
 											HyperObject ho = he.getHyperObject(line12);
-											if (!hc.isLocked()) {
+											if (!hc.getHyperLock().isLocked(p)) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 												pt.setAmount(amount);
 												pt.setHyperObject(ho);

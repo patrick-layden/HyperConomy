@@ -38,6 +38,7 @@ config:
   block-player-with-same-name-as-global-shop-account: true
   max-player-shop-volume: 1000
   use-player-shops: true
+  max-shops-per-player: 2
   use-composite-items: true
   dynamic-tax:
     use-dynamic-tax: false

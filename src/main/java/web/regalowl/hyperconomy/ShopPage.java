@@ -58,7 +58,7 @@ public class ShopPage extends HttpServlet {
 	private String buildPage(String economy) {
 		try {
 			String page = "";
-			if (!hc.fullLock() && hc.enabled()) {
+			if (!hc.getHyperLock().fullLock() && hc.enabled()) {
 				if (s == null) {
 					return "";
 				}
