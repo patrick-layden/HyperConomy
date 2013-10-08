@@ -459,6 +459,7 @@ public class ChestShop implements Listener {
 					setprice = false;
 				}
 			}
+                        double chestprice = staticprice;
 			if (icevent.isShiftClick()) {
 
 				Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
@@ -626,6 +627,13 @@ public class ChestShop implements Listener {
 				HyperPlayer hp = dh.getHyperPlayer(p);
 				if (!im.hasenchants(icevent.getCurrentItem())) {
 					HyperObject ho = dh.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()), hp.getEconomy());
+                                        if (ho == null && setprice) {
+                                        ho = new HyperObject("ChestShopItem",
+                                                "null", "item", "ChestShopItem",
+                                                "ChestShopItem", icevent.getCurrentItem().getTypeId(),
+                                                im.getDamageValue(icevent.getCurrentItem()), 0, chestprice, "false",
+                                                0, 0, 0, "false", 0, 0, 0, 0);
+                                        }
 
 					if (slot < 27 && ho != null) {
 						if (buy) {
