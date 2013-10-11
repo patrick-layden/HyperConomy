@@ -24,6 +24,7 @@ public class Manageshop implements CommandExecutor {
 			return true;
 		}
 		if (!hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {
+			sender.sendMessage(L.get("PLAYERSHOPS_DISABLED"));
 			return true;
 		}
 		int maxVolume = hc.gYH().gFC("config").getInt("config.max-player-shop-volume");

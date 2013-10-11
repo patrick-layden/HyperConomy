@@ -429,3 +429,4 @@ MANAGESHOP_STATUS_HELP: &4Use /manageshop status [object] ['trade', 'sell' or 'b
 SELL_ONLY_ITEM: &cOnly sales are allowed for this object.
 BUY_ONLY_ITEM: &cOnly purchases are allowed for this object.
 NO_TRADE_ITEM: &cThis object cannot currently be bought or sold.
+PLAYERSHOPS_DISABLED: &cSorry, player shops are currently disabled.
