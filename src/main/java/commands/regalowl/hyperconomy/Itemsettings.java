@@ -41,6 +41,14 @@ public class Itemsettings {
 					maxinitialitems = (int) (roundedtotalstock - sto);
 					double ceiling = ho.getCeiling();
 					double floor = ho.getFloor();
+					String objectType = "";
+					if (ho instanceof ComponentObject) {
+						objectType = "component";
+					} else if (ho instanceof CompositeObject) {
+						objectType = "composite";
+					} else {
+						objectType = "other";
+					}
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.f(L.get("SETTINGS_NAME"), nam));
 					sender.sendMessage(L.f(L.get("SETTINGS_VALUE"), val));
@@ -52,6 +60,7 @@ public class Itemsettings {
 					sender.sendMessage(L.f(L.get("SETTINGS_CEILING"), ceiling));
 					sender.sendMessage(L.f(L.get("SETTINGS_FLOOR"), floor));
 					sender.sendMessage(L.f(L.get("SETTINGS_REACH_HYPERBOLIC"), maxinitialitems));
+					sender.sendMessage(L.f(L.get("SETTINGS_TYPE"), objectType));
     				sender.sendMessage(L.get("LINE_BREAK"));
 				}
 			} else if (args.length == 1) {
@@ -80,6 +89,14 @@ public class Itemsettings {
 					maxinitialitems = (int) (roundedtotalstock - sto);
 					double ceiling = ho.getCeiling();
 					double floor = ho.getFloor();
+					String objectType = "";
+					if (ho instanceof ComponentObject) {
+						objectType = "component";
+					} else if (ho instanceof CompositeObject) {
+						objectType = "composite";
+					} else {
+						objectType = "other";
+					}
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.f(L.get("SETTINGS_NAME"), nam));
 					sender.sendMessage(L.f(L.get("SETTINGS_VALUE"), val));
@@ -91,6 +108,7 @@ public class Itemsettings {
 					sender.sendMessage(L.f(L.get("SETTINGS_CEILING"), ceiling));
 					sender.sendMessage(L.f(L.get("SETTINGS_FLOOR"), floor));
 					sender.sendMessage(L.f(L.get("SETTINGS_REACH_HYPERBOLIC"), maxinitialitems));
+					sender.sendMessage(L.f(L.get("SETTINGS_TYPE"), objectType));
     				sender.sendMessage(L.get("LINE_BREAK"));
 				} else {
 	    			sender.sendMessage(L.get("INVALID_ITEM_NAME"));

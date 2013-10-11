@@ -213,6 +213,7 @@ SETTINGS_MEDIAN: &9Median stock: &b%v
 SETTINGS_CEILING: &9Ceiling: &b%v
 SETTINGS_FLOOR: &9Floor: &b%v
 SETTINGS_REACH_HYPERBOLIC: &9Items Needed To Reach Hyperbolic Curve: &b%v
+SETTINGS_TYPE: &9Type: &b%n
 EVALUE_INVALID: &4Invalid Parameters. Use /evalue (name) ('b'/'s'/'a')
 EVALUE_STOCK: &9The global shop has &a%a &b%n &9available.
 EVALUE_CLASS_PURCHASE: &b%n &9on a &b%e &9item can be bought for: &a%c%p

@@ -34,8 +34,8 @@ public class HyperEconomy {
 		hc = HyperConomy.hc;	
 		this.economy = economy;
 		sr = hc.getSQLRead();
-		loadCompositeKeys();
 		useComposites = hc.gYH().gFC("config").getBoolean("config.use-composite-items");
+		loadCompositeKeys();
 		load();
 	}
 
@@ -50,7 +50,7 @@ public class HyperEconomy {
 				hyperObjects.clear();
 				QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economy+"'");
 				while (result.next()) {
-					if (useComposites && compositeKeys.contains(result.getString("NAME"))) {continue;}
+					if (useComposites && compositeKeys.contains(result.getString("NAME").toLowerCase())) {continue;}
 					HyperObject hobj = new ComponentObject(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
 							result.getString("CATEGORY"), result.getString("MATERIAL"), result.getInt("ID"), result.getInt("DATA"),
 							result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
@@ -77,7 +77,7 @@ public class HyperEconomy {
 		FileConfiguration composites = hc.gYH().gFC("composites");
 		Iterator<String> it = composites.getKeys(false).iterator();
 		while (it.hasNext()) {
-			compositeKeys.add(it.next().toString());
+			compositeKeys.add(it.next().toString().toLowerCase());
 		}
 	}
 	
@@ -113,7 +113,13 @@ public class HyperEconomy {
 		}
 		boolean loaded = false;
 		FileConfiguration composites = hc.gYH().gFC("composites");
+		int counter = 0;
 		while (!loaded) {
+			counter++;
+			if (counter > 100) {
+				hc.getDataBukkit().writeError("Infinite loop when loading composites.yml.  You likely have an error in your composites.yml file.  Your items will not work properly until this is fixed.");
+				return;
+			}
 			loaded = true;
 			Iterator<String> it = composites.getKeys(false).iterator();
 			while (it.hasNext()) {

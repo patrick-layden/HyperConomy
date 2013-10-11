@@ -1,19 +1,139 @@
-ironblock:
+activatorrail:
   information:
     type: item
     category: unknown
-    material: IRON_BLOCK
-    id: 42
+    material: ACTIVATOR_RAIL
+    id: 157
     data: 0
-  components: ironingot,9;
-paper:
+  components: ironingot,1;redstonetorch,1/6;stick,1/3;
+anvil:
   information:
     type: item
     category: unknown
-    material: PAPER
-    id: 339
+    material: ANVIL
+    id: 145
     data: 0
-  components: sugarcane,1;
+  components: ironblock,3;ironingot,4;
+arrow:
+  information:
+    type: item
+    category: unknown
+    material: ARROW
+    id: 262
+    data: 0
+  components: flint,1/4;stick,1/4;feather,1/4;
+awkwardpotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16
+  components: waterbottle,1;netherwarts,1;
+beacon:
+  information:
+    type: item
+    category: unknown
+    material: BEACON
+    id: 138
+    data: 0
+  components: glass,5;obsidian,3;netherstar,1;
+bed:
+  information:
+    type: item
+    category: unknown
+    material: BED
+    id: 355
+    data: 0
+  components: wool,3;oakwood,3;
+birchwoodslab:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_STEP
+    id: 126
+    data: 2
+  components: birchlog,1/2;
+birchwoodstairs:
+  information:
+    type: item
+    category: unknown
+    material: BIRCH_WOOD_STAIRS
+    id: 135
+    data: 0
+  components: birchlog,3/2;
+blackcarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 15
+  components: blackwool,2/3;
+blackclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 15
+  components: inksac,1/8;hardenedclay,1;
+blackwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 15
+  components: inksac,1;wool,1;
+blazepowder:
+  information:
+    type: item
+    category: unknown
+    material: BLAZE_POWDER
+    id: 377
+    data: 0
+  components: blazerod,1/2;
+bluecarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 11
+  components: bluewool,2/3;
+blueclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 11
+  components: lapislazuli,1/8;hardenedclay,1;
+bluewool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 11
+  components: lapislazuli,1;wool,1;
+boat:
+  information:
+    type: item
+    category: unknown
+    material: BOAT
+    id: 333
+    data: 0
+  components: oakwood,5;
+bonemeal:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 15
+  components: bone,1/3;
 book:
   information:
     type: item
@@ -22,14 +142,14 @@ book:
     id: 340
     data: 0
   components: leather,1;paper,3;
-oakwood:
+bookandquill:
   information:
     type: item
     category: unknown
-    material: WOOD
-    id: 5
+    material: BOOK_AND_QUILL
+    id: 386
     data: 0
-  components: oaklog,1/4;
+  components: book,1;feather,1;inksac,1;
 bookshelf:
   information:
     type: item
@@ -38,22 +158,6 @@ bookshelf:
     id: 47
     data: 0
   components: oakwood,6;book,3;
-lapisblock:
-  information:
-    type: item
-    category: unknown
-    material: LAPIS_BLOCK
-    id: 22
-    data: 0
-  components: lapislazuli,9;
-stick:
-  information:
-    type: item
-    category: unknown
-    material: STICK
-    id: 280
-    data: 0
-  components: oakwood,1/2;
 bow:
   information:
     type: item
@@ -62,6 +166,334 @@ bow:
     id: 261
     data: 0
   components: string,3;stick,3;
+bowl:
+  information:
+    type: item
+    category: unknown
+    material: BOWL
+    id: 281
+    data: 0
+  components: oakwood,3/4;
+bread:
+  information:
+    type: item
+    category: unknown
+    material: BREAD
+    id: 297
+    data: 0
+  components: wheat,3;
+brewingstand:
+  information:
+    type: item
+    category: unknown
+    material: BREWING_STAND_ITEM
+    id: 379
+    data: 0
+  components: cobblestone,3;blazerod,1;
+brickslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 4
+  components: brick,1/2;
+brickstairs:
+  information:
+    type: item
+    category: unknown
+    material: BRICK_STAIRS
+    id: 108
+    data: 0
+  components: brick,3/2;
+browncarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 12
+  components: brownwool,2/3;
+brownclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 12
+  components: cocoabeans,1/8;hardenedclay,1;
+brownwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 12
+  components: cocoabeans,1;wool,1;
+bucket:
+  information:
+    type: item
+    category: unknown
+    material: BUCKET
+    id: 325
+    data: 0
+  components: ironingot,3;
+button:
+  information:
+    type: item
+    category: unknown
+    material: STONE_BUTTON
+    id: 77
+    data: 0
+  components: stone,1;
+carpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 0
+  components: wool,2/3;
+carrotonastick:
+  information:
+    type: item
+    category: unknown
+    material: CARROT_STICK
+    id: 398
+    data: 0
+  components: fishingrod,1;carrot,1;
+cauldron:
+  information:
+    type: item
+    category: unknown
+    material: CAULDRON_ITEM
+    id: 380
+    data: 0
+  components: ironingot,7;
+chest:
+  information:
+    type: item
+    category: unknown
+    material: CHEST
+    id: 54
+    data: 0
+  components: oakwood,8;
+chiseledquartzblock:
+  information:
+    type: item
+    category: unknown
+    material: QUARTZ_BLOCK
+    id: 155
+    data: 1
+  components: quartzslab,2;
+clock:
+  information:
+    type: item
+    category: unknown
+    material: WATCH
+    id: 347
+    data: 0
+  components: goldingot,4;redstone,1;
+coalblock:
+  information:
+    type: item
+    category: unknown
+    material: COAL_BLOCK
+    id: 173
+    data: 0
+  components: coal,9;
+cobblestoneslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 3
+  components: cobblestone,1/2;
+cobblestonestairs:
+  information:
+    type: item
+    category: unknown
+    material: COBBLESTONE_STAIRS
+    id: 67
+    data: 0
+  components: cobblestone,3/2;
+cobblestonewall:
+  information:
+    type: item
+    category: unknown
+    material: COBBLE_WALL
+    id: 139
+    data: 0
+  components: cobblestone,1;
+comparator:
+  information:
+    type: item
+    category: unknown
+    material: REDSTONE_COMPARATOR
+    id: 404
+    data: 0
+  components: redstonetorch,3;stone,3;netherquartz,1;
+compass:
+  information:
+    type: item
+    category: unknown
+    material: COMPASS
+    id: 345
+    data: 0
+  components: ironingot,4;redstone,1;
+cookie:
+  information:
+    type: item
+    category: unknown
+    material: COOKIE
+    id: 357
+    data: 0
+  components: cocoabeans,1/8;wheat,1/4;
+craftingtable:
+  information:
+    type: item
+    category: unknown
+    material: WORKBENCH
+    id: 58
+    data: 0
+  components: oakwood,4;
+cyancarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 9
+  components: cyanwool,2/3;
+cyanclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 9
+  components: cyandye,1/8;hardenedclay,1;
+cyandye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 6
+  components: cactusgreen,1/2;lapislazuli,1/2;
+cyanwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 9
+  components: cyandye,1;wool,1;
+dandelionyellow:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 11
+  components: yellowflower,1/2;
+daylightsensor:
+  information:
+    type: item
+    category: unknown
+    material: DAYLIGHT_DETECTOR
+    id: 151
+    data: 0
+  components: glass,3;netherquartz,3;oakwoodslab,3;
+detectorrail:
+  information:
+    type: item
+    category: unknown
+    material: DETECTOR_RAIL
+    id: 28
+    data: 0
+  components: ironingot,1;stonepressureplate,1/6;redstone,1/6;
+diamondaxe:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_AXE
+    id: 279
+    data: 0
+  components: diamond,3;stick,2;
+diamondblock:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_BLOCK
+    id: 57
+    data: 0
+  components: diamond,9;
+diamondboots:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_BOOTS
+    id: 313
+    data: 0
+  components: diamond,4;
+diamondchestplate:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_CHESTPLATE
+    id: 311
+    data: 0
+  components: diamond,8;
+diamondhelmet:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_HELMET
+    id: 310
+    data: 0
+  components: diamond,5;
+diamondhoe:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_HOE
+    id: 293
+    data: 0
+  components: diamond,2;stick,2;
+diamondleggings:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_LEGGINGS
+    id: 312
+    data: 0
+  components: diamond,7;
+diamondpickaxe:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_PICKAXE
+    id: 278
+    data: 0
+  components: diamond,3;stick,2;
+diamondshovel:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_SPADE
+    id: 277
+    data: 0
+  components: diamond,1;stick,2;
+diamondsword:
+  information:
+    type: item
+    category: unknown
+    material: DIAMOND_SWORD
+    id: 276
+    data: 0
+  components: diamond,2;stick,1;
 dispenser:
   information:
     type: item
@@ -70,30 +502,62 @@ dispenser:
     id: 23
     data: 0
   components: cobblestone,7;redstone,1;bow,1;
-noteblock:
+dropper:
   information:
     type: item
     category: unknown
-    material: NOTE_BLOCK
-    id: 25
+    material: DROPPER
+    id: 158
     data: 0
-  components: oakwood,8;redstone,1;
-piston:
+  components: cobblestone,7;redstone,1;
+emeraldblock:
   information:
     type: item
     category: unknown
-    material: PISTON_BASE
-    id: 33
+    material: EMERALD_BLOCK
+    id: 133
     data: 0
-  components: cobblestone,4;redstone,1;ironingot,1;oakwood,3;
-stickypiston:
+  components: emerald,9;
+emptymap:
   information:
     type: item
     category: unknown
-    material: PISTON_STICKY_BASE
-    id: 29
+    material: EMPTY_MAP
+    id: 395
     data: 0
-  components: piston,1;slimeball,1;
+  components: compass,1;paper,8;
+enchantedapple:
+  information:
+    type: item
+    category: unknown
+    material: GOLDEN_APPLE
+    id: 322
+    data: 1
+  components: goldblock,8;apple,1;
+enchantmenttable:
+  information:
+    type: item
+    category: unknown
+    material: ENCHANTMENT_TABLE
+    id: 116
+    data: 0
+  components: obsidian,8;diamond,2;book,1;
+enderchest:
+  information:
+    type: item
+    category: unknown
+    material: ENDER_CHEST
+    id: 130
+    data: 0
+  components: obsidian,8;eyeofender,1;
+eyeofender:
+  information:
+    type: item
+    category: unknown
+    material: BUCKET
+    id: 381
+    data: 0
+  components: enderpearl,1;blazepowder,1;
 fence:
   information:
     type: item
@@ -102,6 +566,62 @@ fence:
     id: 85
     data: 0
   components: stick,3;
+fermentedspidereye:
+  information:
+    type: item
+    category: unknown
+    material: FERMENTED_SPIDER_EYE
+    id: 376
+    data: 0
+  components: brownmushroom,1;sugar,1;spidereye,1;
+firecharge:
+  information:
+    type: item
+    category: unknown
+    material: FIREBALL
+    id: 385
+    data: 0
+  components: blazepowder,1/3;gunpowder,1/3;coal,1/3;
+fishingrod:
+  information:
+    type: item
+    category: unknown
+    material: FISHING_ROD
+    id: 346
+    data: 0
+  components: stick,3;string,2;
+flintandsteel:
+  information:
+    type: item
+    category: unknown
+    material: FLINT_AND_STEEL
+    id: 259
+    data: 0
+  components: ironingot,1;flint,1;
+flowerpot:
+  information:
+    type: item
+    category: unknown
+    material: FLOWER_POT_ITEM
+    id: 390
+    data: 0
+  components: claybrick,3;
+furnace:
+  information:
+    type: item
+    category: unknown
+    material: FURNACE
+    id: 61
+    data: 0
+  components: cobblestone,8;
+gate:
+  information:
+    type: item
+    category: unknown
+    material: FENCE_GATE
+    id: 107
+    data: 0
+  components: stick,4;oakwood,2;
 glassbottle:
   information:
     type: item
@@ -110,22 +630,1174 @@ glassbottle:
     id: 374
     data: 0
   components: glass,1;
-waterbottle:
+glasspane:
   information:
     type: item
     category: unknown
-    material: POTION
-    id: 373
+    material: THIN_GLASS
+    id: 102
     data: 0
-  components: glassbottle,1;
-awkwardpotion:
+  components: glass,3/8;
+glisteringmelon:
+  information:
+    type: item
+    category: unknown
+    material: SPECKLED_MELON
+    id: 382
+    data: 0
+  components: goldnugget,8;melon,1;
+glowstone:
+  information:
+    type: item
+    category: unknown
+    material: GLOWSTONE
+    id: 89
+    data: 0
+  components: glowstonedust,4;
+goldaxe:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_AXE
+    id: 286
+    data: 0
+  components: goldingot,3;stick,2;
+goldblock:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_BLOCK
+    id: 41
+    data: 0
+  components: goldingot,9;
+goldboots:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_BOOTS
+    id: 317
+    data: 0
+  components: goldingot,4;
+goldchestplate:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_CHESTPLATE
+    id: 315
+    data: 0
+  components: goldingot,8;
+goldenapple:
+  information:
+    type: item
+    category: unknown
+    material: GOLDEN_APPLE
+    id: 322
+    data: 0
+  components: goldingot,8;apple,1;
+goldencarrot:
+  information:
+    type: item
+    category: unknown
+    material: GOLDEN_CARROT
+    id: 396
+    data: 0
+  components: goldnugget,8;carrot,1;
+goldhelmet:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_HELMET
+    id: 314
+    data: 0
+  components: goldingot,5;
+goldhoe:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_HOE
+    id: 294
+    data: 0
+  components: goldingot,2;stick,2;
+goldingot:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_INGOT
+    id: 266
+    data: 0
+  components: goldnugget,9;
+goldleggings:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_LEGGINGS
+    id: 316
+    data: 0
+  components: goldingot,7;
+goldpickaxe:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_PICKAXE
+    id: 285
+    data: 0
+  components: goldingot,3;stick,2;
+goldpressureplate:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_PLATE
+    id: 147
+    data: 0
+  components: goldingot,2;
+goldshovel:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_SPADE
+    id: 284
+    data: 0
+  components: goldingot,1;stick,2;
+goldsword:
+  information:
+    type: item
+    category: unknown
+    material: GOLD_SWORD
+    id: 283
+    data: 0
+  components: goldingot,2;stick,1;
+graycarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 7
+  components: graywool,2/3;
+grayclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 7
+  components: graydye,1/8;hardenedclay,1;
+graydye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 8
+  components: bonemeal,1/2;inksac,1/2;
+graywool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 7
+  components: wool,1;graydye,1;
+greencarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 13
+  components: greenwool,2/3;
+greenclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 13
+  components: cactusgreen,1/8;hardenedclay,1;
+greenwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 13
+  components: cactusgreen,1;wool,1;
+haybale:
+  information:
+    type: item
+    category: unknown
+    material: HAY_BLOCK
+    id: 170
+    data: 0
+  components: wheat,9;
+hieroglyph:
+  information:
+    type: item
+    category: unknown
+    material: SANDSTONE
+    id: 24
+    data: 1
+  components: sandstoneslab,2;
+hopper:
+  information:
+    type: item
+    category: unknown
+    material: HOPPER
+    id: 154
+    data: 0
+  components: chest,1;ironingot,5;
+hugebrownmushroom1:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 1
+  components: hugebrownmushroom0,1;
+hugebrownmushroom10:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 10
+  components: hugebrownmushroom0,1;
+hugebrownmushroom2:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 2
+  components: hugebrownmushroom0,1;
+hugebrownmushroom3:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 3
+  components: hugebrownmushroom0,1;
+hugebrownmushroom4:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 4
+  components: hugebrownmushroom0,1;
+hugebrownmushroom5:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 5
+  components: hugebrownmushroom0,1;
+hugebrownmushroom6:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 6
+  components: hugebrownmushroom0,1;
+hugebrownmushroom7:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 7
+  components: hugebrownmushroom0,1;
+hugebrownmushroom8:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 8
+  components: hugebrownmushroom0,1;
+hugebrownmushroom9:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_1
+    id: 99
+    data: 9
+  components: hugebrownmushroom0,1;
+hugeredmushroom1:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 1
+  components: hugeredmushroom0,1;
+hugeredmushroom10:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 10
+  components: hugeredmushroom0,1;
+hugeredmushroom2:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 2
+  components: hugeredmushroom0,1;
+hugeredmushroom3:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 3
+  components: hugeredmushroom0,1;
+hugeredmushroom4:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 4
+  components: hugeredmushroom0,1;
+hugeredmushroom5:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 5
+  components: hugeredmushroom0,1;
+hugeredmushroom6:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 6
+  components: hugeredmushroom0,1;
+hugeredmushroom7:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 7
+  components: hugeredmushroom0,1;
+hugeredmushroom8:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 8
+  components: hugeredmushroom0,1;
+hugeredmushroom9:
+  information:
+    type: item
+    category: unknown
+    material: HUGE_MUSHROOM_2
+    id: 100
+    data: 9
+  components: hugeredmushroom0,1;
+ironaxe:
+  information:
+    type: item
+    category: unknown
+    material: IRON_AXE
+    id: 258
+    data: 0
+  components: ironingot,3;stick,2;
+ironbars:
+  information:
+    type: item
+    category: unknown
+    material: IRON_FENCE
+    id: 101
+    data: 0
+  components: ironingot,3/8;
+ironblock:
+  information:
+    type: item
+    category: unknown
+    material: IRON_BLOCK
+    id: 42
+    data: 0
+  components: ironingot,9;
+ironboots:
+  information:
+    type: item
+    category: unknown
+    material: IRON_BOOTS
+    id: 309
+    data: 0
+  components: ironingot,4;
+ironchestplate:
+  information:
+    type: item
+    category: unknown
+    material: IRON_CHESTPLATE
+    id: 307
+    data: 0
+  components: ironingot,8;
+irondoor:
+  information:
+    type: item
+    category: unknown
+    material: IRON_DOOR
+    id: 330
+    data: 0
+  components: ironingot,6;
+ironhelmet:
+  information:
+    type: item
+    category: unknown
+    material: IRON_HELMET
+    id: 306
+    data: 0
+  components: ironingot,5;
+ironhoe:
+  information:
+    type: item
+    category: unknown
+    material: IRON_HOE
+    id: 292
+    data: 0
+  components: ironingot,2;stick,2;
+ironleggings:
+  information:
+    type: item
+    category: unknown
+    material: IRON_LEGGINGS
+    id: 308
+    data: 0
+  components: ironingot,7;
+ironpickaxe:
+  information:
+    type: item
+    category: unknown
+    material: IRON_PICKAXE
+    id: 257
+    data: 0
+  components: ironingot,3;stick,2;
+ironpressureplate:
+  information:
+    type: item
+    category: unknown
+    material: IRON_PLATE
+    id: 148
+    data: 0
+  components: ironingot,2;
+ironshovel:
+  information:
+    type: item
+    category: unknown
+    material: IRON_SPADE
+    id: 256
+    data: 0
+  components: ironingot,1;stick,2;
+ironsword:
+  information:
+    type: item
+    category: unknown
+    material: IRON_SWORD
+    id: 267
+    data: 0
+  components: ironingot,2;stick,1;
+itemframe:
+  information:
+    type: item
+    category: unknown
+    material: ITEM_FRAME
+    id: 389
+    data: 0
+  components: leather,1;stick,8;
+jackolantern:
+  information:
+    type: item
+    category: unknown
+    material: JACK_O_LANTERN
+    id: 91
+    data: 0
+  components: pumpkin,1;torch,1;
+jukebox:
+  information:
+    type: item
+    category: unknown
+    material: JUKEBOX
+    id: 84
+    data: 0
+  components: oakwood,8;diamond,1;
+junglewood:
+  information:
+    type: item
+    category: unknown
+    material: WOOD
+    id: 5
+    data: 3
+  components: junglelog,1/4;
+junglewoodslab:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_STEP
+    id: 126
+    data: 3
+  components: junglewood,1/2;
+junglewoodstairs:
+  information:
+    type: item
+    category: unknown
+    material: JUNGLE_WOOD_STAIRS
+    id: 136
+    data: 0
+  components: junglewood,3/2;
+ladder:
+  information:
+    type: item
+    category: unknown
+    material: LADDER
+    id: 65
+    data: 0
+  components: stick,7/3;
+lapisblock:
+  information:
+    type: item
+    category: unknown
+    material: LAPIS_BLOCK
+    id: 22
+    data: 0
+  components: lapislazuli,9;
+lead:
+  information:
+    type: item
+    category: unknown
+    material: LEASH
+    id: 420
+    data: 0
+  components: slimeball,1/2;string,2;
+leatherboots:
+  information:
+    type: item
+    category: unknown
+    material: LEATHER_BOOTS
+    id: 301
+    data: 0
+  components: leather,4;
+leatherchestplate:
+  information:
+    type: item
+    category: unknown
+    material: LEATHER_CHESTPLATE
+    id: 299
+    data: 0
+  components: leather,8;
+leatherhelmet:
+  information:
+    type: item
+    category: unknown
+    material: LEATHER_HELMET
+    id: 298
+    data: 0
+  components: leather,5;
+leatherleggings:
+  information:
+    type: item
+    category: unknown
+    material: LEATHER_LEGGINGS
+    id: 300
+    data: 0
+  components: leather,7;
+lever:
+  information:
+    type: item
+    category: unknown
+    material: LEVER
+    id: 69
+    data: 0
+  components: cobblestone,1;stick,1;
+lightbluecarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 3
+  components: lightbluewool,2/3;
+lightblueclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 3
+  components: hardenedclay,1;lightbluedye,1/8;
+lightbluedye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 12
+  components: bonemeal,1/2;lapislazuli,1/2;
+lightbluewool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 3
+  components: wool,1;lightbluedye,1;
+lightgraycarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 8
+  components: lightgraywool,2/3;
+lightgrayclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 8
+  components: hardenedclay,1;lightgraydye,1/8;
+lightgraydye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 7
+  components: graydye,1/2;bonemeal,1/2;
+lightgraywool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 8
+  components: wool,1;lightgraydye,1;
+limecarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 5
+  components: limewool,2/3;
+limeclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 5
+  components: hardenedclay,1;limedye,1/8;
+limedye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 10
+  components: bonemeal,1/2;cactusgreen,1/2;
+limewool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 5
+  components: limedye,1;wool,1;
+magentacarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 2
+  components: magentawool,2/3;
+magentaclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 2
+  components: hardenedclay,1;magentadye,1/8;
+magentadye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 13
+  components: purpledye,1/2;pinkdye,1/2;
+magentawool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 2
+  components: magentadye,1;wool,1;
+magmacream:
+  information:
+    type: item
+    category: unknown
+    material: MAGMA_CREAM
+    id: 378
+    data: 0
+  components: slimeball,1;blazepowder,1;
+map:
+  information:
+    type: item
+    category: unknown
+    material: MAP
+    id: 358
+    data: 0
+  components: compass,1;paper,8;
+melonblock:
+  information:
+    type: item
+    category: unknown
+    material: MELON_BLOCK
+    id: 103
+    data: 0
+  components: melon,9;
+minecart:
+  information:
+    type: item
+    category: unknown
+    material: MINECART
+    id: 328
+    data: 0
+  components: ironingot,5;
+minecartwithchest:
+  information:
+    type: item
+    category: unknown
+    material: STORAGE_MINECART
+    id: 342
+    data: 0
+  components: chest,1;minecart,1;
+minecartwithfurnace:
+  information:
+    type: item
+    category: unknown
+    material: POWERED_MINECART
+    id: 343
+    data: 0
+  components: minecart,1;furnace,1;
+minecartwithhopper:
+  information:
+    type: item
+    category: unknown
+    material: HOPPER_MINECART
+    id: 408
+    data: 0
+  components: hopper,1;minecart,1;
+minecartwithtnt:
+  information:
+    type: item
+    category: unknown
+    material: EXPLOSIVE_MINECART
+    id: 407
+    data: 0
+  components: tnt,1;minecart,1;
+mossywall:
+  information:
+    type: item
+    category: unknown
+    material: COBBLE_WALL
+    id: 139
+    data: 1
+  components: mossstone,1;
+mundanepotion:
   information:
     type: item
     category: unknown
     material: POTION
     id: 373
-    data: 16
-  components: netherwarts,1;waterbottle,1;
+    data: 8192
+  components: waterbottle,1;
+mundanepotionext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 64
+  components: redstone,1;mundanepotion,1;
+mushroomsoup:
+  information:
+    type: item
+    category: unknown
+    material: MUSHROOM_SOUP
+    id: 282
+    data: 0
+  components: bowl,1;redmushroom,1;brownmushroom,1;
+netherbrick:
+  information:
+    type: item
+    category: unknown
+    material: NETHER_BRICK
+    id: 112
+    data: 0
+  components: singlenetherbrick,4;
+netherbrickslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 6
+  components: netherbrick,1/2;
+netherbrickstairs:
+  information:
+    type: item
+    category: unknown
+    material: NETHER_BRICK_STAIRS
+    id: 114
+    data: 0
+  components: netherbrick,3/2;
+netherfence:
+  information:
+    type: item
+    category: unknown
+    material: NETHER_FENCE
+    id: 113
+    data: 0
+  components: netherbrick,1;
+noteblock:
+  information:
+    type: item
+    category: unknown
+    material: NOTE_BLOCK
+    id: 25
+    data: 0
+  components: oakwood,8;redstone,1;
+oakwood:
+  information:
+    type: item
+    category: unknown
+    material: WOOD
+    id: 5
+    data: 0
+  components: oaklog,1/4;
+oakwoodslab:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_STEP
+    id: 126
+    data: 0
+  components: oakwood,1/2;
+oakwoodstairs:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_STAIRS
+    id: 53
+    data: 0
+  components: oakwood,3/2;
+orangecarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 1
+  components: orangewool,2/3;
+orangeclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 1
+  components: hardenedclay,1;orangedye,1/8;
+orangedye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 14
+  components: rosered,1/2;dandelionyellow,1/2;
+orangewool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 1
+  components: orangedye,1;wool,1;
+painting:
+  information:
+    type: item
+    category: unknown
+    material: PAINTING
+    id: 321
+    data: 0
+  components: wool,1;stick,8;
+paper:
+  information:
+    type: item
+    category: unknown
+    material: PAPER
+    id: 339
+    data: 0
+  components: sugarcane,1;
+pillarquartzblock:
+  information:
+    type: item
+    category: unknown
+    material: QUARTZ_BLOCK
+    id: 155
+    data: 2
+  components: quartzblock,1;
+pinkcarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 6
+  components: pinkwool,2/3;
+pinkclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 6
+  components: pinkdye,1/8;hardenedclay,1;
+pinkdye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 9
+  components: rosered,1/2;bonemeal,1/2;
+pinkwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 6
+  components: wool,1;pinkdye,1;
+piston:
+  information:
+    type: item
+    category: unknown
+    material: PISTON_BASE
+    id: 33
+    data: 0
+  components: oakwood,3;cobblestone,4;ironingot,1;redstone,1;
+potionoffireresist:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 3
+  components: awkwardpotion,1;magmacream,1;
+potionoffireresist2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 35
+  components: glowstonedust,1;potionoffireresist,1;
+potionoffireresist2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 99
+  components: glowstonedust,1;redstone,1;potionoffireresist,1;
+potionoffireresistext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 67
+  components: redstone,1;potionoffireresist,1;
+potionofharming:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 12
+  components: potionofpoison,1;fermentedspidereye,1;
+potionofharming2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 44
+  components: glowstonedust,1;potionofharming,1;
+potionofharming2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 108
+  components: glowstonedust,1;redstone,1;potionofharming,1;
+potionofharmingext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 76
+  components: redstone,1;potionofharming,1;
+potionofhealing:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 5
+  components: awkwardpotion,1;glisteringmelon,1;
+potionofhealing2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 37
+  components: glowstonedust,1;potionofhealing,1;
+potionofhealing2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 101
+  components: glowstonedust,1;redstone,1;potionofhealing,1;
+potionofhealingext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 69
+  components: redstone,1;potionofhealing,1;
+potionofinvisibility:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 14
+  components: potionofnightvision,1;fermentedspidereye,1;
+potionofinvisibility2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 46
+  components: glowstonedust,1;potionofinvisibility,1;
+potionofinvisibility2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 110
+  components: glowstonedust,1;redstone,1;potionofinvisibility,1;
+potionofinvisibilityext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 78
+  components: redstone,1;potionofinvisibility,1;
+potionofnightvision:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 6
+  components: awkwardpotion,1;goldencarrot,1;
+potionofnightvision2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 38
+  components: glowstonedust,1;potionofnightvision,1;
+potionofnightvision2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 102
+  components: glowstonedust,1;redstone,1;potionofnightvision,1;
+potionofnightvisionext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 70
+  components: redstone,1;potionofnightvision,1;
+potionofpoison:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 4
+  components: awkwardpotion,1;spidereye,1;
+potionofpoison2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 36
+  components: glowstonedust,1;potionofpoison,1;
+potionofpoison2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 100
+  components: glowstonedust,1;redstone,1;potionofpoison,1;
+potionofpoisonext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 68
+  components: redstone,1;potionofpoison,1;
 potionofregen:
   information:
     type: item
@@ -142,6 +1814,14 @@ potionofregen2:
     id: 373
     data: 33
   components: glowstonedust,1;potionofregen,1;
+potionofregen2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 97
+  components: glowstonedust,1;redstone,1;potionofregen,1;
 potionofregenext:
   information:
     type: item
@@ -150,14 +1830,542 @@ potionofregenext:
     id: 373
     data: 65
   components: redstone,1;potionofregen,1;
-potionofregen2ext:
+potionofslowness:
   information:
     type: item
     category: unknown
     material: POTION
     id: 373
-    data: 97
-  components: redstone,1;glowstonedust,1;potionofregen,1;
+    data: 10
+  components: potionofspeed,1;fermentedspidereye,1;
+potionofslowness2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 42
+  components: glowstonedust,1;potionofslowness,1;
+potionofslowness2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 106
+  components: glowstonedust,1;redstone,1;potionofslowness,1;
+potionofslownessext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 74
+  components: redstone,1;potionofslowness,1;
+potionofspeed:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 2
+  components: awkwardpotion,1;sugar,1;
+potionofspeed2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 34
+  components: glowstonedust,1;potionofspeed,1;
+potionofspeed2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 98
+  components: glowstonedust,1;redstone,1;potionofspeed,1;
+potionofspeedext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 66
+  components: redstone,1;potionofspeed,1;
+potionofstrength:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 9
+  components: awkwardpotion,1;blazepowder,1;
+potionofstrength2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 41
+  components: glowstonedust,1;potionofstrength,1;
+potionofstrength2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 105
+  components: glowstonedust,1;redstone,1;potionofstrength,1;
+potionofstrengthext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 73
+  components: redstone,1;potionofstrength,1;
+potionofweakness:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 8
+  components: awkwardpotion,1;fermentedspidereye,1;
+potionofweakness2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 40
+  components: glowstonedust,1;potionofweakness,1;
+potionofweakness2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 104
+  components: glowstonedust,1;redstone,1;potionofweakness,1;
+potionofweaknessext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 72
+  components: redstone,1;potionofweakness,1;
+poweredrail:
+  information:
+    type: item
+    category: unknown
+    material: POWERED_RAIL
+    id: 27
+    data: 0
+  components: goldingot,1;stick,1/6;redstone,1/6;
+pumpkinpie:
+  information:
+    type: item
+    category: unknown
+    material: PUMPKIN_PIE
+    id: 400
+    data: 0
+  components: pumpkin,1;sugar,1;egg,1;
+purplecarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 10
+  components: purplewool,2/3;
+purpleclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 10
+  components: hardenedclay,1;purpledye,1/8;
+purpledye:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 5
+  components: lapislazuli,1/2;rosered,1/2;
+purplewool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 10
+  components: wool,1;purpledye,1;
+quartzblock:
+  information:
+    type: item
+    category: unknown
+    material: QUARTZ_BLOCK
+    id: 155
+    data: 0
+  components: netherquartz,4;
+quartzslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 7
+  components: quartzblock,1/2;
+quartzstairs:
+  information:
+    type: item
+    category: unknown
+    material: QUARTZ_STAIRS
+    id: 156
+    data: 0
+  components: quartzblock,3/2;
+rails:
+  information:
+    type: item
+    category: unknown
+    material: RAILS
+    id: 66
+    data: 0
+  components: ironingot,3/8;stick,1/16;
+redcarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 14
+  components: redwool,2/3;
+redclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 14
+  components: hardenedclay,1;rosered,1;
+redstoneblock:
+  information:
+    type: item
+    category: unknown
+    material: REDSTONE_BLOCK
+    id: 152
+    data: 0
+  components: redstone,9;
+redstonelamp:
+  information:
+    type: item
+    category: unknown
+    material: REDSTONE_LAMP_OFF
+    id: 123
+    data: 0
+  components: glowstone,1;redstone,4;
+redstonetorch:
+  information:
+    type: item
+    category: unknown
+    material: REDSTONE_TORCH_ON
+    id: 76
+    data: 0
+  components: redstone,1;stick,1;
+redwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 14
+  components: wool,1;rosered,1;
+repeater:
+  information:
+    type: item
+    category: unknown
+    material: DIODE
+    id: 356
+    data: 0
+  components: redstone,1;redstonetorch,2;stone,3;
+rosered:
+  information:
+    type: item
+    category: unknown
+    material: INK_SACK
+    id: 351
+    data: 1
+  components: redrose,1/2;
+sandstone:
+  information:
+    type: item
+    category: unknown
+    material: SANDSTONE
+    id: 24
+    data: 0
+  components: sand,4;
+sandstoneslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 1
+  components: sandstone,1/2;
+sandstonestairs:
+  information:
+    type: item
+    category: unknown
+    material: SANDSTONE_STAIRS
+    id: 128
+    data: 0
+  components: sandstone,3/2;
+shears:
+  information:
+    type: item
+    category: unknown
+    material: SHEARS
+    id: 359
+    data: 0
+  components: ironingot,2;
+sign:
+  information:
+    type: item
+    category: unknown
+    material: SIGN
+    id: 323
+    data: 0
+  components: oakwood,2;stick,1/3;
+smoothsandstone:
+  information:
+    type: item
+    category: unknown
+    material: SANDSTONE
+    id: 24
+    data: 2
+  components: sandstone,1;
+smundanepotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 24576
+  components: mundanepotion,1;gunpowder,1;
+snow:
+  information:
+    type: item
+    category: unknown
+    material: SNOW
+    id: 78
+    data: 0
+  components: snowblock,1/2;
+snowblock:
+  information:
+    type: item
+    category: unknown
+    material: SNOW_BLOCK
+    id: 80
+    data: 0
+  components: snowball,4;
+spotionoffireresist:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16387
+  components: gunpowder,1;potionoffireresist,1;
+spotionoffireresist2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16419
+  components: gunpowder,1;glowstonedust,1;potionoffireresist,1;
+spotionoffireresist2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16483
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionoffireresist,1;
+spotionoffireresistext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16451
+  components: gunpowder,1;redstone,1;potionoffireresist,1;
+spotionofharming:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16396
+  components: gunpowder,1;potionofharming,1;
+spotionofharming2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16428
+  components: gunpowder,1;glowstonedust,1;potionofharming,1;
+spotionofharming2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16492
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofharming,1;
+spotionofharmingext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16460
+  components: gunpowder,1;redstone,1;potionofharming,1;
+spotionofhealing:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16389
+  components: gunpowder,1;potionofhealing,1;
+spotionofhealing2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16421
+  components: gunpowder,1;glowstonedust,1;potionofhealing,1;
+spotionofhealing2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16485
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofhealing,1;
+spotionofhealingext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16453
+  components: gunpowder,1;redstone,1;potionofhealing,1;
+spotionofinvisibility:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16398
+  components: gunpowder,1;potionofinvisibility,1;
+spotionofinvisibility2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16430
+  components: gunpowder,1;glowstonedust,1;potionofinvisibility,1;
+spotionofinvisibility2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16494
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofinvisibility,1;
+spotionofinvisibilityext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16462
+  components: gunpowder,1;redstone,1;potionofinvisibility,1;
+spotionofnightvision:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16390
+  components: gunpowder,1;potionofnightvision,1;
+spotionofnightvision2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16422
+  components: gunpowder,1;glowstonedust,1;potionofnightvision,1;
+spotionofnightvision2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16486
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofnightvision,1;
+spotionofnightvisionext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16454
+  components: gunpowder,1;redstone,1;potionofnightvision,1;
+spotionofpoison:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16388
+  components: gunpowder,1;potionofpoison,1;
+spotionofpoison2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16420
+  components: gunpowder,1;glowstonedust,1;potionofpoison,1;
+spotionofpoison2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16484
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofpoison,1;
+spotionofpoisonext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16452
+  components: gunpowder,1;redstone,1;potionofpoison,1;
 spotionofregen:
   information:
     type: item
@@ -166,14 +2374,6 @@ spotionofregen:
     id: 373
     data: 16385
   components: gunpowder,1;potionofregen,1;
-spotionofregenext:
-  information:
-    type: item
-    category: unknown
-    material: POTION
-    id: 373
-    data: 16449
-  components: redstone,1;gunpowder,1;potionofregen,1;
 spotionofregen2:
   information:
     type: item
@@ -181,7 +2381,7 @@ spotionofregen2:
     material: POTION
     id: 373
     data: 16417
-  components: glowstonedust,1;gunpowder,1;potionofregen,1;
+  components: gunpowder,1;glowstonedust,1;potionofregen,1;
 spotionofregen2ext:
   information:
     type: item
@@ -189,4 +2389,420 @@ spotionofregen2ext:
     material: POTION
     id: 373
     data: 16481
-  components: glowstonedust,1;gunpowder,1;redstone,1;potionofregen,1;
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofregen,1;
+spotionofregenext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16449
+  components: gunpowder,1;redstone,1;potionofregen,1;
+spotionofslowness:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16394
+  components: gunpowder,1;potionofslowness,1;
+spotionofslowness2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16426
+  components: gunpowder,1;glowstonedust,1;potionofslowness,1;
+spotionofslowness2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16490
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofslowness,1;
+spotionofslownessext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16458
+  components: gunpowder,1;redstone,1;potionofslowness,1;
+spotionofspeed:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16386
+  components: gunpowder,1;potionofspeed,1;
+spotionofspeed2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16418
+  components: gunpowder,1;glowstonedust,1;potionofspeed,1;
+spotionofspeed2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16482
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofspeed,1;
+spotionofspeedext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16450
+  components: gunpowder,1;redstone,1;potionofspeed,1;
+spotionofstrength:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16393
+  components: gunpowder,1;potionofstrength,1;
+spotionofstrength2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16425
+  components: gunpowder,1;glowstonedust,1;potionofstrength,1;
+spotionofstrength2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16489
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofstrength,1;
+spotionofstrengthext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16457
+  components: gunpowder,1;redstone,1;potionofstrength,1;
+spotionofweakness:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16392
+  components: gunpowder,1;potionofweakness,1;
+spotionofweakness2:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16424
+  components: gunpowder,1;glowstonedust,1;potionofweakness,1;
+spotionofweakness2ext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16488
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofweakness,1;
+spotionofweaknessext:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 16456
+  components: gunpowder,1;redstone,1;potionofweakness,1;
+sprucewood:
+  information:
+    type: item
+    category: unknown
+    material: WOOD
+    id: 5
+    data: 1
+  components: sprucelog,1/4;
+sprucewoodslab:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_STEP
+    id: 126
+    data: 1
+  components: sprucewood,1/2;
+sprucewoodstairs:
+  information:
+    type: item
+    category: unknown
+    material: SPRUCE_WOOD_STAIRS
+    id: 134
+    data: 0
+  components: sprucewood,3/2;
+stick:
+  information:
+    type: item
+    category: unknown
+    material: STICK
+    id: 280
+    data: 0
+  components: oakwood,1/2;
+stickypiston:
+  information:
+    type: item
+    category: unknown
+    material: PISTON_STICKY_BASE
+    id: 29
+    data: 0
+  components: piston,1;slimeball,1;
+stoneaxe:
+  information:
+    type: item
+    category: unknown
+    material: STONE_AXE
+    id: 275
+    data: 0
+  components: cobblestone,3;stick,2;
+stonebrick:
+  information:
+    type: item
+    category: unknown
+    material: SMOOTH_BRICK
+    id: 98
+    data: 0
+  components: stone,1;
+stonebrickslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 5
+  components: stonebrick,1/2;
+stonebrickstairs:
+  information:
+    type: item
+    category: unknown
+    material: SMOOTH_STAIRS
+    id: 109
+    data: 0
+  components: stonebrick,3/2;
+stonehoe:
+  information:
+    type: item
+    category: unknown
+    material: STONE_HOE
+    id: 291
+    data: 0
+  components: cobblestone,2;stick,2;
+stonepickaxe:
+  information:
+    type: item
+    category: unknown
+    material: STONE_PICKAXE
+    id: 274
+    data: 0
+  components: cobblestone,3;stick,2;
+stonepressureplate:
+  information:
+    type: item
+    category: unknown
+    material: STONE_PLATE
+    id: 70
+    data: 0
+  components: stone,2;
+stoneshovel:
+  information:
+    type: item
+    category: unknown
+    material: STONE_SPADE
+    id: 273
+    data: 0
+  components: cobblestone,1;stick,2;
+stoneslab:
+  information:
+    type: item
+    category: unknown
+    material: STEP
+    id: 44
+    data: 0
+  components: stone,1/2;
+stonesword:
+  information:
+    type: item
+    category: unknown
+    material: STONE_SWORD
+    id: 272
+    data: 0
+  components: cobblestone,2;stick,1;
+thickpotion:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 32
+  components: waterbottle,1;glowstonedust,1;
+tnt:
+  information:
+    type: item
+    category: unknown
+    material: TNT
+    id: 46
+    data: 0
+  components: sand,4;gunpowder,5;
+torch:
+  information:
+    type: item
+    category: unknown
+    material: TORCH
+    id: 50
+    data: 0
+  components: stick,1/4;coal,1/4;
+trapdoor:
+  information:
+    type: item
+    category: unknown
+    material: TRAP_DOOR
+    id: 96
+    data: 0
+  components: oakwood,3;
+trappedchest:
+  information:
+    type: item
+    category: unknown
+    material: TRAPPED_CHEST
+    id: 146
+    data: 0
+  components: chest,1;tripwirehook,1;
+tripwirehook:
+  information:
+    type: item
+    category: unknown
+    material: TRIPWIRE_HOOK
+    id: 131
+    data: 0
+  components: ironingot,1/2;stick,1/2;oakwood,1/2;
+waterbottle:
+  information:
+    type: item
+    category: unknown
+    material: POTION
+    id: 373
+    data: 0
+  components: glassbottle,1;
+whiteclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 0
+  components: hardenedclay,1;bonemeal,1/8;
+woodaxe:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_AXE
+    id: 271
+    data: 0
+  components: oakwood,3;stick,2;
+woodbutton:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_BUTTON
+    id: 143
+    data: 0
+  components: oakwood,1;
+wooddoor:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_DOOR
+    id: 324
+    data: 0
+  components: oakwood,6;
+woodhoe:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_HOE
+    id: 290
+    data: 0
+  components: oakwood,2;stick,2;
+woodpickaxe:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_PICKAXE
+    id: 270
+    data: 0
+  components: oakwood,3;stick,2;
+woodpressureplate:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_PLATE
+    id: 72
+    data: 0
+  components: oakwood,2;
+woodshovel:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_SPADE
+    id: 269
+    data: 0
+  components: oakwood,1;stick,2;
+woodsword:
+  information:
+    type: item
+    category: unknown
+    material: WOOD_SWORD
+    id: 268
+    data: 0
+  components: oakwood,2;stick,1;
+wool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 0
+  components: string,4;
+yellowcarpet:
+  information:
+    type: item
+    category: unknown
+    material: CARPET
+    id: 171
+    data: 4
+  components: yellowwool,2/3;
+yellowclay:
+  information:
+    type: item
+    category: unknown
+    material: STAINED_CLAY
+    id: 159
+    data: 4
+  components: hardenedclay,1;dandelionyellow,1/8;
+yellowwool:
+  information:
+    type: item
+    category: unknown
+    material: WOOL
+    id: 35
+    data: 4
+  components: wool,1;dandelionyellow,1;

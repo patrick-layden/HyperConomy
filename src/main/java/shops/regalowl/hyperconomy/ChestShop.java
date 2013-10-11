@@ -566,7 +566,7 @@ public class ChestShop implements Listener {
 							int itemamount = im.countItems(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
 
 							if (itemamount > 0) {
-								double price = ho.getValue(1);
+								double price = ho.getValue(1, hp);
 								if (setprice) {
 									price = staticprice;
 								}

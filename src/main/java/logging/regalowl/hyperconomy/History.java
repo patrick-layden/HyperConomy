@@ -84,7 +84,9 @@ public class History {
 			    		writeHistoryThread();
 						hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
 						    public void run() {
-						    	isign.updateSigns();
+						    	if (isign != null) {
+						    		isign.updateSigns();
+						    	}
 						    }
 						}, 1200L);
 			    	}
