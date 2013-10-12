@@ -39,7 +39,7 @@ config:
   max-player-shop-volume: 1000
   use-player-shops: true
   max-shops-per-player: 2
-  use-composite-items: true
+  use-composite-items: false
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

@@ -57,7 +57,7 @@ public class Manageshop implements CommandExecutor {
 			}
 			return true;
 		}
-		if (args[0].equalsIgnoreCase("select")) {
+		if (args[0].equalsIgnoreCase("select") || args[0].equalsIgnoreCase("sel")) {
 			if (args.length == 1) {
 				player.sendMessage(L.get("MANAGESHOP_SELECT_HELP"));
 				return true;
@@ -73,7 +73,7 @@ public class Manageshop implements CommandExecutor {
 			}
 			currentShop.put(hp, (PlayerShop)s);
 			player.sendMessage(L.get("SHOP_SELECTED"));
-		} else  if (args[0].equalsIgnoreCase("create")) {
+		} else  if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("c")) {
 			if (args.length == 1) {
 				player.sendMessage(L.get("MANAGESHOP_CREATE_HELP"));
 				return true;
@@ -112,7 +112,7 @@ public class Manageshop implements CommandExecutor {
 			}
 			em.addShop(newShop);
 			player.sendMessage(L.get("SHOP_CREATED"));
-		} else if (args[0].equalsIgnoreCase("delete")) {
+		} else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("d")) {
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
 				return true;
@@ -135,7 +135,7 @@ public class Manageshop implements CommandExecutor {
 			}
 			
 			
-		} else if (args[0].equalsIgnoreCase("set1")) {
+		} else if (args[0].equalsIgnoreCase("set1") || args[0].equalsIgnoreCase("s1")) {
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
 				return true;
@@ -148,7 +148,7 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			player.sendMessage(L.get("P1_SET"));
-		} else if (args[0].equalsIgnoreCase("set2")) {
+		} else if (args[0].equalsIgnoreCase("set2") || args[0].equalsIgnoreCase("s2")) {
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
 				return true;
@@ -161,7 +161,7 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			player.sendMessage(L.get("P2_SET"));
-		} else if (args[0].equalsIgnoreCase("price")) {
+		} else if (args[0].equalsIgnoreCase("price") || args[0].equalsIgnoreCase("p")) {
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
 				return true;
@@ -190,7 +190,7 @@ public class Manageshop implements CommandExecutor {
 				hc.getDataBukkit().writeError("Setting PlayerShopObject price failed.");
 				return true;
 			}
-		} else if (args[0].equalsIgnoreCase("status")) {
+		} else if (args[0].equalsIgnoreCase("status") || args[0].equalsIgnoreCase("s")) {
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
 				return true;
