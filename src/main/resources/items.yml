@@ -4,7 +4,7 @@ birchleaves:
     category: unknown
     material: LEAVES
     id: 18
-    data: 6
+    data: 2
   value: 1.0
   price:
     static: false
@@ -21,7 +21,7 @@ jungleleaves:
     category: unknown
     material: LEAVES
     id: 18
-    data: 7
+    data: 3
   value: 1.0
   price:
     static: false
@@ -7399,7 +7399,7 @@ oakleaves:
     category: unknown
     material: LEAVES
     id: 18
-    data: 4
+    data: 0
   value: 1.0
   price:
     static: false
@@ -7467,7 +7467,7 @@ spruceleaves:
     category: unknown
     material: LEAVES
     id: 18
-    data: 5
+    data: 0
   value: 1.0
   price:
     static: false
