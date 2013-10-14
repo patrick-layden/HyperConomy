@@ -332,8 +332,6 @@ TOPITEMS_INVALID: &4Use /topitems (page)
 WRITEITEMS_INVALID: &4Invalid parameters. Use /writeitems ['row'/'column'] ('e')
 ITEM_NAMES_WRITTEN: &6Item names written to items.txt
 ENCHANT_NAMES_WRITTEN: &6Enchantment names written to enchants.txt
-LOG_NO_ECON_PLUGIN: [HyperConomy] No economy plugin detected! No money can be gained or lost. Please read the installation guide here: http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/
-NO_ECON_PLUGIN: &4No economy plugin detected! No money can be gained or lost.
 HYPERERROR_LOG: &4An error has occurred. [#%v] Enable error logging in config.yml to log future errors.
 ERROR_HAS_OCCURRED: &4An error has occurred. [#%v] Check the errors folder for more info.
 SQL_BACKUP_NOT_FOUND: &4SQL backup not found.  Place your backup in the HyperConomy folder.
@@ -361,7 +359,7 @@ HCPAY_INVALID: &4Invalid parameters. Use /hcpay [account] [amount]
 MONEY_PAYED: &9You payed &b%n &a%c%a.
 ONLY_AVAILABLE_INTERNAL: &4This command is disabled.  To enable it set HyperConomy as your economy plugin.
 TOGGLEECONOMY_INVALID: &4Invalid parameters.  Use /toggleeconomy
-TOGGLEECONOMY_ENABLED: &6HyperConomy will now use an external economy plugin via Vault.
+TOGGLEECONOMY_ENABLED: &6HyperConomy will try to use an external economy plugin via Vault.
 TOGGLEECONOMY_DISABLED: &6HyperConomy will now function as your economy plugin.
 TOGGLEECONOMY_HYPERCONOMY: &4Vault has registered HyperConomy as your economy plugin; you must use the internal economy.
 MAKEACCOUNT_INVALID: &4Invalid parameters.  Use /makeaccount [name]

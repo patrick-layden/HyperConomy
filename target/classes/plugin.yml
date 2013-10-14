@@ -3,6 +3,7 @@ main: regalowl.hyperconomy.HyperConomy
 version: 0.974
 author: RegalOwl
 website: http://dev.bukkit.org/server-mods/hyperconomy/
+load: STARTUP
 softdepend: [HeroStronghold, Buycraft, Essentials]
 loadbefore: []
 commands:

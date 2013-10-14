@@ -217,7 +217,6 @@ LOG_BUY_CHEST: %y a acheté %a %n à %zc pour %c%p. [Prix fixe=%za][Prix initial
 LOG_BUY_CHEST_ENCHANTMENT: %y a acheté %n à %zc pour %c%p. [Prix fixe=%za][Prix initial=%zb]
 LOG_BUY_ENCHANTMENT: %y a acheté %n pour %c%p. [Prix fixe=%za][Prix initial=%zb]
 LOG_INTERVAL_SET: &6Interval de journalisation réglé !
-LOG_NO_ECON_PLUGIN: Aucun module d'économie détecté ! L'argent ne peut être gagné ou dépensé. Merci de lire le guide d'installation ici : http://dev.bukkit.org/server-mods/hyperconomy/pages/quick-installation-guide/
 LOG_SELL: %y a vendu %a %n pour %c%p. [Prix fixe=%za][Prix initial=%zb]
 LOG_SELL_CHEST: %y a vendu %a %n à %zc pour %c%p. [Prix fixe=%za][Prix initial=%zb]
 LOG_SELL_ENCHANTMENT: %y a vendu %n pour %c%p. [Prix fixe=%za][Prix initial=%zb]
@@ -234,7 +233,6 @@ MUST_BE_IN_SHOP: &4Vous devez être dans un magasin pour acheter ou vendre !
 MUST_USE_EXTERNAL_ECONOMY: &4Vous devez utiliser un plugin d'économie externe pour cette commande.
 NEW_ECONOMY_CREATED: &6Nouvelle économie créée !
 NO_DISPLAY_DETECTED: &4Aucune vitrine trouvée là où vous êtes.
-NO_ECON_PLUGIN: &4Aucun module d'économie détecté ! L'argent ne peut être gagné ou dépensé.
 NO_SIGNS_FOUND: &9Aucune pancarte trouvée.
 NOTIFICATION: &9L'économie a maintenant &a%a &b%n &9évalués à &a%c%p &9pièce.
 NOTIFICATIONS_DISABLED: &4Les notifications sont désactivées !

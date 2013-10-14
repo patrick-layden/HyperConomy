@@ -41,6 +41,7 @@ public class LanguageFile {
 	
 	public String buildLanguageFile(boolean overwrite) {
 		ft = new FileTools();
+		updateBackup();
 		String lang = HyperConomy.hc.gYH().gFC("config").getString("config.language");
 		if (lang == null) {
 			lang = "enUS";

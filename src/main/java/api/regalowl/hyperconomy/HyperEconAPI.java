@@ -97,12 +97,27 @@ public class HyperEconAPI implements EconomyAPI {
 
 	public boolean createAccount(String account) {
 		HyperConomy hc = HyperConomy.hc;
-		return hc.getEconomyManager().createPlayerAccount(account);
+		if (!hc.getEconomyManager().hasAccount(account)) {
+			return hc.getEconomyManager().createPlayerAccount(account);
+		}
+		return false;
 	}
 	
 	public String formatMoney(double money) {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		return (calc.formatMoney(money));
+	}
+
+	public int fractionalDigits() {
+		return -1;
+	}
+
+	public String currencyName() {
+		return "";
+	}
+
+	public String currencyNamePlural() {
+		return "";
 	}
 }

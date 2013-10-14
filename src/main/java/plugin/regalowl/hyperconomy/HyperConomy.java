@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import regalowl.databukkit.DataBukkit;
@@ -47,44 +48,29 @@ public class HyperConomy extends JavaPlugin {
 	private Economy economy;
 	private SerializeArrayList sal;
 	private boolean enabled;
+	private boolean useExternalEconomy;
 
+	@Override
+	public void onLoad() {
+		load();
+	}
 	@Override
 	public void onEnable() {
-		initialize();
+		enable();
 	}
-
 	@Override
 	public void onDisable() {
-		shutDown(false);
+		disable(false);
 	}
 	
-	public void onDataLoad() {
-		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
-		if (x != null & x instanceof Vault) {
-			this.setupEconomy();
-		} else if (s().gB("use-external-economy-plugin")) {
-			log.warning(L.get("VAULT_NOT_FOUND"));
-			s().sB("use-external-economy-plugin", false);
-		}
-		hist = new History();
-		itdi = new ItemDisplayFactory();
-		registerCommands();
-		if (wh == null) {
-			wh = new WebHandler();
-			wh.startServer();
-		} else {
-			wh.endServer();
-			wh.startServer();
-		}
-		isign = new InfoSignHandler();
-		isign.updateSigns();
-		enabled = true;
-		hl.setLoadLock(false);
-	}
 
 
-	public void initialize() {
+	private void load() {
 		enabled = false;
+		hc = this;
+		hyperAPI = new HyperAPI();
+		hyperEconAPI = new HyperEconAPI();
+		hyperObjectAPI = new HyperObjectAPI();
 		db = new DataBukkit(this);
 		yh = db.getYamlHandler();
 		yh.copyFromJar("categories");
@@ -100,12 +86,17 @@ public class HyperConomy extends JavaPlugin {
 		yh.registerFileConfiguration("items");
 		yh.registerFileConfiguration("shops");
 		yh.registerFileConfiguration("signs");
-		yh.setSaveInterval(yh.gFC("config").getLong("config.saveinterval"));
-		HandlerList.unregisterAll(this);
-		hc = this;
 		L = new LanguageFile();
 		hl = new HyperLock(true, false, false);
 		hs = new HyperSettings();
+		if (yh.gFC("config").getBoolean("config.hook-internal-economy-into-vault")) {
+			getServer().getServicesManager().register(Economy.class, new Economy_HyperConomy(), this, ServicePriority.Highest);
+			log.info("[HyperConomy]Vault hooked.");
+		}
+	}
+	private void enable() {
+		yh.setSaveInterval(yh.gFC("config").getLong("config.saveinterval"));
+		HandlerList.unregisterAll(this);
 		em = new EconomyManager();
 		FileConfiguration config = yh.gFC("config");
 		if (config.getBoolean("config.sql-connection.use-mysql")) {
@@ -119,8 +110,8 @@ public class HyperConomy extends JavaPlugin {
 		db.createDatabase();
 		sw = db.getSQLWrite();
 		sr = db.getSQLRead();
+		setupExternalEconomy();
 		em.load();
-
 		l = new Log(this);
 		im = new InventoryManipulation();
 		calc = new Calculation();
@@ -130,12 +121,34 @@ public class HyperConomy extends JavaPlugin {
 		new TransactionSign();
 		hs.startSave();
 		cs = new ChestShop();
-		hyperAPI = new HyperAPI();
-		hyperEconAPI = new HyperEconAPI();
-		hyperObjectAPI = new HyperObjectAPI();
 	}
+	public void onDataLoad() {
+		hist = new History();
+		itdi = new ItemDisplayFactory();
+		registerCommands();
+		if (wh == null) {
+			wh = new WebHandler();
+			wh.startServer();
+		} else {
+			wh.endServer();
+			wh.startServer();
+		}
+		isign = new InfoSignHandler();
+		isign.updateSigns();
+		enabled = true;
+		hl.setLoadLock(false);
+	}
+	
 
-	public void shutDown(boolean protect) {
+	public void disable(boolean protect) {
+	    RegisteredServiceProvider<Economy> eco = getServer().getServicesManager().getRegistration(Economy.class);
+	    if (eco != null) {
+	    	Economy registeredEconomy = eco.getProvider();
+	    	if (registeredEconomy.getName().equalsIgnoreCase("HyperConomy")) {
+		        getServer().getServicesManager().unregister(eco.getProvider());
+		        log.info("[HyperConomy]Vault unhooked.");
+	    	}
+	    }
 		enabled = false;
 		HandlerList.unregisterAll(this);
 		if (itdi != null) {
@@ -164,8 +177,9 @@ public class HyperConomy extends JavaPlugin {
 	}
 	
 	public void restart() {
-		shutDown(true);
-		initialize();
+		disable(true);
+		load();
+		enable();
 	}
 
 	private void registerCommands() {
@@ -210,7 +224,8 @@ public class HyperConomy extends JavaPlugin {
 				} else {
 					if (sender.hasPermission("hyperconomy.admin")) {
 						if (args.length == 1 && args[0].equalsIgnoreCase("enable") && hl.fullLock()) {
-							initialize();
+							load();
+							enable();
 							sender.sendMessage(L.get("HC_HYPERCONOMY_ENABLED"));
 							sender.sendMessage(L.get("FILES_RELOADED"));
 							sender.sendMessage(L.get("SHOP_UNLOCKED"));
@@ -220,7 +235,7 @@ public class HyperConomy extends JavaPlugin {
 							sender.sendMessage(L.get("SHOP_LOCKED"));
 							hl.setPlayerLock(true);
 							hl.setFullLock(true);
-							shutDown(true);
+							disable(true);
 							return true;
 						}
 					}
@@ -234,25 +249,38 @@ public class HyperConomy extends JavaPlugin {
 				return true;
 			}
 		} catch (Exception e) {
-			db.writeError(e, "Unhandled command exception.");
-			return true;
-		}
-	}
-
-	private Boolean setupEconomy() {
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider != null) {
-			economy = economyProvider.getProvider();
-			if (economy.getName().equalsIgnoreCase("HyperConomy")) {
-				s().sB("use-external-economy-plugin", false);
+			if (db != null) {
+				db.writeError(e, "Unhandled command exception.");
+				return true;
+			} else {
+				e.printStackTrace();
+				return true;
 			}
 		}
-		return (economy != null);
 	}
 
+	public void setupExternalEconomy() {
+		useExternalEconomy = s().gB("use-external-economy-plugin");
+		if (useExternalEconomy) {
+			Plugin vault = this.getServer().getPluginManager().getPlugin("Vault");
+			if (vault != null & vault instanceof Vault) {
+				RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+				if (economyProvider != null) {
+					economy = economyProvider.getProvider();
+					if (economy == null) {
+						useExternalEconomy = false;
+						return;
+					}
+					if (economy.getName().equalsIgnoreCase("HyperConomy")) {
+						useExternalEconomy = false;
+					}
+				} else {
+					useExternalEconomy = false;
+				}
+			}
+		}
+	}
 
-
-	
 	public HyperLock getHyperLock() {
 		return hl;
 	}
@@ -273,6 +301,9 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public Economy getEconomy() {
+		if (economy == null) {
+			setupExternalEconomy();
+		}
 		return economy;
 	}
 
@@ -340,6 +371,12 @@ public class HyperConomy extends JavaPlugin {
 	}
 	public SerializeArrayList getSerializeArrayList() {
 		return sal;
+	}
+	public boolean useExternalEconomy() {
+		return useExternalEconomy;
+	}
+	public void setUseExternalEconomy(boolean state) {
+		useExternalEconomy = state;
 	}
 	
 }

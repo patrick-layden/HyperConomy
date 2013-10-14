@@ -14,7 +14,7 @@ public class Importbalance {
 		Economy econ = hc.getEconomy();
 		Log l = hc.getLog();
 		try {
-			if (hc.s().gB("use-external-economy-plugin")) {
+			if (hc.useExternalEconomy()) {
 				
 				ArrayList<String> players = new ArrayList<String>();
 				for (HyperPlayer hp:em.getHyperPlayers()) {

@@ -1,14 +1,9 @@
 package regalowl.hyperconomy;
 
-
-import java.util.logging.Logger;
-
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-
 import regalowl.databukkit.SQLWrite;
 
 
@@ -18,9 +13,6 @@ public class HyperPlayer {
 	private HyperConomy hc;
 	private TransactionProcessor tp;
 	private EconomyManager em;
-	private Economy econ;
-	private LanguageFile L;
-	
 	private String name;
 	private String economy;
 	private double balance;
@@ -57,8 +49,6 @@ public class HyperPlayer {
 		}
 		name = player;
 		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','','')");
-		econ = hc.getEconomy();
-		L = hc.getLanguageFile();
 	}
 	
 	
@@ -75,8 +65,6 @@ public class HyperPlayer {
 		this.world = world;
 		this.hash = hash;
 		this.salt = salt;
-		econ = hc.getEconomy();
-		L = hc.getLanguageFile();
 	}
 	
 	public String getName() {
@@ -89,15 +77,8 @@ public class HyperPlayer {
 		return em.getEconomy(economy);
 	}
 	public double getBalance() {
-		if (hc.s().gB("use-external-economy-plugin")) {
-			if (econ != null) {
-				return econ.getBalance(name);
-			} else {
-				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-		    	Logger log = Logger.getLogger("Minecraft");
-		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
-		    	return 0.0;
-			}
+		if (hc.useExternalEconomy()) {
+			return hc.getEconomy().getBalance(name);
 		} else {
 			return balance;
 		}
@@ -258,21 +239,17 @@ public class HyperPlayer {
 		}
 		return false;
 	}
+
 	public void setBalance(double balance) {
-		if (hc.s().gB("use-external-economy-plugin")) {
-			if (econ != null) {
-				if (econ.hasAccount(name)) {
-					econ.withdrawPlayer(name, econ.getBalance(name));
-				} else {
-					econ.createPlayerAccount(name);
-				}
-				econ.depositPlayer(name, balance);
-				hc.getLog().writeAuditLog(name, "setbalance", balance, econ.getName());
+		if (hc.useExternalEconomy()) {
+			Economy econ = hc.getEconomy();
+			if (econ.hasAccount(name)) {
+				econ.withdrawPlayer(name, econ.getBalance(name));
 			} else {
-				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-		    	Logger log = Logger.getLogger("Minecraft");
-		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+				econ.createPlayerAccount(name);
 			}
+			econ.depositPlayer(name, balance);
+			hc.getLog().writeAuditLog(name, "setbalance", balance, econ.getName());
 		} else {
 			this.balance = balance;
 			String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";
@@ -281,15 +258,10 @@ public class HyperPlayer {
 		}
 	}
 	public void deposit(double amount) {
-		if (hc.s().gB("use-external-economy-plugin")) {
-			if (econ != null) {
-				econ.depositPlayer(name, amount);
-				hc.getLog().writeAuditLog(name, "deposit", amount, econ.getName());
-			} else {
-				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-		    	Logger log = Logger.getLogger("Minecraft");
-		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
-			}
+		if (hc.useExternalEconomy()) {
+			Economy econ = hc.getEconomy();
+			econ.depositPlayer(name, amount);
+			hc.getLog().writeAuditLog(name, "deposit", amount, econ.getName());
 		} else {
 			this.balance += amount;
 			String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";
@@ -299,15 +271,10 @@ public class HyperPlayer {
 	}
 	
 	public void withdraw(double amount) {
-		if (hc.s().gB("use-external-economy-plugin")) {
-			if (econ != null) {
-				econ.withdrawPlayer(name, amount);
-				hc.getLog().writeAuditLog(name, "withdrawal", amount, econ.getName());
-			} else {
-				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-		    	Logger log = Logger.getLogger("Minecraft");
-		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
-			}
+		if (hc.useExternalEconomy()) {
+			Economy econ = hc.getEconomy();
+			econ.withdrawPlayer(name, amount);
+			hc.getLog().writeAuditLog(name, "withdrawal", amount, econ.getName());
 		} else {
 			this.balance -= amount;
 			String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";

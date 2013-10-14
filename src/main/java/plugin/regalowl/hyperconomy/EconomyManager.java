@@ -471,7 +471,7 @@ public class EconomyManager implements Listener {
 
 
 	public boolean hasAccount(String name) {
-		if (hc.s().gB("use-external-economy-plugin")) {
+		if (hc.useExternalEconomy()) {
 			Economy economy = hc.getEconomy();
 			if (economy.hasAccount(name)) {
 				if (!hyperPlayers.containsKey(fixpN(name))) {
@@ -518,21 +518,13 @@ public class EconomyManager implements Listener {
 	}
 	public void createGlobalShopAccount(){		
 		HyperConomy hc = HyperConomy.hc;
-		Economy economy = hc.getEconomy();
-		LanguageFile L = hc.getLanguageFile();
 		Log l = hc.getLog();
-		boolean useExternalEconomy = hc.s().gB("use-external-economy-plugin");
 		String globalaccount = hc.gYH().gFC("config").getString("config.global-shop-account");
-		if (useExternalEconomy) {
-			if (economy != null) {
-				if (!economy.hasAccount(globalaccount)) {
-					getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
-					l.writeAuditLog(globalaccount, "setbalance", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), economy.getName());
-				}
-			} else {
-				Bukkit.broadcast(L.get("NO_ECON_PLUGIN"), "hyperconomy.admin");
-		    	Logger log = Logger.getLogger("Minecraft");
-		    	log.info(L.get("LOG_NO_ECON_PLUGIN"));
+		if (hc.useExternalEconomy()) {
+			Economy economy = hc.getEconomy();
+			if (!economy.hasAccount(globalaccount)) {
+				getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
+				l.writeAuditLog(globalaccount, "setbalance", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), economy.getName());
 			}
 		} else {
 			if (!hasAccount(globalaccount)) {

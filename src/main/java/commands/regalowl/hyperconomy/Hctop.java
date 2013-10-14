@@ -11,7 +11,7 @@ public class Hctop {
 		LanguageFile L = hc.getLanguageFile();
 		Calculation calc = hc.getCalculation();
 		try {
-			if (hc.s().gB("use-external-economy-plugin")) {
+			if (hc.useExternalEconomy()) {
 				sender.sendMessage(L.get("ONLY_AVAILABLE_INTERNAL"));
 				return;
 			}
