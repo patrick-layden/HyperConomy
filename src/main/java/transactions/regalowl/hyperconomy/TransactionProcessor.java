@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 public class TransactionProcessor {
 
 	private HyperConomy hc;
+	private HyperEventHandler heh;
 	private EconomyManager em;
 	private LanguageFile L;
 	private HyperPlayer hp;
@@ -28,6 +29,7 @@ public class TransactionProcessor {
 	private boolean setPrice;
 	private ItemStack giveItem;
 	private HyperObjectStatus status;
+	private PlayerTransaction pt;
 	
 	
 	
@@ -41,11 +43,12 @@ public class TransactionProcessor {
 		L = hc.getLanguageFile();
 		this.hp = hp;
 		im = hc.getInventoryManipulation();
+		heh = hc.getHyperEventHandler();
 	}
 	
 	
 	public TransactionResponse processTransaction(PlayerTransaction pt) {
-		
+		this.pt = pt;
 		transactionType = pt.getTransactionType();
 		hyperObject = pt.getHyperObject();
 		if (hyperObject instanceof PlayerShopObject) {
@@ -129,6 +132,7 @@ public class TransactionProcessor {
 			if (hp == null || hyperObject == null) {
 				response.setFailed();
 				response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			Calculation calc = hc.getCalculation();
@@ -145,22 +149,27 @@ public class TransactionProcessor {
 			}
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			} else if (status == HyperObjectStatus.SELL) {
 				response.addFailed(L.f(L.get("SELL_ONLY_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			if (amount == 0) {
 				response.addFailed(L.f(L.get("CANT_BUY_LESS_THAN_ONE"), name), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			double shopstock = hyperObject.getStock();
 			if (shopstock < amount) {
 				response.addFailed(L.f(L.get("THE_SHOP_DOESNT_HAVE_ENOUGH"), name), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			if (id < 0) {
 				response.addFailed(L.f(L.get("CANNOT_BE_PURCHASED_WITH"), name), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			double price = hyperObject.getCost(amount);
@@ -168,11 +177,13 @@ public class TransactionProcessor {
 			price = calc.twoDecimals(price + taxpaid);
 			if (!hp.hasBalance(price)) {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			int space = im.getAvailableSpace(id, data, receiveInventory);
 			if (space < amount) {
 				response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, name), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			im.addItems(amount, id, data, receiveInventory);
@@ -194,10 +205,12 @@ public class TransactionProcessor {
 			isign.updateSigns();
 			not.setNotify(name, null, playerecon);
 			not.sendNotification();
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
 			String info = "Transaction buy() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', id='" + hyperObject.getId() + "', data='" + hyperObject.getData() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
+			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
 		}
 	}
@@ -216,6 +229,7 @@ public class TransactionProcessor {
 			if (hp == null || hyperObject == null) {
 				response.setFailed();
 				response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			Calculation calc = hc.getCalculation();
@@ -232,17 +246,21 @@ public class TransactionProcessor {
 			}
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			} else if (status == HyperObjectStatus.BUY) {
 				response.addFailed(L.f(L.get("BUY_ONLY_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			if (amount <= 0) {
 				response.addFailed(L.f(L.get("CANT_SELL_LESS_THAN_ONE"), name), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			if (id < 0) {
 				response.addFailed(L.f(L.get("CANNOT_BE_SOLD_WITH"), name), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			int totalitems = im.countItems(id, data, giveInventory);
@@ -252,16 +270,19 @@ public class TransactionProcessor {
 					amount = totalitems;
 				} else {
 					response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), hyperObject);
+					heh.fireTransactionEvent(pt, response);
 					return response;
 				}
 			}
 			if (amount <= 0) {
 				response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			double price = hyperObject.getValue(amount, hp);
 			if (price == 3235624645000.7) {
 				response.addFailed(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), hyperObject.getStock(), name), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			int maxi = hyperObject.getMaxInitial();
@@ -275,6 +296,7 @@ public class TransactionProcessor {
 			}
 			if (!hasBalance(price)) {
 				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			if (maxi == 0) {
@@ -307,11 +329,13 @@ public class TransactionProcessor {
 			isign.updateSigns();
 			not.setNotify(name, null, playerecon);
 			not.sendNotification();
+			heh.fireTransactionEvent(pt, response);
 			return response;
 
 		} catch (Exception e) {
 			String info = "Transaction sell() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', id='" + hyperObject.getId() + "', data='" + hyperObject.getData() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
+			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
 		}
 	}
@@ -325,6 +349,7 @@ public class TransactionProcessor {
 			if (hp == null) {
 				response.setFailed();
 				response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			response.setSuccessful();
@@ -363,9 +388,11 @@ public class TransactionProcessor {
 					}
 				} 
 			}
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
+			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
 		}
 	}
@@ -383,6 +410,7 @@ public class TransactionProcessor {
 		if (hp == null || hyperObject == null) {
 			response.setFailed();
 			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		}
 		try {
@@ -394,9 +422,11 @@ public class TransactionProcessor {
 			String playerecon = hp.getEconomy();
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			} else if (status == HyperObjectStatus.SELL) {
 				response.addFailed(L.f(L.get("SELL_ONLY_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			if (amount > 0) {
@@ -441,10 +471,12 @@ public class TransactionProcessor {
 			} else {
 				response.addFailed(L.f(L.get("CANT_BUY_LESS_THAN_ONE"), hyperObject.getName()), hyperObject);
 			}
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
 			String info = "Transaction buyXP() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
+			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
 		}
 	}
@@ -460,6 +492,7 @@ public class TransactionProcessor {
 		if (hp == null || hyperObject == null) {
 			response.setFailed();
 			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		}
 		try {
@@ -471,9 +504,11 @@ public class TransactionProcessor {
 			String playerecon = hp.getEconomy();
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			} else if (status == HyperObjectStatus.BUY) {
 				response.addFailed(L.f(L.get("BUY_ONLY_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			if (amount > 0) {
@@ -540,10 +575,12 @@ public class TransactionProcessor {
 			} else {
 				response.addFailed(L.f(L.get("CANT_SELL_LESS_THAN_ONE"), hyperObject.getName()), hyperObject);
 			}
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
 			String info = "Transaction sellXP() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
+			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
 		}
 	}
@@ -556,6 +593,7 @@ public class TransactionProcessor {
 		if (hp == null || tradePartner == null || hyperObject == null) {
 			response.setFailed();
 			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		}
 		try {
@@ -585,10 +623,12 @@ public class TransactionProcessor {
 			} else {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
 			}
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
 			String info = "Transaction buyChest() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
+			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
 		}
 	}
@@ -606,6 +646,7 @@ public class TransactionProcessor {
 		if (hp == null || tradePartner == null || hyperObject == null) {
 			response.setFailed();
 			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		}
 		try {
@@ -634,10 +675,12 @@ public class TransactionProcessor {
 			} else {
 				response.addFailed(L.f(L.get("CURRENTLY_CANT_SELL_MORE_THAN"), hyperObject.getStock(), hyperObject.getName()), hyperObject);
 			}
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
 			String info = "Transaction sellChest() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
+			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
 		}
 	}
@@ -656,6 +699,7 @@ public class TransactionProcessor {
 		if (hp == null || hyperObject == null) {
 			response.setFailed();
 			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		}
 		Calculation calc = hc.getCalculation();
@@ -672,9 +716,11 @@ public class TransactionProcessor {
 			int truelvl = im.getEnchantmentLevel(p.getItemInHand(), ench);
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			} else if (status == HyperObjectStatus.BUY) {
 				response.addFailed(L.f(L.get("BUY_ONLY_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			if (im.containsEnchantment(p.getItemInHand(), ench) && lvl == truelvl) {
@@ -715,10 +761,12 @@ public class TransactionProcessor {
 			} else {
 				response.addFailed(L.f(L.get("ITEM_DOESNT_HAVE_ENCHANTMENT"), hyperObject.getName()), hyperObject);
 			}
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
 			String info = "ETransaction sellEnchant() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "'";
 			hc.gDB().writeError(e, info);
+			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
 		}
 	}
@@ -734,6 +782,7 @@ public class TransactionProcessor {
 		if (hp == null || hyperObject == null) {
 			response.setFailed();
 			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		}
 		Calculation calc = hc.getCalculation();
@@ -749,9 +798,11 @@ public class TransactionProcessor {
 			shopstock = (int) hyperObject.getStock();
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			} else if (status == HyperObjectStatus.SELL) {
 				response.addFailed(L.f(L.get("SELL_ONLY_ITEM"), hyperObject.getName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
 			if (shopstock >= 1) {
@@ -809,10 +860,12 @@ public class TransactionProcessor {
 			} else {
 				response.addFailed(L.f(L.get("THE_SHOP_DOESNT_HAVE_ENOUGH"), hyperObject.getName()), hyperObject);
 			}
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
 			String info = "ETransaction buyEnchant() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "'";
 			hc.gDB().writeError(e, info);
+			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
 		}
 	}
@@ -828,6 +881,7 @@ public class TransactionProcessor {
 		if (hp == null || hyperObject == null || tradePartner == null || giveItem == null) {
 			response.setFailed();
 			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		}
 		Calculation calc = hc.getCalculation();
@@ -872,10 +926,12 @@ public class TransactionProcessor {
 			} else {
 				response.addFailed(L.get("ITEM_CANT_ACCEPT_ENCHANTMENT"), hyperObject);
 			}
+			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
 			String info = "ETransaction buyChestEnchant() passed values name='" + hyperObject.getName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "'";
 			hc.gDB().writeError(e, info);
+			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
 		}
 	}
