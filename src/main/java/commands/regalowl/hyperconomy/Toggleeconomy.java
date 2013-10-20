@@ -11,7 +11,7 @@ public class Toggleeconomy {
 		LanguageFile L = hc.getLanguageFile();
 		Economy economy = hc.getEconomy();
 		try {
-			if (hc.s().gB("use-external-economy-plugin")) {
+			if (hc.gYH().gFC("config").getBoolean("config.use-external-economy-plugin")) {
 				hc.gYH().gFC("config").set("config.use-external-economy-plugin", false);
 				hc.setUseExternalEconomy(false);
 				hc.getEconomyManager().createGlobalShopAccount();

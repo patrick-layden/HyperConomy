@@ -157,9 +157,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("listcategories")) {
 			new Listcategories(sender);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("ymladditem") && (player != null)) {
-			new Ymladditem(player, args);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hcbackup")) {
 			new Hcbackup(sender);
 			return true;

@@ -292,6 +292,7 @@ commands:
       description: Adds the item you're holding to the yml item database.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+      aliases: [yai, ya]
    copydatabase:
       description: Copys database from SQLite to MySQL and vice versa.
       permission: hyperconomy.admin

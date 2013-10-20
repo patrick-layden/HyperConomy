@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.Vault;
@@ -20,7 +21,7 @@ import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
 import regalowl.databukkit.YamlHandler;
 
-public class HyperConomy extends JavaPlugin {
+public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public static HyperConomy hc;
 	public static HyperAPI hyperAPI;
 	public static HyperEconAPI hyperEconAPI;
@@ -47,6 +48,7 @@ public class HyperConomy extends JavaPlugin {
 	private Logger log = Logger.getLogger("Minecraft");
 	private Economy economy;
 	private SerializeArrayList sal;
+	private HyperEventHandler heh;
 	private boolean enabled;
 	private boolean useExternalEconomy;
 
@@ -89,13 +91,14 @@ public class HyperConomy extends JavaPlugin {
 		L = new LanguageFile();
 		hl = new HyperLock(true, false, false);
 		hs = new HyperSettings();
+		heh = new HyperEventHandler();
+		heh.registerDataLoadListener(this);
 		if (yh.gFC("config").getBoolean("config.hook-internal-economy-into-vault")) {
 			getServer().getServicesManager().register(Economy.class, new Economy_HyperConomy(), this, ServicePriority.Highest);
 			log.info("[HyperConomy]Vault hooked.");
 		}
 	}
 	private void enable() {
-		yh.setSaveInterval(yh.gFC("config").getLong("config.saveinterval"));
 		HandlerList.unregisterAll(this);
 		em = new EconomyManager();
 		FileConfiguration config = yh.gFC("config");
@@ -122,6 +125,7 @@ public class HyperConomy extends JavaPlugin {
 		hs.startSave();
 		cs = new ChestShop();
 	}
+	
 	public void onDataLoad() {
 		hist = new History();
 		itdi = new ItemDisplayFactory();
@@ -174,6 +178,9 @@ public class HyperConomy extends JavaPlugin {
 		if (protect) {
 			new DisabledProtection();
 		}
+		if (heh != null) {
+			heh.clearListeners();
+		}
 	}
 	
 	public void restart() {
@@ -186,6 +193,7 @@ public class HyperConomy extends JavaPlugin {
 		Bukkit.getServer().getPluginCommand("addcategory").setExecutor(new Addcategory());
 		Bukkit.getServer().getPluginCommand("additem").setExecutor(new Additem());
 		Bukkit.getServer().getPluginCommand("manageshop").setExecutor(new Manageshop());
+		Bukkit.getServer().getPluginCommand("ymladditem").setExecutor(new Ymladditem());
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -260,7 +268,7 @@ public class HyperConomy extends JavaPlugin {
 	}
 
 	public void setupExternalEconomy() {
-		useExternalEconomy = s().gB("use-external-economy-plugin");
+		useExternalEconomy = yh.getFileConfiguration("config").getBoolean("config.use-external-economy-plugin");
 		if (useExternalEconomy) {
 			Plugin vault = this.getServer().getPluginManager().getPlugin("Vault");
 			if (vault != null & vault instanceof Vault) {
@@ -372,11 +380,19 @@ public class HyperConomy extends JavaPlugin {
 	public SerializeArrayList getSerializeArrayList() {
 		return sal;
 	}
+	public HyperEventHandler getHyperEventHandler() {
+		return heh;
+	}
 	public boolean useExternalEconomy() {
 		return useExternalEconomy;
 	}
 	public void setUseExternalEconomy(boolean state) {
 		useExternalEconomy = state;
+	}
+	public String getFolderPath() {
+		FileTools ft = new FileTools();
+		String folderpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";
+		return folderpath;
 	}
 	
 }

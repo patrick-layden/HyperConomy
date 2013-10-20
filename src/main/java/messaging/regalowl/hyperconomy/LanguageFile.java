@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -55,8 +53,8 @@ public class LanguageFile {
 				break;
 			}
 		}
-		
-		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
+		String folderpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "Languages";
+		//String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
 		ft.makeFolder(folderpath);
 		String filepath = folderpath + File.separator + lang + ".hl";
 		String backuppath = folderpath + File.separator + "enUS_b.hl";
@@ -89,7 +87,9 @@ public class LanguageFile {
 	
 	
 	public void updateBackup() {
-		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
+		String folderpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "Languages";
+		ft.makeFolder(folderpath);
+		//String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
 		String backuppath = folderpath + File.separator + "enUS_b.hl";
 		ft.copyFileFromJar("Languages/enUS.hl", backuppath);
 		languageBackup.clear();

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -141,7 +140,7 @@ public class EconomyManager implements Listener {
 					hc.getHyperLock().setLoadLock(false);
 					economiesLoaded = true;
 					wait.cancel();
-					hc.onDataLoad();
+					hc.getHyperEventHandler().fireDataLoadEvent();
 					loadActive = false;
 				}
 			}
