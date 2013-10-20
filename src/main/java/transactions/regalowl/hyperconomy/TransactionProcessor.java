@@ -138,9 +138,7 @@ public class TransactionProcessor {
 			Calculation calc = hc.getCalculation();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
-			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
-			String playerecon = hp.getEconomy();
 			String name = hyperObject.getName();
 			int id = hyperObject.getId();
 			int data = hyperObject.getData();
@@ -203,8 +201,6 @@ public class TransactionProcessor {
 			}
 			log.writeSQLLog(hp.getName(), "purchase", name, (double) amount, calc.twoDecimals(price - taxpaid), calc.twoDecimals(taxpaid), tradePartner.getName(), type);
 			isign.updateSigns();
-			not.setNotify(name, null, playerecon);
-			not.sendNotification();
 			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
@@ -235,9 +231,7 @@ public class TransactionProcessor {
 			Calculation calc = hc.getCalculation();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
-			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
-			String playerecon = hp.getEconomy();
 			int id = hyperObject.getId();
 			int data = hyperObject.getData();
 			String name = hyperObject.getName();
@@ -327,8 +321,6 @@ public class TransactionProcessor {
 			}
 			log.writeSQLLog(hp.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), tradePartner.getName(), type);
 			isign.updateSigns();
-			not.setNotify(name, null, playerecon);
-			not.sendNotification();
 			heh.fireTransactionEvent(pt, response);
 			return response;
 
@@ -371,6 +363,7 @@ public class TransactionProcessor {
 						if (hyperObject != null) {
 							if (em.getShop(hp.getPlayer()).has(hyperObject.getName())) {
 								amount = im.countItems(id, da, hp.getInventory());
+								pt.setHyperObject(hyperObject);
 								TransactionResponse sresponse = sell();
 								if (sresponse.successful()) {
 									response.addSuccess(sresponse.getMessage(), sresponse.getPrice(), hyperObject);
@@ -417,9 +410,7 @@ public class TransactionProcessor {
 			Calculation calc = hc.getCalculation();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
-			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
-			String playerecon = hp.getEconomy();
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
 				heh.fireTransactionEvent(pt, response);
@@ -460,8 +451,6 @@ public class TransactionProcessor {
 						}
 						log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, calc.twoDecimals(price), calc.twoDecimals(taxpaid), tradePartner.getName(), type);
 						isign.updateSigns();
-						not.setNotify(hyperObject.getName(), null, playerecon);
-						not.sendNotification();
 					} else {
 						response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
 					}
@@ -499,9 +488,7 @@ public class TransactionProcessor {
 			Calculation calc = hc.getCalculation();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
-			Notification not = hc.getNotify();
 			InfoSignHandler isign = hc.getInfoSignHandler();
-			String playerecon = hp.getEconomy();
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getName()), hyperObject);
 				heh.fireTransactionEvent(pt, response);
@@ -561,8 +548,6 @@ public class TransactionProcessor {
 							log.writeSQLLog(hp.getName(), "sale", hyperObject.getName(), (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), tradePartner.getName(), type);
 
 							isign.updateSigns();
-							not.setNotify(hyperObject.getName(), null, playerecon);
-							not.sendNotification();
 						} else {
 							response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
 						}
@@ -704,11 +689,9 @@ public class TransactionProcessor {
 		}
 		Calculation calc = hc.getCalculation();
 		Log log = hc.getLog();
-		Notification not = hc.getNotify();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
 			String nenchant = "";
-			String playerecon = hp.getEconomy();
 			Player p = hp.getPlayer();
 			nenchant = hyperObject.getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
@@ -753,8 +736,6 @@ public class TransactionProcessor {
 					log.writeSQLLog(p.getName(), "sale", hyperObject.getName(), 1.0, fprice - salestax, salestax, tradePartner.getName(), type);
 
 					isign.updateSigns();
-					not.setNotify(hyperObject.getName(), mater, playerecon);
-					not.sendNotification();
 				} else {
 					response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
 				}
@@ -787,10 +768,8 @@ public class TransactionProcessor {
 		}
 		Calculation calc = hc.getCalculation();
 		Log log = hc.getLog();
-		Notification not = hc.getNotify();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
-			String playerecon = hp.getEconomy();
 			Player p = hp.getPlayer();
 			String nenchant = hyperObject.getMaterial();
 			Enchantment ench = Enchantment.getByName(nenchant);
@@ -843,8 +822,6 @@ public class TransactionProcessor {
 								log.writeSQLLog(p.getName(), "purchase", hyperObject.getName(), 1.0, price, taxpaid, tradePartner.getName(), type);
 
 								isign.updateSigns();
-								not.setNotify(hyperObject.getName(), mater, playerecon);
-								not.sendNotification();
 							} else {
 								response.addFailed(L.get("ITEM_CANT_ACCEPT_ENCHANTMENT"), hyperObject);
 							}

@@ -6,86 +6,72 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class Notification {
+public class Notification implements TransactionListener {
 	
 	private HyperConomy hc;
-	private ArrayList<String> name = new ArrayList<String>();
-	private ArrayList<String> eclass = new ArrayList<String>();
-
-	private String econ;
-	
+	private ArrayList<HyperObject> notificationQueue = new ArrayList<HyperObject>();
 	private String previousmessage;
-	
-	
 	private int notifrequests;
-	
 	boolean usenotify;
 	
 	Notification() {
 		hc = HyperConomy.hc;
+		usenotify = hc.gYH().gFC("config").getBoolean("config.use-notifications");
+		if (!usenotify) {return;}
 		previousmessage = "";
 		notifrequests = 0;
-		usenotify = hc.gYH().gFC("config").getBoolean("config.use-notifications");
+		hc.getHyperEventHandler().registerTransactionListener(this);
 	}
 	
-	
-	public void setNotify(String nam, String ecla, String economy) {
-		
-		hc = HyperConomy.hc;
 
-		
-		econ = economy;
-		
-		if (usenotify) {
-			name.add(nam);
-			eclass.add(ecla);
+	public void onTransaction(PlayerTransaction pt, TransactionResponse response) {
+		if (response.successful()) {
+			TransactionType tt = pt.getTransactionType();
+			if (tt == TransactionType.BUY || tt == TransactionType.SELL || tt == TransactionType.SELL_ALL) {
+				if (pt.getHyperObject() != null) {
+					notificationQueue.add(pt.getHyperObject());
+					sendNotification();
+				}
+			}
 		}
-
 	}
 	
 	
-    public void sendNotification() {
-    	usenotify = hc.gYH().gFC("config").getBoolean("config.use-notifications");
-    	if (usenotify) {
-	    	notifrequests++;
-	    	hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
-	    		public void run() {
-	    		    send();
-	    		    notifrequests--;
-	    		}
-	    	}, notifrequests * 20);
-    	
+	private void sendNotification() {
+		usenotify = hc.gYH().gFC("config").getBoolean("config.use-notifications");
+		notifrequests++;
+		hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+			public void run() {
+				send();
+				notifrequests--;
+			}
+		}, notifrequests * 20);
+	}
 
-    	}
-		
-    }
-
-	public void send() {
+	private void send() {
+		HyperObject ho = notificationQueue.get(0);
 		LanguageFile L = hc.getLanguageFile();
+		String econ = ho.getEconomy();
 		HyperEconomy he = hc.getEconomyManager().getEconomy(econ);
-		if (checkNotify(name.get(0))) {
+		if (checkNotify(ho.getName())) {
 			double cost = 0.0;
 			int stock = 0;
-			HyperObject ho = he.getHyperObject(name.get(0));
-			if (he.itemTest(name.get(0))) {
+
+			if (he.itemTest(ho.getName())) {
 				stock = (int) ho.getStock();
 				cost = ho.getCost(1);
-
-				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, name.get(0), econ);
-
+				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getName(), econ);
 				if (!message.equalsIgnoreCase(previousmessage)) {
-					manualNotify(message);
+					notify(message);
 					previousmessage = message;
 				}
-			} else if (he.enchantTest(name.get(0))) {
-				cost = ho.getCost(EnchantmentClass.fromString(eclass.get(0)));
+			} else if (he.enchantTest(ho.getName())) {
+				cost = ho.getCost(EnchantmentClass.DIAMOND);
 				cost = cost + ho.getPurchaseTax(cost);
-				stock = (int) he.getHyperObject(name.get(0)).getStock();
-				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, name.get(0), econ);
-
+				stock = (int) ho.getStock();
+				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getName(), econ);
 				if (!message.equalsIgnoreCase(previousmessage)) {
-
-					manualNotify(message);
+					notify(message);
 					previousmessage = message;
 				}
 			} else {
@@ -94,18 +80,15 @@ public class Notification {
 		    	Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #32--Notifcation Error", "hyperconomy.error");
 			}
 		}
-
-		name.remove(0);
-		eclass.remove(0);
+		notificationQueue.remove(0);
 	}
 	
 	
 	
-	public boolean checkNotify(String name) {
+	private boolean checkNotify(String name) {
 		boolean note = false;
 		String notify = hc.gYH().gFC("config").getString("config.notify-for");
 		if (notify != null && name != null) {		
-			//For everything but the first.  (Which lacks a comma.)
 			if (notify.contains("," + name + ",")) {
 				note = true;
 			}
@@ -116,8 +99,8 @@ public class Notification {
 		return note;
 	}
 	
-	//Workaround for lame bug...
-	public void manualNotify(String message) {
+
+	private void notify(String message) {
 		Player[] players = Bukkit.getOnlinePlayers();
 		for (int i = 0; i < players.length; i++) {
 			Player p = players[i];
