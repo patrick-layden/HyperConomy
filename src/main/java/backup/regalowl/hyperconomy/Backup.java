@@ -3,9 +3,12 @@ package regalowl.hyperconomy;
 import java.io.File;
 import java.util.ArrayList;
 
+import regalowl.databukkit.FileTools;
+
 public class Backup {
 	Backup() {
-		FileTools ft = new FileTools();
+		HyperConomy hc = HyperConomy.hc;
+		FileTools ft = hc.getFileTools();
 
 		ArrayList<String> backupFiles = new ArrayList<String>();
 		backupFiles.add("config.yml");

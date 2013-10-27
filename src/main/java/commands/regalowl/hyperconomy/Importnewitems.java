@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import regalowl.databukkit.FileTools;
+
 public class Importnewitems {
 	
 	Importnewitems(String args[], CommandSender sender) {
@@ -21,7 +23,7 @@ public class Importnewitems {
 			if (em.economyExists(economy) || args[0].equalsIgnoreCase("update")) {
 				if (args[0].equalsIgnoreCase("update")) {
 					new Backup();
-					FileTools ft = new FileTools();
+					FileTools ft = hc.getFileTools();
 					String folderPath = hc.getFolderPath();
 					hc.disable(true);
 					ft.deleteFile(folderPath + File.separator + "objects.yml");

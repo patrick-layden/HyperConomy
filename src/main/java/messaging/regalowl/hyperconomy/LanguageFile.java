@@ -10,8 +10,11 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import regalowl.databukkit.FileTools;
+
 public class LanguageFile {
 	
+	private HyperConomy hc;
 	private FileTools ft;
 	private HashMap<String, String> language = new HashMap<String, String>();
 	private HashMap<String, String> languageBackup = new HashMap<String, String>();
@@ -41,7 +44,8 @@ public class LanguageFile {
 	
 	
 	public String buildLanguageFile(boolean overwrite) {
-		ft = new FileTools();
+		hc = HyperConomy.hc;
+		ft = hc.getFileTools();
 		updateBackup();
 		String lang = HyperConomy.hc.gYH().gFC("config").getString("config.language");
 		if (lang == null) {

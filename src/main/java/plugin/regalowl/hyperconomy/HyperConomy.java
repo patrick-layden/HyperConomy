@@ -18,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.DataBukkit;
+import regalowl.databukkit.FileTools;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
 import regalowl.databukkit.YamlHandler;
@@ -51,6 +52,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private boolean enabled;
 	private boolean useExternalEconomy;
 	private CommonFunctions cf;
+	private FileTools ft;
 
 	@Override
 	public void onLoad() {
@@ -75,6 +77,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		hyperObjectAPI = new HyperObjectAPI();
 		db = new DataBukkit(this);
 		cf = db.getCommonFunctions();
+		ft = db.getFileTools();
 		yh = db.getYamlHandler();
 		yh.copyFromJar("categories");
 		yh.copyFromJar("config");
@@ -376,6 +379,9 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public CommonFunctions gCF() {
 		return cf;
 	}
+	public FileTools getFileTools() {
+		return ft;
+	}
 	public HyperEventHandler getHyperEventHandler() {
 		return heh;
 	}
@@ -386,7 +392,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		useExternalEconomy = state;
 	}
 	public String getFolderPath() {
-		FileTools ft = new FileTools();
 		String folderpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";
 		return folderpath;
 	}

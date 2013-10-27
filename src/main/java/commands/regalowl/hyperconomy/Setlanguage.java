@@ -1,15 +1,18 @@
 package regalowl.hyperconomy;
 
 import java.io.File;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+
+import regalowl.databukkit.FileTools;
 
 public class Setlanguage {
 
 	Setlanguage(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		FileTools ft = new FileTools();
+		FileTools ft = hc.getFileTools();
 		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
 		ft.makeFolder(folderpath);
 		try {

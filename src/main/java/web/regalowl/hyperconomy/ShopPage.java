@@ -9,12 +9,14 @@ import java.util.HashMap;
 
 
 
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import regalowl.databukkit.CommonFunctions;
+import regalowl.databukkit.FileTools;
 
 public class ShopPage extends HttpServlet {
 	
@@ -37,7 +39,7 @@ public class ShopPage extends HttpServlet {
 		hist = hc.getHistory();
 		s = shop;
 		page = buildLoadPage();
-		FileTools ft = new FileTools();
+		FileTools ft = hc.getFileTools();
 		webFolder = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "web" + File.separator;
 	}
 

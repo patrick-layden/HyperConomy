@@ -3,14 +3,17 @@ package regalowl.hyperconomy;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import org.bukkit.command.CommandSender;
+
+import regalowl.databukkit.FileTools;
 
 public class Writeitems {
 	Writeitems(String args[], CommandSender sender) {
 
 		HyperConomy hc = HyperConomy.hc;
 		SerializeArrayList sal = new SerializeArrayList();
-		FileTools ft = new FileTools();
+		FileTools ft = hc.getFileTools();
 		LanguageFile L = hc.getLanguageFile();
 		HyperEconomy defaultEcon = hc.getEconomyManager().getEconomy("default");
 		String path = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";
