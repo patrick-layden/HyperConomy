@@ -13,27 +13,12 @@ public class Setstaticprice {
 			if (args.length == 2) {
 				name = he.fixName(args[0]);
 				Double staticprice = Double.parseDouble(args[1]);
-				if (he.itemTest(name)) {
+				if (he.objectTest(name)) {
 					he.getHyperObject(name).setStaticprice(staticprice);
 					sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), name));
 					isign.updateSigns();
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
-				}
-			} else if (args.length == 3) {
-				String ench = args[2];
-				if (ench.equalsIgnoreCase("e")) {
-					name = args[0];
-					Double staticprice = Double.parseDouble(args[1]);
-					if (he.enchantTest(name)) {
-						he.getHyperObject(name).setStaticprice(staticprice);
-						sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), name));
-						isign.updateSigns();
-					} else {
-						sender.sendMessage(L.get("INVALID_ENCHANTMENT_NAME"));
-					}
-				} else {
-					sender.sendMessage(L.get("SETSTATICPRICE_INVALID"));
 				}
 			} else {
 				sender.sendMessage(L.get("SETSTATICPRICE_INVALID"));

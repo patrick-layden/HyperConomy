@@ -95,7 +95,7 @@ EVALUE_INVALID: &4Paramètres invalides. Utiliser /evalue (nom) ('b'/'s'/'a')
 EVALUE_PURCHASE: &b%n &9s'achète : &a%c%p
 EVALUE_SALE: &b%n &9se vend : &a%c%p
 EVALUE_STOCK: &9Le magasin global a &a%a &b%n &9disponibles.
-EXPORT_PROCEED: &cCela écrasera les données de items.yml et enchants.yml, tapez /exporttoyml [économie] ['confirm'] pour continuer !
+EXPORT_PROCEED: &cCela écrasera les données de objects.yml, tapez /exporttoyml [économie] ['confirm'] pour continuer !
 EXPORTTOYML_INVALID: &4Paramètres invalides. Utiliser /exporttoyml [économie] ['confirm']
 FILES_RELOADED: &6Tous les fichiers ont été rechargés.
 FIRST_LOCK_SHOP: &4Vous devez d'abord verrouiller le magasin global !
@@ -193,7 +193,7 @@ INVALID_ITEM_CLASS: &4Classe d'objet invalide.
 INVALID_ITEM_NAME: &4Nom d'objet invalide !
 INVALID_NAME: &4Nom invalide !
 IRON_VALUE: &9Valeur pour le fer : &a%v
-ITEM_ADDED: &6Objet ajouté à items.yml. Utiliser /reloadfiles ou redémarrer le serveur pour qu'il soit pris en compte.
+ITEM_ADDED: &6Objet ajouté à objects.yml. Utiliser /reloadfiles ou redémarrer le serveur pour qu'il soit pris en compte.
 ITEM_ALREADY_HAS_ENCHANTMENT: &9L'objet que vous tenez possède déjà un enchantement de ce type !
 ITEM_CANNOT_ACCEPT_ENCHANTMENTS: &9Cet objet ne peut être enchanté.
 ITEM_CANT_ACCEPT_ENCHANTMENT: &9L'objet que vous tenez est incompatible avec cet enchantement !

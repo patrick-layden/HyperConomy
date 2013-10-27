@@ -30,9 +30,10 @@ public class Value {
 				} else {
 					amount = 1;
 				}
-				if (he.itemTest(name)) {
-					HyperObject ho = he.getHyperObject(name, em.getShop(player));
-					double val = ho.getValue(amount);
+				BasicObject bo = he.getBasicObject(name, em.getShop(player));
+				HyperItem hi = he.getHyperItem(name, em.getShop(player));
+				if (hi != null) {
+					double val = hi.getValue(amount);
 					double salestax = 0;
 					if (player != null) {
 						HyperPlayer hp = em.getHyperPlayer(player);
@@ -41,8 +42,29 @@ public class Value {
 					val = calc.twoDecimals(val - salestax);
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, name));
-					double cost = ho.getCost(amount);
-					double taxpaid = ho.getPurchaseTax(cost);
+					double cost = hi.getCost(amount);
+					double taxpaid = hi.getPurchaseTax(cost);
+					cost = calc.twoDecimals(cost + taxpaid);
+					if (cost > Math.pow(10, 10)) {
+						cost = -1;
+					}
+					double stock = 0;
+					stock = calc.twoDecimals(he.getHyperObject(name, em.getShop(player)).getStock());
+					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, name));
+					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, name));
+					sender.sendMessage(L.get("LINE_BREAK"));
+				} else if (bo != null) {
+					double val = bo.getValue(amount);
+					double salestax = 0;
+					if (player != null) {
+						HyperPlayer hp = em.getHyperPlayer(player);
+						salestax = hp.getSalesTax(val);
+					}
+					val = calc.twoDecimals(val - salestax);
+					sender.sendMessage(L.get("LINE_BREAK"));
+					sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, name));
+					double cost = bo.getCost(amount);
+					double taxpaid = bo.getPurchaseTax(cost);
 					cost = calc.twoDecimals(cost + taxpaid);
 					if (cost > Math.pow(10, 10)) {
 						cost = -1;

@@ -165,9 +165,21 @@ public class ShopPage extends HttpServlet {
 							tax = hc.s().getTax();
 						}
 					}
-					double scost = ho.getValue(1);
-					double bcost = ho.getCost(1);
-
+					double scost = -1;
+					double bcost = -1;
+					if (ho instanceof HyperItem) {
+						HyperItem hi = (HyperItem)ho;
+						scost = hi.getValue(1);
+						bcost = hi.getCost(1);
+					} else if (ho instanceof HyperEnchant) {
+						HyperEnchant he = (HyperEnchant)ho;
+						scost = he.getValue(EnchantmentClass.DIAMOND);
+						bcost = he.getCost(EnchantmentClass.DIAMOND);
+					} else if (ho instanceof BasicObject) {
+						BasicObject bo = (BasicObject)ho;
+						scost = bo.getValue(1);
+						bcost = bo.getCost(1);
+					}
 					page += "<TR>\n";
 					/*
 					 * page += "<TD>\n";
@@ -196,7 +208,15 @@ public class ShopPage extends HttpServlet {
 					page += calc.twoDecimals(ho.getStock()) + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
-					page += ho.getId() + "\n";
+					
+					
+					int id = -1;
+					if (ho instanceof HyperItem) {
+						HyperItem hi = (HyperItem)ho;
+						id = hi.getId();
+					} 
+					
+					page += id + "\n";
 					page += "</TD>\n";
 
 					if (hc.s().getUseHistory()) {

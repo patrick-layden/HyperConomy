@@ -18,14 +18,11 @@ public class Resetshop {
 				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
 					new Backup();
 				}
-				ArrayList<String> names = he.getNames();
-				for (int c = 0; c < names.size(); c++) {
-					String cname = names.get(c);
-					HyperObject ho = he.getHyperObject(cname);
-					if (ho instanceof ComponentObject) {
+				for (HyperObject ho:he.getHyperObjects()) {
+					if (!(ho instanceof CompositeItem)) {
 						ho.setStock(0);
 						ho.setIsstatic("false");
-						ho.setInitiation("true");
+						ho.setInitiation("true");	
 					}
 				}
 				sender.sendMessage(L.get("RESETSHOP_SUCCESS"));

@@ -24,7 +24,7 @@ public class Makedisplay {
 			String name = he.fixName(args[0]);
 			if (he.itemTest(name)) {
 				String economy = hp.getEconomy();
-				itdi.testDisplay(bl.getX(), bl.getY() + 1, bl.getZ(), bl.getWorld(), name, economy);
+				itdi.testDisplay(bl.getX(), bl.getY() + 1, bl.getZ(), bl.getWorld(), name);
 			} else {
 				player.sendMessage(L.get("INVALID_ITEM_NAME"));
 			}
@@ -36,7 +36,7 @@ public class Makedisplay {
 				double y = player.getLocation().getY();
 				double z = player.getLocation().getZ();
 				World w = player.getLocation().getWorld();
-				itdi.testDisplay(x, y, z, w, name, economy);
+				itdi.testDisplay(x, y, z, w, name);
 			} else {
 				player.sendMessage(L.get("INVALID_ITEM_NAME"));
 			}

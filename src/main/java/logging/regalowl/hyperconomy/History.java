@@ -101,12 +101,16 @@ public class History {
 	private void writeHistoryThread() {
 		ArrayList<HyperObject> objects = em.getHyperObjects();
 		for (HyperObject object : objects) {
-			if (object.getType() == HyperObjectType.ENCHANTMENT) {
-				writeHistoryData(object.getName(), object.getEconomy(), object.getValue(EnchantmentClass.DIAMOND));
-			} else {
-				writeHistoryData(object.getName(), object.getEconomy(), object.getValue(1));
+			if (object instanceof HyperEnchant) {
+				HyperEnchant he = (HyperEnchant)object;
+				writeHistoryData(object.getName(), object.getEconomy(), he.getValue(EnchantmentClass.DIAMOND));
+			} else if (object instanceof HyperItem) {
+				HyperItem hi = (HyperItem)object;
+				writeHistoryData(object.getName(), object.getEconomy(), hi.getValue(1));
+			} else if (object instanceof BasicObject) {
+				BasicObject bo = (BasicObject)object;
+				writeHistoryData(object.getName(), object.getEconomy(), bo.getValue(1));
 			}
-
 		}
 	}
   	
@@ -178,11 +182,18 @@ public class History {
 			return "?";
 		}
 		double currentvalue = 0.0;
-		if (ho.getType() == HyperObjectType.ENCHANTMENT) {
-			currentvalue = ho.getValue(EnchantmentClass.DIAMOND);
-		} else {
-			currentvalue = ho.getValue(1);
+		
+		if (ho instanceof HyperEnchant) {
+			HyperEnchant he = (HyperEnchant)ho;
+			currentvalue = he.getValue(EnchantmentClass.DIAMOND);
+		} else if (ho instanceof HyperItem) {
+			HyperItem hi = (HyperItem)ho;
+			currentvalue = hi.getValue(1);
+		} else if (ho instanceof BasicObject) {
+			BasicObject bo = (BasicObject)ho;
+			currentvalue = bo.getValue(1);
 		}
+
 		percentChange = ((currentvalue - historicvalue) / historicvalue) * 100;
 		percentChange = calc.round(percentChange, 3);
 		return percentChange + "";
@@ -226,10 +237,15 @@ public class History {
 				if (historicValues.size() >= timevalue) {
 					double historicValue = historicValues.get(timevalue - 1);
 					double currentvalue = 0.0;
-					if (ho.getType() == HyperObjectType.ENCHANTMENT) {
-						currentvalue = ho.getValue(EnchantmentClass.DIAMOND);
-					} else {
-						currentvalue = ho.getValue(1);
+					if (ho instanceof HyperEnchant) {
+						HyperEnchant he = (HyperEnchant)ho;
+						currentvalue = he.getValue(EnchantmentClass.DIAMOND);
+					} else if (ho instanceof HyperItem) {
+						HyperItem hi = (HyperItem)ho;
+						currentvalue = hi.getValue(1);
+					} else if (ho instanceof BasicObject) {
+						BasicObject bo = (BasicObject)ho;
+						currentvalue = bo.getValue(1);
 					}
 					double percentChange = ((currentvalue - historicValue) / historicValue) * 100;
 					percentChange = hc.getCalculation().round(percentChange, 3);

@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -27,6 +28,7 @@ public interface ObjectAPI
 	 *            economy.
 	 * @return The purchase price of an object before tax and price modifiers.
 	 */
+	@Deprecated
 	double getTheoreticalPurchasePrice(int id, int durability, int amount, String nameOfEconomy);
 
 	/**
@@ -45,6 +47,7 @@ public interface ObjectAPI
 	 * @return The sale value of an object ignoring durability, tax, and all
 	 *         price modifiers.
 	 */
+	@Deprecated
 	double getTheoreticalSaleValue(int id, int durability, int amount, String nameOfEconomy);
 
 	/**
@@ -63,6 +66,7 @@ public interface ObjectAPI
 	 * @return The purchase price of an object including taxes and all price
 	 *         modifiers.
 	 */
+	@Deprecated
 	double getTruePurchasePrice(int id, int durability, int amount, String nameOfEconomy);
 
 	/**
@@ -79,6 +83,7 @@ public interface ObjectAPI
 	 * @return The sale value of an object including all taxes, durability, and
 	 *         price modifiers.
 	 */
+	@Deprecated
 	double getTrueSaleValue(int id, int durability, int amount, Player player);
 
 	
@@ -165,6 +170,16 @@ public interface ObjectAPI
 	public HyperObject getHyperObject(ItemStack stack, String player);
 	
 	public HyperObject getHyperObject(String name, String economy);
+	public HyperItem getHyperItem(String name, String economy);
+	public HyperEnchant getHyperEnchant(String name, String economy);
+	public BasicObject getBasicObject(String name, String economy);
+	public HyperXP getHyperXP(String economy);
+	
+	public PlayerShopObject getPlayerShopObject(String name, PlayerShop s);
+	public PlayerShopItem getPlayerShopItem(String name, PlayerShop s);
+	public PlayerShopEnchant getPlayerShopEnchant(String name, PlayerShop s);
+	public BasicShopObject getBasicShopObject(String name, PlayerShop s);
+	public ShopXp getShopXp(String name, PlayerShop s);
 	
 	public HyperPlayer getHyperPlayer(String name);
 	
@@ -180,40 +195,11 @@ public interface ObjectAPI
 	
 	public ArrayList<HyperObject> getAvailableObjects(Player p, int startingPosition, int limit);
 	
-
-	/**
-	 * @deprecated The economy should be specified for future versions of the
-	 *             plugin. "default" is the main economy used when SQL is not
-	 *             enabled.
-	 * @param id
-	 * @param data
-	 * @param amount
-	 * @return
-	 */
-	@Deprecated
-	double getItemPurchasePrice(int id, int data, int amount);
-
-	/**
-	 * @deprecated The economy should be specified for future versions of the
-	 *             plugin. "default" is the main economy used when SQL is not
-	 *             enabled.
-	 * @param id
-	 * @param data
-	 * @param amount
-	 * @return
-	 */
-	@Deprecated
-	double getItemSaleValue(int id, int data, int amount);
 	
-	/**
-	 * Get all objects in an economy
-	 * @param pEconomy Economy name
-	 * @param pPlayer Player
-	 * @return List of each objects with properties
-	 */
-	public List<Map<String, String>> getAllStockPlayer(Player pPlayer);
+
+	//public List<Map<String, String>> getAllStockPlayer(Player pPlayer);
 	
-	public List<Map<String, String>> getAllStockEconomy(String economy);
+	//public List<Map<String, String>> getAllStockEconomy(String economy);
 	
 	public EnchantmentClass getEnchantmentClass(ItemStack stack);
 }

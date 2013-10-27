@@ -17,25 +17,13 @@ public class Importprices {
 				String economy = args[0];
 				if (em.economyExists(economy)) {
 					new Backup();
-					FileConfiguration itemsyaml = hc.gYH().gFC("items");
-					Iterator<String> it = itemsyaml.getKeys(false).iterator();
+					FileConfiguration objects = hc.gYH().gFC("objects");
+					Iterator<String> it = objects.getKeys(false).iterator();
 					while (it.hasNext()) {
 						String name = it.next().toString();
-						double value = itemsyaml.getDouble(name + ".value");
-						double staticprice = itemsyaml.getDouble(name + ".price.staticprice");
-						double startprice = itemsyaml.getDouble(name + ".initiation.startprice");
-						HyperObject ho = em.getEconomy(economy).getHyperObject(name);
-						ho.setValue(value);
-						ho.setStartprice(startprice);
-						ho.setStaticprice(staticprice);
-					}
-					FileConfiguration enchantsyaml = hc.gYH().gFC("enchants");
-					Iterator<String> it2 = enchantsyaml.getKeys(false).iterator();
-					while (it2.hasNext()) {
-						String name = it2.next().toString();
-						double value = enchantsyaml.getDouble(name + ".value");
-						double staticprice = enchantsyaml.getDouble(name + ".price.staticprice");
-						double startprice = enchantsyaml.getDouble(name + ".initiation.startprice");
+						double value = objects.getDouble(name + ".value");
+						double staticprice = objects.getDouble(name + ".price.staticprice");
+						double startprice = objects.getDouble(name + ".initiation.startprice");
 						HyperObject ho = em.getEconomy(economy).getHyperObject(name);
 						ho.setValue(value);
 						ho.setStartprice(startprice);

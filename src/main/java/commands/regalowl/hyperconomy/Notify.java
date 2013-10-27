@@ -14,7 +14,7 @@ public class Notify {
 			String itemname = he.fixName(args[0]);
 			if (args.length == 1) {
 				if (hc.gYH().gFC("config").getBoolean("config.use-notifications")) {
-					if (he.itemTest(itemname) || he.enchantTest(itemname) || itemname.equalsIgnoreCase("all")) {
+					if (he.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
 						if (!itemname.equalsIgnoreCase("all")) {
 							boolean note = false;
 							String notify = hc.gYH().gFC("config").getString("config.notify-for");

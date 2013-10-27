@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -37,22 +36,21 @@ public class Topenchants {
 				page = Integer.parseInt(args[0]);
 			}
 			SortedMap<Double, String> enchantstocks = new TreeMap<Double, String>();
-			ArrayList<String> enames = he.getEnchantNames();
-			for (int c = 0; c < enames.size(); c++) {
-				String elst = enames.get(c);
+			for (HyperObject ho:he.getHyperObjects()) {
+				if (!(ho instanceof HyperEnchant)) {continue;}
 				boolean unavailable = false;
 				if (nameshop != "") {
-					if (!em.getShop(nameshop).has(elst)) {
+					if (!em.getShop(nameshop).has(ho.getName())) {
 						unavailable = true;
 					}
 				}
 				if (!unavailable) {
-					double samount = he.getHyperObject(elst, em.getShop(player)).getStock();
+					double samount = he.getHyperObject(ho.getName(), em.getShop(player)).getStock();
 					if (samount > 0) {
 						while (enchantstocks.containsKey(samount * 100)) {
 							samount = samount + .0000001;
 						}
-						enchantstocks.put(samount * 100, elst);
+						enchantstocks.put(samount * 100, ho.getName());
 					}
 				}
 			}
@@ -62,7 +60,6 @@ public class Topenchants {
 			double maxpages = le / 10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int) maxpages + 1;
-			//sender.sendMessage(ChatColor.RED + "Page " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
 			sender.sendMessage(L.f(L.get("PAGE_NUMBER"), page, maxpi));
 			try {
 				while (count < numberpage) {

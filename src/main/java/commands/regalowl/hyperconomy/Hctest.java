@@ -11,7 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class Hctest {
 	
 	
-	
+	/*
 	
 	Hctest() {
 		HyperConomy hc = HyperConomy.hc;
@@ -94,7 +94,7 @@ public class Hctest {
 		
 		
 		
-		
+		/*
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy em = hc.getEconomyManager().getEconomy("default");
 		FileConfiguration composites = hc.gYH().gFC("composites");
@@ -144,4 +144,5 @@ public class Hctest {
 		
 		
 	}
+	*/
 }

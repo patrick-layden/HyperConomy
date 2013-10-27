@@ -12,7 +12,6 @@ public class Hv {
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
-		InventoryManipulation im = hc.getInventoryManipulation();;
 		int amount;
 		try {
 			HyperPlayer hp = em.getHyperPlayer(player.getName());
@@ -20,25 +19,23 @@ public class Hv {
 			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
 			if ((requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				ItemStack iinhand = player.getItemInHand();
-					if (args.length == 0) {
-						amount = 1;
-					} else {
-						amount = Integer.parseInt(args[0]);
-						if (amount > 10000) {
-							amount = 10000;
-						}
+				if (args.length == 0) {
+					amount = 1;
+				} else {
+					amount = Integer.parseInt(args[0]);
+					if (amount > 10000) {
+						amount = 10000;
 					}
-					if (!im.hasenchants(iinhand)) {
-					int itd = player.getItemInHand().getTypeId();
-					int da = im.getDamageValue(player.getItemInHand());
-					HyperObject ho = he.getHyperObject(itd, da, em.getShop(player));
+				}
+				if (!new HyperItemStack(iinhand).hasenchants()) {
+					HyperItem ho = he.getHyperItem(player.getItemInHand(), em.getShop(player));
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
 						String nam = ho.getName();
 						double val = ho.getValue(amount, hp);
 						if (ho.isDurable() && amount > 1) {
-							int numberofitem = im.countItems(itd, player.getItemInHand().getData().getData(), player.getInventory());
+							int numberofitem = ho.count(player.getInventory());
 							if (amount - numberofitem > 0) {
 								int addamount = amount - numberofitem;
 								val = val + ho.getValue(addamount);
@@ -60,7 +57,7 @@ public class Hv {
 						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, nam));
 						player.sendMessage(L.get("LINE_BREAK"));
 					}
-					} else {
+				} else {
 					player.getItemInHand().getEnchantments().keySet().toArray();
 					Iterator<Enchantment> ite = player.getItemInHand().getEnchantments().keySet().iterator();
 					player.sendMessage(L.get("LINE_BREAK"));
@@ -73,7 +70,7 @@ public class Hv {
 						String enam = he.getEnchantNameWithoutLevel(enchname);
 						String fnam = enam + lvl;
 						String mater = player.getItemInHand().getType().name();
-						HyperObject ho = he.getHyperObject(fnam, em.getShop(player));
+						HyperEnchant ho = he.getHyperEnchant(fnam, em.getShop(player));
 						double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
 						double cost = ho.getCost(EnchantmentClass.fromString(mater));
 						cost = cost + ho.getPurchaseTax(cost);

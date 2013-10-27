@@ -29,7 +29,7 @@ public class Setinitiationall {
 		for (int i = 0; i < names.size(); i++) {
 			name = names.get(i);
 			HyperObject ho = he.getHyperObject(name);
-			if (ho instanceof CompositeObject) {continue;}
+			if (ho instanceof CompositeItem) {continue;}
 			ho.setInitiation(setting);
 		}
 		isign.updateSigns();

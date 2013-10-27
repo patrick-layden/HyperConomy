@@ -24,8 +24,7 @@ public class Importnewitems {
 					FileTools ft = new FileTools();
 					String folderPath = hc.getFolderPath();
 					hc.disable(true);
-					ft.deleteFile(folderPath + File.separator + "items.yml");
-					ft.deleteFile(folderPath + File.separator + "enchants.yml");
+					ft.deleteFile(folderPath + File.separator + "objects.yml");
 					hc.restart();
 				} else {
 					if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {

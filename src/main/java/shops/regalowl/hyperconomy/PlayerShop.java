@@ -1,13 +1,14 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.QueryResult;
 
 public class PlayerShop implements Shop, Comparable<Shop> {
@@ -15,6 +16,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private String name;
 	private String world;
 	private HyperPlayer owner;
+	private ArrayList<String> allowed = new ArrayList<String>();
 	private String economy;
 	private String message1;
 	private String message2;
@@ -32,8 +34,9 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private FileConfiguration shopFile;
 	private EconomyManager em;
 	private PlayerShop ps;
+	private CommonFunctions cf;
 	
-	private CopyOnWriteArrayList<PlayerShopObject> shopContents = new CopyOnWriteArrayList<PlayerShopObject>();
+	private ConcurrentHashMap<HyperObject,PlayerShopObject> shopContents = new ConcurrentHashMap<HyperObject,PlayerShopObject>();
 	private ArrayList<String> inShop = new ArrayList<String>();
 	
 	PlayerShop(String shopName, String econ, HyperPlayer owner) {
@@ -41,6 +44,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		this.economy = econ;
 		this.owner = owner;
 		hc = HyperConomy.hc;
+		cf = hc.getDataBukkit().getCommonFunctions();
 		em = hc.getEconomyManager();
 		ps = this;
 		L = hc.getLanguageFile();
@@ -48,7 +52,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		shopFile.set(name + ".economy", economy);
 		shopFile.set(name + ".owner", owner.getName());
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
-		
+		allowed = cf.explode(shopFile.getString(name + ".allowed"), ",");
 		
 		
 		
@@ -61,19 +65,29 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 					HyperObject ho = he.getHyperObject(result.getString("HYPEROBJECT"));
 					double stock = result.getDouble("QUANTITY");
 					HyperObjectStatus status = HyperObjectStatus.fromString(result.getString("STATUS"));
-					if (ho instanceof ComponentObject) {
-						ComponentShopObject pso = new ComponentShopObject(ps, ho, stock, price, status);
-						shopContents.add(pso);
-					} else if (ho instanceof CompositeObject) {
-						PlayerShopObject pso = new CompositeShopObject(ps, ho, stock, price, status);
-						shopContents.add(pso);
+					if (ho instanceof ComponentItem) {
+						ComponentShopItem pso = new ComponentShopItem(ps, (ComponentItem) ho, stock, price, status);
+						shopContents.put(ho, pso);
+					} else if (ho instanceof CompositeItem) {
+						CompositeShopItem pso = new CompositeShopItem(ps, (CompositeItem)ho, stock, price, status);
+						shopContents.put(ho, pso);
+					} else if (ho instanceof Xp) {
+						ShopXp pso = new ShopXp(ps, (BasicObject) ho, stock, price, status);
+						shopContents.put(ho, pso);
+					} else if (ho instanceof HyperEnchant) {
+						HyperEnchant hye = (HyperEnchant)ho;
+						ShopEnchant pso = new ShopEnchant(ps, hye, stock, price, status);
+						shopContents.put(ho, pso);
+					} else if (ho instanceof BasicObject) {
+						BasicShopObject pso = new BasicShopObject(ps, (BasicObject) ho, stock, price, status);
+						shopContents.put(ho, pso);
 					}
+
 				}
 				result.close();
 			}
 		});		
 	}
-	
 
 	
 	public int compareTo(Shop s) {
@@ -307,14 +321,14 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 	public ArrayList<HyperObject> getAvailableObjects() {
 		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
-		for (PlayerShopObject pso:shopContents) {
+		for (PlayerShopObject pso:shopContents.values()) {
 			available.add(pso.getHyperObject());
 		}
 		return available;
 	}
 	
 	public boolean isEmpty() {
-		for (PlayerShopObject pso:shopContents) {
+		for (PlayerShopObject pso:shopContents.values()) {
 			if (pso.getStock() > 0) {
 				return false;
 			}
@@ -330,7 +344,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void removePlayerShopObject(HyperObject hyperObject) {
-		HyperObject pso = getPlayerShopObject(hyperObject);
+		PlayerShopObject pso = getPlayerShopObject(hyperObject);
 		if (pso == null) {
 			return;
 		} else {
@@ -338,32 +352,73 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			hc.getSQLWrite().executeSQL("DELETE FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"' AND HYPEROBJECT = '"+hyperObject.getName()+"'");
 		}
 	}
-	public HyperObject getPlayerShopObject(HyperObject hyperObject) {
-		for (PlayerShopObject pso:shopContents) {
-			if (hyperObject.equals(pso.getHyperObject())) {
-				return pso;
-			}
+	public PlayerShopObject getPlayerShopObject(HyperObject hyperObject) {
+		if (shopContents.containsKey(hyperObject)) {
+			return shopContents.get(hyperObject);
 		}
-		if (hyperObject instanceof ComponentObject) {
-			PlayerShopObject pso = new ComponentShopObject(this, hyperObject, 0.0, 0.0, HyperObjectStatus.TRADE);
-			shopContents.add(pso);
-			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'trade')");
+		if (hyperObject instanceof ComponentItem) {
+			ComponentShopItem pso = new ComponentShopItem(this, (ComponentItem)hyperObject, 0.0, 0.0, HyperObjectStatus.NONE);
+			shopContents.put(hyperObject, pso);
+			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'none')");
 			return pso;
-		} else if (hyperObject instanceof CompositeObject) {
-			PlayerShopObject pso = new CompositeShopObject(this, hyperObject, 0.0, 0.0, HyperObjectStatus.TRADE);
-			shopContents.add(pso);
-			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'trade')");
+		} else if (hyperObject instanceof CompositeItem) {
+			CompositeShopItem pso = new CompositeShopItem(this, (CompositeItem)hyperObject, 0.0, 0.0, HyperObjectStatus.NONE);
+			shopContents.put(hyperObject, pso);
+			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'none')");
+			return pso;
+		} else if (hyperObject instanceof Xp) {
+			ShopXp pso = new ShopXp(this, (Xp)hyperObject, 0.0, 0.0, HyperObjectStatus.NONE);
+			shopContents.put(hyperObject, pso);
+			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'none')");
+			return pso;
+		} else if (hyperObject instanceof HyperEnchant) {
+			ShopEnchant pso = new ShopEnchant(ps, (HyperEnchant)hyperObject, 0.0, 0.0, HyperObjectStatus.NONE);
+			shopContents.put(hyperObject, pso);
+			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'none')");
+			return pso;
+		} else if (hyperObject instanceof BasicObject) {
+			BasicShopObject pso = new BasicShopObject(this, (BasicObject)hyperObject, 0.0, 0.0, HyperObjectStatus.NONE);
+			shopContents.put(hyperObject, pso);
+			hc.getSQLWrite().executeSQL("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', 'none')");
 			return pso;
 		}
 		return null;
 	}
-	public boolean hasPlayerShopObject(HyperObject ho) {
-		for (PlayerShopObject pso:shopContents) {
-			if (ho.equals(pso.getHyperObject())) {
-				return true;
-			}
+	
+	public PlayerShopItem getPlayerShopItem(HyperObject hyperObject) {
+		PlayerShopObject pso = getPlayerShopObject(hyperObject);
+		if (pso != null && pso instanceof PlayerShopItem) {
+			return (PlayerShopItem)pso;
 		}
-		return false;
+		return null;
+	}
+	
+	public PlayerShopEnchant getPlayerShopEnchant(HyperObject hyperObject) {
+		PlayerShopObject pso = getPlayerShopObject(hyperObject);
+		if (pso != null && pso instanceof PlayerShopEnchant) {
+			return (PlayerShopEnchant)pso;
+		}
+		return null;
+	}
+	
+	public BasicShopObject getBasicShopObject(HyperObject hyperObject) {
+		PlayerShopObject pso = getPlayerShopObject(hyperObject);
+		if (pso != null && pso instanceof BasicShopObject) {
+			return (BasicShopObject)pso;
+		}
+		return null;
+	}
+	
+	public ShopXp getShopXp(HyperObject hyperObject) {
+		PlayerShopObject pso = getPlayerShopObject(hyperObject);
+		if (pso != null && pso instanceof ShopXp) {
+			return (ShopXp)pso;
+		}
+		return null;
+	}
+	
+	public boolean hasPlayerShopObject(HyperObject ho) {
+		return shopContents.containsKey(ho);
 	}
 	
 
@@ -409,5 +464,30 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 	public int getVolume() {
 		return Math.abs(p1x - p2x) * Math.abs(p1y - p2y) * Math.abs(p1z - p2z);
+	}
+	
+	public ArrayList<String> getAllowed() {
+		return allowed;
+	}
+	public void addAllowed(HyperPlayer hp) {
+		if (!allowed.contains(hp.getName())) {
+			allowed.add(hp.getName());
+		}
+		saveAllowed();
+	}
+	public void removeAllowed(HyperPlayer hp) {
+		if (allowed.contains(hp.getName())) {
+			allowed.remove(hp.getName());
+		}
+		saveAllowed();
+	}
+	public boolean isAllowed(HyperPlayer hp) {
+		if (allowed.contains(hp.getName())) {
+			return true;
+		}
+		return false;
+	}
+	public void saveAllowed() {
+		shopFile.set(name + ".allowed", cf.implode(allowed, ","));
 	}
 }

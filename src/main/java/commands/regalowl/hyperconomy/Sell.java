@@ -10,7 +10,6 @@ public class Sell {
 		hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		LanguageFile L = hc.getLanguageFile();
-		InventoryManipulation im = hc.getInventoryManipulation();
 		EconomyManager em = hc.getEconomyManager();
 		try {
 			if (player.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
@@ -20,15 +19,11 @@ public class Sell {
 			if (em.inAnyShop(player)) {
 				if (em.getHyperPlayer(player).hasSellPermission(em.getShop(player))) {
 					String name = he.fixName(args[0]);
+					HyperObject ho = he.getHyperObject(name, em.getShop(player));
 					int amount = 0;
-					boolean xp = false;
 
-					if (he.itemTest(name)) {
-						HyperObject ho = he.getHyperObject(name, em.getShop(player));
-						if (ho.getType() == HyperObjectType.EXPERIENCE) {
-							xp = true;
-						}
-						
+					if (ho instanceof HyperItem) {
+						HyperItem hi = he.getHyperItem(name, em.getShop(player));
 						if (args.length == 1) {
 							amount = 1;
 						} else {
@@ -40,20 +35,45 @@ public class Sell {
 							} catch (Exception e) {
 								String max = args[1];
 								if (max.equalsIgnoreCase("max")) {
-									if (xp) {
-										amount = im.gettotalxpPoints(player);
-									} else {
-										amount = im.countItems(ho.getId(), ho.getData(), player.getInventory());	
-									}
+									amount = hi.count(player.getInventory());	
 								} else {
 									player.sendMessage(L.get("SELL_INVALID"));
 									return;
 								}
 							}
 						}
-					}
-					if (he.itemTest(name)) {
-						HyperObject ho = he.getHyperObject(name, em.getShop(player));
+						Shop s = em.getShop(player);
+						if (s.has(name)) {
+							PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+							pt.setHyperObject(ho);
+							pt.setAmount(amount);
+							pt.setTradePartner(s.getOwner());
+							TransactionResponse response = em.getHyperPlayer(player).processTransaction(pt);
+							response.sendMessages();
+						} else {
+							player.sendMessage(L.get("CANT_BE_TRADED"));
+							return;
+						}
+					} else if (ho instanceof HyperXP) {
+						HyperXP xp = he.getHyperXP(em.getShop(player));
+						if (args.length == 1) {
+							amount = 1;
+						} else {
+							try {
+								amount = Integer.parseInt(args[1]);
+								if (amount > 100000) {
+									amount = 100000;
+								}
+							} catch (Exception e) {
+								String max = args[1];
+								if (max.equalsIgnoreCase("max")) {
+									amount = xp.getTotalXpPoints(player);
+								} else {
+									player.sendMessage(L.get("SELL_INVALID"));
+									return;
+								}
+							}
+						}
 						Shop s = em.getShop(player);
 						if (s.has(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);

@@ -14,45 +14,11 @@ public class Iteminfo {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
-		InventoryManipulation im = hc.getInventoryManipulation();
 		try {		
 			HyperPlayer hp = em.getHyperPlayer(player.getName());
 			HyperEconomy he = hp.getHyperEconomy();
-			if (args.length == 1) {
-				int givenid = Integer.parseInt(args[0]);
-				int dv = 0;
-				int newdat = im.cleanDamageValue(givenid, dv);
-				HyperObject ho = he.getHyperObject(givenid, newdat);
-				String nam = "";
-				if (ho == null) {
-					nam = "Item not in database.";
-				} else {
-					nam = ho.getName();
-				}
-				player.sendMessage(L.get("LINE_BREAK"));
-				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
-				player.sendMessage(L.get("LINE_BREAK"));
-				return;
-			} else if (args.length == 2) {
-				int givenid = Integer.parseInt(args[0]);;
-				int givendam = Integer.parseInt(args[1]);
-				int newdat = im.cleanDamageValue(givenid, givendam);
-				HyperObject ho = he.getHyperObject(givenid, newdat);
-				String nam = "";
-				if (ho == null) {
-					nam = "Item not in database.";
-				} else {
-					nam = ho.getName();
-				}
-				player.sendMessage(L.get("LINE_BREAK"));
-				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
-				player.sendMessage(L.get("LINE_BREAK"));
-				return;
-			}
 			String mat = player.getItemInHand().getType().toString();
-			int itemid = player.getItemInHand().getTypeId();
-			int dv = im.getDamageValue(player.getItemInHand());
-			HyperObject ho = he.getHyperObject(itemid, dv);
+			HyperItem ho = he.getHyperItem(player.getItemInHand());
 			String nam = "";
 			if (ho == null) {
 				nam = "Item not in database.";
@@ -66,15 +32,15 @@ public class Iteminfo {
 			if (inhand.getType().equals(Material.ENCHANTED_BOOK)) {
 				
 				EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)inhand.getItemMeta();
-				ArrayList<String> enchants = im.convertEnchantmentMapToNames(emeta.getStoredEnchants());
+				ArrayList<String> enchants = new HyperItemStack(player.getItemInHand()).convertEnchantmentMapToNames(emeta.getStoredEnchants());
 				if (enchants.size() == 0) {
 					enchantments = "None";
 				} else {
 					enchantments = sal.stringArrayToString(enchants);
 				}
 			} else {
-				if (im.hasenchants(inhand)) {
-					ArrayList<String> enchants = im.convertEnchantmentMapToNames(inhand.getEnchantments());
+				if (new HyperItemStack(inhand).hasenchants()) {
+					ArrayList<String> enchants = new HyperItemStack(player.getItemInHand()).convertEnchantmentMapToNames(inhand.getEnchantments());
 					enchantments = sal.stringArrayToString(enchants);
 				} else {
 					enchantments = "None";
@@ -92,11 +58,14 @@ public class Iteminfo {
 
 			double dura = player.getItemInHand().getDurability();
 			double maxdura = player.getItemInHand().getType().getMaxDurability();
-			double durp = (1 - dura/maxdura) * 100;
-			if  (ho != null && ho.isDurable()) {
-				durp = (long)Math.floor(durp + .5);
-			} else {
-				durp = 100;
+			double durp = 100;
+			
+			if (ho != null && ho instanceof HyperItem) {
+				HyperItem hi = (HyperItem)ho;
+				if  (hi.isDurable()) {
+					durp = (1 - dura/maxdura) * 100;
+					durp = (long)Math.floor(durp + .5);
+				}
 			}
 				
 
@@ -104,7 +73,7 @@ public class Iteminfo {
 				player.sendMessage(L.get("LINE_BREAK"));
 				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
 				player.sendMessage(ChatColor.BLUE + "Material: " + ChatColor.AQUA + "" + mat);
-				player.sendMessage(ChatColor.BLUE + "ID: " + ChatColor.GREEN + "" + itemid);
+				player.sendMessage(ChatColor.BLUE + "ID: " + ChatColor.GREEN + "" + player.getItemInHand().getTypeId());
 				player.sendMessage(ChatColor.BLUE + "Damage Value: " + ChatColor.GREEN + "" + player.getItemInHand().getData().getData());
 				player.sendMessage(ChatColor.BLUE + "Durability: " + ChatColor.GREEN + "" + (int)dura);
 				player.sendMessage(ChatColor.BLUE + "Durability Percent: " + ChatColor.GREEN + "" + durp + "%");

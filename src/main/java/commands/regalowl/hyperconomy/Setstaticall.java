@@ -32,7 +32,7 @@ public class Setstaticall {
 			for (int i = 0; i < names.size(); i++) {
 				String name = names.get(i);
 				HyperObject ho = he.getHyperObject(name);
-				if (ho instanceof CompositeObject) {continue;}
+				if (ho instanceof CompositeItem) {continue;}
 				ho.setStaticprice(ho.getStartprice());
 				ho.setIsstatic("true");
 			}
@@ -40,7 +40,7 @@ public class Setstaticall {
 		} else {
 			for (int i = 0; i < names.size(); i++) {
 				HyperObject ho = he.getHyperObject(names.get(i));
-				if (ho instanceof CompositeObject) {continue;}
+				if (ho instanceof CompositeItem) {continue;}
 				ho.setIsstatic(setting);
 			}
 		}

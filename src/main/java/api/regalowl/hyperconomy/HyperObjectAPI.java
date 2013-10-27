@@ -1,9 +1,6 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -17,7 +14,8 @@ public class HyperObjectAPI implements ObjectAPI {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		HyperObject ho = he.getHyperObject(id, durability);
+		ItemStack stack = new ItemStack(id, durability);
+		HyperItem ho = he.getHyperItem(stack);
 		if (ho == null) {
 			return 0.0;
 		}
@@ -33,7 +31,8 @@ public class HyperObjectAPI implements ObjectAPI {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		HyperObject ho = he.getHyperObject(id, durability);
+		ItemStack stack = new ItemStack(id, durability);
+		HyperItem ho = he.getHyperItem(stack);
 		if (ho == null) {
 			return 0.0;
 		}
@@ -49,7 +48,8 @@ public class HyperObjectAPI implements ObjectAPI {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		HyperObject ho = he.getHyperObject(id, durability);
+		ItemStack stack = new ItemStack(id, durability);
+		HyperItem ho = he.getHyperItem(stack);
 		if (ho == null) {
 			return 0.0;
 		}
@@ -64,7 +64,8 @@ public class HyperObjectAPI implements ObjectAPI {
 		HyperConomy hc = HyperConomy.hc;
 		Calculation calc = hc.getCalculation();
 		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player.getName()).getHyperEconomy();
-		HyperObject ho = he.getHyperObject(id, durability);
+		ItemStack stack = new ItemStack(id, durability);
+		HyperItem ho = he.getHyperItem(stack);
 		if (ho == null) {
 			return 0.0;
 		}
@@ -84,33 +85,49 @@ public class HyperObjectAPI implements ObjectAPI {
 		if (enchantClass == null || enchantClass == EnchantmentClass.NONE) {
 			enchantClass = EnchantmentClass.DIAMOND;
 		}
-		if (hyperObject.getType() == HyperObjectType.ENCHANTMENT) {
-			double cost = hyperObject.getCost(enchantClass);
+		if (hyperObject instanceof HyperEnchant) {
+			HyperEnchant he = (HyperEnchant)hyperObject;
+			double cost = he.getCost(enchantClass);
 			cost += hyperObject.getPurchaseTax(cost);
 			return cost;
-		} else {
-			double cost = hyperObject.getCost(amount);
+		} else if (hyperObject instanceof HyperItem) {
+			HyperItem hi = (HyperItem)hyperObject;
+			double cost = hi.getCost(amount);
+			cost += hyperObject.getPurchaseTax(cost);
+			return cost;
+		} else if (hyperObject instanceof BasicObject) {
+			BasicObject bo = (BasicObject)hyperObject;
+			double cost = bo.getCost(amount);
 			cost += hyperObject.getPurchaseTax(cost);
 			return cost;
 		}
+		return 0;
 	}
 
 	public double getTrueSaleValue(HyperObject hyperObject, HyperPlayer hyperPlayer, EnchantmentClass enchantClass, int amount) {
 		if (hyperObject == null || hyperPlayer == null) {
 			return 0.0;
 		}
-		if (hyperObject.getType() == HyperObjectType.ENCHANTMENT) {
+		if (hyperObject instanceof HyperEnchant) {
+			HyperEnchant he = (HyperEnchant)hyperObject;
 			if (enchantClass == null || enchantClass == EnchantmentClass.NONE) {
 				enchantClass = EnchantmentClass.DIAMOND;
 			}
-			double value = hyperObject.getValue(enchantClass, hyperPlayer);
+			double value = he.getValue(enchantClass, hyperPlayer);
 			value -= hyperPlayer.getSalesTax(value);
 			return value;
-		} else {
-			double value = hyperObject.getValue(amount, hyperPlayer);
+		} else if (hyperObject instanceof HyperItem) {
+			HyperItem hi = (HyperItem)hyperObject;
+			double value = hi.getValue(amount, hyperPlayer);
+			value -= hyperPlayer.getSalesTax(value);
+			return value;
+		} else if (hyperObject instanceof BasicObject) {
+			BasicObject bo = (BasicObject)hyperObject;
+			double value = bo.getValue(amount);
 			value -= hyperPlayer.getSalesTax(value);
 			return value;
 		}
+		return 0;
 	}
 	
 	
@@ -118,18 +135,26 @@ public class HyperObjectAPI implements ObjectAPI {
 		if (hyperObject == null) {
 			return 0.0;
 		}
-		if (hyperObject.getType() == HyperObjectType.ENCHANTMENT) {
+		if (hyperObject instanceof HyperEnchant) {
+			HyperEnchant he = (HyperEnchant)hyperObject;
 			if (enchantClass == null || enchantClass == EnchantmentClass.NONE) {
 				enchantClass = EnchantmentClass.DIAMOND;
 			}
-			double value = hyperObject.getValue(enchantClass);
+			double value = he.getValue(enchantClass);
 			value -= hyperObject.getSalesTaxEstimate(value);
 			return value;
-		} else {
-			double value = hyperObject.getValue(amount);
+		} else if (hyperObject instanceof HyperItem) {
+			HyperItem hi = (HyperItem)hyperObject;
+			double value = hi.getValue(amount);
+			value -= hyperObject.getSalesTaxEstimate(value);
+			return value;
+		} else if (hyperObject instanceof BasicObject) {
+			BasicObject bo = (BasicObject)hyperObject;
+			double value = bo.getValue(amount);
 			value -= hyperObject.getSalesTaxEstimate(value);
 			return value;
 		}
+		return 0;
 	}
 	
 
@@ -160,25 +185,25 @@ public class HyperObjectAPI implements ObjectAPI {
 	public String getMaterial(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		return he.getHyperObject(name).getMaterial();
+		return he.getHyperItem(name).getMaterial();
 	}
 
 	public int getId(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		return he.getHyperObject(name).getId();
+		return he.getHyperItem(name).getId();
 	}
 
 	public int getData(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		return he.getHyperObject(name).getData();
+		return he.getHyperItem(name).getData();
 	}
 
 	public int getDurability(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		return he.getHyperObject(name).getDurability();
+		return he.getHyperItem(name).getDurability();
 	}
 
 	public double getValue(String name, String economy) {
@@ -250,25 +275,25 @@ public class HyperObjectAPI implements ObjectAPI {
 	public void setMaterial(String name, String economy, String newmaterial) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		he.getHyperObject(name).setMaterial(newmaterial);
+		he.getHyperItem(name).setMaterial(newmaterial);
 	}
 
 	public void setId(String name, String economy, int newid) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		he.getHyperObject(name).setId(newid);
+		he.getHyperItem(name).setId(newid);
 	}
 
 	public void setData(String name, String economy, int newdata) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		he.getHyperObject(name).setData(newdata);
+		he.getHyperItem(name).setData(newdata);
 	}
 
 	public void setDurability(String name, String economy, int newdurability) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		he.getHyperObject(name).setDurability(newdurability);
+		he.getHyperItem(name).setDurability(newdurability);
 	}
 
 	public void setValue(String name, String economy, double newvalue) {
@@ -313,47 +338,17 @@ public class HyperObjectAPI implements ObjectAPI {
 		he.getHyperObject(name).setStartprice(newstartprice);
 	}
 
-	public double getItemPurchasePrice(int id, int data, int amount) {
-		HyperConomy hc = HyperConomy.hc;
-		Calculation calc = hc.getCalculation();
-		HyperEconomy he = hc.getEconomyManager().getEconomy("default");
-		HyperObject ho = he.getHyperObject(id, data);
-		if (ho == null) {
-			return 0.0;
-		}
-		Double price = ho.getCost(amount);
-		price = calc.twoDecimals(price);
-		return price;
-	}
-
-	public double getItemSaleValue(int id, int data, int amount) {
-		HyperConomy hc = HyperConomy.hc;
-		Calculation calc = hc.getCalculation();
-		HyperEconomy he = hc.getEconomyManager().getEconomy("default");
-		HyperObject ho = he.getHyperObject(id, data);
-		if (ho == null) {
-			return 0.0;
-		}
-		Double value = ho.getValue(amount);
-		value = calc.twoDecimals(value);
-		return value;
-	}
-
 	public HyperObject getHyperObject(ItemStack stack, Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player.getName()).getHyperEconomy();
-		int id = stack.getTypeId();
-		int damageValue = hc.getInventoryManipulation().getDamageValue(stack);
-		HyperObject ho = he.getHyperObject(id, damageValue);
+		HyperObject ho = he.getHyperObject(stack);
 		return ho;
 	}
 	
 	public HyperObject getHyperObject(ItemStack stack, String player) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
-		int id = stack.getTypeId();
-		int damageValue = hc.getInventoryManipulation().getDamageValue(stack);
-		HyperObject ho = he.getHyperObject(id, damageValue);
+		HyperObject ho = he.getHyperObject(stack);
 		return ho;
 	}
 	
@@ -364,6 +359,50 @@ public class HyperObjectAPI implements ObjectAPI {
 		return he.getHyperObject(name);
 	}
 	
+	public HyperItem getHyperItem(String name, String economy) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		return he.getHyperItem(name);
+	}
+
+	public HyperEnchant getHyperEnchant(String name, String economy) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		return he.getHyperEnchant(name);
+	}
+
+	public BasicObject getBasicObject(String name, String economy) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		return he.getBasicObject(name);
+	}
+
+	public HyperXP getHyperXP(String economy) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		return he.getHyperXP();
+	}
+
+	public PlayerShopObject getPlayerShopObject(String name, PlayerShop s) {
+		return s.getPlayerShopObject(getHyperObject(name, s.getEconomy()));
+	}
+
+	public PlayerShopItem getPlayerShopItem(String name, PlayerShop s) {
+		return s.getPlayerShopItem(getHyperObject(name, s.getEconomy()));
+	}
+
+	public PlayerShopEnchant getPlayerShopEnchant(String name, PlayerShop s) {
+		return s.getPlayerShopEnchant(getHyperObject(name, s.getEconomy()));
+	}
+
+	public BasicShopObject getBasicShopObject(String name, PlayerShop s) {
+		return s.getBasicShopObject(getHyperObject(name, s.getEconomy()));
+	}
+
+	public ShopXp getShopXp(String name, PlayerShop s) {
+		return s.getShopXp(getHyperObject(name, s.getEconomy()));
+	}
+	
 	public HyperPlayer getHyperPlayer(String name) {
 		HyperConomy hc = HyperConomy.hc;
 		return hc.getEconomyManager().getHyperPlayer(name);
@@ -371,9 +410,8 @@ public class HyperObjectAPI implements ObjectAPI {
 	
 	public ArrayList<HyperObject> getEnchantmentHyperObjects(ItemStack stack, String player) {
 		HyperConomy hc = HyperConomy.hc;
-		InventoryManipulation im = hc.getInventoryManipulation();
 		HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(player);
-		return im.getEnchantmentObjects(stack, hp.getEconomy());
+		return new HyperItemStack(stack).getEnchantmentObjects(hp.getEconomy());
 	}
 
 	public TransactionResponse buy(Player p, HyperObject o, int amount) {
@@ -429,7 +467,7 @@ public class HyperObjectAPI implements ObjectAPI {
 		return availableSubset;
 	}
 	
-	
+	/*
 	public List<Map<String, String>> getAllStockPlayer(Player pPlayer) {
 		List<Map<String, String>> lAllStock = new ArrayList<Map<String, String>>();
 		HyperConomy hc = HyperConomy.hc;
@@ -466,8 +504,8 @@ public class HyperObjectAPI implements ObjectAPI {
 		}
 		return lAllStock;
 	}
-	
-	
+	*/
+	/*
 	public List<Map<String, String>> getAllStockEconomy(String economy) {
 		List<Map<String, String>> lAllStock = new ArrayList<Map<String, String>>();
 		HyperConomy hc = HyperConomy.hc;
@@ -503,6 +541,7 @@ public class HyperObjectAPI implements ObjectAPI {
 		}
 		return lAllStock;
 	}
+	*/
 
 	public TransactionResponse sellAll(Player p, Inventory inventory) {
 		HyperConomy hc = HyperConomy.hc;
@@ -513,10 +552,10 @@ public class HyperObjectAPI implements ObjectAPI {
 	}
 
 	public EnchantmentClass getEnchantmentClass(ItemStack stack) {
-		HyperConomy hc = HyperConomy.hc;
-		InventoryManipulation im = hc.getInventoryManipulation();
-		return im.getEnchantmentClass(stack);
+		return new HyperItemStack(stack).getEnchantmentClass();
 	}
+
+
 
 
 

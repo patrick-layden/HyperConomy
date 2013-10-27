@@ -3,8 +3,8 @@ package regalowl.hyperconomy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Itemsettings {
-	Itemsettings(String args[], CommandSender sender, Player player, String playerecon) {
+public class Objectsettings {
+	Objectsettings(String args[], CommandSender sender, Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -12,9 +12,7 @@ public class Itemsettings {
 			if (args.length == 0 && player != null) {
 				HyperPlayer hp = em.getHyperPlayer(player.getName());
 				HyperEconomy he = hp.getHyperEconomy();
-				int itd = player.getItemInHand().getTypeId();
-				int da = hc.getInventoryManipulation().getDamageValue(player.getItemInHand());
-				HyperObject hob = he.getHyperObject(itd, da);
+				HyperObject hob = he.getHyperObject(player.getItemInHand());
 				if (hob == null) {
 					sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 				} else {
@@ -42,9 +40,9 @@ public class Itemsettings {
 					double ceiling = ho.getCeiling();
 					double floor = ho.getFloor();
 					String objectType = "";
-					if (ho instanceof ComponentObject) {
+					if (ho instanceof ComponentItem) {
 						objectType = "component";
-					} else if (ho instanceof CompositeObject) {
+					} else if (ho instanceof CompositeItem) {
 						objectType = "composite";
 					} else {
 						objectType = "other";
@@ -66,7 +64,7 @@ public class Itemsettings {
 			} else if (args.length == 1) {
 				HyperEconomy he = em.getEconomy(playerecon);
 				String nam = he.fixName(args[0]);
-				if (he.itemTest(nam)) {
+				if (he.objectTest(nam)) {
 					double val = 0;
 					boolean stat = false;
 					double statprice = 0;
@@ -90,9 +88,9 @@ public class Itemsettings {
 					double ceiling = ho.getCeiling();
 					double floor = ho.getFloor();
 					String objectType = "";
-					if (ho instanceof ComponentObject) {
+					if (ho instanceof ComponentItem) {
 						objectType = "component";
-					} else if (ho instanceof CompositeObject) {
+					} else if (ho instanceof CompositeItem) {
 						objectType = "composite";
 					} else {
 						objectType = "other";

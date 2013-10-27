@@ -11,7 +11,6 @@ public class Hb {
 		hc = HyperConomy.hc;
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
-		InventoryManipulation im = hc.getInventoryManipulation();
 		double amount;
 		boolean ma = false;
 		try {
@@ -20,7 +19,12 @@ public class Hb {
 			if (em.inAnyShop(player)) {
 				if (hp.hasBuyPermission(em.getShop(player))) {
 					ItemStack iinhand = player.getItemInHand();
-					if (im.hasenchants(iinhand) == false) {
+					if (new HyperItemStack(iinhand).hasenchants() == false) {
+						HyperItem ho = he.getHyperItem(player.getItemInHand(), em.getShop(player));
+						if (ho == null) {
+							player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
+							return;
+						}
 						if (args.length == 0) {
 							amount = 1;
 						} else {
@@ -33,7 +37,7 @@ public class Hb {
 								String max = args[0];
 								if (max.equalsIgnoreCase("max")) {
 									ma = true;
-									int space = im.getAvailableSpace(player.getItemInHand().getTypeId(), im.getDamageValue(player.getItemInHand()), player.getInventory());
+									int space = ho.getAvailableSpace(player.getInventory());
 									amount = space;
 								} else {
 									player.sendMessage(L.get("HB_INVALID"));
@@ -41,32 +45,27 @@ public class Hb {
 								}
 							}
 						}
-						int itd = player.getItemInHand().getTypeId();
-						int da = im.getDamageValue(player.getItemInHand());
-						HyperObject ho = he.getHyperObject(itd, da, em.getShop(player));
-						if (ho == null) {
-							player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
-						} else {
-							String nam = ho.getName();
-							double shopstock = 0;
-							shopstock = ho.getStock();
-							// Buys the most possible from the shop if the
-							// amount is more than that for max.
-							if (amount > shopstock && ma) {
-								amount = shopstock;
-							}
-							Shop s = em.getShop(player);
-							if (s.has(nam)) {
-								PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
-								pt.setHyperObject(ho);
-								pt.setAmount((int) Math.rint(amount));
-								pt.setTradePartner(s.getOwner());
-								TransactionResponse response = hp.processTransaction(pt);
-								response.sendMessages();
-							} else {
-								player.sendMessage(L.get("CANT_BE_TRADED"));
-							}
+
+						String nam = ho.getName();
+						double shopstock = 0;
+						shopstock = ho.getStock();
+						// Buys the most possible from the shop if the
+						// amount is more than that for max.
+						if (amount > shopstock && ma) {
+							amount = shopstock;
 						}
+						Shop s = em.getShop(player);
+						if (s.has(nam)) {
+							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+							pt.setHyperObject(ho);
+							pt.setAmount((int) Math.rint(amount));
+							pt.setTradePartner(s.getOwner());
+							TransactionResponse response = hp.processTransaction(pt);
+							response.sendMessages();
+						} else {
+							player.sendMessage(L.get("CANT_BE_TRADED"));
+						}
+
 					} else {
 						player.sendMessage(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"));
 					}

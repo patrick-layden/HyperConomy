@@ -1,46 +1,36 @@
 package regalowl.hyperconomy;
 
 
-public class ComponentObject implements HyperObject {
-	private HyperConomy hc;
-	private HyperObjectValue hov;
+
+public class BasicObject implements HyperObject {
 	
+	protected HyperConomy hc;
+	protected String name;
+	protected String economy;
+	protected HyperObjectType type;
+	protected String category;
+	protected double value;
+	protected String isstatic;
+	protected double staticprice;
+	protected double stock;
+	protected double median;
+	protected String initiation;
+	protected double startprice;
+	protected double ceiling;
+	protected double floor;
+	protected double maxstock;
 	
-	private String name;
-	private String economy;
-	private HyperObjectType type;
-	private String category;
-	private String material;
-	private int id;
-	private int data;
-	private int durability;
-	private double value;
-	private String isstatic;
-	private double staticprice;
-	private double stock;
-	private double median;
-	private String initiation;
-	private double startprice;
-	private double ceiling;
-	private double floor;
-	private double maxstock;
-	
-	
-	ComponentObject() {
+	/*
+	public BasicObject() {
 		hc = HyperConomy.hc;
-		hov = new HyperObjectValue(this);
 	}
-	
-	public ComponentObject(String name, String economy, String type, String category, String material, int id, int data, int durability, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
+	*/
+	public BasicObject(String name, String economy, String type, String category, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
 		hc = HyperConomy.hc;
 		this.name = name;
 		this.economy = economy;
 		this.type = HyperObjectType.fromString(type);
 		this.category = category;
-		this.material = material;
-		this.id = id;
-		this.data = data;
-		this.durability = durability;
 		this.value = value;
 		this.isstatic = isstatic;
 		this.staticprice = staticprice;
@@ -51,7 +41,6 @@ public class ComponentObject implements HyperObject {
 		this.ceiling = ceiling;
 		this.floor = floor;
 		this.maxstock = maxstock;
-		hov = new HyperObjectValue(this);
 	}
 	
 	
@@ -70,18 +59,6 @@ public class ComponentObject implements HyperObject {
 	}
 	public String getCategory() {
 		return category;
-	}
-	public String getMaterial() {
-		return material;
-	}
-	public int getId() {
-		return id;
-	}
-	public int getData() {
-		return data;
-	}
-	public int getDurability() {
-		return durability;
 	}
 	public double getValue() {
 		return value;
@@ -154,26 +131,6 @@ public class ComponentObject implements HyperObject {
 		hc.getSQLWrite().executeSQL(statement);
 		this.category = category;
 	}
-	public void setMaterial(String material) {
-		String statement = "UPDATE hyperconomy_objects SET MATERIAL='" + material + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-		hc.getSQLWrite().executeSQL(statement);
-		this.material = material;
-	}
-	public void setId(int id) {
-		String statement = "UPDATE hyperconomy_objects SET ID='" + id + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-		hc.getSQLWrite().executeSQL(statement);
-		this.id = id;
-	}
-	public void setData(int data) {
-		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-		hc.getSQLWrite().executeSQL(statement);
-		this.data = data;
-	}
-	public void setDurability(int durability) {
-		String statement = "UPDATE hyperconomy_objects SET DURABILITY='" + durability + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-		hc.getSQLWrite().executeSQL(statement);
-		this.durability = durability;
-	}
 	public void setValue(double value) {
 		String statement = "UPDATE hyperconomy_objects SET VALUE='" + value + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().executeSQL(statement);
@@ -241,40 +198,141 @@ public class ComponentObject implements HyperObject {
 		double medianStock = ((median * value) / startprice);
 		return (int) (Math.ceil(medianStock) - stock);
 	}
-
 	
-	public double getCost(int amount) {
-		return hov.getCost(amount);
-	}
-	public double getCost(EnchantmentClass enchantClass) {
-		return hov.getEnchantCost(enchantClass);
-	}
-	
-	public double getValue(int amount) {
-		return hov.getTheoreticalValue(amount);
-	}
-	public double getValue(int amount, HyperPlayer hp) {
-		return hov.getValue(amount, hp);
-	}
-	
-	public double getValue(EnchantmentClass enchantClass) {
-		return hov.getTheoreticalEnchantValue(enchantClass);
-	}
-	
-	public double getValue(EnchantmentClass enchantClass, HyperPlayer hp) {
-		return hov.getEnchantValue(enchantClass, hp);
-	}
-	
-
 	public double getPurchaseTax(double cost) {
-		return hov.getPurchaseTax(cost);
+		double tax = 0.0;
+		if (Boolean.parseBoolean(getIsstatic())) {
+			tax = hc.gYH().gFC("config").getDouble("config.statictaxpercent") / 100.0;
+		} else {
+			if (getType() == HyperObjectType.ENCHANTMENT) {
+				tax = hc.gYH().gFC("config").getDouble("config.enchanttaxpercent") / 100.0;
+			} else {
+				if (Boolean.parseBoolean(getInitiation())) {
+					tax = hc.gYH().gFC("config").getDouble("config.initialpurchasetaxpercent") / 100.0;
+				} else {
+					tax = hc.gYH().gFC("config").getDouble("config.purchasetaxpercent") / 100.0;
+				}
+			}
+		}
+		return twoDecimals(cost * tax);
 	}
 	
 	public double getSalesTaxEstimate(double value) {
-		return hov.getSalesTaxEstimate(value);
+		double salestax = 0;
+		if (hc.gYH().gFC("config").getBoolean("config.dynamic-tax.use-dynamic-tax")) {
+			return 0.0;
+		} else {
+			double salestaxpercent = hc.gYH().gFC("config").getDouble("config.sales-tax-percent");
+			salestax = (salestaxpercent / 100) * value;
+		}
+		return twoDecimals(salestax);
 	}
 	
-	public boolean isDurable() {
-		return hov.isDurable();
+	protected double twoDecimals(double input) {
+		int nodecimals = (int) Math.ceil((input * 100) - .5);
+		double twodecimals = (double) nodecimals / 100.0;
+		return twodecimals;
+	}
+	
+	
+	public double applyCeilingFloor(double price) {
+		double floor = getFloor();
+		double ceiling = getCeiling();
+		if (price > ceiling) {
+			price = ceiling;
+		} else if (price < floor) {
+			price = floor;
+		}
+		return price;
+	}
+	
+
+	
+	public double getCost(int amount) {
+		try {
+			double cost = 0;
+			boolean isstatic = Boolean.parseBoolean(getIsstatic());
+			if (isstatic == false) {
+				double shopstock = 0;
+				double oshopstock = 0;
+				double value = 0;
+				double median = 0;
+				shopstock = getTotalStock();
+				oshopstock = shopstock;
+				value = getValue();
+				median = getMedian();
+				shopstock = shopstock - 1;
+				int counter = 0;
+				while (counter < amount) {
+					double price = ((median * value) / shopstock);
+					price = applyCeilingFloor(price);
+					shopstock = shopstock - 1;
+					cost = cost + price;
+					counter++;
+				}
+				boolean initial = Boolean.parseBoolean(getInitiation());
+				if (initial == true) {
+					double icost = 0;
+					icost = getStartprice();
+					if (cost < (icost * amount) && oshopstock > 1) {
+						setInitiation("false");
+					} else {
+						double price = applyCeilingFloor(icost);
+						cost = price * amount;
+					}
+				}
+			} else {
+				double staticcost = getStaticprice();
+				double price = applyCeilingFloor(staticcost);
+				cost = price * amount;
+			}
+			return twoDecimals(cost);
+		} catch (Exception e) {
+			String info = "Calculation getCost() passed values name='" + getName() + "', amount='" + amount + "'";
+			hc.gDB().writeError(e, info);
+			double cost = 99999999;
+			return cost;
+		}
+	}
+	public double getValue(int amount) {
+		try {
+			double cost = 0;
+			int counter = 0;
+			Boolean initial = false;
+			initial = Boolean.parseBoolean(getInitiation());
+			boolean isstatic = false;
+			isstatic = Boolean.parseBoolean(getIsstatic());
+			if (!isstatic) {
+				double shopstock = 0;
+				double value = 0;
+				double median = 0;
+				double icost = 0;
+				shopstock = getTotalStock();
+				value = getValue();
+				median = getMedian();
+				icost = getStartprice();
+				while (counter < amount) {
+					double price = ((median * value) / shopstock);
+					price = applyCeilingFloor(price);
+					shopstock = shopstock + 1;
+					cost = cost + price;
+					counter++;
+				}
+				if (initial == true) {
+					double price = applyCeilingFloor(icost);
+					cost = price * amount;
+				}
+			} else {
+				double statprice = getStaticprice();
+				double price = applyCeilingFloor(statprice);
+				cost = price * amount;
+			}
+			return twoDecimals(cost);
+		} catch (Exception e) {
+			String info = "Calculation getTvalue() passed values name='" + getName() + "', amount='" + amount + "'";
+			hc.gDB().writeError(e, info);
+			double cost = 99999999;
+			return cost;
+		}
 	}
 }

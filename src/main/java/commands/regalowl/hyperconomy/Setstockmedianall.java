@@ -20,7 +20,7 @@ public class Setstockmedianall {
 				ArrayList<String> names = he.getNames();
 				for (int c = 0; c < names.size(); c++) {
 					HyperObject ho = he.getHyperObject(names.get(c));
-					if (ho instanceof ComponentObject) {
+					if (!(ho instanceof CompositeItem)) {
 						ho.setStock(ho.getMedian());
 						ho.setInitiation("false");
 					}

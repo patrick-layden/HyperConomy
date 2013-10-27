@@ -3,11 +3,13 @@ package regalowl.hyperconomy;
 
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 
 
@@ -20,7 +22,7 @@ public class Manageshop implements CommandExecutor {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		if (hc.getHyperLock().isLocked(sender)) {
-			hc.getHyperLock().sendLockMessage(sender);;
+			hc.getHyperLock().sendLockMessage(sender);
 			return true;
 		}
 		if (!hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {
@@ -33,25 +35,32 @@ public class Manageshop implements CommandExecutor {
 		if (sender instanceof Player) {
 			player = (Player)sender;
 		}
-		if (player == null) {
-			return true;
-		}
+		if (player == null) {return true;}
 		HyperPlayer hp = em.getHyperPlayer(player.getName());
 		HyperEconomy he = em.getEconomy(hp.getEconomy());
 		if (em.inAnyShop(player)) {
 			Shop s = em.getShop(player);
-			if (s instanceof PlayerShop && (s.getOwner().equals(hp) || player.hasPermission("hyperconomy.admin"))) {
-				currentShop.put(hp, (PlayerShop)s);
+			if (s instanceof PlayerShop) {
+				PlayerShop ps = (PlayerShop)s;
+				if (ps.getOwner().equals(hp) || ps.isAllowed(hp) || player.hasPermission("hyperconomy.admin")) {
+					currentShop.put(hp, (PlayerShop)s);
+				}
 			}
 		}
 		PlayerShop cps = null;
 		if (currentShop.containsKey(hp)) {
 			cps = currentShop.get(hp);
+			if (!(cps.getOwner() == hp) && !cps.isAllowed(hp) && !player.hasPermission("hyperconomy.admin")) {
+				currentShop.remove(hp);
+				cps = null;
+			}
 		}
 		if (args.length == 0) {
 			player.sendMessage(L.get("MANAGESHOP_HELP"));
 			if (cps != null) {
 				player.sendMessage(L.f(L.get("MANAGESHOP_HELP2"), cps.getName()));
+				player.sendMessage(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " " + ChatColor.AQUA + cps.getOwner().getName());
+				player.sendMessage(L.get("MANAGESHOP_HELP4") + " " + ChatColor.AQUA +  hc.getDataBukkit().getCommonFunctions().implode(cps.getAllowed(), ","));
 			} else {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
 			}
@@ -67,12 +76,179 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			Shop s = em.getShop(args[1]);
-			if ((!(s instanceof PlayerShop) || !(s.getOwner().equals(hp))) && !player.hasPermission("hyperconomy.admin")) {
+			if (!(s instanceof PlayerShop)) {
 				player.sendMessage(L.get("ONLY_EDIT_OWN_SHOPS"));
 				return true;
 			}
-			currentShop.put(hp, (PlayerShop)s);
+			PlayerShop ps = (PlayerShop)s;
+			if ((!(ps.getOwner().equals(hp) || ps.isAllowed(hp))) && !player.hasPermission("hyperconomy.admin")) {
+				player.sendMessage(L.get("ONLY_EDIT_OWN_SHOPS"));
+				return true;
+			}
+			currentShop.put(hp, ps);
 			player.sendMessage(L.get("SHOP_SELECTED"));
+		} else if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("a")) {
+			if (cps == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+
+			int amount = 1;
+			HyperObject ho = null;
+			if (args.length == 1) {
+				ItemStack selectedItem = player.getItemInHand();
+				ho = hp.getHyperEconomy().getHyperObject(selectedItem);
+			} else if (args.length == 2) {
+				try {
+					amount = Integer.parseInt(args[1]);
+				} catch (Exception e) {
+					player.sendMessage(L.get("MANAGESHOP_ADD_HELP"));
+					return true;
+				}
+				ItemStack selectedItem = player.getItemInHand();
+				ho = hp.getHyperEconomy().getHyperObject(selectedItem);
+			} else if (args.length == 3) {
+				ho = hp.getHyperEconomy().getHyperObject(args[1]);
+				try {
+					amount = Integer.parseInt(args[2]);
+				} catch (Exception e) {
+					player.sendMessage(L.get("MANAGESHOP_ADD_HELP"));
+					return true;
+				}
+			} else {
+				player.sendMessage(L.get("MANAGESHOP_ADD_HELP"));
+				return true;
+			}
+
+	
+
+			if (ho == null) {
+				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
+				return true;
+			}
+			
+			HyperObject ho2 = he.getHyperObject(ho.getName(), cps);
+			if (ho2 instanceof PlayerShopItem) {
+				PlayerShopItem pso = (PlayerShopItem)ho2;
+				int count = pso.count(player.getInventory());
+				if (amount > count) {
+					amount = count;
+				}
+				if (amount <= 0) {
+					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
+					return true;
+				}
+				pso.remove(amount, player.getInventory());
+				((PlayerShopObject) pso).setStock(pso.getStock() + amount);
+				player.sendMessage(L.get("STOCK_ADDED"));
+				return true;
+			} else if (ho2 instanceof PlayerShopEnchant) {
+				PlayerShopEnchant pso = (PlayerShopEnchant)ho2;
+				if (amount < 1) {
+					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
+					return true;
+				}
+				boolean success = pso.removeEnchantment(player.getItemInHand());
+				if (success) {
+					((PlayerShopObject) pso).setStock(pso.getStock() + 1);
+				} else {
+					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
+				}
+				return true;
+			} else if (ho2 instanceof ShopXp) {
+				ShopXp pso = (ShopXp)ho2;
+				if (amount < 1) {
+					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
+					return true;
+				}
+				int count = pso.getTotalXpPoints(player);
+				if (amount > count) {
+					amount = count;
+				}
+				boolean success = pso.removeXp(player, amount);
+				if (success) {
+					((PlayerShopObject) pso).setStock(pso.getStock() + amount);
+				} else {
+					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
+				}
+			} else {
+				hc.getDataBukkit().writeError("Setting PlayerShopObject stock failed in /ms add.");
+				return true;
+			}	
+		} else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("r")) {
+			if (cps == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			if (args.length < 2) {
+				player.sendMessage(L.get("MANAGESHOP_REMOVE_HELP"));
+				return true;
+			}
+			int amount = 1;
+			if (args.length == 3) {
+				try {
+					amount = Integer.parseInt(args[2]);
+				} catch (Exception e) {}
+			}
+
+			
+			HyperObject ho = he.getHyperObject(args[1], cps);
+			if (ho == null) {
+				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
+				return true;
+			}
+			if (ho instanceof PlayerShopItem) {
+				PlayerShopItem pso = (PlayerShopItem)ho;
+				if (pso.getStock() < amount) {
+					amount = (int) Math.floor(pso.getStock());
+				}
+				if (amount <= 0.0) {
+					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
+					return true;
+				}
+				int space = pso.getAvailableSpace(player.getInventory());
+				if (space < amount) {
+					player.sendMessage(L.get("NOT_ENOUGH_SPACE"));
+					return true;
+				}
+				pso.add(amount, player.getInventory());
+				((PlayerShopObject) pso).setStock(pso.getStock() - amount);
+				player.sendMessage(L.get("STOCK_REMOVED"));
+				return true;
+			} else if (ho instanceof PlayerShopEnchant) {
+				PlayerShopEnchant pso = (PlayerShopEnchant)ho;
+				if (pso.getStock() < 1) {
+					amount = (int) Math.floor(pso.getStock());
+				}
+				if (amount < 1) {
+					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
+					return true;
+				}
+				boolean success = pso.addEnchantment(player.getItemInHand());
+				if (success) {
+					((PlayerShopObject) pso).setStock(pso.getStock() - 1);
+				} else {
+					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
+				}
+			} else if (ho instanceof ShopXp) {
+				ShopXp pso = (ShopXp)ho;
+				if (pso.getStock() < amount) {
+					amount = (int) Math.floor(pso.getStock());
+				}
+				if (amount < 1) {
+					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
+					return true;
+				}
+				boolean success = pso.addXp(player, amount);
+				if (success) {
+					((PlayerShopObject) pso).setStock(pso.getStock() - amount);
+				} else {
+					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
+				}
+			} else {
+				hc.getDataBukkit().writeError("Setting PlayerShopObject stock failed in /ms remove.");
+				return true;
+			}
 		} else  if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("c")) {
 			if (args.length == 1) {
 				player.sendMessage(L.get("MANAGESHOP_CREATE_HELP"));
@@ -177,7 +353,7 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("MANAGESHOP_PRICE_HELP"));
 				return true;
 			}
-			if (!he.itemTest(args[1])) {
+			if (!he.objectTest(args[1])) {
 				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 				return true;
 			}
@@ -204,7 +380,7 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("INVALID_STATUS"));
 				return true;
 			}
-			if (!he.itemTest(args[1]) && !args[1].equalsIgnoreCase("all")) {
+			if (!he.objectTest(args[1]) && !args[1].equalsIgnoreCase("all")) {
 				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 				return true;
 			}
@@ -227,6 +403,28 @@ public class Manageshop implements CommandExecutor {
 					return true;
 				}
 			}
+		} else if (args[0].equalsIgnoreCase("allow")) {
+			if (cps == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			if (args.length != 2) {
+				player.sendMessage(L.get("MANAGESHOP_ALLOW_HELP"));
+				return true;
+			}
+			if (!em.hasAccount(args[1])) {
+				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
+				return true;
+			}
+			HyperPlayer ap = em.getHyperPlayer(args[1]);
+			if (cps.isAllowed(ap)) {
+				cps.removeAllowed(ap);
+				player.sendMessage(L.get("DISALLOWED_TO_MANAGE_SHOP"));
+			} else {
+				cps.addAllowed(ap);
+				player.sendMessage(L.get("ALLOWED_TO_MANAGE_SHOP"));
+			}
+			return true;
 		} else if (args[0].equalsIgnoreCase("owner") && player.hasPermission("hyperconomy.admin")) {
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
@@ -248,6 +446,8 @@ public class Manageshop implements CommandExecutor {
 			player.sendMessage(L.get("MANAGESHOP_HELP"));
 			if (cps != null) {
 				player.sendMessage(L.f(L.get("MANAGESHOP_HELP2"), cps.getName()));
+				player.sendMessage(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " " + ChatColor.AQUA + cps.getOwner().getName());
+				player.sendMessage(L.get("MANAGESHOP_HELP4") + " " + ChatColor.AQUA +  hc.getDataBukkit().getCommonFunctions().implode(cps.getAllowed(), ","));
 			} else {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
 			}

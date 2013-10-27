@@ -30,7 +30,6 @@ public class Hc {
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.get("HC_BUY_BUY"));
 					sender.sendMessage(L.get("HC_BUY_HB"));
-					sender.sendMessage(L.get("HC_BUY_BUYID"));
 					sender.sendMessage(L.get("HC_BUY_EBUY"));
 					sender.sendMessage(L.get("HC_BUY_MORE"));
 					sender.sendMessage(L.get("LINE_BREAK"));
@@ -101,11 +100,6 @@ public class Hc {
 						sender.sendMessage(L.get("LINE_BREAK"));
 						sender.sendMessage(L.get("HC_BUY_HB"));
 						sender.sendMessage(L.get("HC_HB_DETAIL"));
-						sender.sendMessage(L.get("LINE_BREAK"));
-					} else if (subtype.equalsIgnoreCase("buyid")) {
-						sender.sendMessage(L.get("LINE_BREAK"));
-						sender.sendMessage(L.get("HC_BUY_BUYID"));
-						sender.sendMessage(L.get("HC_BUYID_DETAIL"));
 						sender.sendMessage(L.get("LINE_BREAK"));
 					} else if (subtype.equalsIgnoreCase("ebuy")) {
 						sender.sendMessage(L.get("LINE_BREAK"));

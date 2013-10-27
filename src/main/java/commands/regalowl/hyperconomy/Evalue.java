@@ -12,7 +12,6 @@ public class Evalue {
 		Calculation calc = hc.getCalculation();
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
-		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
 			HyperPlayer hp = em.getHyperPlayer(player.getName());
 			HyperEconomy he = hp.getHyperEconomy();
@@ -20,8 +19,9 @@ public class Evalue {
 			if ((requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				if (args.length == 2) {
 					String nam = args[0];
-					if (he.enchantTest(nam)) {
-						HyperObject ho = he.getHyperObject(nam, em.getShop(player));
+					HyperEnchant ho = he.getHyperEnchant(nam, em.getShop(player));
+					if (ho != null) {
+
 						String type = args[1];
 						if (type.equalsIgnoreCase("s")) {
 							String[] classtype = new String[9];
@@ -75,8 +75,8 @@ public class Evalue {
 						sender.sendMessage(L.get("ENCHANTMENT_NOT_IN_DATABASE"));
 					}
 				} else if (args.length == 0 && player != null) {
-					if (im.hasenchants(player.getItemInHand())) {
-						Iterator<Enchantment> ite = im.getEnchantmentMap(player.getItemInHand()).keySet().iterator();
+					if (new HyperItemStack(player.getItemInHand()).hasenchants()) {
+						Iterator<Enchantment> ite = new HyperItemStack(player.getItemInHand()).getEnchantmentMap().keySet().iterator();
 						player.sendMessage(L.get("LINE_BREAK"));
 
 						while (ite.hasNext()) {
@@ -84,10 +84,11 @@ public class Evalue {
 							String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
 							Enchantment en = null;
 							en = Enchantment.getByName(enchname);
-							int lvl = im.getEnchantmentLevel(player.getItemInHand(), en);
+							int lvl = new HyperItemStack(player.getItemInHand()).getEnchantmentLevel(en);
 							String nam = he.getEnchantNameWithoutLevel(enchname);
 							String fnam = nam + lvl;
-							HyperObject ho = he.getHyperObject(fnam, em.getShop(player));
+							HyperEnchant ho = he.getHyperEnchant(fnam, em.getShop(player));
+							if (ho == null) {continue;}
 							String mater = player.getItemInHand().getType().name();
 							double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
 							double cost = ho.getCost(EnchantmentClass.fromString(mater));

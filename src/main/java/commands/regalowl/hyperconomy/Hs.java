@@ -9,7 +9,6 @@ public class Hs {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
-		InventoryManipulation im = hc.getInventoryManipulation();
 		int amount;
 		try {
 			if (player.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
@@ -31,24 +30,21 @@ public class Hs {
 						} catch (Exception e) {
 							String max = args[0];
 							if (max.equalsIgnoreCase("max")) {
-								int itmid = player.getItemInHand().getTypeId();
-								int da = im.getDamageValue(player.getItemInHand());
-								amount = im.countItems(itmid, da, player.getInventory());
+								HyperItem hi = he.getHyperItem(player.getItemInHand());
+								amount = hi.count(player.getInventory());
 							} else {
 								player.sendMessage(L.get("HS_INVALID"));
 								return;
 							}
 						}
 					}
-					int itd = player.getItemInHand().getTypeId();
-					int da = im.getDamageValue(player.getItemInHand());
-					HyperObject ho = he.getHyperObject(itd, da, em.getShop(player));
+					HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getShop(player));
 					if (ho == null) {
 						player.sendMessage(L.get("CANT_BE_TRADED"));
 					} else {
 						String nam = ho.getName();
 						ItemStack iinhand = player.getItemInHand();
-						if (im.hasenchants(iinhand) == false) {
+						if (new HyperItemStack(iinhand).hasenchants() == false) {
 							Shop s = em.getShop(player);
 							if (s.has(nam)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);

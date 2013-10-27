@@ -10,7 +10,6 @@ public class Esell {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
-		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
 			if (player.getGameMode() == GameMode.CREATIVE && hc.s().gB("block-selling-in-creative-mode")) {
 				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
@@ -23,10 +22,10 @@ public class Esell {
 				if (hp.hasSellPermission(s)) {
 					String name = args[0];
 					if (args[0].equalsIgnoreCase("max")) {
-						if (!im.hasenchants(player.getItemInHand())) {
+						if (!new HyperItemStack(player.getItemInHand()).hasenchants()) {
 							player.sendMessage(L.get("HAS_NO_ENCHANTMENTS"));
 						}
-						ArrayList<String> enchants = im.getEnchantments(player.getItemInHand());
+						ArrayList<String> enchants = new HyperItemStack(player.getItemInHand()).getEnchants();
 						for (String e:enchants) {
 							if (s.has(e)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);

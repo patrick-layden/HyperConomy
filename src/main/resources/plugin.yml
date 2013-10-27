@@ -37,11 +37,6 @@ commands:
       permission: hyperconomy.buy
       permission-message: You don't have permission to do this.
       aliases: [hb]
-   buyid:
-      description: Buys an amount of an item with the chosen id and damage value.
-      permission: hyperconomy.buy
-      permission-message: You don't have permission to do this.
-      aliases: [bd]
    xpinfo:
       description: Displays information about experience.
       permission: hyperconomy.info
@@ -163,11 +158,11 @@ commands:
       description: Creates a list of all item names or enchantment names in the plugin's folder.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-   itemsettings:
-      description: Displays the current shop settings for the item you're holding. Also works as /is
+   objectsettings:
+      description: Displays the current shop settings for the object you're holding or the one you specify. Also works as /os
       permission: hyperconomy.settings
       permission-message: You do not have permission.
-      aliases: [is]
+      aliases: [is, os, ens]
    taxsettings:
       description: Displays the current tax values.
       permission: hyperconomy.settings
@@ -192,11 +187,6 @@ commands:
       description: Displays economy help.
       permission: hyperconomy.use
       permission-message: You don't have permission to do this.
-   enchantsettings:
-      description: Displays enchantment settings.
-      permission: hyperconomy.settings
-      permission-message: You do not have permission.
-      aliases: [ens, eset]
    setinterval:
       description: Sets the interval at which shops check for players.
       permission: hyperconomy.admin
@@ -348,7 +338,7 @@ commands:
       permission-message: You do not have permission.
       aliases: [sela]
    importprices:
-      description: Imports all prices from items.yml and enchants.yml.
+      description: Imports all prices from objects.yml.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
    repairsigns:

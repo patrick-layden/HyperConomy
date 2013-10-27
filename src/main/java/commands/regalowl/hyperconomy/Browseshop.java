@@ -105,14 +105,22 @@ public class Browseshop {
 			            Double cost = 0.0;
 			            double stock = 0;
 			            HyperObject ho = he.getHyperObject(iname, em.getShop(player));
-			            if (he.itemTest(iname)) {
-							cost = ho.getCost(1);
+			            if (ho instanceof HyperItem) {
+			            	HyperItem hi = (HyperItem)ho;
+							cost = hi.getCost(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = calc.twoDecimals(cost + taxpaid);
 							stock = calc.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
-						} else if (he.enchantTest(iname)) {
-							cost = ho.getCost(EnchantmentClass.DIAMOND);
+						} else if (ho instanceof HyperEnchant) {
+							HyperEnchant hye = (HyperEnchant)ho;
+							cost = hye.getCost(EnchantmentClass.DIAMOND);
 							cost = cost + ho.getPurchaseTax(cost);
+							stock = calc.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
+						} else if (ho instanceof BasicObject) {
+							BasicObject hi = (BasicObject)ho;
+							cost = hi.getCost(1);
+							double taxpaid = ho.getPurchaseTax(cost);
+							cost = calc.twoDecimals(cost + taxpaid);
 							stock = calc.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
 						}
 			            if (ho instanceof PlayerShopObject) {

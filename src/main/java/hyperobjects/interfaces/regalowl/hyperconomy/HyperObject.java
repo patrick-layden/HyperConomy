@@ -11,10 +11,6 @@ public interface HyperObject extends Comparable<HyperObject> {
 	public String getEconomy();
 	public HyperObjectType getType();
 	public String getCategory();
-	public String getMaterial();
-	public int getId();
-	public int getData();
-	public int getDurability();
 	public double getValue();
 	public String getIsstatic();
 	public double getStaticprice();
@@ -34,10 +30,6 @@ public interface HyperObject extends Comparable<HyperObject> {
 	public void setEconomy(String economy);
 	public void setType(String type);
 	public void setCategory(String category);
-	public void setMaterial(String material);
-	public void setId(int id);
-	public void setData(int data);
-	public void setDurability(int durability);
 	public void setValue(double value);
 	public void setIsstatic(String isstatic);
 	public void setStaticprice(double staticprice);
@@ -62,14 +54,8 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * 
 	 */
 	public int getMaxInitial();
-	public double getCost(int amount);
-	public double getCost(EnchantmentClass enchantClass);
-	public double getValue(int amount);
-	public double getValue(int amount, HyperPlayer hp);
-	public double getValue(EnchantmentClass enchantClass);
-	public double getValue(EnchantmentClass enchantClass, HyperPlayer hp);
 	public double getPurchaseTax(double cost);
 	public double getSalesTaxEstimate(double value);
-	public boolean isDurable();
+
 
 }

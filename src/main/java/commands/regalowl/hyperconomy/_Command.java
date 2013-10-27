@@ -43,9 +43,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("xpinfo") && (player != null)) {
 			new Xpinfo(args, player);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("buyid") && (player != null)) {
-			new Buyid(args, player);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("heldsell") && (player != null)) {
 			new Hs(args, player);
 			return true;
@@ -115,11 +112,8 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("iteminfo") && (player != null)) {
 			new Iteminfo(args, player);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("itemsettings")) {
-			new Itemsettings(args, sender, player, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("enchantsettings")) {
-			new Enchantsettings(args, sender, playerecon);
+		} else if (cmd.getName().equalsIgnoreCase("objectsettings")) {
+			new Objectsettings(args, sender, player, playerecon);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("taxsettings")) {
 			new Taxsettings(sender);
@@ -266,7 +260,7 @@ public class _Command {
 			new Importfromyml(sender, args);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hctest")) {
-			new Hctest(args, sender);
+			//new Hctest(args, sender);
 			return true;
 		}
 		

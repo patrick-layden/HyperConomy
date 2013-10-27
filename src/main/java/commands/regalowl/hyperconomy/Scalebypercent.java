@@ -12,13 +12,15 @@ public class Scalebypercent {
 			HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 			Calculation calc = hc.getCalculation();
 			InfoSignHandler isign = hc.getInfoSignHandler();
-			ArrayList<String> names = new ArrayList<String>();;
+			ArrayList<String> names = he.getNames();
+			boolean onlyItems = false;
+			boolean onlyEnchants = false;
 			if (args.length == 2 || args.length == 3) {
 				if (args.length == 3) {
 					if (args[2].contains("item")) {
-						names = he.getItemNames();
+						onlyItems = true;
 					} else if (args[2].contains("enchantment")) {
-						names = he.getEnchantNames();
+						onlyEnchants = true;
 					}
 				} else {
 					names = he.getNames();
@@ -34,7 +36,9 @@ public class Scalebypercent {
 						for (int c = 0; c < names.size(); c++) {
 							String cname = names.get(c);
 							HyperObject ho = he.getHyperObject(cname);
-							if (ho instanceof ComponentObject) {
+							if (!(ho instanceof HyperItem) && onlyItems) {continue;}
+							if (!(ho instanceof HyperEnchant) && onlyEnchants) {continue;}
+							if (!(ho instanceof CompositeItem)) {
 								if (type.equalsIgnoreCase("value")) {
 									ho.setValue(calc.twoDecimals(ho.getValue() * percent));
 								} else if (type.equalsIgnoreCase("staticprice")) {

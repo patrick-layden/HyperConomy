@@ -95,7 +95,7 @@ EVALUE_INVALID: &4Неверные параметры. Напишите /evalue 
 EVALUE_PURCHASE: &b%n &9можно купить за: &a%c%p
 EVALUE_SALE: &b%n &9можно продать за: &a%c%p
 EVALUE_STOCK: &9В центральном магазине доступно &a%a &b%n.
-EXPORT_PROCEED: &cЭта операция уничтожит все данные в файлах items.yml и enchants.yml. Если Вы уверены, что хотите продолжить, напишите '/exporttoyml [экономика] [confirm]'.
+EXPORT_PROCEED: &cЭта операция уничтожит все данные в файлах objects.yml. Если Вы уверены, что хотите продолжить, напишите '/exporttoyml [экономика] [confirm]'.
 EXPORTTOYML_INVALID: &4Неверные параметры. Напишите /exporttoyml [экономика] ['confirm'] 
 FILES_RELOADED: &6Все файлы были заново загружены.
 FIRST_LOCK_SHOP: &4Сначала нужно заблокировать магазин!
@@ -193,7 +193,7 @@ INVALID_ITEM_CLASS: &4Неверный класс предмета!
 INVALID_ITEM_NAME: &4Неверное название предмета!
 INVALID_NAME: &4Неверное название!
 IRON_VALUE: &9Цена железа: &a%v
-ITEM_ADDED: &6Предмет добавлен в файл items.yml.  Напишите /reloadfiles или перезапустите сервер чтобы изменения вступили в силу.
+ITEM_ADDED: &6Предмет добавлен в файл objects.yml.  Напишите /reloadfiles или перезапустите сервер чтобы изменения вступили в силу.
 ITEM_ALREADY_HAS_ENCHANTMENT: &9На предмете, который Вы держите, уже наложено зачарование этого типа!
 ITEM_CANNOT_ACCEPT_ENCHANTMENTS: &9На этот предмет невозможно наложить зачарования.
 ITEM_CANT_ACCEPT_ENCHANTMENT: &9На предмет, который Вы держите, невозможно наложить это зачарование!

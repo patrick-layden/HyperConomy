@@ -17,7 +17,6 @@ CANT_BE_TRADED: &9Sorry, that item or enchantment can't be traded at this shop.
 INVALID_ITEM_NAME: &4Invalid item name!
 NO_TRADE_PERMISSION: &9Sorry, you don't have permission to trade here.
 MUST_BE_IN_SHOP: &4You must be in a shop to buy or sell.
-BUYID_INVALID: &4Invalid parameters. Use /buyid [amount] [id] (damage value).
 OBJECT_NOT_AVAILABLE: &9Sorry, that item or enchantment is not currently available.
 BUYXP_INVALID: &4Invalid Parameters.  Use /buyxp (amount)
 LINE_BREAK: &8-----------------------------------------------------
@@ -54,7 +53,7 @@ DIAMOND_VALUE: &9Diamond Value: &a%v
 BOOK_VALUE: &9Book Value: &a%v
 CLASSVALUES_INVALID: &4Invalid Parameters. Use /classvalues
 ECONOMY_EXPORTED: &6Economy exported to YML!
-EXPORT_PROCEED: &cThe will erase all data in your items.yml and enchants.yml, type '/exporttoyml [economy] [confirm]' to proceed!
+EXPORT_PROCEED: &cThe will erase all data in your objects.yml file, type '/exporttoyml [economy] [confirm]' to proceed!
 ECONOMY_NOT_EXIST: &4That economy doesn't exist!
 EXPORTTOYML_INVALID: &4Invalid Parameters.  Use /exporttoyml [economy] ['confirm']
 ONLY_AVAILABLE_SQL: &cThis command is only available when SQL is enabled!
@@ -68,7 +67,7 @@ COPYDATABASE_STARTED: &6Database copy started successfully...this may take some 
 COPYDATABASE_SQLITE: &6SQLite database successfully copied to MySQL database.
 LISTCATEGORIES_INVALID: &4Invalid Parameters.  Use /listcategories
 ALREADY_IN_DATABASE: &9That item is already in the database.
-ITEM_ADDED: &6Item added to items.yml.  Use /importnewitems for it to become active.
+ITEM_ADDED: &6Item added to objects.yml.  Use /importnewitems for it to become active.
 YMLADDITEM_INVALID: &4Use /ymladditem (name) (value) (median) (start price)
 ALL_BACKED_UP: &6All files have been backed up!
 HCBACKUP_INVALID: &4Invalid Parameters.  Use /hcbackup
@@ -85,10 +84,9 @@ HC_SELL_SELLALL: &a/sellall
 HC_SELL_MORE: &bFor more help type &a/hc sell &c[command]
 HC_BUY_BUY: &a/buy &c[name] &e(amount/'max')
 HC_BUY_HB: &a/hb &e(amount/'max')
-HC_BUY_BUYID: &a/buyid &c[amount] [id] &e(damage value)
 HC_BUY_EBUY: &a/ebuy &c[name]
 HC_BUY_MORE: &bFor more help type &a/hc buy &c[command]
-HC_SHOP_MANAGESHOP: &a/manageshop &c['select', 'create', 'set1', 'set2', 'price', or 'status']
+HC_SHOP_MANAGESHOP: &a/manageshop &c['select', 'create', 'delete', 'add', 'remove', 'set1', 'set2', 'price', 'allow', or 'status']
 HC_INFO_VALUE: &a/value &c[name] &e(amount)
 HC_INFO_HV: &a/hv &e(amount)
 HC_INFO_II: &a/ii &e(id) (damage value)
@@ -116,9 +114,8 @@ HC_ESELL_DETAIL: &bSells the specified enchantment on the item you're holding or
 HC_SELLALL_DETAIL: &bBe careful, this sells all the items in your inventory. This does not include armor slots, however.
 HC_BUY_DETAIL: &bBuys 1 of the specified item if no parameters are given, an amount of the item, or as many as your inventory can hold if the given parameter is 'max'.
 HC_HB_DETAIL: &bBuys 1 of the item you're holding if no parameters are given, an amount of the item, or as many as your inventory can hold if the given parameter is 'max'.
-HC_BUYID_DETAIL: &bBuys an amount of the item with the given id and damage value. (Useful if you don't know the item name.)
 HC_EBUY_DETAIL: &bBuys the given enchantment and puts it on the item you're holding.
-HC_MANAGESHOP_DETAIL: &bManages player created shops.  To select a shop either stand in it or type /ms select [shop].  Once selected you can create shops with /ms create [name], delete shops with /ms delete, set the corners of the shop cuboid with /ms set1 and /ms set2, and you can set the status or price of items in the shop with /ms status [status] or /ms price [price]. Valid statuses are trade, buy, sell, and none. trade = buy or sell, buy = buy only, sell = sell only, none = not tradable.
+HC_MANAGESHOP_DETAIL: &bManages player created shops.  To select a shop either stand in it or type /ms select [shop].  Once selected you can create shops with /ms create [name], allow other players to manage your shop with /ms allow [name], add items with /ms add, remove items with /ms remove, delete shops with /ms delete, set the corners of the shop cuboid with /ms set1 and /ms set2, and you can set the status or price of items in the shop with /ms status [status] or /ms price [price]. Valid statuses are trade, buy, sell, and none. trade = buy or sell, buy = buy only, sell = sell only, none = not tradable.
 HC_VALUE_DETAIL: &bDisplays the value of the given item(s) name.  This value is theoretical and does not factor in item damage.
 HC_HV_DETAIL: &bDisplays the value of the item(s) you're holding. This factors in damage.  However, if you specify more of the item than you have in your inventory, the additional items will use a theoretical value.
 HC_II_DETAIL: &bDisplays information about the item you're holding.  If an id and damage value is specified it returns the name of the item, even if you're not holding it.
@@ -404,8 +401,10 @@ SERVER_STARTING: &dThe web server is starting.
 SERVER_STOPPING: &dThe web server is stopping.
 SERVER_FAILED: &4The web server is failed.
 CANT_USE_ACCOUNT: You cannot play on this server using HyperConomy's global shop account.
-MANAGESHOP_HELP: &cUse /manageshop [select, create, delete, set1, set2, price, or status]
+MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, or status]
 MANAGESHOP_HELP2: &9You currently have the shop &a%n &9selected.
+MANAGESHOP_HELP3: &9The owner of &a%n &9is:
+MANAGESHOP_HELP4: &9The following players are allowed to manage the shop:
 NO_SHOP_SELECTED: &9You do not have a shop selected.
 MANAGESHOP_SELECT_HELP: &4Use /manageshop select [shop]
 ONLY_EDIT_OWN_SHOPS: &4You can only edit your own shops.
@@ -417,9 +416,14 @@ CANT_MAKE_SHOP_LARGER_THAN: &4You cannot make a shop with a volume larger than &
 SHOP_LIMIT_REACHED: &4You cannot make more than &a%v &4shops.
 MANAGESHOP_PRICE_HELP: &4Use /manageshop price [object] [price]
 MANAGESHOP_OWNER_HELP: &4Use /manageshop owner [name]
+MANAGESHOP_ADD_HELP: &4Use /manageshop add (object) (amount)
+MANAGESHOP_ALLOW_HELP: &4Use /manageshop allow [player]
+MANAGESHOP_REMOVE_HELP: &4Use /manageshop remove [object] [amount]
 OWNER_SET: &6Owner set.
 STATUS_SET: &6Status set.
 PRICE_SET: &6Price set.
+STOCK_ADDED: &6Stock added to shop.
+STOCK_REMOVED: &6Stock removed from shop.
 ALL_STATUS_SET: &6All statuses set.
 SHOP_CREATED: &6Shop created.
 INVALID_STATUS: &4That is not a valid status.
@@ -429,4 +433,8 @@ BUY_ONLY_ITEM: &cOnly purchases are allowed for this object.
 NO_TRADE_ITEM: &cThis object cannot currently be bought or sold.
 PLAYERSHOPS_DISABLED: &cSorry, player shops are currently disabled.
 AIR_CANT_BE_TRADED: &4Air cannot be traded.
-INVENTORY_ADDED: &9Attempted to add all items in your inventory to items.yml with generated names.
+INVENTORY_ADDED: &9Attempted to add all items in your inventory to objects.yml with generated names.
+MUST_TRANSFER_MORE_THAN_ZERO: &4You must transfer more than 0 items.
+NOT_ENOUGH_SPACE: &4You don't have enough space to transfer the items.
+ALLOWED_TO_MANAGE_SHOP: &6Player now allowed to manage shop.
+DISALLOWED_TO_MANAGE_SHOP: &6Player no longer allowed to manage shop.

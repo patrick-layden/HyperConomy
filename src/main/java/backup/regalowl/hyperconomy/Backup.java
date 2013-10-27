@@ -10,8 +10,7 @@ public class Backup {
 		ArrayList<String> backupFiles = new ArrayList<String>();
 		backupFiles.add("config.yml");
 		backupFiles.add("displays.yml");
-		backupFiles.add("enchants.yml");
-		backupFiles.add("items.yml");
+		backupFiles.add("objects.yml");
 		backupFiles.add("shops.yml");
 		backupFiles.add("signs.yml");
 		backupFiles.add("categories.yml");

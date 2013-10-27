@@ -52,21 +52,31 @@ public class Notification implements TransactionListener {
 		HyperObject ho = notificationQueue.get(0);
 		LanguageFile L = hc.getLanguageFile();
 		String econ = ho.getEconomy();
-		HyperEconomy he = hc.getEconomyManager().getEconomy(econ);
 		if (checkNotify(ho.getName())) {
 			double cost = 0.0;
 			int stock = 0;
 
-			if (he.itemTest(ho.getName())) {
+			if (ho instanceof HyperItem) {
+				HyperItem hi = (HyperItem)ho;
 				stock = (int) ho.getStock();
-				cost = ho.getCost(1);
+				cost = hi.getCost(1);
 				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getName(), econ);
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					notify(message);
 					previousmessage = message;
 				}
-			} else if (he.enchantTest(ho.getName())) {
-				cost = ho.getCost(EnchantmentClass.DIAMOND);
+			} else if (ho instanceof BasicObject) {
+				BasicObject bo = (BasicObject)ho;
+				stock = (int) ho.getStock();
+				cost = bo.getCost(1);
+				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getName(), econ);
+				if (!message.equalsIgnoreCase(previousmessage)) {
+					notify(message);
+					previousmessage = message;
+				}
+			} else if (ho instanceof HyperEnchant) {
+				HyperEnchant hye = (HyperEnchant)ho;
+				cost = hye.getCost(EnchantmentClass.DIAMOND);
 				cost = cost + ho.getPurchaseTax(cost);
 				stock = (int) ho.getStock();
 				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getName(), econ);

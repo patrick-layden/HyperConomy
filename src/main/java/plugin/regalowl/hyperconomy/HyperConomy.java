@@ -36,7 +36,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private InfoSignHandler isign;
 	private _Command commandhandler;
 	private History hist;
-	private InventoryManipulation im;
 	private Notification not;
 	private ItemDisplayFactory itdi;
 	private SQLWrite sw;
@@ -77,17 +76,16 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		yh = db.getYamlHandler();
 		yh.copyFromJar("categories");
 		yh.copyFromJar("config");
-		yh.copyFromJar("enchants");
-		yh.copyFromJar("items");
+		yh.copyFromJar("objects");
 		yh.copyFromJar("composites");
 		yh.registerFileConfiguration("categories");
 		yh.registerFileConfiguration("composites");
 		yh.registerFileConfiguration("config");
 		yh.registerFileConfiguration("displays");
-		yh.registerFileConfiguration("enchants");
-		yh.registerFileConfiguration("items");
+		yh.registerFileConfiguration("objects");
 		yh.registerFileConfiguration("shops");
 		yh.registerFileConfiguration("signs");
+		yh.registerFileConfiguration("temp");
 		L = new LanguageFile();
 		hl = new HyperLock(true, false, false);
 		hs = new HyperSettings();
@@ -116,7 +114,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		setupExternalEconomy();
 		em.load();
 		l = new Log(this);
-		im = new InventoryManipulation();
 		calc = new Calculation();
 		sal = new SerializeArrayList();
 		commandhandler = new _Command();
@@ -341,10 +338,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 
 	public History getHistory() {
 		return hist;
-	}
-
-	public InventoryManipulation getInventoryManipulation() {
-		return im;
 	}
 
 	public LanguageFile getLanguageFile() {

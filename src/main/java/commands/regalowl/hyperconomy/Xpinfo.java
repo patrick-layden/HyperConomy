@@ -8,14 +8,15 @@ public class Xpinfo {
 	
 	Xpinfo(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
+		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
-		InventoryManipulation im = hc.getInventoryManipulation();
 		try {
 			if (args.length == 0) {
-				int totalexp = im.gettotalxpPoints(player);
+				HyperXP xp = em.getHyperPlayer(player).getHyperEconomy().getHyperXP();
+				int totalexp = xp.getTotalXpPoints(player);
 				int lvl = player.getLevel();
-				int xpfornextlvl = im.getxpfornextLvl(lvl) - im.getbarxpPoints(player);			
-				int xpfor30 = im.getlvlxpPoints(30) - totalexp;				
+				int xpfornextlvl = xp.getXpForNextLvl(lvl) - xp.getBarXpPoints(player);			
+				int xpfor30 = xp.getLvlXpPoints(30) - totalexp;				
 				player.sendMessage(L.get("LINE_BREAK"));
 				player.sendMessage(L.f(L.get("TOTAL_XP_POINTS"), totalexp));
 				player.sendMessage(L.f(L.get("XP_FOR_NEXT_LVL"), xpfornextlvl));

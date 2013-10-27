@@ -61,7 +61,6 @@ public class ItemDisplayFactory implements Listener {
 				while (it.hasNext()) {
 					String key = it.next().toString();
 					String name = disp.getString(key + ".name");
-					String economy = disp.getString(key + ".economy");
 					double x = disp.getDouble(key + ".x");
 					double y = disp.getDouble(key + ".y");
 					double z = disp.getDouble(key + ".z");
@@ -69,7 +68,7 @@ public class ItemDisplayFactory implements Listener {
 					Location l = new Location(w, x, y, z);
 					Chunk locChunk = l.getChunk();
 					if (locChunk.isLoaded()) {
-						ItemDisplay display = new ItemDisplay(key, l, name, economy);
+						ItemDisplay display = new ItemDisplay(key, l, name);
 						String hkey = (int)Math.floor(x) + ":" + (int)Math.floor(y) + ":" + (int)Math.floor(z) + ":" + w.getName();
 						displays.put(hkey, display);				
 						display.makeDisplay();
@@ -140,7 +139,7 @@ public class ItemDisplayFactory implements Listener {
 		return false;
 	}
 
-	public boolean testDisplay(double x, double y, double z, World w, String name, String economy) {
+	public boolean testDisplay(double x, double y, double z, World w, String name) {
 		x = Math.floor(x) + .5;
 		z = Math.floor(z) + .5;	
 		FileConfiguration disp = hc.gYH().gFC("displays");
@@ -156,7 +155,7 @@ public class ItemDisplayFactory implements Listener {
 			}
 		}
 		Location l = new Location(w, x, y, z);
-		ItemDisplay display = new ItemDisplay(l, name, economy);
+		ItemDisplay display = new ItemDisplay(l, name);
 		String hkey = (int)Math.floor(x) + ":" + (int)Math.floor(y) + ":" + (int)Math.floor(z) + ":" + w.getName();
 		displays.put(hkey, display);
 		Chunk locChunk = l.getChunk();

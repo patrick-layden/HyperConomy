@@ -7,8 +7,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.bukkit.configuration.file.FileConfiguration;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
@@ -18,7 +19,8 @@ import regalowl.databukkit.SQLWrite;
 
 public class HyperEconomy {
 
-	private ConcurrentHashMap<String, HyperObject> hyperObjects = new ConcurrentHashMap<String, HyperObject>();
+	private ConcurrentHashMap<String, HyperObject> hyperObjectsName = new ConcurrentHashMap<String, HyperObject>();
+	private ConcurrentHashMap<String, HyperObject> hyperObjectsData = new ConcurrentHashMap<String, HyperObject>();
 
 
 	private ArrayList<String> compositeKeys = new ArrayList<String>();
@@ -27,6 +29,8 @@ public class HyperEconomy {
 	private SQLRead sr;
 	private String economy;
 	private boolean dataLoaded;
+	
+	private String xpName = null;
 	
 
 	HyperEconomy(String economy) {
@@ -47,19 +51,38 @@ public class HyperEconomy {
 	private void load() {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
-				hyperObjects.clear();
+				hyperObjectsName.clear();
+				hyperObjectsData.clear();
 				QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economy+"'");
 				while (result.next()) {
 					if (useComposites && compositeKeys.contains(result.getString("NAME").toLowerCase())) {continue;}
-					HyperObject hobj = new ComponentObject(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
-							result.getString("CATEGORY"), result.getString("MATERIAL"), result.getInt("ID"), result.getInt("DATA"),
-							result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
-							result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-							result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
-					hyperObjects.put(hobj.getName(), hobj);
+					HyperObjectType type = HyperObjectType.fromString(result.getString("TYPE"));
+					if (type == HyperObjectType.ITEM) {
+						HyperItem hobj = new ComponentItem(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
+								result.getString("CATEGORY"), result.getString("MATERIAL"), result.getInt("ID"), result.getInt("DATA"),
+								result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
+								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
+								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
+						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
+						hyperObjectsData.put(hobj.getId() + "|" + hobj.getData(), hobj);
+					} else if (type == HyperObjectType.ENCHANTMENT) {
+						HyperObject hobj = new Enchant(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
+								result.getString("CATEGORY"), result.getString("MATERIAL"), result.getInt("ID"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
+								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
+								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
+						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
+					} else if (type == HyperObjectType.EXPERIENCE) {
+						HyperObject hobj = new Xp(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
+								result.getString("CATEGORY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
+								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
+								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
+						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
+						xpName = result.getString("NAME");
+					}
 				}
 				result.close();
 				dataLoaded = true;
+				if (xpName == null) {xpName = "xp";}
 				hc.getServer().getScheduler().runTask(hc, new Runnable() {
 					public void run() {
 						loadComposites();
@@ -128,8 +151,9 @@ public class HyperEconomy {
 					loaded = false;
 					continue;
 				}
-				HyperObject ho = new CompositeObject(name, economy);
-				hyperObjects.put(ho.getName(), ho);
+				HyperItem ho = new CompositeItem(name, economy);
+				hyperObjectsName.put(ho.getName().toLowerCase(), ho);
+				hyperObjectsData.put(ho.getId() + "|" + ho.getData(), ho);
 			}
 		}
 	}
@@ -153,64 +177,125 @@ public class HyperEconomy {
 	}
 	
 
-	
-	
-	
-	public HyperObject getHyperObject(int id, int data, Shop s) {
+
+	public HyperObject getHyperObject(ItemStack stack) {
+		return getHyperObject(stack, null);
+	}
+	public HyperObject getHyperObject(ItemStack stack, Shop s) {
+		HyperItemStack his = new HyperItemStack(stack);
 		if (s != null && s instanceof PlayerShop) {
-			for (HyperObject ho:hyperObjects.values()) {
-				if (ho.getId() == id && ho.getData() == data) {
-					return ((PlayerShop) s).getPlayerShopObject(ho);
-				}
+			if (hyperObjectsData.containsKey(his.getKey())) {
+				HyperObject ho = hyperObjectsData.get(his.getKey());
+				return (HyperObject) ((PlayerShop) s).getPlayerShopObject(ho);
 			}
-			return null;
 		} else {
-			for (HyperObject ho:hyperObjects.values()) {
-				if (ho.getId() == id && ho.getData() == data) {
-					return ho;
-				}
+			if (hyperObjectsData.containsKey(his.getKey())) {
+				return hyperObjectsData.get(his.getKey());
 			}
 		}
 		return null;
 	}
 	public HyperObject getHyperObject(String name, Shop s) {
-		name = fixName(name);
+		name = name.toLowerCase();
 		if (s != null && s instanceof PlayerShop) {
-			if (hyperObjects.containsKey(name)) {
-				return ((PlayerShop) s).getPlayerShopObject(hyperObjects.get(name));
+			if (hyperObjectsName.containsKey(name)) {
+				return (HyperObject) ((PlayerShop) s).getPlayerShopObject(hyperObjectsName.get(name));
 			} else {
 				return null;
 			}
 		} else {
-			if (hyperObjects.containsKey(name)) {
-				return hyperObjects.get(name);
+			if (hyperObjectsName.containsKey(name)) {
+				return hyperObjectsName.get(name);
 			} else {
 				return null;
 			}
 		}
 	}
 
-	public HyperObject getHyperObject(int id, int data) {
-		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getId() == id && ho.getData() == data) {
-				return ho;
-			}
+
+	public HyperObject getHyperObject(String name) {
+		name = name.toLowerCase();
+		if (hyperObjectsName.containsKey(name)) {
+			return hyperObjectsName.get(name);
 		}
 		return null;
 	}
 	
-	public HyperObject getHyperObject(String name) {
-		name = fixName(name);
-		if (hyperObjects.containsKey(name)) {
-			return hyperObjects.get(name);
-		} else {
-			return null;
+	public HyperItem getHyperItem(String name) {
+		HyperObject ho = getHyperObject(name);
+		if (ho != null && ho instanceof HyperItem) {
+			return (HyperItem)ho;
 		}
+		return null;
 	}
+	public HyperItem getHyperItem(ItemStack stack) {
+		HyperObject ho = getHyperObject(stack);
+		if (ho != null && ho instanceof HyperItem) {
+			return (HyperItem)ho;
+		}
+		return null;
+	}
+	public HyperItem getHyperItem(ItemStack stack, Shop s) {
+		HyperObject ho = getHyperObject(stack, s);
+		if (ho != null && ho instanceof HyperItem) {
+			return (HyperItem)ho;
+		}
+		return null;
+	}
+	public HyperEnchant getHyperEnchant(String name) {
+		HyperObject ho = getHyperObject(name);
+		if (ho != null && ho instanceof HyperEnchant) {
+			return (HyperEnchant)ho;
+		}
+		return null;
+	}
+	public BasicObject getBasicObject(String name) {
+		HyperObject ho = getHyperObject(name);
+		if (ho != null && ho instanceof BasicObject) {
+			return (BasicObject)ho;
+		}
+		return null;
+	}
+	public HyperItem getHyperItem(String name, Shop s) {
+		HyperObject ho = getHyperObject(name, s);
+		if (ho != null && ho instanceof HyperItem) {
+			return (HyperItem)ho;
+		}
+		return null;
+	}
+	public HyperEnchant getHyperEnchant(String name, Shop s) {
+		HyperObject ho = getHyperObject(name, s);
+		if (ho != null && ho instanceof HyperEnchant) {
+			return (HyperEnchant)ho;
+		}
+		return null;
+	}
+	public BasicObject getBasicObject(String name, Shop s) {
+		HyperObject ho = getHyperObject(name, s);
+		if (ho != null && ho instanceof BasicObject) {
+			return (BasicObject)ho;
+		}
+		return null;
+	}
+	public HyperXP getHyperXP() {
+		HyperObject ho = getHyperObject(xpName);
+		if (ho != null && ho instanceof HyperXP) {
+			return (HyperXP)ho;
+		}
+		return null;
+	}
+	public HyperXP getHyperXP(Shop s) {
+		HyperObject ho = getHyperObject(xpName, s);
+		if (ho != null && ho instanceof HyperXP) {
+			return (HyperXP)ho;
+		}
+		return null;
+	}
+	
 	
 	public ArrayList<HyperObject> getHyperObjects(Shop s) {
 		ArrayList<HyperObject> hos = new ArrayList<HyperObject>();
-		for (HyperObject ho:hyperObjects.values()) {
+		for (HyperObject ho:hyperObjectsName.values()) {
 			hos.add(getHyperObject(ho.getName(), s));
 		}
 		return hos;
@@ -219,7 +304,7 @@ public class HyperEconomy {
 	
 	public ArrayList<HyperObject> getHyperObjects() {
 		ArrayList<HyperObject> hos = new ArrayList<HyperObject>();
-		for (HyperObject ho:hyperObjects.values()) {
+		for (HyperObject ho:hyperObjectsName.values()) {
 			hos.add(ho);
 		}
 		return hos;
@@ -230,7 +315,7 @@ public class HyperEconomy {
 
 	public ArrayList<String> getObjectKeys() {
 		ArrayList<String> keys = new ArrayList<String>();
-		for (String key:hyperObjects.keySet()) {
+		for (String key:hyperObjectsName.keySet()) {
 			keys.add(key);
 		}
 		return keys;
@@ -243,7 +328,8 @@ public class HyperEconomy {
 
 
 	public void clearData() {
-		hyperObjects.clear();
+		hyperObjectsName.clear();
+		hyperObjectsData.clear();
 	}
 
 
@@ -254,15 +340,15 @@ public class HyperEconomy {
 	
 	public ArrayList<String> getNames() {
 		ArrayList<String> names = new ArrayList<String>();
-		for (HyperObject ho:hyperObjects.values()) {
+		for (HyperObject ho:hyperObjectsName.values()) {
 			names.add(ho.getName());
 		}
 		return names;
 	}
-
+/*
 	public ArrayList<String> getItemNames() {
 		ArrayList<String> names = new ArrayList<String>();
-		for (HyperObject ho:hyperObjects.values()) {
+		for (HyperObject ho:hyperObjectsName.values()) {
 			if (ho.getType() == HyperObjectType.ITEM || ho.getType() == HyperObjectType.EXPERIENCE) {
 				names.add(ho.getName());
 			}
@@ -272,38 +358,40 @@ public class HyperEconomy {
 
 	public ArrayList<String> getEnchantNames() {
 		ArrayList<String> names = new ArrayList<String>();
-		for (HyperObject ho:hyperObjects.values()) {
+		for (HyperObject ho:hyperObjectsName.values()) {
 			if (ho.getType() == HyperObjectType.ENCHANTMENT) {
 				names.add(ho.getName());
 			}
 		}
 		return names;
 	}
-	
+	*/
 	
 	public String getEnchantNameWithoutLevel(String bukkitName) {
-		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getType() == HyperObjectType.ENCHANTMENT && ho.getMaterial().equalsIgnoreCase(bukkitName)) {
-				String name = ho.getName();
-				return name.substring(0, name.length() - 1);
+		for (HyperObject ho:hyperObjectsName.values()) {
+			if (ho instanceof HyperEnchant) {
+				HyperEnchant he = (HyperEnchant)ho;
+				if (ho.getType() == HyperObjectType.ENCHANTMENT && he.getEnchantmentName().equalsIgnoreCase(bukkitName)) {
+					String name = ho.getName();
+					return name.substring(0, name.length() - 1);
+				}
 			}
 		}
 		return null;
 	}
 	
 	public boolean objectTest(String name) {
-		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getName().equalsIgnoreCase(name)) {
-				return true;
-			}
+		if (hyperObjectsName.containsKey(name.toLowerCase())) {
+			return true;
 		}
 		return false;
 	}
 	
 	
 	public boolean itemTest(String name) {
-		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getName().equals(name) && ho.getType() != HyperObjectType.ENCHANTMENT) {
+		if (hyperObjectsName.containsKey(name.toLowerCase())) {
+			HyperObject ho = hyperObjectsName.get(name.toLowerCase());
+			if (ho instanceof HyperItem) {
 				return true;
 			}
 		}
@@ -312,13 +400,15 @@ public class HyperEconomy {
 	
 
 	public boolean enchantTest(String name) {
-		for (HyperObject ho:hyperObjects.values()) {
-			if (ho.getName().equalsIgnoreCase(name) && ho.getType() == HyperObjectType.ENCHANTMENT) {
+		if (hyperObjectsName.containsKey(name.toLowerCase())) {
+			HyperObject ho = hyperObjectsName.get(name.toLowerCase());
+			if (ho instanceof HyperEnchant) {
 				return true;
 			}
 		}
 		return false;
 	}
+	
 	
 	public String fixName(String nam) {
 		for (String name:getNames()) {
@@ -344,60 +434,83 @@ public class HyperEconomy {
 	
 	
 	public ArrayList<String> loadNewItems() {
-		FileConfiguration itemsyaml = hc.gYH().gFC("items");
-		FileConfiguration enchantsyaml = hc.gYH().gFC("enchants");
-		ArrayList<String> statements = new ArrayList<String>();
+		FileConfiguration objects = hc.gYH().gFC("objects");
 		ArrayList<String> objectsAdded = new ArrayList<String>();
-		Iterator<String> it = itemsyaml.getKeys(false).iterator();
+		SQLWrite sw = hc.getSQLWrite();
+		Iterator<String> it = objects.getKeys(false).iterator();
 		ArrayList<String> keys = getObjectKeys();
 		while (it.hasNext()) {
 			String itemname = it.next().toString();
 			if (!keys.contains(itemname)) {
 				objectsAdded.add(itemname);
-				if (!itemname.equalsIgnoreCase("xp")) {
-					statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + itemname + "','" + economy + "','" + "item" + "','" + "unknown" + "','" + itemsyaml.getString(itemname + ".information.material") + "','" + itemsyaml.getInt(itemname + ".information.id") + "','" + itemsyaml.getInt(itemname + ".information.data") + "','"
-							+ itemsyaml.getInt(itemname + ".information.data") + "','" + itemsyaml.getDouble(itemname + ".value") + "','" + itemsyaml.getString(itemname + ".price.static") + "','" + itemsyaml.getDouble(itemname + ".price.staticprice") + "','" + itemsyaml.getDouble(itemname + ".stock.stock") + "','" + itemsyaml.getDouble(itemname + ".stock.median") + "','" + itemsyaml.getString(itemname + ".initiation.initiation") + "','" + itemsyaml.getDouble(itemname + ".initiation.startprice")
-							+ "','"+ itemsyaml.getDouble(itemname + ".price.ceiling") + "','" + itemsyaml.getDouble(itemname + ".price.floor") + "','" + itemsyaml.getDouble(itemname + ".stock.maxstock") + "')");
-				} else {
-					statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + itemname + "','" + economy + "','" + "experience" + "','" + "unknown" + "','" + "none" + "','" + itemsyaml.getInt(itemname + ".information.id") + "','" + itemsyaml.getInt(itemname + ".information.data") + "','" + itemsyaml.getInt(itemname + ".information.data") + "','"
-							+ itemsyaml.getDouble(itemname + ".value") + "','" + itemsyaml.getString(itemname + ".price.static") + "','" + itemsyaml.getDouble(itemname + ".price.staticprice") + "','" + itemsyaml.getDouble(itemname + ".stock.stock") + "','" + itemsyaml.getDouble(itemname + ".stock.median") + "','" + itemsyaml.getString(itemname + ".initiation.initiation") + "','" + itemsyaml.getDouble(itemname + ".initiation.startprice") + "','" + itemsyaml.getDouble(itemname + ".price.ceiling") + "','"
-							+ itemsyaml.getDouble(itemname + ".price.floor") + "','" + itemsyaml.getDouble(itemname + ".stock.maxstock") + "')");
+				String category = objects.getString(itemname + ".information.category");
+				if (category == null) {
+					category = "unknown";
 				}
+				HashMap<String, String> values = new HashMap<String, String>();
+				values.put("NAME", itemname);
+				values.put("ECONOMY", economy);
+				values.put("TYPE", objects.getString(itemname + ".information.type"));
+				values.put("CATEGORY", category);
+				values.put("VALUE", objects.getDouble(itemname + ".value") + "");
+				values.put("STATIC", objects.getString(itemname + ".price.static"));
+				values.put("STATICPRICE", objects.getDouble(itemname + ".price.staticprice") + "");
+				values.put("STOCK", objects.getDouble(itemname + ".stock.stock") + "");
+				values.put("MEDIAN", objects.getDouble(itemname + ".stock.median") + "");
+				values.put("INITIATION", objects.getString(itemname + ".initiation.initiation"));
+				values.put("STARTPRICE", objects.getDouble(itemname + ".initiation.startprice") + "");
+				values.put("CEILING", objects.getDouble(itemname + ".price.ceiling") + "");
+				values.put("FLOOR", objects.getDouble(itemname + ".price.floor") + "");
+				values.put("MAXSTOCK", objects.getDouble(itemname + ".stock.maxstock") + "");
+				if (objects.getString(itemname + ".information.type").equalsIgnoreCase("item")) {
+					values.put("MATERIAL", objects.getString(itemname + ".information.material"));
+					values.put("ID", objects.getInt(itemname + ".information.id") + "");
+					values.put("DATA", objects.getInt(itemname + ".information.data") + "");
+					values.put("DURABILITY", objects.getInt(itemname + ".information.data") + "");
+				} else if (objects.getString(itemname + ".information.type").equalsIgnoreCase("enchantment")) {
+					values.put("MATERIAL", objects.getString(itemname + ".information.material"));
+					values.put("ID", objects.getString(itemname + ".information.id"));
+					values.put("DATA", "-1");
+					values.put("DURABILITY", "-1");
+				} else if (objects.getString(itemname + ".information.type").equalsIgnoreCase("experience")) {
+					values.put("MATERIAL", "none");
+					values.put("ID", "-1");
+					values.put("DATA", "-1");
+					values.put("DURABILITY", "-1");
+				}
+				sw.performInsert("hyperconomy_objects", values);
 			}
 		}
-		Iterator<String> it2 = enchantsyaml.getKeys(false).iterator();
-		while (it2.hasNext()) {
-			String ename = it2.next().toString();
-			if (!keys.contains(ename)) {
-				objectsAdded.add(ename);
-				statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR)" + " Values ('" + ename + "','" + economy + "','" + "enchantment" + "','" + "unknown" + "','" + enchantsyaml.getString(ename + ".information.name") + "','" + enchantsyaml.getInt(ename + ".information.id") + "','" + "-2" + "','" + "-2" + "','" + enchantsyaml.getDouble(ename + ".value") + "','"
-						+ enchantsyaml.getString(ename + ".price.static") + "','" + enchantsyaml.getDouble(ename + ".price.staticprice") + "','" + enchantsyaml.getDouble(ename + ".stock.stock") + "','" + enchantsyaml.getDouble(ename + ".stock.median") + "','" + enchantsyaml.getString(ename + ".initiation.initiation") + "','" + enchantsyaml.getDouble(ename + ".initiation.startprice") + "','" + enchantsyaml.getDouble(ename + ".price.ceiling") + "','" + enchantsyaml.getDouble(ename + ".price.floor")
-						+ "','" + enchantsyaml.getDouble(ename + ".stock.maxstock") + "')");
-			}
-		}
-		SQLWrite sw = hc.getSQLWrite();
-		sw.executeSQL(statements);
 		hc.restart();
 		return objectsAdded;
 	}
 	
 	
 	public void exportToYml() {
-		FileConfiguration items = hc.gYH().gFC("items");
-		FileConfiguration enchants = hc.gYH().gFC("enchants");
+		FileConfiguration objects = hc.gYH().gFC("objects");
 		ArrayList<String> names = getNames();
 		Collections.sort(names, String.CASE_INSENSITIVE_ORDER);
 		for (int i = 0; i < names.size(); i++) {
 			String name = names.get(i);
-			items.set(name, null);
-			enchants.set(name, null);
+			objects.set(name, null);
 			HyperObject ho = getHyperObject(name);
-			String newtype = HyperObjectType.getString(ho.getType());
+			String newtype = ho.getType().toString();
 			String newcategory = ho.getCategory();
-			String newmaterial = ho.getMaterial();
-			int newid = ho.getId();
-			int newdata = ho.getData();
-			int newdurability = ho.getDurability();
+			String newmaterial = "none";
+			int newid = -1;
+			int newdata = -1;
+			int newdurability = -1;
+			if (ho instanceof HyperItem) {
+				HyperItem hi = (HyperItem)ho;
+				newmaterial = hi.getMaterial();
+				newid = hi.getId();
+				newdata = hi.getData();
+				newdurability = hi.getDurability();
+			} else if (ho instanceof HyperEnchant) {
+				HyperEnchant he = (HyperEnchant)ho;
+				newmaterial = he.getEnchantmentName();
+				newid = he.getEnchantmentId();
+			}
 			double newvalue = ho.getValue();
 			String newstatic = ho.getIsstatic();
 			double newstaticprice = ho.getStaticprice();
@@ -408,85 +521,26 @@ public class HyperEconomy {
 			double newceiling = ho.getCeiling();
 			double newfloor = ho.getFloor();
 			double newmaxstock = ho.getMaxstock();
-			if (itemTest(name)) {
-				items.set(name + ".information.type", newtype);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".information.type", newtype);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".information.category", newcategory);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".information.category", newcategory);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".information.material", newmaterial);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".information.name", newmaterial);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".information.id", newid);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".information.id", newid);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".information.data", newdata);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".information.data", newdurability);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".value", newvalue);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".value", newvalue);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".price.static", Boolean.parseBoolean(newstatic));
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".price.static", Boolean.parseBoolean(newstatic));
-			}
-			if (itemTest(name)) {
-				items.set(name + ".price.staticprice", newstaticprice);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".price.staticprice", newstaticprice);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".stock.stock", newstock);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".stock.stock", newstock);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".stock.median", newmedian);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".stock.median", newmedian);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
-			}
-			if (itemTest(name)) {
-				items.set(name + ".initiation.startprice", newstartprice);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".initiation.startprice", newstartprice);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".price.ceiling", newceiling);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".price.ceiling", newceiling);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".price.floor", newfloor);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".price.floor", newfloor);
-			}
-			if (itemTest(name)) {
-				items.set(name + ".stock.maxstock", newmaxstock);
-			} else if (enchantTest(name)) {
-				enchants.set(name + ".stock.maxstock", newmaxstock);
-			}
+			objects.set(name + ".information.type", newtype);
+			objects.set(name + ".information.category", newcategory);
+			objects.set(name + ".information.material", newmaterial);
+			objects.set(name + ".information.id", newid);
+			objects.set(name + ".information.data", newdata);
+			objects.set(name + ".value", newvalue);
+			objects.set(name + ".price.static", Boolean.parseBoolean(newstatic));
+			objects.set(name + ".price.staticprice", newstaticprice);
+			objects.set(name + ".stock.stock", newstock);
+			objects.set(name + ".stock.median", newmedian);
+			objects.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
+			objects.set(name + ".initiation.startprice", newstartprice);
+			objects.set(name + ".price.ceiling", newceiling);
+			objects.set(name + ".price.floor", newfloor);
+			objects.set(name + ".stock.maxstock", newmaxstock);
 		}
 		hc.gYH().saveYamls();
 	}
 
-	
+	public String getXpName() {
+		return xpName;
+	}
 }

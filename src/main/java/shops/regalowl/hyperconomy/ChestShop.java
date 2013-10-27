@@ -1,6 +1,7 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -30,7 +31,6 @@ public class ChestShop implements Listener {
 	private Calculation calc;
 	private LanguageFile L;
 	private EconomyManager em;
-	private InventoryManipulation im;
 
 	private ArrayList<BlockFace> faces = new ArrayList<BlockFace>();
 	private ArrayList<BlockFace> allfaces = new ArrayList<BlockFace>();
@@ -38,7 +38,6 @@ public class ChestShop implements Listener {
 	ChestShop() {
 
 		hc = HyperConomy.hc;
-		im = hc.getInventoryManipulation();
 		em = hc.getEconomyManager();
 		calc = hc.getCalculation();
 		L = hc.getLanguageFile();
@@ -459,12 +458,12 @@ public class ChestShop implements Listener {
 			if (icevent.isShiftClick()) {
 				HyperPlayer hp = em.getHyperPlayer(p.getName());
 				HyperEconomy he = em.getEconomy(hp.getEconomy());
-				if (im.hasenchants(icevent.getCurrentItem())) {
+				if (new HyperItemStack(icevent.getCurrentItem()).hasenchants()) {
 					icevent.setCancelled(true);
 					return;
 				}
 
-				HyperObject ho = he.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()));
+				HyperItem ho = he.getHyperItem(icevent.getCurrentItem());
 				if (ho == null) {
 					icevent.setCancelled(true);
 					return;
@@ -496,10 +495,10 @@ public class ChestShop implements Listener {
 							icevent.setCancelled(true);
 							return;
 						}
-						int itemamount = im.countItems(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
+						int itemamount = ho.count(icevent.getView().getTopInventory());
 
 						if (itemamount > 0) {
-							int space = im.getAvailableSpace(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
+							int space = ho.getAvailableSpace(icevent.getView().getTopInventory());
 							if (space >= camount) {
 								if (em.hasAccount(line34)) {
 									double bal = em.getHyperPlayer(line34).getBalance();
@@ -543,8 +542,8 @@ public class ChestShop implements Listener {
 			} else if (icevent.isLeftClick()) {
 				HyperPlayer hp = em.getHyperPlayer(p.getName());
 				HyperEconomy he = em.getEconomy(hp.getEconomy());
-				if (!im.hasenchants(icevent.getCurrentItem())) {
-					HyperObject ho = he.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()));
+				if (!new HyperItemStack(icevent.getCurrentItem()).hasenchants()) {
+					HyperItem ho = he.getHyperItem(icevent.getCurrentItem());
 
 					if (slot < 27 && ho != null) {
 						String name = ho.getName();
@@ -563,7 +562,7 @@ public class ChestShop implements Listener {
 					} else if (slot >= 27 && ho != null) {
 						String name = ho.getName();
 						if (sell) {
-							int itemamount = im.countItems(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
+							int itemamount = ho.count(icevent.getView().getTopInventory());
 
 							if (itemamount > 0) {
 								double price = ho.getValue(1, hp);
@@ -585,18 +584,18 @@ public class ChestShop implements Listener {
 					if (slot < 27) {
 						if (buy) {
 							double price = 0;
-							for (Enchantment enchantment : im.listEnchantments(icevent.getCurrentItem())) {
-								int lvl = im.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
+							for (Enchantment enchantment : new HyperItemStack(icevent.getCurrentItem()).listEnchantments()) {
+								int lvl = new HyperItemStack(icevent.getCurrentItem()).getEnchantmentLevel( enchantment);
 								String nam = he.getEnchantNameWithoutLevel(enchantment.getName());
 								String fnam = nam + lvl;
-								HyperObject ho = he.getHyperObject(fnam);
+								HyperEnchant ho = he.getHyperEnchant(fnam);
 								price += ho.getValue(EnchantmentClass.fromString(p.getItemInHand().getType().name()), hp);
 								if (setprice) {
 									price = staticprice;
 								}
 							}
 							price = calc.twoDecimals(price);
-							if (im.canEnchantItem(p.getItemInHand())) {
+							if (new HyperItemStack(p.getItemInHand()).canEnchantItem()) {
 								p.sendMessage(L.get("LINE_BREAK"));
 								p.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, line34));
 								p.sendMessage(L.get("LINE_BREAK"));
@@ -620,8 +619,8 @@ public class ChestShop implements Listener {
 			} else if (icevent.isRightClick()) {
 				HyperPlayer hp = em.getHyperPlayer(p.getName());
 				HyperEconomy he = em.getEconomy(hp.getEconomy());
-				if (!im.hasenchants(icevent.getCurrentItem())) {
-					HyperObject ho = he.getHyperObject(icevent.getCurrentItem().getTypeId(), im.getDamageValue(icevent.getCurrentItem()));
+				if (!new HyperItemStack(icevent.getCurrentItem()).hasenchants()) {
+					HyperItem ho = he.getHyperItem(icevent.getCurrentItem());
 
 					if (slot < 27 && ho != null) {
 						if (buy) {
@@ -648,10 +647,10 @@ public class ChestShop implements Listener {
 								icevent.setCancelled(true);
 								return;
 							}
-							int itemamount = im.countItems(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
+							int itemamount = ho.count(icevent.getView().getTopInventory());
 
 							if (itemamount > 0) {
-								int space = im.getAvailableSpace(ho.getId(), ho.getData(), icevent.getView().getTopInventory());
+								int space = ho.getAvailableSpace(icevent.getView().getTopInventory());
 								if (space >= 1) {
 									if (em.hasAccount(line34)) {
 										double bal = em.getHyperPlayer(line34).getBalance();
@@ -689,8 +688,8 @@ public class ChestShop implements Listener {
 				} else {
 					if (slot < 27) {
 						if (buy) {
-							for (Enchantment enchantment : im.listEnchantments(icevent.getCurrentItem())) {
-								int lvl = im.getEnchantmentLevel(icevent.getCurrentItem(), enchantment);
+							for (Enchantment enchantment : new HyperItemStack(icevent.getCurrentItem()).listEnchantments()) {
+								int lvl = new HyperItemStack(icevent.getCurrentItem()).getEnchantmentLevel(enchantment);
 								String nam = he.getEnchantNameWithoutLevel(enchantment.getName());
 								String fnam = nam + lvl;
 								HyperObject ho = he.getHyperObject(fnam);

@@ -2,6 +2,7 @@ package regalowl.hyperconomy;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -223,39 +224,110 @@ public class EconomyManager implements Listener {
 	
 	public void createNewEconomy(String economy) {
 		HyperEconomy defaultEconomy = getEconomy("default");
-		ArrayList<String> items = defaultEconomy.getItemNames();
-		ArrayList<String> enchants = defaultEconomy.getEnchantNames();
-		ArrayList<String> statements = new ArrayList<String>();
-		for (int i = 0; i < items.size(); i++) {
-			String type = "item";
-			if (items.get(i).equalsIgnoreCase("xp")) {
-				type = "experience";
-			}
-			String c = items.get(i);
-			HyperObject ho = defaultEconomy.getHyperObject(c);
-			if (ho instanceof CompositeObject) {continue;} 
-			statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + c + "','" + economy + "','" + type + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','" + ho.getDurability() + "','" + ho.getValue() + "','"
-					+ ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + 0.0 + "','" + ho.getMedian() + "','" + "true" + "','" + ho.getStartprice() + "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
-		}
-		for (int i = 0; i < enchants.size(); i++) {
-			String type = "enchantment";
-			String c = enchants.get(i);
-			HyperObject ho = defaultEconomy.getHyperObject(c);
-			if (ho instanceof CompositeObject) {continue;} 
-			statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + c + "','" + economy + "','" + type + "','" + ho.getCategory() + "','" + ho.getMaterial() + "','" + ho.getId() + "','" + ho.getData() + "','" + ho.getDurability() + "','" + ho.getValue() + "','"
-					+ ho.getIsstatic() + "','" + ho.getStaticprice() + "','" + 0.0 + "','" + ho.getMedian() + "','" + "true" + "','" + ho.getStartprice() + "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
-		}
 		SQLWrite sw = hc.getSQLWrite();
-		sw.executeSQL(statements);
+		for (HyperObject ho:defaultEconomy.getHyperObjects()) {
+			HashMap<String,String> values = new HashMap<String,String>();
+			values.put("NAME", ho.getName());
+			values.put("ECONOMY", economy);
+			values.put("TYPE", ho.getType().toString());
+			values.put("CATEGORY", ho.getCategory());
+			values.put("VALUE", ho.getValue()+"");
+			values.put("STATIC", ho.getIsstatic());
+			values.put("STATICPRICE", ho.getStaticprice()+"");
+			values.put("STOCK", ho.getStock()+"");
+			values.put("MEDIAN", ho.getMedian()+"");
+			values.put("INITIATION", ho.getInitiation());
+			values.put("STARTPRICE", ho.getStartprice()+"");
+			values.put("CEILING", ho.getCeiling()+"");
+			values.put("FLOOR", ho.getFloor()+"");
+			values.put("MAXSTOCK", ho.getMaxstock()+"");
+			if (ho instanceof HyperItem) {
+				HyperItem hi = (HyperItem)ho;
+				values.put("MATERIAL", hi.getMaterial());
+				values.put("ID", hi.getId()+"");
+				values.put("DATA", hi.getData()+"");
+				values.put("DURABILITY", hi.getDurability()+"");
+			} else if (ho instanceof HyperEnchant) {
+				HyperEnchant he = (HyperEnchant)ho;
+				values.put("MATERIAL", he.getEnchantmentName());
+				values.put("ID", he.getEnchantmentId()+"");
+				values.put("DATA", "-1");
+				values.put("DURABILITY", "-1");
+			} else {
+				values.put("MATERIAL", "none");
+				values.put("ID", "-1");
+				values.put("DATA", "-1");
+				values.put("DURABILITY", "-1");
+			}
+			sw.performInsert("hyperconomy_objects", values);
+		}
 		hc.restart();
 	}
+	
 	public void deleteEconomy(String economy) {
 		hc.getSQLWrite().executeSQL("DELETE FROM hyperconomy_objects WHERE ECONOMY='" + economy + "'");
 		hc.restart();
 	}
 
 	
-
+	
+	public void createEconomyFromYml(String econ) {
+		new Backup();
+		FileConfiguration objects = hc.gYH().gFC("objects");
+		SQLWrite sw = hc.getSQLWrite();
+		Iterator<String> it = objects.getKeys(false).iterator();
+		while (it.hasNext()) {
+			String itemname = it.next().toString();
+			String category = objects.getString(itemname + ".information.category");
+			if (category == null) {
+				category = "unknown";
+			}
+			
+			HashMap<String,String> values = new HashMap<String,String>();
+			values.put("NAME", itemname);
+			values.put("ECONOMY", econ);
+			values.put("TYPE", objects.getString(itemname + ".information.type"));
+			values.put("CATEGORY", category);
+			values.put("VALUE", objects.getDouble(itemname + ".value")+"");
+			values.put("STATIC", objects.getString(itemname + ".price.static"));
+			values.put("STATICPRICE", objects.getDouble(itemname + ".price.staticprice")+"");
+			values.put("STOCK", objects.getDouble(itemname + ".stock.stock")+"");
+			values.put("MEDIAN", objects.getDouble(itemname + ".stock.median")+"");
+			values.put("INITIATION", objects.getString(itemname + ".initiation.initiation"));
+			values.put("STARTPRICE", objects.getDouble(itemname + ".initiation.startprice")+"");
+			values.put("CEILING", objects.getDouble(itemname + ".price.ceiling")+"");
+			values.put("FLOOR", objects.getDouble(itemname + ".price.floor")+"");
+			values.put("MAXSTOCK", objects.getDouble(itemname + ".stock.maxstock")+"");
+			if (objects.getString(itemname + ".information.type").equalsIgnoreCase("item")) {
+				values.put("MATERIAL", objects.getString(itemname + ".information.material"));
+				values.put("ID", objects.getInt(itemname + ".information.id")+"");
+				values.put("DATA", objects.getInt(itemname + ".information.data")+"");
+				values.put("DURABILITY", objects.getInt(itemname + ".information.data")+"");
+			} else if (objects.getString(itemname + ".information.type").equalsIgnoreCase("enchantment")) {
+				values.put("MATERIAL", objects.getString(itemname + ".information.material"));
+				values.put("ID", objects.getString(itemname + ".information.id"));
+				values.put("DATA", "-1");
+				values.put("DURABILITY", "-1");
+			} else if (objects.getString(itemname + ".information.type").equalsIgnoreCase("experience")) {
+				values.put("MATERIAL", "none");
+				values.put("ID", "-1");
+				values.put("DATA", "-1");
+				values.put("DURABILITY", "-1");
+			}
+			sw.performInsert("hyperconomy_objects", values);
+		}
+		hc.restart();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+/*
 	public void createEconomyFromYml(String econ) {
 		new Backup();
 		FileConfiguration itemsyaml = hc.gYH().gFC("items");
@@ -268,12 +340,12 @@ public class EconomyManager implements Listener {
 			if (category == null) {
 				category = "unknown";
 			}
-			if (!itemname.equalsIgnoreCase("xp")) {
-				statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + itemname + "','" + econ + "','" + "item" + "','" + category + "','" + itemsyaml.getString(itemname + ".information.material") + "','" + itemsyaml.getInt(itemname + ".information.id") + "','" + itemsyaml.getInt(itemname + ".information.data") + "','"
+			if (itemsyaml.getString(itemname + ".information.type").equalsIgnoreCase("experience")) {
+				statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + itemname + "','" + econ + "','" + itemsyaml.getString(itemname + ".information.type") + "','" + category + "','" + itemsyaml.getString(itemname + ".information.material") + "','" + itemsyaml.getInt(itemname + ".information.id") + "','" + itemsyaml.getInt(itemname + ".information.data") + "','"
 						+ itemsyaml.getInt(itemname + ".information.data") + "','" + itemsyaml.getDouble(itemname + ".value") + "','" + itemsyaml.getString(itemname + ".price.static") + "','" + itemsyaml.getDouble(itemname + ".price.staticprice") + "','" + itemsyaml.getDouble(itemname + ".stock.stock") + "','" + itemsyaml.getDouble(itemname + ".stock.median") + "','" + itemsyaml.getString(itemname + ".initiation.initiation") + "','" + itemsyaml.getDouble(itemname + ".initiation.startprice")
 						+ "','" + itemsyaml.getDouble(itemname + ".price.ceiling") + "','" + itemsyaml.getDouble(itemname + ".price.floor") + "','" + itemsyaml.getDouble(itemname + ".stock.maxstock") + "')");
 			} else {
-				statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + itemname + "','" + econ + "','" + "experience" + "','" + category + "','" + "none" + "','" + itemsyaml.getInt(itemname + ".information.id") + "','" + itemsyaml.getInt(itemname + ".information.data") + "','" + itemsyaml.getInt(itemname + ".information.data") + "','"
+				statements.add("Insert Into hyperconomy_objects (NAME, ECONOMY, TYPE, CATEGORY, MATERIAL, ID, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " Values ('" + itemname + "','" + econ + "','" + itemsyaml.getString(itemname + ".information.type") + "','" + category + "','" + "none" + "','" + itemsyaml.getInt(itemname + ".information.id") + "','" + itemsyaml.getInt(itemname + ".information.data") + "','" + itemsyaml.getInt(itemname + ".information.data") + "','"
 						+ itemsyaml.getDouble(itemname + ".value") + "','" + itemsyaml.getString(itemname + ".price.static") + "','" + itemsyaml.getDouble(itemname + ".price.staticprice") + "','" + itemsyaml.getDouble(itemname + ".stock.stock") + "','" + itemsyaml.getDouble(itemname + ".stock.median") + "','" + itemsyaml.getString(itemname + ".initiation.initiation") + "','" + itemsyaml.getDouble(itemname + ".initiation.startprice") + "','" + itemsyaml.getDouble(itemname + ".price.ceiling") + "','"
 						+ itemsyaml.getDouble(itemname + ".price.floor") + "','" + itemsyaml.getDouble(itemname + ".stock.maxstock") + "')");
 			}
@@ -291,7 +363,7 @@ public class EconomyManager implements Listener {
 		SQLWrite sw = hc.getSQLWrite();
 		sw.executeSQL(statements);
 	}
-	
+	*/
 	
 	
 	

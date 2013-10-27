@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 
 import java.util.Iterator;
 import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,6 +16,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.potion.Potion;
 import org.bukkit.util.Vector;
 
 public class ItemDisplay {
@@ -25,7 +27,6 @@ public class ItemDisplay {
 	private Item item;
 	private Location location;
 	private String name;
-	private String economy;
 	private double x;
 	private double y;
 	private double z;
@@ -34,30 +35,28 @@ public class ItemDisplay {
 	private Block baseBlock;
 	private Block itemBlock;
 	
-	ItemDisplay(String key, Location location, String name, String economy) {
+	ItemDisplay(String key, Location location, String name) {
 		this.hc = HyperConomy.hc;
 		this.location = location;
-		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		HyperEconomy he = hc.getEconomyManager().getEconomy("default");
 		this.x = this.location.getX();
 		this.y = this.location.getY();
 		this.z = this.location.getZ();
 		this.w = this.location.getWorld();
 		this.name = he.fixName(name);
-		this.economy = economy;
 		this.key = key;
 		setProtectedBlocks();
 	}
 	
-	ItemDisplay(Location location, String name, String economy) {
+	ItemDisplay(Location location, String name) {
 		this.hc = HyperConomy.hc;
 		this.location = location;
-		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		HyperEconomy he = hc.getEconomyManager().getEconomy("default");
 		this.x = this.location.getX();
 		this.y = this.location.getY();
 		this.z = this.location.getZ();
 		this.w = this.location.getWorld();
 		this.name = he.fixName(name);
-		this.economy = economy;
 		storeDisplay();
 		setProtectedBlocks();
 	}
@@ -78,7 +77,6 @@ public class ItemDisplay {
 		location = null;
 		w = null;
 		name = null;
-		economy = null;
 		item = null;
 		key = null;
 	}
@@ -107,10 +105,6 @@ public class ItemDisplay {
 		return name;
 	}
 	
-	public String getEconomy() {
-		return economy;
-	}
-	
 	public double getX() {
 		return location.getX();
 	}
@@ -132,10 +126,10 @@ public class ItemDisplay {
 	}
 	
 	public Item makeDisplay() {
-		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		HyperEconomy he = hc.getEconomyManager().getEconomy("default");
 		Location l = new Location(w, x, y + 1, z);
-		ItemStack dropstack = new ItemStack(he.getHyperObject(name).getId());
-		dropstack.setDurability((short) he.getHyperObject(name).getDurability());
+		ItemStack dropstack = new ItemStack(he.getHyperItem(name).getId());
+		dropstack.setDurability((short) he.getHyperItem(name).getDurability());
 		this.item = w.dropItem(l, dropstack);
 		this.entityId = item.getEntityId();
 		item.setVelocity(new Vector(0, 0, 0));
@@ -162,7 +156,6 @@ public class ItemDisplay {
 		FileConfiguration disp = hc.gYH().gFC("displays");
 		key = "d" + numdisplays;
 		disp.set(key + ".name", name);
-		disp.set(key + ".economy", economy);
 		disp.set(key + ".x", x);
 		disp.set(key + ".y", y);
 		disp.set(key + ".z", z);
@@ -184,13 +177,13 @@ public class ItemDisplay {
 	public boolean blockItemDrop(Item droppedItem) {
 		Location l = droppedItem.getLocation();
 		int dropid = droppedItem.getItemStack().getType().getId();
-		int dropda = hc.getInventoryManipulation().getDamageValue(droppedItem.getItemStack());
+		int dropda = getDamageValue(droppedItem.getItemStack());
 		double dropx = l.getX();
 		double dropy = l.getY();
 		double dropz = l.getZ();
 		World dropworld = l.getWorld();
 		int id = item.getItemStack().getType().getId();
-		int da = hc.getInventoryManipulation().getDamageValue(item.getItemStack());
+		int da = getDamageValue(item.getItemStack());
 		if (id == dropid) {
 			if (da == dropda) {
 				if (dropworld.equals(location.getWorld())) {
@@ -252,7 +245,7 @@ public class ItemDisplay {
 				}
 				if (!nearbyItem.equals(item) && !display) {
 					if (nearbyItem.getItemStack().getType().getId() == item.getItemStack().getType().getId()) {
-						if (hc.getInventoryManipulation().getDamageValue(nearbyItem.getItemStack()) == hc.getInventoryManipulation().getDamageValue(item.getItemStack())) {
+						if (getDamageValue(nearbyItem.getItemStack()) == getDamageValue(item.getItemStack())) {
 							entity.remove();
 						}
 					}
@@ -261,6 +254,25 @@ public class ItemDisplay {
 		}
 	}
 	
-	
+	public int cleanDamageValue(int id, int data) {
+		if (Material.getMaterial(id).getMaxDurability() > 0) {return 0;}
+		return data;
+	}
+	public int getDamageValue(ItemStack item) {
+		if (item == null) {return 0;}
+		return cleanDamageValue(item.getTypeId(), getpotionDV(item));
+	}
+	public int getpotionDV(ItemStack item) {
+		if (item == null) {return 0;}
+		if (item.getTypeId() != 373) {
+			return item.getData().getData();
+		}
+		try {
+			Potion p = Potion.fromItemStack(item);
+			return p.toDamageValue();
+		} catch (Exception IllegalArgumentException) {
+			return item.getData().getData();
+		}
+	}
 	
 }

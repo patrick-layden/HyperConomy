@@ -26,7 +26,7 @@ public class Setstockall {
 		for (int i = 0; i < names.size(); i++) {
 			name = names.get(i);
 			HyperObject ho = he.getHyperObject(name);
-			if (ho instanceof ComponentObject) {
+			if (!(ho instanceof CompositeItem)) {
 				ho.setStock(stock);
 			}
 		}
