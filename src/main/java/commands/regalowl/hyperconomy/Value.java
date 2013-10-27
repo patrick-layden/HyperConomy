@@ -3,13 +3,15 @@ package regalowl.hyperconomy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class Value {
 	HyperConomy hc;
 
 	Value(String args[], CommandSender sender, String playerecon) {
 		hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
-		Calculation calc = hc.getCalculation();
+		CommonFunctions cf = hc.gCF();
 		LanguageFile L = hc.getLanguageFile();
 		Player player = null;
 		EconomyManager em = hc.getEconomyManager();
@@ -39,17 +41,17 @@ public class Value {
 						HyperPlayer hp = em.getHyperPlayer(player);
 						salestax = hp.getSalesTax(val);
 					}
-					val = calc.twoDecimals(val - salestax);
+					val = cf.twoDecimals(val - salestax);
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, name));
 					double cost = hi.getCost(amount);
 					double taxpaid = hi.getPurchaseTax(cost);
-					cost = calc.twoDecimals(cost + taxpaid);
+					cost = cf.twoDecimals(cost + taxpaid);
 					if (cost > Math.pow(10, 10)) {
 						cost = -1;
 					}
 					double stock = 0;
-					stock = calc.twoDecimals(he.getHyperObject(name, em.getShop(player)).getStock());
+					stock = cf.twoDecimals(he.getHyperObject(name, em.getShop(player)).getStock());
 					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, name));
 					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, name));
 					sender.sendMessage(L.get("LINE_BREAK"));
@@ -60,17 +62,17 @@ public class Value {
 						HyperPlayer hp = em.getHyperPlayer(player);
 						salestax = hp.getSalesTax(val);
 					}
-					val = calc.twoDecimals(val - salestax);
+					val = cf.twoDecimals(val - salestax);
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, name));
 					double cost = bo.getCost(amount);
 					double taxpaid = bo.getPurchaseTax(cost);
-					cost = calc.twoDecimals(cost + taxpaid);
+					cost = cf.twoDecimals(cost + taxpaid);
 					if (cost > Math.pow(10, 10)) {
 						cost = -1;
 					}
 					double stock = 0;
-					stock = calc.twoDecimals(he.getHyperObject(name, em.getShop(player)).getStock());
+					stock = cf.twoDecimals(he.getHyperObject(name, em.getShop(player)).getStock());
 					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, name));
 					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, name));
 					sender.sendMessage(L.get("LINE_BREAK"));

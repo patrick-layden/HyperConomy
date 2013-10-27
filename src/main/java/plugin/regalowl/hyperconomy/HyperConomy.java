@@ -16,6 +16,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.DataBukkit;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
@@ -31,7 +32,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private DataBukkit db;
 	private YamlHandler yh;
 	private HyperSettings hs;
-	private Calculation calc;
 	private Log l;
 	private InfoSignHandler isign;
 	private _Command commandhandler;
@@ -50,6 +50,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private HyperEventHandler heh;
 	private boolean enabled;
 	private boolean useExternalEconomy;
+	private CommonFunctions cf;
 
 	@Override
 	public void onLoad() {
@@ -73,6 +74,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		hyperEconAPI = new HyperEconAPI();
 		hyperObjectAPI = new HyperObjectAPI();
 		db = new DataBukkit(this);
+		cf = db.getCommonFunctions();
 		yh = db.getYamlHandler();
 		yh.copyFromJar("categories");
 		yh.copyFromJar("config");
@@ -114,7 +116,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		setupExternalEconomy();
 		em.load();
 		l = new Log(this);
-		calc = new Calculation();
 		sal = new SerializeArrayList();
 		commandhandler = new _Command();
 		not = new Notification();
@@ -301,10 +302,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		return em;
 	}
 
-	public Calculation getCalculation() {
-		return calc;
-	}
-
 	public Economy getEconomy() {
 		if (economy == null) {
 			setupExternalEconomy();
@@ -372,6 +369,12 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	}
 	public SerializeArrayList getSerializeArrayList() {
 		return sal;
+	}
+	public CommonFunctions getCommonFunctions() {
+		return cf;
+	}
+	public CommonFunctions gCF() {
+		return cf;
 	}
 	public HyperEventHandler getHyperEventHandler() {
 		return heh;

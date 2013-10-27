@@ -1,9 +1,12 @@
 package regalowl.hyperconomy;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -170,6 +173,12 @@ public class LanguageFile {
 			}
 		}
 		return language;
+	}
+	
+	public String formatMoney(double money) {
+		BigDecimal bd = new BigDecimal(money);
+		BigDecimal rounded = bd.setScale(2, RoundingMode.HALF_DOWN);
+		return fC(rounded.toPlainString());
 	}
 	
 	public String gC(boolean fullName) {

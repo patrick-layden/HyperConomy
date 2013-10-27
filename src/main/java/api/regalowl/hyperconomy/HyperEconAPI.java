@@ -105,8 +105,8 @@ public class HyperEconAPI implements EconomyAPI {
 	
 	public String formatMoney(double money) {
 		HyperConomy hc = HyperConomy.hc;
-		Calculation calc = hc.getCalculation();
-		return (calc.formatMoney(money));
+		LanguageFile L = hc.getLanguageFile();
+		return (L.formatMoney(money));
 	}
 
 	public int fractionalDigits() {

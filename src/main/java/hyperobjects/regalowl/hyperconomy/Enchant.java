@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class Enchant extends BasicObject implements HyperEnchant {
 
 	private String enchantName;
@@ -74,7 +76,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 
 	public double getCost(EnchantmentClass eclass) {
 		try {
-			Calculation calc = hc.getCalculation();
+			CommonFunctions cf = hc.gCF();
 			double cost = 0;
 			double classvalue = getclassValue(eclass);
 			boolean stax;
@@ -103,7 +105,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 						cost = applyCeilingFloor(cost);
 					}
 				}
-				cost = calc.twoDecimals(cost);
+				cost = cf.twoDecimals(cost);
 			} else {
 				double staticcost;
 				staticcost = getStaticprice();
@@ -120,7 +122,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 	}
 	public double getValue(EnchantmentClass eclass) {
 		try {
-			Calculation calc = hc.getCalculation();
+			CommonFunctions cf = hc.gCF();
 			double cost = 0;
 			double classvalue = getclassValue(eclass);
 			boolean stax;
@@ -147,7 +149,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 					cost = icost * classvalue;
 					cost = applyCeilingFloor(cost);
 				}
-				cost = calc.twoDecimals(cost);
+				cost = cf.twoDecimals(cost);
 			} else {
 				double statprice;
 				statprice = getStaticprice();
@@ -165,7 +167,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 	
 	public double getValue(EnchantmentClass eclass, HyperPlayer hp) {
 		try {
-			Calculation calc = hc.getCalculation();
+			CommonFunctions cf = hc.gCF();
 			double cost = 0;
 			double classvalue = getclassValue(eclass);
 			boolean stax;
@@ -198,7 +200,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 					cost = icost * classvalue * duramult;
 					cost = applyCeilingFloor(cost);
 				}
-				cost = calc.twoDecimals(cost);
+				cost = cf.twoDecimals(cost);
 			} else {
 				double statprice;
 				statprice = getStaticprice();

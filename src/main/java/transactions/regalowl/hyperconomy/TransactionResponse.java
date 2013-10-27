@@ -76,7 +76,7 @@ public class TransactionResponse {
 		for (double p:prices) {
 			total += p;
 		}
-		return HyperConomy.hc.getCalculation().twoDecimals(total);
+		return HyperConomy.hc.gCF().twoDecimals(total);
 	}
 	
 	public ArrayList<HyperObject> getFailedObjects() {

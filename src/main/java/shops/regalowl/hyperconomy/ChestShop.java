@@ -25,10 +25,12 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class ChestShop implements Listener {
 
 	private HyperConomy hc;
-	private Calculation calc;
+	private CommonFunctions cf;
 	private LanguageFile L;
 	private EconomyManager em;
 
@@ -39,7 +41,7 @@ public class ChestShop implements Listener {
 
 		hc = HyperConomy.hc;
 		em = hc.getEconomyManager();
-		calc = hc.getCalculation();
+		cf = hc.gCF();
 		L = hc.getLanguageFile();
 
 		faces.add(BlockFace.EAST);
@@ -441,7 +443,7 @@ public class ChestShop implements Listener {
 			if (line1.startsWith(L.gC(false))) {
 				try {
 					String price = line1.substring(1, line1.length());
-					staticprice = calc.twoDecimals(Double.parseDouble(price));
+					staticprice = cf.twoDecimals(Double.parseDouble(price));
 					setprice = true;
 				} catch (Exception e) {
 					setprice = false;
@@ -449,7 +451,7 @@ public class ChestShop implements Listener {
 			} else if (line1.endsWith(L.gC(false))) {
 				try {
 					String price = line1.substring(0, line1.length() - 1);
-					staticprice = calc.twoDecimals(Double.parseDouble(price));
+					staticprice = cf.twoDecimals(Double.parseDouble(price));
 					setprice = true;
 				} catch (Exception e) {
 					setprice = false;
@@ -479,7 +481,7 @@ public class ChestShop implements Listener {
 						pt.setAmount(camount);
 						pt.setGiveInventory(icevent.getView().getTopInventory());
 						if (setprice) {
-							pt.setMoney(calc.twoDecimals((camount * staticprice)));
+							pt.setMoney(cf.twoDecimals((camount * staticprice)));
 							pt.setSetPrice(true);
 						}
 						TransactionResponse response = hp.processTransaction(pt);
@@ -514,7 +516,7 @@ public class ChestShop implements Listener {
 										pt.setAmount(camount);
 										pt.setReceiveInventory(icevent.getView().getTopInventory());
 										if (setprice) {
-											pt.setMoney(calc.twoDecimals(cost));
+											pt.setMoney(cf.twoDecimals(cost));
 											pt.setSetPrice(true);
 										}
 										TransactionResponse response = hp.processTransaction(pt);
@@ -594,7 +596,7 @@ public class ChestShop implements Listener {
 									price = staticprice;
 								}
 							}
-							price = calc.twoDecimals(price);
+							price = cf.twoDecimals(price);
 							if (new HyperItemStack(p.getItemInHand()).canEnchantItem()) {
 								p.sendMessage(L.get("LINE_BREAK"));
 								p.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, line34));

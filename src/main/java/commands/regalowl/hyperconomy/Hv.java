@@ -6,10 +6,12 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class Hv {
 	Hv(String args[], Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		Calculation calc = hc.getCalculation();
+		CommonFunctions cf = hc.gCF();
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
 		int amount;
@@ -42,12 +44,12 @@ public class Hv {
 							}
 						}
 						double salestax = hp.getSalesTax(val);
-						val = calc.twoDecimals(val - salestax);
+						val = cf.twoDecimals(val - salestax);
 						player.sendMessage(L.get("LINE_BREAK"));
 						player.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, nam));
 						double cost = ho.getCost(amount);
 						double taxpaid = ho.getPurchaseTax(cost);
-						cost = calc.twoDecimals(cost + taxpaid);
+						cost = cf.twoDecimals(cost + taxpaid);
 						if (cost > Math.pow(10, 10)) {
 							cost = -1;
 						}
@@ -74,14 +76,14 @@ public class Hv {
 						double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
 						double cost = ho.getCost(EnchantmentClass.fromString(mater));
 						cost = cost + ho.getPurchaseTax(cost);
-						value = calc.twoDecimals(value);
-						cost = calc.twoDecimals(cost);
+						value = cf.twoDecimals(value);
+						cost = cf.twoDecimals(cost);
 						double salestax = 0;
 						salestax = hp.getSalesTax(value);
-						value = calc.twoDecimals(value - salestax);
+						value = cf.twoDecimals(value - salestax);
 						player.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 						player.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-						player.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(fnam, em.getShop(player)).getStock()), fnam));
+						player.sendMessage(L.f(L.get("EVALUE_STOCK"), cf.twoDecimals(he.getHyperObject(fnam, em.getShop(player)).getStock()), fnam));
 					}
 					player.sendMessage(L.get("LINE_BREAK"));
 				}

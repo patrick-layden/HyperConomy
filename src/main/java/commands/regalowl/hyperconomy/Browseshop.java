@@ -7,13 +7,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class Browseshop {
 	
 	Browseshop(String args[], CommandSender sender, Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
 		EconomyManager em = hc.getEconomyManager();
-		Calculation calc = hc.getCalculation();
+		CommonFunctions cf = hc.gCF();
 		LanguageFile L = hc.getLanguageFile();
 		ArrayList<String> aargs = new ArrayList<String>();
 		for (int i = 0; i < args.length; i++) {
@@ -109,19 +111,19 @@ public class Browseshop {
 			            	HyperItem hi = (HyperItem)ho;
 							cost = hi.getCost(1);
 							double taxpaid = ho.getPurchaseTax(cost);
-							cost = calc.twoDecimals(cost + taxpaid);
-							stock = calc.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
+							cost = cf.twoDecimals(cost + taxpaid);
+							stock = cf.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
 						} else if (ho instanceof HyperEnchant) {
 							HyperEnchant hye = (HyperEnchant)ho;
 							cost = hye.getCost(EnchantmentClass.DIAMOND);
 							cost = cost + ho.getPurchaseTax(cost);
-							stock = calc.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
+							stock = cf.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
 						} else if (ho instanceof BasicObject) {
 							BasicObject hi = (BasicObject)ho;
 							cost = hi.getCost(1);
 							double taxpaid = ho.getPurchaseTax(cost);
-							cost = calc.twoDecimals(cost + taxpaid);
-							stock = calc.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
+							cost = cf.twoDecimals(cost + taxpaid);
+							stock = cf.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
 						}
 			            if (ho instanceof PlayerShopObject) {
 			            	PlayerShopObject pso = (PlayerShopObject)ho;

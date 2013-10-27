@@ -9,7 +9,6 @@ public class Hctop {
 		HyperConomy hc = HyperConomy.hc;
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
-		Calculation calc = hc.getCalculation();
 		try {
 			if (hc.useExternalEconomy()) {
 				sender.sendMessage(L.get("ONLY_AVAILABLE_INTERNAL"));
@@ -59,7 +58,7 @@ public class Hctop {
 			}
 			sender.sendMessage(L.get("TOP_BALANCE"));
 			sender.sendMessage(L.f(L.get("TOP_BALANCE_PAGE"), pe, (int)Math.ceil(sbalances.size()/10.0)));
-			sender.sendMessage(L.f(L.get("TOP_BALANCE_TOTAL"), calc.formatMoney(serverTotal)));
+			sender.sendMessage(L.f(L.get("TOP_BALANCE_TOTAL"), L.formatMoney(serverTotal)));
 			int ps = pe - 1;
 			ps *= 10;
 			pe *= 10;
@@ -68,7 +67,7 @@ public class Hctop {
 					sender.sendMessage(L.get("REACHED_END"));
 					return;
 				}
-				sender.sendMessage(L.f(L.get("TOP_BALANCE_BALANCE"), splayers.get(i), calc.formatMoney(sbalances.get(i)), (i + 1)));
+				sender.sendMessage(L.f(L.get("TOP_BALANCE_BALANCE"), splayers.get(i), L.formatMoney(sbalances.get(i)), (i + 1)));
 			}
 		} catch (Exception e) {
 			sender.sendMessage(L.get("HCTOP_INVALID"));

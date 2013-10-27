@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
@@ -175,7 +176,7 @@ public class History {
 		if (ho == null || sr == null) {
 			return "?";
 		}
-		Calculation calc = hc.getCalculation();
+		CommonFunctions cf = hc.getCommonFunctions();
 		double percentChange = 0.0;
 		double historicvalue = getHistoricValue(ho.getName(), ho.getEconomy(), timevalue);
 		if (historicvalue == -1.0) {
@@ -195,7 +196,7 @@ public class History {
 		}
 
 		percentChange = ((currentvalue - historicvalue) / historicvalue) * 100;
-		percentChange = calc.round(percentChange, 3);
+		percentChange = cf.round(percentChange, 3);
 		return percentChange + "";
 	}
 	
@@ -248,7 +249,7 @@ public class History {
 						currentvalue = bo.getValue(1);
 					}
 					double percentChange = ((currentvalue - historicValue) / historicValue) * 100;
-					percentChange = hc.getCalculation().round(percentChange, 3);
+					percentChange = hc.getCommonFunctions().round(percentChange, 3);
 					String stringValue = percentChange + "";
 					relevantValues.put(ho, stringValue);
 				} else {

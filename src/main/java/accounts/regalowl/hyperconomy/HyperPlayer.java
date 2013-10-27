@@ -1,9 +1,12 @@
 package regalowl.hyperconomy;
 
 import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+
+import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.SQLWrite;
 
 
@@ -167,7 +170,7 @@ public class HyperPlayer {
 	}
 	
 	public double getSalesTax(Double price) {
-		Calculation calc = hc.getCalculation();
+		CommonFunctions cf = hc.gCF();
 		double salestax = 0;
 		if (hc.gYH().gFC("config").getBoolean("config.dynamic-tax.use-dynamic-tax")) {
 			double moneyfloor = hc.gYH().gFC("config").getDouble("config.dynamic-tax.money-floor");
@@ -187,7 +190,7 @@ public class HyperPlayer {
 			}
 		} else {
 			double salestaxpercent = hc.gYH().gFC("config").getDouble("config.sales-tax-percent");
-			salestax = calc.twoDecimals((salestaxpercent / 100) * price);
+			salestax = cf.twoDecimals((salestaxpercent / 100) * price);
 		}
 		return salestax;
 	}

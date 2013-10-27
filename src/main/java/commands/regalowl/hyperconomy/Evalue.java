@@ -6,10 +6,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class Evalue {
 	Evalue(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
-		Calculation calc = hc.getCalculation();
+		CommonFunctions cf = hc.gCF();
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
 		try {
@@ -39,7 +41,7 @@ public class Evalue {
 							while (n < 9) {
 								double value = ho.getValue(EnchantmentClass.fromString(classtype[n]));
 								double salestax = hp.getSalesTax(value);
-								value = calc.twoDecimals(value - salestax);
+								value = cf.twoDecimals(value - salestax);
 								sender.sendMessage(L.f(L.get("EVALUE_CLASS_SALE"), 1, value, nam, classtype[n]));
 								n++;
 							}
@@ -66,7 +68,7 @@ public class Evalue {
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else if (type.equalsIgnoreCase("a")) {
 							sender.sendMessage(L.get("LINE_BREAK"));
-							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(nam, em.getShop(player)).getStock()), nam));
+							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), cf.twoDecimals(he.getHyperObject(nam, em.getShop(player)).getStock()), nam));
 							sender.sendMessage(L.get("LINE_BREAK"));
 						} else {
 							sender.sendMessage(L.get("EVALUE_INVALID"));
@@ -93,8 +95,8 @@ public class Evalue {
 							double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
 							double cost = ho.getCost(EnchantmentClass.fromString(mater));
 							cost = cost + ho.getPurchaseTax(cost);
-							value = calc.twoDecimals(value);
-							cost = calc.twoDecimals(cost);
+							value = cf.twoDecimals(value);
+							cost = cf.twoDecimals(cost);
 							double salestax = 0;
 							if (hc.gYH().gFC("config").getBoolean("config.dynamic-tax.use-dynamic-tax")) {
 								double moneycap = hc.gYH().gFC("config").getDouble("config.dynamic-tax.money-cap");
@@ -108,10 +110,10 @@ public class Evalue {
 								double salestaxpercent = hc.gYH().gFC("config").getDouble("config.sales-tax-percent");
 								salestax = (salestaxpercent / 100) * value;
 							}
-							value = calc.twoDecimals(value - salestax);
+							value = cf.twoDecimals(value - salestax);
 							sender.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 							sender.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), calc.twoDecimals(he.getHyperObject(fnam, em.getShop(player)).getStock()), fnam));
+							sender.sendMessage(L.f(L.get("EVALUE_STOCK"), cf.twoDecimals(he.getHyperObject(fnam, em.getShop(player)).getStock()), fnam));
 						}
 						player.sendMessage(L.get("LINE_BREAK"));
 					} else {

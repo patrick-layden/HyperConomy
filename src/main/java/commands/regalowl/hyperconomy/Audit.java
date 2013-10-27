@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 
 import org.bukkit.command.CommandSender;
 
+import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 
@@ -38,11 +39,11 @@ public class Audit {
 	    			auditbalance = getAuditLogTotal(account);
 	    			hc.getServer().getScheduler().runTask(hc, new Runnable() {
 	    	    		public void run() {
-	    	    			Calculation calc = hc.getCalculation();
+	    	    			CommonFunctions cf = hc.gCF();
 	    	    			sender.sendMessage(L.get("LINE_BREAK"));
 	    	    			sender.sendMessage(L.f(L.get("AUDIT_TRUE"), cbalance));
-	    	    			sender.sendMessage(L.f(L.get("AUDIT_THEORETICAL1"), calc.twoDecimals(logbalance)));
-	    	    			sender.sendMessage(L.f(L.get("AUDIT_THEORETICAL2"), calc.twoDecimals(auditbalance)));
+	    	    			sender.sendMessage(L.f(L.get("AUDIT_THEORETICAL1"), cf.twoDecimals(logbalance)));
+	    	    			sender.sendMessage(L.f(L.get("AUDIT_THEORETICAL2"), cf.twoDecimals(auditbalance)));
 	    	    			//sender.sendMessage("True balance: " + cbalance);
 	    	    			//sender.sendMessage("Theoretical balance condsidering only sales/purchases: " + calc.twoDecimals(logbalance));
 	    	    			//sender.sendMessage("Theoretical balance condsidering all logged balance changes: " + calc.twoDecimals(auditbalance));

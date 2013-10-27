@@ -8,10 +8,13 @@ import java.util.Collections;
 import java.util.HashMap;
 
 
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import regalowl.databukkit.CommonFunctions;
 
 public class ShopPage extends HttpServlet {
 	
@@ -21,7 +24,7 @@ public class ShopPage extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 699465359999143309L;
 	private HyperConomy hc;
-	private Calculation calc;
+	private CommonFunctions cf;
 	private History hist;
 	private Shop s;
 	private String page = "Loading...";
@@ -30,7 +33,7 @@ public class ShopPage extends HttpServlet {
 
 	public ShopPage(Shop shop) {
 		hc = HyperConomy.hc;
-		calc = hc.getCalculation();
+		cf = hc.gCF();
 		hist = hc.getHistory();
 		s = shop;
 		page = buildLoadPage();
@@ -199,13 +202,13 @@ public class ShopPage extends HttpServlet {
 					page += ho.getName() + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
-					page += hc.getLanguageFile().fC(calc.twoDecimals(scost - (scost * (stax / 100)))) + "\n";
+					page += hc.getLanguageFile().fC(cf.twoDecimals(scost - (scost * (stax / 100)))) + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
-					page += hc.getLanguageFile().fC(calc.twoDecimals(((bcost * (tax / 100)) + bcost))) + "\n";
+					page += hc.getLanguageFile().fC(cf.twoDecimals(((bcost * (tax / 100)) + bcost))) + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
-					page += calc.twoDecimals(ho.getStock()) + "\n";
+					page += cf.twoDecimals(ho.getStock()) + "\n";
 					page += "</TD>\n";
 					page += "<TD>\n";
 					

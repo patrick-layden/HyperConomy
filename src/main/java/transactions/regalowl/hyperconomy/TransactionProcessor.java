@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import regalowl.databukkit.CommonFunctions;
+
 
 
 public class TransactionProcessor {
@@ -144,7 +146,7 @@ public class TransactionProcessor {
 				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
-			Calculation calc = hc.getCalculation();
+			CommonFunctions cf = hc.gCF();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
 			InfoSignHandler isign = hc.getInfoSignHandler();
@@ -180,7 +182,7 @@ public class TransactionProcessor {
 			}
 			double price = hyperItem.getCost(amount);
 			double taxpaid = hyperItem.getPurchaseTax(price);
-			price = calc.twoDecimals(price + taxpaid);
+			price = cf.twoDecimals(price + taxpaid);
 			if (!hp.hasBalance(price)) {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperItem);
 				heh.fireTransactionEvent(pt, response);
@@ -199,7 +201,7 @@ public class TransactionProcessor {
 			hp.withdraw(price);
 			tradePartner.deposit(price);
 			resetBalanceIfUnlimited();
-			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, name, calc.twoDecimals(taxpaid)), price, hyperItem);
+			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, name, cf.twoDecimals(taxpaid)), price, hyperItem);
 			response.setSuccessful();
 			String type = "dynamic";
 			if (Boolean.parseBoolean(hyperItem.getInitiation())) {
@@ -207,7 +209,7 @@ public class TransactionProcessor {
 			} else if (Boolean.parseBoolean(hyperItem.getIsstatic())) {
 				type = "static";
 			}
-			log.writeSQLLog(hp.getName(), "purchase", name, (double) amount, calc.twoDecimals(price - taxpaid), calc.twoDecimals(taxpaid), tradePartner.getName(), type);
+			log.writeSQLLog(hp.getName(), "purchase", name, (double) amount, cf.twoDecimals(price - taxpaid), cf.twoDecimals(taxpaid), tradePartner.getName(), type);
 			isign.updateSigns();
 			heh.fireTransactionEvent(pt, response);
 			return response;
@@ -236,7 +238,7 @@ public class TransactionProcessor {
 				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
-			Calculation calc = hc.getCalculation();
+			CommonFunctions cf = hc.gCF();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
 			InfoSignHandler isign = hc.getInfoSignHandler();
@@ -312,7 +314,7 @@ public class TransactionProcessor {
 			tradePartner.withdraw(price - salestax);
 			resetBalanceIfUnlimited();
 
-			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), name, calc.twoDecimals(salestax)), calc.twoDecimals(price - salestax), hyperItem);
+			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, cf.twoDecimals(price), name, cf.twoDecimals(salestax)), cf.twoDecimals(price - salestax), hyperItem);
 			response.setSuccessful();
 			String type = "dynamic";
 			if (Boolean.parseBoolean(hyperItem.getInitiation())) {
@@ -320,7 +322,7 @@ public class TransactionProcessor {
 			} else if (Boolean.parseBoolean(hyperItem.getIsstatic())) {
 				type = "static";
 			}
-			log.writeSQLLog(hp.getName(), "sale", name, (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), tradePartner.getName(), type);
+			log.writeSQLLog(hp.getName(), "sale", name, (double) amount, cf.twoDecimals(price - salestax), cf.twoDecimals(salestax), tradePartner.getName(), type);
 			isign.updateSigns();
 			heh.fireTransactionEvent(pt, response);
 			return response;
@@ -405,7 +407,7 @@ public class TransactionProcessor {
 			return response;
 		}
 		try {
-			Calculation calc = hc.getCalculation();
+			CommonFunctions cf = hc.gCF();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
 			InfoSignHandler isign = hc.getInfoSignHandler();
@@ -424,7 +426,7 @@ public class TransactionProcessor {
 				if (shopstock >= amount) {
 					double price = xp.getCost(amount);
 					double taxpaid = hyperObject.getPurchaseTax(price);
-					price = calc.twoDecimals(price + taxpaid);
+					price = cf.twoDecimals(price + taxpaid);
 					if (hp.hasBalance(price)) {
 						int totalxp = xp.getTotalXpPoints(hp.getPlayer());
 						int newxp = totalxp + amount;
@@ -439,7 +441,7 @@ public class TransactionProcessor {
 						hp.withdraw(price);
 						tradePartner.deposit(price);
 						resetBalanceIfUnlimited();
-						response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), calc.twoDecimals(taxpaid)), calc.twoDecimals(price), hyperObject);
+						response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, cf.twoDecimals(price), hyperObject.getName(), cf.twoDecimals(taxpaid)), cf.twoDecimals(price), hyperObject);
 						response.setSuccessful();
 						String type = "dynamic";
 						if (Boolean.parseBoolean(hyperObject.getInitiation())) {
@@ -447,7 +449,7 @@ public class TransactionProcessor {
 						} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
 							type = "static";
 						}
-						log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, calc.twoDecimals(price), calc.twoDecimals(taxpaid), tradePartner.getName(), type);
+						log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, cf.twoDecimals(price), cf.twoDecimals(taxpaid), tradePartner.getName(), type);
 						isign.updateSigns();
 					} else {
 						response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
@@ -483,7 +485,7 @@ public class TransactionProcessor {
 			return response;
 		}
 		try {
-			Calculation calc = hc.getCalculation();
+			CommonFunctions cf = hc.gCF();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
 			InfoSignHandler isign = hc.getInfoSignHandler();
@@ -526,11 +528,11 @@ public class TransactionProcessor {
 						if (maxi2 == 0) {
 							hyperObject.setInitiation("false");
 						}
-						double salestax = calc.twoDecimals(hp.getSalesTax(price));
+						double salestax = cf.twoDecimals(hp.getSalesTax(price));
 						hp.deposit(price - salestax);
 						tradePartner.withdraw(price - salestax);
 						resetBalanceIfUnlimited();
-						response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), salestax), calc.twoDecimals(price), hyperObject);
+						response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, cf.twoDecimals(price), hyperObject.getName(), salestax), cf.twoDecimals(price), hyperObject);
 						response.setSuccessful();
 						String type = "dynamic";
 						if (Boolean.parseBoolean(hyperObject.getInitiation())) {
@@ -538,7 +540,7 @@ public class TransactionProcessor {
 						} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
 							type = "static";
 						}
-						log.writeSQLLog(hp.getName(), "sale", hyperObject.getName(), (double) amount, calc.twoDecimals(price - salestax), calc.twoDecimals(salestax), tradePartner.getName(), type);
+						log.writeSQLLog(hp.getName(), "sale", hyperObject.getName(), (double) amount, cf.twoDecimals(price - salestax), cf.twoDecimals(salestax), tradePartner.getName(), type);
 
 						isign.updateSigns();
 					} else {
@@ -572,7 +574,7 @@ public class TransactionProcessor {
 			return response;
 		}
 		try {
-			Calculation calc = hc.getCalculation();
+			CommonFunctions cf = hc.gCF();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
 			double price = 0.0;
@@ -588,10 +590,10 @@ public class TransactionProcessor {
 					hyperItem.remove(amount, giveInventory);
 					hp.withdraw(price);
 					tradePartner.deposit(price);
-					response.addSuccess(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), tradePartner.getName()), calc.twoDecimals(price), hyperObject);
+					response.addSuccess(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, cf.twoDecimals(price), hyperObject.getName(), tradePartner.getName()), cf.twoDecimals(price), hyperObject);
 					response.setSuccessful();
-					log.writeSQLLog(hp.getName(), "purchase", hyperObject.getName(), (double) amount, calc.twoDecimals(price), 0.0, tradePartner.getName(), "chestshop");
-					tradePartner.sendMessage(L.f(L.get("CHEST_BUY_NOTIFICATION"), amount, calc.twoDecimals(price), hyperObject.getName(), hp.getPlayer()));
+					log.writeSQLLog(hp.getName(), "purchase", hyperObject.getName(), (double) amount, cf.twoDecimals(price), 0.0, tradePartner.getName(), "chestshop");
+					tradePartner.sendMessage(L.f(L.get("CHEST_BUY_NOTIFICATION"), amount, cf.twoDecimals(price), hyperObject.getName(), hp.getPlayer()));
 				} else {
 					response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, hyperObject.getName()), hyperObject);
 				}
@@ -625,7 +627,7 @@ public class TransactionProcessor {
 			return response;
 		}
 		try {
-			Calculation calc = hc.getCalculation();
+			CommonFunctions cf = hc.gCF();
 			Log log = hc.getLog();
 			LanguageFile L = hc.getLanguageFile();
 			double price = 0.0;
@@ -638,10 +640,10 @@ public class TransactionProcessor {
 			hyperItem.add(amount, receiveInventory);
 			hp.deposit(price);
 			tradePartner.withdraw(price);
-			response.addSuccess(L.f(L.get("SELL_CHEST_MESSAGE"), amount, calc.twoDecimals(price), hyperObject.getName(), tradePartner.getName()), calc.twoDecimals(price), hyperObject);
+			response.addSuccess(L.f(L.get("SELL_CHEST_MESSAGE"), amount, cf.twoDecimals(price), hyperObject.getName(), tradePartner.getName()), cf.twoDecimals(price), hyperObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "sale", hyperObject.getName(), (double) amount, calc.twoDecimals(price), 0.0, tradePartner.getName(), "chestshop");
-			tradePartner.sendMessage(L.f(L.get("CHEST_SELL_NOTIFICATION"), amount, calc.twoDecimals(price), hyperObject.getName(), hp.getPlayer()));
+			log.writeSQLLog(hp.getName(), "sale", hyperObject.getName(), (double) amount, cf.twoDecimals(price), 0.0, tradePartner.getName(), "chestshop");
+			tradePartner.sendMessage(L.f(L.get("CHEST_SELL_NOTIFICATION"), amount, cf.twoDecimals(price), hyperObject.getName(), hp.getPlayer()));
 			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
@@ -669,7 +671,7 @@ public class TransactionProcessor {
 			heh.fireTransactionEvent(pt, response);
 			return response;
 		}
-		Calculation calc = hc.getCalculation();
+		CommonFunctions cf = hc.gCF();
 		Log log = hc.getLog();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
@@ -706,8 +708,8 @@ public class TransactionProcessor {
 					hp.deposit(fprice - salestax);
 					tradePartner.withdraw(fprice - salestax);
 					resetBalanceIfUnlimited();
-					fprice = calc.twoDecimals(fprice);
-					response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, calc.twoDecimals(fprice), hyperObject.getName(), calc.twoDecimals(salestax)), calc.twoDecimals(fprice - salestax), hyperObject);
+					fprice = cf.twoDecimals(fprice);
+					response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, cf.twoDecimals(fprice), hyperObject.getName(), cf.twoDecimals(salestax)), cf.twoDecimals(fprice - salestax), hyperObject);
 					response.setSuccessful();
 					String type = "dynamic";
 					if (Boolean.parseBoolean(hyperObject.getInitiation())) {
@@ -748,7 +750,7 @@ public class TransactionProcessor {
 			heh.fireTransactionEvent(pt, response);
 			return response;
 		}
-		Calculation calc = hc.getCalculation();
+		CommonFunctions cf = hc.gCF();
 		Log log = hc.getLog();
 		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
@@ -790,9 +792,9 @@ public class TransactionProcessor {
 								taxrate = hc.gYH().gFC("config").getDouble("config.statictaxpercent");
 							}
 							double taxpaid = price - (price / (1 + taxrate / 100));
-							taxpaid = calc.twoDecimals(taxpaid);
-							price = calc.twoDecimals(price);
-							response.addSuccess(L.f(L.get("ENCHANTMENT_PURCHASE_MESSAGE"), 1, price, hyperObject.getName(), calc.twoDecimals(taxpaid)), calc.twoDecimals(price), hyperObject);
+							taxpaid = cf.twoDecimals(taxpaid);
+							price = cf.twoDecimals(price);
+							response.addSuccess(L.f(L.get("ENCHANTMENT_PURCHASE_MESSAGE"), 1, price, hyperObject.getName(), cf.twoDecimals(taxpaid)), cf.twoDecimals(price), hyperObject);
 							response.setSuccessful();
 							String type = "dynamic";
 							if (Boolean.parseBoolean(hyperObject.getInitiation())) {
@@ -839,7 +841,7 @@ public class TransactionProcessor {
 			heh.fireTransactionEvent(pt, response);
 			return response;
 		}
-		Calculation calc = hc.getCalculation();
+		CommonFunctions cf = hc.gCF();
 		Log log = hc.getLog();
 		try {
 			Player p = hp.getPlayer();
@@ -864,11 +866,11 @@ public class TransactionProcessor {
 						int level = Integer.parseInt(lev);
 						his.addEnchantment(ench, level);
 						new HyperItemStack(giveItem).removeEnchant(ench);
-						price = calc.twoDecimals(price);
-						response.addSuccess(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, calc.twoDecimals(price), hyperObject.getName(), tradePartner.getName()), calc.twoDecimals(price), hyperObject);
+						price = cf.twoDecimals(price);
+						response.addSuccess(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, cf.twoDecimals(price), hyperObject.getName(), tradePartner.getName()), cf.twoDecimals(price), hyperObject);
 						response.setSuccessful();
 						log.writeSQLLog(p.getName(), "purchase", hyperObject.getName(), 1.0, price, 0.0, tradePartner.getName(), "chestshop");
-						tradePartner.sendMessage(L.f(L.get("CHEST_ENCHANTMENT_BUY_NOTIFICATION"), 1, calc.twoDecimals(price), hyperObject.getName(), p));
+						tradePartner.sendMessage(L.f(L.get("CHEST_ENCHANTMENT_BUY_NOTIFICATION"), 1, cf.twoDecimals(price), hyperObject.getName(), p));
 					} else {
 						response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
 					}

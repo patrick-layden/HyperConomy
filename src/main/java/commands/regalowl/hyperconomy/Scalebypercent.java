@@ -4,13 +4,15 @@ import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class Scalebypercent {
 	Scalebypercent(CommandSender sender, String[] args, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			HyperEconomy he = hc.getEconomyManager().getEconomy(playerecon);
-			Calculation calc = hc.getCalculation();
+			CommonFunctions cf = hc.gCF();
 			InfoSignHandler isign = hc.getInfoSignHandler();
 			ArrayList<String> names = he.getNames();
 			boolean onlyItems = false;
@@ -40,15 +42,15 @@ public class Scalebypercent {
 							if (!(ho instanceof HyperEnchant) && onlyEnchants) {continue;}
 							if (!(ho instanceof CompositeItem)) {
 								if (type.equalsIgnoreCase("value")) {
-									ho.setValue(calc.twoDecimals(ho.getValue() * percent));
+									ho.setValue(cf.twoDecimals(ho.getValue() * percent));
 								} else if (type.equalsIgnoreCase("staticprice")) {
-									ho.setStaticprice(calc.twoDecimals(ho.getStaticprice() * percent));
+									ho.setStaticprice(cf.twoDecimals(ho.getStaticprice() * percent));
 								} else if (type.equalsIgnoreCase("stock")) {
 									ho.setStock(Math.floor(ho.getStock() * percent + .5));
 								} else if (type.equalsIgnoreCase("median")) {
-									ho.setMedian(calc.twoDecimals(ho.getMedian() * percent));
+									ho.setMedian(cf.twoDecimals(ho.getMedian() * percent));
 								} else if (type.equalsIgnoreCase("startprice")) {
-									ho.setStartprice(calc.twoDecimals(ho.getStartprice() * percent));
+									ho.setStartprice(cf.twoDecimals(ho.getStartprice() * percent));
 								}
 							}
 						}

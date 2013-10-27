@@ -25,11 +25,11 @@ public class Log {
 		String statement = "";
 		if (hc.s().gB("sql-connection.use-mysql")) {
 			statement = "Insert Into hyperconomy_log (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE)"
-		            + " Values (NOW(),'" + playername + "','" + action + "','" + object + "','" + amount + "','" + hc.getCalculation().twoDecimals(money) + "','" + hc.getCalculation().twoDecimals(tax) + "','" + store + 
+		            + " Values (NOW(),'" + playername + "','" + action + "','" + object + "','" + amount + "','" + hc.gCF().twoDecimals(money) + "','" + hc.gCF().twoDecimals(tax) + "','" + store + 
 		        "','" + type + "')";
 		} else {
 			statement = "Insert Into hyperconomy_log (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE)"
-		            + " Values (datetime('NOW', 'localtime'),'" + playername + "','" + action + "','" + object + "','" + amount + "','" + hc.getCalculation().twoDecimals(money) + "','" + hc.getCalculation().twoDecimals(tax) + "','" + store + 
+		            + " Values (datetime('NOW', 'localtime'),'" + playername + "','" + action + "','" + object + "','" + amount + "','" + hc.gCF().twoDecimals(money) + "','" + hc.gCF().twoDecimals(tax) + "','" + store + 
 		        "','" + type + "')";
 		}
 		hc.getSQLWrite().executeSQL(statement);
