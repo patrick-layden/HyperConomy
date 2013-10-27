@@ -47,7 +47,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
 	private Economy economy;
-	private SerializeArrayList sal;
 	private HyperEventHandler heh;
 	private boolean enabled;
 	private boolean useExternalEconomy;
@@ -119,7 +118,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		setupExternalEconomy();
 		em.load();
 		l = new Log(this);
-		sal = new SerializeArrayList();
 		commandhandler = new _Command();
 		not = new Notification();
 		new TransactionSign();
@@ -369,9 +367,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	}
 	public DataBukkit gDB() {
 		return db;
-	}
-	public SerializeArrayList getSerializeArrayList() {
-		return sal;
 	}
 	public CommonFunctions getCommonFunctions() {
 		return cf;

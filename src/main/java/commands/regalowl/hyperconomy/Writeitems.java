@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
 
+import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.FileTools;
 
 public class Writeitems {
 	Writeitems(String args[], CommandSender sender) {
-
 		HyperConomy hc = HyperConomy.hc;
-		SerializeArrayList sal = new SerializeArrayList();
+		CommonFunctions cf = hc.gCF();
 		FileTools ft = hc.getFileTools();
 		LanguageFile L = hc.getLanguageFile();
 		HyperEconomy defaultEcon = hc.getEconomyManager().getEconomy("default");
@@ -22,12 +22,12 @@ public class Writeitems {
     			if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("column")) {
 						ArrayList<String> inames = defaultEcon.getNames();
-						String output = sal.implode(inames, "\n");
+						String output = cf.implode(inames, "\n");
 						ft.writeStringToFile(output, path + File.separator + "items.txt");
 						sender.sendMessage(L.get("ITEM_NAMES_WRITTEN"));
 					} else if (args[0].equalsIgnoreCase("row")) {
 						ArrayList<String> inames = defaultEcon.getNames();
-						String output = sal.stringArrayToString(inames);
+						String output = cf.implode(inames,",");
 						ft.writeStringToFile(output, path + File.separator + "items.txt");
 						sender.sendMessage(L.get("ITEM_NAMES_WRITTEN"));
 					}

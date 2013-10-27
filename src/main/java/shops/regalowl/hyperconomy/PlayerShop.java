@@ -225,9 +225,9 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		if (item == null) {
 			return false;
 		}
-		SerializeArrayList sal = new SerializeArrayList();
+		CommonFunctions cf = hc.gCF();
 
-		ArrayList<String> unavailable = sal.stringToArray(unavailableS);
+		ArrayList<String> unavailable = cf.explode(unavailableS,",");
 		for (String object : unavailable) {
 			if (object.equalsIgnoreCase(item)) {
 				return false;
@@ -248,8 +248,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	public void addObjects(ArrayList<String> objects) {
 		HyperEconomy he = em.getEconomy(economy);
 		FileConfiguration sh = hc.gYH().gFC("shops");
-		SerializeArrayList sal = new SerializeArrayList();
-		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
+		CommonFunctions cf = hc.gCF();
+		ArrayList<String> unavailable = cf.explode(sh.getString(name + ".unavailable"),",");
 		if (unavailable.size() == 1 && unavailable.get(0).equalsIgnoreCase("all")) {
 			unavailable = he.getNames();
 		}
@@ -258,14 +258,14 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				unavailable.remove(object);
 			}
 		}
-		sh.set(name + ".unavailable", sal.stringArrayToString(unavailable));
+		sh.set(name + ".unavailable", cf.implode(unavailable,","));
 	}
 	
 	public void removeObjects(ArrayList<String> objects) {
 		HyperEconomy he = em.getEconomy(economy);
 		FileConfiguration sh = hc.gYH().gFC("shops");
-		SerializeArrayList sal = new SerializeArrayList();
-		ArrayList<String> unavailable = sal.stringToArray(sh.getString(name + ".unavailable"));
+		CommonFunctions cf = hc.gCF();
+		ArrayList<String> unavailable = cf.explode(sh.getString(name + ".unavailable"),",");
 		if (unavailable.size() == 1 && unavailable.get(0).equalsIgnoreCase("all")) {
 			return;
 		}
@@ -274,7 +274,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				unavailable.add(object);
 			}
 		}
-		sh.set(name + ".unavailable", sal.stringArrayToString(unavailable));
+		sh.set(name + ".unavailable", cf.implode(unavailable,","));
 	}
 	
 	

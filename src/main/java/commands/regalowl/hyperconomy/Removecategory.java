@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class Removecategory {
 	private HyperConomy hc;
 
@@ -12,7 +14,7 @@ public class Removecategory {
 		hc = HyperConomy.hc;
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
-		SerializeArrayList sal = new SerializeArrayList();
+		CommonFunctions cf = hc.gCF();
 		try {
 			FileConfiguration category = hc.gYH().gFC("categories");
 			String testcategory = category.getString(args[0]);
@@ -20,7 +22,7 @@ public class Removecategory {
 				sender.sendMessage(L.get("CATEGORY_NOT_EXIST"));
 				return;
 			}
-			ArrayList<String> objects = sal.stringToArray(testcategory);
+			ArrayList<String> objects = cf.explode(testcategory,",");
 			if (args.length == 2) {
 				String shopname = args[1];
 				if (em.shopExists(shopname)) {

@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
+import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
@@ -158,7 +159,8 @@ public class HyperEconomy {
 		}
 	}
 	private boolean componentsLoaded(String name) {
-		HashMap<String,String> tempComponents = hc.getSerializeArrayList().explodeMap(hc.gYH().gFC("composites").getString(name + ".components"));
+		CommonFunctions cf = hc.gCF();
+		HashMap<String,String> tempComponents = cf.explodeMap(hc.gYH().gFC("composites").getString(name + ".components"));
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
 		    String oname = entry.getKey();
 		    HyperObject ho = getHyperObject(oname);

@@ -13,6 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.Potion;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class CompositeItem extends BasicObject implements HyperItem {
 
 
@@ -23,7 +25,7 @@ public class CompositeItem extends BasicObject implements HyperItem {
 
 	
 	private FileConfiguration composites;
-	private SerializeArrayList sal;
+	private CommonFunctions cf;
 	
 	private ConcurrentHashMap<HyperItem,Double> components = new ConcurrentHashMap<HyperItem,Double>();
 	
@@ -31,7 +33,7 @@ public class CompositeItem extends BasicObject implements HyperItem {
 	public CompositeItem(String name, String economy) {
 		super("","","","",0,"",0,0,0,"",0,0,0,0);
 		hc = HyperConomy.hc;
-		sal = hc.getSerializeArrayList();
+		cf = hc.gCF();
 		composites = hc.gYH().gFC("composites");
 		this.name = name;
 		this.economy = economy;
@@ -42,7 +44,7 @@ public class CompositeItem extends BasicObject implements HyperItem {
 		this.data = composites.getInt(this.name + ".information.data");
 		this.durability = composites.getInt(this.name + ".information.data");
 		
-		HashMap<String,String> tempComponents = sal.explodeMap(composites.getString(this.name + ".components"));
+		HashMap<String,String> tempComponents = cf.explodeMap(composites.getString(this.name + ".components"));
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
 		    String oname = entry.getKey();
 		    String amountString = entry.getValue();

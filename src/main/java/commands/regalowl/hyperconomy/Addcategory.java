@@ -8,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import regalowl.databukkit.CommonFunctions;
+
 
 
 
@@ -16,13 +18,13 @@ public class Addcategory implements CommandExecutor {
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
+		CommonFunctions cf = hc.gCF();
 		if (hc.getHyperLock().isLocked(sender)) {
 			hc.getHyperLock().sendLockMessage(sender);;
 			return true;
 		}
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
-		SerializeArrayList sal = new SerializeArrayList();
 		try {
 			FileConfiguration category = hc.gYH().gFC("categories");
 			String testcategory = category.getString(args[0]);
@@ -30,7 +32,7 @@ public class Addcategory implements CommandExecutor {
 				sender.sendMessage(L.get("CATEGORY_NOT_EXIST"));
 				return true;
 			}
-			ArrayList<String> objects = sal.stringToArray(testcategory);
+			ArrayList<String> objects = cf.explode(testcategory, ",");
 			if (args.length == 2) {
 				String shopname = args[1];
 				if (em.shopExists(shopname)) {

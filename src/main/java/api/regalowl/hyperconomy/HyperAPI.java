@@ -4,18 +4,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class HyperAPI implements GeneralAPI {
 
 	public String listShops() {
 		HyperConomy hc = HyperConomy.hc;
-		SerializeArrayList sal = new SerializeArrayList();
-		return sal.stringArrayToString(hc.getEconomyManager().listShops());
+		CommonFunctions cf = hc.gCF();
+		return cf.implode(hc.getEconomyManager().listShops(),",");
 	}
 
 	public String listEconomies() {
 		HyperConomy hc = HyperConomy.hc;
-		SerializeArrayList sal = new SerializeArrayList();
-		return sal.stringArrayToString(hc.getEconomyManager().getEconomyList());
+		CommonFunctions cf = hc.gCF();
+		return cf.implode(hc.getEconomyManager().getEconomyList(),",");
 	}
 
 	public int getShopP1X(String shop) {

@@ -9,6 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 
+import regalowl.databukkit.CommonFunctions;
+
 public class Iteminfo {
 	Iteminfo(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
@@ -28,7 +30,7 @@ public class Iteminfo {
 			
 			String enchantments = "";
 			ItemStack inhand = player.getItemInHand();
-			SerializeArrayList sal = new SerializeArrayList(); 
+			CommonFunctions cf = hc.gCF();
 			if (inhand.getType().equals(Material.ENCHANTED_BOOK)) {
 				
 				EnchantmentStorageMeta emeta = (EnchantmentStorageMeta)inhand.getItemMeta();
@@ -36,12 +38,12 @@ public class Iteminfo {
 				if (enchants.size() == 0) {
 					enchantments = "None";
 				} else {
-					enchantments = sal.stringArrayToString(enchants);
+					enchantments = cf.implode(enchants,",");
 				}
 			} else {
 				if (new HyperItemStack(inhand).hasenchants()) {
 					ArrayList<String> enchants = new HyperItemStack(player.getItemInHand()).convertEnchantmentMapToNames(inhand.getEnchantments());
-					enchantments = sal.stringArrayToString(enchants);
+					enchantments = cf.implode(enchants,"");
 				} else {
 					enchantments = "None";
 				}
