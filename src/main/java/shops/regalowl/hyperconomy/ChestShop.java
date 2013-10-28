@@ -467,8 +467,12 @@ public class ChestShop implements Listener {
 
 				HyperItem ho = he.getHyperItem(icevent.getCurrentItem());
 				if (ho == null) {
-					icevent.setCancelled(true);
-					return;
+					if (setprice) {
+						ho = new HyperItemStack(icevent.getCurrentItem()).generateTempItem();
+					} else {
+						icevent.setCancelled(true);
+						return;
+					}
 				}
 
 				int camount = icevent.getCurrentItem().getAmount();
@@ -546,7 +550,9 @@ public class ChestShop implements Listener {
 				HyperEconomy he = em.getEconomy(hp.getEconomy());
 				if (!new HyperItemStack(icevent.getCurrentItem()).hasenchants()) {
 					HyperItem ho = he.getHyperItem(icevent.getCurrentItem());
-
+					if (ho == null && setprice) {
+						ho = new HyperItemStack(icevent.getCurrentItem()).generateTempItem();
+					}
 					if (slot < 27 && ho != null) {
 						String name = ho.getName();
 						if (buy) {
@@ -623,7 +629,9 @@ public class ChestShop implements Listener {
 				HyperEconomy he = em.getEconomy(hp.getEconomy());
 				if (!new HyperItemStack(icevent.getCurrentItem()).hasenchants()) {
 					HyperItem ho = he.getHyperItem(icevent.getCurrentItem());
-
+					if (ho == null && setprice) {
+						ho = new HyperItemStack(icevent.getCurrentItem()).generateTempItem();
+					}
 					if (slot < 27 && ho != null) {
 						if (buy) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);

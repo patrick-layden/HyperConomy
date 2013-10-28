@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -240,6 +241,49 @@ public class HyperItemStack {
 
 	public EnchantmentClass getEnchantmentClass() {
 		return EnchantmentClass.fromString(stack.getType().name());
+	}
+	
+	
+	
+	public HyperItem generateTempItem(){
+		int id = stack.getTypeId();
+		if (id == 0) {return null;}
+		String name = generateName(stack);
+		double value = 10.0;
+		double median = 10000;
+		double startprice = 20.0;
+		int data = getDamageValue();
+		return new TempItem(name, "default", "item", "unknown", stack.getType().toString(), id, data, data, value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0);
+	}
+	private String generateName(ItemStack stack) {
+		String name = stack.getData().toString().toLowerCase();
+		if (name.contains("(")) {
+			name = name.substring(0, name.lastIndexOf("(")).replace("_", "").replace(" ", "");
+		} else {
+			name = name.replace("_", "").replace(" ", "");
+		}
+		if (nameInUse(name)) {
+			return generateGenericName();
+		}
+		return name;
+	}
+	
+	private String generateGenericName() {
+		String name = "object1";
+		int counter = 1;
+		while (nameInUse(name)) {
+			name = "object" + counter;
+			counter++;
+		}
+		return name;
+	}
+	
+	private boolean nameInUse(String name) {
+		if (HyperConomy.hc.gYH().gFC("objects").isSet(name)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 }
