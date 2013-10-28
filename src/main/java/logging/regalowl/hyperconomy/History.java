@@ -29,9 +29,12 @@ public class History {
 	
 	private long lastTime;
 	private long timeCounter;
+	private boolean useHistory;
 	
 	History() {
 		hc = HyperConomy.hc;
+		useHistory = hc.gYH().gFC("config").getBoolean("config.store-price-history");
+		if (!useHistory) {return;}
 		em = hc.getEconomyManager();
 		isign = hc.getInfoSignHandler();
 		sw = hc.getSQLWrite();
@@ -50,6 +53,10 @@ public class History {
 			}
 		}
 		startTimer();
+	}
+	
+	public boolean useHistory() {
+		return useHistory;
 	}
 	
 
@@ -72,30 +79,28 @@ public class History {
 	}
 
 	
-    private void startTimer() {
-    	if (hc.gYH().gFC("config").getBoolean("config.store-price-history")) {
-			historylogtaskid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
-			    public void run() {
-			    	long currentTime = System.currentTimeMillis();
-			    	timeCounter += (currentTime - lastTime);
-			    	lastTime = currentTime;
-			    	if (timeCounter >= 3600000) {
-			    	//if (timeCounter >= 120000) {
-			    		timeCounter = 0;
-			    		writeHistoryThread();
-						hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
-						    public void run() {
-						    	if (isign != null) {
-						    		isign.updateSigns();
-						    	}
-						    }
-						}, 1200L);
-			    	}
-			    	updateSetting("history_time_counter", timeCounter + "");
-			    }
-			}, 600, 600);
-    	}
-    }
+	private void startTimer() {
+		historylogtaskid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
+			public void run() {
+				long currentTime = System.currentTimeMillis();
+				timeCounter += (currentTime - lastTime);
+				lastTime = currentTime;
+				if (timeCounter >= 3600000) {
+					// if (timeCounter >= 120000) {
+					timeCounter = 0;
+					writeHistoryThread();
+					hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+						public void run() {
+							if (isign != null) {
+								isign.updateSigns();
+							}
+						}
+					}, 1200L);
+				}
+				updateSetting("history_time_counter", timeCounter + "");
+			}
+		}, 600, 600);
+	}
 	
 
 	
@@ -118,14 +123,9 @@ public class History {
   	
   	
 	private void writeHistoryData(String object, String economy, double price) {
-		String statement = "";
-		if (hc.s().gB("sql-connection.use-mysql")) {
-			statement = "Insert Into hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " Values ('" + object + "','" + economy + "', NOW() ,'" + price + "')";
-		} else {
-			statement = "Insert Into hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " Values ('" + object + "','" + economy + "', datetime('NOW', 'localtime') ,'" + price + "')";
-		}
-		sw.executeSQL(statement);
-		if (hc.s().gB("sql-connection.use-mysql")) {
+		String statement = "Insert Into hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " Values ('" + object + "','" + economy + "', NOW() ,'" + price + "')";
+		sw.convertExecuteSQL(statement);
+		if (hc.getDataBukkit().useMySQL()) {
 			statement = "DELETE FROM hyperconomy_history WHERE TIME < DATE_SUB(NOW(), INTERVAL " + daysToSaveHistory + " DAY)";
 		} else {
 			statement = "DELETE FROM hyperconomy_history WHERE TIME < date('now','" + formatSQLiteTime(daysToSaveHistory * -1) + " day')";
@@ -172,7 +172,7 @@ public class History {
 	 * @param economy
 	 * @return The percentage change in theoretical price for the given object and timevalue in hours
 	 */
-	public String getPercentChange(HyperObject ho, int timevalue) {
+	public synchronized String getPercentChange(HyperObject ho, int timevalue) {
 		if (ho == null || sr == null) {
 			return "?";
 		}
@@ -208,7 +208,7 @@ public class History {
 	 * @param economy
 	 * @return The percentage change in theoretical price for the given object and timevalue in hours
 	 */
-	public HashMap<HyperObject, String> getPercentChange(String economy, int timevalue) {
+	public synchronized HashMap<HyperObject, String> getPercentChange(String economy, int timevalue) {
 		if (sr == null) {
 			return null;
 		}
@@ -244,8 +244,8 @@ public class History {
 					} else if (ho instanceof HyperItem) {
 						HyperItem hi = (HyperItem)ho;
 						currentvalue = hi.getValue(1);
-					} else if (ho instanceof BasicObject) {
-						BasicObject bo = (BasicObject)ho;
+					} else if (ho instanceof HyperXP) {
+						HyperXP bo = (HyperXP)ho;
 						currentvalue = bo.getValue(1);
 					}
 					double percentChange = ((currentvalue - historicValue) / historicValue) * 100;

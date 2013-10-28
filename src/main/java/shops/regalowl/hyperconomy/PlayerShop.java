@@ -322,7 +322,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	public ArrayList<HyperObject> getAvailableObjects() {
 		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
 		for (PlayerShopObject pso:shopContents.values()) {
-			available.add(pso.getHyperObject());
+			available.add(pso);
 		}
 		return available;
 	}
@@ -483,6 +483,12 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	public boolean isAllowed(HyperPlayer hp) {
 		if (allowed.contains(hp.getName())) {
+			return true;
+		}
+		if (hp.getName().equalsIgnoreCase(owner.getName())) {
+			return true;
+		}
+		if (hp.getPlayer() != null && hp.getPlayer().hasPermission("hyperconomy.admin")) {
 			return true;
 		}
 		return false;

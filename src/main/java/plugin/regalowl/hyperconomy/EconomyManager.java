@@ -694,10 +694,12 @@ public class EconomyManager implements Listener {
 	public boolean shopExists(String name) {
 		return shops.containsKey(fixShopName(name));
 	}
+	
 	public void addShop(Shop shop) {
 		shops.put(shop.getName(), shop);
-		hc.getWebHandler().addShop(shop);
+		hc.getHyperEventHandler().fireShopCreationEvent(shop);
 	}
+	
 	public void removeShop(String name) {
 		if (shopExists(name)) {
 			shops.remove(fixShopName(name));

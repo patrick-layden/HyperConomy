@@ -183,7 +183,7 @@ public class BasicShopObject implements PlayerShopObject {
 
 
 	public int compareTo(HyperObject ho) {
-		return ho.compareTo(ho);
+		return this.ho.compareTo(ho);
 	}
 
 

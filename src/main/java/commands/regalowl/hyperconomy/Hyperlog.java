@@ -51,7 +51,7 @@ public class Hyperlog {
 						sender.sendMessage(L.get("HYPERLOG_INVALID_INCREMENT"));
 						return;
 					}
-					if (hc.s().gB("sql-connection.use-mysql")) {
+					if (hc.gDB().useMySQL()) {
 						statement += " TIME > DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
 					} else {
 						statement += " TIME > date('now','" + formatSQLiteTime(quantity * -1) + " minute')";
@@ -71,7 +71,7 @@ public class Hyperlog {
 						return;
 					}
 
-					if (hc.s().gB("sql-connection.use-mysql")) {
+					if (hc.gDB().useMySQL()) {
 						statement += " TIME < DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
 					} else {
 						statement += " TIME < date('now','" + formatSQLiteTime(quantity * -1) + " minute')";

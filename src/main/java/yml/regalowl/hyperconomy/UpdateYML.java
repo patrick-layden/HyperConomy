@@ -3,10 +3,10 @@ package regalowl.hyperconomy;
 import regalowl.databukkit.YamlHandler;
 
 
-public class Update {
+public class UpdateYML {
 	
 	
-	Update() {
+	UpdateYML() {
 		HyperConomy hc = HyperConomy.hc;
 		YamlHandler yh = hc.getYamlHandler();
 		if (yh.gFC("config").getBoolean("config.run-automatic-backups")) {

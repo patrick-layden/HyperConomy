@@ -52,6 +52,14 @@ public class Topitems {
 				}
 				if (!unavailable) {
 					double samount = ho.getStock();
+					if (ho instanceof PlayerShopObject) {
+						PlayerShopObject pso = (PlayerShopObject)ho;
+						if (pso.getStatus() == HyperObjectStatus.NONE) {
+							if (!pso.getShop().isAllowed(em.getHyperPlayer(player))) {
+								continue;
+							}
+						}
+					}
 					if (samount > 0) {
 						while (itemstocks.containsKey(samount * 100)) {
 							samount = samount + .0000001;

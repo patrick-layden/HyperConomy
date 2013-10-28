@@ -394,7 +394,7 @@ commands:
       permission-message: You do not have permission.
    manageshop:
       description: Manages player shops.
-      permission: hyperconomy.use
+      permission: hyperconomy.playershop
       permission-message: You do not have permission.
       aliases: [ms]
 permissions:
@@ -414,6 +414,7 @@ permissions:
             hyperconomy.shop: true
             hyperconomy.balanceall: true
             hyperconomy.topbalance: true
+            hyperconomy.playershop: true
     hyperconomy.use:
         description: Allows general use of HyperConomy.
         default: true
@@ -426,6 +427,7 @@ permissions:
             hyperconomy.top: true
             hyperconomy.xp: true
             hyperconomy.chestshop: true
+            hyperconomy.playershop: true
             hyperconomy.buysign: true
             hyperconomy.sellsign: true
             hyperconomy.pay: true
@@ -504,4 +506,7 @@ permissions:
         default: false
     hyperconomy.pay:
         description: Allows sending payment to other players.
+        default: false
+    hyperconomy.playershop:
+        description: Allows the use of the /manageshop command.
         default: false

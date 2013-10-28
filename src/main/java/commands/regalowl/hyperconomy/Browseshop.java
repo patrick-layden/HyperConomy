@@ -62,12 +62,12 @@ public class Browseshop {
 				sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
 				return;
 			}
-    		String nameshop = null;
+    		Shop shop = null;
     		if (player != null) {
     			if (!em.inAnyShop(player)) {
-    				nameshop = null;
+    				shop = null;
     			} else {
-    				nameshop = em.getShop(player).getName();
+    				shop = em.getShop(player);
     			}		
     		}
 			ArrayList<String> names = he.getNames();
@@ -78,15 +78,45 @@ public class Browseshop {
 				if (alphabetic) {
 					if (cname.startsWith(input)) {
 						String itemname = cname;
-						if (nameshop == null || em.getShop(nameshop).has(itemname)) {
-							rnames.add(cname);
+						if (shop == null || shop.has(itemname)) {
+							if (shop instanceof PlayerShop) {
+								PlayerShop ps = (PlayerShop)shop;
+								HyperObject ho = he.getHyperObject(itemname);
+								PlayerShopObject pso = ps.getPlayerShopObject(ho);
+								if (pso != null) {
+									if (pso.getStatus() == HyperObjectStatus.NONE) {
+										if (ps.isAllowed(em.getHyperPlayer(player))) {
+											rnames.add(cname);
+										}
+									} else {
+										rnames.add(cname);
+									}
+								}
+							} else {
+								rnames.add(cname);
+							}
 						}
 					}
 				} else {
 					if (cname.contains(input)) {
 						String itemname = cname;
-						if (nameshop == null || em.getShop(nameshop).has(itemname)) {
-							rnames.add(cname);
+						if (shop == null || shop.has(itemname)) {
+							if (shop instanceof PlayerShop) {
+								PlayerShop ps = (PlayerShop)shop;
+								HyperObject ho = he.getHyperObject(itemname);
+								PlayerShopObject pso = ps.getPlayerShopObject(ho);
+								if (pso != null) {
+									if (pso.getStatus() == HyperObjectStatus.NONE) {
+										if (ps.isAllowed(em.getHyperPlayer(player))) {
+											rnames.add(cname);
+										}
+									} else {
+										rnames.add(cname);
+									}
+								}
+							} else {
+								rnames.add(cname);
+							}
 						}
 					}
 				}

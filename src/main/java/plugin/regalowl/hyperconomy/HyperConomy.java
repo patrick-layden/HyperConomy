@@ -32,7 +32,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private EconomyManager em;
 	private DataBukkit db;
 	private YamlHandler yh;
-	private HyperSettings hs;
 	private Log l;
 	private InfoSignHandler isign;
 	private _Command commandhandler;
@@ -41,7 +40,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private ItemDisplayFactory itdi;
 	private SQLWrite sw;
 	private SQLRead sr;
-	private WebHandler wh;
 	private ChestShop cs;
 	private HyperLock hl;
 	private LanguageFile L;
@@ -92,7 +90,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		yh.registerFileConfiguration("temp");
 		L = new LanguageFile();
 		hl = new HyperLock(true, false, false);
-		hs = new HyperSettings();
+		new UpdateYML();
 		heh = new HyperEventHandler();
 		heh.registerDataLoadListener(this);
 		if (yh.gFC("config").getBoolean("config.hook-internal-economy-into-vault")) {
@@ -121,7 +119,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		commandhandler = new _Command();
 		not = new Notification();
 		new TransactionSign();
-		hs.startSave();
+		yh.startSaveTask(config.getLong("config.saveinterval"));
 		cs = new ChestShop();
 	}
 	
@@ -129,13 +127,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		hist = new History();
 		itdi = new ItemDisplayFactory();
 		registerCommands();
-		if (wh == null) {
-			wh = new WebHandler();
-			wh.startServer();
-		} else {
-			wh.endServer();
-			wh.startServer();
-		}
 		isign = new InfoSignHandler();
 		isign.updateSigns();
 		enabled = true;
@@ -157,14 +148,8 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		if (itdi != null) {
 			itdi.unloadDisplays();
 		}
-		if (hs != null) {
-			hs.stopSave();
-		}
 		if (hist != null) {
 			hist.stopHistoryLog();
-		}
-		if (wh != null) {
-			wh.endServer();
 		}
 		if (db != null) {
 			db.shutDown();
@@ -345,17 +330,9 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public Logger log() {
 		return log;
 	}
-
-	public HyperSettings s() {
-		return hs;
-	}
-
+	
 	public boolean enabled() {
 		return enabled;
-	}
-	
-	public WebHandler getWebHandler() {
-		return wh;
 	}
 	
 	public ChestShop getChestShop() {
@@ -390,5 +367,5 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		String folderpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";
 		return folderpath;
 	}
-	
+
 }

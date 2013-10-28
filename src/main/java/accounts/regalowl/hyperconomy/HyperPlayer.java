@@ -202,7 +202,7 @@ public class HyperPlayer {
 	
 	
 	public boolean hasSellPermission(Shop s) {
-		if (!hc.s().gB("use-shop-permissions")) {
+		if (!hc.gYH().gQFC("config").gB("use-shop-permissions")) {
 			return true;
 		}
 		boolean hasPermission = false;
@@ -219,7 +219,7 @@ public class HyperPlayer {
 	}
 	
 	public boolean hasBuyPermission(Shop s) {
-		if (!hc.s().gB("use-shop-permissions")) {
+		if (!hc.gYH().gQFC("config").gB("use-shop-permissions")) {
 			return true;
 		}
 		boolean hasPermission = false;

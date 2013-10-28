@@ -223,9 +223,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("repairsigns") && player != null) {
 			new Repairsigns(args, player);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("hcweb")) {
-			new Hcweb(args, sender);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hcclearhistory")) {
 			new Hcclearhistory(args, sender);
 			return true;

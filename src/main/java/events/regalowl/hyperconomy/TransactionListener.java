@@ -1,5 +1,5 @@
 package regalowl.hyperconomy;
 
-public interface TransactionListener extends HyperListener {
+public interface TransactionListener {
 	public void onTransaction(PlayerTransaction transaction, TransactionResponse response);
 }

@@ -1,5 +1,5 @@
 package regalowl.hyperconomy;
 
-public interface DataLoadListener extends HyperListener {
+public interface DataLoadListener {
 	public void onDataLoad();
 }

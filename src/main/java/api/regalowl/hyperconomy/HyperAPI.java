@@ -150,7 +150,7 @@ public class HyperAPI implements GeneralAPI {
 	}
 
 	public double getAPIVersion() {
-		return HyperConomy.hc.s().getApiVersion();
+		return 0;
 	}
 
 	public String getShopEconomy(String shop) {

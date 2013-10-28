@@ -27,7 +27,7 @@ public class Copydatabase {
 		sender = csender;
 		L = hc.getLanguageFile();
 		includeHistory = false;
-		boolean useMySQL = hc.s().gB("sql-connection.use-mysql");
+		boolean useMySQL = hc.gYH().gQFC("config").gB("sql-connection.use-mysql");
 
 		try {
 			mysqlMessage = L.get("COPYDATABASE_MYSQL");
@@ -162,7 +162,7 @@ public class Copydatabase {
     				hc.getHyperLock().setLoadLock(false);
     				hc.getServer().getScheduler().runTask(hc, new Runnable() {
     		    		public void run() {
-    		    			if (hc.s().gB("sql-connection.use-mysql")) {
+    		    			if (hc.gYH().gQFC("config").gB("sql-connection.use-mysql")) {
     		    				sender.sendMessage(mysqlMessage);
     		    			} else {
     		    				sender.sendMessage(sqliteMessage);
