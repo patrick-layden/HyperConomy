@@ -438,3 +438,4 @@ MUST_TRANSFER_MORE_THAN_ZERO: &4You must transfer more than 0 items.
 NOT_ENOUGH_SPACE: &4You don't have enough space to transfer the items.
 ALLOWED_TO_MANAGE_SHOP: &6Player now allowed to manage shop.
 DISALLOWED_TO_MANAGE_SHOP: &6Player no longer allowed to manage shop.
+CHESTSHOP_CANT_TRADE_DAMAGED: &4Chest shops cannot trade damaged items.

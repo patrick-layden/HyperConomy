@@ -30,6 +30,7 @@ config:
   sell-remaining-if-less-than-requested-amount: true
   language: english
   use-external-economy-plugin: false
+  hook-internal-economy-into-vault: true
   use-shops: true
   allow-scrolling-transaction-signs: false
   block-selling-in-creative-mode: false
@@ -40,7 +41,6 @@ config:
   use-player-shops: true
   max-shops-per-player: 1
   use-composite-items: false
-  hook-internal-economy-into-vault: true
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

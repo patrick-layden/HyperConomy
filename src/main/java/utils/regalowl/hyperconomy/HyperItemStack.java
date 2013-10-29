@@ -198,6 +198,15 @@ public class HyperItemStack {
 		}
 	}
 	
+	public boolean isDamaged() {
+		if (stack.getType().getMaxDurability() > 0) {
+			if (stack.getData().getData() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public int cleanDamageValue() {
 		if (stack.getType().getMaxDurability() > 0) {return 0;}
 		return stack.getData().getData();
@@ -255,7 +264,7 @@ public class HyperItemStack {
 		int data = getDamageValue();
 		return new TempItem(name, "default", "item", "unknown", stack.getType().toString(), id, data, data, value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0);
 	}
-	private String generateName(ItemStack stack) {
+	public String generateName(ItemStack stack) {
 		String name = stack.getData().toString().toLowerCase();
 		if (name.contains("(")) {
 			name = name.substring(0, name.lastIndexOf("(")).replace("_", "").replace(" ", "");
@@ -279,7 +288,7 @@ public class HyperItemStack {
 	}
 	
 	private boolean nameInUse(String name) {
-		if (HyperConomy.hc.gYH().gFC("objects").isSet(name)) {
+		if (HyperConomy.hc.getEconomyManager().getEconomy("default").objectTest(name)) {
 			return true;
 		} else {
 			return false;
