@@ -48,7 +48,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		globalShop = false;
 		shopFile = hc.gYH().gFC("shops");
 		shopFile.set(name + ".owner", owner.getName());
-		shopFile.set(name + ".economy", owner.getEconomy());
+		shopFile.set(name + ".economy", econ);
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
 	}
 	
@@ -212,13 +212,13 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return true;
 	}
 	
-	public boolean has (HyperObject ho) {
+	public boolean has(HyperObject ho) {
 		return has(ho.getName());
 	}
 	
 	public ArrayList<HyperObject> getAvailableObjects() {
-		ArrayList<HyperObject> allEconomy = em.getEconomy(economy).getHyperObjects();
 		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
+		ArrayList<HyperObject> allEconomy = em.getEconomy(economy).getHyperObjects();
 		for (HyperObject ho : allEconomy) {
 			if (has(ho)) {
 				available.add(ho);
