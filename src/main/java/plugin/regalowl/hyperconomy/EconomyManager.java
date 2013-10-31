@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -543,8 +541,7 @@ public class EconomyManager implements Listener {
 
 	public boolean hasAccount(String name) {
 		if (hc.useExternalEconomy()) {
-			Economy economy = hc.getEconomy();
-			if (economy.hasAccount(name)) {
+			if (hc.getEconomy().hasAccount(name)) {
 				if (!hyperPlayers.containsKey(fixpN(name))) {
 					addPlayer(name);
 				}
@@ -592,10 +589,9 @@ public class EconomyManager implements Listener {
 		Log l = hc.getLog();
 		String globalaccount = hc.gYH().gFC("config").getString("config.global-shop-account");
 		if (hc.useExternalEconomy()) {
-			Economy economy = hc.getEconomy();
-			if (!economy.hasAccount(globalaccount)) {
+			if (!hc.getEconomy().hasAccount(globalaccount)) {
 				getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
-				l.writeAuditLog(globalaccount, "setbalance", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), economy.getName());
+				l.writeAuditLog(globalaccount, "setbalance", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), hc.getEconomy().getName());
 			}
 		} else {
 			if (!hasAccount(globalaccount)) {

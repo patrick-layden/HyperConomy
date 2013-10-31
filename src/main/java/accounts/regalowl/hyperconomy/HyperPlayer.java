@@ -1,7 +1,5 @@
 package regalowl.hyperconomy;
 
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -33,7 +31,7 @@ public class HyperPlayer {
 		em = hc.getEconomyManager();
 		SQLWrite sw = hc.getSQLWrite();
 		try {
-			balance = hc.getConfig().getDouble("config.starting-player-account-balance");
+			balance = hc.gYH().gFC("config").getDouble("config.starting-player-account-balance");
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 			balance = 0;
@@ -52,6 +50,7 @@ public class HyperPlayer {
 		}
 		name = player;
 		sw.executeSQL("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','','')");
+		createExternalAccount();
 	}
 	
 	
@@ -68,6 +67,16 @@ public class HyperPlayer {
 		this.world = world;
 		this.hash = hash;
 		this.salt = salt;
+		createExternalAccount();
+	}
+	
+	private void createExternalAccount() {
+		if (!hc.useExternalEconomy()) {return;}
+		if (!hc.getEconomy().hasAccount(name)) {
+			hc.getEconomy().createPlayerAccount(name);
+			setBalance(balance);
+		}
+
 	}
 	
 	public String getName() {
@@ -245,14 +254,13 @@ public class HyperPlayer {
 
 	public void setBalance(double balance) {
 		if (hc.useExternalEconomy()) {
-			Economy econ = hc.getEconomy();
-			if (econ.hasAccount(name)) {
-				econ.withdrawPlayer(name, econ.getBalance(name));
+			if (hc.getEconomy().hasAccount(name)) {
+				hc.getEconomy().withdrawPlayer(name, hc.getEconomy().getBalance(name));
 			} else {
-				econ.createPlayerAccount(name);
+				hc.getEconomy().createPlayerAccount(name);
 			}
-			econ.depositPlayer(name, balance);
-			hc.getLog().writeAuditLog(name, "setbalance", balance, econ.getName());
+			hc.getEconomy().depositPlayer(name, balance);
+			hc.getLog().writeAuditLog(name, "setbalance", balance, hc.getEconomy().getName());
 		} else {
 			this.balance = balance;
 			String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";
@@ -260,11 +268,16 @@ public class HyperPlayer {
 			hc.getLog().writeAuditLog(name, "setbalance", balance, "HyperConomy");
 		}
 	}
+	public void setInternalBalance(double balance) {
+		this.balance = balance;
+		String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";
+		hc.getSQLWrite().executeSQL(statement);
+		hc.getLog().writeAuditLog(name, "setbalance", balance, "HyperConomy");
+	}
 	public void deposit(double amount) {
 		if (hc.useExternalEconomy()) {
-			Economy econ = hc.getEconomy();
-			econ.depositPlayer(name, amount);
-			hc.getLog().writeAuditLog(name, "deposit", amount, econ.getName());
+			hc.getEconomy().depositPlayer(name, amount);
+			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getEconomy().getName());
 		} else {
 			this.balance += amount;
 			String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";
@@ -275,9 +288,8 @@ public class HyperPlayer {
 	
 	public void withdraw(double amount) {
 		if (hc.useExternalEconomy()) {
-			Economy econ = hc.getEconomy();
-			econ.withdrawPlayer(name, amount);
-			hc.getLog().writeAuditLog(name, "withdrawal", amount, econ.getName());
+			hc.getEconomy().withdrawPlayer(name, amount);
+			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getEconomy().getName());
 		} else {
 			this.balance -= amount;
 			String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";

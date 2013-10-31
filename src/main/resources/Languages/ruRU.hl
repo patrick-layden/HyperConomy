@@ -348,7 +348,6 @@ TAXSETTINGS_INVALID: &4Неверные параметры. Напишите /ta
 THE_SHOP_DOESNT_HAVE_ENOUGH: &9В магазине не хватает %n
 TOGGLEECONOMY_DISABLED: &6HyperConomy будет использоваться в качестве экономического плагина.
 TOGGLEECONOMY_ENABLED: &6HyperConomy будет использовать другой экономический плагин через Vault.
-TOGGLEECONOMY_HYPERCONOMY: &4Vault зарегистрировал HyperConomy в качестве экономического плагина; используйте встроенную экономику HyperConomy.
 TOGGLEECONOMY_INVALID: &4Неверные параметры.  Напишите /toggleeconomy
 TOP_BALANCE: &f----- &cСамые богатые &f-----
 TOP_BALANCE_BALANCE: &f%i &b%n&9: &a%e

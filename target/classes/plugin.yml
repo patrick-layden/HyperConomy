@@ -397,6 +397,11 @@ commands:
       permission: hyperconomy.playershop
       permission-message: You do not have permission.
       aliases: [ms]
+   hcset:
+      description: Sets various settings within HyperConomy.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
+      aliases: [hcs]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

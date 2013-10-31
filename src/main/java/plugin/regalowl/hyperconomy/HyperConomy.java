@@ -48,8 +48,10 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private HyperEventHandler heh;
 	private boolean enabled;
 	private boolean useExternalEconomy;
+	private boolean vaultInstalled;
 	private CommonFunctions cf;
 	private FileTools ft;
+	private ConsoleSettings cos;
 
 	@Override
 	public void onLoad() {
@@ -93,10 +95,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		new UpdateYML();
 		heh = new HyperEventHandler();
 		heh.registerDataLoadListener(this);
-		if (yh.gFC("config").getBoolean("config.hook-internal-economy-into-vault")) {
-			getServer().getServicesManager().register(Economy.class, new Economy_HyperConomy(), this, ServicePriority.Highest);
-			log.info("[HyperConomy]Vault hooked.");
-		}
+		hookVault();
 	}
 	private void enable() {
 		HandlerList.unregisterAll(this);
@@ -114,6 +113,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		sw = db.getSQLWrite();
 		sr = db.getSQLRead();
 		setupExternalEconomy();
+		logEconomyState();
 		em.load();
 		l = new Log(this);
 		commandhandler = new _Command();
@@ -121,6 +121,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		new TransactionSign();
 		yh.startSaveTask(config.getLong("config.saveinterval"));
 		cs = new ChestShop();
+		cos = new ConsoleSettings("default");
 	}
 	
 	public void onDataLoad() {
@@ -135,14 +136,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	
 
 	public void disable(boolean protect) {
-	    RegisteredServiceProvider<Economy> eco = getServer().getServicesManager().getRegistration(Economy.class);
-	    if (eco != null) {
-	    	Economy registeredEconomy = eco.getProvider();
-	    	if (registeredEconomy.getName().equalsIgnoreCase("HyperConomy")) {
-		        getServer().getServicesManager().unregister(eco.getProvider());
-		        log.info("[HyperConomy]Vault unhooked.");
-	    	}
-	    }
+		unHookVault();
 		enabled = false;
 		HandlerList.unregisterAll(this);
 		if (itdi != null) {
@@ -178,6 +172,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		Bukkit.getServer().getPluginCommand("additem").setExecutor(new Additem());
 		Bukkit.getServer().getPluginCommand("manageshop").setExecutor(new Manageshop());
 		Bukkit.getServer().getPluginCommand("ymladditem").setExecutor(new Ymladditem());
+		Bukkit.getServer().getPluginCommand("hcset").setExecutor(new Hcset());
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -250,26 +245,63 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 			}
 		}
 	}
+	
+	
+	private void hookVault() {
+		Plugin vault = this.getServer().getPluginManager().getPlugin("Vault");
+		if (vault != null & vault instanceof Vault) {
+			vaultInstalled = true;
+		} else {
+			vaultInstalled = false;
+		}
+		useExternalEconomy = yh.getFileConfiguration("config").getBoolean("config.use-external-economy-plugin");
+		if (!vaultInstalled) {
+			useExternalEconomy = false;
+		}
+		if (vaultInstalled && yh.gFC("config").getBoolean("config.hook-internal-economy-into-vault")) {
+			getServer().getServicesManager().register(Economy.class, new Economy_HyperConomy(), this, ServicePriority.Highest);
+			log.info("[HyperConomy]Internal economy hooked into Vault.");
+		}
+	}
+
+	private void unHookVault() {
+		if (!vaultInstalled) {
+			return;
+		}
+	    RegisteredServiceProvider<Economy> eco = getServer().getServicesManager().getRegistration(Economy.class);
+	    if (eco != null) {
+	    	Economy registeredEconomy = eco.getProvider();
+	    	if (registeredEconomy != null && registeredEconomy.getName().equalsIgnoreCase("HyperConomy")) {
+		        getServer().getServicesManager().unregister(eco.getProvider());
+		        log.info("[HyperConomy]Internal economy unhooked from Vault.");
+	    	}
+	    }
+	}
+	
 
 	public void setupExternalEconomy() {
-		useExternalEconomy = yh.getFileConfiguration("config").getBoolean("config.use-external-economy-plugin");
+		if (!useExternalEconomy || !vaultInstalled) {return;}
+		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+		if (economyProvider == null) {
+			useExternalEconomy = false;
+			return;
+		}
+		economy = economyProvider.getProvider();
+		if (economy == null) {
+			useExternalEconomy = false;
+			return;
+		}
+		if (economy.getName().equalsIgnoreCase("HyperConomy")) {
+			useExternalEconomy = false;
+			return;
+		}
+	}
+	
+	private void logEconomyState() {
 		if (useExternalEconomy) {
-			Plugin vault = this.getServer().getPluginManager().getPlugin("Vault");
-			if (vault != null & vault instanceof Vault) {
-				RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-				if (economyProvider != null) {
-					economy = economyProvider.getProvider();
-					if (economy == null) {
-						useExternalEconomy = false;
-						return;
-					}
-					if (economy.getName().equalsIgnoreCase("HyperConomy")) {
-						useExternalEconomy = false;
-					}
-				} else {
-					useExternalEconomy = false;
-				}
-			}
+			log.info("[HyperConomy]Using external economy plugin via Vault.");
+		} else {
+			log.info("[HyperConomy]Using internal economy plugin.");
 		}
 	}
 
@@ -354,14 +386,14 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public FileTools getFileTools() {
 		return ft;
 	}
+	public ConsoleSettings getConsoleSettings() {
+		return cos;
+	}
 	public HyperEventHandler getHyperEventHandler() {
 		return heh;
 	}
 	public boolean useExternalEconomy() {
 		return useExternalEconomy;
-	}
-	public void setUseExternalEconomy(boolean state) {
-		useExternalEconomy = state;
 	}
 	public String getFolderPath() {
 		String folderpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";

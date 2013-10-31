@@ -195,7 +195,7 @@ public class TransactionProcessor {
 				return response;
 			}
 			hyperItem.add(amount, receiveInventory);
-			if (!Boolean.parseBoolean(hyperItem.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+			if (!Boolean.parseBoolean(hyperItem.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("config.unlimited-stock-for-static-items")) {
 				hyperItem.setStock(shopstock - amount);
 			}
 			hp.withdraw(price);
@@ -302,7 +302,7 @@ public class TransactionProcessor {
 			}
 			double amountRemoved = hyperItem.remove(amount, giveInventory);
 			double shopstock = hyperItem.getStock();
-			if (!Boolean.parseBoolean(hyperItem.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+			if (!Boolean.parseBoolean(hyperItem.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("config.unlimited-stock-for-static-items")) {
 				hyperItem.setStock(shopstock + amountRemoved);
 			}
 			int maxi2 = hyperItem.getMaxInitial();
@@ -435,7 +435,7 @@ public class TransactionProcessor {
 						float xpbarxp = (float) newxp / (float) xp.getXpForNextLvl(newlvl);
 						hp.getPlayer().setLevel(newlvl);
 						hp.getPlayer().setExp(xpbarxp);
-						if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+						if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("config.unlimited-stock-for-static-items")) {
 							hyperObject.setStock(shopstock - amount);
 						}
 						hp.withdraw(price);
@@ -521,7 +521,7 @@ public class TransactionProcessor {
 						float xpbarxp = (float) newxp / (float) xp.getXpForNextLvl(newlvl);
 						hp.getPlayer().setLevel(newlvl);
 						hp.getPlayer().setExp(xpbarxp);
-						if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConfig().getBoolean("config.unlimited-stock-for-static-items")) {
+						if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("config.unlimited-stock-for-static-items")) {
 							hyperObject.setStock(amount + hyperObject.getStock());
 						}
 						int maxi2 = hyperObject.getMaxInitial();

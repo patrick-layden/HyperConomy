@@ -348,7 +348,6 @@ TAXSETTINGS_INVALID: &4Paramètres invalides. Utiliser /taxsettings
 THE_SHOP_DOESNT_HAVE_ENOUGH: &9La quantité de %n disponible dans ce magasin est insuffisante.
 TOGGLEECONOMY_DISABLED: &6HyperConomy fonctionnera maintenant en tant que votre plugin d'économie.
 TOGGLEECONOMY_ENABLED: &6HyperConomy utilisera maintenant un plugin d'économie externe via Vault.
-TOGGLEECONOMY_HYPERCONOMY: &4Vault a enregistré HyperConomy en tant que plugin d'économie. Vous devez utiliser l'économie interne.
 TOGGLEECONOMY_INVALID: &4Paramètres invalides. Utiliser /toggleeconomy
 TOP_BALANCE: &f----- &cMeilleures balances &f-----
 TOP_BALANCE_BALANCE: &f%i &b%n&9 : &a%e

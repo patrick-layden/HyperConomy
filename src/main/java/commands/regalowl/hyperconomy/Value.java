@@ -20,7 +20,7 @@ public class Value {
 			if (sender instanceof Player) {
 				player = (Player) sender;
 			}
-			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
+			boolean requireShop = hc.gYH().gFC("config").getBoolean("config.limit-info-commands-to-shops");
 			if (player == null || (requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				String name = he.fixName(args[0]);
 				int amount;

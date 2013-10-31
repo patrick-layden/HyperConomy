@@ -17,6 +17,7 @@ public class Seteconomy {
 						sender.sendMessage(L.get("ECONOMY_SET"));
 					} else {
 						command.setNonPlayerEconomy(economy);
+						hc.getConsoleSettings().setConsoleEconomy(economy);
 						sender.sendMessage(L.get("ECONOMY_SET"));
 					}
 				} else {

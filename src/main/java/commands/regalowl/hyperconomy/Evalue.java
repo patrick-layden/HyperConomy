@@ -17,7 +17,7 @@ public class Evalue {
 		try {
 			HyperPlayer hp = em.getHyperPlayer(player.getName());
 			HyperEconomy he = hp.getHyperEconomy();
-			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
+			boolean requireShop = hc.gYH().gFC("config").getBoolean("config.limit-info-commands-to-shops");
 			if ((requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				if (args.length == 2) {
 					String nam = args[0];

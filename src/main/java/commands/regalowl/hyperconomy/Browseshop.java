@@ -22,7 +22,7 @@ public class Browseshop {
 			aargs.add(args[i]);
 		}
 		try {
-			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
+			boolean requireShop = hc.gYH().gFC("config").getBoolean("config.limit-info-commands-to-shops");
     		if (player != null) {
     			if ((requireShop && !em.inAnyShop(player)) && !player.hasPermission("hyperconomy.admin")) {
     				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));

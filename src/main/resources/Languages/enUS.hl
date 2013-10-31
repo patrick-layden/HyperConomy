@@ -356,9 +356,8 @@ HCPAY_INVALID: &4Invalid parameters. Use /hcpay [account] [amount]
 MONEY_PAYED: &9You payed &b%n &a%c%a.
 ONLY_AVAILABLE_INTERNAL: &4This command is disabled.  To enable it set HyperConomy as your economy plugin.
 TOGGLEECONOMY_INVALID: &4Invalid parameters.  Use /toggleeconomy
-TOGGLEECONOMY_ENABLED: &6HyperConomy will try to use an external economy plugin via Vault.
-TOGGLEECONOMY_DISABLED: &6HyperConomy will now function as your economy plugin.
-TOGGLEECONOMY_HYPERCONOMY: &4Vault has registered HyperConomy as your economy plugin; you must use the internal economy.
+TOGGLEECONOMY_ENABLED: &6HyperConomy will try to use an external economy plugin via Vault after the next server restart.
+TOGGLEECONOMY_DISABLED: &6HyperConomy will now function as your economy plugin after the next server restart.
 MAKEACCOUNT_INVALID: &4Invalid parameters.  Use /makeaccount [name]
 MAKEACCOUNT_SUCCESS: &6Account created successfully.
 MAKEACCOUNT_FAILED: &4Account creation failed.
@@ -439,3 +438,5 @@ NOT_ENOUGH_SPACE: &4You don't have enough space to transfer the items.
 ALLOWED_TO_MANAGE_SHOP: &6Player now allowed to manage shop.
 DISALLOWED_TO_MANAGE_SHOP: &6Player no longer allowed to manage shop.
 CHESTSHOP_CANT_TRADE_DAMAGED: &4Chest shops cannot trade damaged items.
+WORLD_NOT_FOUND: &4That world was not found, importing only accounts known to HyperConomy.
+HCSET_INVALID: &4Invalid parameters. Use /hcset [option] (arg1) (arg2) ... (argx)

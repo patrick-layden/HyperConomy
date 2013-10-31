@@ -14,7 +14,7 @@ public class Topenchants {
 		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		try {
-			boolean requireShop = hc.getConfig().getBoolean("config.limit-info-commands-to-shops");
+			boolean requireShop = hc.gYH().gFC("config").getBoolean("config.limit-info-commands-to-shops");
 			if (args.length > 1) {
 				sender.sendMessage(L.get("TOPENCHANTS_INVALID"));
 				return;
