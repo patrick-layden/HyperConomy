@@ -573,11 +573,12 @@ public class EconomyManager implements Listener {
 			String name = element.toString(); 
 			if (name.equalsIgnoreCase("GlobalShop")) {continue;}
 			String owner = sh.getString(name + ".owner");
+			String economy = sh.getString(name + ".economy");
 			if (owner == null) {
 				owner = getGlobalShopAccount().getName();
 			}
 			if (owner.equalsIgnoreCase(getGlobalShopAccount().getName())) {
-				Shop shop = new ServerShop(name, getHyperPlayer(owner).getEconomy(), getHyperPlayer(owner));
+				Shop shop = new ServerShop(name, economy, getHyperPlayer(owner));
 				shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
 				shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
 				shop.setMessage1(sh.getString(name + ".shopmessage1"));
@@ -585,7 +586,7 @@ public class EconomyManager implements Listener {
 				shops.put(name, shop);
 			} else {
 				if (hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {
-					Shop shop = new PlayerShop(name, getHyperPlayer(owner).getEconomy(), getHyperPlayer(owner));
+					Shop shop = new PlayerShop(name, economy, getHyperPlayer(owner));
 					shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
 					shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
 					shop.setMessage1(sh.getString(name + ".shopmessage1"));

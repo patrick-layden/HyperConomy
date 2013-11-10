@@ -13,7 +13,8 @@ public class Setshop {
 				if (em.shopExists(name)) {
 					em.getShop(name).setPoint1(player.getLocation());
 				} else {
-					Shop shop = new ServerShop(name, hc.getEconomyManager().getGlobalShopAccount().getEconomy(), hc.getEconomyManager().getGlobalShopAccount());
+					HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(player);
+					Shop shop = new ServerShop(name, hp.getEconomy(), hc.getEconomyManager().getGlobalShopAccount());
 					shop.setPoint1(player.getLocation());
 					shop.setPoint2(player.getLocation());
 					shop.setDefaultMessages();
@@ -25,7 +26,8 @@ public class Setshop {
 				if (em.shopExists(name)) {
 					em.getShop(name).setPoint2(player.getLocation());
 				} else {
-					Shop shop = new ServerShop(name, hc.getEconomyManager().getGlobalShopAccount().getEconomy(), hc.getEconomyManager().getGlobalShopAccount());
+					HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(player);
+					Shop shop = new ServerShop(name, hp.getEconomy(), hc.getEconomyManager().getGlobalShopAccount());
 					shop.setPoint1(player.getLocation());
 					shop.setPoint2(player.getLocation());
 					shop.setDefaultMessages();
