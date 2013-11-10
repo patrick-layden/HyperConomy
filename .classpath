@@ -5,6 +5,12 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" output="target/classes" path="src/main/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
@@ -16,28 +22,23 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="src/main/java/signs"/>
-	<classpathentry kind="src" path="src/main/java/logging"/>
-	<classpathentry kind="src" path="src/main/java/utils"/>
-	<classpathentry kind="src" path="src/main/java/messaging"/>
-	<classpathentry kind="src" path="src/main/java/commands"/>
-	<classpathentry kind="src" path="src/main/java/api"/>
-	<classpathentry kind="src" path="src/main/java/shops"/>
-	<classpathentry kind="src" path="src/main/java/backup"/>
-	<classpathentry kind="src" path="src/main/java/enums"/>
-	<classpathentry kind="src" path="src/main/java/displays"/>
-	<classpathentry kind="src" path="src/main/java/yml"/>
-	<classpathentry kind="src" path="src/main/java/transactions"/>
-	<classpathentry kind="src" path="src/main/java/accounts"/>
-	<classpathentry excluding="interfaces/" kind="src" path="src/main/java/hyperobjects"/>
-	<classpathentry kind="src" path="src/main/java/plugin"/>
-	<classpathentry kind="src" path="src/main/java/events"/>
-	<classpathentry kind="src" path="src/main/java/hyperobjects/interfaces"/>
+	<classpathentry kind="src" path="hyperobjects"/>
+	<classpathentry kind="src" path="commands"/>
+	<classpathentry kind="src" path="events"/>
+	<classpathentry kind="src" path="signs"/>
+	<classpathentry kind="src" path="shops"/>
+	<classpathentry kind="src" path="transactions"/>
+	<classpathentry kind="src" path="api"/>
+	<classpathentry kind="src" path="utils"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-7-oracle"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

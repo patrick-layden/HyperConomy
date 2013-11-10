@@ -402,6 +402,10 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [hcs]
+   hctest:
+      description: Runs plugin tests.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.
