@@ -9,9 +9,6 @@ public class UpdateYML {
 	UpdateYML() {
 		HyperConomy hc = HyperConomy.hc;
 		YamlHandler yh = hc.getYamlHandler();
-		if (yh.gFC("config").getBoolean("config.run-automatic-backups")) {
-			new Backup();
-		}
 		String t = yh.gFC("config").getString("config.signupdateinterval");
 		if (t == null) {
 			yh.gFC("config").set("config.signupdateinterval", 13);
