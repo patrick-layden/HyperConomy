@@ -87,12 +87,43 @@ public class Manageshop implements CommandExecutor {
 			}
 			currentShop.put(hp, ps);
 			player.sendMessage(L.get("SHOP_SELECTED"));
+		} else if (args[0].equalsIgnoreCase("setstock") && player.hasPermission("hyperconomy.admin")) {
+			if (cps == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			HyperObject ho = null;
+			double amount = 0.0;
+			if (args.length == 3) {
+				ho = hp.getHyperEconomy().getHyperObject(args[1]);
+				try {
+					amount = Double.parseDouble(args[2]);
+				} catch (Exception e) {
+					player.sendMessage(L.get("MANAGESHOP_SETSHOP_HELP"));
+					return true;
+				}
+			} else {
+				player.sendMessage(L.get("MANAGESHOP_SETSHOP_HELP"));
+				return true;
+			}
+			if (ho == null) {
+				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
+				return true;
+			}
+			HyperObject ho2 = he.getHyperObject(ho.getName(), cps);
+			if (ho2 instanceof PlayerShopObject) {
+				PlayerShopObject pso = (PlayerShopObject)ho2;
+				pso.setStock(amount);
+				player.sendMessage(L.f(L.get("STOCK_SET"), pso.getName()));
+				return true;
+			} else {
+				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
+			}
 		} else if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("a")) {
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
 				return true;
 			}
-
 			int amount = 1;
 			HyperObject ho = null;
 			if (args.length == 1) {

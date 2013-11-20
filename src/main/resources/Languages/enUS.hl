@@ -418,6 +418,7 @@ MANAGESHOP_OWNER_HELP: &4Use /manageshop owner [name]
 MANAGESHOP_ADD_HELP: &4Use /manageshop add (object) (amount)
 MANAGESHOP_ALLOW_HELP: &4Use /manageshop allow [player]
 MANAGESHOP_REMOVE_HELP: &4Use /manageshop remove [object] [amount]
+MANAGESHOP_SETSHOP_HELP: &4Use /manageshop setshop [object] [amount]
 OWNER_SET: &6Owner set.
 STATUS_SET: &6Status set.
 PRICE_SET: &6Price set.
