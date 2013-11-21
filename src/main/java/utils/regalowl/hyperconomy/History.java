@@ -161,7 +161,7 @@ public class History {
 			return -1.0;
 		} catch (Exception e) {
 			hc.gDB().writeError(e, "getHistoricValue() passed arguments: name = '" + name + "', economy = '" + economy + "', count = '" + count + "'");
-			return -999999.0;
+			return -1.0;
 		}
 	}
 	
@@ -174,6 +174,7 @@ public class History {
 	 */
 	public synchronized String getPercentChange(HyperObject ho, int timevalue) {
 		if (ho == null || sr == null) {
+			hc.gDB().writeError("getPercentChange passed null HyperObject or SQLRead");
 			return "?";
 		}
 		CommonFunctions cf = hc.getCommonFunctions();
@@ -257,6 +258,7 @@ public class History {
 				}
 			} else {
 				relevantValues.put(ho, "?");
+				hc.gDB().writeError("getPercentChange HyperObject missing: " + ho.getName() + ", economy: " + ho.getEconomy());
 			}
 		}
 		return relevantValues;
