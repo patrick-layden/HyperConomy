@@ -185,6 +185,9 @@ public class History {
 		if (historicvalue == -1.0) {
 			return "?";
 		}
+		if (historicvalue == 0.0) {
+			return "?";
+		}
 		double currentvalue = 0.0;
 		
 		if (ho instanceof HyperEnchant) {
@@ -250,6 +253,10 @@ public class History {
 					} else if (ho instanceof HyperXP) {
 						HyperXP bo = (HyperXP)ho;
 						currentvalue = bo.getValue(1);
+					}
+					if (historicValue == 0.0) {
+						relevantValues.put(ho, "?");
+						continue;
 					}
 					double percentChange = ((currentvalue - historicValue) / historicValue) * 100.0;
 					percentChange = hc.getCommonFunctions().round(percentChange, 3);
