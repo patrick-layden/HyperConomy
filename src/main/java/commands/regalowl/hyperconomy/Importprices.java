@@ -16,7 +16,9 @@ public class Importprices {
 			if (args.length == 1) {
 				String economy = args[0];
 				if (em.economyExists(economy)) {
-					new Backup();
+					if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+						new Backup();
+					}
 					FileConfiguration objects = hc.gYH().gFC("objects");
 					Iterator<String> it = objects.getKeys(false).iterator();
 					while (it.hasNext()) {

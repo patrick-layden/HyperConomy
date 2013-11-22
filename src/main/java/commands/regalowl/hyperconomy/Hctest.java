@@ -20,6 +20,25 @@ public class Hctest implements CommandExecutor {
 	private HyperPlayer hp;
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
+		HyperConomy hc = HyperConomy.hc;
+		for (HyperObject ho:hc.getEconomyManager().getHyperObjects()) {
+			ho.setCeiling(ho.getCeiling());
+			ho.setEconomy(ho.getEconomy());
+			ho.setFloor(ho.getFloor());
+			ho.setInitiation(ho.getInitiation());
+			ho.setIsstatic(ho.getIsstatic());
+			ho.setMaxstock(ho.getMaxstock());
+			ho.setMedian(ho.getMedian());
+			ho.setName(ho.getName());
+			ho.setStartprice(ho.getStartprice());
+			ho.setStaticprice(ho.getStaticprice());
+			ho.setStock(ho.getStock());
+			ho.setType(ho.getType().toString());
+			ho.setValue(ho.getValue());
+		}
+		return true;
+		/*
 		hc = HyperConomy.hc;
 		em = hc.getEconomyManager();
 		config = hc.gYH().gFC("config");
@@ -237,6 +256,8 @@ public class Hctest implements CommandExecutor {
 		
 		sender.sendMessage("Test successful.");
 		return true;
+		
+		*/
 	}
 	
 	

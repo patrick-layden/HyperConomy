@@ -277,7 +277,9 @@ public class EconomyManager implements Listener {
 	
 	
 	public void createEconomyFromYml(String econ, boolean restart) {
-		new Backup();
+		if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+			new Backup();
+		}
 		FileConfiguration objects = hc.gYH().gFC("objects");
 		SQLWrite sw = hc.getSQLWrite();
 		Iterator<String> it = objects.getKeys(false).iterator();

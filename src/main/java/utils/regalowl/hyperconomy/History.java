@@ -31,6 +31,8 @@ public class History {
 	private long timeCounter;
 	private boolean useHistory;
 	
+	private final int millisecondsInHour = 3600000;
+	
 	History() {
 		hc = HyperConomy.hc;
 		useHistory = hc.gYH().gFC("config").getBoolean("config.store-price-history");
@@ -85,7 +87,7 @@ public class History {
 				long currentTime = System.currentTimeMillis();
 				timeCounter += (currentTime - lastTime);
 				lastTime = currentTime;
-				if (timeCounter >= 3600000) {
+				if (timeCounter >= millisecondsInHour) {
 					// if (timeCounter >= 120000) {
 					timeCounter = 0;
 					writeHistoryThread();
@@ -196,7 +198,7 @@ public class History {
 			currentvalue = bo.getValue(1);
 		}
 
-		percentChange = ((currentvalue - historicvalue) / historicvalue) * 100;
+		percentChange = ((currentvalue - historicvalue) / historicvalue) * 100.0;
 		percentChange = cf.round(percentChange, 3);
 		return percentChange + "";
 	}
@@ -249,7 +251,7 @@ public class History {
 						HyperXP bo = (HyperXP)ho;
 						currentvalue = bo.getValue(1);
 					}
-					double percentChange = ((currentvalue - historicValue) / historicValue) * 100;
+					double percentChange = ((currentvalue - historicValue) / historicValue) * 100.0;
 					percentChange = hc.getCommonFunctions().round(percentChange, 3);
 					String stringValue = percentChange + "";
 					relevantValues.put(ho, stringValue);

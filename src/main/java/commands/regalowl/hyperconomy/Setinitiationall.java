@@ -25,7 +25,9 @@ public class Setinitiationall {
 			sender.sendMessage(L.get("SETINITIATIONALL_FALSE"));
 			return;
 		}
-		new Backup();
+		if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+			new Backup();
+		}
 		for (int i = 0; i < names.size(); i++) {
 			name = names.get(i);
 			HyperObject ho = he.getHyperObject(name);

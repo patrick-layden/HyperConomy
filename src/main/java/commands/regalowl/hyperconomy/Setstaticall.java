@@ -26,7 +26,9 @@ public class Setstaticall {
 			sender.sendMessage(L.get("SETSTATICALL_INVALID"));
 			return;
 		}
-		new Backup();
+		if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+			new Backup();
+		}
 
 		if (setting.equalsIgnoreCase("copy")) {
 			for (int i = 0; i < names.size(); i++) {
