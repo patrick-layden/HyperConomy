@@ -114,6 +114,11 @@ public class HyperPlayer {
 		return salt;
 	}
 	
+	public void delete() {
+		hc.getEconomyManager().removeHyperPlayer(this);
+		String statement = "DELETE FROM hyperconomy_players WHERE PLAYER = '" + this.name + "'";
+		hc.getSQLWrite().addToQueue(statement);
+	}
 	
 	public void setName(String name) {
 		String statement = "UPDATE hyperconomy_players SET PLAYER='" + name + "' WHERE PLAYER = '" + this.name + "'";

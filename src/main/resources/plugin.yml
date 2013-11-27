@@ -402,10 +402,20 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [hcs]
+   hcdelete:
+      description: Deletes objects and accounts within HyperConomy.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
+      aliases: [hcd]
    hctest:
       description: Runs plugin tests.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+   frameshop:
+      description: Creates frame shops.
+      permission: hyperconomy.frameshop
+      permission-message: You do not have permission.
+      aliases: [fs]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.
@@ -518,4 +528,7 @@ permissions:
         default: false
     hyperconomy.playershop:
         description: Allows the use of the /manageshop command.
+        default: false
+    hyperconomy.frameshop:
+        description: Allows the use of the /frameshop command.
         default: false

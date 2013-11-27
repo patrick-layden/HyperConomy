@@ -441,3 +441,11 @@ DISALLOWED_TO_MANAGE_SHOP: &6Player no longer allowed to manage shop.
 CHESTSHOP_CANT_TRADE_DAMAGED: &4Chest shops cannot trade damaged items.
 WORLD_NOT_FOUND: &4That world was not found, importing only accounts known to HyperConomy.
 HCSET_INVALID: &4Invalid parameters. Use /hcset [option] (arg1) (arg2) ... (argx)
+HCDELETE_INVALID: &4Invalid parameters. Use /hcdelete [type] [name]
+HCDELETE_SUCCESS: &6Deletion successful.
+HCDELETE_OBJECT_INVALID: &4Invalid parameters. Use /hcdelete object [object name]
+HCDELETE_ACCOUNT_INVALID: &4Invalid parameters. Use /hcdelete account [account name]
+NAME_SET: &6Name set!
+HCSET_CEILING_INVALID: &4Invalid parameters. Use /hcset ceiling [new ceiling]
+HCSET_NAME_INVALID: &4Invalid parameters. Use /hcset name [new name]
+MAKEFRAMESHOP_INVALID: &4Invalid Parameters. Use /makeframeshop [object]

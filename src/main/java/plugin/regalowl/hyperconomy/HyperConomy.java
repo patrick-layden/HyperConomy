@@ -41,6 +41,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private SQLWrite sw;
 	private SQLRead sr;
 	private ChestShop cs;
+	private FrameShopHandler fsh;
 	private HyperLock hl;
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
@@ -130,6 +131,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		registerCommands();
 		isign = new InfoSignHandler();
 		isign.updateSigns();
+		fsh = new FrameShopHandler();
 		enabled = true;
 		hl.setLoadLock(false);
 	}
@@ -173,7 +175,9 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		Bukkit.getServer().getPluginCommand("manageshop").setExecutor(new Manageshop());
 		Bukkit.getServer().getPluginCommand("ymladditem").setExecutor(new Ymladditem());
 		Bukkit.getServer().getPluginCommand("hcset").setExecutor(new Hcset());
+		Bukkit.getServer().getPluginCommand("hcdelete").setExecutor(new Hcdelete());
 		Bukkit.getServer().getPluginCommand("hctest").setExecutor(new Hctest());
+		Bukkit.getServer().getPluginCommand("frameshop").setExecutor(new Frameshopcommand());
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -372,6 +376,9 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		return cs;
 	}
 	
+	public FrameShopHandler getFrameShopHandler() {
+		return fsh;
+	}
 	public DataBukkit getDataBukkit() {
 		return db;
 	}
