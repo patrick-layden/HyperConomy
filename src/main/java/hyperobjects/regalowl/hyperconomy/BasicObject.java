@@ -41,6 +41,12 @@ public class BasicObject implements HyperObject {
 		this.maxstock = maxstock;
 	}
 	
+	public void delete() {
+		hc.getEconomyManager().getEconomy(economy).removeHyperObject(name);
+		String statement = "DELETE FROM hyperconomy_objects WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
+		hc.getSQLWrite().addToQueue(statement);
+	}
+	
 	
 	public int compareTo(HyperObject ho) {
 		return name.compareTo(ho.getName());
@@ -109,7 +115,6 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET NAME='" + name + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.name = name;
-
 	}
 	public void setEconomy(String economy) {
 		String statement = "UPDATE hyperconomy_objects SET ECONOMY='" + economy + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";

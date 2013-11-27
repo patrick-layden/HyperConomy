@@ -402,6 +402,11 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [hcs]
+   hcdelete:
+      description: Deletes objects and accounts within HyperConomy.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
+      aliases: [hcd]
    hctest:
       description: Runs plugin tests.
       permission: hyperconomy.admin

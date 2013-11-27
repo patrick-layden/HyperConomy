@@ -27,8 +27,10 @@ public class BasicShopObject implements PlayerShopObject {
 	
 	
 	
-	
-	
+	public void delete() {
+		//do nothing - a player shop object will just be remade if deleted
+	}
+ 	
 	public PlayerShop getShop() {
 		return playerShop;
 	}

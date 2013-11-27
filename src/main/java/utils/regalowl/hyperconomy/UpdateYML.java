@@ -229,6 +229,9 @@ public class UpdateYML {
 		if (!yh.gFC("config").isSet("config.hook-internal-economy-into-vault")) {
 			yh.gFC("config").set("config.hook-internal-economy-into-vault", true);
 		}
+		if (!yh.gFC("config").isSet("config.log-sql-statements")) {
+			yh.gFC("config").set("config.log-sql-statements", false);
+		}
 
 		yh.gFC("config").set("config.sql-connection.max-sql-threads", null);
 		yh.gFC("config").set("config.log-sqlwrite-errors", null);

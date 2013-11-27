@@ -6,6 +6,7 @@ public interface HyperObject extends Comparable<HyperObject> {
 
 	
 	public int compareTo(HyperObject ho);
+	public void delete();
 	
 	public String getName();
 	public String getEconomy();

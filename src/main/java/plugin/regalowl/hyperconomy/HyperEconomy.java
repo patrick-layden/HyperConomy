@@ -222,6 +222,19 @@ public class HyperEconomy {
 		}
 		return null;
 	}
+	public void removeHyperObject(String name) {
+		HyperObject ho = null;
+		if (hyperObjectsName.containsKey(name)) {
+			ho = hyperObjectsName.get(name);
+			hyperObjectsName.remove(name);
+		}
+		if (ho instanceof HyperItem) {
+			HyperItem hi = (HyperItem)ho;
+			if (hyperObjectsData.containsKey(hi.getMaterialEnum() + "|" + hi.getData())) {
+				hyperObjectsData.remove(hi.getMaterialEnum() + "|" + hi.getData());
+			}
+		}
+	}
 	
 	public HyperItem getHyperItem(String name) {
 		HyperObject ho = getHyperObject(name);

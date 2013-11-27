@@ -112,6 +112,9 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		db.createDatabase();
 		sw = db.getSQLWrite();
 		sr = db.getSQLRead();
+		if (config.getBoolean("config.log-sql-statements")) {
+			sw.setLogSQL(true);
+		}
 		setupExternalEconomy();
 		logEconomyState();
 		em.load();
@@ -173,6 +176,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		Bukkit.getServer().getPluginCommand("manageshop").setExecutor(new Manageshop());
 		Bukkit.getServer().getPluginCommand("ymladditem").setExecutor(new Ymladditem());
 		Bukkit.getServer().getPluginCommand("hcset").setExecutor(new Hcset());
+		Bukkit.getServer().getPluginCommand("hcdelete").setExecutor(new Hcdelete());
 		Bukkit.getServer().getPluginCommand("hctest").setExecutor(new Hctest());
 	}
 

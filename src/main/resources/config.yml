@@ -41,6 +41,7 @@ config:
   use-player-shops: true
   max-shops-per-player: 1
   use-composite-items: false
+  log-sql-statements: false
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

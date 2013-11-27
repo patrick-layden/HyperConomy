@@ -36,6 +36,26 @@ public class Hcset implements CommandExecutor {
 				sender.sendMessage(L.get("HCSET_INVALID"));
 				return true;
 			}
+			
+			if (args[0].equalsIgnoreCase("name")) {
+				try {
+					if (args.length == 3) {
+						String name = args[1];
+						String newName = args[2];
+						if (he.objectTest(name)) {
+							he.getHyperObject(name).setName(newName);
+							sender.sendMessage(L.get("NAME_SET"));
+							hc.restart();
+						} else {
+							sender.sendMessage(L.get("INVALID_NAME"));
+						}
+					} else {
+						sender.sendMessage(L.get("HCSET_NAME_INVALID"));
+					}
+				} catch (Exception e) {
+					sender.sendMessage(L.get("HCSET_NAME_INVALID"));
+				}
+			}
 			if (args[0].equalsIgnoreCase("ceiling")) {
 				try {
 					if (args.length == 3) {
@@ -49,10 +69,10 @@ public class Hcset implements CommandExecutor {
 							sender.sendMessage(L.get("INVALID_NAME"));
 						}
 					} else {
-						sender.sendMessage(L.get("SETCEILING_INVALID"));
+						sender.sendMessage(L.get("HCSET_CEILING_INVALID"));
 					}
 				} catch (Exception e) {
-					sender.sendMessage(L.get("SETCEILING_INVALID"));
+					sender.sendMessage(L.get("HCSET_CEILING_INVALID"));
 				}
 			}
 			
