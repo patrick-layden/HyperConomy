@@ -448,3 +448,4 @@ HCDELETE_ACCOUNT_INVALID: &4Invalid parameters. Use /hcdelete account [account n
 NAME_SET: &6Name set!
 HCSET_CEILING_INVALID: &4Invalid parameters. Use /hcset ceiling [new ceiling]
 HCSET_NAME_INVALID: &4Invalid parameters. Use /hcset name [new name]
+MAKEFRAMESHOP_INVALID: &4Invalid Parameters. Use /makeframeshop [object]
