@@ -67,6 +67,9 @@ public class History {
 		QueryResult result = sr.aSyncSelect("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = '" + setting + "'");
 		if (result.next()) {
 			value = result.getString("VALUE");
+			if (value == null) {
+				value = "0";
+			}
 		}
 		result.close();
 		return value;
