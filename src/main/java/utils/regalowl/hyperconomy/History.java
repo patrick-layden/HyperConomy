@@ -43,17 +43,7 @@ public class History {
 		sr = hc.getSQLRead();
 		daysToSaveHistory = hc.gYH().gFC("config").getInt("config.daystosavehistory");
 		lastTime = System.currentTimeMillis();
-		String tc = getSettingValue("history_time_counter");
-		if (tc == null) {
-			addSetting("history_time_counter", "0");
-			timeCounter = 0;
-		} else {
-			try {
-				timeCounter = Long.parseLong(tc);
-			} catch (Exception e) {
-				hc.gDB().writeError(e);
-			}
-		}
+		timeCounter = getTimeCounter();
 		startTimer();
 	}
 	
@@ -62,14 +52,17 @@ public class History {
 	}
 	
 
-	public String getSettingValue(String setting) {
-		String value = null;
-		QueryResult result = sr.aSyncSelect("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = '" + setting + "'");
+	public Long getTimeCounter() {
+		Long value = 0L;
+		QueryResult result = sr.aSyncSelect("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'history_time_counter'");
 		if (result.next()) {
-			value = result.getString("VALUE");
-			if (value == null) {
-				value = "0";
+			try {
+				value = Long.parseLong(result.getString("VALUE"));
+			} catch (Exception e) {
+				value = 0L;
 			}
+		} else {
+			addSetting("history_time_counter", "0");
 		}
 		result.close();
 		return value;
