@@ -84,7 +84,7 @@ public class History {
 				timeCounter += (currentTime - lastTime);
 				lastTime = currentTime;
 				if (timeCounter >= millisecondsInHour) {
-					// if (timeCounter >= 120000) {
+					// if (timeCounter >= 600) {
 					timeCounter = 0;
 					writeHistoryThread();
 					hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
@@ -104,31 +104,28 @@ public class History {
 	
 	private void writeHistoryThread() {
 		ArrayList<HyperObject> objects = em.getHyperObjects();
+		ArrayList<String> statements = new ArrayList<String>();
 		for (HyperObject object : objects) {
 			if (object instanceof HyperEnchant) {
 				HyperEnchant he = (HyperEnchant)object;
-				writeHistoryData(object.getName(), object.getEconomy(), he.getValue(EnchantmentClass.DIAMOND));
+				statements.add(getWriteStatement(object.getName(), object.getEconomy(), he.getValue(EnchantmentClass.DIAMOND)));
 			} else if (object instanceof HyperItem) {
 				HyperItem hi = (HyperItem)object;
-				writeHistoryData(object.getName(), object.getEconomy(), hi.getValue(1));
+				statements.add(getWriteStatement(object.getName(), object.getEconomy(), hi.getValue(1)));
 			} else if (object instanceof BasicObject) {
 				BasicObject bo = (BasicObject)object;
-				writeHistoryData(object.getName(), object.getEconomy(), bo.getValue(1));
+				statements.add(getWriteStatement(object.getName(), object.getEconomy(), bo.getValue(1)));
 			}
 		}
-	}
-  	
-  	
-  	
-	private void writeHistoryData(String object, String economy, double price) {
-		String statement = "Insert Into hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " Values ('" + object + "','" + economy + "', NOW() ,'" + price + "')";
-		sw.convertAddToQueue(statement);
 		if (hc.getDataBukkit().useMySQL()) {
-			statement = "DELETE FROM hyperconomy_history WHERE TIME < DATE_SUB(NOW(), INTERVAL " + daysToSaveHistory + " DAY)";
+			statements.add("DELETE FROM hyperconomy_history WHERE TIME < DATE_SUB(NOW(), INTERVAL " + daysToSaveHistory + " DAY)");
 		} else {
-			statement = "DELETE FROM hyperconomy_history WHERE TIME < date('now','" + formatSQLiteTime(daysToSaveHistory * -1) + " day')";
+			statements.add("DELETE FROM hyperconomy_history WHERE TIME < date('now','" + formatSQLiteTime(daysToSaveHistory * -1) + " day')");
 		}
-		sw.addToQueue(statement);
+		sw.addToQueue(statements);
+	}
+	private String getWriteStatement(String object, String economy, double price) {
+		return sw.convertSQL("INSERT INTO hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE) VALUES ('" + object + "','" + economy + "', NOW() ,'" + price + "')");
 	}
   	
   	
