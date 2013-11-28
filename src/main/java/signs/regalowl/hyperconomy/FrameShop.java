@@ -84,16 +84,7 @@ public class FrameShop {
 		stack.setDurability(mapId);
 		frame.setItem(stack);
 	}
-	
 
-	
-	
-	
-	
-	
-	
-	
-	
 	public ItemFrame getFrame(Location loc) {
 		for (Entity e : loc.getChunk().getEntities())
 			if (e instanceof ItemFrame) {
@@ -103,8 +94,6 @@ public class FrameShop {
 			}
 		return null;
 	}
-	
 
-	
 	
 }
