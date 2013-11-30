@@ -163,7 +163,7 @@ public class UpdateYML {
 		}
 		String t41 = yh.gFC("config").getString("config.use-external-economy-plugin");
 		if (t41 == null) {
-			yh.gFC("config").set("config.use-external-economy-plugin", false);
+			yh.gFC("config").set("config.use-external-economy-plugin", true);
 		}
 		String t42 = yh.gFC("config").getString("config.limit-info-commands-to-shops");
 		if (t42 == null) {
@@ -227,7 +227,7 @@ public class UpdateYML {
 			yh.gFC("config").set("config.max-shops-per-player", 2);
 		}
 		if (!yh.gFC("config").isSet("config.hook-internal-economy-into-vault")) {
-			yh.gFC("config").set("config.hook-internal-economy-into-vault", true);
+			yh.gFC("config").set("config.hook-internal-economy-into-vault", false);
 		}
 		if (!yh.gFC("config").isSet("config.log-sql-statements")) {
 			yh.gFC("config").set("config.log-sql-statements", false);
