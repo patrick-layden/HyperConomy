@@ -29,8 +29,8 @@ config:
   unlimited-stock-for-static-items: false
   sell-remaining-if-less-than-requested-amount: true
   language: english
-  use-external-economy-plugin: false
-  hook-internal-economy-into-vault: true
+  use-external-economy-plugin: true
+  hook-internal-economy-into-vault: false
   use-shops: true
   allow-scrolling-transaction-signs: false
   block-selling-in-creative-mode: false
