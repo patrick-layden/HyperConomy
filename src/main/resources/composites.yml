@@ -29,7 +29,7 @@ awkwardpotion:
     material: POTION
     id: 373
     data: 16
-  components: waterbottle,1;netherwarts,1;
+  components: waterbottle,1;netherwarts,1/3;
 beacon:
   information:
     type: item
@@ -1613,7 +1613,7 @@ potionoffireresist:
     material: POTION
     id: 373
     data: 3
-  components: awkwardpotion,1;magmacream,1;
+  components: awkwardpotion,1;magmacream,1/3;
 potionoffireresist2:
   information:
     type: item
@@ -1645,7 +1645,7 @@ potionofharming:
     material: POTION
     id: 373
     data: 12
-  components: potionofpoison,1;fermentedspidereye,1;
+  components: potionofpoison,1;fermentedspidereye,1/3;
 potionofharming2:
   information:
     type: item
@@ -1677,7 +1677,7 @@ potionofhealing:
     material: POTION
     id: 373
     data: 5
-  components: awkwardpotion,1;glisteringmelon,1;
+  components: awkwardpotion,1;glisteringmelon,1/3;
 potionofhealing2:
   information:
     type: item
@@ -1709,7 +1709,7 @@ potionofinvisibility:
     material: POTION
     id: 373
     data: 14
-  components: potionofnightvision,1;fermentedspidereye,1;
+  components: potionofnightvision,1;fermentedspidereye,1/3;
 potionofinvisibility2:
   information:
     type: item
@@ -1741,7 +1741,7 @@ potionofnightvision:
     material: POTION
     id: 373
     data: 6
-  components: awkwardpotion,1;goldencarrot,1;
+  components: awkwardpotion,1;goldencarrot,1/3;
 potionofnightvision2:
   information:
     type: item
@@ -1773,7 +1773,7 @@ potionofpoison:
     material: POTION
     id: 373
     data: 4
-  components: awkwardpotion,1;spidereye,1;
+  components: awkwardpotion,1;spidereye,1/3;
 potionofpoison2:
   information:
     type: item
@@ -1805,7 +1805,7 @@ potionofregen:
     material: POTION
     id: 373
     data: 1
-  components: awkwardpotion,1;ghasttear,1;
+  components: awkwardpotion,1;ghasttear,1/3;
 potionofregen2:
   information:
     type: item
@@ -1837,7 +1837,7 @@ potionofslowness:
     material: POTION
     id: 373
     data: 10
-  components: potionofspeed,1;fermentedspidereye,1;
+  components: potionofspeed,1;fermentedspidereye,1/3;
 potionofslowness2:
   information:
     type: item
@@ -1869,7 +1869,7 @@ potionofspeed:
     material: POTION
     id: 373
     data: 2
-  components: awkwardpotion,1;sugar,1;
+  components: awkwardpotion,1;sugar,1/3;
 potionofspeed2:
   information:
     type: item
@@ -1901,7 +1901,7 @@ potionofstrength:
     material: POTION
     id: 373
     data: 9
-  components: awkwardpotion,1;blazepowder,1;
+  components: awkwardpotion,1;blazepowder,1/3;
 potionofstrength2:
   information:
     type: item
@@ -1933,7 +1933,7 @@ potionofweakness:
     material: POTION
     id: 373
     data: 8
-  components: awkwardpotion,1;fermentedspidereye,1;
+  components: awkwardpotion,1;fermentedspidereye,1/3;
 potionofweakness2:
   information:
     type: item
@@ -2806,3 +2806,244 @@ yellowwool:
     id: 35
     data: 4
   components: wool,1;dandelionyellow,1;
+acaciawood:
+  information:
+    type: item
+    material: WOOD
+    data: 4
+  components: acacialog,1/4;
+darkoakwood:
+  information:
+    type: item
+    material: WOOD
+    data: 5
+  components: darkoaklog,1/4;
+darkoakwoodslab:
+  information:
+    type: item
+    material: WOOD_STEP
+    data: 5
+  value: 10.0
+  components: darkoakwood,1/2;
+acaciawoodslab:
+  information:
+    type: item
+    material: WOOD_STEP
+    data: 4
+  components: acaciawood,1/2;
+darkoakwoodstairs:
+  information:
+    type: item
+    material: DARK_OAK_STAIRS
+    data: 0
+  components: darkoakwood,3/2;
+acaciawoodstairs:
+  information:
+    type: item
+    material: ACACIA_STAIRS
+    data: 0
+  components: acaciawood,3/2;
+whitestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 0
+  components: bonemeal,1/8;glass,1;
+orangestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 1
+  components: orangedye,1/8;glass,1;
+magentastainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 2
+  components: magentadye,1/8;glass,1;
+lightbluestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 3
+  components: lightbluedye,1/8;glass,1;
+yellowstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 4
+  components: dandelionyellow,1/8;glass,1;
+limestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 5
+  components: limedye,1/8;glass,1;
+pinkstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 6
+  components: pinkdye,1/8;glass,1;
+graystainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 7
+  components: graydye,1/8;glass,1;
+lightgraystainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 8
+  components: lightgraydye,1/8;glass,1;
+cyanstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 9
+  components: cyandye,1/8;glass,1;
+purplestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 10
+  components: purpledye,1/8;glass,1;
+bluestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 11
+  components: lapislazuli,1/8;glass,1;
+brownstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 12
+  components: cocoabeans,1/8;glass,1;
+greenstaineglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 13
+  components: cactusgreen,1/8;glass,1;
+redstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 14
+  components: rosered,1/8;glass,1;
+blackstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 15
+  components: inksac,1/8;glass,1;
+whitestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 0
+  components: whitestainedglass,3/8;
+orangestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 1
+  components: orangestainedglass,3/8;
+magentastainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 2
+  components: magentastainedglass,3/8;
+lightbluestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 3
+  components: lightbluestainedglass,3/8;
+yellowstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 4
+  components: yellowstainedglass,3/8;
+limestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 5
+  components: limestainedglass,3/8;
+pinkstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 6
+  components: pinkstainedglass,3/8;
+graystainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 7
+  components: graystainedglass,3/8;
+lightgraystainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 8
+  components: lightgraystainedglass,3/8;
+cyanstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 9
+  components: cyanstainedglass,3/8;
+purplestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 10
+  components: purplestainedglass,3/8;
+bluestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 11
+  components: bluestainedglass,3/8;
+brownstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 12
+  components: brownstainedglass,3/8;
+greenstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 13
+  components: greenstainedglass,3/8;
+redstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 14
+  components: redstainedglass,3/8;
+blackstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 15
+  components: blackstainedglass,3/8;
+potionofwaterbreathing:
+  information:
+    type: item
+    material: POTION
+    data: 13
+  components: awkwardpotion,1;pufferfish,1/3;
+potionofwaterbreathingext:
+  information:
+    type: item
+    material: POTION
+    data: 77
+  components: potionofwaterbreathing,1;redstone,1;
