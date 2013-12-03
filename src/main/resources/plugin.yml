@@ -434,6 +434,7 @@ permissions:
             hyperconomy.balanceall: true
             hyperconomy.topbalance: true
             hyperconomy.playershop: true
+            hyperconomy.frameshop: true
     hyperconomy.use:
         description: Allows general use of HyperConomy.
         default: true

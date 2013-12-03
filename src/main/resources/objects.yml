@@ -523,36 +523,6 @@ blackwool:
   initiation:
     initiation: true
     startprice: 20.0
-yellowflower:
-  information:
-    type: item
-    material: YELLOW_FLOWER
-    data: 0
-  value: 10.0
-  price:
-    static: false
-    staticprice: 20.0
-  stock:
-    stock: 0.0
-    median: 10000.0
-  initiation:
-    initiation: true
-    startprice: 20.0
-redrose:
-  information:
-    type: item
-    material: RED_ROSE
-    data: 0
-  value: 10.0
-  price:
-    static: false
-    staticprice: 20.0
-  stock:
-    stock: 0.0
-    median: 10000.0
-  initiation:
-    initiation: true
-    startprice: 20.0
 brownmushroom:
   information:
     type: item
@@ -8883,3 +8853,1143 @@ thorns3:
   initiation:
     initiation: true
     startprice: 1000.0
+acacialog:
+  information:
+    type: item
+    material: LOG_2
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+darkoaklog:
+  information:
+    type: item
+    material: LOG_2
+    data: 1
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+acaciawood:
+  information:
+    type: item
+    material: WOOD
+    data: 4
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 2.0
+darkoakwood:
+  information:
+    type: item
+    material: WOOD
+    data: 5
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 2.0
+darkoakwoodslab:
+  information:
+    type: item
+    material: WOOD_STEP
+    data: 5
+  value: 10.0
+  price:
+    static: false
+    staticprice: 20.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 20.0
+acaciawoodslab:
+  information:
+    type: item
+    material: WOOD_STEP
+    data: 4
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 2.0
+darkoakwoodstairs:
+  information:
+    type: item
+    material: DARK_OAK_STAIRS
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 20.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 20.0
+acaciawoodstairs:
+  information:
+    type: item
+    material: ACACIA_STAIRS
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 20.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 20.0
+acaciasapling:
+  information:
+    type: item
+    material: SAPLING
+    data: 4
+  value: 5.0
+  price:
+    static: false
+    staticprice: 10.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 10.0
+darkoaksapling:
+  information:
+    type: item
+    material: SAPLING
+    data: 5
+  value: 5.0
+  price:
+    static: false
+    staticprice: 10.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 10.0
+darkoakleaves:
+  information:
+    type: item
+    material: LEAVES_2
+    data: 1
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 2.0
+acacialeaves:
+  information:
+    type: item
+    material: LEAVES_2
+    data: 0
+  value: 1.0
+  price:
+    static: false
+    staticprice: 2.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 2.0
+pufferfish:
+  information:
+    type: item
+    material: RAW_FISH
+    data: 3
+  value: 100.0
+  price:
+    static: false
+    staticprice: 200.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 200.0
+rawsalmon:
+  information:
+    type: item
+    material: RAW_FISH
+    data: 1
+  value: 100.0
+  price:
+    static: false
+    staticprice: 200.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 200.0
+cookedsalmon:
+  information:
+    type: item
+    material: COOKED_FISH
+    data: 1
+  value: 107.0
+  price:
+    static: false
+    staticprice: 214.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 214.0
+clownfish:
+  information:
+    type: item
+    material: RAW_FISH
+    data: 2
+  value: 400.0
+  price:
+    static: false
+    staticprice: 800.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 800.0
+packedice:
+  information:
+    type: item
+    material: PACKED_ICE
+    data: 0
+  value: 800.0
+  price:
+    static: false
+    staticprice: 1600.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 1600.0
+grasslessdirt:
+  information:
+    type: item
+    material: DIRT
+    data: 1
+  value: 500.0
+  price:
+    static: false
+    staticprice: 1000.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 1000.0
+podzol:
+  information:
+    type: item
+    material: DIRT
+    data: 2
+  value: 200.0
+  price:
+    static: false
+    staticprice: 400.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 400.0
+redsand:
+  information:
+    type: item
+    material: SAND
+    data: 1
+  value: 15.0
+  price:
+    static: false
+    staticprice: 30.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 30.0
+poppy:
+  information:
+    type: item
+    material: RED_ROSE
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 20.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+dandelion:
+  information:
+    type: item
+    material: YELLOW_FLOWER
+    data: 0
+  value: 10.0
+  price:
+    static: false
+    staticprice: 20.0
+  stock:
+    stock: 0.0
+    median: 10000.0
+  initiation:
+    initiation: true
+    startprice: 20.0
+redtulip:
+  information:
+    type: item
+    material: RED_ROSE
+    data: 4
+  value: 30.0
+  price:
+    static: false
+    staticprice: 60.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 60.0
+orangetulip:
+  information:
+    type: item
+    material: RED_ROSE
+    data: 5
+  value: 30.0
+  price:
+    static: false
+    staticprice: 60.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 60.0
+whitetulip:
+  information:
+    type: item
+    material: RED_ROSE
+    data: 6
+  value: 30.0
+  price:
+    static: false
+    staticprice: 60.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 60.0
+pinktulip:
+  information:
+    type: item
+    material: RED_ROSE
+    data: 7
+  value: 10.0
+  price:
+    static: false
+    staticprice: 20.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 20.0
+blueorchid:
+  information:
+    type: item
+    material: RED_ROSE
+    data: 1
+  value: 20.0
+  price:
+    static: false
+    staticprice: 40.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 40.0
+allium:
+  information:
+    type: item
+    material: RED_ROSE
+    data: 2
+  value: 60.0
+  price:
+    static: false
+    staticprice: 120.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 120.0
+azurebluet:
+  information:
+    type: item
+    material: RED_ROSE
+    data: 3
+  value: 30.0
+  price:
+    static: false
+    staticprice: 60.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 60.0
+oxeyedaisy:
+  information:
+    type: item
+    material: RED_ROSE
+    data: 8
+  value: 30.0
+  price:
+    static: false
+    staticprice: 60.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 60.0
+sunflower:
+  information:
+    type: item
+    material: DOUBLE_PLANT
+    data: 0
+  value: 50.0
+  price:
+    static: false
+    staticprice: 100.0
+  stock:
+    stock: 0
+    median: 5000
+  initiation:
+    initiation: true
+    startprice: 100.0
+peony:
+  information:
+    type: item
+    material: DOUBLE_PLANT
+    data: 5
+  value: 40.0
+  price:
+    static: false
+    staticprice: 80.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 80.0
+rosebush:
+  information:
+    type: item
+    material: DOUBLE_PLANT
+    data: 4
+  value: 40.0
+  price:
+    static: false
+    staticprice: 80.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 80.0
+lilac:
+  information:
+    type: item
+    material: DOUBLE_PLANT
+    data: 1
+  value: 40.0
+  price:
+    static: false
+    staticprice: 80.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 80.0
+doubletallgrass:
+  information:
+    type: item
+    material: DOUBLE_PLANT
+    data: 2
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+largefern:
+  information:
+    type: item
+    material: DOUBLE_PLANT
+    data: 3
+  value: 6.0
+  price:
+    static: false
+    staticprice: 12.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 12.0
+stonemonsteregg:
+  information:
+    type: item
+    material: MONSTER_EGGS
+    data: 0
+  value: 1000.0
+  price:
+    static: false
+    staticprice: 2000.0
+  stock:
+    stock: 0
+    median: 500
+  initiation:
+    initiation: true
+    startprice: 2000.0
+cobblestonemonsteregg:
+  information:
+    type: item
+    material: MONSTER_EGGS
+    data: 1
+  value: 1000.0
+  price:
+    static: false
+    staticprice: 2000.0
+  stock:
+    stock: 0
+    median: 500
+  initiation:
+    initiation: true
+    startprice: 2000.0
+stonebrickmonsteregg:
+  information:
+    type: item
+    material: MONSTER_EGGS
+    data: 2
+  value: 1000.0
+  price:
+    static: false
+    staticprice: 2000.0
+  stock:
+    stock: 0
+    median: 500
+  initiation:
+    initiation: true
+    startprice: 2000.0
+mossystonebrickmonsteregg:
+  information:
+    type: item
+    material: MONSTER_EGGS
+    data: 3
+  value: 1000.0
+  price:
+    static: false
+    staticprice: 2000.0
+  stock:
+    stock: 0
+    median: 500
+  initiation:
+    initiation: true
+    startprice: 2000.0
+crackedstonebrickmonsteregg:
+  information:
+    type: item
+    material: MONSTER_EGGS
+    data: 4
+  value: 1000.0
+  price:
+    static: false
+    staticprice: 2000.0
+  stock:
+    stock: 0
+    median: 500
+  initiation:
+    initiation: true
+    startprice: 2000.0
+chiseledstonebrickmonsteregg:
+  information:
+    type: item
+    material: MONSTER_EGGS
+    data: 5
+  value: 1000.0
+  price:
+    static: false
+    staticprice: 2000.0
+  stock:
+    stock: 0
+    median: 500
+  initiation:
+    initiation: true
+    startprice: 2000.0
+whitestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 0
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+orangestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 1
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+magentastainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 2
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+lightbluestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 3
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+yellowstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 4
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+limestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 5
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+pinkstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 6
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+graystainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 7
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+lightgraystainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 8
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+cyanstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 9
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+purplestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 10
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+bluestainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 11
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+brownstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 12
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+greenstaineglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 13
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+redstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 14
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+blackstainedglass:
+  information:
+    type: item
+    material: STAINED_GLASS
+    data: 15
+  value: 12.0
+  price:
+    static: false
+    staticprice: 24.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 24.0
+whitestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+orangestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 1
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+magentastainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 2
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+lightbluestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 3
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+yellowstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 4
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+limestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 5
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+pinkstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 6
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+graystainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 7
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+lightgraystainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 8
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+cyanstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 9
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+purplestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 10
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+bluestainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 11
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+brownstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 12
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+greenstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 13
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+redstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 14
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+blackstainedglasspane:
+  information:
+    type: item
+    material: STAINED_GLASS_PANE
+    data: 15
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+potionofwaterbreathing:
+  information:
+    type: item
+    material: POTION
+    data: 13
+  value: 140.0
+  price:
+    static: false
+    staticprice: 280.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 280.0
+potionofwaterbreathingext:
+  information:
+    type: item
+    material: POTION
+    data: 77
+  value: 150.0
+  price:
+    static: false
+    staticprice: 300.0
+  stock:
+    stock: 0
+    median: 1000
+  initiation:
+    initiation: true
+    startprice: 300.0
