@@ -52,6 +52,8 @@ public class Importbalance {
 						}
 					}
 					sender.sendMessage(L.get("PLAYERS_IMPORTED"));
+				} else {
+					sender.sendMessage(L.get("IMPORTBALANCES_INVALID"));
 				}
 			} else {
 				sender.sendMessage(L.get("MUST_USE_EXTERNAL_ECONOMY"));

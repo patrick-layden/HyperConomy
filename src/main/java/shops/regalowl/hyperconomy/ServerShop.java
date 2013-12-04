@@ -36,13 +36,13 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	
 	
 	ServerShop(String name, String econ, HyperPlayer owner) {
+		hc = HyperConomy.hc;
 		this.name = name;
 		this.economy = econ;
 		this.owner = owner;
 		if (owner == null) {
 			this.owner = hc.getEconomyManager().getGlobalShopAccount();
 		}
-		hc = HyperConomy.hc;
 		em = hc.getEconomyManager();
 		L = hc.getLanguageFile();
 		globalShop = false;
