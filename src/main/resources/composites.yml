@@ -397,7 +397,7 @@ dandelionyellow:
     material: INK_SACK
     id: 351
     data: 11
-  components: yellowflower,1/2;
+  components: dandelion,1/2;
 daylightsensor:
   information:
     type: item
@@ -2101,7 +2101,7 @@ rosered:
     material: INK_SACK
     id: 351
     data: 1
-  components: redrose,1/2;
+  components: poppy,1/2;
 sandstone:
   information:
     type: item

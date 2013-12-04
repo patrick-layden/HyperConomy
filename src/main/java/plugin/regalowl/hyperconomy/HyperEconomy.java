@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
@@ -148,6 +149,7 @@ public class HyperEconomy {
 			Iterator<String> it = composites.getKeys(false).iterator();
 			while (it.hasNext()) {
 				String name = it.next().toString();
+				//hc.getLogger().severe(name);
 				if (!componentsLoaded(name)) {
 					loaded = false;
 					continue;
