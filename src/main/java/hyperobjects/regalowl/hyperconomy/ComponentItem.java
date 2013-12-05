@@ -20,8 +20,8 @@ public class ComponentItem extends BasicObject implements HyperItem {
 
 	
 
-	public ComponentItem(String name, String economy, String type, String material, int data, int durability, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
-		super(name, economy, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
+	public ComponentItem(String name, String economy, String displayName, String aliases, String type, String material, int data, int durability, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
+		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
 		this.material = material;
 		this.materialEnum = Material.matchMaterial(material);
 		this.data = data;

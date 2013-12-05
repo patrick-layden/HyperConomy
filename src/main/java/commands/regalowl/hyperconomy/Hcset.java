@@ -76,6 +76,30 @@ public class Hcset implements CommandExecutor {
 				}
 			}
 			
+			if (args[0].equalsIgnoreCase("displayname")) {
+				try {
+					if (args.length == 3) {
+						String name = args[1];
+						String newName = args[2];
+						if (he.objectTest(name)) {
+							HyperObject to = he.getHyperObject(newName);
+							if (to != null) {
+								sender.sendMessage(L.get("NAME_IN_USE"));
+								return true;
+							}
+							he.getHyperObject(name).setDisplayName(newName);
+							sender.sendMessage(L.f(L.get("DISPLAYNAME_SET"), name));
+						} else {
+							sender.sendMessage(L.get("INVALID_NAME"));
+						}
+					} else {
+						sender.sendMessage(L.get("HCSET_CEILING_INVALID"));
+					}
+				} catch (Exception e) {
+					sender.sendMessage(L.get("HCSET_CEILING_INVALID"));
+				}
+			}
+			
 		} catch (Exception e) {
 			sender.sendMessage(L.get("HCSET_INVALID"));
 		}

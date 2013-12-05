@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,12 +32,16 @@ public class CompositeItem extends BasicObject implements HyperItem {
 	
 	
 	public CompositeItem(String name, String economy) {
-		super("","","",0,"",0,0,0,"",0,0,0,0);
+		super(name,economy,"","","",0,"",0,0,0,"",0,0,0,0);
 		hc = HyperConomy.hc;
 		cf = hc.gCF();
 		composites = hc.gYH().gFC("composites");
-		this.name = name;
-		this.economy = economy;
+		this.displayName = composites.getString(this.name + ".name.display");
+		String sAliases = composites.getString(this.name + ".name.aliases");
+		ArrayList<String> tAliases = hc.gCF().explode(sAliases, ",");
+		for (String cAlias:tAliases) {
+			this.aliases.add(cAlias);
+		}
 		this.type = HyperObjectType.fromString(composites.getString(this.name + ".information.type"));
 		this.material = composites.getString(this.name + ".information.material");
 		this.materialEnum = Material.matchMaterial(this.material);

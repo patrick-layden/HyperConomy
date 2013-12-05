@@ -560,7 +560,7 @@ public class ChestShop implements Listener {
 						ho = new HyperItemStack(icevent.getCurrentItem()).generateTempItem();
 					}
 					if (slot < 27 && ho != null) {
-						String name = ho.getName();
+						String name = ho.getDisplayName();
 						if (buy) {
 							double price = ho.getValue(1);
 							if (setprice) {
@@ -574,7 +574,7 @@ public class ChestShop implements Listener {
 						}
 
 					} else if (slot >= 27 && ho != null) {
-						String name = ho.getName();
+						String name = ho.getDisplayName();
 						if (sell) {
 							int itemamount = ho.count(icevent.getView().getTopInventory());
 

@@ -1,6 +1,9 @@
 package regalowl.hyperconomy;
 
 
+import java.util.ArrayList;
+
+
 public interface HyperObject extends Comparable<HyperObject> {
 
 
@@ -9,6 +12,10 @@ public interface HyperObject extends Comparable<HyperObject> {
 	public void delete();
 	
 	public String getName();
+	public String getDisplayName();
+	public ArrayList<String> getAliases();
+	public String getAliasesString();
+	public boolean hasName(String name);
 	public String getEconomy();
 	public HyperObjectType getType();
 	public double getValue();
@@ -27,6 +34,10 @@ public interface HyperObject extends Comparable<HyperObject> {
 	
 	
 	public void setName(String name);
+	public void setDisplayName(String displayName);
+	public void setAliases(ArrayList<String> aliases);
+	public void addAlias(String alias);
+	public void removeAlias(String alias);
 	public void setEconomy(String economy);
 	public void setType(String type);
 	public void setValue(double value);

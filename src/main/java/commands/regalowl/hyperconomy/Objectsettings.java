@@ -49,6 +49,8 @@ public class Objectsettings {
 					}
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.f(L.get("SETTINGS_NAME"), nam));
+					sender.sendMessage(L.f(L.get("SETTINGS_DISPLAY"), ho.getDisplayName()));
+					sender.sendMessage(L.f(L.get("SETTINGS_ALIAS"), ho.getAliasesString()));
 					sender.sendMessage(L.f(L.get("SETTINGS_VALUE"), val));
 					sender.sendMessage(L.f(L.get("SETTINGS_STARTPRICE"), starprice, init));
 					sender.sendMessage(L.f(L.get("SETTINGS_STATICPRICE"), statprice, stat));
@@ -97,6 +99,8 @@ public class Objectsettings {
 					}
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.f(L.get("SETTINGS_NAME"), nam));
+					sender.sendMessage(L.f(L.get("SETTINGS_DISPLAY"), ho.getDisplayName()));
+					sender.sendMessage(L.f(L.get("SETTINGS_ALIAS"), ho.getAliasesString()));
 					sender.sendMessage(L.f(L.get("SETTINGS_VALUE"), val));
 					sender.sendMessage(L.f(L.get("SETTINGS_STARTPRICE"), starprice, init));
 					sender.sendMessage(L.f(L.get("SETTINGS_STATICPRICE"), statprice, stat));

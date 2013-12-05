@@ -1,6 +1,10 @@
 package regalowl.hyperconomy;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,6 +26,23 @@ public class Hctest implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
 		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy em = hc.getEconomyManager().getEconomy("default");
+		FileConfiguration composites = hc.gYH().gFC("composites");
+		Iterator<String> it = composites.getKeys(false).iterator();
+		while (it.hasNext()) {
+			String name = it.next();
+			HyperItem ho = em.getHyperItem(name);
+			if (ho != null) {
+				composites.set(name + ".name.display", ho.getDisplayName());
+				composites.set(name + ".name.aliases", ho.getDisplayName() + ",");
+				composites.set(name + ".information.id", null);
+			}
+		}
+		hc.gYH().saveYamls();
+		return true;
+		
+		/*
+		HyperConomy hc = HyperConomy.hc;
 		for (HyperObject ho:hc.getEconomyManager().getHyperObjects()) {
 			ho.setCeiling(ho.getCeiling());
 			ho.setEconomy(ho.getEconomy());
@@ -38,6 +59,9 @@ public class Hctest implements CommandExecutor {
 			ho.setValue(ho.getValue());
 		}
 		return true;
+		
+		*/
+		
 		/*
 		hc = HyperConomy.hc;
 		em = hc.getEconomyManager();

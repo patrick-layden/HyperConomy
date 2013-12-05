@@ -211,6 +211,8 @@ SETTINGS_CEILING: &9Ceiling: &b%v
 SETTINGS_FLOOR: &9Floor: &b%v
 SETTINGS_REACH_HYPERBOLIC: &9Stock needed for dynamic pricing mode: &b%v
 SETTINGS_TYPE: &9Type: &b%n
+SETTINGS_DISPLAY: &9Display Name: &b%n
+SETTINGS_ALIAS: &9Aliases: &b%n
 EVALUE_INVALID: &4Invalid Parameters. Use /evalue (name) ('b'/'s'/'a')
 EVALUE_STOCK: &9The global shop has &a%a &b%n &9available.
 EVALUE_CLASS_PURCHASE: &b%n &9on a &b%e &9item can be bought for: &a%c%p
@@ -258,6 +260,7 @@ BALANCE_SET: &6Balance set!
 ACCOUNT_NOT_EXIST: &4That account doesn't exist!
 SETBALANCE_INVALID: &4Invalid Parameters.  Use /setbalance [account] [balance]
 CEILING_SET: &6%n ceiling set!
+DISPLAYNAME_SET: &6%n display name set!
 INVALID_NAME: &4Invalid name!
 SETCEILING_INVALID: &4Invalid parameters. Use /setceiling [item/enchantment name] [ceiling]
 SETCLASSVALUE_INVALID: &4Invalid Parameters. Use /setclassvalue [item class] [value]
@@ -449,3 +452,4 @@ NAME_SET: &6Name set!
 HCSET_CEILING_INVALID: &4Invalid parameters. Use /hcset ceiling [new ceiling]
 HCSET_NAME_INVALID: &4Invalid parameters. Use /hcset name [new name]
 MAKEFRAMESHOP_INVALID: &4Invalid Parameters. Use /makeframeshop [object]
+NAME_IN_USE: &4That name/alias is already in use.
