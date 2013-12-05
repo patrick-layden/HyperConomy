@@ -429,9 +429,22 @@ public class HyperObjectAPI implements ObjectAPI {
 		ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
 		Shop s = hc.getEconomyManager().getShop(p);
 		if (s != null) {
+			PlayerShop ps = null;
+			if (s instanceof PlayerShop) {
+				ps = (PlayerShop)s;
+			}
 			for (HyperObject ho:hyperObjects) {
 				if (s.has(ho.getName())) {
-					availableObjects.add(ho);
+					if (ps == null) {
+						availableObjects.add(ho);
+					} else {
+						if (ho instanceof PlayerShopObject) {
+							PlayerShopObject pso = (PlayerShopObject)ho;
+							if (pso.getStatus() != HyperObjectStatus.NONE) {
+								availableObjects.add(pso);
+							}
+						}
+					}
 				}
 			}
 		}
