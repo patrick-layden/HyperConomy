@@ -58,7 +58,7 @@ public class Topenchants {
 						while (enchantstocks.containsKey(samount * 100)) {
 							samount = samount + .0000001;
 						}
-						enchantstocks.put(samount * 100, ho.getName());
+						enchantstocks.put(samount * 100, ho.getDisplayName());
 					}
 				}
 			}

@@ -60,7 +60,7 @@ public class Notification implements TransactionListener {
 				HyperItem hi = (HyperItem)ho;
 				stock = (int) ho.getStock();
 				cost = hi.getCost(1);
-				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getName(), econ);
+				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getDisplayName(), econ);
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					notify(message);
 					previousmessage = message;
@@ -69,7 +69,7 @@ public class Notification implements TransactionListener {
 				BasicObject bo = (BasicObject)ho;
 				stock = (int) ho.getStock();
 				cost = bo.getCost(1);
-				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getName(), econ);
+				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getDisplayName(), econ);
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					notify(message);
 					previousmessage = message;
@@ -79,7 +79,7 @@ public class Notification implements TransactionListener {
 				cost = hye.getCost(EnchantmentClass.DIAMOND);
 				cost = cost + ho.getPurchaseTax(cost);
 				stock = (int) ho.getStock();
-				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getName(), econ);
+				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getDisplayName(), econ);
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					notify(message);
 					previousmessage = message;

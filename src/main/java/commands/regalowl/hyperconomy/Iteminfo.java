@@ -22,11 +22,11 @@ public class Iteminfo {
 			HyperEconomy he = hp.getHyperEconomy();
 			String mat = player.getItemInHand().getType().toString();
 			HyperItem ho = he.getHyperItem(player.getItemInHand());
-			String nam = "";
+			String displayName = "";
 			if (ho == null) {
-				nam = "Item not in database.";
+				displayName = "Item not in database.";
 			} else {
-				nam = ho.getName();
+				displayName = ho.getDisplayName();
 			}
 			
 			String enchantments = "";
@@ -74,7 +74,7 @@ public class Iteminfo {
 
 			
 				player.sendMessage(L.get("LINE_BREAK"));
-				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + nam);
+				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + displayName);
 				player.sendMessage(ChatColor.BLUE + "Material: " + ChatColor.AQUA + "" + mat);
 				player.sendMessage(ChatColor.BLUE + "Damage Value: " + ChatColor.GREEN + "" + player.getItemInHand().getData().getData());
 				player.sendMessage(ChatColor.BLUE + "Durability: " + ChatColor.GREEN + "" + (int)dura);

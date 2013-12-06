@@ -46,7 +46,6 @@ public class Hb {
 							}
 						}
 
-						String nam = ho.getName();
 						double shopstock = 0;
 						shopstock = ho.getStock();
 						// Buys the most possible from the shop if the
@@ -55,7 +54,7 @@ public class Hb {
 							amount = shopstock;
 						}
 						Shop s = em.getShop(player);
-						if (s.has(nam)) {
+						if (s.has(ho.getName())) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(ho);
 							pt.setAmount((int) Math.rint(amount));

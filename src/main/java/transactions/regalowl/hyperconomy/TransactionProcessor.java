@@ -439,7 +439,7 @@ public class TransactionProcessor {
 						hp.withdraw(price);
 						tradePartner.deposit(price);
 						resetBalanceIfUnlimited();
-						response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, cf.twoDecimals(price), hyperObject.getName(), cf.twoDecimals(taxpaid)), cf.twoDecimals(price), hyperObject);
+						response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, cf.twoDecimals(price), hyperObject.getDisplayName(), cf.twoDecimals(taxpaid)), cf.twoDecimals(price), hyperObject);
 						response.setSuccessful();
 						String type = "dynamic";
 						if (Boolean.parseBoolean(hyperObject.getInitiation())) {
