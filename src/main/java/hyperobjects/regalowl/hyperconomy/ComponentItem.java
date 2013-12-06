@@ -111,7 +111,7 @@ public class ComponentItem extends BasicObject implements HyperItem {
 				double svalue = applyCeilingFloor(statprice);
 				totalvalue = svalue * amount * damage;
 			}
-			return twoDecimals(totalvalue);
+			return cf.twoDecimals(totalvalue);
 		} catch (Exception e) {
 			String info = "Calculation countItems() passed values name='" + getName() + "', amount='" + amount + "', player='" + hp.getName() + "'";
 			hc.gDB().writeError(e, info);

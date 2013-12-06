@@ -101,7 +101,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 				cost = staticcost * classvalue;
 				cost = applyCeilingFloor(cost);
 			}
-			return twoDecimals(cost);
+			return cf.twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantCost() passed values name='" + getName() + "', material='" + eclass.toString() + "'";
 			hc.gDB().writeError(e, info);
@@ -145,7 +145,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 				cost = statprice * classvalue;
 				cost = applyCeilingFloor(cost);
 			}
-			return twoDecimals(cost);
+			return cf.twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantValue() passed values name='" + getName() + "', material='" + eclass.toString() + "'";
 			hc.gDB().writeError(e, info);
@@ -196,7 +196,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 				cost = statprice * classvalue * duramult;
 				cost = applyCeilingFloor(cost);
 			}
-			return twoDecimals(cost);
+			return cf.twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantValue() passed values name='" + getName() + "', material='" + eclass.toString() + "'";
 			hc.gDB().writeError(e, info);

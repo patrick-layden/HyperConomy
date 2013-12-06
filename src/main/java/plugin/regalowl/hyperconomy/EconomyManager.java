@@ -260,7 +260,7 @@ public class EconomyManager implements Listener {
 			values.put("VALUE", ho.getValue()+"");
 			values.put("STATIC", ho.getIsstatic());
 			values.put("STATICPRICE", ho.getStaticprice()+"");
-			values.put("STOCK", ho.getStock()+"");
+			values.put("STOCK", 0+"");
 			values.put("MEDIAN", ho.getMedian()+"");
 			values.put("INITIATION", ho.getInitiation());
 			values.put("STARTPRICE", ho.getStartprice()+"");

@@ -3,11 +3,14 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 
+import regalowl.databukkit.CommonFunctions;
+
 
 
 public class BasicObject implements HyperObject {
 	
 	protected HyperConomy hc;
+	protected CommonFunctions cf;
 	protected String name;
 	protected String displayName;
 	protected ArrayList<String> aliases = new ArrayList<String>();
@@ -27,6 +30,7 @@ public class BasicObject implements HyperObject {
 
 	public BasicObject(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
 		hc = HyperConomy.hc;
+		cf = hc.gCF();
 		this.name = name;
 		this.economy = economy;
 		this.displayName = displayName;
@@ -272,7 +276,7 @@ public class BasicObject implements HyperObject {
 				}
 			}
 		}
-		return twoDecimals(cost * tax);
+		return cf.twoDecimals(cost * tax);
 	}
 	
 	public double getSalesTaxEstimate(double value) {
@@ -283,13 +287,7 @@ public class BasicObject implements HyperObject {
 			double salestaxpercent = hc.gYH().gFC("config").getDouble("config.sales-tax-percent");
 			salestax = (salestaxpercent / 100) * value;
 		}
-		return twoDecimals(salestax);
-	}
-	
-	protected double twoDecimals(double input) {
-		int nodecimals = (int) Math.ceil((input * 100) - .5);
-		double twodecimals = (double) nodecimals / 100.0;
-		return twodecimals;
+		return cf.twoDecimals(salestax);
 	}
 	
 	
@@ -344,7 +342,7 @@ public class BasicObject implements HyperObject {
 				double price = applyCeilingFloor(staticcost);
 				cost = price * amount;
 			}
-			return twoDecimals(cost);
+			return cf.twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getCost() passed values name='" + getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
@@ -385,7 +383,7 @@ public class BasicObject implements HyperObject {
 				double price = applyCeilingFloor(statprice);
 				cost = price * amount;
 			}
-			return twoDecimals(cost);
+			return cf.twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getTvalue() passed values name='" + getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
