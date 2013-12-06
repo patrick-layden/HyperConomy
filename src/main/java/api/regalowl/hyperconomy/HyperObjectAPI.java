@@ -428,32 +428,11 @@ public class HyperObjectAPI implements ObjectAPI {
 
 	public ArrayList<HyperObject> getAvailableObjects(Player p) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(p.getName());
-		HyperEconomy he = hp.getHyperEconomy();
-		ArrayList<HyperObject> hyperObjects = he.getHyperObjects();
-		ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
 		Shop s = hc.getEconomyManager().getShop(p);
 		if (s != null) {
-			PlayerShop ps = null;
-			if (s instanceof PlayerShop) {
-				ps = (PlayerShop)s;
-			}
-			for (HyperObject ho:hyperObjects) {
-				if (s.has(ho.getName())) {
-					if (ps == null) {
-						availableObjects.add(ho);
-					} else {
-						if (ho instanceof PlayerShopObject) {
-							PlayerShopObject pso = (PlayerShopObject)ho;
-							if (pso.getStatus() != HyperObjectStatus.NONE) {
-								availableObjects.add(pso);
-							}
-						}
-					}
-				}
-			}
+			return s.getAvailableObjects();
 		}
-		return availableObjects;
+		return new ArrayList<HyperObject>();
 	}
 
 	public ArrayList<HyperObject> getAvailableObjects(Player p, int startingPosition, int limit) {
@@ -466,6 +445,27 @@ public class HyperObjectAPI implements ObjectAPI {
 		}
 		return availableSubset;
 	}
+	
+	public ArrayList<HyperObject> getAvailableObjects(String shopname) {
+		HyperConomy hc = HyperConomy.hc;
+		Shop s = hc.getEconomyManager().getShop(shopname);
+		if (s != null) {
+			return s.getAvailableObjects();
+		}
+		return new ArrayList<HyperObject>();
+	}
+
+	public ArrayList<HyperObject> getAvailableObjects(String shopname, int startingPosition, int limit) {
+		ArrayList<HyperObject> availableObjects = getAvailableObjects(shopname);
+		ArrayList<HyperObject> availableSubset = new ArrayList<HyperObject>();
+		for (int i = startingPosition; i <= limit; i++) {
+			if (availableObjects.indexOf(i) != -1) {
+				availableSubset.add(availableObjects.get(i));
+			}
+		}
+		return availableSubset;
+	}
+	
 	
 	/*
 	public List<Map<String, String>> getAllStockPlayer(Player pPlayer) {
@@ -554,6 +554,8 @@ public class HyperObjectAPI implements ObjectAPI {
 	public EnchantmentClass getEnchantmentClass(ItemStack stack) {
 		return new HyperItemStack(stack).getEnchantmentClass();
 	}
+
+
 
 
 

@@ -255,8 +255,11 @@ public interface ObjectAPI
 	
 	public TransactionResponse sellAll(Player p, Inventory inventory);
 	
-	public ArrayList<HyperObject> getAvailableObjects(Player p);
 	
+	public ArrayList<HyperObject> getAvailableObjects(String shopname);
+	public ArrayList<HyperObject> getAvailableObjects(String shopname, int startingPosition, int limit);
+	
+	public ArrayList<HyperObject> getAvailableObjects(Player p);
 	public ArrayList<HyperObject> getAvailableObjects(Player p, int startingPosition, int limit);
 	
 	
