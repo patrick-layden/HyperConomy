@@ -318,7 +318,9 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
 		for (PlayerShopObject pso:shopContents.values()) {
 			if (pso.getStatus() != HyperObjectStatus.NONE) {
-				available.add(pso);
+				if (has(pso)) {
+					available.add(pso);
+				}
 			}
 		}
 		return available;
