@@ -36,12 +36,15 @@ public interface Shop extends Comparable<Shop>{
 	
 	public boolean has(String item);
 	public boolean has (HyperObject ho);
+	/**
+	 * Returns all HyperObjects that are available for trade in this shop.
+	 */
 	public ArrayList<HyperObject> getAvailableObjects();
 	
 	public void addAllObjects();
 	public void removeAllObjects();
-	public void addObjects(ArrayList<String> objects);
-	public void removeObjects(ArrayList<String> objects);
+	public void addObjects(ArrayList<HyperObject> objects);
+	public void removeObjects(ArrayList<HyperObject> objects);
 	
 	public int getP1x();
 	public int getP1y();

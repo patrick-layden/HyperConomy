@@ -22,8 +22,9 @@ public class Additem implements CommandExecutor {
     					Shop shop = em.getShop(shopname);
 	    				if (!shop.has(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
-	    						ArrayList<String> add = new ArrayList<String>();
-	    						add.add(itemname);
+	    						ArrayList<HyperObject> add = new ArrayList<HyperObject>();
+	    						HyperObject ho = shop.getHyperEconomy().getHyperObject(itemname);
+	    						add.add(ho);
 	    						shop.addObjects(add);
 		    					sender.sendMessage(ChatColor.GOLD + itemname + " " + L.get("ADDED_TO") + " " + shopname.replace("_", " "));
 	    					} else if (itemname.equalsIgnoreCase("all")) {

@@ -229,42 +229,35 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	
 	
 	public void addAllObjects() {
-		FileConfiguration sh = hc.gYH().gFC("shops");
-		sh.set(name + ".unavailable", null);
+		shopFile.set(name + ".unavailable", null);
 	}
-	
 	public void removeAllObjects() {
-		FileConfiguration sh = hc.gYH().gFC("shops");
-		sh.set(name + ".unavailable", "all");
-	}
-	
-	public void addObjects(ArrayList<String> objects) {
+		CommonFunctions cf = hc.gCF();
 		HyperEconomy he = em.getEconomy(economy);
+		ArrayList<String> unavailable = new ArrayList<String>();
+		for (HyperObject ho:he.getHyperObjects()) {
+			unavailable.add(ho.getName());
+		}
+		shopFile.set(name + ".unavailable", cf.implode(unavailable, ","));
+	}
+	public void addObjects(ArrayList<HyperObject> objects) {
 		FileConfiguration sh = hc.gYH().gFC("shops");
 		CommonFunctions cf = hc.gCF();
 		ArrayList<String> unavailable = cf.explode(sh.getString(name + ".unavailable"),",");
-		if (unavailable.size() == 1 && unavailable.get(0).equalsIgnoreCase("all")) {
-			unavailable = he.getNames();
-		}
-		for (String object:objects) {
-			if (unavailable.contains(he.fixName(object))) {
-				unavailable.remove(object);
+		for (HyperObject ho:objects) {
+			if (unavailable.contains(ho.getName())) {
+				unavailable.remove(ho.getName());
 			}
 		}
 		sh.set(name + ".unavailable", cf.implode(unavailable,","));
 	}
-	
-	public void removeObjects(ArrayList<String> objects) {
-		HyperEconomy he = em.getEconomy(economy);
+	public void removeObjects(ArrayList<HyperObject> objects) {
 		FileConfiguration sh = hc.gYH().gFC("shops");
 		CommonFunctions cf = hc.gCF();
 		ArrayList<String> unavailable = cf.explode(sh.getString(name + ".unavailable"),",");
-		if (unavailable.size() == 1 && unavailable.get(0).equalsIgnoreCase("all")) {
-			return;
-		}
-		for (String object:objects) {
-			if (!unavailable.contains(he.fixName(object))) {
-				unavailable.add(object);
+		for (HyperObject ho:objects) {
+			if (!unavailable.contains(ho.getName())) {
+				unavailable.add(ho.getName());
 			}
 		}
 		sh.set(name + ".unavailable", cf.implode(unavailable,","));

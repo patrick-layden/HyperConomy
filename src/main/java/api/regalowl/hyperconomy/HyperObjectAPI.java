@@ -320,19 +320,6 @@ public class HyperObjectAPI implements ObjectAPI {
 		he.getHyperObject(name).setStartprice(newstartprice);
 	}
 
-	public HyperObject getHyperObject(ItemStack stack, Player player) {
-		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player.getName()).getHyperEconomy();
-		HyperObject ho = he.getHyperObject(stack);
-		return ho;
-	}
-	
-	public HyperObject getHyperObject(ItemStack stack, String player) {
-		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player).getHyperEconomy();
-		HyperObject ho = he.getHyperObject(stack);
-		return ho;
-	}
 	
 	
 	public HyperObject getHyperObject(String name, String economy) {
@@ -340,6 +327,24 @@ public class HyperObjectAPI implements ObjectAPI {
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 		return he.getHyperObject(name);
 	}
+	
+	public HyperObject getHyperObject(ItemStack stack, String economy) { 
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		return he.getHyperObject(stack);
+	}
+	public HyperObject getHyperObject(ItemStack stack, String economy, Shop s) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		return he.getHyperObject(stack, s);
+	}
+	public HyperObject getHyperObject(String name, String economy, Shop s) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		return he.getHyperObject(name, s);
+	}
+	
+
 	
 	public HyperItem getHyperItem(String name, String economy) {
 		HyperConomy hc = HyperConomy.hc;
