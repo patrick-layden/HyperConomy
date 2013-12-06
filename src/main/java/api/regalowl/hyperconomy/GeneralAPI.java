@@ -1,5 +1,7 @@
 package regalowl.hyperconomy;
 
+import java.util.ArrayList;
+
 import org.bukkit.entity.Item;
 
 
@@ -19,6 +21,13 @@ public interface GeneralAPI {
 	double getPlayerZ(String player);
 	String getShopEconomy(String shop);
 	String getGlobalShopAccount();
+	
+	
+	ArrayList<String> getPlayerShopList();
+	ArrayList<String> getServerShopList();
+	Shop getShop(String name);
+	ServerShop getServerShop(String name);
+	PlayerShop getPlayerShop(String name);
 	/**
 	 * @param player (name of player)
 	 * @return true if the hash matches the player's hash and false if it doesn't

@@ -37,7 +37,15 @@ public class Addcategory implements CommandExecutor {
 				String shopname = args[1];
 				if (em.shopExists(shopname)) {
 					Shop shop = em.getShop(shopname);
-					shop.addObjects(objects);
+					HyperEconomy he = shop.getHyperEconomy();
+					ArrayList<HyperObject> add = new ArrayList<HyperObject>();
+					for (String name:objects) {
+						HyperObject ho = he.getHyperObject(name);
+						if (ho != null) {
+							add.add(ho);
+						}
+					}
+					shop.addObjects(add);
 					sender.sendMessage(ChatColor.GOLD + args[0] + " " + L.get("ADDED_TO") + " " + shopname.replace("_", " "));
 				} else {
 					sender.sendMessage(L.get("SHOP_NOT_EXIST"));

@@ -22,8 +22,9 @@ public class Removeitem {
 				if (he.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
 	    				if (shop.has(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
-	    						ArrayList<String> remove = new ArrayList<String>();
-	    						remove.add(itemname);
+	    						ArrayList<HyperObject> remove = new ArrayList<HyperObject>();
+	    						HyperObject ho = shop.getHyperEconomy().getHyperObject(itemname);
+	    						remove.add(ho);
 	    						shop.removeObjects(remove);
 		    					sender.sendMessage(L.f(L.get("REMOVED_FROM"), itemname, shopname.replace("_", " ")));
 	    					} else {

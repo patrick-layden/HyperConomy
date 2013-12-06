@@ -27,7 +27,15 @@ public class Removecategory {
 				String shopname = args[1];
 				if (em.shopExists(shopname)) {
 					Shop shop = em.getShop(shopname);
-					shop.removeObjects(objects);
+					HyperEconomy he = shop.getHyperEconomy();
+					ArrayList<HyperObject> remove = new ArrayList<HyperObject>();
+					for (String name:objects) {
+						HyperObject ho = he.getHyperObject(name);
+						if (ho != null) {
+							remove.add(ho);
+						}
+					}
+					shop.removeObjects(remove);
 					sender.sendMessage(L.f(L.get("REMOVED_FROM"), args[0], shopname.replace("_", " ")));
 				} else {
 					sender.sendMessage(L.get("SHOP_NOT_EXIST"));

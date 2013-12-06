@@ -1,5 +1,7 @@
 package regalowl.hyperconomy;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -181,6 +183,53 @@ public class HyperAPI implements GeneralAPI {
 			HyperConomy.hc.gDB().writeError(e);
 			return false;
 		}
+	}
+
+	public ArrayList<String> getPlayerShopList() {
+		HyperConomy hc = HyperConomy.hc;
+		ArrayList<Shop> shops = hc.getEconomyManager().getShops();
+		ArrayList<String> names = new ArrayList<String>();
+		for (Shop s:shops) {
+			if (s instanceof PlayerShop) {
+				names.add(s.getName());
+			}
+		}
+		return names;
+	}
+
+	public ArrayList<String> getServerShopList() {
+		HyperConomy hc = HyperConomy.hc;
+		ArrayList<Shop> shops = hc.getEconomyManager().getShops();
+		ArrayList<String> names = new ArrayList<String>();
+		for (Shop s:shops) {
+			if (s instanceof ServerShop) {
+				names.add(s.getName());
+			}
+		}
+		return names;
+	}
+
+	public Shop getShop(String name) {
+		HyperConomy hc = HyperConomy.hc;
+		return hc.getEconomyManager().getShop(name);
+	}
+
+	public ServerShop getServerShop(String name) {
+		HyperConomy hc = HyperConomy.hc;
+		Shop s = hc.getEconomyManager().getShop(name);
+		if (s instanceof ServerShop) {
+			return (ServerShop)s;
+		}
+		return null;
+	}
+
+	public PlayerShop getPlayerShop(String name) {
+		HyperConomy hc = HyperConomy.hc;
+		Shop s = hc.getEconomyManager().getShop(name);
+		if (s instanceof PlayerShop) {
+			return (PlayerShop)s;
+		}
+		return null;
 	}
 
 }
