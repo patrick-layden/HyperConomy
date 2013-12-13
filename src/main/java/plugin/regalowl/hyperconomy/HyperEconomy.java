@@ -143,6 +143,7 @@ public class HyperEconomy {
 				String name = it.next().toString();
 				//hc.getLogger().severe(name);
 				if (!componentsLoaded(name)) {
+					hc.getLogger().severe(name);
 					loaded = false;
 					continue;
 				}

@@ -1,3871 +1,3519 @@
-activatorrail:
+ACTIVATOR_RAIL_0:
   information:
     type: item
-    category: unknown
     material: ACTIVATOR_RAIL
     data: 0
-  components: ironingot,1;redstonetorch,1/6;stick,1/3;
   name:
-    display: activatorrail
+    display: activator_rail
     aliases: activatorrail,
-anvil:
+  components: ironingot,1;redstonetorch,1/6;stick,1/3;
+ANVIL_0:
   information:
     type: item
-    category: unknown
     material: ANVIL
     data: 0
-  components: ironblock,3;ironingot,4;
   name:
     display: anvil
     aliases: anvil,
-arrow:
+  components: ironblock,3;ironingot,4;
+ARROW_0:
   information:
     type: item
-    category: unknown
     material: ARROW
     data: 0
-  components: flint,1/4;stick,1/4;feather,1/4;
   name:
     display: arrow
     aliases: arrow,
-awkwardpotion:
+  components: flint,1/4;stick,1/4;feather,1/4;
+POTION_16:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16
-  components: waterbottle,1;netherwarts,1/3;
   name:
-    display: awkwardpotion
+    display: awkward_potion
     aliases: awkwardpotion,
-beacon:
+  components: waterbottle,1;netherwarts,1/3;
+BEACON_0:
   information:
     type: item
-    category: unknown
     material: BEACON
     data: 0
-  components: glass,5;obsidian,3;netherstar,1;
   name:
     display: beacon
     aliases: beacon,
-bed:
+  components: glass,5;obsidian,3;netherstar,1;
+BED_0:
   information:
     type: item
-    category: unknown
     material: BED
     data: 0
-  components: wool,3;oakwood,3;
   name:
     display: bed
     aliases: bed,
-birchwoodslab:
+  components: wool,3;oakwood,3;
+WOOD_STEP_2:
   information:
     type: item
-    category: unknown
     material: WOOD_STEP
     data: 2
-  components: birchlog,1/2;
   name:
-    display: birchwoodslab
+    display: birch_wood_slab
     aliases: birchwoodslab,
-birchwoodstairs:
+  components: birchlog,1/2;
+BIRCH_WOOD_STAIRS_0:
   information:
     type: item
-    category: unknown
     material: BIRCH_WOOD_STAIRS
     data: 0
-  components: birchlog,3/2;
   name:
-    display: birchwoodstairs
+    display: birch_wood_stairs
     aliases: birchwoodstairs,
-blackcarpet:
+  components: birchlog,3/2;
+CARPET_15:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 15
-  components: blackwool,2/3;
   name:
-    display: blackcarpet
+    display: black_carpet
     aliases: blackcarpet,
-blackclay:
+  components: blackwool,2/3;
+STAINED_CLAY_15:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 15
-  components: inksac,1/8;hardenedclay,1;
   name:
-    display: blackclay
+    display: black_clay
     aliases: blackclay,
-blackwool:
+  components: inksac,1/8;hardenedclay,1;
+WOOL_15:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 15
-  components: inksac,1;wool,1;
   name:
-    display: blackwool
+    display: black_wool
     aliases: blackwool,
-blazepowder:
+  components: inksac,1;wool,1;
+BLAZE_POWDER_0:
   information:
     type: item
-    category: unknown
     material: BLAZE_POWDER
     data: 0
-  components: blazerod,1/2;
   name:
-    display: blazepowder
+    display: blaze_powder
     aliases: blazepowder,
-bluecarpet:
+  components: blazerod,1/2;
+CARPET_11:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 11
-  components: bluewool,2/3;
   name:
-    display: bluecarpet
+    display: blue_carpet
     aliases: bluecarpet,
-blueclay:
+  components: bluewool,2/3;
+STAINED_CLAY_11:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 11
-  components: lapislazuli,1/8;hardenedclay,1;
   name:
-    display: blueclay
+    display: blue_clay
     aliases: blueclay,
-bluewool:
+  components: lapislazuli,1/8;hardenedclay,1;
+WOOL_11:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 11
-  components: lapislazuli,1;wool,1;
   name:
-    display: bluewool
+    display: blue_wool
     aliases: bluewool,
-boat:
+  components: lapislazuli,1;wool,1;
+BOAT_0:
   information:
     type: item
-    category: unknown
     material: BOAT
     data: 0
-  components: oakwood,5;
   name:
     display: boat
     aliases: boat,
-bonemeal:
+  components: oakwood,5;
+INK_SACK_15:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 15
-  components: bone,1/3;
   name:
     display: bonemeal
     aliases: bonemeal,
-book:
+  components: bone,1/3;
+BOOK_0:
   information:
     type: item
-    category: unknown
     material: BOOK
     data: 0
-  components: leather,1;paper,3;
   name:
     display: book
     aliases: book,
-bookandquill:
+  components: leather,1;paper,3;
+BOOK_AND_QUILL_0:
   information:
     type: item
-    category: unknown
     material: BOOK_AND_QUILL
     data: 0
-  components: book,1;feather,1;inksac,1;
   name:
-    display: bookandquill
+    display: book_and_quill
     aliases: bookandquill,
-bookshelf:
+  components: book,1;feather,1;inksac,1;
+BOOKSHELF_0:
   information:
     type: item
-    category: unknown
     material: BOOKSHELF
     data: 0
-  components: oakwood,6;book,3;
   name:
     display: bookshelf
     aliases: bookshelf,
-bow:
+  components: oakwood,6;book,3;
+BOW_0:
   information:
     type: item
-    category: unknown
     material: BOW
     data: 0
-  components: string,3;stick,3;
   name:
     display: bow
     aliases: bow,
-bowl:
+  components: string,3;stick,3;
+BOWL_0:
   information:
     type: item
-    category: unknown
     material: BOWL
     data: 0
-  components: oakwood,3/4;
   name:
     display: bowl
     aliases: bowl,
-bread:
+  components: oakwood,3/4;
+BREAD_0:
   information:
     type: item
-    category: unknown
     material: BREAD
     data: 0
-  components: wheat,3;
   name:
     display: bread
     aliases: bread,
-brewingstand:
+  components: wheat,3;
+BREWING_STAND_ITEM_0:
   information:
     type: item
-    category: unknown
     material: BREWING_STAND_ITEM
     data: 0
-  components: cobblestone,3;blazerod,1;
   name:
-    display: brewingstand
+    display: brewing_stand
     aliases: brewingstand,
-brickslab:
+  components: cobblestone,3;blazerod,1;
+STEP_4:
   information:
     type: item
-    category: unknown
     material: STEP
     data: 4
-  components: brick,1/2;
   name:
-    display: brickslab
+    display: brick_slab
     aliases: brickslab,
-brickstairs:
+  components: brick,1/2;
+BRICK_STAIRS_0:
   information:
     type: item
-    category: unknown
     material: BRICK_STAIRS
     data: 0
-  components: brick,3/2;
   name:
-    display: brickstairs
+    display: brick_stairs
     aliases: brickstairs,
-browncarpet:
+  components: brick,3/2;
+CARPET_12:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 12
-  components: brownwool,2/3;
   name:
-    display: browncarpet
+    display: brown_carpet
     aliases: browncarpet,
-brownclay:
+  components: brownwool,2/3;
+STAINED_CLAY_12:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 12
-  components: cocoabeans,1/8;hardenedclay,1;
   name:
-    display: brownclay
+    display: brown_clay
     aliases: brownclay,
-brownwool:
+  components: cocoabeans,1/8;hardenedclay,1;
+WOOL_12:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 12
-  components: cocoabeans,1;wool,1;
   name:
-    display: brownwool
+    display: brown_wool
     aliases: brownwool,
-bucket:
+  components: cocoabeans,1;wool,1;
+BUCKET_0:
   information:
     type: item
-    category: unknown
     material: BUCKET
     data: 0
-  components: ironingot,3;
   name:
     display: bucket
     aliases: bucket,
-button:
+  components: ironingot,3;
+STONE_BUTTON_0:
   information:
     type: item
-    category: unknown
     material: STONE_BUTTON
     data: 0
-  components: stone,1;
   name:
-    display: button
+    display: stone_button
     aliases: button,
-carpet:
+  components: stone,1;
+CARPET_0:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 0
-  components: wool,2/3;
   name:
     display: carpet
     aliases: carpet,
-carrotonastick:
+  components: wool,2/3;
+CARROT_STICK_0:
   information:
     type: item
-    category: unknown
     material: CARROT_STICK
     data: 0
-  components: fishingrod,1;carrot,1;
   name:
-    display: carrotonastick
+    display: carrot_on_a_stick
     aliases: carrotonastick,
-cauldron:
+  components: fishingrod,1;carrot,1;
+CAULDRON_ITEM_0:
   information:
     type: item
-    category: unknown
     material: CAULDRON_ITEM
     data: 0
-  components: ironingot,7;
   name:
     display: cauldron
     aliases: cauldron,
-chest:
+  components: ironingot,7;
+CHEST_0:
   information:
     type: item
-    category: unknown
     material: CHEST
     data: 0
-  components: oakwood,8;
   name:
     display: chest
     aliases: chest,
-chiseledquartzblock:
+  components: oakwood,8;
+QUARTZ_BLOCK_1:
   information:
     type: item
-    category: unknown
     material: QUARTZ_BLOCK
     data: 1
-  components: quartzslab,2;
   name:
-    display: chiseledquartzblock
+    display: chiseled_quartz_block
     aliases: chiseledquartzblock,
-clock:
+  components: quartzslab,2;
+WATCH_0:
   information:
     type: item
-    category: unknown
     material: WATCH
     data: 0
-  components: goldingot,4;redstone,1;
   name:
     display: clock
     aliases: clock,
-coalblock:
+  components: goldingot,4;redstone,1;
+COAL_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: COAL_BLOCK
     data: 0
-  components: coal,9;
   name:
-    display: coalblock
+    display: coal_block
     aliases: coalblock,
-cobblestoneslab:
+  components: coal,9;
+STEP_3:
   information:
     type: item
-    category: unknown
     material: STEP
     data: 3
-  components: cobblestone,1/2;
   name:
-    display: cobblestoneslab
+    display: cobblestone_slab
     aliases: cobblestoneslab,
-cobblestonestairs:
+  components: cobblestone,1/2;
+COBBLESTONE_STAIRS_0:
   information:
     type: item
-    category: unknown
     material: COBBLESTONE_STAIRS
     data: 0
-  components: cobblestone,3/2;
   name:
-    display: cobblestonestairs
+    display: cobblestone_stairs
     aliases: cobblestonestairs,
-cobblestonewall:
+  components: cobblestone,3/2;
+COBBLE_WALL_0:
   information:
     type: item
-    category: unknown
     material: COBBLE_WALL
     data: 0
-  components: cobblestone,1;
   name:
-    display: cobblestonewall
+    display: cobblestone_wall
     aliases: cobblestonewall,
-comparator:
+  components: cobblestone,1;
+REDSTONE_COMPARATOR_0:
   information:
     type: item
-    category: unknown
     material: REDSTONE_COMPARATOR
     data: 0
-  components: redstonetorch,3;stone,3;netherquartz,1;
   name:
     display: comparator
     aliases: comparator,
-compass:
+  components: redstonetorch,3;stone,3;netherquartz,1;
+COMPASS_0:
   information:
     type: item
-    category: unknown
     material: COMPASS
     data: 0
-  components: ironingot,4;redstone,1;
   name:
     display: compass
     aliases: compass,
-cookie:
+  components: ironingot,4;redstone,1;
+COOKIE_0:
   information:
     type: item
-    category: unknown
     material: COOKIE
     data: 0
-  components: cocoabeans,1/8;wheat,1/4;
   name:
     display: cookie
     aliases: cookie,
-craftingtable:
+  components: cocoabeans,1/8;wheat,1/4;
+WORKBENCH_0:
   information:
     type: item
-    category: unknown
     material: WORKBENCH
     data: 0
-  components: oakwood,4;
   name:
-    display: craftingtable
+    display: crafting_table
     aliases: craftingtable,
-cyancarpet:
+  components: oakwood,4;
+CARPET_9:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 9
-  components: cyanwool,2/3;
   name:
-    display: cyancarpet
+    display: cyan_carpet
     aliases: cyancarpet,
-cyanclay:
+  components: cyanwool,2/3;
+STAINED_CLAY_9:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 9
-  components: cyandye,1/8;hardenedclay,1;
   name:
-    display: cyanclay
+    display: cyan_clay
     aliases: cyanclay,
-cyandye:
+  components: cyandye,1/8;hardenedclay,1;
+INK_SACK_6:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 6
-  components: cactusgreen,1/2;lapislazuli,1/2;
   name:
-    display: cyandye
+    display: cyan_dye
     aliases: cyandye,
-cyanwool:
+  components: cactusgreen,1/2;lapislazuli,1/2;
+WOOL_9:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 9
-  components: cyandye,1;wool,1;
   name:
-    display: cyanwool
+    display: cyan_wool
     aliases: cyanwool,
-dandelionyellow:
+  components: cyandye,1;wool,1;
+INK_SACK_11:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 11
-  components: dandelion,1/2;
   name:
-    display: dandelionyellow
-    aliases: dandelionyellow,
-daylightsensor:
+    display: dandelion_yellow
+    aliases: dandelionyellow,yellowdye,
+  components: dandelion,1/2;
+DAYLIGHT_DETECTOR_0:
   information:
     type: item
-    category: unknown
     material: DAYLIGHT_DETECTOR
     data: 0
-  components: glass,3;netherquartz,3;oakwoodslab,3;
   name:
-    display: daylightsensor
+    display: daylight_sensor
     aliases: daylightsensor,
-detectorrail:
+  components: glass,3;netherquartz,3;oakwoodslab,3;
+DETECTOR_RAIL_0:
   information:
     type: item
-    category: unknown
     material: DETECTOR_RAIL
     data: 0
-  components: ironingot,1;stonepressureplate,1/6;redstone,1/6;
   name:
-    display: detectorrail
+    display: detector_rail
     aliases: detectorrail,
-diamondaxe:
+  components: ironingot,1;stonepressureplate,1/6;redstone,1/6;
+DIAMOND_AXE_0:
   information:
     type: item
-    category: unknown
     material: DIAMOND_AXE
     data: 0
-  components: diamond,3;stick,2;
   name:
-    display: diamondaxe
+    display: diamond_axe
     aliases: diamondaxe,
-diamondblock:
+  components: diamond,3;stick,2;
+DIAMOND_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: DIAMOND_BLOCK
     data: 0
-  components: diamond,9;
   name:
-    display: diamondblock
+    display: diamond_block
     aliases: diamondblock,
-diamondboots:
+  components: diamond,9;
+DIAMOND_BOOTS_0:
   information:
     type: item
-    category: unknown
     material: DIAMOND_BOOTS
     data: 0
-  components: diamond,4;
   name:
-    display: diamondboots
+    display: diamond_boots
     aliases: diamondboots,
-diamondchestplate:
+  components: diamond,4;
+DIAMOND_CHESTPLATE_0:
   information:
     type: item
-    category: unknown
     material: DIAMOND_CHESTPLATE
     data: 0
-  components: diamond,8;
   name:
-    display: diamondchestplate
+    display: diamond_chestplate
     aliases: diamondchestplate,
-diamondhelmet:
+  components: diamond,8;
+DIAMOND_HELMET_0:
   information:
     type: item
-    category: unknown
     material: DIAMOND_HELMET
     data: 0
-  components: diamond,5;
   name:
-    display: diamondhelmet
+    display: diamond_helmet
     aliases: diamondhelmet,
-diamondhoe:
+  components: diamond,5;
+DIAMOND_HOE_0:
   information:
     type: item
-    category: unknown
     material: DIAMOND_HOE
     data: 0
-  components: diamond,2;stick,2;
   name:
-    display: diamondhoe
+    display: diamond_hoe
     aliases: diamondhoe,
-diamondleggings:
+  components: diamond,2;stick,2;
+DIAMOND_LEGGINGS_0:
   information:
     type: item
-    category: unknown
     material: DIAMOND_LEGGINGS
     data: 0
-  components: diamond,7;
   name:
-    display: diamondleggings
+    display: diamond_leggings
     aliases: diamondleggings,
-diamondpickaxe:
+  components: diamond,7;
+DIAMOND_PICKAXE_0:
   information:
     type: item
-    category: unknown
     material: DIAMOND_PICKAXE
     data: 0
-  components: diamond,3;stick,2;
   name:
-    display: diamondpickaxe
+    display: diamond_pickaxe
     aliases: diamondpickaxe,
-diamondshovel:
+  components: diamond,3;stick,2;
+DIAMOND_SPADE_0:
   information:
     type: item
-    category: unknown
     material: DIAMOND_SPADE
     data: 0
-  components: diamond,1;stick,2;
   name:
-    display: diamondshovel
+    display: diamond_shovel
     aliases: diamondshovel,
-diamondsword:
+  components: diamond,1;stick,2;
+DIAMOND_SWORD_0:
   information:
     type: item
-    category: unknown
     material: DIAMOND_SWORD
     data: 0
-  components: diamond,2;stick,1;
   name:
-    display: diamondsword
+    display: diamond_sword
     aliases: diamondsword,
-dispenser:
+  components: diamond,2;stick,1;
+DISPENSER_0:
   information:
     type: item
-    category: unknown
     material: DISPENSER
     data: 0
-  components: cobblestone,7;redstone,1;bow,1;
   name:
     display: dispenser
     aliases: dispenser,
-dropper:
+  components: cobblestone,7;redstone,1;bow,1;
+DROPPER_0:
   information:
     type: item
-    category: unknown
     material: DROPPER
     data: 0
-  components: cobblestone,7;redstone,1;
   name:
     display: dropper
     aliases: dropper,
-emeraldblock:
+  components: cobblestone,7;redstone,1;
+EMERALD_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: EMERALD_BLOCK
     data: 0
-  components: emerald,9;
   name:
-    display: emeraldblock
+    display: emerald_block
     aliases: emeraldblock,
-emptymap:
+  components: emerald,9;
+EMPTY_MAP_0:
   information:
     type: item
-    category: unknown
     material: EMPTY_MAP
     data: 0
-  components: compass,1;paper,8;
   name:
-    display: emptymap
+    display: empty_map
     aliases: emptymap,
-enchantedapple:
+  components: compass,1;paper,8;
+GOLDEN_APPLE_1:
   information:
     type: item
-    category: unknown
     material: GOLDEN_APPLE
     data: 1
-  components: goldblock,8;apple,1;
   name:
-    display: enchantedapple
+    display: enchanted_apple
     aliases: enchantedapple,
-enchantmenttable:
+  components: goldblock,8;apple,1;
+ENCHANTMENT_TABLE_0:
   information:
     type: item
-    category: unknown
     material: ENCHANTMENT_TABLE
     data: 0
-  components: obsidian,8;diamond,2;book,1;
   name:
-    display: enchantmenttable
+    display: enchantment_table
     aliases: enchantmenttable,
-enderchest:
+  components: obsidian,8;diamond,2;book,1;
+ENDER_CHEST_0:
   information:
     type: item
-    category: unknown
     material: ENDER_CHEST
     data: 0
-  components: obsidian,8;eyeofender,1;
   name:
-    display: enderchest
+    display: ender_chest
     aliases: enderchest,
-eyeofender:
+  components: obsidian,8;eyeofender,1;
+EYE_OF_ENDER_0:
   information:
     type: item
-    category: unknown
     material: BUCKET
     data: 0
-  components: enderpearl,1;blazepowder,1;
   name:
-    display: eyeofender
+    display: eye_of_ender
     aliases: eyeofender,
-fence:
+  components: enderpearl,1;blazepowder,1;
+FENCE_0:
   information:
     type: item
-    category: unknown
     material: FENCE
     data: 0
-  components: stick,3;
   name:
     display: fence
     aliases: fence,
-fermentedspidereye:
+  components: stick,3;
+FERMENTED_SPIDER_EYE_0:
   information:
     type: item
-    category: unknown
     material: FERMENTED_SPIDER_EYE
     data: 0
-  components: brownmushroom,1;sugar,1;spidereye,1;
   name:
-    display: fermentedspidereye
+    display: fermented_spider_eye
     aliases: fermentedspidereye,
-firecharge:
+  components: brownmushroom,1;sugar,1;spidereye,1;
+FIREBALL_0:
   information:
     type: item
-    category: unknown
     material: FIREBALL
     data: 0
-  components: blazepowder,1/3;gunpowder,1/3;coal,1/3;
   name:
     display: firecharge
     aliases: firecharge,
-fishingrod:
+  components: blazepowder,1/3;gunpowder,1/3;coal,1/3;
+FISHING_ROD_0:
   information:
     type: item
-    category: unknown
     material: FISHING_ROD
     data: 0
-  components: stick,3;string,2;
   name:
-    display: fishingrod
+    display: fishing_rod
     aliases: fishingrod,
-flintandsteel:
+  components: stick,3;string,2;
+FLINT_AND_STEEL_0:
   information:
     type: item
-    category: unknown
     material: FLINT_AND_STEEL
     data: 0
-  components: ironingot,1;flint,1;
   name:
-    display: flintandsteel
+    display: flint_and_steel
     aliases: flintandsteel,
-flowerpot:
+  components: ironingot,1;flint,1;
+FLOWER_POT_ITEM_0:
   information:
     type: item
-    category: unknown
     material: FLOWER_POT_ITEM
     data: 0
-  components: claybrick,3;
   name:
-    display: flowerpot
+    display: flower_pot
     aliases: flowerpot,
-furnace:
+  components: claybrick,3;
+FURNACE_0:
   information:
     type: item
-    category: unknown
     material: FURNACE
     data: 0
-  components: cobblestone,8;
   name:
     display: furnace
     aliases: furnace,
-gate:
+  components: cobblestone,8;
+FENCE_GATE_0:
   information:
     type: item
-    category: unknown
     material: FENCE_GATE
     data: 0
-  components: stick,4;oakwood,2;
   name:
     display: gate
     aliases: gate,
-glassbottle:
+  components: stick,4;oakwood,2;
+GLASS_BOTTLE_0:
   information:
     type: item
-    category: unknown
     material: GLASS_BOTTLE
     data: 0
-  components: glass,1;
   name:
-    display: glassbottle
+    display: glass_bottle
     aliases: glassbottle,
-glasspane:
+  components: glass,1;
+THIN_GLASS_0:
   information:
     type: item
-    category: unknown
     material: THIN_GLASS
     data: 0
-  components: glass,3/8;
   name:
-    display: glasspane
+    display: glass_pane
     aliases: glasspane,
-glisteringmelon:
+  components: glass,3/8;
+SPECKLED_MELON_0:
   information:
     type: item
-    category: unknown
     material: SPECKLED_MELON
     data: 0
-  components: goldnugget,8;melon,1;
   name:
-    display: glisteringmelon
+    display: glistering_melon
     aliases: glisteringmelon,
-glowstone:
+  components: goldnugget,8;melon,1;
+GLOWSTONE_0:
   information:
     type: item
-    category: unknown
     material: GLOWSTONE
     data: 0
-  components: glowstonedust,4;
   name:
     display: glowstone
     aliases: glowstone,
-goldaxe:
+  components: glowstonedust,4;
+GOLD_AXE_0:
   information:
     type: item
-    category: unknown
     material: GOLD_AXE
     data: 0
-  components: goldingot,3;stick,2;
   name:
-    display: goldaxe
+    display: gold_axe
     aliases: goldaxe,
-goldblock:
+  components: goldingot,3;stick,2;
+GOLD_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: GOLD_BLOCK
     data: 0
-  components: goldingot,9;
   name:
-    display: goldblock
+    display: gold_block
     aliases: goldblock,
-goldboots:
+  components: goldingot,9;
+GOLD_BOOTS_0:
   information:
     type: item
-    category: unknown
     material: GOLD_BOOTS
     data: 0
-  components: goldingot,4;
   name:
-    display: goldboots
+    display: gold_boots
     aliases: goldboots,
-goldchestplate:
+  components: goldingot,4;
+GOLD_CHESTPLATE_0:
   information:
     type: item
-    category: unknown
     material: GOLD_CHESTPLATE
     data: 0
-  components: goldingot,8;
   name:
-    display: goldchestplate
+    display: gold_chestplate
     aliases: goldchestplate,
-goldenapple:
+  components: goldingot,8;
+GOLDEN_APPLE_0:
   information:
     type: item
-    category: unknown
     material: GOLDEN_APPLE
     data: 0
-  components: goldingot,8;apple,1;
   name:
-    display: goldenapple
+    display: golden_apple
     aliases: goldenapple,
-goldencarrot:
+  components: goldingot,8;apple,1;
+GOLDEN_CARROT_0:
   information:
     type: item
-    category: unknown
     material: GOLDEN_CARROT
     data: 0
-  components: goldnugget,8;carrot,1;
   name:
-    display: goldencarrot
+    display: golden_carrot
     aliases: goldencarrot,
-goldhelmet:
+  components: goldnugget,8;carrot,1;
+GOLD_HELMET_0:
   information:
     type: item
-    category: unknown
     material: GOLD_HELMET
     data: 0
-  components: goldingot,5;
   name:
-    display: goldhelmet
+    display: gold_helmet
     aliases: goldhelmet,
-goldhoe:
+  components: goldingot,5;
+GOLD_HOE_0:
   information:
     type: item
-    category: unknown
     material: GOLD_HOE
     data: 0
-  components: goldingot,2;stick,2;
   name:
-    display: goldhoe
+    display: gold_hoe
     aliases: goldhoe,
-goldingot:
+  components: goldingot,2;stick,2;
+GOLD_INGOT_0:
   information:
     type: item
-    category: unknown
     material: GOLD_INGOT
     data: 0
-  components: goldnugget,9;
   name:
-    display: goldingot
+    display: gold_ingot
     aliases: goldingot,
-goldleggings:
+  components: goldnugget,9;
+GOLD_LEGGINGS_0:
   information:
     type: item
-    category: unknown
     material: GOLD_LEGGINGS
     data: 0
-  components: goldingot,7;
   name:
-    display: goldleggings
+    display: gold_leggings
     aliases: goldleggings,
-goldpickaxe:
+  components: goldingot,7;
+GOLD_PICKAXE_0:
   information:
     type: item
-    category: unknown
     material: GOLD_PICKAXE
     data: 0
-  components: goldingot,3;stick,2;
   name:
-    display: goldpickaxe
+    display: gold_pickaxe
     aliases: goldpickaxe,
-goldpressureplate:
+  components: goldingot,3;stick,2;
+GOLD_PLATE_0:
   information:
     type: item
-    category: unknown
     material: GOLD_PLATE
     data: 0
-  components: goldingot,2;
   name:
-    display: goldpressureplate
+    display: gold_pressure_plate
     aliases: goldpressureplate,
-goldshovel:
+  components: goldingot,2;
+GOLD_SPADE_0:
   information:
     type: item
-    category: unknown
     material: GOLD_SPADE
     data: 0
-  components: goldingot,1;stick,2;
   name:
-    display: goldshovel
+    display: gold_shovel
     aliases: goldshovel,
-goldsword:
+  components: goldingot,1;stick,2;
+GOLD_SWORD_0:
   information:
     type: item
-    category: unknown
     material: GOLD_SWORD
     data: 0
-  components: goldingot,2;stick,1;
   name:
-    display: goldsword
+    display: gold_sword
     aliases: goldsword,
-graycarpet:
+  components: goldingot,2;stick,1;
+CARPET_7:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 7
-  components: graywool,2/3;
   name:
-    display: graycarpet
-    aliases: graycarpet,
-grayclay:
+    display: gray_carpet
+    aliases: graycarpet,greycarpet,
+  components: graywool,2/3;
+STAINED_CLAY_7:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 7
-  components: graydye,1/8;hardenedclay,1;
   name:
-    display: grayclay
-    aliases: grayclay,
-graydye:
+    display: gray_clay
+    aliases: grayclay,greyclay,
+  components: graydye,1/8;hardenedclay,1;
+INK_SACK_8:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 8
-  components: bonemeal,1/2;inksac,1/2;
   name:
-    display: graydye
-    aliases: graydye,
-graywool:
+    display: gray_dye
+    aliases: graydye,greydye,
+  components: bonemeal,1/2;inksac,1/2;
+WOOL_7:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 7
-  components: wool,1;graydye,1;
   name:
-    display: graywool
-    aliases: graywool,
-greencarpet:
+    display: gray_wool
+    aliases: graywool,greywool,
+  components: wool,1;graydye,1;
+CARPET_13:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 13
-  components: greenwool,2/3;
   name:
-    display: greencarpet
+    display: green_carpet
     aliases: greencarpet,
-greenclay:
+  components: greenwool,2/3;
+STAINED_CLAY_13:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 13
-  components: cactusgreen,1/8;hardenedclay,1;
   name:
-    display: greenclay
+    display: green_clay
     aliases: greenclay,
-greenwool:
+  components: cactusgreen,1/8;hardenedclay,1;
+WOOL_13:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 13
-  components: cactusgreen,1;wool,1;
   name:
-    display: greenwool
+    display: green_wool
     aliases: greenwool,
-haybale:
+  components: cactusgreen,1;wool,1;
+HAY_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: HAY_BLOCK
     data: 0
-  components: wheat,9;
   name:
-    display: haybale
+    display: hay_bale
     aliases: haybale,
-hieroglyph:
+  components: wheat,9;
+SANDSTONE_1:
   information:
     type: item
-    category: unknown
     material: SANDSTONE
     data: 1
-  components: sandstoneslab,2;
   name:
     display: hieroglyph
     aliases: hieroglyph,
-hopper:
+  components: sandstoneslab,2;
+HOPPER_0:
   information:
     type: item
-    category: unknown
     material: HOPPER
     data: 0
-  components: chest,1;ironingot,5;
   name:
     display: hopper
     aliases: hopper,
-hugebrownmushroom1:
+  components: chest,1;ironingot,5;
+HUGE_MUSHROOM_1_1:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_1
     data: 1
-  components: hugebrownmushroom0,1;
   name:
-    display: hugebrownmushroom1
+    display: huge_brown_mushroom_1
     aliases: hugebrownmushroom1,
-hugebrownmushroom10:
+  components: hugebrownmushroom0,1;
+HUGE_MUSHROOM_1_10:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_1
     data: 10
-  components: hugebrownmushroom0,1;
   name:
-    display: hugebrownmushroom10
+    display: huge_brown_mushroom_10
     aliases: hugebrownmushroom10,
-hugebrownmushroom2:
+  components: hugebrownmushroom0,1;
+HUGE_MUSHROOM_1_2:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_1
     data: 2
-  components: hugebrownmushroom0,1;
   name:
-    display: hugebrownmushroom2
+    display: huge_brown_mushroom_2
     aliases: hugebrownmushroom2,
-hugebrownmushroom3:
+  components: hugebrownmushroom0,1;
+HUGE_MUSHROOM_1_3:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_1
     data: 3
-  components: hugebrownmushroom0,1;
   name:
-    display: hugebrownmushroom3
+    display: huge_brown_mushroom_3
     aliases: hugebrownmushroom3,
-hugebrownmushroom4:
+  components: hugebrownmushroom0,1;
+HUGE_MUSHROOM_1_4:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_1
     data: 4
-  components: hugebrownmushroom0,1;
   name:
-    display: hugebrownmushroom4
+    display: huge_brown_mushroom_4
     aliases: hugebrownmushroom4,
-hugebrownmushroom5:
+  components: hugebrownmushroom0,1;
+HUGE_MUSHROOM_1_5:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_1
     data: 5
-  components: hugebrownmushroom0,1;
   name:
-    display: hugebrownmushroom5
+    display: huge_brown_mushroom_5
     aliases: hugebrownmushroom5,
-hugebrownmushroom6:
+  components: hugebrownmushroom0,1;
+HUGE_MUSHROOM_1_6:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_1
     data: 6
-  components: hugebrownmushroom0,1;
   name:
-    display: hugebrownmushroom6
+    display: huge_brown_mushroom_6
     aliases: hugebrownmushroom6,
-hugebrownmushroom7:
+  components: hugebrownmushroom0,1;
+HUGE_MUSHROOM_1_7:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_1
     data: 7
-  components: hugebrownmushroom0,1;
   name:
-    display: hugebrownmushroom7
+    display: huge_brown_mushroom_7
     aliases: hugebrownmushroom7,
-hugebrownmushroom8:
+  components: hugebrownmushroom0,1;
+HUGE_MUSHROOM_1_8:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_1
     data: 8
-  components: hugebrownmushroom0,1;
   name:
-    display: hugebrownmushroom8
+    display: huge_brown_mushroom_8
     aliases: hugebrownmushroom8,
-hugebrownmushroom9:
+  components: hugebrownmushroom0,1;
+HUGE_MUSHROOM_1_9:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_1
     data: 9
-  components: hugebrownmushroom0,1;
   name:
-    display: hugebrownmushroom9
+    display: huge_brown_mushroom_9
     aliases: hugebrownmushroom9,
-hugeredmushroom1:
+  components: hugebrownmushroom0,1;
+HUGE_MUSHROOM_2_1:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_2
     data: 1
-  components: hugeredmushroom0,1;
   name:
-    display: hugeredmushroom1
+    display: huge_red_mushroom_1
     aliases: hugeredmushroom1,
-hugeredmushroom10:
+  components: hugeredmushroom0,1;
+HUGE_MUSHROOM_2_10:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_2
     data: 10
-  components: hugeredmushroom0,1;
   name:
-    display: hugeredmushroom10
+    display: huge_red_mushroom_10
     aliases: hugeredmushroom10,
-hugeredmushroom2:
+  components: hugeredmushroom0,1;
+HUGE_MUSHROOM_2_2:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_2
     data: 2
-  components: hugeredmushroom0,1;
   name:
-    display: hugeredmushroom2
+    display: huge_red_mushroom_2
     aliases: hugeredmushroom2,
-hugeredmushroom3:
+  components: hugeredmushroom0,1;
+HUGE_MUSHROOM_2_3:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_2
     data: 3
-  components: hugeredmushroom0,1;
   name:
-    display: hugeredmushroom3
+    display: huge_red_mushroom_3
     aliases: hugeredmushroom3,
-hugeredmushroom4:
+  components: hugeredmushroom0,1;
+HUGE_MUSHROOM_2_4:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_2
     data: 4
-  components: hugeredmushroom0,1;
   name:
-    display: hugeredmushroom4
+    display: huge_red_mushroom_4
     aliases: hugeredmushroom4,
-hugeredmushroom5:
+  components: hugeredmushroom0,1;
+HUGE_MUSHROOM_2_5:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_2
     data: 5
-  components: hugeredmushroom0,1;
   name:
-    display: hugeredmushroom5
+    display: huge_red_mushroom_5
     aliases: hugeredmushroom5,
-hugeredmushroom6:
+  components: hugeredmushroom0,1;
+HUGE_MUSHROOM_2_6:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_2
     data: 6
-  components: hugeredmushroom0,1;
   name:
-    display: hugeredmushroom6
+    display: huge_red_mushroom_6
     aliases: hugeredmushroom6,
-hugeredmushroom7:
+  components: hugeredmushroom0,1;
+HUGE_MUSHROOM_2_7:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_2
     data: 7
-  components: hugeredmushroom0,1;
   name:
-    display: hugeredmushroom7
+    display: huge_red_mushroom_7
     aliases: hugeredmushroom7,
-hugeredmushroom8:
+  components: hugeredmushroom0,1;
+HUGE_MUSHROOM_2_8:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_2
     data: 8
-  components: hugeredmushroom0,1;
   name:
-    display: hugeredmushroom8
+    display: huge_red_mushroom_8
     aliases: hugeredmushroom8,
-hugeredmushroom9:
+  components: hugeredmushroom0,1;
+HUGE_MUSHROOM_2_9:
   information:
     type: item
-    category: unknown
     material: HUGE_MUSHROOM_2
     data: 9
-  components: hugeredmushroom0,1;
   name:
-    display: hugeredmushroom9
+    display: huge_red_mushroom_9
     aliases: hugeredmushroom9,
-ironaxe:
+  components: hugeredmushroom0,1;
+IRON_AXE_0:
   information:
     type: item
-    category: unknown
     material: IRON_AXE
     data: 0
-  components: ironingot,3;stick,2;
   name:
-    display: ironaxe
+    display: iron_axe
     aliases: ironaxe,
-ironbars:
+  components: ironingot,3;stick,2;
+IRON_FENCE_0:
   information:
     type: item
-    category: unknown
     material: IRON_FENCE
     data: 0
-  components: ironingot,3/8;
   name:
-    display: ironbars
+    display: iron_bars
     aliases: ironbars,
-ironblock:
+  components: ironingot,3/8;
+IRON_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: IRON_BLOCK
     data: 0
-  components: ironingot,9;
   name:
-    display: ironblock
+    display: iron_block
     aliases: ironblock,
-ironboots:
+  components: ironingot,9;
+IRON_BOOTS_0:
   information:
     type: item
-    category: unknown
     material: IRON_BOOTS
     data: 0
-  components: ironingot,4;
   name:
-    display: ironboots
+    display: iron_boots
     aliases: ironboots,
-ironchestplate:
+  components: ironingot,4;
+IRON_CHESTPLATE_0:
   information:
     type: item
-    category: unknown
     material: IRON_CHESTPLATE
     data: 0
-  components: ironingot,8;
   name:
-    display: ironchestplate
+    display: iron_chestplate
     aliases: ironchestplate,
-irondoor:
+  components: ironingot,8;
+IRON_DOOR_0:
   information:
     type: item
-    category: unknown
     material: IRON_DOOR
     data: 0
-  components: ironingot,6;
   name:
-    display: irondoor
+    display: iron_door
     aliases: irondoor,
-ironhelmet:
+  components: ironingot,6;
+IRON_HELMET_0:
   information:
     type: item
-    category: unknown
     material: IRON_HELMET
     data: 0
-  components: ironingot,5;
   name:
-    display: ironhelmet
+    display: iron_helmet
     aliases: ironhelmet,
-ironhoe:
+  components: ironingot,5;
+IRON_HOE_0:
   information:
     type: item
-    category: unknown
     material: IRON_HOE
     data: 0
-  components: ironingot,2;stick,2;
   name:
-    display: ironhoe
+    display: iron_hoe
     aliases: ironhoe,
-ironleggings:
+  components: ironingot,2;stick,2;
+IRON_LEGGINGS_0:
   information:
     type: item
-    category: unknown
     material: IRON_LEGGINGS
     data: 0
-  components: ironingot,7;
   name:
-    display: ironleggings
+    display: iron_leggings
     aliases: ironleggings,
-ironpickaxe:
+  components: ironingot,7;
+IRON_PICKAXE_0:
   information:
     type: item
-    category: unknown
     material: IRON_PICKAXE
     data: 0
-  components: ironingot,3;stick,2;
   name:
-    display: ironpickaxe
+    display: iron_pickaxe
     aliases: ironpickaxe,
-ironpressureplate:
+  components: ironingot,3;stick,2;
+IRON_PLATE_0:
   information:
     type: item
-    category: unknown
     material: IRON_PLATE
     data: 0
-  components: ironingot,2;
   name:
-    display: ironpressureplate
+    display: iron_pressure_plate
     aliases: ironpressureplate,
-ironshovel:
+  components: ironingot,2;
+IRON_SPADE_0:
   information:
     type: item
-    category: unknown
     material: IRON_SPADE
     data: 0
-  components: ironingot,1;stick,2;
   name:
-    display: ironshovel
+    display: iron_shovel
     aliases: ironshovel,
-ironsword:
+  components: ironingot,1;stick,2;
+IRON_SWORD_0:
   information:
     type: item
-    category: unknown
     material: IRON_SWORD
     data: 0
-  components: ironingot,2;stick,1;
   name:
-    display: ironsword
+    display: iron_sword
     aliases: ironsword,
-itemframe:
+  components: ironingot,2;stick,1;
+ITEM_FRAME_0:
   information:
     type: item
-    category: unknown
     material: ITEM_FRAME
     data: 0
-  components: leather,1;stick,8;
   name:
-    display: itemframe
+    display: item_frame
     aliases: itemframe,
-jackolantern:
+  components: leather,1;stick,8;
+JACK_O_LANTERN_0:
   information:
     type: item
-    category: unknown
     material: JACK_O_LANTERN
     data: 0
-  components: pumpkin,1;torch,1;
   name:
-    display: jackolantern
+    display: jack_o_lantern
     aliases: jackolantern,
-jukebox:
+  components: pumpkin,1;torch,1;
+JUKEBOX_0:
   information:
     type: item
-    category: unknown
     material: JUKEBOX
     data: 0
-  components: oakwood,8;diamond,1;
   name:
     display: jukebox
     aliases: jukebox,
-junglewood:
+  components: oakwood,8;diamond,1;
+WOOD_3:
   information:
     type: item
-    category: unknown
     material: WOOD
     data: 3
-  components: junglelog,1/4;
   name:
-    display: junglewood
+    display: jungle_wood
     aliases: junglewood,
-junglewoodslab:
+  components: junglelog,1/4;
+WOOD_STEP_3:
   information:
     type: item
-    category: unknown
     material: WOOD_STEP
     data: 3
-  components: junglewood,1/2;
   name:
-    display: junglewoodslab
+    display: jungle_wood_slab
     aliases: junglewoodslab,
-junglewoodstairs:
+  components: junglewood,1/2;
+JUNGLE_WOOD_STAIRS_0:
   information:
     type: item
-    category: unknown
     material: JUNGLE_WOOD_STAIRS
     data: 0
-  components: junglewood,3/2;
   name:
-    display: junglewoodstairs
+    display: jungle_wood_stairs
     aliases: junglewoodstairs,
-ladder:
+  components: junglewood,3/2;
+LADDER_0:
   information:
     type: item
-    category: unknown
     material: LADDER
     data: 0
-  components: stick,7/3;
   name:
     display: ladder
     aliases: ladder,
-lapisblock:
+  components: stick,7/3;
+LAPIS_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: LAPIS_BLOCK
     data: 0
-  components: lapislazuli,9;
   name:
-    display: lapisblock
+    display: lapis_block
     aliases: lapisblock,
-lead:
+  components: lapislazuli,9;
+LEASH_0:
   information:
     type: item
-    category: unknown
     material: LEASH
     data: 0
-  components: slimeball,1/2;string,2;
   name:
     display: lead
     aliases: lead,
-leatherboots:
+  components: slimeball,1/2;string,2;
+LEATHER_BOOTS_0:
   information:
     type: item
-    category: unknown
     material: LEATHER_BOOTS
     data: 0
-  components: leather,4;
   name:
-    display: leatherboots
+    display: leather_boots
     aliases: leatherboots,
-leatherchestplate:
+  components: leather,4;
+LEATHER_CHESTPLATE_0:
   information:
     type: item
-    category: unknown
     material: LEATHER_CHESTPLATE
     data: 0
-  components: leather,8;
   name:
-    display: leatherchestplate
+    display: leather_chestplate
     aliases: leatherchestplate,
-leatherhelmet:
+  components: leather,8;
+LEATHER_HELMET_0:
   information:
     type: item
-    category: unknown
     material: LEATHER_HELMET
     data: 0
-  components: leather,5;
   name:
-    display: leatherhelmet
+    display: leather_helmet
     aliases: leatherhelmet,
-leatherleggings:
+  components: leather,5;
+LEATHER_LEGGINGS_0:
   information:
     type: item
-    category: unknown
     material: LEATHER_LEGGINGS
     data: 0
-  components: leather,7;
   name:
-    display: leatherleggings
+    display: leather_leggings
     aliases: leatherleggings,
-lever:
+  components: leather,7;
+LEVER_0:
   information:
     type: item
-    category: unknown
     material: LEVER
     data: 0
-  components: cobblestone,1;stick,1;
   name:
     display: lever
     aliases: lever,
-lightbluecarpet:
+  components: cobblestone,1;stick,1;
+CARPET_3:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 3
-  components: lightbluewool,2/3;
   name:
-    display: lightbluecarpet
+    display: light_blue_carpet
     aliases: lightbluecarpet,
-lightblueclay:
+  components: lightbluewool,2/3;
+STAINED_CLAY_3:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 3
-  components: hardenedclay,1;lightbluedye,1/8;
   name:
-    display: lightblueclay
+    display: light_blue_clay
     aliases: lightblueclay,
-lightbluedye:
+  components: hardenedclay,1;lightbluedye,1/8;
+INK_SACK_12:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 12
-  components: bonemeal,1/2;lapislazuli,1/2;
   name:
-    display: lightbluedye
+    display: light_blue_dye
     aliases: lightbluedye,
-lightbluewool:
+  components: bonemeal,1/2;lapislazuli,1/2;
+WOOL_3:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 3
-  components: wool,1;lightbluedye,1;
   name:
-    display: lightbluewool
+    display: light_blue_wool
     aliases: lightbluewool,
-lightgraycarpet:
+  components: wool,1;lightbluedye,1;
+CARPET_8:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 8
-  components: lightgraywool,2/3;
   name:
-    display: lightgraycarpet
-    aliases: lightgraycarpet,
-lightgrayclay:
+    display: light_gray_carpet
+    aliases: lightgraycarpet,lightgreycarpet,
+  components: lightgraywool,2/3;
+STAINED_CLAY_8:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 8
-  components: hardenedclay,1;lightgraydye,1/8;
   name:
-    display: lightgrayclay
-    aliases: lightgrayclay,
-lightgraydye:
+    display: light_gray_clay
+    aliases: lightgrayclay,lightgreyclay,
+  components: hardenedclay,1;lightgraydye,1/8;
+INK_SACK_7:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 7
-  components: graydye,1/2;bonemeal,1/2;
   name:
-    display: lightgraydye
-    aliases: lightgraydye,
-lightgraywool:
+    display: light_gray_dye
+    aliases: lightgraydye,lightgreydye,
+  components: graydye,1/2;bonemeal,1/2;
+WOOL_8:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 8
-  components: wool,1;lightgraydye,1;
   name:
-    display: lightgraywool
-    aliases: lightgraywool,
-limecarpet:
+    display: light_gray_wool
+    aliases: lightgraywool,lightgreywool,
+  components: wool,1;lightgraydye,1;
+CARPET_5:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 5
-  components: limewool,2/3;
   name:
-    display: limecarpet
+    display: lime_carpet
     aliases: limecarpet,
-limeclay:
+  components: limewool,2/3;
+STAINED_CLAY_5:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 5
-  components: hardenedclay,1;limedye,1/8;
   name:
     display: limeclay
     aliases: limeclay,
-limedye:
+  components: hardenedclay,1;limedye,1/8;
+INK_SACK_10:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 10
-  components: bonemeal,1/2;cactusgreen,1/2;
   name:
-    display: limedye
+    display: lime_dye
     aliases: limedye,
-limewool:
+  components: bonemeal,1/2;cactusgreen,1/2;
+WOOL_5:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 5
-  components: limedye,1;wool,1;
   name:
-    display: limewool
+    display: lime_wool
     aliases: limewool,
-magentacarpet:
+  components: limedye,1;wool,1;
+CARPET_2:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 2
-  components: magentawool,2/3;
   name:
-    display: magentacarpet
+    display: magenta_carpet
     aliases: magentacarpet,
-magentaclay:
+  components: magentawool,2/3;
+STAINED_CLAY_2:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 2
-  components: hardenedclay,1;magentadye,1/8;
   name:
-    display: magentaclay
+    display: magenta_clay
     aliases: magentaclay,
-magentadye:
+  components: hardenedclay,1;magentadye,1/8;
+INK_SACK_13:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 13
-  components: purpledye,1/2;pinkdye,1/2;
   name:
-    display: magentadye
+    display: magenta_dye
     aliases: magentadye,
-magentawool:
+  components: purpledye,1/2;pinkdye,1/2;
+WOOL_2:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 2
-  components: magentadye,1;wool,1;
   name:
-    display: magentawool
+    display: magenta_wool
     aliases: magentawool,
-magmacream:
+  components: magentadye,1;wool,1;
+MAGMA_CREAM_0:
   information:
     type: item
-    category: unknown
     material: MAGMA_CREAM
     data: 0
-  components: slimeball,1;blazepowder,1;
   name:
-    display: magmacream
+    display: magma_cream
     aliases: magmacream,
-map:
+  components: slimeball,1;blazepowder,1;
+MAP_0:
   information:
     type: item
-    category: unknown
     material: MAP
     data: 0
-  components: compass,1;paper,8;
   name:
     display: map
     aliases: map,
-melonblock:
+  components: compass,1;paper,8;
+MELON_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: MELON_BLOCK
     data: 0
-  components: melon,9;
   name:
-    display: melonblock
+    display: melon_block
     aliases: melonblock,
-minecart:
+  components: melon,9;
+MINECART_0:
   information:
     type: item
-    category: unknown
     material: MINECART
     data: 0
-  components: ironingot,5;
   name:
     display: minecart
     aliases: minecart,
-minecartwithchest:
+  components: ironingot,5;
+STORAGE_MINECART_0:
   information:
     type: item
-    category: unknown
     material: STORAGE_MINECART
     data: 0
-  components: chest,1;minecart,1;
   name:
-    display: minecartwithchest
+    display: minecart_with_chest
     aliases: minecartwithchest,
-minecartwithfurnace:
+  components: chest,1;minecart,1;
+POWERED_MINECART_0:
   information:
     type: item
-    category: unknown
     material: POWERED_MINECART
     data: 0
-  components: minecart,1;furnace,1;
   name:
-    display: minecartwithfurnace
+    display: minecart_with_furnace
     aliases: minecartwithfurnace,
-minecartwithhopper:
+  components: minecart,1;furnace,1;
+HOPPER_MINECART_0:
   information:
     type: item
-    category: unknown
     material: HOPPER_MINECART
     data: 0
-  components: hopper,1;minecart,1;
   name:
-    display: minecartwithhopper
+    display: minecart_with_hopper
     aliases: minecartwithhopper,
-minecartwithtnt:
+  components: hopper,1;minecart,1;
+EXPLOSIVE_MINECART_0:
   information:
     type: item
-    category: unknown
     material: EXPLOSIVE_MINECART
     data: 0
-  components: tnt,1;minecart,1;
   name:
-    display: minecartwithtnt
+    display: minecart_with_tnt
     aliases: minecartwithtnt,
-mossywall:
+  components: tnt,1;minecart,1;
+COBBLE_WALL_1:
   information:
     type: item
-    category: unknown
     material: COBBLE_WALL
     data: 1
-  components: mossstone,1;
   name:
-    display: mossywall
+    display: mossy_wall
     aliases: mossywall,
-mundanepotion:
+  components: mossstone,1;
+POTION_8192:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 8192
-  components: waterbottle,1;
   name:
-    display: mundanepotion
+    display: mundane_potion
     aliases: mundanepotion,
-mundanepotionext:
+  components: waterbottle,1;
+POTION_64:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 64
-  components: redstone,1;mundanepotion,1;
   name:
-    display: mundanepotionext
+    display: mundane_potion_extended
     aliases: mundanepotionext,
-mushroomsoup:
+  components: redstone,1;mundanepotion,1;
+MUSHROOM_SOUP_0:
   information:
     type: item
-    category: unknown
     material: MUSHROOM_SOUP
     data: 0
-  components: bowl,1;redmushroom,1;brownmushroom,1;
   name:
-    display: mushroomsoup
+    display: mushroom_soup
     aliases: mushroomsoup,
-netherbrick:
+  components: bowl,1;redmushroom,1;brownmushroom,1;
+NETHER_BRICK_0:
   information:
     type: item
-    category: unknown
     material: NETHER_BRICK
     data: 0
-  components: singlenetherbrick,4;
   name:
-    display: netherbrick
+    display: nether_brick
     aliases: netherbrick,
-netherbrickslab:
+  components: singlenetherbrick,4;
+STEP_6:
   information:
     type: item
-    category: unknown
     material: STEP
     data: 6
-  components: netherbrick,1/2;
   name:
-    display: netherbrickslab
+    display: nether_brick_slab
     aliases: netherbrickslab,
-netherbrickstairs:
+  components: netherbrick,1/2;
+NETHER_BRICK_STAIRS_0:
   information:
     type: item
-    category: unknown
     material: NETHER_BRICK_STAIRS
     data: 0
-  components: netherbrick,3/2;
   name:
-    display: netherbrickstairs
+    display: nether_brick_stairs
     aliases: netherbrickstairs,
-netherfence:
+  components: netherbrick,3/2;
+NETHER_FENCE_0:
   information:
     type: item
-    category: unknown
     material: NETHER_FENCE
     data: 0
-  components: netherbrick,1;
   name:
-    display: netherfence
+    display: nether_fence
     aliases: netherfence,
-noteblock:
+  components: netherbrick,1;
+NOTE_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: NOTE_BLOCK
     data: 0
-  components: oakwood,8;redstone,1;
   name:
-    display: noteblock
+    display: note_block
     aliases: noteblock,
-oakwood:
+  components: oakwood,8;redstone,1;
+WOOD_0:
   information:
     type: item
-    category: unknown
     material: WOOD
     data: 0
-  components: oaklog,1/4;
   name:
-    display: oakwood
+    display: oak_wood
     aliases: oakwood,
-oakwoodslab:
+  components: oaklog,1/4;
+WOOD_STEP_0:
   information:
     type: item
-    category: unknown
     material: WOOD_STEP
     data: 0
-  components: oakwood,1/2;
   name:
-    display: oakwoodslab
+    display: oak_wood_slab
     aliases: oakwoodslab,
-oakwoodstairs:
+  components: oakwood,1/2;
+WOOD_STAIRS_0:
   information:
     type: item
-    category: unknown
     material: WOOD_STAIRS
     data: 0
-  components: oakwood,3/2;
   name:
-    display: oakwoodstairs
+    display: oak_wood_stairs
     aliases: oakwoodstairs,
-orangecarpet:
+  components: oakwood,3/2;
+CARPET_1:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 1
-  components: orangewool,2/3;
   name:
-    display: orangecarpet
+    display: orange_carpet
     aliases: orangecarpet,
-orangeclay:
+  components: orangewool,2/3;
+STAINED_CLAY_1:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 1
-  components: hardenedclay,1;orangedye,1/8;
   name:
-    display: orangeclay
+    display: orange_clay
     aliases: orangeclay,
-orangedye:
+  components: hardenedclay,1;orangedye,1/8;
+INK_SACK_14:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 14
-  components: rosered,1/2;dandelionyellow,1/2;
   name:
     display: orangedye
     aliases: orangedye,
-orangewool:
+  components: rosered,1/2;dandelionyellow,1/2;
+WOOL_1:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 1
-  components: orangedye,1;wool,1;
   name:
-    display: orangewool
+    display: orange_wool
     aliases: orangewool,
-painting:
+  components: orangedye,1;wool,1;
+PAINTING_0:
   information:
     type: item
-    category: unknown
     material: PAINTING
     data: 0
-  components: wool,1;stick,8;
   name:
     display: painting
     aliases: painting,
-paper:
+  components: wool,1;stick,8;
+PAPER_0:
   information:
     type: item
-    category: unknown
     material: PAPER
     data: 0
-  components: sugarcane,1;
   name:
     display: paper
     aliases: paper,
-pillarquartzblock:
+  components: sugarcane,1;
+QUARTZ_BLOCK_2:
   information:
     type: item
-    category: unknown
     material: QUARTZ_BLOCK
     data: 2
-  components: quartzblock,1;
   name:
-    display: pillarquartzblock
+    display: pillar_quartz_block
     aliases: pillarquartzblock,
-pinkcarpet:
+  components: quartzblock,1;
+CARPET_6:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 6
-  components: pinkwool,2/3;
   name:
-    display: pinkcarpet
+    display: pink_carpet
     aliases: pinkcarpet,
-pinkclay:
+  components: pinkwool,2/3;
+STAINED_CLAY_6:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 6
-  components: pinkdye,1/8;hardenedclay,1;
   name:
-    display: pinkclay
+    display: pink_clay
     aliases: pinkclay,
-pinkdye:
+  components: pinkdye,1/8;hardenedclay,1;
+INK_SACK_9:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 9
-  components: rosered,1/2;bonemeal,1/2;
   name:
-    display: pinkdye
+    display: pink_dye
     aliases: pinkdye,
-pinkwool:
+  components: rosered,1/2;bonemeal,1/2;
+WOOL_6:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 6
-  components: wool,1;pinkdye,1;
   name:
-    display: pinkwool
+    display: pink_wool
     aliases: pinkwool,
-piston:
+  components: wool,1;pinkdye,1;
+PISTON_BASE_0:
   information:
     type: item
-    category: unknown
     material: PISTON_BASE
     data: 0
-  components: oakwood,3;cobblestone,4;ironingot,1;redstone,1;
   name:
     display: piston
     aliases: piston,
-potionoffireresist:
+  components: oakwood,3;cobblestone,4;ironingot,1;redstone,1;
+POTION_3:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 3
-  components: awkwardpotion,1;magmacream,1/3;
   name:
-    display: potionoffireresist
+    display: potion_of_fire_resist
     aliases: potionoffireresist,
-potionoffireresist2:
+  components: awkwardpotion,1;magmacream,1/3;
+POTION_35:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 35
-  components: glowstonedust,1;potionoffireresist,1;
   name:
-    display: potionoffireresist2
+    display: potion_of_fire_resist_2
     aliases: potionoffireresist2,
-potionoffireresist2ext:
+  components: glowstonedust,1;potionoffireresist,1;
+POTION_99:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 99
-  components: glowstonedust,1;redstone,1;potionoffireresist,1;
   name:
-    display: potionoffireresist2ext
+    display: potion_of_fire_resist_2_extended
     aliases: potionoffireresist2ext,
-potionoffireresistext:
+  components: glowstonedust,1;redstone,1;potionoffireresist,1;
+POTION_67:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 67
-  components: redstone,1;potionoffireresist,1;
   name:
-    display: potionoffireresistext
+    display: potion_of_fire_resist_extended
     aliases: potionoffireresistext,
-potionofharming:
+  components: redstone,1;potionoffireresist,1;
+POTION_12:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 12
-  components: potionofpoison,1;fermentedspidereye,1/3;
   name:
-    display: potionofharming
+    display: potion_of_harming
     aliases: potionofharming,
-potionofharming2:
+  components: potionofpoison,1;fermentedspidereye,1/3;
+POTION_44:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 44
-  components: glowstonedust,1;potionofharming,1;
   name:
-    display: potionofharming2
+    display: potion_of_harming_2
     aliases: potionofharming2,
-potionofharming2ext:
+  components: glowstonedust,1;potionofharming,1;
+POTION_108:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 108
-  components: glowstonedust,1;redstone,1;potionofharming,1;
   name:
-    display: potionofharming2ext
+    display: potion_of_harming_2_extended
     aliases: potionofharming2ext,
-potionofharmingext:
+  components: glowstonedust,1;redstone,1;potionofharming,1;
+POTION_76:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 76
-  components: redstone,1;potionofharming,1;
   name:
-    display: potionofharmingext
+    display: potion_of_harming_extended
     aliases: potionofharmingext,
-potionofhealing:
+  components: redstone,1;potionofharming,1;
+POTION_5:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 5
-  components: awkwardpotion,1;glisteringmelon,1/3;
   name:
-    display: potionofhealing
+    display: potion_of_healing
     aliases: potionofhealing,
-potionofhealing2:
+  components: awkwardpotion,1;glisteringmelon,1/3;
+POTION_37:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 37
-  components: glowstonedust,1;potionofhealing,1;
   name:
-    display: potionofhealing2
+    display: potion_of_healing_2
     aliases: potionofhealing2,
-potionofhealing2ext:
+  components: glowstonedust,1;potionofhealing,1;
+POTION_101:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 101
-  components: glowstonedust,1;redstone,1;potionofhealing,1;
   name:
-    display: potionofhealing2ext
+    display: potion_of_healing_2_extended
     aliases: potionofhealing2ext,
-potionofhealingext:
+  components: glowstonedust,1;redstone,1;potionofhealing,1;
+POTION_69:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 69
-  components: redstone,1;potionofhealing,1;
   name:
-    display: potionofhealingext
+    display: potion_of_healing_extended
     aliases: potionofhealingext,
-potionofinvisibility:
+  components: redstone,1;potionofhealing,1;
+POTION_14:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 14
-  components: potionofnightvision,1;fermentedspidereye,1/3;
   name:
-    display: potionofinvisibility
+    display: potion_of_invisibility
     aliases: potionofinvisibility,
-potionofinvisibility2:
+  components: potionofnightvision,1;fermentedspidereye,1/3;
+POTION_46:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 46
-  components: glowstonedust,1;potionofinvisibility,1;
   name:
-    display: potionofinvisibility2
+    display: potion_of_invisibility_2
     aliases: potionofinvisibility2,
-potionofinvisibility2ext:
+  components: glowstonedust,1;potionofinvisibility,1;
+POTION_110:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 110
-  components: glowstonedust,1;redstone,1;potionofinvisibility,1;
   name:
-    display: potionofinvisibility2ext
+    display: potion_of_invisibility_2_extended
     aliases: potionofinvisibility2ext,
-potionofinvisibilityext:
+  components: glowstonedust,1;redstone,1;potionofinvisibility,1;
+POTION_78:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 78
-  components: redstone,1;potionofinvisibility,1;
   name:
-    display: potionofinvisibilityext
+    display: potion_of_invisibility_extended
     aliases: potionofinvisibilityext,
-potionofnightvision:
+  components: redstone,1;potionofinvisibility,1;
+POTION_6:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 6
-  components: awkwardpotion,1;goldencarrot,1/3;
   name:
-    display: potionofnightvision
+    display: potion_of_night_vision
     aliases: potionofnightvision,
-potionofnightvision2:
+  components: awkwardpotion,1;goldencarrot,1/3;
+POTION_38:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 38
-  components: glowstonedust,1;potionofnightvision,1;
   name:
-    display: potionofnightvision2
+    display: potion_of_night_vision_2
     aliases: potionofnightvision2,
-potionofnightvision2ext:
+  components: glowstonedust,1;potionofnightvision,1;
+POTION_102:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 102
-  components: glowstonedust,1;redstone,1;potionofnightvision,1;
   name:
-    display: potionofnightvision2ext
+    display: potion_of_night_vision_2_extended
     aliases: potionofnightvision2ext,
-potionofnightvisionext:
+  components: glowstonedust,1;redstone,1;potionofnightvision,1;
+POTION_70:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 70
-  components: redstone,1;potionofnightvision,1;
   name:
-    display: potionofnightvisionext
+    display: potion_of_night_vision_extended
     aliases: potionofnightvisionext,
-potionofpoison:
+  components: redstone,1;potionofnightvision,1;
+POTION_4:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 4
-  components: awkwardpotion,1;spidereye,1/3;
   name:
-    display: potionofpoison
+    display: potion_of_poison
     aliases: potionofpoison,
-potionofpoison2:
+  components: awkwardpotion,1;spidereye,1/3;
+POTION_36:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 36
-  components: glowstonedust,1;potionofpoison,1;
   name:
-    display: potionofpoison2
+    display: potion_of_poison_2
     aliases: potionofpoison2,
-potionofpoison2ext:
+  components: glowstonedust,1;potionofpoison,1;
+POTION_100:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 100
-  components: glowstonedust,1;redstone,1;potionofpoison,1;
   name:
-    display: potionofpoison2ext
+    display: potion_of_poison_2_extended
     aliases: potionofpoison2ext,
-potionofpoisonext:
+  components: glowstonedust,1;redstone,1;potionofpoison,1;
+POTION_68:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 68
-  components: redstone,1;potionofpoison,1;
   name:
-    display: potionofpoisonext
+    display: potion_of_poison_extended
     aliases: potionofpoisonext,
-potionofregen:
+  components: redstone,1;potionofpoison,1;
+POTION_1:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 1
-  components: awkwardpotion,1;ghasttear,1/3;
   name:
-    display: potionofregen
+    display: potion_of_regen
     aliases: potionofregen,
-potionofregen2:
+  components: awkwardpotion,1;ghasttear,1/3;
+POTION_33:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 33
-  components: glowstonedust,1;potionofregen,1;
   name:
-    display: potionofregen2
+    display: potion_of_regen_2
     aliases: potionofregen2,
-potionofregen2ext:
+  components: glowstonedust,1;potionofregen,1;
+POTION_97:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 97
-  components: glowstonedust,1;redstone,1;potionofregen,1;
   name:
-    display: potionofregen2ext
+    display: potion_of_regen_2_extended
     aliases: potionofregen2ext,
-potionofregenext:
+  components: glowstonedust,1;redstone,1;potionofregen,1;
+POTION_65:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 65
-  components: redstone,1;potionofregen,1;
   name:
-    display: potionofregenext
+    display: potion_of_regen_extended
     aliases: potionofregenext,
-potionofslowness:
+  components: redstone,1;potionofregen,1;
+POTION_10:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 10
-  components: potionofspeed,1;fermentedspidereye,1/3;
   name:
-    display: potionofslowness
+    display: potion_of_slowness
     aliases: potionofslowness,
-potionofslowness2:
+  components: potionofspeed,1;fermentedspidereye,1/3;
+POTION_42:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 42
-  components: glowstonedust,1;potionofslowness,1;
   name:
-    display: potionofslowness2
+    display: potion_of_slowness_2
     aliases: potionofslowness2,
-potionofslowness2ext:
+  components: glowstonedust,1;potionofslowness,1;
+POTION_106:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 106
-  components: glowstonedust,1;redstone,1;potionofslowness,1;
   name:
-    display: potionofslowness2ext
+    display: potion_of_slowness_2_extended
     aliases: potionofslowness2ext,
-potionofslownessext:
+  components: glowstonedust,1;redstone,1;potionofslowness,1;
+POTION_74:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 74
-  components: redstone,1;potionofslowness,1;
   name:
-    display: potionofslownessext
+    display: potion_of_slowness_extended
     aliases: potionofslownessext,
-potionofspeed:
+  components: redstone,1;potionofslowness,1;
+POTION_2:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 2
-  components: awkwardpotion,1;sugar,1/3;
   name:
-    display: potionofspeed
+    display: potion_of_speed
     aliases: potionofspeed,
-potionofspeed2:
+  components: awkwardpotion,1;sugar,1/3;
+POTION_34:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 34
-  components: glowstonedust,1;potionofspeed,1;
   name:
-    display: potionofspeed2
+    display: potion_of_speed_2
     aliases: potionofspeed2,
-potionofspeed2ext:
+  components: glowstonedust,1;potionofspeed,1;
+POTION_98:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 98
-  components: glowstonedust,1;redstone,1;potionofspeed,1;
   name:
-    display: potionofspeed2ext
+    display: potion_of_speed_2_extended
     aliases: potionofspeed2ext,
-potionofspeedext:
+  components: glowstonedust,1;redstone,1;potionofspeed,1;
+POTION_66:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 66
-  components: redstone,1;potionofspeed,1;
   name:
-    display: potionofspeedext
+    display: potion_of_speed_extended
     aliases: potionofspeedext,
-potionofstrength:
+  components: redstone,1;potionofspeed,1;
+POTION_9:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 9
-  components: awkwardpotion,1;blazepowder,1/3;
   name:
-    display: potionofstrength
+    display: potion_of_strength
     aliases: potionofstrength,
-potionofstrength2:
+  components: awkwardpotion,1;blazepowder,1/3;
+POTION_41:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 41
-  components: glowstonedust,1;potionofstrength,1;
   name:
-    display: potionofstrength2
+    display: potion_of_strength_2
     aliases: potionofstrength2,
-potionofstrength2ext:
+  components: glowstonedust,1;potionofstrength,1;
+POTION_105:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 105
-  components: glowstonedust,1;redstone,1;potionofstrength,1;
   name:
-    display: potionofstrength2ext
+    display: potion_of_strength_2_extended
     aliases: potionofstrength2ext,
-potionofstrengthext:
+  components: glowstonedust,1;redstone,1;potionofstrength,1;
+POTION_73:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 73
-  components: redstone,1;potionofstrength,1;
   name:
-    display: potionofstrengthext
+    display: potion_of_strength_extended
     aliases: potionofstrengthext,
-potionofweakness:
+  components: redstone,1;potionofstrength,1;
+POTION_8:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 8
-  components: awkwardpotion,1;fermentedspidereye,1/3;
   name:
-    display: potionofweakness
+    display: potion_of_weakness
     aliases: potionofweakness,
-potionofweakness2:
+  components: awkwardpotion,1;fermentedspidereye,1/3;
+POTION_40:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 40
-  components: glowstonedust,1;potionofweakness,1;
   name:
-    display: potionofweakness2
+    display: potion_of_weakness_2
     aliases: potionofweakness2,
-potionofweakness2ext:
+  components: glowstonedust,1;potionofweakness,1;
+POTION_104:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 104
-  components: glowstonedust,1;redstone,1;potionofweakness,1;
   name:
-    display: potionofweakness2ext
+    display: potion_of_weakness_2_extended
     aliases: potionofweakness2ext,
-potionofweaknessext:
+  components: glowstonedust,1;redstone,1;potionofweakness,1;
+POTION_72:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 72
-  components: redstone,1;potionofweakness,1;
   name:
-    display: potionofweaknessext
+    display: potion_of_weakness_extended
     aliases: potionofweaknessext,
-poweredrail:
+  components: redstone,1;potionofweakness,1;
+POWERED_RAIL_0:
   information:
     type: item
-    category: unknown
     material: POWERED_RAIL
     data: 0
-  components: goldingot,1;stick,1/6;redstone,1/6;
   name:
-    display: poweredrail
+    display: powered_rail
     aliases: poweredrail,
-pumpkinpie:
+  components: goldingot,1;stick,1/6;redstone,1/6;
+PUMPKIN_PIE_0:
   information:
     type: item
-    category: unknown
     material: PUMPKIN_PIE
     data: 0
-  components: pumpkin,1;sugar,1;egg,1;
   name:
-    display: pumpkinpie
+    display: pumpkin_pie
     aliases: pumpkinpie,
-purplecarpet:
+  components: pumpkin,1;sugar,1;egg,1;
+CARPET_10:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 10
-  components: purplewool,2/3;
   name:
-    display: purplecarpet
+    display: purple_carpet
     aliases: purplecarpet,
-purpleclay:
+  components: purplewool,2/3;
+STAINED_CLAY_10:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 10
-  components: hardenedclay,1;purpledye,1/8;
   name:
-    display: purpleclay
+    display: purple_clay
     aliases: purpleclay,
-purpledye:
+  components: hardenedclay,1;purpledye,1/8;
+INK_SACK_5:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 5
-  components: lapislazuli,1/2;rosered,1/2;
   name:
-    display: purpledye
+    display: purple_dye
     aliases: purpledye,
-purplewool:
+  components: lapislazuli,1/2;rosered,1/2;
+WOOL_10:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 10
-  components: wool,1;purpledye,1;
   name:
-    display: purplewool
+    display: purple_wool
     aliases: purplewool,
-quartzblock:
+  components: wool,1;purpledye,1;
+QUARTZ_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: QUARTZ_BLOCK
     data: 0
-  components: netherquartz,4;
   name:
-    display: quartzblock
+    display: quartz_block
     aliases: quartzblock,
-quartzslab:
+  components: netherquartz,4;
+STEP_7:
   information:
     type: item
-    category: unknown
     material: STEP
     data: 7
-  components: quartzblock,1/2;
   name:
-    display: quartzslab
+    display: quartz_slab
     aliases: quartzslab,
-quartzstairs:
+  components: quartzblock,1/2;
+QUARTZ_STAIRS_0:
   information:
     type: item
-    category: unknown
     material: QUARTZ_STAIRS
     data: 0
-  components: quartzblock,3/2;
   name:
-    display: quartzstairs
+    display: quartz_stairs
     aliases: quartzstairs,
-rails:
+  components: quartzblock,3/2;
+RAILS_0:
   information:
     type: item
-    category: unknown
     material: RAILS
     data: 0
-  components: ironingot,3/8;stick,1/16;
   name:
     display: rails
     aliases: rails,
-redcarpet:
+  components: ironingot,3/8;stick,1/16;
+CARPET_14:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 14
-  components: redwool,2/3;
   name:
     display: redcarpet
     aliases: redcarpet,
-redclay:
+  components: redwool,2/3;
+STAINED_CLAY_14:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 14
-  components: hardenedclay,1;rosered,1;
   name:
     display: redclay
     aliases: redclay,
-redstoneblock:
+  components: hardenedclay,1;rosered,1;
+REDSTONE_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: REDSTONE_BLOCK
     data: 0
-  components: redstone,9;
   name:
-    display: redstoneblock
+    display: redstone_block
     aliases: redstoneblock,
-redstonelamp:
+  components: redstone,9;
+REDSTONE_LAMP_OFF_0:
   information:
     type: item
-    category: unknown
     material: REDSTONE_LAMP_OFF
     data: 0
-  components: glowstone,1;redstone,4;
   name:
-    display: redstonelamp
+    display: redstone_lamp
     aliases: redstonelamp,
-redstonetorch:
+  components: glowstone,1;redstone,4;
+REDSTONE_TORCH_ON_0:
   information:
     type: item
-    category: unknown
     material: REDSTONE_TORCH_ON
     data: 0
-  components: redstone,1;stick,1;
   name:
-    display: redstonetorch
+    display: redstone_torch
     aliases: redstonetorch,
-redwool:
+  components: redstone,1;stick,1;
+WOOL_14:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 14
-  components: wool,1;rosered,1;
   name:
-    display: redwool
+    display: red_wool
     aliases: redwool,
-repeater:
+  components: wool,1;rosered,1;
+DIODE_0:
   information:
     type: item
-    category: unknown
     material: DIODE
     data: 0
-  components: redstone,1;redstonetorch,2;stone,3;
   name:
     display: repeater
     aliases: repeater,
-rosered:
+  components: redstone,1;redstonetorch,2;stone,3;
+INK_SACK_1:
   information:
     type: item
-    category: unknown
     material: INK_SACK
     data: 1
-  components: poppy,1/2;
   name:
-    display: rosered
-    aliases: rosered,
-sandstone:
+    display: rose_red
+    aliases: rosered,reddye,
+  components: poppy,1/2;
+SANDSTONE_0:
   information:
     type: item
-    category: unknown
     material: SANDSTONE
     data: 0
-  components: sand,4;
   name:
     display: sandstone
     aliases: sandstone,
-sandstoneslab:
+  components: sand,4;
+STEP_1:
   information:
     type: item
-    category: unknown
     material: STEP
     data: 1
-  components: sandstone,1/2;
   name:
-    display: sandstoneslab
+    display: sand_stone_slab
     aliases: sandstoneslab,
-sandstonestairs:
+  components: sandstone,1/2;
+SANDSTONE_STAIRS_0:
   information:
     type: item
-    category: unknown
     material: SANDSTONE_STAIRS
     data: 0
-  components: sandstone,3/2;
   name:
-    display: sandstonestairs
+    display: sandstone_stairs
     aliases: sandstonestairs,
-shears:
+  components: sandstone,3/2;
+SHEARS_0:
   information:
     type: item
-    category: unknown
     material: SHEARS
     data: 0
-  components: ironingot,2;
   name:
     display: shears
     aliases: shears,
-sign:
+  components: ironingot,2;
+SIGN_0:
   information:
     type: item
-    category: unknown
     material: SIGN
     data: 0
-  components: oakwood,2;stick,1/3;
   name:
     display: sign
     aliases: sign,
-smoothsandstone:
+  components: oakwood,2;stick,1/3;
+SANDSTONE_2:
   information:
     type: item
-    category: unknown
     material: SANDSTONE
     data: 2
-  components: sandstone,1;
   name:
-    display: smoothsandstone
+    display: smooth_sandstone
     aliases: smoothsandstone,
-smundanepotion:
+  components: sandstone,1;
+POTION_24576:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 24576
-  components: mundanepotion,1;gunpowder,1;
   name:
-    display: smundanepotion
+    display: splash_mundane_potion
     aliases: smundanepotion,
-snow:
+  components: mundanepotion,1;gunpowder,1;
+SNOW_0:
   information:
     type: item
-    category: unknown
     material: SNOW
     data: 0
-  components: snowblock,1/2;
   name:
     display: snow
     aliases: snow,
-snowblock:
+  components: snowblock,1/2;
+SNOW_BLOCK_0:
   information:
     type: item
-    category: unknown
     material: SNOW_BLOCK
     data: 0
-  components: snowball,4;
   name:
-    display: snowblock
+    display: snow_block
     aliases: snowblock,
-spotionoffireresist:
+  components: snowball,4;
+POTION_16387:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16387
-  components: gunpowder,1;potionoffireresist,1;
   name:
-    display: spotionoffireresist
+    display: splash_potion_of_fire_resist
     aliases: spotionoffireresist,
-spotionoffireresist2:
+  components: gunpowder,1;potionoffireresist,1;
+POTION_16419:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16419
-  components: gunpowder,1;glowstonedust,1;potionoffireresist,1;
   name:
-    display: spotionoffireresist2
+    display: splash_potion_of_fire_resist_2
     aliases: spotionoffireresist2,
-spotionoffireresist2ext:
+  components: gunpowder,1;glowstonedust,1;potionoffireresist,1;
+POTION_16483:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16483
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionoffireresist,1;
   name:
-    display: spotionoffireresist2ext
+    display: splash_potion_of_fire_resist_2_extended
     aliases: spotionoffireresist2ext,
-spotionoffireresistext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionoffireresist,1;
+POTION_16451:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16451
-  components: gunpowder,1;redstone,1;potionoffireresist,1;
   name:
-    display: spotionoffireresistext
+    display: splash_potion_of_fire_resist_extended
     aliases: spotionoffireresistext,
-spotionofharming:
+  components: gunpowder,1;redstone,1;potionoffireresist,1;
+POTION_16396:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16396
-  components: gunpowder,1;potionofharming,1;
   name:
-    display: spotionofharming
+    display: splash_potion_of_harming
     aliases: spotionofharming,
-spotionofharming2:
+  components: gunpowder,1;potionofharming,1;
+POTION_16428:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16428
-  components: gunpowder,1;glowstonedust,1;potionofharming,1;
   name:
-    display: spotionofharming2
+    display: splash_potion_of_harming_2
     aliases: spotionofharming2,
-spotionofharming2ext:
+  components: gunpowder,1;glowstonedust,1;potionofharming,1;
+POTION_16492:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16492
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionofharming,1;
   name:
-    display: spotionofharming2ext
+    display: splash_potion_of_harming_2_extended
     aliases: spotionofharming2ext,
-spotionofharmingext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofharming,1;
+POTION_16460:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16460
-  components: gunpowder,1;redstone,1;potionofharming,1;
   name:
-    display: spotionofharmingext
+    display: splash_potion_of_harming_extended
     aliases: spotionofharmingext,
-spotionofhealing:
+  components: gunpowder,1;redstone,1;potionofharming,1;
+POTION_16389:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16389
-  components: gunpowder,1;potionofhealing,1;
   name:
-    display: spotionofhealing
+    display: splash_potion_of_healing
     aliases: spotionofhealing,
-spotionofhealing2:
+  components: gunpowder,1;potionofhealing,1;
+POTION_16421:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16421
-  components: gunpowder,1;glowstonedust,1;potionofhealing,1;
   name:
-    display: spotionofhealing2
+    display: splash_potion_of_healing_2
     aliases: spotionofhealing2,
-spotionofhealing2ext:
+  components: gunpowder,1;glowstonedust,1;potionofhealing,1;
+POTION_16485:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16485
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionofhealing,1;
   name:
-    display: spotionofhealing2ext
+    display: splash_potion_of_healing_2_extended
     aliases: spotionofhealing2ext,
-spotionofhealingext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofhealing,1;
+POTION_16453:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16453
-  components: gunpowder,1;redstone,1;potionofhealing,1;
   name:
-    display: spotionofhealingext
+    display: splash_potion_of_healing_extended
     aliases: spotionofhealingext,
-spotionofinvisibility:
+  components: gunpowder,1;redstone,1;potionofhealing,1;
+POTION_16398:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16398
-  components: gunpowder,1;potionofinvisibility,1;
   name:
-    display: spotionofinvisibility
+    display: splash_potion_of_invisibility
     aliases: spotionofinvisibility,
-spotionofinvisibility2:
+  components: gunpowder,1;potionofinvisibility,1;
+POTION_16430:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16430
-  components: gunpowder,1;glowstonedust,1;potionofinvisibility,1;
   name:
-    display: spotionofinvisibility2
+    display: splash_potion_of_invisibility_2
     aliases: spotionofinvisibility2,
-spotionofinvisibility2ext:
+  components: gunpowder,1;glowstonedust,1;potionofinvisibility,1;
+POTION_16494:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16494
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionofinvisibility,1;
   name:
-    display: spotionofinvisibility2ext
+    display: splash_potion_of_invisibility_2_extended
     aliases: spotionofinvisibility2ext,
-spotionofinvisibilityext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofinvisibility,1;
+POTION_16462:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16462
-  components: gunpowder,1;redstone,1;potionofinvisibility,1;
   name:
-    display: spotionofinvisibilityext
+    display: splash_potion_of_invisibility_extended
     aliases: spotionofinvisibilityext,
-spotionofnightvision:
+  components: gunpowder,1;redstone,1;potionofinvisibility,1;
+POTION_16390:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16390
-  components: gunpowder,1;potionofnightvision,1;
   name:
-    display: spotionofnightvision
+    display: splash_potion_of_night_vision
     aliases: spotionofnightvision,
-spotionofnightvision2:
+  components: gunpowder,1;potionofnightvision,1;
+POTION_16422:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16422
-  components: gunpowder,1;glowstonedust,1;potionofnightvision,1;
   name:
-    display: spotionofnightvision2
+    display: splash_potion_of_night_vision2
     aliases: spotionofnightvision2,
-spotionofnightvision2ext:
+  components: gunpowder,1;glowstonedust,1;potionofnightvision,1;
+POTION_16486:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16486
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionofnightvision,1;
   name:
-    display: spotionofnightvision2ext
+    display: splash_potion_of_night_vision_2_extended
     aliases: spotionofnightvision2ext,
-spotionofnightvisionext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofnightvision,1;
+POTION_16454:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16454
-  components: gunpowder,1;redstone,1;potionofnightvision,1;
   name:
-    display: spotionofnightvisionext
+    display: splash_potion_of_night_vision_extended
     aliases: spotionofnightvisionext,
-spotionofpoison:
+  components: gunpowder,1;redstone,1;potionofnightvision,1;
+POTION_16388:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16388
-  components: gunpowder,1;potionofpoison,1;
   name:
-    display: spotionofpoison
+    display: splash_potion_of_poison
     aliases: spotionofpoison,
-spotionofpoison2:
+  components: gunpowder,1;potionofpoison,1;
+POTION_16420:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16420
-  components: gunpowder,1;glowstonedust,1;potionofpoison,1;
   name:
-    display: spotionofpoison2
+    display: splash_potion_of_poison_2
     aliases: spotionofpoison2,
-spotionofpoison2ext:
+  components: gunpowder,1;glowstonedust,1;potionofpoison,1;
+POTION_16484:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16484
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionofpoison,1;
   name:
-    display: spotionofpoison2ext
+    display: splash_potion_of_poison_2_extended
     aliases: spotionofpoison2ext,
-spotionofpoisonext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofpoison,1;
+POTION_16452:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16452
-  components: gunpowder,1;redstone,1;potionofpoison,1;
   name:
-    display: spotionofpoisonext
+    display: splash_potion_of_poison_extended
     aliases: spotionofpoisonext,
-spotionofregen:
+  components: gunpowder,1;redstone,1;potionofpoison,1;
+POTION_16385:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16385
-  components: gunpowder,1;potionofregen,1;
   name:
-    display: spotionofregen
+    display: splash_potion_of_regen
     aliases: spotionofregen,
-spotionofregen2:
+  components: gunpowder,1;potionofregen,1;
+POTION_16417:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16417
-  components: gunpowder,1;glowstonedust,1;potionofregen,1;
   name:
-    display: spotionofregen2
+    display: splash_potion_of_regen_2
     aliases: spotionofregen2,
-spotionofregen2ext:
+  components: gunpowder,1;glowstonedust,1;potionofregen,1;
+POTION_16481:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16481
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionofregen,1;
   name:
-    display: spotionofregen2ext
+    display: splash_potion_of_regen_2_extended
     aliases: spotionofregen2ext,
-spotionofregenext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofregen,1;
+POTION_16449:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16449
-  components: gunpowder,1;redstone,1;potionofregen,1;
   name:
-    display: spotionofregenext
+    display: splash_potion_of_regen_extended
     aliases: spotionofregenext,
-spotionofslowness:
+  components: gunpowder,1;redstone,1;potionofregen,1;
+POTION_16394:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16394
-  components: gunpowder,1;potionofslowness,1;
   name:
-    display: spotionofslowness
+    display: splash_potion_of_slowness
     aliases: spotionofslowness,
-spotionofslowness2:
+  components: gunpowder,1;potionofslowness,1;
+POTION_16426:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16426
-  components: gunpowder,1;glowstonedust,1;potionofslowness,1;
   name:
-    display: spotionofslowness2
+    display: splash_potion_of_slowness_2
     aliases: spotionofslowness2,
-spotionofslowness2ext:
+  components: gunpowder,1;glowstonedust,1;potionofslowness,1;
+POTION_16490:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16490
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionofslowness,1;
   name:
-    display: spotionofslowness2ext
+    display: splash_potion_of_slowness_2_extended
     aliases: spotionofslowness2ext,
-spotionofslownessext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofslowness,1;
+POTION_16458:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16458
-  components: gunpowder,1;redstone,1;potionofslowness,1;
   name:
-    display: spotionofslownessext
+    display: splash_potion_of_slowness_extended
     aliases: spotionofslownessext,
-spotionofspeed:
+  components: gunpowder,1;redstone,1;potionofslowness,1;
+POTION_16386:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16386
-  components: gunpowder,1;potionofspeed,1;
   name:
-    display: spotionofspeed
+    display: splash_potion_of_speed
     aliases: spotionofspeed,
-spotionofspeed2:
+  components: gunpowder,1;potionofspeed,1;
+POTION_16418:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16418
-  components: gunpowder,1;glowstonedust,1;potionofspeed,1;
   name:
-    display: spotionofspeed2
+    display: splash_potion_of_speed_2
     aliases: spotionofspeed2,
-spotionofspeed2ext:
+  components: gunpowder,1;glowstonedust,1;potionofspeed,1;
+POTION_16482:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16482
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionofspeed,1;
   name:
-    display: spotionofspeed2ext
+    display: splash_potion_of_speed_2_extended
     aliases: spotionofspeed2ext,
-spotionofspeedext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofspeed,1;
+POTION_16450:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16450
-  components: gunpowder,1;redstone,1;potionofspeed,1;
   name:
-    display: spotionofspeedext
+    display: splash_potion_of_speed_extended
     aliases: spotionofspeedext,
-spotionofstrength:
+  components: gunpowder,1;redstone,1;potionofspeed,1;
+POTION_16393:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16393
-  components: gunpowder,1;potionofstrength,1;
   name:
-    display: spotionofstrength
+    display: splash_potion_of_strength
     aliases: spotionofstrength,
-spotionofstrength2:
+  components: gunpowder,1;potionofstrength,1;
+POTION_16425:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16425
-  components: gunpowder,1;glowstonedust,1;potionofstrength,1;
   name:
-    display: spotionofstrength2
+    display: splash_potion_of_strength_2
     aliases: spotionofstrength2,
-spotionofstrength2ext:
+  components: gunpowder,1;glowstonedust,1;potionofstrength,1;
+POTION_16489:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16489
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionofstrength,1;
   name:
-    display: spotionofstrength2ext
+    display: splash_potion_of_strength_2_extended
     aliases: spotionofstrength2ext,
-spotionofstrengthext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofstrength,1;
+POTION_16457:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16457
-  components: gunpowder,1;redstone,1;potionofstrength,1;
   name:
-    display: spotionofstrengthext
+    display: splash_potion_of_strength_extended
     aliases: spotionofstrengthext,
-spotionofweakness:
+  components: gunpowder,1;redstone,1;potionofstrength,1;
+POTION_16392:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16392
-  components: gunpowder,1;potionofweakness,1;
   name:
-    display: spotionofweakness
+    display: splash_potion_of_weakness
     aliases: spotionofweakness,
-spotionofweakness2:
+  components: gunpowder,1;potionofweakness,1;
+POTION_16424:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16424
-  components: gunpowder,1;glowstonedust,1;potionofweakness,1;
   name:
-    display: spotionofweakness2
+    display: splash_potion_of_weakness_2
     aliases: spotionofweakness2,
-spotionofweakness2ext:
+  components: gunpowder,1;glowstonedust,1;potionofweakness,1;
+POTION_16488:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16488
-  components: gunpowder,1;glowstonedust,1;redstone,1;potionofweakness,1;
   name:
-    display: spotionofweakness2ext
+    display: splash_potion_of_weakness_2_extended
     aliases: spotionofweakness2ext,
-spotionofweaknessext:
+  components: gunpowder,1;glowstonedust,1;redstone,1;potionofweakness,1;
+POTION_16456:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 16456
-  components: gunpowder,1;redstone,1;potionofweakness,1;
   name:
-    display: spotionofweaknessext
+    display: splash_potion_of_weakness_extended
     aliases: spotionofweaknessext,
-sprucewood:
+  components: gunpowder,1;redstone,1;potionofweakness,1;
+WOOD_1:
   information:
     type: item
-    category: unknown
     material: WOOD
     data: 1
-  components: sprucelog,1/4;
   name:
-    display: sprucewood
+    display: spruce_wood
     aliases: sprucewood,
-sprucewoodslab:
+  components: sprucelog,1/4;
+WOOD_STEP_1:
   information:
     type: item
-    category: unknown
     material: WOOD_STEP
     data: 1
-  components: sprucewood,1/2;
   name:
-    display: sprucewoodslab
+    display: spruce_wood_slab
     aliases: sprucewoodslab,
-sprucewoodstairs:
+  components: sprucewood,1/2;
+SPRUCE_WOOD_STAIRS_0:
   information:
     type: item
-    category: unknown
     material: SPRUCE_WOOD_STAIRS
     data: 0
-  components: sprucewood,3/2;
   name:
-    display: sprucewoodstairs
+    display: spruce_wood_stairs
     aliases: sprucewoodstairs,
-stick:
+  components: sprucewood,3/2;
+STICK_0:
   information:
     type: item
-    category: unknown
     material: STICK
     data: 0
-  components: oakwood,1/2;
   name:
     display: stick
     aliases: stick,
-stickypiston:
+  components: oakwood,1/2;
+PISTON_STICKY_BASE_0:
   information:
     type: item
-    category: unknown
     material: PISTON_STICKY_BASE
     data: 0
-  components: piston,1;slimeball,1;
   name:
-    display: stickypiston
+    display: sticky_piston
     aliases: stickypiston,
-stoneaxe:
+  components: piston,1;slimeball,1;
+STONE_AXE_0:
   information:
     type: item
-    category: unknown
     material: STONE_AXE
     data: 0
-  components: cobblestone,3;stick,2;
   name:
-    display: stoneaxe
+    display: stone_axe
     aliases: stoneaxe,
-stonebrick:
+  components: cobblestone,3;stick,2;
+SMOOTH_BRICK_0:
   information:
     type: item
-    category: unknown
     material: SMOOTH_BRICK
     data: 0
-  components: stone,1;
   name:
     display: stonebrick
     aliases: stonebrick,
-stonebrickslab:
+  components: stone,1;
+STEP_5:
   information:
     type: item
-    category: unknown
     material: STEP
     data: 5
-  components: stonebrick,1/2;
   name:
-    display: stonebrickslab
+    display: stone_brick_slab
     aliases: stonebrickslab,
-stonebrickstairs:
+  components: stonebrick,1/2;
+SMOOTH_STAIRS_0:
   information:
     type: item
-    category: unknown
     material: SMOOTH_STAIRS
     data: 0
-  components: stonebrick,3/2;
   name:
-    display: stonebrickstairs
+    display: stone_brick_stairs
     aliases: stonebrickstairs,
-stonehoe:
+  components: stonebrick,3/2;
+STONE_HOE_0:
   information:
     type: item
-    category: unknown
     material: STONE_HOE
     data: 0
-  components: cobblestone,2;stick,2;
   name:
-    display: stonehoe
+    display: stone_hoe
     aliases: stonehoe,
-stonepickaxe:
+  components: cobblestone,2;stick,2;
+STONE_PICKAXE_0:
   information:
     type: item
-    category: unknown
     material: STONE_PICKAXE
     data: 0
-  components: cobblestone,3;stick,2;
   name:
-    display: stonepickaxe
+    display: stone_pickaxe
     aliases: stonepickaxe,
-stonepressureplate:
+  components: cobblestone,3;stick,2;
+STONE_PLATE_0:
   information:
     type: item
-    category: unknown
     material: STONE_PLATE
     data: 0
-  components: stone,2;
   name:
-    display: stonepressureplate
+    display: stone_pressure_plate
     aliases: stonepressureplate,
-stoneshovel:
+  components: stone,2;
+STONE_SPADE_0:
   information:
     type: item
-    category: unknown
     material: STONE_SPADE
     data: 0
-  components: cobblestone,1;stick,2;
   name:
-    display: stoneshovel
+    display: stone_shovel
     aliases: stoneshovel,
-stoneslab:
+  components: cobblestone,1;stick,2;
+STEP_0:
   information:
     type: item
-    category: unknown
     material: STEP
     data: 0
-  components: stone,1/2;
   name:
-    display: stoneslab
+    display: stone_slab
     aliases: stoneslab,
-stonesword:
+  components: stone,1/2;
+STONE_SWORD_0:
   information:
     type: item
-    category: unknown
     material: STONE_SWORD
     data: 0
-  components: cobblestone,2;stick,1;
   name:
-    display: stonesword
+    display: stone_sword
     aliases: stonesword,
-thickpotion:
+  components: cobblestone,2;stick,1;
+POTION_32:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 32
-  components: waterbottle,1;glowstonedust,1;
   name:
-    display: thickpotion
+    display: thick_potion
     aliases: thickpotion,
-tnt:
+  components: waterbottle,1;glowstonedust,1;
+TNT_0:
   information:
     type: item
-    category: unknown
     material: TNT
     data: 0
-  components: sand,4;gunpowder,5;
   name:
     display: tnt
     aliases: tnt,
-torch:
+  components: sand,4;gunpowder,5;
+TORCH_0:
   information:
     type: item
-    category: unknown
     material: TORCH
     data: 0
-  components: stick,1/4;coal,1/4;
   name:
     display: torch
     aliases: torch,
-trapdoor:
+  components: stick,1/4;coal,1/4;
+TRAP_DOOR_0:
   information:
     type: item
-    category: unknown
     material: TRAP_DOOR
     data: 0
-  components: oakwood,3;
   name:
-    display: trapdoor
+    display: trap_door
     aliases: trapdoor,
-trappedchest:
+  components: oakwood,3;
+TRAPPED_CHEST_0:
   information:
     type: item
-    category: unknown
     material: TRAPPED_CHEST
     data: 0
-  components: chest,1;tripwirehook,1;
   name:
-    display: trappedchest
+    display: trapped_chest
     aliases: trappedchest,
-tripwirehook:
+  components: chest,1;tripwirehook,1;
+TRIPWIRE_HOOK_0:
   information:
     type: item
-    category: unknown
     material: TRIPWIRE_HOOK
     data: 0
-  components: ironingot,1/2;stick,1/2;oakwood,1/2;
   name:
-    display: tripwirehook
+    display: tripwire_hook
     aliases: tripwirehook,
-waterbottle:
+  components: ironingot,1/2;stick,1/2;oakwood,1/2;
+POTION_0:
   information:
     type: item
-    category: unknown
     material: POTION
     data: 0
-  components: glassbottle,1;
   name:
-    display: waterbottle
+    display: water_bottle
     aliases: waterbottle,
-whiteclay:
+  components: glassbottle,1;
+STAINED_CLAY_0:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 0
-  components: hardenedclay,1;bonemeal,1/8;
   name:
-    display: whiteclay
+    display: white_clay
     aliases: whiteclay,
-woodaxe:
+  components: hardenedclay,1;bonemeal,1/8;
+WOOD_AXE_0:
   information:
     type: item
-    category: unknown
     material: WOOD_AXE
     data: 0
-  components: oakwood,3;stick,2;
   name:
-    display: woodaxe
+    display: wood_axe
     aliases: woodaxe,
-woodbutton:
+  components: oakwood,3;stick,2;
+WOOD_BUTTON_0:
   information:
     type: item
-    category: unknown
     material: WOOD_BUTTON
     data: 0
-  components: oakwood,1;
   name:
-    display: woodbutton
+    display: wood_button
     aliases: woodbutton,
-wooddoor:
+  components: oakwood,1;
+WOOD_DOOR_0:
   information:
     type: item
-    category: unknown
     material: WOOD_DOOR
     data: 0
-  components: oakwood,6;
   name:
-    display: wooddoor
+    display: wood_door
     aliases: wooddoor,
-woodhoe:
+  components: oakwood,6;
+WOOD_HOE_0:
   information:
     type: item
-    category: unknown
     material: WOOD_HOE
     data: 0
-  components: oakwood,2;stick,2;
   name:
-    display: woodhoe
+    display: wood_hoe
     aliases: woodhoe,
-woodpickaxe:
+  components: oakwood,2;stick,2;
+WOOD_PICKAXE_0:
   information:
     type: item
-    category: unknown
     material: WOOD_PICKAXE
     data: 0
-  components: oakwood,3;stick,2;
   name:
-    display: woodpickaxe
+    display: wood_pickaxe
     aliases: woodpickaxe,
-woodpressureplate:
+  components: oakwood,3;stick,2;
+WOOD_PLATE_0:
   information:
     type: item
-    category: unknown
     material: WOOD_PLATE
     data: 0
-  components: oakwood,2;
   name:
-    display: woodpressureplate
+    display: wood_pressure_plate
     aliases: woodpressureplate,
-woodshovel:
+  components: oakwood,2;
+WOOD_SPADE_0:
   information:
     type: item
-    category: unknown
     material: WOOD_SPADE
     data: 0
-  components: oakwood,1;stick,2;
   name:
-    display: woodshovel
+    display: wood_shovel
     aliases: woodshovel,
-woodsword:
+  components: oakwood,1;stick,2;
+WOOD_SWORD_0:
   information:
     type: item
-    category: unknown
     material: WOOD_SWORD
     data: 0
-  components: oakwood,2;stick,1;
   name:
-    display: woodsword
+    display: wood_sword
     aliases: woodsword,
-wool:
+  components: oakwood,2;stick,1;
+WOOL_0:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 0
-  components: string,4;
   name:
     display: wool
     aliases: wool,
-yellowcarpet:
+  components: string,4;
+CARPET_4:
   information:
     type: item
-    category: unknown
     material: CARPET
     data: 4
-  components: yellowwool,2/3;
   name:
-    display: yellowcarpet
+    display: yellow_carpet
     aliases: yellowcarpet,
-yellowclay:
+  components: yellowwool,2/3;
+STAINED_CLAY_4:
   information:
     type: item
-    category: unknown
     material: STAINED_CLAY
     data: 4
-  components: hardenedclay,1;dandelionyellow,1/8;
   name:
-    display: yellowclay
+    display: yellow_clay
     aliases: yellowclay,
-yellowwool:
+  components: hardenedclay,1;dandelionyellow,1/8;
+WOOL_4:
   information:
     type: item
-    category: unknown
     material: WOOL
     data: 4
-  components: wool,1;dandelionyellow,1;
   name:
-    display: yellowwool
+    display: yellow_wool
     aliases: yellowwool,
-acaciawood:
+  components: wool,1;dandelionyellow,1;
+WOOD_4:
   information:
     type: item
     material: WOOD
     data: 4
-  components: acacialog,1/4;
   name:
-    display: acaciawood
+    display: acacia_wood
     aliases: acaciawood,
-darkoakwood:
+  components: acacialog,1/4;
+WOOD_5:
   information:
     type: item
     material: WOOD
     data: 5
-  components: darkoaklog,1/4;
   name:
-    display: darkoakwood
+    display: dark_oak_wood
     aliases: darkoakwood,
-darkoakwoodslab:
+  components: darkoaklog,1/4;
+WOOD_STEP_5:
   information:
     type: item
     material: WOOD_STEP
     data: 5
-  value: 10.0
-  components: darkoakwood,1/2;
   name:
-    display: darkoakwoodslab
+    display: dark_oak_wood_slab
     aliases: darkoakwoodslab,
-acaciawoodslab:
+  components: darkoakwood,1/2;
+WOOD_STEP_4:
   information:
     type: item
     material: WOOD_STEP
     data: 4
-  components: acaciawood,1/2;
   name:
-    display: acaciawoodslab
+    display: acacia_wood_slab
     aliases: acaciawoodslab,
-darkoakwoodstairs:
+  components: acaciawood,1/2;
+DARK_OAK_STAIRS_0:
   information:
     type: item
     material: DARK_OAK_STAIRS
     data: 0
-  components: darkoakwood,3/2;
   name:
-    display: darkoakwoodstairs
+    display: dark_oak_wood_stairs
     aliases: darkoakwoodstairs,
-acaciawoodstairs:
+  components: darkoakwood,3/2;
+ACACIA_STAIRS_0:
   information:
     type: item
     material: ACACIA_STAIRS
     data: 0
-  components: acaciawood,3/2;
   name:
-    display: acaciawoodstairs
+    display: acacia_wood_stairs
     aliases: acaciawoodstairs,
-whitestainedglass:
+  components: acaciawood,3/2;
+STAINED_GLASS_0:
   information:
     type: item
     material: STAINED_GLASS
     data: 0
-  components: bonemeal,1/8;glass,1;
   name:
-    display: whitestainedglass
+    display: white_stained_glass
     aliases: whitestainedglass,
-orangestainedglass:
+  components: bonemeal,1/8;glass,1;
+STAINED_GLASS_1:
   information:
     type: item
     material: STAINED_GLASS
     data: 1
-  components: orangedye,1/8;glass,1;
   name:
-    display: orangestainedglass
+    display: orange_stained_glass
     aliases: orangestainedglass,
-magentastainedglass:
+  components: orangedye,1/8;glass,1;
+STAINED_GLASS_2:
   information:
     type: item
     material: STAINED_GLASS
     data: 2
-  components: magentadye,1/8;glass,1;
   name:
-    display: magentastainedglass
+    display: magenta_stained_glass
     aliases: magentastainedglass,
-lightbluestainedglass:
+  components: magentadye,1/8;glass,1;
+STAINED_GLASS_3:
   information:
     type: item
     material: STAINED_GLASS
     data: 3
-  components: lightbluedye,1/8;glass,1;
   name:
-    display: lightbluestainedglass
+    display: light_blue_stained_glass
     aliases: lightbluestainedglass,
-yellowstainedglass:
+  components: lightbluedye,1/8;glass,1;
+STAINED_GLASS_4:
   information:
     type: item
     material: STAINED_GLASS
     data: 4
-  components: dandelionyellow,1/8;glass,1;
   name:
-    display: yellowstainedglass
+    display: yellow_stained_glass
     aliases: yellowstainedglass,
-limestainedglass:
+  components: dandelionyellow,1/8;glass,1;
+STAINED_GLASS_5:
   information:
     type: item
     material: STAINED_GLASS
     data: 5
-  components: limedye,1/8;glass,1;
   name:
-    display: limestainedglass
+    display: lime_stained_glass
     aliases: limestainedglass,
-pinkstainedglass:
+  components: limedye,1/8;glass,1;
+STAINED_GLASS_6:
   information:
     type: item
     material: STAINED_GLASS
     data: 6
-  components: pinkdye,1/8;glass,1;
   name:
-    display: pinkstainedglass
+    display: pink_stained_glass
     aliases: pinkstainedglass,
-graystainedglass:
+  components: pinkdye,1/8;glass,1;
+STAINED_GLASS_7:
   information:
     type: item
     material: STAINED_GLASS
     data: 7
-  components: graydye,1/8;glass,1;
   name:
-    display: graystainedglass
-    aliases: graystainedglass,
-lightgraystainedglass:
+    display: gray_stained_glass
+    aliases: graystainedglass,greystainedglass,
+  components: graydye,1/8;glass,1;
+STAINED_GLASS_8:
   information:
     type: item
     material: STAINED_GLASS
     data: 8
-  components: lightgraydye,1/8;glass,1;
   name:
-    display: lightgraystainedglass
-    aliases: lightgraystainedglass,
-cyanstainedglass:
+    display: light_gray_stained_glass
+    aliases: lightgraystainedglass,lightgreystainedglass,
+  components: lightgraydye,1/8;glass,1;
+STAINED_GLASS_9:
   information:
     type: item
     material: STAINED_GLASS
     data: 9
-  components: cyandye,1/8;glass,1;
   name:
-    display: cyanstainedglass
+    display: cyan_stained_glass
     aliases: cyanstainedglass,
-purplestainedglass:
+  components: cyandye,1/8;glass,1;
+STAINED_GLASS_10:
   information:
     type: item
     material: STAINED_GLASS
     data: 10
-  components: purpledye,1/8;glass,1;
   name:
-    display: purplestainedglass
+    display: purple_stained_glass
     aliases: purplestainedglass,
-bluestainedglass:
+  components: purpledye,1/8;glass,1;
+STAINED_GLASS_11:
   information:
     type: item
     material: STAINED_GLASS
     data: 11
-  components: lapislazuli,1/8;glass,1;
   name:
-    display: bluestainedglass
+    display: blue_stained_glass
     aliases: bluestainedglass,
-brownstainedglass:
+  components: lapislazuli,1/8;glass,1;
+STAINED_GLASS_12:
   information:
     type: item
     material: STAINED_GLASS
     data: 12
-  components: cocoabeans,1/8;glass,1;
   name:
-    display: brownstainedglass
+    display: brown_stained_glass
     aliases: brownstainedglass,
-greenstaineglass:
+  components: cocoabeans,1/8;glass,1;
+STAINED_GLASS_13:
   information:
     type: item
     material: STAINED_GLASS
     data: 13
-  components: cactusgreen,1/8;glass,1;
   name:
-    display: greenstaineglass
-    aliases: greenstaineglass,
-redstainedglass:
+    display: green_stained_glass
+    aliases: greenstainedglass,
+  components: cactusgreen,1/8;glass,1;
+STAINED_GLASS_14:
   information:
     type: item
     material: STAINED_GLASS
     data: 14
-  components: rosered,1/8;glass,1;
   name:
-    display: redstainedglass
+    display: red_stained_glass
     aliases: redstainedglass,
-blackstainedglass:
+  components: rosered,1/8;glass,1;
+STAINED_GLASS_15:
   information:
     type: item
     material: STAINED_GLASS
     data: 15
-  components: inksac,1/8;glass,1;
   name:
-    display: blackstainedglass
+    display: black_stained_glass
     aliases: blackstainedglass,
-whitestainedglasspane:
+  components: inksac,1/8;glass,1;
+STAINED_GLASS_PANE_0:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 0
-  components: whitestainedglass,3/8;
   name:
-    display: whitestainedglasspane
+    display: white_stained_glass_pane
     aliases: whitestainedglasspane,
-orangestainedglasspane:
+  components: whitestainedglass,3/8;
+STAINED_GLASS_PANE_1:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 1
-  components: orangestainedglass,3/8;
   name:
-    display: orangestainedglasspane
+    display: orange_stained_glass_pane
     aliases: orangestainedglasspane,
-magentastainedglasspane:
+  components: orangestainedglass,3/8;
+STAINED_GLASS_PANE_2:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 2
-  components: magentastainedglass,3/8;
   name:
-    display: magentastainedglasspane
+    display: magenta_stained_glass_pane
     aliases: magentastainedglasspane,
-lightbluestainedglasspane:
+  components: magentastainedglass,3/8;
+STAINED_GLASS_PANE_3:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 3
-  components: lightbluestainedglass,3/8;
   name:
-    display: lightbluestainedglasspane
+    display: light_blue_stained_glass_pane
     aliases: lightbluestainedglasspane,
-yellowstainedglasspane:
+  components: lightbluestainedglass,3/8;
+STAINED_GLASS_PANE_4:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 4
-  components: yellowstainedglass,3/8;
   name:
-    display: yellowstainedglasspane
+    display: yellow_stained_glass_pane
     aliases: yellowstainedglasspane,
-limestainedglasspane:
+  components: yellowstainedglass,3/8;
+STAINED_GLASS_PANE_5:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 5
-  components: limestainedglass,3/8;
   name:
-    display: limestainedglasspane
+    display: lime_stained_glass_pane
     aliases: limestainedglasspane,
-pinkstainedglasspane:
+  components: limestainedglass,3/8;
+STAINED_GLASS_PANE_6:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 6
-  components: pinkstainedglass,3/8;
   name:
-    display: pinkstainedglasspane
+    display: pink_stained_glass_pane
     aliases: pinkstainedglasspane,
-graystainedglasspane:
+  components: pinkstainedglass,3/8;
+STAINED_GLASS_PANE_7:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 7
-  components: graystainedglass,3/8;
   name:
-    display: graystainedglasspane
-    aliases: graystainedglasspane,
-lightgraystainedglasspane:
+    display: gray_stained_glass_pane
+    aliases: graystainedglasspane,greystainedglasspane,
+  components: graystainedglass,3/8;
+STAINED_GLASS_PANE_8:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 8
-  components: lightgraystainedglass,3/8;
   name:
-    display: lightgraystainedglasspane
-    aliases: lightgraystainedglasspane,
-cyanstainedglasspane:
+    display: light_gray_stained_glass_pane
+    aliases: lightgraystainedglasspane,lightgreystainedglasspane,
+  components: lightgraystainedglass,3/8;
+STAINED_GLASS_PANE_9:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 9
-  components: cyanstainedglass,3/8;
   name:
-    display: cyanstainedglasspane
+    display: cyan_stained_glass_pane
     aliases: cyanstainedglasspane,
-purplestainedglasspane:
+  components: cyanstainedglass,3/8;
+STAINED_GLASS_PANE_10:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 10
-  components: purplestainedglass,3/8;
   name:
-    display: purplestainedglasspane
+    display: purple_stained_glass_pane
     aliases: purplestainedglasspane,
-bluestainedglasspane:
+  components: purplestainedglass,3/8;
+STAINED_GLASS_PANE_11:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 11
-  components: bluestainedglass,3/8;
   name:
-    display: bluestainedglasspane
+    display: blue_stained_glass_pane
     aliases: bluestainedglasspane,
-brownstainedglasspane:
+  components: bluestainedglass,3/8;
+STAINED_GLASS_PANE_12:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 12
-  components: brownstainedglass,3/8;
   name:
-    display: brownstainedglasspane
+    display: brown_stained_glass_pane
     aliases: brownstainedglasspane,
-greenstainedglasspane:
+  components: brownstainedglass,3/8;
+STAINED_GLASS_PANE_13:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 13
-  components: greenstainedglass,3/8;
   name:
-    display: greenstainedglasspane
+    display: green_stained_glass_pane
     aliases: greenstainedglasspane,
-redstainedglasspane:
+  components: greenstainedglass,3/8;
+STAINED_GLASS_PANE_14:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 14
-  components: redstainedglass,3/8;
   name:
-    display: redstainedglasspane
+    display: red_stained_glass_pane
     aliases: redstainedglasspane,
-blackstainedglasspane:
+  components: redstainedglass,3/8;
+STAINED_GLASS_PANE_15:
   information:
     type: item
     material: STAINED_GLASS_PANE
     data: 15
-  components: blackstainedglass,3/8;
   name:
-    display: blackstainedglasspane
+    display: black_stained_glass_pane
     aliases: blackstainedglasspane,
-potionofwaterbreathing:
+  components: blackstainedglass,3/8;
+POTION_13:
   information:
     type: item
     material: POTION
     data: 13
-  components: awkwardpotion,1;pufferfish,1/3;
   name:
-    display: potionofwaterbreathing
+    display: potion_of_water_breathing
     aliases: potionofwaterbreathing,
-potionofwaterbreathingext:
+  components: awkwardpotion,1;pufferfish,1/3;
+POTION_77:
   information:
     type: item
     material: POTION
     data: 77
-  components: potionofwaterbreathing,1;redstone,1;
   name:
-    display: potionofwaterbreathingext
+    display: potion_of_water_breathing_extended
     aliases: potionofwaterbreathingext,
+  components: potionofwaterbreathing,1;redstone,1;

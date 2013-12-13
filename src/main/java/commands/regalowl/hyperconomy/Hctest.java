@@ -30,12 +30,16 @@ public class Hctest implements CommandExecutor {
 		FileConfiguration composites = hc.gYH().gFC("composites");
 		Iterator<String> it = composites.getKeys(false).iterator();
 		while (it.hasNext()) {
-			String name = it.next();
-			HyperItem ho = em.getHyperItem(name);
+			String oldName = it.next();
+			HyperItem ho = em.getHyperItem(oldName);
 			if (ho != null) {
-				composites.set(name + ".name.display", ho.getDisplayName());
-				composites.set(name + ".name.aliases", ho.getDisplayName() + ",");
-				composites.set(name + ".information.id", null);
+				composites.set(ho.getName() + ".information.type", composites.getString(oldName + ".information.type"));
+				composites.set(ho.getName() + ".information.material", composites.getString(oldName + ".information.material"));
+				composites.set(ho.getName() + ".information.data", composites.getInt(oldName + ".information.data"));
+				composites.set(ho.getName() + ".name.display", ho.getDisplayName());
+				composites.set(ho.getName() + ".name.aliases", ho.getAliasesString());
+				composites.set(ho.getName() + ".components", composites.getString(oldName + ".components"));
+				composites.set(oldName, null);
 			}
 		}
 		hc.gYH().saveYamls();

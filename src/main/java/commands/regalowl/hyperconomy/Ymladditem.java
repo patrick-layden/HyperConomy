@@ -28,15 +28,15 @@ public class Ymladditem implements CommandExecutor {
 		EconomyManager em = hc.getEconomyManager();
 		
 		try {
-			String name = "";
+			String displayName = "";
 			if (args.length >= 1) {
-				name = args[0];
-				if (name.equalsIgnoreCase("all")) {
+				displayName = args[0];
+				if (displayName.equalsIgnoreCase("all")) {
 					addAll(player);
 					player.sendMessage(L.get("INVENTORY_ADDED"));
 					return true;
 				}
-				if (name.equalsIgnoreCase("help")) {
+				if (displayName.equalsIgnoreCase("help")) {
 					player.sendMessage(L.get("YMLADDITEM_INVALID"));
 					return true;
 				}
@@ -77,13 +77,16 @@ public class Ymladditem implements CommandExecutor {
 				player.sendMessage(L.get("ALREADY_IN_DATABASE"));
 				return true;
 			}
+			ItemStack stack = player.getItemInHand();
+			HyperItemStack his = new HyperItemStack(stack);
+			String name = stack.getType() + "_" + his.getDamageValue();
 			if (econ.objectTest(name) || name.equalsIgnoreCase("")) {
-				name = generateName(player.getItemInHand());
+				name = generateName(stack);
 			}
 			FileConfiguration objects = hc.gYH().gFC("objects");
 			objects.set(name + ".information.type", "item");
-			objects.set(name + ".information.material", player.getItemInHand().getType().toString());
-			HyperItemStack his = new HyperItemStack(player.getItemInHand());
+			objects.set(name + ".information.material", stack.getType().toString());
+			String aliases = displayName.replace("_", "") + ",";
 			int data = his.getDamageValue();
 			objects.set(name + ".information.data", data);
 			objects.set(name + ".value", value);
@@ -93,6 +96,8 @@ public class Ymladditem implements CommandExecutor {
 			objects.set(name + ".stock.median", median);
 			objects.set(name + ".initiation.initiation", true);
 			objects.set(name + ".initiation.startprice", value*2);
+			objects.set(name + ".name.display", displayName);
+			objects.set(name + ".name.aliases", aliases);
 			player.sendMessage(L.get("ITEM_ADDED"));
 			return true;
 		} catch (Exception e) {
@@ -107,11 +112,13 @@ public class Ymladditem implements CommandExecutor {
 		HyperConomy hc = HyperConomy.hc;
 		EconomyManager em = hc.getEconomyManager();
 		if (stack.getType() == Material.AIR) {return;}
-		String name = generateName(stack);
+		String displayName = generateName(stack);
+		HyperItemStack his = new HyperItemStack(stack);
+		String name = stack.getType() + "_" + his.getDamageValue();
+		String aliases = displayName.replace("_", "") + ",";
 		double value = 10.0;
 		int median = 10000;
 		double startprice = 20.0;
-		HyperItemStack his = new HyperItemStack(stack);
 		int data = his.getDamageValue();
 		HyperEconomy econ = em.getHyperPlayer(player.getName()).getHyperEconomy();
 		HyperObject ho =  econ.getHyperObject(stack);
@@ -127,6 +134,8 @@ public class Ymladditem implements CommandExecutor {
 		objects.set(name + ".stock.median", median);
 		objects.set(name + ".initiation.initiation", true);
 		objects.set(name + ".initiation.startprice", startprice);
+		objects.set(name + ".name.display", displayName);
+		objects.set(name + ".name.aliases", aliases);
 	}
 	
 	private String generateName(ItemStack stack) {

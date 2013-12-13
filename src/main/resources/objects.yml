@@ -1,4 +1,4 @@
-ACACIA_STAIRS:
+ACACIA_STAIRS_0:
   name:
     display: acacia_wood_stairs
     aliases: acaciawoodstairs,
@@ -19,7 +19,7 @@ ACACIA_STAIRS:
   initiation:
     initiation: true
     startprice: 20.0
-ACTIVATOR_RAIL:
+ACTIVATOR_RAIL_0:
   name:
     display: activator_rail
     aliases: activatorrail,
@@ -40,7 +40,7 @@ ACTIVATOR_RAIL:
   initiation:
     initiation: true
     startprice: 84.0
-ANVIL:
+ANVIL_0:
   name:
     display: anvil
     aliases: anvil,
@@ -61,7 +61,7 @@ ANVIL:
   initiation:
     initiation: true
     startprice: 2000.0
-APPLE:
+APPLE_0:
   name:
     display: apple
     aliases: apple,
@@ -82,7 +82,7 @@ APPLE:
   initiation:
     initiation: true
     startprice: 300.0
-aquaaffinity1:
+WATER_WORKER_1:
   name:
     display: aqua_affinity_1
     aliases: aquaaffinity1,
@@ -103,7 +103,7 @@ aquaaffinity1:
   initiation:
     initiation: true
     startprice: 800.0
-ARROW:
+ARROW_0:
   name:
     display: arrow
     aliases: arrow,
@@ -124,7 +124,7 @@ ARROW:
   initiation:
     initiation: true
     startprice: 12.0
-BAKED_POTATO:
+BAKED_POTATO_0:
   name:
     display: baked_potato
     aliases: bakedpotato,
@@ -145,7 +145,7 @@ BAKED_POTATO:
   initiation:
     initiation: true
     startprice: 48.0
-baneofarthropods1:
+DAMAGE_ARTHROPODS_1:
   name:
     display: bane_of_arthropods_1
     aliases: baneofarthropods1,
@@ -166,7 +166,7 @@ baneofarthropods1:
   initiation:
     initiation: true
     startprice: 50.0
-baneofarthropods2:
+DAMAGE_ARTHROPODS_2:
   name:
     display: bane_of_arthropods_2
     aliases: baneofarthropods2,
@@ -187,7 +187,7 @@ baneofarthropods2:
   initiation:
     initiation: true
     startprice: 200.0
-baneofarthropods3:
+DAMAGE_ARTHROPODS_3:
   name:
     display: bane_of_arthropods_3
     aliases: baneofarthropods3,
@@ -208,7 +208,7 @@ baneofarthropods3:
   initiation:
     initiation: true
     startprice: 1000.0
-baneofarthropods4:
+DAMAGE_ARTHROPODS_4:
   name:
     display: bane_of_arthropods_4
     aliases: baneofarthropods4,
@@ -229,7 +229,7 @@ baneofarthropods4:
   initiation:
     initiation: true
     startprice: 2000.0
-baneofarthropods5:
+DAMAGE_ARTHROPODS_5:
   name:
     display: bane_of_arthropods_5
     aliases: baneofarthropods5,
@@ -250,7 +250,7 @@ baneofarthropods5:
   initiation:
     initiation: true
     startprice: 4000.0
-BEACON:
+BEACON_0:
   name:
     display: beacon
     aliases: beacon,
@@ -271,7 +271,7 @@ BEACON:
   initiation:
     initiation: true
     startprice: 146000.0
-BED:
+BED_0:
   name:
     display: bed
     aliases: bed,
@@ -292,7 +292,7 @@ BED:
   initiation:
     initiation: true
     startprice: 40.0
-BEDROCK:
+BEDROCK_0:
   name:
     display: bedrock
     aliases: bedrock,
@@ -313,7 +313,7 @@ BEDROCK:
   initiation:
     initiation: true
     startprice: 20000.0
-BIRCH_WOOD_STAIRS:
+BIRCH_WOOD_STAIRS_0:
   name:
     display: birch_wood_stairs
     aliases: birchwoodstairs,
@@ -334,7 +334,7 @@ BIRCH_WOOD_STAIRS:
   initiation:
     initiation: true
     startprice: 2.0
-blastprotection1:
+PROTECTION_EXPLOSIONS_1:
   name:
     display: blast_protection_1
     aliases: blastprotection1,
@@ -355,7 +355,7 @@ blastprotection1:
   initiation:
     initiation: true
     startprice: 100.0
-blastprotection2:
+PROTECTION_EXPLOSIONS_2:
   name:
     display: blast_protection_2
     aliases: blastprotection2,
@@ -376,7 +376,7 @@ blastprotection2:
   initiation:
     initiation: true
     startprice: 400.0
-blastprotection3:
+PROTECTION_EXPLOSIONS_3:
   name:
     display: blast_protection_3
     aliases: blastprotection3,
@@ -397,7 +397,7 @@ blastprotection3:
   initiation:
     initiation: true
     startprice: 2000.0
-blastprotection4:
+PROTECTION_EXPLOSIONS_4:
   name:
     display: blast_protection_4
     aliases: blastprotection4,
@@ -418,7 +418,7 @@ blastprotection4:
   initiation:
     initiation: true
     startprice: 5000.0
-BLAZE_POWDER:
+BLAZE_POWDER_0:
   name:
     display: blaze_powder
     aliases: blazepowder,
@@ -439,7 +439,7 @@ BLAZE_POWDER:
   initiation:
     initiation: true
     startprice: 250.0
-BLAZE_ROD:
+BLAZE_ROD_0:
   name:
     display: blaze_rod
     aliases: blazerod,
@@ -460,7 +460,7 @@ BLAZE_ROD:
   initiation:
     initiation: true
     startprice: 500.0
-BOAT:
+BOAT_0:
   name:
     display: boat
     aliases: boat,
@@ -481,7 +481,7 @@ BOAT:
   initiation:
     initiation: true
     startprice: 12.0
-BONE:
+BONE_0:
   name:
     display: bone
     aliases: bone,
@@ -502,7 +502,7 @@ BONE:
   initiation:
     initiation: true
     startprice: 20.0
-BOOK:
+BOOK_0:
   name:
     display: book
     aliases: book,
@@ -523,7 +523,7 @@ BOOK:
   initiation:
     initiation: true
     startprice: 30.0
-BOOK_AND_QUILL:
+BOOK_AND_QUILL_0:
   name:
     display: book_and_quill
     aliases: bookandquill,
@@ -544,7 +544,7 @@ BOOK_AND_QUILL:
   initiation:
     initiation: true
     startprice: 66.0
-BOOKSHELF:
+BOOKSHELF_0:
   name:
     display: bookshelf
     aliases: bookshelf,
@@ -565,7 +565,7 @@ BOOKSHELF:
   initiation:
     initiation: true
     startprice: 110.0
-BOW:
+BOW_0:
   name:
     display: bow
     aliases: bow,
@@ -586,7 +586,7 @@ BOW:
   initiation:
     initiation: true
     startprice: 10.0
-BOWL:
+BOWL_0:
   name:
     display: bowl
     aliases: bowl,
@@ -607,7 +607,7 @@ BOWL:
   initiation:
     initiation: true
     startprice: 2.0
-BREAD:
+BREAD_0:
   name:
     display: bread
     aliases: bread,
@@ -628,7 +628,7 @@ BREAD:
   initiation:
     initiation: true
     startprice: 32.0
-BREWING_STAND_ITEM:
+BREWING_STAND_ITEM_0:
   name:
     display: brewing_stand
     aliases: brewingstand,
@@ -649,7 +649,7 @@ BREWING_STAND_ITEM:
   initiation:
     initiation: true
     startprice: 520.0
-BRICK:
+BRICK_0:
   name:
     display: brick
     aliases: brick,
@@ -670,7 +670,7 @@ BRICK:
   initiation:
     initiation: true
     startprice: 100.0
-BRICK_STAIRS:
+BRICK_STAIRS_0:
   name:
     display: brick_stairs
     aliases: brickstairs,
@@ -691,7 +691,7 @@ BRICK_STAIRS:
   initiation:
     initiation: true
     startprice: 160.0
-BROWN_MUSHROOM:
+BROWN_MUSHROOM_0:
   name:
     display: brown_mushroom
     aliases: brownmushroom,
@@ -712,7 +712,7 @@ BROWN_MUSHROOM:
   initiation:
     initiation: true
     startprice: 2.0
-BUCKET:
+BUCKET_0:
   name:
     display: bucket
     aliases: bucket,
@@ -733,7 +733,7 @@ BUCKET:
   initiation:
     initiation: true
     startprice: 200.0
-CACTUS:
+CACTUS_0:
   name:
     display: cactus
     aliases: cactus,
@@ -754,7 +754,7 @@ CACTUS:
   initiation:
     initiation: true
     startprice: 8.0
-CAKE:
+CAKE_0:
   name:
     display: cake
     aliases: cake,
@@ -1111,7 +1111,7 @@ CARPET_9:
   initiation:
     initiation: true
     startprice: 49.33
-CARROT_ITEM:
+CARROT_ITEM_0:
   name:
     display: carrot
     aliases: carrot,
@@ -1132,7 +1132,7 @@ CARROT_ITEM:
   initiation:
     initiation: true
     startprice: 40.0
-CARROT_STICK:
+CARROT_STICK_0:
   name:
     display: carrot_on_a_stick
     aliases: carrotonastick,
@@ -1153,7 +1153,7 @@ CARROT_STICK:
   initiation:
     initiation: true
     startprice: 46.0
-CAULDRON_ITEM:
+CAULDRON_ITEM_0:
   name:
     display: cauldron
     aliases: cauldron,
@@ -1174,7 +1174,7 @@ CAULDRON_ITEM:
   initiation:
     initiation: true
     startprice: 460.0
-CHAINMAIL_BOOTS:
+CHAINMAIL_BOOTS_0:
   name:
     display: chainmail_boots
     aliases: chainmailboots,
@@ -1195,7 +1195,7 @@ CHAINMAIL_BOOTS:
   initiation:
     initiation: true
     startprice: 4000.0
-CHAINMAIL_CHESTPLATE:
+CHAINMAIL_CHESTPLATE_0:
   name:
     display: chainmail_chestplate
     aliases: chainmailchestplate,
@@ -1216,7 +1216,7 @@ CHAINMAIL_CHESTPLATE:
   initiation:
     initiation: true
     startprice: 8000.0
-CHAINMAIL_HELMET:
+CHAINMAIL_HELMET_0:
   name:
     display: chainmail_helmet
     aliases: chainmailhelmet,
@@ -1237,7 +1237,7 @@ CHAINMAIL_HELMET:
   initiation:
     initiation: true
     startprice: 10000.0
-CHAINMAIL_LEGGINGS:
+CHAINMAIL_LEGGINGS_0:
   name:
     display: chainmail_leggings
     aliases: chainmailleggings,
@@ -1258,7 +1258,7 @@ CHAINMAIL_LEGGINGS:
   initiation:
     initiation: true
     startprice: 14000.0
-CHEST:
+CHEST_0:
   name:
     display: chest
     aliases: chest,
@@ -1279,7 +1279,7 @@ CHEST:
   initiation:
     initiation: true
     startprice: 10.0
-CLAY:
+CLAY_0:
   name:
     display: clay
     aliases: clay,
@@ -1300,7 +1300,7 @@ CLAY:
   initiation:
     initiation: true
     startprice: 40.0
-CLAY_BALL:
+CLAY_BALL_0:
   name:
     display: clay_ball
     aliases: clayball,
@@ -1321,7 +1321,7 @@ CLAY_BALL:
   initiation:
     initiation: true
     startprice: 10.0
-CLAY_BRICK:
+CLAY_BRICK_0:
   name:
     display: clay_brick
     aliases: claybrick,
@@ -1384,7 +1384,7 @@ COAL_1:
   initiation:
     initiation: true
     startprice: 10.0
-COAL_BLOCK:
+COAL_BLOCK_0:
   name:
     display: coal_block
     aliases: coalblock,
@@ -1405,7 +1405,7 @@ COAL_BLOCK:
   initiation:
     initiation: true
     startprice: 120.0
-COAL_ORE:
+COAL_ORE_0:
   name:
     display: coal_ore
     aliases: coalore,
@@ -1468,7 +1468,7 @@ COBBLE_WALL_1:
   initiation:
     initiation: true
     startprice: 400.0
-COBBLESTONE:
+COBBLESTONE_0:
   name:
     display: cobblestone
     aliases: cobblestone,
@@ -1489,7 +1489,7 @@ COBBLESTONE:
   initiation:
     initiation: true
     startprice: 2.0
-COBBLESTONE_STAIRS:
+COBBLESTONE_STAIRS_0:
   name:
     display: cobblestone_stairs
     aliases: cobblestonestairs,
@@ -1510,7 +1510,7 @@ COBBLESTONE_STAIRS:
   initiation:
     initiation: true
     startprice: 3.0
-COMMAND:
+COMMAND_0:
   name:
     display: command_block
     aliases: commandblock,
@@ -1531,7 +1531,7 @@ COMMAND:
   initiation:
     initiation: true
     startprice: 20000.0
-COMPASS:
+COMPASS_0:
   name:
     display: compass
     aliases: compass,
@@ -1552,7 +1552,7 @@ COMPASS:
   initiation:
     initiation: true
     startprice: 280.0
-COOKED_BEEF:
+COOKED_BEEF_0:
   name:
     display: cooked_beef
     aliases: cookedbeef,steak,
@@ -1573,7 +1573,7 @@ COOKED_BEEF:
   initiation:
     initiation: true
     startprice: 80.0
-COOKED_CHICKEN:
+COOKED_CHICKEN_0:
   name:
     display: cooked_chicken
     aliases: cookedchicken,
@@ -1594,7 +1594,7 @@ COOKED_CHICKEN:
   initiation:
     initiation: true
     startprice: 64.0
-COOKED_FISH:
+COOKED_FISH_0:
   name:
     display: cooked_fish
     aliases: cookedfish,
@@ -1636,7 +1636,7 @@ COOKED_FISH_1:
   initiation:
     initiation: true
     startprice: 214.0
-COOKIE:
+COOKIE_0:
   name:
     display: cookie
     aliases: cookie,
@@ -1657,7 +1657,7 @@ COOKIE:
   initiation:
     initiation: true
     startprice: 4.0
-DARK_OAK_STAIRS:
+DARK_OAK_STAIRS_0:
   name:
     display: dark_oak_wood_stairs
     aliases: darkoakwoodstairs,
@@ -1678,7 +1678,7 @@ DARK_OAK_STAIRS:
   initiation:
     initiation: true
     startprice: 20.0
-DAYLIGHT_DETECTOR:
+DAYLIGHT_DETECTOR_0:
   name:
     display: daylight_sensor
     aliases: daylightsensor,
@@ -1699,7 +1699,7 @@ DAYLIGHT_DETECTOR:
   initiation:
     initiation: true
     startprice: 106.0
-DEAD_BUSH:
+DEAD_BUSH_0:
   name:
     display: dead_bush
     aliases: deadbush,
@@ -1720,7 +1720,7 @@ DEAD_BUSH:
   initiation:
     initiation: true
     startprice: 2.0
-DETECTOR_RAIL:
+DETECTOR_RAIL_0:
   name:
     display: detector_rail
     aliases: detectorrail,
@@ -1741,7 +1741,7 @@ DETECTOR_RAIL:
   initiation:
     initiation: true
     startprice: 80.0
-DIAMOND:
+DIAMOND_0:
   name:
     display: diamond
     aliases: diamond,
@@ -1762,7 +1762,7 @@ DIAMOND:
   initiation:
     initiation: true
     startprice: 4000.0
-DIAMOND_AXE:
+DIAMOND_AXE_0:
   name:
     display: diamond_axe
     aliases: diamondaxe,
@@ -1783,7 +1783,7 @@ DIAMOND_AXE:
   initiation:
     initiation: true
     startprice: 12200.0
-DIAMOND_BARDING:
+DIAMOND_BARDING_0:
   name:
     display: diamond_horse_armor
     aliases: diamondhorsearmor,
@@ -1804,7 +1804,7 @@ DIAMOND_BARDING:
   initiation:
     initiation: true
     startprice: 40000.0
-DIAMOND_BLOCK:
+DIAMOND_BLOCK_0:
   name:
     display: diamond_block
     aliases: diamondblock,
@@ -1825,7 +1825,7 @@ DIAMOND_BLOCK:
   initiation:
     initiation: true
     startprice: 36000.0
-DIAMOND_BOOTS:
+DIAMOND_BOOTS_0:
   name:
     display: diamond_boots
     aliases: diamondboots,
@@ -1846,7 +1846,7 @@ DIAMOND_BOOTS:
   initiation:
     initiation: true
     startprice: 16000.0
-DIAMOND_CHESTPLATE:
+DIAMOND_CHESTPLATE_0:
   name:
     display: diamond_chestplate
     aliases: diamondchestplate,
@@ -1867,7 +1867,7 @@ DIAMOND_CHESTPLATE:
   initiation:
     initiation: true
     startprice: 32000.0
-DIAMOND_HELMET:
+DIAMOND_HELMET_0:
   name:
     display: diamond_helmet
     aliases: diamondhelmet,
@@ -1888,7 +1888,7 @@ DIAMOND_HELMET:
   initiation:
     initiation: true
     startprice: 20000.0
-DIAMOND_HOE:
+DIAMOND_HOE_0:
   name:
     display: diamond_hoe
     aliases: diamondhoe,
@@ -1909,7 +1909,7 @@ DIAMOND_HOE:
   initiation:
     initiation: true
     startprice: 8100.0
-DIAMOND_LEGGINGS:
+DIAMOND_LEGGINGS_0:
   name:
     display: diamond_leggings
     aliases: diamondleggings,
@@ -1930,7 +1930,7 @@ DIAMOND_LEGGINGS:
   initiation:
     initiation: true
     startprice: 28000.0
-DIAMOND_ORE:
+DIAMOND_ORE_0:
   name:
     display: diamond_ore
     aliases: diamondore,
@@ -1951,7 +1951,7 @@ DIAMOND_ORE:
   initiation:
     initiation: true
     startprice: 18000.0
-DIAMOND_PICKAXE:
+DIAMOND_PICKAXE_0:
   name:
     display: diamond_pickaxe
     aliases: diamondpickaxe,
@@ -1972,7 +1972,7 @@ DIAMOND_PICKAXE:
   initiation:
     initiation: true
     startprice: 12200.0
-DIAMOND_SPADE:
+DIAMOND_SPADE_0:
   name:
     display: diamond_shovel
     aliases: diamondshovel,
@@ -1993,7 +1993,7 @@ DIAMOND_SPADE:
   initiation:
     initiation: true
     startprice: 4100.0
-DIAMOND_SWORD:
+DIAMOND_SWORD_0:
   name:
     display: diamond_sword
     aliases: diamondsword,
@@ -2014,7 +2014,7 @@ DIAMOND_SWORD:
   initiation:
     initiation: true
     startprice: 8100.0
-DIODE:
+DIODE_0:
   name:
     display: repeater
     aliases: repeater,
@@ -2035,7 +2035,7 @@ DIODE:
   initiation:
     initiation: true
     startprice: 70.0
-DIRT:
+DIRT_0:
   name:
     display: dirt
     aliases: dirt,
@@ -2098,7 +2098,7 @@ DIRT_2:
   initiation:
     initiation: true
     startprice: 400.0
-DISPENSER:
+DISPENSER_0:
   name:
     display: dispenser
     aliases: dispenser,
@@ -2245,7 +2245,7 @@ DOUBLE_PLANT_5:
   initiation:
     initiation: true
     startprice: 80.0
-DRAGON_EGG:
+DRAGON_EGG_0:
   name:
     display: dragon_egg
     aliases: dragonegg,
@@ -2266,7 +2266,7 @@ DRAGON_EGG:
   initiation:
     initiation: true
     startprice: 14000.0
-DROPPER:
+DROPPER_0:
   name:
     display: dropper
     aliases: dropper,
@@ -2287,7 +2287,7 @@ DROPPER:
   initiation:
     initiation: true
     startprice: 28.0
-efficiency1:
+DIG_SPEED_1:
   name:
     display: efficiency_1
     aliases: efficiency1,
@@ -2308,7 +2308,7 @@ efficiency1:
   initiation:
     initiation: true
     startprice: 50.0
-efficiency2:
+DIG_SPEED_2:
   name:
     display: efficiency_2
     aliases: efficiency2,
@@ -2329,7 +2329,7 @@ efficiency2:
   initiation:
     initiation: true
     startprice: 200.0
-efficiency3:
+DIG_SPEED_3:
   name:
     display: efficiency_3
     aliases: efficiency3,
@@ -2350,7 +2350,7 @@ efficiency3:
   initiation:
     initiation: true
     startprice: 2000.0
-efficiency4:
+DIG_SPEED_4:
   name:
     display: efficiency_4
     aliases: efficiency4,
@@ -2371,7 +2371,7 @@ efficiency4:
   initiation:
     initiation: true
     startprice: 3000.0
-efficiency5:
+DIG_SPEED_5:
   name:
     display: efficiency_5
     aliases: efficiency5,
@@ -2392,7 +2392,7 @@ efficiency5:
   initiation:
     initiation: true
     startprice: 7000.0
-EGG:
+EGG_0:
   name:
     display: egg
     aliases: egg,
@@ -2413,7 +2413,7 @@ EGG:
   initiation:
     initiation: true
     startprice: 4.0
-EMERALD:
+EMERALD_0:
   name:
     display: emerald
     aliases: emerald,
@@ -2434,7 +2434,7 @@ EMERALD:
   initiation:
     initiation: true
     startprice: 512.0
-EMERALD_BLOCK:
+EMERALD_BLOCK_0:
   name:
     display: emerald_block
     aliases: emeraldblock,
@@ -2455,7 +2455,7 @@ EMERALD_BLOCK:
   initiation:
     initiation: true
     startprice: 4608.0
-EMERALD_ORE:
+EMERALD_ORE_0:
   name:
     display: emerald_ore
     aliases: emeraldore,
@@ -2476,7 +2476,7 @@ EMERALD_ORE:
   initiation:
     initiation: true
     startprice: 16000.0
-EMPTY_MAP:
+EMPTY_MAP_0:
   name:
     display: empty_map
     aliases: emptymap,
@@ -2497,7 +2497,7 @@ EMPTY_MAP:
   initiation:
     initiation: true
     startprice: 360.0
-ENCHANTED_BOOK:
+ENCHANTED_BOOK_0:
   name:
     display: enchanted_book
     aliases: enchantedbook,
@@ -2518,7 +2518,7 @@ ENCHANTED_BOOK:
   initiation:
     initiation: true
     startprice: 30.0
-ENCHANTMENT_TABLE:
+ENCHANTMENT_TABLE_0:
   name:
     display: enchantment_table
     aliases: enchantmenttable,
@@ -2539,7 +2539,7 @@ ENCHANTMENT_TABLE:
   initiation:
     initiation: true
     startprice: 9300.0
-ENDER_CHEST:
+ENDER_CHEST_0:
   name:
     display: ender_chest
     aliases: enderchest,
@@ -2560,7 +2560,7 @@ ENDER_CHEST:
   initiation:
     initiation: true
     startprice: 3460.0
-ENDER_PEARL:
+ENDER_PEARL_0:
   name:
     display: ender_pearl
     aliases: enderpearl,
@@ -2581,7 +2581,7 @@ ENDER_PEARL:
   initiation:
     initiation: true
     startprice: 800.0
-ENDER_PORTAL_FRAME:
+ENDER_PORTAL_FRAME_0:
   name:
     display: ender_portal_frame
     aliases: enderportalframe,
@@ -2602,7 +2602,7 @@ ENDER_PORTAL_FRAME:
   initiation:
     initiation: true
     startprice: 5000.0
-ENDER_STONE:
+ENDER_STONE_0:
   name:
     display: endstone
     aliases: endstone,
@@ -2623,7 +2623,7 @@ ENDER_STONE:
   initiation:
     initiation: true
     startprice: 150.0
-EXP_BOTTLE:
+EXP_BOTTLE_0:
   name:
     display: bottle_o_enchanting
     aliases: bottleoenchanting,
@@ -2644,7 +2644,7 @@ EXP_BOTTLE:
   initiation:
     initiation: true
     startprice: 100.0
-EXPLOSIVE_MINECART:
+EXPLOSIVE_MINECART_0:
   name:
     display: minecart_with_tnt
     aliases: minecartwithtnt,
@@ -2665,7 +2665,7 @@ EXPLOSIVE_MINECART:
   initiation:
     initiation: true
     startprice: 870.0
-EYE_OF_ENDER:
+EYE_OF_ENDER_0:
   name:
     display: eye_of_ender
     aliases: eyeofender,
@@ -2686,7 +2686,7 @@ EYE_OF_ENDER:
   initiation:
     initiation: true
     startprice: 1060.0
-FEATHER:
+FEATHER_0:
   name:
     display: feather
     aliases: feather,
@@ -2707,7 +2707,7 @@ FEATHER:
   initiation:
     initiation: true
     startprice: 6.0
-featherfalling1:
+PROTECTION_FALL_1:
   name:
     display: feather_falling_1
     aliases: featherfalling1,
@@ -2728,7 +2728,7 @@ featherfalling1:
   initiation:
     initiation: true
     startprice: 200.0
-featherfalling2:
+PROTECTION_FALL_2:
   name:
     display: feather_falling_2
     aliases: featherfalling2,
@@ -2749,7 +2749,7 @@ featherfalling2:
   initiation:
     initiation: true
     startprice: 600.0
-featherfalling3:
+PROTECTION_FALL_3:
   name:
     display: feather_falling_3
     aliases: featherfalling3,
@@ -2770,7 +2770,7 @@ featherfalling3:
   initiation:
     initiation: true
     startprice: 1600.0
-featherfalling4:
+PROTECTION_FALL_4:
   name:
     display: feather_falling_4
     aliases: featherfalling4,
@@ -2791,7 +2791,7 @@ featherfalling4:
   initiation:
     initiation: true
     startprice: 4000.0
-FENCE:
+FENCE_0:
   name:
     display: fence
     aliases: fence,
@@ -2812,7 +2812,7 @@ FENCE:
   initiation:
     initiation: true
     startprice: 4.0
-FENCE_GATE:
+FENCE_GATE_0:
   name:
     display: gate
     aliases: gate,
@@ -2833,7 +2833,7 @@ FENCE_GATE:
   initiation:
     initiation: true
     startprice: 12.0
-FERMENTED_SPIDER_EYE:
+FERMENTED_SPIDER_EYE_0:
   name:
     display: fermented_spider_eye
     aliases: fermentedspidereye,
@@ -2854,7 +2854,7 @@ FERMENTED_SPIDER_EYE:
   initiation:
     initiation: true
     startprice: 90.0
-FIRE:
+FIRE_0:
   name:
     display: fire
     aliases: fire,
@@ -2875,7 +2875,7 @@ FIRE:
   initiation:
     initiation: true
     startprice: 9000.0
-fireaspect1:
+FIRE_ASPECT_1:
   name:
     display: fire_aspect_1
     aliases: fireaspect1,
@@ -2896,7 +2896,7 @@ fireaspect1:
   initiation:
     initiation: true
     startprice: 1000.0
-fireaspect2:
+FIRE_ASPECT_2:
   name:
     display: fire_aspect_2
     aliases: fireaspect2,
@@ -2917,7 +2917,7 @@ fireaspect2:
   initiation:
     initiation: true
     startprice: 4000.0
-FIREBALL:
+FIREBALL_0:
   name:
     display: firecharge
     aliases: firecharge,
@@ -2938,7 +2938,7 @@ FIREBALL:
   initiation:
     initiation: true
     startprice: 320.0
-fireprotection1:
+PROTECTION_FIRE_1:
   name:
     display: fire_protection_1
     aliases: fireprotection1,
@@ -2959,7 +2959,7 @@ fireprotection1:
   initiation:
     initiation: true
     startprice: 200.0
-fireprotection2:
+PROTECTION_FIRE_2:
   name:
     display: fire_protection_2
     aliases: fireprotection2,
@@ -2980,7 +2980,7 @@ fireprotection2:
   initiation:
     initiation: true
     startprice: 1000.0
-fireprotection3:
+PROTECTION_FIRE_3:
   name:
     display: fire_protection_3
     aliases: fireprotection3,
@@ -3001,7 +3001,7 @@ fireprotection3:
   initiation:
     initiation: true
     startprice: 2400.0
-fireprotection4:
+PROTECTION_FIRE_4:
   name:
     display: fire_protection_4
     aliases: fireprotection4,
@@ -3022,7 +3022,7 @@ fireprotection4:
   initiation:
     initiation: true
     startprice: 5600.0
-FISHING_ROD:
+FISHING_ROD_0:
   name:
     display: fishing_rod
     aliases: fishingrod,
@@ -3043,7 +3043,7 @@ FISHING_ROD:
   initiation:
     initiation: true
     startprice: 6.0
-flame1:
+ARROW_FIRE_1:
   name:
     display: flame_1
     aliases: flame1,
@@ -3064,7 +3064,7 @@ flame1:
   initiation:
     initiation: true
     startprice: 1600.0
-FLINT:
+FLINT_0:
   name:
     display: flint
     aliases: flint,
@@ -3085,7 +3085,7 @@ FLINT:
   initiation:
     initiation: true
     startprice: 16.0
-FLINT_AND_STEEL:
+FLINT_AND_STEEL_0:
   name:
     display: flint_and_steel
     aliases: flintandsteel,
@@ -3106,7 +3106,7 @@ FLINT_AND_STEEL:
   initiation:
     initiation: true
     startprice: 100.0
-FLOWER_POT_ITEM:
+FLOWER_POT_ITEM_0:
   name:
     display: flower_pot
     aliases: flowerpot,
@@ -3127,7 +3127,7 @@ FLOWER_POT_ITEM:
   initiation:
     initiation: true
     startprice: 60.0
-fortune1:
+LOOT_BONUS_BLOCKS_1:
   name:
     display: fortune_1
     aliases: fortune1,
@@ -3148,7 +3148,7 @@ fortune1:
   initiation:
     initiation: true
     startprice: 1200.0
-fortune2:
+LOOT_BONUS_BLOCKS_2:
   name:
     display: fortune_2
     aliases: fortune2,
@@ -3169,7 +3169,7 @@ fortune2:
   initiation:
     initiation: true
     startprice: 3200.0
-fortune3:
+LOOT_BONUS_BLOCKS_3:
   name:
     display: fortune_3
     aliases: fortune3,
@@ -3190,7 +3190,7 @@ fortune3:
   initiation:
     initiation: true
     startprice: 8000.0
-FURNACE:
+FURNACE_0:
   name:
     display: furnace
     aliases: furnace,
@@ -3211,7 +3211,7 @@ FURNACE:
   initiation:
     initiation: true
     startprice: 20.0
-GHAST_TEAR:
+GHAST_TEAR_0:
   name:
     display: ghast_tear
     aliases: ghasttear,
@@ -3232,7 +3232,7 @@ GHAST_TEAR:
   initiation:
     initiation: true
     startprice: 800.0
-GLASS:
+GLASS_0:
   name:
     display: glass
     aliases: glass,
@@ -3253,7 +3253,7 @@ GLASS:
   initiation:
     initiation: true
     startprice: 20.0
-GLASS_BOTTLE:
+GLASS_BOTTLE_0:
   name:
     display: glass_bottle
     aliases: glassbottle,
@@ -3274,7 +3274,7 @@ GLASS_BOTTLE:
   initiation:
     initiation: true
     startprice: 30.0
-GLOWSTONE:
+GLOWSTONE_0:
   name:
     display: glowstone
     aliases: glowstone,
@@ -3295,7 +3295,7 @@ GLOWSTONE:
   initiation:
     initiation: true
     startprice: 128.0
-GLOWSTONE_DUST:
+GLOWSTONE_DUST_0:
   name:
     display: glowstone_dust
     aliases: glowstonedust,
@@ -3316,7 +3316,7 @@ GLOWSTONE_DUST:
   initiation:
     initiation: true
     startprice: 32.0
-GOLD_AXE:
+GOLD_AXE_0:
   name:
     display: gold_axe
     aliases: goldaxe,
@@ -3337,7 +3337,7 @@ GOLD_AXE:
   initiation:
     initiation: true
     startprice: 810.0
-GOLD_BARDING:
+GOLD_BARDING_0:
   name:
     display: gold_horse_armor
     aliases: goldhorsearmor,
@@ -3358,7 +3358,7 @@ GOLD_BARDING:
   initiation:
     initiation: true
     startprice: 30000.0
-GOLD_BLOCK:
+GOLD_BLOCK_0:
   name:
     display: gold_block
     aliases: goldblock,
@@ -3379,7 +3379,7 @@ GOLD_BLOCK:
   initiation:
     initiation: true
     startprice: 2400.0
-GOLD_BOOTS:
+GOLD_BOOTS_0:
   name:
     display: gold_boots
     aliases: goldboots,
@@ -3400,7 +3400,7 @@ GOLD_BOOTS:
   initiation:
     initiation: true
     startprice: 1100.0
-GOLD_CHESTPLATE:
+GOLD_CHESTPLATE_0:
   name:
     display: gold_chestplate
     aliases: goldchestplate,
@@ -3421,7 +3421,7 @@ GOLD_CHESTPLATE:
   initiation:
     initiation: true
     startprice: 2200.0
-GOLD_HELMET:
+GOLD_HELMET_0:
   name:
     display: gold_helmet
     aliases: goldhelmet,
@@ -3442,7 +3442,7 @@ GOLD_HELMET:
   initiation:
     initiation: true
     startprice: 1350.0
-GOLD_HOE:
+GOLD_HOE_0:
   name:
     display: gold_hoe
     aliases: goldhoe,
@@ -3463,7 +3463,7 @@ GOLD_HOE:
   initiation:
     initiation: true
     startprice: 520.0
-GOLD_INGOT:
+GOLD_INGOT_0:
   name:
     display: gold_ingot
     aliases: goldingot,
@@ -3484,7 +3484,7 @@ GOLD_INGOT:
   initiation:
     initiation: true
     startprice: 266.66
-GOLD_LEGGINGS:
+GOLD_LEGGINGS_0:
   name:
     display: gold_leggings
     aliases: goldleggings,
@@ -3505,7 +3505,7 @@ GOLD_LEGGINGS:
   initiation:
     initiation: true
     startprice: 1880.0
-GOLD_NUGGET:
+GOLD_NUGGET_0:
   name:
     display: gold_nugget
     aliases: goldnugget,
@@ -3526,7 +3526,7 @@ GOLD_NUGGET:
   initiation:
     initiation: true
     startprice: 28.0
-GOLD_ORE:
+GOLD_ORE_0:
   name:
     display: gold_ore
     aliases: goldore,
@@ -3547,7 +3547,7 @@ GOLD_ORE:
   initiation:
     initiation: true
     startprice: 260.0
-GOLD_PICKAXE:
+GOLD_PICKAXE_0:
   name:
     display: gold_pickaxe
     aliases: goldpickaxe,
@@ -3568,7 +3568,7 @@ GOLD_PICKAXE:
   initiation:
     initiation: true
     startprice: 820.0
-GOLD_PLATE:
+GOLD_PLATE_0:
   name:
     display: gold_pressure_plate
     aliases: goldpressureplate,
@@ -3589,7 +3589,7 @@ GOLD_PLATE:
   initiation:
     initiation: true
     startprice: 533.33
-GOLD_RECORD:
+GOLD_RECORD_0:
   name:
     display: 13_disk
     aliases: 13disk,
@@ -3610,7 +3610,7 @@ GOLD_RECORD:
   initiation:
     initiation: true
     startprice: 400.0
-GOLD_SPADE:
+GOLD_SPADE_0:
   name:
     display: gold_shovel
     aliases: goldshovel,
@@ -3631,7 +3631,7 @@ GOLD_SPADE:
   initiation:
     initiation: true
     startprice: 280.0
-GOLD_SWORD:
+GOLD_SWORD_0:
   name:
     display: gold_sword
     aliases: goldsword,
@@ -3694,7 +3694,7 @@ GOLDEN_APPLE_1:
   initiation:
     initiation: true
     startprice: 19600.0
-GOLDEN_CARROT:
+GOLDEN_CARROT_0:
   name:
     display: golden_carrot
     aliases: goldencarrot,
@@ -3715,7 +3715,7 @@ GOLDEN_CARROT:
   initiation:
     initiation: true
     startprice: 264.0
-GRASS:
+GRASS_0:
   name:
     display: grass
     aliases: grass,
@@ -3736,7 +3736,7 @@ GRASS:
   initiation:
     initiation: true
     startprice: 100.0
-GRAVEL:
+GRAVEL_0:
   name:
     display: gravel
     aliases: gravel,
@@ -3757,7 +3757,7 @@ GRAVEL:
   initiation:
     initiation: true
     startprice: 1.0
-GREEN_RECORD:
+GREEN_RECORD_0:
   name:
     display: cat_disk
     aliases: catdisk,
@@ -3778,7 +3778,7 @@ GREEN_RECORD:
   initiation:
     initiation: true
     startprice: 400.0
-GRILLED_PORK:
+GRILLED_PORK_0:
   name:
     display: cooked_pork
     aliases: cookedpork,grilledpork,
@@ -3799,7 +3799,7 @@ GRILLED_PORK:
   initiation:
     initiation: true
     startprice: 80.0
-HARD_CLAY:
+HARD_CLAY_0:
   name:
     display: hardened_clay
     aliases: hardenedclay,
@@ -3820,7 +3820,7 @@ HARD_CLAY:
   initiation:
     initiation: true
     startprice: 48.0
-HAY_BLOCK:
+HAY_BLOCK_0:
   name:
     display: hay_bale
     aliases: haybale,
@@ -3841,7 +3841,7 @@ HAY_BLOCK:
   initiation:
     initiation: true
     startprice: 90.0
-HOPPER:
+HOPPER_0:
   name:
     display: hopper
     aliases: hopper,
@@ -3862,7 +3862,7 @@ HOPPER:
   initiation:
     initiation: true
     startprice: 330.0
-HOPPER_MINECART:
+HOPPER_MINECART_0:
   name:
     display: minecart_with_hopper
     aliases: minecartwithhopper,
@@ -4345,7 +4345,7 @@ HUGE_MUSHROOM_2_9:
   initiation:
     initiation: true
     startprice: 10.0
-ICE:
+ICE_0:
   name:
     display: ice
     aliases: ice,
@@ -4366,7 +4366,7 @@ ICE:
   initiation:
     initiation: true
     startprice: 400.0
-infinity1:
+ARROW_INFINITE_1:
   name:
     display: infinity_1
     aliases: infinity1,
@@ -4723,7 +4723,7 @@ INK_SACK_9:
   initiation:
     initiation: true
     startprice: 40.0
-IRON_AXE:
+IRON_AXE_0:
   name:
     display: iron_axe
     aliases: ironaxe,
@@ -4744,7 +4744,7 @@ IRON_AXE:
   initiation:
     initiation: true
     startprice: 300.0
-IRON_BARDING:
+IRON_BARDING_0:
   name:
     display: iron_horse_armor
     aliases: ironhorsearmor,
@@ -4765,7 +4765,7 @@ IRON_BARDING:
   initiation:
     initiation: true
     startprice: 16000.0
-IRON_BLOCK:
+IRON_BLOCK_0:
   name:
     display: iron_block
     aliases: ironblock,
@@ -4786,7 +4786,7 @@ IRON_BLOCK:
   initiation:
     initiation: true
     startprice: 576.0
-IRON_BOOTS:
+IRON_BOOTS_0:
   name:
     display: iron_boots
     aliases: ironboots,
@@ -4807,7 +4807,7 @@ IRON_BOOTS:
   initiation:
     initiation: true
     startprice: 270.0
-IRON_CHESTPLATE:
+IRON_CHESTPLATE_0:
   name:
     display: iron_chestplate
     aliases: ironchestplate,
@@ -4828,7 +4828,7 @@ IRON_CHESTPLATE:
   initiation:
     initiation: true
     startprice: 540.0
-IRON_DOOR:
+IRON_DOOR_0:
   name:
     display: iron_door
     aliases: irondoor,
@@ -4849,7 +4849,7 @@ IRON_DOOR:
   initiation:
     initiation: true
     startprice: 384.0
-IRON_FENCE:
+IRON_FENCE_0:
   name:
     display: iron_bars
     aliases: ironbars,
@@ -4870,7 +4870,7 @@ IRON_FENCE:
   initiation:
     initiation: true
     startprice: 28.0
-IRON_HELMET:
+IRON_HELMET_0:
   name:
     display: iron_helmet
     aliases: ironhelmet,
@@ -4891,7 +4891,7 @@ IRON_HELMET:
   initiation:
     initiation: true
     startprice: 340.0
-IRON_HOE:
+IRON_HOE_0:
   name:
     display: iron_hoe
     aliases: ironhoe,
@@ -4912,7 +4912,7 @@ IRON_HOE:
   initiation:
     initiation: true
     startprice: 140.0
-IRON_INGOT:
+IRON_INGOT_0:
   name:
     display: iron_ingot
     aliases: ironingot,
@@ -4933,7 +4933,7 @@ IRON_INGOT:
   initiation:
     initiation: true
     startprice: 64.0
-IRON_LEGGINGS:
+IRON_LEGGINGS_0:
   name:
     display: iron_leggings
     aliases: ironleggings,
@@ -4954,7 +4954,7 @@ IRON_LEGGINGS:
   initiation:
     initiation: true
     startprice: 470.0
-IRON_ORE:
+IRON_ORE_0:
   name:
     display: iron_ore
     aliases: ironore,
@@ -4975,7 +4975,7 @@ IRON_ORE:
   initiation:
     initiation: true
     startprice: 60.0
-IRON_PICKAXE:
+IRON_PICKAXE_0:
   name:
     display: iron_pickaxe
     aliases: ironpickaxe,
@@ -4996,7 +4996,7 @@ IRON_PICKAXE:
   initiation:
     initiation: true
     startprice: 300.0
-IRON_PLATE:
+IRON_PLATE_0:
   name:
     display: iron_pressure_plate
     aliases: ironpressureplate,
@@ -5017,7 +5017,7 @@ IRON_PLATE:
   initiation:
     initiation: true
     startprice: 128.0
-IRON_SPADE:
+IRON_SPADE_0:
   name:
     display: iron_shovel
     aliases: ironshovel,
@@ -5038,7 +5038,7 @@ IRON_SPADE:
   initiation:
     initiation: true
     startprice: 70.0
-IRON_SWORD:
+IRON_SWORD_0:
   name:
     display: iron_sword
     aliases: ironsword,
@@ -5059,7 +5059,7 @@ IRON_SWORD:
   initiation:
     initiation: true
     startprice: 132.0
-ITEM_FRAME:
+ITEM_FRAME_0:
   name:
     display: item_frame
     aliases: itemframe,
@@ -5080,7 +5080,7 @@ ITEM_FRAME:
   initiation:
     initiation: true
     startprice: 36.0
-JACK_O_LANTERN:
+JACK_O_LANTERN_0:
   name:
     display: jack_o_lantern
     aliases: jackolantern,
@@ -5101,7 +5101,7 @@ JACK_O_LANTERN:
   initiation:
     initiation: true
     startprice: 50.0
-JUKEBOX:
+JUKEBOX_0:
   name:
     display: jukebox
     aliases: jukebox,
@@ -5122,7 +5122,7 @@ JUKEBOX:
   initiation:
     initiation: true
     startprice: 4100.0
-JUNGLE_WOOD_STAIRS:
+JUNGLE_WOOD_STAIRS_0:
   name:
     display: jungle_wood_stairs
     aliases: junglewoodstairs,
@@ -5143,7 +5143,7 @@ JUNGLE_WOOD_STAIRS:
   initiation:
     initiation: true
     startprice: 2.0
-knockback1:
+KNOCKBACK_1:
   name:
     display: knockback_1
     aliases: knockback1,
@@ -5164,7 +5164,7 @@ knockback1:
   initiation:
     initiation: true
     startprice: 400.0
-knockback2:
+KNOCKBACK_2:
   name:
     display: knockback_2
     aliases: knockback2,
@@ -5185,7 +5185,7 @@ knockback2:
   initiation:
     initiation: true
     startprice: 3000.0
-LADDER:
+LADDER_0:
   name:
     display: ladder
     aliases: ladder,
@@ -5206,7 +5206,7 @@ LADDER:
   initiation:
     initiation: true
     startprice: 5.0
-LAPIS_BLOCK:
+LAPIS_BLOCK_0:
   name:
     display: lapis_block
     aliases: lapisblock,
@@ -5227,7 +5227,7 @@ LAPIS_BLOCK:
   initiation:
     initiation: true
     startprice: 500.0
-LAPIS_ORE:
+LAPIS_ORE_0:
   name:
     display: lapis_ore
     aliases: lapisore,
@@ -5248,7 +5248,7 @@ LAPIS_ORE:
   initiation:
     initiation: true
     startprice: 500.0
-LAVA_BUCKET:
+LAVA_BUCKET_0:
   name:
     display: lava_bucket
     aliases: lavabucket,
@@ -5269,7 +5269,7 @@ LAVA_BUCKET:
   initiation:
     initiation: true
     startprice: 300.0
-LEASH:
+LEASH_0:
   name:
     display: lead
     aliases: lead,
@@ -5290,7 +5290,7 @@ LEASH:
   initiation:
     initiation: true
     startprice: 54.0
-LEATHER:
+LEATHER_0:
   name:
     display: leather
     aliases: leather,
@@ -5311,7 +5311,7 @@ LEATHER:
   initiation:
     initiation: true
     startprice: 20.0
-LEATHER_BOOTS:
+LEATHER_BOOTS_0:
   name:
     display: leather_boots
     aliases: leatherboots,
@@ -5332,7 +5332,7 @@ LEATHER_BOOTS:
   initiation:
     initiation: true
     startprice: 80.0
-LEATHER_CHESTPLATE:
+LEATHER_CHESTPLATE_0:
   name:
     display: leather_chestplate
     aliases: leatherchestplate,
@@ -5353,7 +5353,7 @@ LEATHER_CHESTPLATE:
   initiation:
     initiation: true
     startprice: 160.0
-LEATHER_HELMET:
+LEATHER_HELMET_0:
   name:
     display: leather_helmet
     aliases: leatherhelmet,
@@ -5374,7 +5374,7 @@ LEATHER_HELMET:
   initiation:
     initiation: true
     startprice: 100.0
-LEATHER_LEGGINGS:
+LEATHER_LEGGINGS_0:
   name:
     display: leather_leggings
     aliases: leatherleggings,
@@ -5521,7 +5521,7 @@ LEAVES_3:
   initiation:
     initiation: true
     startprice: 2.0
-LEVER:
+LEVER_0:
   name:
     display: lever
     aliases: lever,
@@ -5605,6 +5605,24 @@ LOG_2:
   initiation:
     initiation: true
     startprice: 8.0
+LOG_2_0:
+  information:
+    type: item
+    material: LOG_2
+    data: 0
+  value: 4.0
+  price:
+    static: false
+    staticprice: 8.0
+  stock:
+    stock: 0
+    median: 10000
+  initiation:
+    initiation: true
+    startprice: 8.0
+  name:
+    display: acacia_log
+    aliases: acacialog,
 LOG_2_1:
   name:
     display: dark_oak_log
@@ -5689,7 +5707,7 @@ LONG_GRASS_2:
   initiation:
     initiation: true
     startprice: 6.0
-looting1:
+LOOT_BONUS_MOBS_1:
   name:
     display: looting_1
     aliases: looting1,
@@ -5710,7 +5728,7 @@ looting1:
   initiation:
     initiation: true
     startprice: 1200.0
-looting2:
+LOOT_BONUS_MOBS_2:
   name:
     display: looting_2
     aliases: looting2,
@@ -5731,7 +5749,7 @@ looting2:
   initiation:
     initiation: true
     startprice: 3600.0
-looting3:
+LOOT_BONUS_MOBS_3:
   name:
     display: looting_3
     aliases: looting3,
@@ -5752,7 +5770,7 @@ looting3:
   initiation:
     initiation: true
     startprice: 8000.0
-MAGMA_CREAM:
+MAGMA_CREAM_0:
   name:
     display: magma_cream
     aliases: magmacream,
@@ -5773,7 +5791,7 @@ MAGMA_CREAM:
   initiation:
     initiation: true
     startprice: 326.0
-MAP:
+MAP_0:
   name:
     display: map
     aliases: map,
@@ -5794,7 +5812,7 @@ MAP:
   initiation:
     initiation: true
     startprice: 380.0
-MELON:
+MELON_0:
   name:
     display: melon
     aliases: melon,
@@ -5815,7 +5833,7 @@ MELON:
   initiation:
     initiation: true
     startprice: 20.0
-MELON_BLOCK:
+MELON_BLOCK_0:
   name:
     display: melon_block
     aliases: melonblock,
@@ -5836,7 +5854,7 @@ MELON_BLOCK:
   initiation:
     initiation: true
     startprice: 200.0
-MELON_SEEDS:
+MELON_SEEDS_0:
   name:
     display: melon_seeds
     aliases: melonseeds,
@@ -5857,7 +5875,7 @@ MELON_SEEDS:
   initiation:
     initiation: true
     startprice: 60.0
-MILK_BUCKET:
+MILK_BUCKET_0:
   name:
     display: milk
     aliases: milk,
@@ -5878,7 +5896,7 @@ MILK_BUCKET:
   initiation:
     initiation: true
     startprice: 240.0
-MINECART:
+MINECART_0:
   name:
     display: minecart
     aliases: minecart,
@@ -5899,7 +5917,7 @@ MINECART:
   initiation:
     initiation: true
     startprice: 320.0
-MOB_SPAWNER:
+MOB_SPAWNER_0:
   name:
     display: spawner
     aliases: spawner,
@@ -6613,7 +6631,7 @@ MONSTER_EGGS_5:
   initiation:
     initiation: true
     startprice: 2000.0
-MOSSY_COBBLESTONE:
+MOSSY_COBBLESTONE_0:
   name:
     display: moss_stone
     aliases: mossstone,
@@ -6634,7 +6652,7 @@ MOSSY_COBBLESTONE:
   initiation:
     initiation: true
     startprice: 400.0
-MUSHROOM_SOUP:
+MUSHROOM_SOUP_0:
   name:
     display: mushroom_soup
     aliases: mushroomsoup,
@@ -6655,7 +6673,7 @@ MUSHROOM_SOUP:
   initiation:
     initiation: true
     startprice: 20.0
-MYCEL:
+MYCEL_0:
   name:
     display: mycelium
     aliases: mycelium,
@@ -6676,7 +6694,7 @@ MYCEL:
   initiation:
     initiation: true
     startprice: 400.0
-NAME_TAG:
+NAME_TAG_0:
   name:
     display: name_tag
     aliases: nametag,
@@ -6697,7 +6715,7 @@ NAME_TAG:
   initiation:
     initiation: true
     startprice: 20000.0
-NETHER_BRICK:
+NETHER_BRICK_0:
   name:
     display: nether_brick
     aliases: netherbrick,
@@ -6718,7 +6736,7 @@ NETHER_BRICK:
   initiation:
     initiation: true
     startprice: 40.0
-NETHER_BRICK_ITEM:
+NETHER_BRICK_ITEM_0:
   name:
     display: single_nether_brick
     aliases: singlenetherbrick,
@@ -6739,7 +6757,7 @@ NETHER_BRICK_ITEM:
   initiation:
     initiation: true
     startprice: 10.0
-NETHER_BRICK_STAIRS:
+NETHER_BRICK_STAIRS_0:
   name:
     display: nether_brick_stairs
     aliases: netherbrickstairs,
@@ -6760,7 +6778,7 @@ NETHER_BRICK_STAIRS:
   initiation:
     initiation: true
     startprice: 60.0
-NETHER_FENCE:
+NETHER_FENCE_0:
   name:
     display: nether_fence
     aliases: netherfence,
@@ -6781,7 +6799,7 @@ NETHER_FENCE:
   initiation:
     initiation: true
     startprice: 40.0
-NETHER_STALK:
+NETHER_STALK_0:
   name:
     display: netherwarts
     aliases: netherwarts,
@@ -6802,7 +6820,7 @@ NETHER_STALK:
   initiation:
     initiation: true
     startprice: 40.0
-NETHER_STAR:
+NETHER_STAR_0:
   name:
     display: nether_star
     aliases: netherstar,
@@ -6823,7 +6841,7 @@ NETHER_STAR:
   initiation:
     initiation: true
     startprice: 144000.0
-NETHERRACK:
+NETHERRACK_0:
   name:
     display: netherrack
     aliases: netherrack,
@@ -6844,7 +6862,7 @@ NETHERRACK:
   initiation:
     initiation: true
     startprice: 6.0
-NOTE_BLOCK:
+NOTE_BLOCK_0:
   name:
     display: note_block
     aliases: noteblock,
@@ -6865,7 +6883,7 @@ NOTE_BLOCK:
   initiation:
     initiation: true
     startprice: 30.0
-OBSIDIAN:
+OBSIDIAN_0:
   name:
     display: obsidian
     aliases: obsidian,
@@ -6886,7 +6904,7 @@ OBSIDIAN:
   initiation:
     initiation: true
     startprice: 200.0
-PACKED_ICE:
+PACKED_ICE_0:
   name:
     display: packed_ice
     aliases: packedice,
@@ -6907,7 +6925,7 @@ PACKED_ICE:
   initiation:
     initiation: true
     startprice: 1600.0
-PAINTING:
+PAINTING_0:
   name:
     display: painting
     aliases: painting,
@@ -6928,7 +6946,7 @@ PAINTING:
   initiation:
     initiation: true
     startprice: 16.0
-PAPER:
+PAPER_0:
   name:
     display: paper
     aliases: paper,
@@ -6949,7 +6967,7 @@ PAPER:
   initiation:
     initiation: true
     startprice: 10.0
-PISTON_BASE:
+PISTON_BASE_0:
   name:
     display: piston
     aliases: piston,
@@ -6970,7 +6988,7 @@ PISTON_BASE:
   initiation:
     initiation: true
     startprice: 100.0
-PISTON_STICKY_BASE:
+PISTON_STICKY_BASE_0:
   name:
     display: sticky_piston
     aliases: stickypiston,
@@ -6991,7 +7009,7 @@ PISTON_STICKY_BASE:
   initiation:
     initiation: true
     startprice: 200.0
-POISONOUS_POTATO:
+POISONOUS_POTATO_0:
   name:
     display: poisonous_potato
     aliases: poisonouspotato,
@@ -7012,7 +7030,7 @@ POISONOUS_POTATO:
   initiation:
     initiation: true
     startprice: 48.0
-PORK:
+PORK_0:
   name:
     display: raw_pork
     aliases: rawpork,
@@ -7033,7 +7051,7 @@ PORK:
   initiation:
     initiation: true
     startprice: 60.0
-PORTAL:
+PORTAL_0:
   name:
     display: portal
     aliases: portal,
@@ -7054,7 +7072,7 @@ PORTAL:
   initiation:
     initiation: true
     startprice: 5000.0
-POTATO_ITEM:
+POTATO_ITEM_0:
   name:
     display: potato
     aliases: potato,
@@ -9091,7 +9109,7 @@ POTION_99:
   initiation:
     initiation: true
     startprice: 366.0
-power1:
+ARROW_DAMAGE_1:
   name:
     display: power_1
     aliases: power1,
@@ -9112,7 +9130,7 @@ power1:
   initiation:
     initiation: true
     startprice: 100.0
-power2:
+ARROW_DAMAGE_2:
   name:
     display: power_2
     aliases: power2,
@@ -9133,7 +9151,7 @@ power2:
   initiation:
     initiation: true
     startprice: 800.0
-power3:
+ARROW_DAMAGE_3:
   name:
     display: power_3
     aliases: power3,
@@ -9154,7 +9172,7 @@ power3:
   initiation:
     initiation: true
     startprice: 1600.0
-power4:
+ARROW_DAMAGE_4:
   name:
     display: power_4
     aliases: power4,
@@ -9175,7 +9193,7 @@ power4:
   initiation:
     initiation: true
     startprice: 3200.0
-power5:
+ARROW_DAMAGE_5:
   name:
     display: power_5
     aliases: power5,
@@ -9196,7 +9214,7 @@ power5:
   initiation:
     initiation: true
     startprice: 5600.0
-POWERED_MINECART:
+POWERED_MINECART_0:
   name:
     display: minecart_with_furnace
     aliases: minecartwithfurnace,
@@ -9217,7 +9235,7 @@ POWERED_MINECART:
   initiation:
     initiation: true
     startprice: 400.0
-POWERED_RAIL:
+POWERED_RAIL_0:
   name:
     display: powered_rail
     aliases: poweredrail,
@@ -9238,7 +9256,7 @@ POWERED_RAIL:
   initiation:
     initiation: true
     startprice: 300.0
-projectileprotection1:
+PROTECTION_PROJECTILE_1:
   name:
     display: projectile_protection_1
     aliases: projectileprotection1,
@@ -9259,7 +9277,7 @@ projectileprotection1:
   initiation:
     initiation: true
     startprice: 100.0
-projectileprotection2:
+PROTECTION_PROJECTILE_2:
   name:
     display: projectile_protection_2
     aliases: projectileprotection2,
@@ -9280,7 +9298,7 @@ projectileprotection2:
   initiation:
     initiation: true
     startprice: 400.0
-projectileprotection3:
+PROTECTION_PROJECTILE_3:
   name:
     display: projectile_protection_3
     aliases: projectileprotection3,
@@ -9301,7 +9319,7 @@ projectileprotection3:
   initiation:
     initiation: true
     startprice: 2000.0
-projectileprotection4:
+PROTECTION_PROJECTILE_4:
   name:
     display: projectile_protection_4
     aliases: projectileprotection4,
@@ -9322,7 +9340,7 @@ projectileprotection4:
   initiation:
     initiation: true
     startprice: 5000.0
-protection1:
+PROTECTION_ENVIRONMENTAL_1:
   name:
     display: protection_1
     aliases: protection1,
@@ -9343,7 +9361,7 @@ protection1:
   initiation:
     initiation: true
     startprice: 50.0
-protection2:
+PROTECTION_ENVIRONMENTAL_2:
   name:
     display: protection_2
     aliases: protection2,
@@ -9364,7 +9382,7 @@ protection2:
   initiation:
     initiation: true
     startprice: 200.0
-protection3:
+PROTECTION_ENVIRONMENTAL_3:
   name:
     display: protection_3
     aliases: protection3,
@@ -9385,7 +9403,7 @@ protection3:
   initiation:
     initiation: true
     startprice: 3600.0
-protection4:
+PROTECTION_ENVIRONMENTAL_4:
   name:
     display: protection_4
     aliases: protection4,
@@ -9406,7 +9424,7 @@ protection4:
   initiation:
     initiation: true
     startprice: 10000.0
-PUMPKIN:
+PUMPKIN_0:
   name:
     display: pumpkin
     aliases: pumpkin,
@@ -9427,7 +9445,7 @@ PUMPKIN:
   initiation:
     initiation: true
     startprice: 40.0
-PUMPKIN_PIE:
+PUMPKIN_PIE_0:
   name:
     display: pumpkin_pie
     aliases: pumpkinpie,
@@ -9448,7 +9466,7 @@ PUMPKIN_PIE:
   initiation:
     initiation: true
     startprice: 56.0
-PUMPKIN_SEEDS:
+PUMPKIN_SEEDS_0:
   name:
     display: pumpkin_seeds
     aliases: pumpkinseeds,
@@ -9469,7 +9487,7 @@ PUMPKIN_SEEDS:
   initiation:
     initiation: true
     startprice: 10.0
-punch1:
+ARROW_KNOCKBACK_1:
   name:
     display: punch_1
     aliases: punch1,
@@ -9490,7 +9508,7 @@ punch1:
   initiation:
     initiation: true
     startprice: 800.0
-punch2:
+ARROW_KNOCKBACK_2:
   name:
     display: punch_2
     aliases: punch2,
@@ -9511,7 +9529,7 @@ punch2:
   initiation:
     initiation: true
     startprice: 3200.0
-QUARTZ:
+QUARTZ_0:
   name:
     display: nether_quartz
     aliases: netherquartz,
@@ -9595,7 +9613,7 @@ QUARTZ_BLOCK_2:
   initiation:
     initiation: true
     startprice: 320.0
-QUARTZ_ORE:
+QUARTZ_ORE_0:
   name:
     display: nether_quartz_ore
     aliases: netherquartzore,
@@ -9616,7 +9634,7 @@ QUARTZ_ORE:
   initiation:
     initiation: true
     startprice: 400.0
-QUARTZ_STAIRS:
+QUARTZ_STAIRS_0:
   name:
     display: quartz_stairs
     aliases: quartzstairs,
@@ -9637,7 +9655,7 @@ QUARTZ_STAIRS:
   initiation:
     initiation: true
     startprice: 240.0
-RAILS:
+RAILS_0:
   name:
     display: rails
     aliases: rails,
@@ -9658,7 +9676,7 @@ RAILS:
   initiation:
     initiation: true
     startprice: 28.0
-RAW_BEEF:
+RAW_BEEF_0:
   name:
     display: raw_beef
     aliases: rawbeef,
@@ -9679,7 +9697,7 @@ RAW_BEEF:
   initiation:
     initiation: true
     startprice: 60.0
-RAW_CHICKEN:
+RAW_CHICKEN_0:
   name:
     display: raw_chicken
     aliases: rawchicken,
@@ -9784,7 +9802,7 @@ RAW_FISH_3:
   initiation:
     initiation: true
     startprice: 200.0
-RECORD_10:
+RECORD_10_0:
   name:
     display: ward_disk
     aliases: warddisk,
@@ -9805,7 +9823,7 @@ RECORD_10:
   initiation:
     initiation: true
     startprice: 400.0
-RECORD_11:
+RECORD_11_0:
   name:
     display: 11_disk
     aliases: 11disk,
@@ -9826,7 +9844,7 @@ RECORD_11:
   initiation:
     initiation: true
     startprice: 400.0
-RECORD_12:
+RECORD_12_0:
   name:
     display: wait_disk
     aliases: waitdisk,
@@ -9847,7 +9865,7 @@ RECORD_12:
   initiation:
     initiation: true
     startprice: 400.0
-RECORD_3:
+RECORD_3_0:
   name:
     display: blocks_disk
     aliases: blocksdisk,
@@ -9868,7 +9886,7 @@ RECORD_3:
   initiation:
     initiation: true
     startprice: 400.0
-RECORD_4:
+RECORD_4_0:
   name:
     display: chirp_disk
     aliases: chirpdisk,
@@ -9889,7 +9907,7 @@ RECORD_4:
   initiation:
     initiation: true
     startprice: 400.0
-RECORD_5:
+RECORD_5_0:
   name:
     display: far_disk
     aliases: fardisk,
@@ -9910,7 +9928,7 @@ RECORD_5:
   initiation:
     initiation: true
     startprice: 400.0
-RECORD_6:
+RECORD_6_0:
   name:
     display: mall_disk
     aliases: malldisk,
@@ -9931,7 +9949,7 @@ RECORD_6:
   initiation:
     initiation: true
     startprice: 400.0
-RECORD_7:
+RECORD_7_0:
   name:
     display: mellohi_disk
     aliases: mellohidisk,
@@ -9952,7 +9970,7 @@ RECORD_7:
   initiation:
     initiation: true
     startprice: 400.0
-RECORD_8:
+RECORD_8_0:
   name:
     display: stal_disk
     aliases: staldisk,
@@ -9973,7 +9991,7 @@ RECORD_8:
   initiation:
     initiation: true
     startprice: 400.0
-RECORD_9:
+RECORD_9_0:
   name:
     display: strad_disk
     aliases: straddisk,
@@ -9994,7 +10012,7 @@ RECORD_9:
   initiation:
     initiation: true
     startprice: 400.0
-RED_MUSHROOM:
+RED_MUSHROOM_0:
   name:
     display: red_mushroom
     aliases: redmushroom,
@@ -10204,7 +10222,7 @@ RED_ROSE_8:
   initiation:
     initiation: true
     startprice: 60.0
-REDSTONE:
+REDSTONE_0:
   name:
     display: redstone
     aliases: redstone,
@@ -10225,7 +10243,7 @@ REDSTONE:
   initiation:
     initiation: true
     startprice: 13.0
-REDSTONE_BLOCK:
+REDSTONE_BLOCK_0:
   name:
     display: redstone_block
     aliases: redstoneblock,
@@ -10246,7 +10264,7 @@ REDSTONE_BLOCK:
   initiation:
     initiation: true
     startprice: 120.0
-REDSTONE_COMPARATOR:
+REDSTONE_COMPARATOR_0:
   name:
     display: comparator
     aliases: comparator,
@@ -10267,7 +10285,7 @@ REDSTONE_COMPARATOR:
   initiation:
     initiation: true
     startprice: 106.0
-REDSTONE_LAMP_OFF:
+REDSTONE_LAMP_OFF_0:
   name:
     display: redstone_lamp
     aliases: redstonelamp,
@@ -10288,7 +10306,7 @@ REDSTONE_LAMP_OFF:
   initiation:
     initiation: true
     startprice: 200.0
-REDSTONE_ORE:
+REDSTONE_ORE_0:
   name:
     display: redstone_ore
     aliases: redstoneore,
@@ -10309,7 +10327,7 @@ REDSTONE_ORE:
   initiation:
     initiation: true
     startprice: 400.0
-REDSTONE_TORCH_ON:
+REDSTONE_TORCH_ON_0:
   name:
     display: redstone_torch
     aliases: redstonetorch,
@@ -10330,7 +10348,7 @@ REDSTONE_TORCH_ON:
   initiation:
     initiation: true
     startprice: 16.0
-respiration1:
+OXYGEN_1:
   name:
     display: respiration_1
     aliases: respiration1,
@@ -10351,7 +10369,7 @@ respiration1:
   initiation:
     initiation: true
     startprice: 200.0
-respiration2:
+OXYGEN_2:
   name:
     display: respiration_2
     aliases: respiration2,
@@ -10372,7 +10390,7 @@ respiration2:
   initiation:
     initiation: true
     startprice: 800.0
-respiration3:
+OXYGEN_3:
   name:
     display: respiration_3
     aliases: respiration3,
@@ -10393,7 +10411,7 @@ respiration3:
   initiation:
     initiation: true
     startprice: 3200.0
-ROTTEN_FLESH:
+ROTTEN_FLESH_0:
   name:
     display: rotten_flesh
     aliases: rottenflesh,
@@ -10414,7 +10432,7 @@ ROTTEN_FLESH:
   initiation:
     initiation: true
     startprice: 2.0
-SADDLE:
+SADDLE_0:
   name:
     display: saddle
     aliases: saddle,
@@ -10477,7 +10495,7 @@ SAND_1:
   initiation:
     initiation: true
     startprice: 30.0
-SANDSTONE:
+SANDSTONE_0:
   name:
     display: sandstone
     aliases: sandstone,
@@ -10540,7 +10558,7 @@ SANDSTONE_2:
   initiation:
     initiation: true
     startprice: 44.0
-SANDSTONE_STAIRS:
+SANDSTONE_STAIRS_0:
   name:
     display: sandstone_stairs
     aliases: sandstonestairs,
@@ -10687,7 +10705,7 @@ SAPLING_5:
   initiation:
     initiation: true
     startprice: 10.0
-SEEDS:
+SEEDS_0:
   name:
     display: seeds
     aliases: seeds,
@@ -10708,7 +10726,7 @@ SEEDS:
   initiation:
     initiation: true
     startprice: 4.0
-sharpness1:
+DAMAGE_ALL_1:
   name:
     display: sharpness_1
     aliases: sharpness1,
@@ -10729,7 +10747,7 @@ sharpness1:
   initiation:
     initiation: true
     startprice: 50.0
-sharpness2:
+DAMAGE_ALL_2:
   name:
     display: sharpness_2
     aliases: sharpness2,
@@ -10750,7 +10768,7 @@ sharpness2:
   initiation:
     initiation: true
     startprice: 200.0
-sharpness3:
+DAMAGE_ALL_3:
   name:
     display: sharpness_3
     aliases: sharpness3,
@@ -10771,7 +10789,7 @@ sharpness3:
   initiation:
     initiation: true
     startprice: 2000.0
-sharpness4:
+DAMAGE_ALL_4:
   name:
     display: sharpness_4
     aliases: sharpness4,
@@ -10792,7 +10810,7 @@ sharpness4:
   initiation:
     initiation: true
     startprice: 4000.0
-sharpness5:
+DAMAGE_ALL_5:
   name:
     display: sharpness_5
     aliases: sharpness5,
@@ -10813,7 +10831,7 @@ sharpness5:
   initiation:
     initiation: true
     startprice: 10000.0
-SHEARS:
+SHEARS_0:
   name:
     display: shears
     aliases: shears,
@@ -10834,7 +10852,7 @@ SHEARS:
   initiation:
     initiation: true
     startprice: 140.0
-SIGN:
+SIGN_0:
   name:
     display: sign
     aliases: sign,
@@ -10855,7 +10873,7 @@ SIGN:
   initiation:
     initiation: true
     startprice: 14.0
-silktouch1:
+SILK_TOUCH_1:
   name:
     display: silktouch_1
     aliases: silktouch1,
@@ -10981,7 +10999,7 @@ SKULL_ITEM_4:
   initiation:
     initiation: true
     startprice: 20000.0
-SLIME_BALL:
+SLIME_BALL_0:
   name:
     display: slime_ball
     aliases: slimeball,
@@ -11002,7 +11020,7 @@ SLIME_BALL:
   initiation:
     initiation: true
     startprice: 100.0
-smite1:
+DAMAGE_UNDEAD_1:
   name:
     display: smite_1
     aliases: smite1,
@@ -11023,7 +11041,7 @@ smite1:
   initiation:
     initiation: true
     startprice: 50.0
-smite2:
+DAMAGE_UNDEAD_2:
   name:
     display: smite_2
     aliases: smite2,
@@ -11044,7 +11062,7 @@ smite2:
   initiation:
     initiation: true
     startprice: 200.0
-smite3:
+DAMAGE_UNDEAD_3:
   name:
     display: smite_3
     aliases: smite3,
@@ -11065,7 +11083,7 @@ smite3:
   initiation:
     initiation: true
     startprice: 1600.0
-smite4:
+DAMAGE_UNDEAD_4:
   name:
     display: smite_4
     aliases: smite4,
@@ -11086,7 +11104,7 @@ smite4:
   initiation:
     initiation: true
     startprice: 3200.0
-smite5:
+DAMAGE_UNDEAD_5:
   name:
     display: smite_5
     aliases: smite5,
@@ -11191,7 +11209,7 @@ SMOOTH_BRICK_3:
   initiation:
     initiation: true
     startprice: 80000.0
-SMOOTH_STAIRS:
+SMOOTH_STAIRS_0:
   name:
     display: stone_brick_stairs
     aliases: stonebrickstairs,
@@ -11212,7 +11230,7 @@ SMOOTH_STAIRS:
   initiation:
     initiation: true
     startprice: 20.0
-SNOW:
+SNOW_0:
   name:
     display: snow
     aliases: snow,
@@ -11233,7 +11251,7 @@ SNOW:
   initiation:
     initiation: true
     startprice: 10.0
-SNOW_BALL:
+SNOW_BALL_0:
   name:
     display: snow_ball
     aliases: snowball,
@@ -11254,7 +11272,7 @@ SNOW_BALL:
   initiation:
     initiation: true
     startprice: 5.0
-SNOW_BLOCK:
+SNOW_BLOCK_0:
   name:
     display: snow_block
     aliases: snowblock,
@@ -11275,7 +11293,7 @@ SNOW_BLOCK:
   initiation:
     initiation: true
     startprice: 20.0
-SOUL_SAND:
+SOUL_SAND_0:
   name:
     display: soul_sand
     aliases: soulsand,
@@ -11296,7 +11314,7 @@ SOUL_SAND:
   initiation:
     initiation: true
     startprice: 40.0
-SPECKLED_MELON:
+SPECKLED_MELON_0:
   name:
     display: glistering_melon
     aliases: glisteringmelon,
@@ -11317,7 +11335,7 @@ SPECKLED_MELON:
   initiation:
     initiation: true
     startprice: 60.0
-SPIDER_EYE:
+SPIDER_EYE_0:
   name:
     display: spider_eye
     aliases: spidereye,
@@ -11338,7 +11356,7 @@ SPIDER_EYE:
   initiation:
     initiation: true
     startprice: 30.0
-SPONGE:
+SPONGE_0:
   name:
     display: sponge
     aliases: sponge,
@@ -11359,7 +11377,7 @@ SPONGE:
   initiation:
     initiation: true
     startprice: 50.0
-SPRUCE_WOOD_STAIRS:
+SPRUCE_WOOD_STAIRS_0:
   name:
     display: spruce_wood_stairs
     aliases: sprucewoodstairs,
@@ -12535,7 +12553,7 @@ STEP_7:
   initiation:
     initiation: true
     startprice: 80.0
-STICK:
+STICK_0:
   name:
     display: stick
     aliases: stick,
@@ -12556,7 +12574,7 @@ STICK:
   initiation:
     initiation: true
     startprice: 1.0
-STONE:
+STONE_0:
   name:
     display: stone
     aliases: stone,
@@ -12577,7 +12595,7 @@ STONE:
   initiation:
     initiation: true
     startprice: 6.0
-STONE_AXE:
+STONE_AXE_0:
   name:
     display: stone_axe
     aliases: stoneaxe,
@@ -12598,7 +12616,7 @@ STONE_AXE:
   initiation:
     initiation: true
     startprice: 20.0
-STONE_BUTTON:
+STONE_BUTTON_0:
   name:
     display: stone_button
     aliases: button,
@@ -12619,7 +12637,7 @@ STONE_BUTTON:
   initiation:
     initiation: true
     startprice: 12.0
-STONE_HOE:
+STONE_HOE_0:
   name:
     display: stone_hoe
     aliases: stonehoe,
@@ -12640,7 +12658,7 @@ STONE_HOE:
   initiation:
     initiation: true
     startprice: 8.0
-STONE_PICKAXE:
+STONE_PICKAXE_0:
   name:
     display: stone_pickaxe
     aliases: stonepickaxe,
@@ -12661,7 +12679,7 @@ STONE_PICKAXE:
   initiation:
     initiation: true
     startprice: 12.0
-STONE_PLATE:
+STONE_PLATE_0:
   name:
     display: stone_pressure_plate
     aliases: stonepressureplate,
@@ -12682,7 +12700,7 @@ STONE_PLATE:
   initiation:
     initiation: true
     startprice: 8.0
-STONE_SPADE:
+STONE_SPADE_0:
   name:
     display: stone_shovel
     aliases: stoneshovel,
@@ -12703,7 +12721,7 @@ STONE_SPADE:
   initiation:
     initiation: true
     startprice: 10.0
-STONE_SWORD:
+STONE_SWORD_0:
   name:
     display: stone_sword
     aliases: stonesword,
@@ -12724,7 +12742,7 @@ STONE_SWORD:
   initiation:
     initiation: true
     startprice: 12.0
-STORAGE_MINECART:
+STORAGE_MINECART_0:
   name:
     display: minecart_with_chest
     aliases: minecartwithchest,
@@ -12745,7 +12763,7 @@ STORAGE_MINECART:
   initiation:
     initiation: true
     startprice: 400.0
-STRING:
+STRING_0:
   name:
     display: string
     aliases: string,
@@ -12766,7 +12784,7 @@ STRING:
   initiation:
     initiation: true
     startprice: 2.0
-SUGAR:
+SUGAR_0:
   name:
     display: sugar
     aliases: sugar,
@@ -12787,7 +12805,7 @@ SUGAR:
   initiation:
     initiation: true
     startprice: 10.0
-SUGAR_CANE:
+SUGAR_CANE_0:
   name:
     display: sugarcane
     aliases: sugarcane,
@@ -12808,7 +12826,7 @@ SUGAR_CANE:
   initiation:
     initiation: true
     startprice: 10.0
-SULPHUR:
+SULPHUR_0:
   name:
     display: gunpowder
     aliases: gunpowder,
@@ -12829,7 +12847,7 @@ SULPHUR:
   initiation:
     initiation: true
     startprice: 60.0
-THIN_GLASS:
+THIN_GLASS_0:
   name:
     display: glass_pane
     aliases: glasspane,
@@ -12850,7 +12868,7 @@ THIN_GLASS:
   initiation:
     initiation: true
     startprice: 6.0
-thorns1:
+THORNS_1:
   name:
     display: thorns_1
     aliases: thorns1,
@@ -12871,7 +12889,7 @@ thorns1:
   initiation:
     initiation: true
     startprice: 50.0
-thorns2:
+THORNS_2:
   name:
     display: thorns_2
     aliases: thorns2,
@@ -12892,7 +12910,7 @@ thorns2:
   initiation:
     initiation: true
     startprice: 200.0
-thorns3:
+THORNS_3:
   name:
     display: thorns_3
     aliases: thorns3,
@@ -12913,7 +12931,7 @@ thorns3:
   initiation:
     initiation: true
     startprice: 1000.0
-TNT:
+TNT_0:
   name:
     display: tnt
     aliases: tnt,
@@ -12934,7 +12952,7 @@ TNT:
   initiation:
     initiation: true
     startprice: 550.0
-TORCH:
+TORCH_0:
   name:
     display: torch
     aliases: torch,
@@ -12955,7 +12973,7 @@ TORCH:
   initiation:
     initiation: true
     startprice: 6.0
-TRAP_DOOR:
+TRAP_DOOR_0:
   name:
     display: trap_door
     aliases: trapdoor,
@@ -12976,7 +12994,7 @@ TRAP_DOOR:
   initiation:
     initiation: true
     startprice: 8.0
-TRAPPED_CHEST:
+TRAPPED_CHEST_0:
   name:
     display: trapped_chest
     aliases: trappedchest,
@@ -12997,7 +13015,7 @@ TRAPPED_CHEST:
   initiation:
     initiation: true
     startprice: 44.0
-TRIPWIRE_HOOK:
+TRIPWIRE_HOOK_0:
   name:
     display: tripwire_hook
     aliases: tripwirehook,
@@ -13018,7 +13036,7 @@ TRIPWIRE_HOOK:
   initiation:
     initiation: true
     startprice: 34.0
-unbreaking1:
+DURABILITY_1:
   name:
     display: unbreaking_1
     aliases: unbreaking1,
@@ -13039,7 +13057,7 @@ unbreaking1:
   initiation:
     initiation: true
     startprice: 200.0
-unbreaking2:
+DURABILITY_2:
   name:
     display: unbreaking_2
     aliases: unbreaking2,
@@ -13060,7 +13078,7 @@ unbreaking2:
   initiation:
     initiation: true
     startprice: 2000.0
-unbreaking3:
+DURABILITY_3:
   name:
     display: unbreaking_3
     aliases: unbreaking3,
@@ -13081,7 +13099,7 @@ unbreaking3:
   initiation:
     initiation: true
     startprice: 7000.0
-VINE:
+VINE_0:
   name:
     display: vine
     aliases: vine,
@@ -13102,7 +13120,7 @@ VINE:
   initiation:
     initiation: true
     startprice: 4.0
-WATCH:
+WATCH_0:
   name:
     display: clock
     aliases: clock,
@@ -13123,7 +13141,7 @@ WATCH:
   initiation:
     initiation: true
     startprice: 1100.0
-WATER_BUCKET:
+WATER_BUCKET_0:
   name:
     display: water_bucket
     aliases: waterbucket,
@@ -13144,7 +13162,7 @@ WATER_BUCKET:
   initiation:
     initiation: true
     startprice: 240.0
-WATER_LILY:
+WATER_LILY_0:
   name:
     display: lilypad
     aliases: lilypad,
@@ -13165,7 +13183,7 @@ WATER_LILY:
   initiation:
     initiation: true
     startprice: 8.0
-WEB:
+WEB_0:
   name:
     display: web
     aliases: web,
@@ -13186,7 +13204,7 @@ WEB:
   initiation:
     initiation: true
     startprice: 4000.0
-WHEAT:
+WHEAT_0:
   name:
     display: wheat
     aliases: wheat,
@@ -13333,7 +13351,7 @@ WOOD_5:
   initiation:
     initiation: true
     startprice: 2.0
-WOOD_AXE:
+WOOD_AXE_0:
   name:
     display: wood_axe
     aliases: woodaxe,
@@ -13354,7 +13372,7 @@ WOOD_AXE:
   initiation:
     initiation: true
     startprice: 12.0
-WOOD_BUTTON:
+WOOD_BUTTON_0:
   name:
     display: wood_button
     aliases: woodbutton,
@@ -13375,7 +13393,7 @@ WOOD_BUTTON:
   initiation:
     initiation: true
     startprice: 2.0
-WOOD_DOOR:
+WOOD_DOOR_0:
   name:
     display: wood_door
     aliases: wooddoor,
@@ -13396,7 +13414,7 @@ WOOD_DOOR:
   initiation:
     initiation: true
     startprice: 12.0
-WOOD_HOE:
+WOOD_HOE_0:
   name:
     display: wood_hoe
     aliases: woodhoe,
@@ -13417,7 +13435,7 @@ WOOD_HOE:
   initiation:
     initiation: true
     startprice: 4.0
-WOOD_PICKAXE:
+WOOD_PICKAXE_0:
   name:
     display: wood_pickaxe
     aliases: woodpickaxe,
@@ -13438,7 +13456,7 @@ WOOD_PICKAXE:
   initiation:
     initiation: true
     startprice: 12.0
-WOOD_PLATE:
+WOOD_PLATE_0:
   name:
     display: wood_pressure_plate
     aliases: woodpressureplate,
@@ -13459,7 +13477,7 @@ WOOD_PLATE:
   initiation:
     initiation: true
     startprice: 3.0
-WOOD_SPADE:
+WOOD_SPADE_0:
   name:
     display: wood_shovel
     aliases: woodshovel,
@@ -13480,7 +13498,7 @@ WOOD_SPADE:
   initiation:
     initiation: true
     startprice: 5.0
-WOOD_STAIRS:
+WOOD_STAIRS_0:
   name:
     display: oak_wood_stairs
     aliases: oakwoodstairs,
@@ -13627,7 +13645,7 @@ WOOD_STEP_5:
   initiation:
     initiation: true
     startprice: 20.0
-WOOD_SWORD:
+WOOD_SWORD_0:
   name:
     display: wood_sword
     aliases: woodsword,
@@ -13984,7 +14002,7 @@ WOOL_9:
   initiation:
     initiation: true
     startprice: 70.0
-WORKBENCH:
+WORKBENCH_0:
   name:
     display: crafting_table
     aliases: craftingtable,
@@ -14005,7 +14023,7 @@ WORKBENCH:
   initiation:
     initiation: true
     startprice: 8.0
-xp:
+EXPERIENCE:
   name:
     display: experience
     aliases: exp,
@@ -14026,7 +14044,7 @@ xp:
   initiation:
     initiation: true
     startprice: 6.0
-YELLOW_FLOWER:
+YELLOW_FLOWER_0:
   name:
     display: dandelion
     aliases: dandelion,yellowflower,

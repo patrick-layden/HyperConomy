@@ -403,7 +403,7 @@ SERVER_STARTING: &dThe web server is starting.
 SERVER_STOPPING: &dThe web server is stopping.
 SERVER_FAILED: &4The web server is failed.
 CANT_USE_ACCOUNT: You cannot play on this server using HyperConomy's global shop account.
-MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, or status]
+MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, status, setstock, or owner]
 MANAGESHOP_HELP2: &9You currently have the shop &a%n &9selected.
 MANAGESHOP_HELP3: &9The owner of &a%n &9is:
 MANAGESHOP_HELP4: &9The following players are allowed to manage the shop:
@@ -453,3 +453,4 @@ HCSET_CEILING_INVALID: &4Invalid parameters. Use /hcset ceiling [new ceiling]
 HCSET_NAME_INVALID: &4Invalid parameters. Use /hcset name [new name]
 MAKEFRAMESHOP_INVALID: &4Invalid Parameters. Use /makeframeshop [object]
 NAME_IN_USE: &4That name/alias is already in use.
+NOT_IMPLEMENTED: &dThis message has not been implemented yet.
