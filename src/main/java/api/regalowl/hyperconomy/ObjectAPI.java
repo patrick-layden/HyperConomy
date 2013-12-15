@@ -250,10 +250,14 @@ public interface ObjectAPI
 	public ArrayList<HyperObject> getEnchantmentHyperObjects(ItemStack stack, String player);
 	
 	public TransactionResponse buy(Player p, HyperObject o, int amount);
+	public TransactionResponse buy(Player p, HyperObject o, int amount, Shop shop);
+	
+	public TransactionResponse sell(Player p, HyperObject o, int amount);
+	public TransactionResponse sell(Player p, HyperObject o, int amount, Shop shop);
 	
 	public TransactionResponse sellAll(Player p);
-	
 	public TransactionResponse sellAll(Player p, Inventory inventory);
+
 	
 	
 	public ArrayList<HyperObject> getAvailableObjects(String shopname);

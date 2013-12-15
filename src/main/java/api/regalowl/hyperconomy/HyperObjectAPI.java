@@ -409,6 +409,16 @@ public class HyperObjectAPI implements ObjectAPI {
 		pt.setAmount(amount);
 		return hp.processTransaction(pt);
 	}
+
+	public TransactionResponse buy(Player p, HyperObject o, int amount, Shop shop) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(p.getName());
+		PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+		pt.setHyperObject(o);
+		pt.setAmount(amount);
+		pt.setTradePartner(shop.getOwner());
+		return hp.processTransaction(pt);
+	}
 	
 	public TransactionResponse sell(Player p, HyperObject o, int amount ) {
 		HyperConomy hc = HyperConomy.hc;
@@ -416,6 +426,16 @@ public class HyperObjectAPI implements ObjectAPI {
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 		pt.setHyperObject(o);
 		pt.setAmount(amount);
+		return hp.processTransaction(pt);
+	}
+	
+	public TransactionResponse sell(Player p, HyperObject o, int amount, Shop shop) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(p.getName());
+		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+		pt.setHyperObject(o);
+		pt.setAmount(amount);
+		pt.setTradePartner(shop.getOwner());
 		return hp.processTransaction(pt);
 	}
 
