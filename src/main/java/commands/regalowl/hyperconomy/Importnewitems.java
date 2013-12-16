@@ -1,12 +1,9 @@
 package regalowl.hyperconomy;
 
-import java.io.File;
 import java.util.ArrayList;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-
-import regalowl.databukkit.FileTools;
+import regalowl.databukkit.YamlHandler;
 
 public class Importnewitems {
 	
@@ -14,7 +11,7 @@ public class Importnewitems {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
-		
+		YamlHandler yh = hc.getYamlHandler();
 		try {
 			String economy = "default";
 			if (args.length > 0) {
@@ -24,16 +21,12 @@ public class Importnewitems {
 				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
 					new Backup();
 				}
-				if (args[0].equalsIgnoreCase("update")) {
-					FileTools ft = hc.getFileTools();
-					String folderPath = hc.getFolderPath();
-					hc.disable(true);
-					ft.deleteFile(folderPath + File.separator + "objects.yml");
-					hc.restart();
-				} else {
-					ArrayList<String> added = em.getEconomy(economy).loadNewItems();
-					sender.sendMessage(ChatColor.GOLD + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
-				}
+				yh.unRegisterFileConfiguration("objects");
+				yh.deleteConfigFile("objects");
+				yh.copyFromJar("objects");
+				yh.registerFileConfiguration("objects");
+				ArrayList<String> added = em.getEconomy(economy).loadNewItems();
+				sender.sendMessage(ChatColor.GOLD + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
 			} else {
 				sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
 			}

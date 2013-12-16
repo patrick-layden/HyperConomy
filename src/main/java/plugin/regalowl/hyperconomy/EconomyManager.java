@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitTask;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
+import regalowl.databukkit.YamlHandler;
 
 public class EconomyManager implements Listener {
 
@@ -41,7 +42,7 @@ public class EconomyManager implements Listener {
 	private BukkitTask shopCheckTask;
 	private boolean useShops;
 	private boolean dataLoaded;
-	
+	private boolean updateNames;
 	
 	
 	
@@ -51,6 +52,7 @@ public class EconomyManager implements Listener {
 		hc = HyperConomy.hc;
 		dataLoaded = false;
 		loadActive = false;
+		updateNames = false;
 		economiesLoaded = false;
 		useShops = hc.gYH().gFC("config").getBoolean("config.use-shops");
 		shopinterval = hc.gYH().gFC("config").getLong("config.shopcheckinterval");
@@ -105,6 +107,17 @@ public class EconomyManager implements Listener {
 				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
 				hc.getSQLWrite().executeSynchronously("INSERT INTO hyperconomy_objects (NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK) SELECT NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK FROM hyperconomy_objects_temp");
 				hc.getSQLWrite().executeSynchronously("DROP TABLE hyperconomy_objects_temp");
+				new Backup();
+				YamlHandler yh = hc.getYamlHandler();
+				yh.unRegisterFileConfiguration("composites");
+				yh.unRegisterFileConfiguration("objects");
+				yh.deleteConfigFile("composites");
+				yh.deleteConfigFile("objects");
+				yh.copyFromJar("composites");
+				yh.copyFromJar("objects");
+				yh.registerFileConfiguration("composites");
+				yh.registerFileConfiguration("objects");
+				hc.getEconomyManager().setUpdateNames();
 				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.23' WHERE SETTING = 'version'");
 			}
 			if (version < 1.24) {
@@ -165,11 +178,21 @@ public class EconomyManager implements Listener {
 					wait.cancel();
 					hc.getHyperEventHandler().fireDataLoadEvent();
 					loadActive = false;
+					if (updateNames) {updateNames();}
 				}
 			}
 		}, 1L, 1L);
 	}
 	
+	public void setUpdateNames() {
+		updateNames = true;
+	}
+	private void updateNames() {
+		for (HyperEconomy he : getEconomies()) {
+			he.updateNamesFromYml();
+		}
+		hc.restart();
+	}
 	
 	public boolean economiesLoaded() {
 		return economiesLoaded;

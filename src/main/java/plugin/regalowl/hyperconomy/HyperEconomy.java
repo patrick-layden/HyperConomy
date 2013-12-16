@@ -141,9 +141,7 @@ public class HyperEconomy {
 			Iterator<String> it = composites.getKeys(false).iterator();
 			while (it.hasNext()) {
 				String name = it.next().toString();
-				//hc.getLogger().severe(name);
 				if (!componentsLoaded(name)) {
-					hc.getLogger().severe(name);
 					loaded = false;
 					continue;
 				}
@@ -165,6 +163,7 @@ public class HyperEconomy {
 		    String oname = entry.getKey();
 		    HyperObject ho = getHyperObject(oname);
 		    if (ho == null) {
+		    	//hc.getLogger().severe("Not loaded: " + oname);
 		    	return false;
 		    }
 		}
@@ -184,6 +183,7 @@ public class HyperEconomy {
 		return getHyperObject(stack, null);
 	}
 	public HyperObject getHyperObject(ItemStack stack, Shop s) {
+		if (stack == null) {return null;}
 		HyperItemStack his = new HyperItemStack(stack);
 		if (s != null && s instanceof PlayerShop) {
 			if (hyperObjectsData.containsKey(his.getKey())) {
@@ -198,6 +198,7 @@ public class HyperEconomy {
 		return null;
 	}
 	public HyperObject getHyperObject(String name, Shop s) {
+		if (name == null) {return null;}
 		String sname = name.toLowerCase();
 		if (hyperObjectsAliases.containsKey(sname)) {
 			sname = hyperObjectsAliases.get(sname);
@@ -471,11 +472,11 @@ public class HyperEconomy {
 		FileConfiguration objects = hc.gYH().gFC("objects");
 		ArrayList<String> objectsAdded = new ArrayList<String>();
 		SQLWrite sw = hc.getSQLWrite();
-		Iterator<String> it = objects.getKeys(false).iterator();
 		ArrayList<String> keys = getObjectKeys();
+		Iterator<String> it = objects.getKeys(false).iterator();
 		while (it.hasNext()) {
 			String itemname = it.next().toString();
-			if (!keys.contains(itemname)) {
+			if (!keys.contains(itemname.toLowerCase())) {
 				objectsAdded.add(itemname);
 				String category = objects.getString(itemname + ".information.category");
 				if (category == null) {
@@ -515,6 +516,26 @@ public class HyperEconomy {
 		}
 		hc.restart();
 		return objectsAdded;
+	}
+	
+	public void updateNamesFromYml() {
+		FileConfiguration objects = hc.gYH().gFC("objects");
+		Iterator<String> it = objects.getKeys(false).iterator();
+		while (it.hasNext()) {
+			String name = it.next().toString();
+			String aliasString = objects.getString(name + ".name.aliases");
+			ArrayList<String> names = hc.gCF().explode(aliasString, ",");
+			String displayName = objects.getString(name + ".name.display");
+			names.add(displayName);
+			names.add(name);
+			for (String cname:names) {
+				HyperObject ho = getHyperObject(cname);
+				if (ho == null) {continue;}
+				ho.setAliases(hc.gCF().explode(aliasString, ","));
+				ho.setDisplayName(displayName);
+				ho.setName(name);
+			}
+		}
 	}
 	
 	

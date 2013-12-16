@@ -14026,7 +14026,7 @@ WORKBENCH_0:
 EXPERIENCE:
   name:
     display: experience
-    aliases: exp,
+    aliases: exp,xp,
   information:
     type: EXPERIENCE
     material: none

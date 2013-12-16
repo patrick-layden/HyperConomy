@@ -1,20 +1,15 @@
 package regalowl.hyperconomy;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
+
 
 
 public class Hctest implements CommandExecutor {
-	
+	/*
 	private HyperConomy hc;
 	private EconomyManager em;
 	private HyperEconomy de;
@@ -22,9 +17,10 @@ public class Hctest implements CommandExecutor {
 	private Inventory inv;
 	private FileConfiguration config;
 	private HyperPlayer hp;
-
+*/
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		
+		return true;
+		/*
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy em = hc.getEconomyManager().getEconomy("default");
 		FileConfiguration composites = hc.gYH().gFC("composites");
@@ -44,7 +40,7 @@ public class Hctest implements CommandExecutor {
 		}
 		hc.gYH().saveYamls();
 		return true;
-		
+		*/
 		/*
 		HyperConomy hc = HyperConomy.hc;
 		for (HyperObject ho:hc.getEconomyManager().getHyperObjects()) {
