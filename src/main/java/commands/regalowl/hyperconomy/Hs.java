@@ -42,11 +42,10 @@ public class Hs {
 					if (ho == null) {
 						player.sendMessage(L.get("CANT_BE_TRADED"));
 					} else {
-						String nam = ho.getName();
 						ItemStack iinhand = player.getItemInHand();
 						if (new HyperItemStack(iinhand).hasenchants() == false) {
 							Shop s = em.getShop(player);
-							if (s.has(nam)) {
+							if (s.has(ho.getName())) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 								pt.setHyperObject(ho);
 								pt.setAmount(amount);

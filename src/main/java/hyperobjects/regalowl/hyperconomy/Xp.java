@@ -4,8 +4,8 @@ import org.bukkit.entity.Player;
 
 public class Xp extends BasicObject implements HyperXP {
 
-	public Xp(String name, String economy, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
-		super(name, economy, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
+	public Xp(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
+		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
 	}
 	
 	public int getBarXpPoints(Player player) {

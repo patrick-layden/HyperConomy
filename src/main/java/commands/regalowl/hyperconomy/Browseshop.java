@@ -75,47 +75,45 @@ public class Browseshop {
 			int i = 0;
 			while(i < names.size()) {
 				String cname = names.get(i);
+				HyperObject ho = he.getHyperObject(cname);
+				String displayName = ho.getDisplayName();
 				if (alphabetic) {
-					if (cname.startsWith(input)) {
-						String itemname = cname;
-						if (shop == null || shop.has(itemname)) {
+					if (displayName.startsWith(input)) {
+						if (shop == null || shop.has(cname)) {
 							if (shop instanceof PlayerShop) {
 								PlayerShop ps = (PlayerShop)shop;
-								HyperObject ho = he.getHyperObject(itemname);
 								PlayerShopObject pso = ps.getPlayerShopObject(ho);
 								if (pso != null) {
 									if (pso.getStatus() == HyperObjectStatus.NONE) {
 										if (ps.isAllowed(em.getHyperPlayer(player))) {
-											rnames.add(cname);
+											rnames.add(displayName);
 										}
 									} else {
-										rnames.add(cname);
+										rnames.add(displayName);
 									}
 								}
 							} else {
-								rnames.add(cname);
+								rnames.add(displayName);
 							}
 						}
 					}
 				} else {
-					if (cname.contains(input)) {
-						String itemname = cname;
-						if (shop == null || shop.has(itemname)) {
+					if (displayName.contains(input)) {
+						if (shop == null || shop.has(cname)) {
 							if (shop instanceof PlayerShop) {
 								PlayerShop ps = (PlayerShop)shop;
-								HyperObject ho = he.getHyperObject(itemname);
 								PlayerShopObject pso = ps.getPlayerShopObject(ho);
 								if (pso != null) {
 									if (pso.getStatus() == HyperObjectStatus.NONE) {
 										if (ps.isAllowed(em.getHyperPlayer(player))) {
-											rnames.add(cname);
+											rnames.add(displayName);
 										}
 									} else {
-										rnames.add(cname);
+										rnames.add(displayName);
 									}
 								}
 							} else {
-								rnames.add(cname);
+								rnames.add(displayName);
 							}
 						}
 					}
@@ -133,7 +131,7 @@ public class Browseshop {
 			while (count < numberpage) {
 				if (count > ((page * 10) - 11)) {
 					if (count < rsize) {
-						String iname = he.fixName(rnames.get(count));
+						String iname = rnames.get(count);
 			            Double cost = 0.0;
 			            double stock = 0;
 			            HyperObject ho = he.getHyperObject(iname, em.getShop(player));

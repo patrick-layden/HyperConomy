@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitTask;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
+import regalowl.databukkit.YamlHandler;
 
 public class EconomyManager implements Listener {
 
@@ -41,7 +42,7 @@ public class EconomyManager implements Listener {
 	private BukkitTask shopCheckTask;
 	private boolean useShops;
 	private boolean dataLoaded;
-	
+	private boolean updateNames;
 	
 	
 	
@@ -51,6 +52,7 @@ public class EconomyManager implements Listener {
 		hc = HyperConomy.hc;
 		dataLoaded = false;
 		loadActive = false;
+		updateNames = false;
 		economiesLoaded = false;
 		useShops = hc.gYH().gFC("config").getBoolean("config.use-shops");
 		shopinterval = hc.gYH().gFC("config").getLong("config.shopcheckinterval");
@@ -98,7 +100,28 @@ public class EconomyManager implements Listener {
 				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.22' WHERE SETTING = 'version'");
 			}
 			if (version < 1.23) {
-				//for next version
+				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.23.");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_objects_temp (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
+				hc.getSQLWrite().executeSynchronously("INSERT INTO hyperconomy_objects_temp (NAME, ECONOMY, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK) SELECT NAME, ECONOMY, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK FROM hyperconomy_objects");
+				hc.getSQLWrite().executeSynchronously("DROP TABLE hyperconomy_objects");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
+				hc.getSQLWrite().executeSynchronously("INSERT INTO hyperconomy_objects (NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK) SELECT NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK FROM hyperconomy_objects_temp");
+				hc.getSQLWrite().executeSynchronously("DROP TABLE hyperconomy_objects_temp");
+				new Backup();
+				YamlHandler yh = hc.getYamlHandler();
+				yh.unRegisterFileConfiguration("composites");
+				yh.unRegisterFileConfiguration("objects");
+				yh.deleteConfigFile("composites");
+				yh.deleteConfigFile("objects");
+				yh.copyFromJar("composites");
+				yh.copyFromJar("objects");
+				yh.registerFileConfiguration("composites");
+				yh.registerFileConfiguration("objects");
+				hc.getEconomyManager().setUpdateNames();
+				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.23' WHERE SETTING = 'version'");
+			}
+			if (version < 1.24) {
+				
 			}
 		} else {
 			createTables();
@@ -109,8 +132,8 @@ public class EconomyManager implements Listener {
 	public void createTables() {
 		hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL, VALUE TEXT, TIME DATETIME NOT NULL, PRIMARY KEY (SETTING))");
 		hc.getSQLWrite().convertExecuteSynchronously("DELETE FROM hyperconomy_settings");
-		hc.getSQLWrite().convertExecuteSynchronously("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '1.21', NOW() )");
-		hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
+		hc.getSQLWrite().convertExecuteSynchronously("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '1.23', NOW() )");
+		hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
 		hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL PRIMARY KEY, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 		hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_log (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT)");
 		hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE)");
@@ -155,11 +178,21 @@ public class EconomyManager implements Listener {
 					wait.cancel();
 					hc.getHyperEventHandler().fireDataLoadEvent();
 					loadActive = false;
+					if (updateNames) {updateNames();}
 				}
 			}
 		}, 1L, 1L);
 	}
 	
+	public void setUpdateNames() {
+		updateNames = true;
+	}
+	private void updateNames() {
+		for (HyperEconomy he : getEconomies()) {
+			he.updateNamesFromYml();
+		}
+		hc.restart();
+	}
 	
 	public boolean economiesLoaded() {
 		return economiesLoaded;
@@ -243,12 +276,14 @@ public class EconomyManager implements Listener {
 		for (HyperObject ho:defaultEconomy.getHyperObjects()) {
 			HashMap<String,String> values = new HashMap<String,String>();
 			values.put("NAME", ho.getName());
+			values.put("DISPLAY_NAME", ho.getDisplayName());
+			values.put("ALIASES", ho.getAliasesString());
 			values.put("ECONOMY", economy);
 			values.put("TYPE", ho.getType().toString());
 			values.put("VALUE", ho.getValue()+"");
 			values.put("STATIC", ho.getIsstatic());
 			values.put("STATICPRICE", ho.getStaticprice()+"");
-			values.put("STOCK", ho.getStock()+"");
+			values.put("STOCK", 0+"");
 			values.put("MEDIAN", ho.getMedian()+"");
 			values.put("INITIATION", ho.getInitiation());
 			values.put("STARTPRICE", ho.getStartprice()+"");
@@ -299,6 +334,8 @@ public class EconomyManager implements Listener {
 			HashMap<String,String> values = new HashMap<String,String>();
 			values.put("NAME", itemname);
 			values.put("ECONOMY", econ);
+			values.put("DISPLAY_NAME", objects.getString(itemname + ".name.display"));
+			values.put("ALIASES", objects.getString(itemname + ".name.aliases"));
 			values.put("TYPE", objects.getString(itemname + ".information.type"));
 			values.put("VALUE", objects.getDouble(itemname + ".value")+"");
 			values.put("STATIC", objects.getString(itemname + ".price.static"));

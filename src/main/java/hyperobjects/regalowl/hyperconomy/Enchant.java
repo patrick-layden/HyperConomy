@@ -11,8 +11,8 @@ public class Enchant extends BasicObject implements HyperEnchant {
 	private String enchantName;
 
 	
-	public Enchant(String name, String economy, String type, String enchantName, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
-		super(name, economy, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
+	public Enchant(String name, String economy, String displayName, String aliases, String type, String enchantName, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
+		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
 		this.enchantName = enchantName;
 	}
 
@@ -101,7 +101,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 				cost = staticcost * classvalue;
 				cost = applyCeilingFloor(cost);
 			}
-			return twoDecimals(cost);
+			return cf.twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantCost() passed values name='" + getName() + "', material='" + eclass.toString() + "'";
 			hc.gDB().writeError(e, info);
@@ -145,7 +145,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 				cost = statprice * classvalue;
 				cost = applyCeilingFloor(cost);
 			}
-			return twoDecimals(cost);
+			return cf.twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantValue() passed values name='" + getName() + "', material='" + eclass.toString() + "'";
 			hc.gDB().writeError(e, info);
@@ -196,7 +196,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 				cost = statprice * classvalue * duramult;
 				cost = applyCeilingFloor(cost);
 			}
-			return twoDecimals(cost);
+			return cf.twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getEnchantValue() passed values name='" + getName() + "', material='" + eclass.toString() + "'";
 			hc.gDB().writeError(e, info);

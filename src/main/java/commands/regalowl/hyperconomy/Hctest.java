@@ -1,16 +1,15 @@
 package regalowl.hyperconomy;
 
 
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
+
 
 
 public class Hctest implements CommandExecutor {
-	
+	/*
 	private HyperConomy hc;
 	private EconomyManager em;
 	private HyperEconomy de;
@@ -18,9 +17,31 @@ public class Hctest implements CommandExecutor {
 	private Inventory inv;
 	private FileConfiguration config;
 	private HyperPlayer hp;
-
+*/
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		
+		return true;
+		/*
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy em = hc.getEconomyManager().getEconomy("default");
+		FileConfiguration composites = hc.gYH().gFC("composites");
+		Iterator<String> it = composites.getKeys(false).iterator();
+		while (it.hasNext()) {
+			String oldName = it.next();
+			HyperItem ho = em.getHyperItem(oldName);
+			if (ho != null) {
+				composites.set(ho.getName() + ".information.type", composites.getString(oldName + ".information.type"));
+				composites.set(ho.getName() + ".information.material", composites.getString(oldName + ".information.material"));
+				composites.set(ho.getName() + ".information.data", composites.getInt(oldName + ".information.data"));
+				composites.set(ho.getName() + ".name.display", ho.getDisplayName());
+				composites.set(ho.getName() + ".name.aliases", ho.getAliasesString());
+				composites.set(ho.getName() + ".components", composites.getString(oldName + ".components"));
+				composites.set(oldName, null);
+			}
+		}
+		hc.gYH().saveYamls();
+		return true;
+		*/
+		/*
 		HyperConomy hc = HyperConomy.hc;
 		for (HyperObject ho:hc.getEconomyManager().getHyperObjects()) {
 			ho.setCeiling(ho.getCeiling());
@@ -38,6 +59,9 @@ public class Hctest implements CommandExecutor {
 			ho.setValue(ho.getValue());
 		}
 		return true;
+		
+		*/
+		
 		/*
 		hc = HyperConomy.hc;
 		em = hc.getEconomyManager();

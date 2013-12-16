@@ -1,11 +1,19 @@
 package regalowl.hyperconomy;
 
 
+import java.util.ArrayList;
+
+import regalowl.databukkit.CommonFunctions;
+
+
 
 public class BasicObject implements HyperObject {
 	
 	protected HyperConomy hc;
+	protected CommonFunctions cf;
 	protected String name;
+	protected String displayName;
+	protected ArrayList<String> aliases = new ArrayList<String>();
 	protected String economy;
 	protected HyperObjectType type;
 	protected double value;
@@ -19,15 +27,17 @@ public class BasicObject implements HyperObject {
 	protected double floor;
 	protected double maxstock;
 	
-	/*
-	public BasicObject() {
+
+	public BasicObject(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
 		hc = HyperConomy.hc;
-	}
-	*/
-	public BasicObject(String name, String economy, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
-		hc = HyperConomy.hc;
+		cf = hc.gCF();
 		this.name = name;
 		this.economy = economy;
+		this.displayName = displayName;
+		ArrayList<String> tAliases = hc.gCF().explode(aliases, ",");
+		for (String cAlias:tAliases) {
+			this.aliases.add(cAlias);
+		}
 		this.type = HyperObjectType.fromString(type);
 		this.value = value;
 		this.isstatic = isstatic;
@@ -54,6 +64,35 @@ public class BasicObject implements HyperObject {
 	
 	public String getName() {
 		return name;
+	}
+	public String getDisplayName() {
+		if (displayName != null) {
+			return displayName;
+		} else {
+			return name;
+		}
+	}
+
+	public ArrayList<String> getAliases() {
+		return new ArrayList<String>(aliases);
+	}
+	public String getAliasesString() {
+		return hc.gCF().implode(aliases, ",");
+	}
+	public boolean hasName(String testName) {
+		if (name.equalsIgnoreCase(testName)) {
+			return true;
+		}
+		if (displayName.equalsIgnoreCase(testName)) {
+			return true;
+		}
+		for (int i = 0; i < aliases.size(); i++) {
+			String alias = aliases.get(i);
+			if (alias.equalsIgnoreCase(testName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	public String getEconomy() {
 		return economy;
@@ -115,6 +154,34 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET NAME='" + name + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.name = name;
+	}
+	public void setDisplayName(String displayName) {
+		String statement = "UPDATE hyperconomy_objects SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		hc.getSQLWrite().addToQueue(statement);
+		this.displayName = displayName;
+	}
+	public void setAliases(ArrayList<String> newAliases) {
+		String stringAliases = hc.getCommonFunctions().implode(newAliases, ",");
+		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		hc.getSQLWrite().addToQueue(statement);
+		aliases.clear();
+		for (String cAlias:newAliases) {
+			aliases.add(cAlias);
+		}
+	}
+	public void addAlias(String addAlias) {
+		if (aliases.contains(addAlias)) {return;}
+		aliases.add(addAlias);
+		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
+		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		hc.getSQLWrite().addToQueue(statement);
+	}
+	public void removeAlias(String removeAlias) {
+		if (!aliases.contains(removeAlias)) {return;}
+		aliases.remove(removeAlias);
+		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
+		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		hc.getSQLWrite().addToQueue(statement);
 	}
 	public void setEconomy(String economy) {
 		String statement = "UPDATE hyperconomy_objects SET ECONOMY='" + economy + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
@@ -209,7 +276,7 @@ public class BasicObject implements HyperObject {
 				}
 			}
 		}
-		return twoDecimals(cost * tax);
+		return cf.twoDecimals(cost * tax);
 	}
 	
 	public double getSalesTaxEstimate(double value) {
@@ -220,13 +287,7 @@ public class BasicObject implements HyperObject {
 			double salestaxpercent = hc.gYH().gFC("config").getDouble("config.sales-tax-percent");
 			salestax = (salestaxpercent / 100) * value;
 		}
-		return twoDecimals(salestax);
-	}
-	
-	protected double twoDecimals(double input) {
-		int nodecimals = (int) Math.ceil((input * 100) - .5);
-		double twodecimals = (double) nodecimals / 100.0;
-		return twodecimals;
+		return cf.twoDecimals(salestax);
 	}
 	
 	
@@ -281,7 +342,7 @@ public class BasicObject implements HyperObject {
 				double price = applyCeilingFloor(staticcost);
 				cost = price * amount;
 			}
-			return twoDecimals(cost);
+			return cf.twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getCost() passed values name='" + getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
@@ -322,7 +383,7 @@ public class BasicObject implements HyperObject {
 				double price = applyCeilingFloor(statprice);
 				cost = price * amount;
 			}
-			return twoDecimals(cost);
+			return cf.twoDecimals(cost);
 		} catch (Exception e) {
 			String info = "Calculation getTvalue() passed values name='" + getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);

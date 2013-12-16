@@ -34,7 +34,9 @@ public class Value {
 				}
 				BasicObject bo = he.getBasicObject(name, em.getShop(player));
 				HyperItem hi = he.getHyperItem(name, em.getShop(player));
+				
 				if (hi != null) {
+					String displayName = hi.getDisplayName();
 					double val = hi.getValue(amount);
 					double salestax = 0;
 					if (player != null) {
@@ -43,7 +45,7 @@ public class Value {
 					}
 					val = cf.twoDecimals(val - salestax);
 					sender.sendMessage(L.get("LINE_BREAK"));
-					sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, name));
+					sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, displayName));
 					double cost = hi.getCost(amount);
 					double taxpaid = hi.getPurchaseTax(cost);
 					cost = cf.twoDecimals(cost + taxpaid);
@@ -52,10 +54,11 @@ public class Value {
 					}
 					double stock = 0;
 					stock = cf.twoDecimals(he.getHyperObject(name, em.getShop(player)).getStock());
-					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, name));
-					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, name));
+					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, displayName));
+					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, displayName));
 					sender.sendMessage(L.get("LINE_BREAK"));
 				} else if (bo != null) {
+					String displayName = bo.getDisplayName();
 					double val = bo.getValue(amount);
 					double salestax = 0;
 					if (player != null) {
@@ -64,7 +67,7 @@ public class Value {
 					}
 					val = cf.twoDecimals(val - salestax);
 					sender.sendMessage(L.get("LINE_BREAK"));
-					sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, name));
+					sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, displayName));
 					double cost = bo.getCost(amount);
 					double taxpaid = bo.getPurchaseTax(cost);
 					cost = cf.twoDecimals(cost + taxpaid);
@@ -73,8 +76,8 @@ public class Value {
 					}
 					double stock = 0;
 					stock = cf.twoDecimals(he.getHyperObject(name, em.getShop(player)).getStock());
-					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, name));
-					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, name));
+					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, displayName));
+					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, displayName));
 					sender.sendMessage(L.get("LINE_BREAK"));
 				} else {
 					sender.sendMessage(L.get("INVALID_ITEM_NAME"));

@@ -81,7 +81,7 @@ public class FrameShopRenderer extends MapRenderer {
   
 			int fHeight = MinecraftFont.Font.getHeight();
 			
-			canvas.drawText(7, fHeight, MinecraftFont.Font, applyMapColor(ho.getName(), MapPalette.RED));
+			canvas.drawText(7, fHeight, MinecraftFont.Font, applyMapColor(ho.getDisplayName(), MapPalette.RED));
 			//canvas.drawText(8, fHeight + 10, MinecraftFont.Font, applyMapColor("Sell: Left Click", MapPalette.DARK_GRAY));
 			//canvas.drawText(8, fHeight + 20, MinecraftFont.Font, applyMapColor("Buy: Right Click", MapPalette.DARK_GRAY));
 			

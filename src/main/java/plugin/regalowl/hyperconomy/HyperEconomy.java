@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,7 +22,8 @@ public class HyperEconomy {
 
 	private ConcurrentHashMap<String, HyperObject> hyperObjectsName = new ConcurrentHashMap<String, HyperObject>();
 	private ConcurrentHashMap<String, HyperObject> hyperObjectsData = new ConcurrentHashMap<String, HyperObject>();
-
+	private ConcurrentHashMap<String, String> hyperObjectsAliases = new ConcurrentHashMap<String, String>();
+	
 
 	private ArrayList<String> compositeKeys = new ArrayList<String>();
 	private boolean useComposites;
@@ -60,26 +60,44 @@ public class HyperEconomy {
 					if (useComposites && compositeKeys.contains(result.getString("NAME").toLowerCase())) {continue;}
 					HyperObjectType type = HyperObjectType.fromString(result.getString("TYPE"));
 					if (type == HyperObjectType.ITEM) {
-						HyperItem hobj = new ComponentItem(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
+						HyperItem hobj = new ComponentItem(result.getString("NAME"), result.getString("ECONOMY"), 
+								result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
 								result.getString("MATERIAL"), result.getInt("DATA"),
 								result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
 								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
 						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
 						hyperObjectsData.put(hobj.getMaterialEnum() + "|" + hobj.getData(), hobj);
+						for (String alias:hobj.getAliases()) {
+							hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
+						}
+						hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
+						hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 					} else if (type == HyperObjectType.ENCHANTMENT) {
-						HyperObject hobj = new Enchant(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
+						HyperObject hobj = new Enchant(result.getString("NAME"), result.getString("ECONOMY"), 
+								result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
 								result.getString("MATERIAL"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
 								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
 						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
+						for (String alias:hobj.getAliases()) {
+							hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
+						}
+						hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
+						hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 					} else if (type == HyperObjectType.EXPERIENCE) {
-						HyperObject hobj = new Xp(result.getString("NAME"), result.getString("ECONOMY"), result.getString("TYPE"), 
+						HyperObject hobj = new Xp(result.getString("NAME"), result.getString("ECONOMY"), 
+								result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
 								result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
 								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
 						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
 						xpName = result.getString("NAME");
+						for (String alias:hobj.getAliases()) {
+							hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
+						}
+						hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
+						hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 					}
 				}
 				result.close();
@@ -106,32 +124,6 @@ public class HyperEconomy {
 		}
 	}
 	
-	
-	/* Code to display recipes from bukkit.  Doesn't include potions.
-		Iterator<Recipe> iter = hc.getServer().recipeIterator();
-		while (iter.hasNext()) {
-		  Recipe recipe = iter.next();
-		  if (recipe instanceof ShapedRecipe) {
-			  ShapedRecipe sr = (ShapedRecipe)recipe;
-			  ItemStack result = sr.getResult();
-			  hc.getLogger().severe("Result: [" + result.getType().toString() + "," + result.getAmount() + "]");
-
-			  for (Map.Entry<Character,ItemStack> entry : sr.getIngredientMap().entrySet()) {
-				  Character ch = entry.getKey();
-				  ItemStack stack = entry.getValue();
-				  hc.getLogger().severe("Char: [" + ch + "] Stack: [" + stack.getType().toString() + "," + stack.getAmount() + "]");
-			  }
-		  } else if (recipe instanceof ShapelessRecipe) {
-			  ShapelessRecipe sr = (ShapelessRecipe)recipe;
-			  ItemStack result = sr.getResult();
-			  hc.getLogger().severe("Result: [" + result.getType().toString() + "," + result.getAmount() + "]");
-			  for (ItemStack stack:sr.getIngredientList()) {
-				  hc.getLogger().severe("Stack: [" + stack.getType().toString() + "," + stack.getAmount() + "]");
-			  }
-		  }
-		}
-	 */
-	
 	private void loadComposites() {
 		if (!useComposites) {
 			return;
@@ -149,7 +141,6 @@ public class HyperEconomy {
 			Iterator<String> it = composites.getKeys(false).iterator();
 			while (it.hasNext()) {
 				String name = it.next().toString();
-				//hc.getLogger().severe(name);
 				if (!componentsLoaded(name)) {
 					loaded = false;
 					continue;
@@ -157,6 +148,11 @@ public class HyperEconomy {
 				HyperItem ho = new CompositeItem(name, economy);
 				hyperObjectsName.put(ho.getName().toLowerCase(), ho);
 				hyperObjectsData.put(ho.getMaterialEnum() + "|" + ho.getData(), ho);
+				for (String alias:ho.getAliases()) {
+					hyperObjectsAliases.put(alias.toLowerCase(), ho.getName().toLowerCase());
+				}
+				hyperObjectsAliases.put(ho.getName().toLowerCase(), ho.getName().toLowerCase());
+				hyperObjectsAliases.put(ho.getDisplayName().toLowerCase(), ho.getName().toLowerCase());
 			}
 		}
 	}
@@ -167,6 +163,7 @@ public class HyperEconomy {
 		    String oname = entry.getKey();
 		    HyperObject ho = getHyperObject(oname);
 		    if (ho == null) {
+		    	//hc.getLogger().severe("Not loaded: " + oname);
 		    	return false;
 		    }
 		}
@@ -186,6 +183,7 @@ public class HyperEconomy {
 		return getHyperObject(stack, null);
 	}
 	public HyperObject getHyperObject(ItemStack stack, Shop s) {
+		if (stack == null) {return null;}
 		HyperItemStack his = new HyperItemStack(stack);
 		if (s != null && s instanceof PlayerShop) {
 			if (hyperObjectsData.containsKey(his.getKey())) {
@@ -200,30 +198,29 @@ public class HyperEconomy {
 		return null;
 	}
 	public HyperObject getHyperObject(String name, Shop s) {
-		name = name.toLowerCase();
+		if (name == null) {return null;}
+		String sname = name.toLowerCase();
+		if (hyperObjectsAliases.containsKey(sname)) {
+			sname = hyperObjectsAliases.get(sname);
+		}
 		if (s != null && s instanceof PlayerShop) {
-			if (hyperObjectsName.containsKey(name)) {
-				return (HyperObject) ((PlayerShop) s).getPlayerShopObject(hyperObjectsName.get(name));
+			if (hyperObjectsName.containsKey(sname)) {
+				return (HyperObject) ((PlayerShop) s).getPlayerShopObject(hyperObjectsName.get(sname));
 			} else {
 				return null;
 			}
 		} else {
-			if (hyperObjectsName.containsKey(name)) {
-				return hyperObjectsName.get(name);
+			if (hyperObjectsName.containsKey(sname)) {
+				return hyperObjectsName.get(sname);
 			} else {
 				return null;
 			}
 		}
 	}
-
-
 	public HyperObject getHyperObject(String name) {
-		name = name.toLowerCase();
-		if (hyperObjectsName.containsKey(name)) {
-			return hyperObjectsName.get(name);
-		}
-		return null;
+		return getHyperObject(name, null);
 	}
+	
 	public void removeHyperObject(String name) {
 		HyperObject ho = null;
 		if (hyperObjectsName.containsKey(name)) {
@@ -362,6 +359,7 @@ public class HyperEconomy {
 		}
 		return names;
 	}
+	
 /*
 	public ArrayList<String> getItemNames() {
 		ArrayList<String> names = new ArrayList<String>();
@@ -398,7 +396,11 @@ public class HyperEconomy {
 	}
 	
 	public boolean objectTest(String name) {
-		if (hyperObjectsName.containsKey(name.toLowerCase())) {
+		String sname = name.toLowerCase();
+		if (hyperObjectsAliases.containsKey(name)) {
+			sname = hyperObjectsAliases.get(name);
+		}
+		if (hyperObjectsName.containsKey(sname)) {
 			return true;
 		}
 		return false;
@@ -406,8 +408,12 @@ public class HyperEconomy {
 	
 	
 	public boolean itemTest(String name) {
-		if (hyperObjectsName.containsKey(name.toLowerCase())) {
-			HyperObject ho = hyperObjectsName.get(name.toLowerCase());
+		String sname = name.toLowerCase();
+		if (hyperObjectsAliases.containsKey(name)) {
+			sname = hyperObjectsAliases.get(name);
+		}
+		if (hyperObjectsName.containsKey(sname)) {
+			HyperObject ho = hyperObjectsName.get(sname);
 			if (ho instanceof HyperItem) {
 				return true;
 			}
@@ -417,8 +423,12 @@ public class HyperEconomy {
 	
 
 	public boolean enchantTest(String name) {
-		if (hyperObjectsName.containsKey(name.toLowerCase())) {
-			HyperObject ho = hyperObjectsName.get(name.toLowerCase());
+		String sname = name.toLowerCase();
+		if (hyperObjectsAliases.containsKey(name)) {
+			sname = hyperObjectsAliases.get(name);
+		}
+		if (hyperObjectsName.containsKey(sname)) {
+			HyperObject ho = hyperObjectsName.get(sname);
 			if (ho instanceof HyperEnchant) {
 				return true;
 			}
@@ -428,8 +438,12 @@ public class HyperEconomy {
 	
 	
 	public String fixName(String nam) {
+		String sname = nam.toLowerCase();
+		if (hyperObjectsAliases.containsKey(nam)) {
+			sname = hyperObjectsAliases.get(nam);
+		}
 		for (String name:getNames()) {
-			if (name.equalsIgnoreCase(nam)) {
+			if (name.equalsIgnoreCase(sname)) {
 				return name;
 			}
 		}
@@ -437,9 +451,13 @@ public class HyperEconomy {
 	}
 	
 	public String fixNameTest(String nam) {
+		String sname = nam.toLowerCase();
+		if (hyperObjectsAliases.containsKey(nam)) {
+			sname = hyperObjectsAliases.get(nam);
+		}
 		ArrayList<String> names = getNames();
 		for (int i = 0; i < names.size(); i++) {
-			if (names.get(i).equalsIgnoreCase(nam)) {
+			if (names.get(i).equalsIgnoreCase(sname)) {
 				return names.get(i);
 			}
 		}
@@ -454,11 +472,11 @@ public class HyperEconomy {
 		FileConfiguration objects = hc.gYH().gFC("objects");
 		ArrayList<String> objectsAdded = new ArrayList<String>();
 		SQLWrite sw = hc.getSQLWrite();
-		Iterator<String> it = objects.getKeys(false).iterator();
 		ArrayList<String> keys = getObjectKeys();
+		Iterator<String> it = objects.getKeys(false).iterator();
 		while (it.hasNext()) {
 			String itemname = it.next().toString();
-			if (!keys.contains(itemname)) {
+			if (!keys.contains(itemname.toLowerCase())) {
 				objectsAdded.add(itemname);
 				String category = objects.getString(itemname + ".information.category");
 				if (category == null) {
@@ -467,6 +485,8 @@ public class HyperEconomy {
 				HashMap<String, String> values = new HashMap<String, String>();
 				values.put("NAME", itemname);
 				values.put("ECONOMY", economy);
+				values.put("DISPLAY_NAME", objects.getString(itemname + ".name.display"));
+				values.put("ALIASES", objects.getString(itemname + ".name.aliases"));
 				values.put("TYPE", objects.getString(itemname + ".information.type"));
 				values.put("VALUE", objects.getDouble(itemname + ".value") + "");
 				values.put("STATIC", objects.getString(itemname + ".price.static"));
@@ -498,6 +518,26 @@ public class HyperEconomy {
 		return objectsAdded;
 	}
 	
+	public void updateNamesFromYml() {
+		FileConfiguration objects = hc.gYH().gFC("objects");
+		Iterator<String> it = objects.getKeys(false).iterator();
+		while (it.hasNext()) {
+			String name = it.next().toString();
+			String aliasString = objects.getString(name + ".name.aliases");
+			ArrayList<String> names = hc.gCF().explode(aliasString, ",");
+			String displayName = objects.getString(name + ".name.display");
+			names.add(displayName);
+			names.add(name);
+			for (String cname:names) {
+				HyperObject ho = getHyperObject(cname);
+				if (ho == null) {continue;}
+				ho.setAliases(hc.gCF().explode(aliasString, ","));
+				ho.setDisplayName(displayName);
+				ho.setName(name);
+			}
+		}
+	}
+	
 	
 	public void exportToYml() {
 		FileConfiguration objects = hc.gYH().gFC("objects");
@@ -507,6 +547,8 @@ public class HyperEconomy {
 			String name = names.get(i);
 			objects.set(name, null);
 			HyperObject ho = getHyperObject(name);
+			String displayName = ho.getDisplayName();
+			String aliases = ho.getAliasesString();
 			String newtype = ho.getType().toString();
 			String newmaterial = "none";
 			int newdata = -1;
@@ -528,6 +570,8 @@ public class HyperEconomy {
 			double newceiling = ho.getCeiling();
 			double newfloor = ho.getFloor();
 			double newmaxstock = ho.getMaxstock();
+			objects.set(name + ".name.display", displayName);
+			objects.set(name + ".name.aliases", aliases);
 			objects.set(name + ".information.type", newtype);
 			objects.set(name + ".information.material", newmaterial);
 			objects.set(name + ".information.data", newdata);

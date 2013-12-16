@@ -34,7 +34,7 @@ public class Hv {
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
-						String nam = ho.getName();
+						String displayName = ho.getDisplayName();
 						double val = ho.getValue(amount, hp);
 						if (ho.isDurable() && amount > 1) {
 							int numberofitem = ho.count(player.getInventory());
@@ -46,7 +46,7 @@ public class Hv {
 						double salestax = hp.getSalesTax(val);
 						val = cf.twoDecimals(val - salestax);
 						player.sendMessage(L.get("LINE_BREAK"));
-						player.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, nam));
+						player.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, displayName));
 						double cost = ho.getCost(amount);
 						double taxpaid = ho.getPurchaseTax(cost);
 						cost = cf.twoDecimals(cost + taxpaid);
@@ -54,9 +54,9 @@ public class Hv {
 							cost = -1;
 						}
 						double stock = 0;
-						stock = he.getHyperObject(nam, em.getShop(player)).getStock();
-						player.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, nam));
-						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, nam));
+						stock = ho.getStock();
+						player.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, displayName));
+						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, displayName));
 						player.sendMessage(L.get("LINE_BREAK"));
 					}
 				} else {

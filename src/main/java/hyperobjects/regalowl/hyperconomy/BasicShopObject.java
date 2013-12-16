@@ -1,5 +1,7 @@
 package regalowl.hyperconomy;
 
+import java.util.ArrayList;
+
 import regalowl.databukkit.SQLWrite;
 
 public class BasicShopObject implements PlayerShopObject {
@@ -91,6 +93,19 @@ public class BasicShopObject implements PlayerShopObject {
 	public String getName() {
 		return ho.getName();
 	}
+	
+	public String getDisplayName() {
+		return ho.getDisplayName();
+	}
+	public ArrayList<String> getAliases() {
+		return ho.getAliases();
+	}
+	public String getAliasesString() {
+		return ho.getAliasesString();
+	}
+	public boolean hasName(String testName) {
+		return ho.hasName(testName);
+	}
 
 	public String getEconomy() {
 		return ho.getEconomy();
@@ -139,6 +154,11 @@ public class BasicShopObject implements PlayerShopObject {
 	public void setName(String name) {}
 
 	public void setEconomy(String economy) {}
+	
+	public void setDisplayName(String displayName) {}
+	public void setAliases(ArrayList<String> newAliases) {}
+	public void addAlias(String addAlias) {}
+	public void removeAlias(String removeAlias) {}
 
 	public void setType(String type) {}
 

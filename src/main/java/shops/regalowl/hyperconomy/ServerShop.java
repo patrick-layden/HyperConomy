@@ -47,7 +47,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		L = hc.getLanguageFile();
 		globalShop = false;
 		shopFile = hc.gYH().gFC("shops");
-		shopFile.set(name + ".owner", owner.getName());
+		shopFile.set(name + ".owner", this.owner.getName());
 		shopFile.set(name + ".economy", econ);
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
 	}

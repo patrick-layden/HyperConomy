@@ -263,7 +263,7 @@ public class HyperItemStack {
 		double median = 10000;
 		double startprice = 20.0;
 		int data = getDamageValue();
-		return new TempItem(name, "default", "item", stack.getType().toString(), data, data, value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0);
+		return new TempItem(name, "default", name, "", "item", stack.getType().toString(), data, data, value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0);
 	}
 	public String generateName(ItemStack stack) {
 		String name = stack.getData().toString().toLowerCase();
