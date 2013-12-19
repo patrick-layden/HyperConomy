@@ -622,7 +622,7 @@ ENDER_CHEST_0:
 EYE_OF_ENDER_0:
   information:
     type: item
-    material: BUCKET
+    material: EYE_OF_ENDER
     data: 0
   name:
     display: eye_of_ender
