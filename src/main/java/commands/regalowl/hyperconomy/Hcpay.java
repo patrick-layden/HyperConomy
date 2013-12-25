@@ -11,6 +11,10 @@ public class Hcpay {
 			if (args.length == 2) {
 				String recipient = args[0];
 				Double amount = Double.parseDouble(args[1]);
+				if (amount <= 0) {
+					player.sendMessage(L.get("CANNOT_PAY_NEGATIVE"));
+					return;
+				}
 				if (em.hasAccount(recipient)) {
 					if (em.getHyperPlayer(player.getName()).hasBalance(amount)) {
 						em.getHyperPlayer(player.getName()).withdraw(amount);

@@ -454,3 +454,4 @@ HCSET_NAME_INVALID: &4Invalid parameters. Use /hcset name [new name]
 MAKEFRAMESHOP_INVALID: &4Invalid Parameters. Use /makeframeshop [object]
 NAME_IN_USE: &4That name/alias is already in use.
 NOT_IMPLEMENTED: &dThis message has not been implemented yet.
+CANNOT_PAY_NEGATIVE: &4You cannot pay a zero or negative amount.
