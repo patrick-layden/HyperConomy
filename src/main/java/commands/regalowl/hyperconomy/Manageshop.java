@@ -169,8 +169,8 @@ public class Manageshop implements CommandExecutor {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return true;
 				}
-				pso.remove(amount, player.getInventory());
-				((PlayerShopObject) pso).setStock(pso.getStock() + amount);
+				double amountRemoved = pso.remove(amount, player.getInventory());
+				((PlayerShopObject) pso).setStock(pso.getStock() + amountRemoved);
 				player.sendMessage(L.get("STOCK_ADDED"));
 				return true;
 			} else if (ho2 instanceof PlayerShopEnchant) {
@@ -179,9 +179,9 @@ public class Manageshop implements CommandExecutor {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return true;
 				}
-				boolean success = pso.removeEnchantment(player.getItemInHand());
-				if (success) {
-					((PlayerShopObject) pso).setStock(pso.getStock() + 1);
+				double removed = pso.removeEnchantment(player.getItemInHand());
+				if (removed > 0) {
+					((PlayerShopObject) pso).setStock(pso.getStock() + removed);
 				} else {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}
@@ -255,9 +255,9 @@ public class Manageshop implements CommandExecutor {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return true;
 				}
-				boolean success = pso.addEnchantment(player.getItemInHand());
-				if (success) {
-					((PlayerShopObject) pso).setStock(pso.getStock() - 1);
+				double amountAdded = pso.addEnchantment(player.getItemInHand());
+				if (amountAdded > 0) {
+					((PlayerShopObject) pso).setStock(pso.getStock() - amountAdded);
 				} else {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}

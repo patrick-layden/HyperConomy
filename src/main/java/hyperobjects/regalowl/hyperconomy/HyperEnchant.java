@@ -13,6 +13,6 @@ public interface HyperEnchant extends HyperObject {
 	
 	public Enchantment getEnchantment();
 	public int getEnchantmentLevel();
-	public boolean addEnchantment(ItemStack stack);
-	public boolean removeEnchantment(ItemStack stack);
+	public double addEnchantment(ItemStack stack);
+	public double removeEnchantment(ItemStack stack);
 }

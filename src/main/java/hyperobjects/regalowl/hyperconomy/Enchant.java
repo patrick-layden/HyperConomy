@@ -219,27 +219,33 @@ public class Enchant extends BasicObject implements HyperEnchant {
 		}
 	}
 
-	public boolean addEnchantment(ItemStack stack) {
-		if (stack == null) {return false;}
+	public double addEnchantment(ItemStack stack) {
+		if (stack == null) {return 0;}
 		HyperItemStack his = new HyperItemStack(stack);
 		Enchantment e = getEnchantment();
 		if (his.canAcceptEnchantment(e) && !his.containsEnchantment(e)) {
 			his.addEnchantment(e, getEnchantmentLevel());
-			return true;
+			return 1;
 		}
-		return false;
+		return 0;
 	}
 
-	public boolean removeEnchantment(ItemStack stack) {
-		if (stack == null) {return false;}
+	public double removeEnchantment(ItemStack stack) {
+		if (stack == null) {return 0;}
 		HyperItemStack his = new HyperItemStack(stack);
 		Enchantment e = getEnchantment();
 		int lvl = his.getEnchantmentLevel(e);
 		if (getEnchantmentLevel() == lvl && his.containsEnchantment(e)) {
 			his.removeEnchant(e);
-			return true;
+			double dura = stack.getDurability();
+			double maxdura = stack.getType().getMaxDurability();
+			double duramult = (1 - dura / maxdura);
+			if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
+				duramult = 1;
+			}
+			return duramult;
 		}
-		return false;
+		return 0;
 	}
 
 

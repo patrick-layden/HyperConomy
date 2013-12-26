@@ -1,7 +1,6 @@
 package regalowl.hyperconomy;
 
 
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -677,7 +676,7 @@ public class TransactionProcessor {
 			Player p = hp.getPlayer();
 			nenchant = hyperEnchant.getEnchantmentName();
 			Enchantment ench = Enchantment.getByName(nenchant);
-			int lvl = Integer.parseInt(hyperObject.getName().substring(hyperObject.getName().length() - 1, hyperObject.getName().length()));
+			int lvl = hyperEnchant.getEnchantmentLevel();
 			int truelvl = new HyperItemStack(p.getItemInHand()).getEnchantmentLevel(ench);
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getDisplayName()), hyperObject);
@@ -689,19 +688,14 @@ public class TransactionProcessor {
 				return response;
 			}
 			if (new HyperItemStack(p.getItemInHand()).containsEnchantment(ench) && lvl == truelvl) {
-				double dura = p.getItemInHand().getDurability();
-				double maxdura = p.getItemInHand().getType().getMaxDurability();
-				double duramult = (1 - dura / maxdura);
-				if (p.getItemInHand().getType().equals(Material.ENCHANTED_BOOK)) {
-					duramult = 1;
-				}
 				String mater = p.getItemInHand().getType().toString();
 				double price = hyperEnchant.getValue(EnchantmentClass.fromString(mater), hp);
 				double fprice = price;
 				if (hasBalance(fprice)) {
 					new HyperItemStack(p.getItemInHand()).removeEnchant(ench);
 					double shopstock = hyperObject.getStock();
-					hyperObject.setStock(shopstock + duramult);
+					double amountRemoved = hyperEnchant.removeEnchantment(p.getItemInHand());
+					hyperObject.setStock(shopstock + amountRemoved);
 					double salestax = hp.getSalesTax(fprice);
 					hp.deposit(fprice - salestax);
 					tradePartner.withdraw(fprice - salestax);
@@ -859,9 +853,7 @@ public class TransactionProcessor {
 					if (hp.hasBalance(price)) {
 						hp.withdraw(price);
 						tradePartner.deposit(price);
-						int l = hyperObject.getName().length();
-						String lev = hyperObject.getName().substring(l - 1, l);
-						int level = Integer.parseInt(lev);
+						int level = hyperEnchant.getEnchantmentLevel();
 						his.addEnchantment(ench, level);
 						new HyperItemStack(giveItem).removeEnchant(ench);
 						price = cf.twoDecimals(price);

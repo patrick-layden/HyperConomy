@@ -62,12 +62,12 @@ public class ShopEnchant extends BasicShopObject implements PlayerShopEnchant {
 	}
 
 
-	public boolean addEnchantment(ItemStack stack) {
+	public double addEnchantment(ItemStack stack) {
 		return ((HyperEnchant)ho).addEnchantment(stack);
 	}
 
 
-	public boolean removeEnchantment(ItemStack stack) {
+	public double removeEnchantment(ItemStack stack) {
 		return ((HyperEnchant)ho).removeEnchantment(stack);
 	}
 
