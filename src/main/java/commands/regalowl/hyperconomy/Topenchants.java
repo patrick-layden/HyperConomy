@@ -41,7 +41,10 @@ public class Topenchants {
 				PlayerShopObject pso = null;
 				boolean allowed = false;
 				boolean stocked = false;
-				boolean banned = em.getShop(nameshop).isBanned(ho);
+				boolean banned = false;
+				if (nameshop != "") {
+					banned = em.getShop(nameshop).isBanned(ho);
+				}
 				if (ho.getStock() > 0) {stocked = true;}
 				if (ho instanceof PlayerShopObject) {
 					pso = (PlayerShopObject)ho;

@@ -45,8 +45,13 @@ public class Topitems {
 			}
 			for (HyperObject ho:objects) {
 				boolean unavailable = false;
+				boolean allowed = false;
+				boolean stocked = false;
+				if (ho.getStock() > 0) {stocked = true;}
+				boolean banned = em.getShop(nameshop).isBanned(ho);
+				
 				if (s != null) {
-					if (!s.isStocked(ho.getName())) {
+					if (banned && !(allowed && stocked)) {
 						unavailable = true;
 					}
 				}
