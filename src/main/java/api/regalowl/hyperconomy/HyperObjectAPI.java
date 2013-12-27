@@ -450,7 +450,7 @@ public class HyperObjectAPI implements ObjectAPI {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getEconomyManager().getShop(p);
 		if (s != null) {
-			return s.getAvailableObjects();
+			return s.getTradeableObjects();
 		}
 		return new ArrayList<HyperObject>();
 	}
@@ -470,7 +470,7 @@ public class HyperObjectAPI implements ObjectAPI {
 		HyperConomy hc = HyperConomy.hc;
 		Shop s = hc.getEconomyManager().getShop(shopname);
 		if (s != null) {
-			return s.getAvailableObjects();
+			return s.getTradeableObjects();
 		}
 		return new ArrayList<HyperObject>();
 	}

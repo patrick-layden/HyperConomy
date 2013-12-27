@@ -27,7 +27,7 @@ public class Esell {
 						}
 						ArrayList<String> enchants = new HyperItemStack(player.getItemInHand()).getEnchants();
 						for (String e:enchants) {
-							if (s.has(e)) {
+							if (!s.isBanned(e)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 								pt.setHyperObject(he.getHyperObject(e, s));
 								pt.setTradePartner(s.getOwner());
@@ -40,7 +40,7 @@ public class Esell {
 
 					} else {
 						if (he.enchantTest(name)) {
-							if (s.has(name)) {
+							if (!s.isBanned(name)) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 								pt.setHyperObject(he.getHyperObject(name, s));
 								pt.setTradePartner(s.getOwner());

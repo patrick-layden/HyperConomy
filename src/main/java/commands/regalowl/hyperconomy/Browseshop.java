@@ -79,7 +79,7 @@ public class Browseshop {
 				String displayName = ho.getDisplayName();
 				if (alphabetic) {
 					if (displayName.startsWith(input)) {
-						if (shop == null || shop.has(cname)) {
+						if (shop == null || !shop.isBanned(cname)) {
 							if (shop instanceof PlayerShop) {
 								PlayerShop ps = (PlayerShop)shop;
 								PlayerShopObject pso = ps.getPlayerShopObject(ho);
@@ -99,7 +99,7 @@ public class Browseshop {
 					}
 				} else {
 					if (displayName.contains(input)) {
-						if (shop == null || shop.has(cname)) {
+						if (shop == null || !shop.isBanned(cname)) {
 							if (shop instanceof PlayerShop) {
 								PlayerShop ps = (PlayerShop)shop;
 								PlayerShopObject pso = ps.getPlayerShopObject(ho);

@@ -38,17 +38,21 @@ public class Topenchants {
 			SortedMap<Double, String> enchantstocks = new TreeMap<Double, String>();
 			for (HyperObject ho:he.getHyperObjects()) {
 				if (!(ho instanceof HyperEnchant)) {continue;}
+				PlayerShopObject pso = null;
+				boolean allowed = false;
+				boolean stocked = false;
+				boolean banned = em.getShop(nameshop).isBanned(ho);
+				if (ho.getStock() > 0) {stocked = true;}
 				if (ho instanceof PlayerShopObject) {
-					PlayerShopObject pso = (PlayerShopObject)ho;
-					if (pso.getStatus() == HyperObjectStatus.NONE) {
-						if (!pso.getShop().isAllowed(em.getHyperPlayer(player))) {
-							continue;
-						}
+					pso = (PlayerShopObject)ho;
+					allowed = pso.getShop().isAllowed(em.getHyperPlayer(player));
+					if (pso.getStatus() == HyperObjectStatus.NONE && !allowed) {
+						continue;
 					}
 				}
 				boolean unavailable = false;
 				if (nameshop != "") {
-					if (!em.getShop(nameshop).has(ho.getName())) {
+					if (banned && !(allowed && stocked)) {
 						unavailable = true;
 					}
 				}

@@ -45,7 +45,7 @@ public class Addcategory implements CommandExecutor {
 							add.add(ho);
 						}
 					}
-					shop.addObjects(add);
+					shop.unBanObjects(add);
 					sender.sendMessage(ChatColor.GOLD + args[0] + " " + L.get("ADDED_TO") + " " + shopname.replace("_", " "));
 				} else {
 					sender.sendMessage(L.get("SHOP_NOT_EXIST"));

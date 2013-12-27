@@ -54,7 +54,7 @@ public class Hb {
 							amount = shopstock;
 						}
 						Shop s = em.getShop(player);
-						if (s.has(ho.getName())) {
+						if (!s.isBanned(ho.getName())) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(ho);
 							pt.setAmount((int) Math.rint(amount));

@@ -20,15 +20,15 @@ public class Removeitem {
 				Shop shop = em.getShop(shopname);
 				HyperEconomy he = shop.getHyperEconomy();
 				if (he.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
-	    				if (shop.has(itemname) || itemname.equalsIgnoreCase("all")) {
+	    				if (!shop.isBanned(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
 	    						ArrayList<HyperObject> remove = new ArrayList<HyperObject>();
 	    						HyperObject ho = shop.getHyperEconomy().getHyperObject(itemname);
 	    						remove.add(ho);
-	    						shop.removeObjects(remove);
+	    						shop.banObjects(remove);
 		    					sender.sendMessage(L.f(L.get("REMOVED_FROM"), itemname, shopname.replace("_", " ")));
 	    					} else {
-	    						shop.removeAllObjects();
+	    						shop.banAllObjects();
 		    					sender.sendMessage(L.f(L.get("ALL_REMOVED_FROM"), shopname.replace("_", " ")));
 	    					}
 	    				} else {

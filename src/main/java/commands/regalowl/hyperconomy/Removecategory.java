@@ -35,7 +35,7 @@ public class Removecategory {
 							remove.add(ho);
 						}
 					}
-					shop.removeObjects(remove);
+					shop.banObjects(remove);
 					sender.sendMessage(L.f(L.get("REMOVED_FROM"), args[0], shopname.replace("_", " ")));
 				} else {
 					sender.sendMessage(L.get("SHOP_NOT_EXIST"));

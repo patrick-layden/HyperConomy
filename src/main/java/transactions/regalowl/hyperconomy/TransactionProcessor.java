@@ -358,7 +358,7 @@ public class TransactionProcessor {
 					hyperItem = econ.getHyperItem(stack, em.getShop(hp.getPlayer()));
 					if (new HyperItemStack(stack).hasenchants() == false) {
 						if (hyperItem != null) {
-							if (em.getShop(hp.getPlayer()).has(hyperItem.getName())) {
+							if (!em.getShop(hp.getPlayer()).isBanned(hyperItem.getName())) {
 								amount = hyperItem.count(hp.getInventory());
 								pt.setHyperObject(hyperItem);
 								TransactionResponse sresponse = sell();

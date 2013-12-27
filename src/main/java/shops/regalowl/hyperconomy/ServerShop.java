@@ -7,9 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import regalowl.databukkit.CommonFunctions;
-
-public class ServerShop implements Shop, Comparable<Shop>{
+public class ServerShop implements Shop, DataLoadListener, Comparable<Shop>{
 	
 	private String name;
 	private String economy;
@@ -33,6 +31,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	private FileConfiguration shopFile;
 	
 	private boolean globalShop;
+	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
 	
 	
 	ServerShop(String name, String econ, HyperPlayer owner) {
@@ -50,7 +49,10 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		shopFile.set(name + ".owner", this.owner.getName());
 		shopFile.set(name + ".economy", econ);
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
+		hc.getHyperEventHandler().registerDataLoadListener(this);
 	}
+	
+
 	
 	public int compareTo(Shop s) {
 		return name.compareTo(s.getName());
@@ -188,79 +190,86 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	
-	public boolean has(String item) {
-		FileConfiguration sh = hc.gYH().gFC("shops");
-		String unavailableS = sh.getString(name + ".unavailable");
-		if (unavailableS == null || unavailableS.equalsIgnoreCase("")) {
-			return true;
-		}
-		if (unavailableS.equalsIgnoreCase("all")) {
-			return false;
-		}
-		item = em.getEconomy(economy).fixNameTest(item);
-		if (item == null) {
-			return false;
-		}
-		CommonFunctions cf = hc.gCF();
-
-		ArrayList<String> unavailable = cf.explode(unavailableS,",");
-		for (String object : unavailable) {
-			if (object.equalsIgnoreCase(item)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public boolean has(HyperObject ho) {
-		return has(ho.getName());
-	}
-	
-	public ArrayList<HyperObject> getAvailableObjects() {
-		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
-		ArrayList<HyperObject> allEconomy = em.getEconomy(economy).getHyperObjects();
-		for (HyperObject ho : allEconomy) {
-			if (has(ho)) {
-				available.add(ho);
-			}
-		}
-		return available;
-	}
-	
-	
-	public void addAllObjects() {
-		shopFile.set(name + ".unavailable", null);
-	}
-	public void removeAllObjects() {
-		CommonFunctions cf = hc.gCF();
-		HyperEconomy he = em.getEconomy(economy);
-		ArrayList<String> unavailable = new ArrayList<String>();
+	@Override
+	public void onDataLoad() {
+		HyperEconomy he = getHyperEconomy();
+		availableObjects.clear();
 		for (HyperObject ho:he.getHyperObjects()) {
-			unavailable.add(ho.getName());
+			availableObjects.add(ho);
 		}
-		shopFile.set(name + ".unavailable", cf.implode(unavailable, ","));
-	}
-	public void addObjects(ArrayList<HyperObject> objects) {
-		FileConfiguration sh = hc.gYH().gFC("shops");
-		CommonFunctions cf = hc.gCF();
-		ArrayList<String> unavailable = cf.explode(sh.getString(name + ".unavailable"),",");
-		for (HyperObject ho:objects) {
-			if (unavailable.contains(ho.getName())) {
-				unavailable.remove(ho.getName());
-			}
+		ArrayList<String> unavailable = hc.gCF().explode(shopFile.getString(name + ".unavailable"),",");
+		for (String objectName : unavailable) {
+			HyperObject ho = he.getHyperObject(objectName);
+			availableObjects.remove(ho);
 		}
-		sh.set(name + ".unavailable", cf.implode(unavailable,","));
 	}
-	public void removeObjects(ArrayList<HyperObject> objects) {
-		FileConfiguration sh = hc.gYH().gFC("shops");
-		CommonFunctions cf = hc.gCF();
-		ArrayList<String> unavailable = cf.explode(sh.getString(name + ".unavailable"),",");
-		for (HyperObject ho:objects) {
-			if (!unavailable.contains(ho.getName())) {
+	public void saveAvailable() {
+		HyperEconomy he = getHyperEconomy();
+		ArrayList<String> unavailable = new ArrayList<String>();
+		ArrayList<HyperObject> allObjects = he.getHyperObjects();
+		for (HyperObject ho:allObjects) {
+			if (!availableObjects.contains(ho)) {
 				unavailable.add(ho.getName());
 			}
 		}
-		sh.set(name + ".unavailable", cf.implode(unavailable,","));
+		if (unavailable.isEmpty()) {
+			shopFile.set(name + ".unavailable", null);
+		} else {
+			shopFile.set(name + ".unavailable", hc.gCF().implode(unavailable,","));
+		}
+	}
+	/*
+	public boolean isStocked(HyperObject ho) {
+		if (ho != null && ho.getStock() > 0) {
+			return true;
+		}
+		return false;
+	}
+	public boolean isBanned(HyperObject ho) {
+		if (availableObjects.contains(ho)) {
+			return false;
+		}
+		return true;
+	}
+	public boolean isTradeable(HyperObject ho) {
+		if (!isBanned(ho)) {
+			return true;
+		}
+		return false;
+	}
+	public boolean isStocked(String item) {
+		return isStocked(getHyperEconomy().getHyperObject(item));
+	}
+	public ArrayList<HyperObject> getTradeableObjects() {
+		return availableObjects;
+	}
+	*/
+	public void unBanAllObjects() {
+		availableObjects.clear();
+		for (HyperObject ho:getHyperEconomy().getHyperObjects()) {
+			availableObjects.add(ho);
+		}
+		saveAvailable();
+	}
+	public void banAllObjects() {
+		availableObjects.clear();
+		saveAvailable();
+	}
+	public void unBanObjects(ArrayList<HyperObject> objects) {
+		for (HyperObject ho:objects) {
+			if (!availableObjects.contains(ho)) {
+				availableObjects.add(ho);
+			}
+		}
+		saveAvailable();
+	}
+	public void banObjects(ArrayList<HyperObject> objects) {
+		for (HyperObject ho:objects) {
+			if (availableObjects.contains(ho)) {
+				availableObjects.remove(ho);
+			}
+		}
+		saveAvailable();
 	}
 	
 	
@@ -331,4 +340,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		this.owner = owner;
 		shopFile.set(name + ".owner", owner.getName());
 	}
+
+
 }

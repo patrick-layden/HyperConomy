@@ -20,15 +20,15 @@ public class Additem implements CommandExecutor {
 				if (em.getEconomy("default").objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
     				if (em.shopExists(shopname)) {
     					Shop shop = em.getShop(shopname);
-	    				if (!shop.has(itemname) || itemname.equalsIgnoreCase("all")) {
+	    				if (shop.isBanned(itemname) || itemname.equalsIgnoreCase("all")) {
 	    					if (!itemname.equalsIgnoreCase("all")) {
 	    						ArrayList<HyperObject> add = new ArrayList<HyperObject>();
 	    						HyperObject ho = shop.getHyperEconomy().getHyperObject(itemname);
 	    						add.add(ho);
-	    						shop.addObjects(add);
+	    						shop.unBanObjects(add);
 		    					sender.sendMessage(ChatColor.GOLD + itemname + " " + L.get("ADDED_TO") + " " + shopname.replace("_", " "));
 	    					} else if (itemname.equalsIgnoreCase("all")) {
-		    					shop.addAllObjects();
+		    					shop.unBanAllObjects();
 		    					sender.sendMessage(ChatColor.GOLD + L.get("ALL_ITEMS_ADDED") + " " + shopname.replace("_", " "));
 	    					}
 	    				} else {

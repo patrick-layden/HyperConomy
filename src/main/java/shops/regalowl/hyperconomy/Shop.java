@@ -34,17 +34,32 @@ public interface Shop extends Comparable<Shop>{
 	public void setOwner(HyperPlayer owner);
 	public String getDisplayName();
 	
-	public boolean has(String item);
-	public boolean has (HyperObject ho);
+	/**
+	 * Returns true if the Shop has stock of the given object name.
+	 */
+	//public boolean isStocked(String item);
+	/**
+	 * Returns true if the Shop has stock of the given HyperObject.
+	 */
+	//public boolean isStocked(HyperObject ho);
+	/**
+	 * Returns true if the HyperObject is not banned, and is tradeable.
+	 */
+	//public boolean isTradeable(HyperObject ho);
+	/**
+	 * Returns true if a HyperObject is banned from the Shop, and false if it is not.
+	 */
+	//public boolean isBanned(HyperObject ho);
+	
 	/**
 	 * Returns all HyperObjects that are available for trade in this shop.
 	 */
-	public ArrayList<HyperObject> getAvailableObjects();
+	public ArrayList<HyperObject> getTradeableObjects();
 	
-	public void addAllObjects();
-	public void removeAllObjects();
-	public void addObjects(ArrayList<HyperObject> objects);
-	public void removeObjects(ArrayList<HyperObject> objects);
+	public void unBanAllObjects();
+	public void banAllObjects();
+	public void unBanObjects(ArrayList<HyperObject> objects);
+	public void banObjects(ArrayList<HyperObject> objects);
 	
 	public int getP1x();
 	public int getP1y();

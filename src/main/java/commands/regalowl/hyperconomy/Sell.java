@@ -43,7 +43,7 @@ public class Sell {
 							}
 						}
 						Shop s = em.getShop(player);
-						if (s.has(name)) {
+						if (!s.isBanned(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 							pt.setHyperObject(ho);
 							pt.setAmount(amount);
@@ -75,7 +75,7 @@ public class Sell {
 							}
 						}
 						Shop s = em.getShop(player);
-						if (s.has(name)) {
+						if (s.isStocked(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 							pt.setHyperObject(ho);
 							pt.setAmount(amount);

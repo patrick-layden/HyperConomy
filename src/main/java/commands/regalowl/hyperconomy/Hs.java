@@ -45,7 +45,7 @@ public class Hs {
 						ItemStack iinhand = player.getItemInHand();
 						if (new HyperItemStack(iinhand).hasenchants() == false) {
 							Shop s = em.getShop(player);
-							if (s.has(ho.getName())) {
+							if (!s.isBanned(ho.getName())) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 								pt.setHyperObject(ho);
 								pt.setAmount(amount);

@@ -46,7 +46,7 @@ public class Topitems {
 			for (HyperObject ho:objects) {
 				boolean unavailable = false;
 				if (s != null) {
-					if (!s.has(ho.getName())) {
+					if (!s.isStocked(ho.getName())) {
 						unavailable = true;
 					}
 				}

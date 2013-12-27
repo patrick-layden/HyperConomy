@@ -17,7 +17,7 @@ public class Ebuy {
 					String name = args[0];
 					if (he.enchantTest(name)) {
 						Shop s = em.getShop(player);
-						if (s.has(name)) {
+						if (!s.isBanned(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(he.getHyperObject(name, em.getShop(player)));
 							pt.setTradePartner(s.getOwner());

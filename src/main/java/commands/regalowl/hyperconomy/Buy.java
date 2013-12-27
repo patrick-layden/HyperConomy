@@ -47,7 +47,7 @@ public class Buy {
 							}
 						}
 						Shop s = em.getShop(player);
-						if (s.has(name)) {
+						if (!s.isBanned(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(ho);
 							pt.setAmount(amount);
@@ -81,7 +81,7 @@ public class Buy {
 							}
 						}
 						Shop s = em.getShop(player);
-						if (s.has(name)) {
+						if (!s.isBanned(name)) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 							pt.setHyperObject(ho);
 							pt.setAmount(amount);
