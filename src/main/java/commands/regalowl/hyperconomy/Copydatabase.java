@@ -71,6 +71,7 @@ public class Copydatabase {
 						EconomyManager em = hc.getEconomyManager();
 						SQLRead sr = hc.getSQLRead();
 						hc.getHyperLock().setLoadLock(true);
+						em.createTables(sw);
 						sw.addToQueue("DELETE FROM hyperconomy_objects");
 						sw.addToQueue("DELETE FROM hyperconomy_players");
 						sw.addToQueue("DELETE FROM hyperconomy_audit_log");
@@ -81,14 +82,14 @@ public class Copydatabase {
 						for (HyperObject ho : em.getHyperObjects()) {
 							if (ho instanceof HyperItem) {
 								HyperItem hi = (HyperItem)ho;
-								sw.addToQueue("INSERT INTO hyperconomy_objects (NAME, ECONOMY, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + hi.getMaterial() + "','" + hi.getData() + "','" + hi.getDurability() + "','" + ho.getValue() + "','" + ho.getIsstatic() + "','"
+								sw.addToQueue("INSERT INTO hyperconomy_objects (NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getDisplayName() + "','" + ho.getAliasesString() + "','" + ho.getType() + "','" + hi.getMaterial() + "','" + hi.getData() + "','" + hi.getDurability() + "','" + ho.getValue() + "','" + ho.getIsstatic() + "','"
 										+ ho.getStaticprice() + "','" + ho.getStock() + "','" + ho.getMedian() + "','" + ho.getInitiation() + "','" + ho.getStartprice() + "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
 							} else if (ho instanceof HyperEnchant) {
 								HyperEnchant he = (HyperEnchant)ho;
-								sw.addToQueue("INSERT INTO hyperconomy_objects (NAME, ECONOMY, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','" + he.getEnchantmentName() + "','" + "','-1','-1','" + ho.getValue() + "','" + ho.getIsstatic() + "','"
+								sw.addToQueue("INSERT INTO hyperconomy_objects (NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getDisplayName() + "','" + ho.getAliasesString() + "','" + ho.getType() + "','" + he.getEnchantmentName() + "','-1','-1','" + ho.getValue() + "','" + ho.getIsstatic() + "','"
 										+ ho.getStaticprice() + "','" + ho.getStock() + "','" + ho.getMedian() + "','" + ho.getInitiation() + "','" + ho.getStartprice() + "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
 							} else if (ho instanceof BasicObject) {
-								sw.addToQueue("INSERT INTO hyperconomy_objects (NAME, ECONOMY, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getType() + "','none','-1','-1','" + ho.getValue() + "','" + ho.getIsstatic() + "','"
+								sw.addToQueue("INSERT INTO hyperconomy_objects (NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK)" + " VALUES ('" + ho.getName() + "','" + ho.getEconomy() + "','" + ho.getDisplayName() + "','" + ho.getAliasesString() + "','" + ho.getType() + "','none','-1','-1','" + ho.getValue() + "','" + ho.getIsstatic() + "','"
 										+ ho.getStaticprice() + "','" + ho.getStock() + "','" + ho.getMedian() + "','" + ho.getInitiation() + "','" + ho.getStartprice() + "','" + ho.getCeiling() + "','" + ho.getFloor() + "','" + ho.getMaxstock() + "')");
 							}
 						}
