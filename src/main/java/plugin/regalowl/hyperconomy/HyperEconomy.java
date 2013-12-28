@@ -398,8 +398,8 @@ public class HyperEconomy {
 	
 	public boolean objectTest(String name) {
 		String sname = name.toLowerCase();
-		if (hyperObjectsAliases.containsKey(name)) {
-			sname = hyperObjectsAliases.get(name);
+		if (hyperObjectsAliases.containsKey(sname)) {
+			sname = hyperObjectsAliases.get(sname);
 		}
 		if (hyperObjectsName.containsKey(sname)) {
 			return true;
@@ -410,8 +410,8 @@ public class HyperEconomy {
 	
 	public boolean itemTest(String name) {
 		String sname = name.toLowerCase();
-		if (hyperObjectsAliases.containsKey(name)) {
-			sname = hyperObjectsAliases.get(name);
+		if (hyperObjectsAliases.containsKey(sname)) {
+			sname = hyperObjectsAliases.get(sname);
 		}
 		if (hyperObjectsName.containsKey(sname)) {
 			HyperObject ho = hyperObjectsName.get(sname);
@@ -425,8 +425,8 @@ public class HyperEconomy {
 
 	public boolean enchantTest(String name) {
 		String sname = name.toLowerCase();
-		if (hyperObjectsAliases.containsKey(name)) {
-			sname = hyperObjectsAliases.get(name);
+		if (hyperObjectsAliases.containsKey(sname)) {
+			sname = hyperObjectsAliases.get(sname);
 		}
 		if (hyperObjectsName.containsKey(sname)) {
 			HyperObject ho = hyperObjectsName.get(sname);
@@ -440,8 +440,8 @@ public class HyperEconomy {
 	
 	public String fixName(String nam) {
 		String sname = nam.toLowerCase();
-		if (hyperObjectsAliases.containsKey(nam)) {
-			sname = hyperObjectsAliases.get(nam);
+		if (hyperObjectsAliases.containsKey(sname)) {
+			sname = hyperObjectsAliases.get(sname);
 		}
 		for (String name:getNames()) {
 			if (name.equalsIgnoreCase(sname)) {
@@ -453,8 +453,8 @@ public class HyperEconomy {
 	
 	public String fixNameTest(String nam) {
 		String sname = nam.toLowerCase();
-		if (hyperObjectsAliases.containsKey(nam)) {
-			sname = hyperObjectsAliases.get(nam);
+		if (hyperObjectsAliases.containsKey(sname)) {
+			sname = hyperObjectsAliases.get(sname);
 		}
 		ArrayList<String> names = getNames();
 		for (int i = 0; i < names.size(); i++) {
