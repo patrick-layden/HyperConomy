@@ -87,9 +87,9 @@ public class Topitems {
 						HyperObject ho = itemstocks.get(lk);
 						if (ho instanceof PlayerShopObject) {
 							PlayerShopObject pso = (PlayerShopObject)ho;
-							sender.sendMessage(L.applyColor("&f"+pso.getDisplayName() + ": &a" + pso.getStock() + " &f(&e" + pso.getStatus().toString() + "&f)" ));
+							sender.sendMessage(L.applyColor("&f"+pso.getDisplayName() + ": &a" + hc.gCF().twoDecimals(pso.getStock()) + " &f(&e" + pso.getStatus().toString() + "&f)" ));
 						} else {
-							sender.sendMessage(ChatColor.WHITE + ho.getDisplayName() + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + ho.getStock());
+							sender.sendMessage(ChatColor.WHITE + ho.getDisplayName() + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + hc.gCF().twoDecimals(ho.getStock()));
 						}
 					}
 					itemstocks.remove(lk);
