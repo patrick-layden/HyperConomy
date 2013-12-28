@@ -1,5 +1,6 @@
 package regalowl.hyperconomy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -186,7 +187,7 @@ public class TransactionSign implements Listener {
 							s.update();
 						}
 						Action action = ievent.getAction();
-						if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
+						if (action == Action.RIGHT_CLICK_BLOCK) {
 							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[buy]")) {
 								String l1 = s.getLine(0);
 								String l2 = s.getLine(1);
@@ -226,7 +227,7 @@ public class TransactionSign implements Listener {
 								s.setLine(3, l4);
 								s.update();
 							}
-						} else if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
+						} else if (action == Action.LEFT_CLICK_BLOCK) {
 							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]")) {
 								String l1 = s.getLine(0);
 								String l2 = s.getLine(1);
@@ -255,7 +256,6 @@ public class TransactionSign implements Listener {
 											} else {
 												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 											}
-
 										} else {
 											p.sendMessage(L.get("NO_TRADE_PERMISSION"));
 										}
