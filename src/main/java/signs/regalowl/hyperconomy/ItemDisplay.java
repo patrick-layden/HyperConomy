@@ -137,7 +137,7 @@ public class ItemDisplay {
 	}
 	
 	public void refresh() {
-		item.remove();
+		removeItem();
 		makeDisplay();
 	}
 	
