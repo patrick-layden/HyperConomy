@@ -101,7 +101,6 @@ public class HyperEconomy {
 					}
 				}
 				result.close();
-				dataLoaded = true;
 				if (xpName == null) {xpName = "xp";}
 				hc.getServer().getScheduler().runTask(hc, new Runnable() {
 					public void run() {
@@ -135,6 +134,7 @@ public class HyperEconomy {
 			counter++;
 			if (counter > 100) {
 				hc.getDataBukkit().writeError("Infinite loop when loading composites.yml.  You likely have an error in your composites.yml file.  Your items will not work properly until this is fixed.");
+				dataLoaded = true;
 				return;
 			}
 			loaded = true;
@@ -155,6 +155,7 @@ public class HyperEconomy {
 				hyperObjectsAliases.put(ho.getDisplayName().toLowerCase(), ho.getName().toLowerCase());
 			}
 		}
+		dataLoaded = true;
 	}
 	private boolean componentsLoaded(String name) {
 		CommonFunctions cf = hc.gCF();

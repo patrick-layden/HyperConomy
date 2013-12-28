@@ -50,6 +50,9 @@ public class ServerShop implements Shop, DataLoadListener, Comparable<Shop>{
 		shopFile.set(name + ".economy", econ);
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
 		hc.getHyperEventHandler().registerDataLoadListener(this);
+		if (getHyperEconomy().dataLoaded()) {
+			loadAvailable();
+		}
 	}
 	
 
@@ -192,6 +195,9 @@ public class ServerShop implements Shop, DataLoadListener, Comparable<Shop>{
 	
 	@Override
 	public void onDataLoad() {
+		loadAvailable();
+	}
+	public void loadAvailable() {
 		HyperEconomy he = getHyperEconomy();
 		availableObjects.clear();
 		for (HyperObject ho:he.getHyperObjects()) {

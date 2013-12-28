@@ -55,7 +55,9 @@ public class PlayerShop implements DataLoadListener, Shop, Comparable<Shop> {
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
 		allowed = cf.explode(shopFile.getString(name + ".allowed"), ",");
 		hc.getHyperEventHandler().registerDataLoadListener(this);
-		
+		if (getHyperEconomy().dataLoaded()) {
+			loadAvailable();
+		}
 		
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
@@ -83,7 +85,6 @@ public class PlayerShop implements DataLoadListener, Shop, Comparable<Shop> {
 						BasicShopObject pso = new BasicShopObject(ps, (BasicObject) ho, stock, price, status);
 						shopContents.put(ho, pso);
 					}
-
 				}
 				result.close();
 			}
@@ -212,8 +213,12 @@ public class PlayerShop implements DataLoadListener, Shop, Comparable<Shop> {
 		return name.replace("_", " ");
 	}
 	
+	
 	@Override
 	public void onDataLoad() {
+		loadAvailable();
+	}
+	public void loadAvailable() {
 		HyperEconomy he = getHyperEconomy();
 		availableObjects.clear();
 		for (HyperObject ho:he.getHyperObjects()) {
