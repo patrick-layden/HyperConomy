@@ -240,7 +240,7 @@ public class PlayerShop implements DataLoadListener, Shop, Comparable<Shop> {
 			shopFile.set(name + ".unavailable", hc.gCF().implode(unavailable,","));
 		}
 	}
-	/*
+	
 	public boolean isStocked(HyperObject ho) {
 		PlayerShopObject pso = null;
 		if (ho instanceof PlayerShopObject) {
@@ -268,6 +268,9 @@ public class PlayerShop implements DataLoadListener, Shop, Comparable<Shop> {
 		}
 		return true;
 	}
+	public boolean isBanned(String name) {
+		return isBanned(getHyperEconomy().getHyperObject(name));
+	}
 	public boolean isTradeable(HyperObject ho) {
 		if (!isBanned(ho)) {
 			if (ho instanceof PlayerShopObject) {
@@ -277,6 +280,12 @@ public class PlayerShop implements DataLoadListener, Shop, Comparable<Shop> {
 			} else {
 				return true;
 			}
+		}
+		return false;
+	}
+	public boolean isAvailable(HyperObject ho) {
+		if (isTradeable(ho) && isStocked(ho)) {
+			return true;
 		}
 		return false;
 	}
@@ -291,7 +300,7 @@ public class PlayerShop implements DataLoadListener, Shop, Comparable<Shop> {
 		}
 		return available;
 	}
-	*/
+	
 	public void unBanAllObjects() {
 		availableObjects.clear();
 		for (HyperObject ho:getHyperEconomy().getHyperObjects()) {

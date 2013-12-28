@@ -37,23 +37,27 @@ public interface Shop extends Comparable<Shop>{
 	/**
 	 * Returns true if the Shop has stock of the given object name.
 	 */
-	//public boolean isStocked(String item);
+	public boolean isStocked(String item);
 	/**
 	 * Returns true if the Shop has stock of the given HyperObject.
 	 */
-	//public boolean isStocked(HyperObject ho);
+	public boolean isStocked(HyperObject ho);
 	/**
 	 * Returns true if the HyperObject is not banned, and is tradeable.
 	 */
-	//public boolean isTradeable(HyperObject ho);
+	public boolean isTradeable(HyperObject ho);
 	/**
 	 * Returns true if a HyperObject is banned from the Shop.
 	 */
-	//public boolean isBanned(HyperObject ho);
+	public boolean isBanned(HyperObject ho);
+	/**
+	 * Returns true if the HyperObject with the given name is banned from the Shop.
+	 */
+	public boolean isBanned(String name);
 	/**
 	 * Returns true if a HyperObject is in stock and tradeable.
 	 */
-	//public boolean isAvailable(HyperObject ho);
+	public boolean isAvailable(HyperObject ho);
 	
 	/**
 	 * Returns all HyperObjects that are available for trade in this shop.

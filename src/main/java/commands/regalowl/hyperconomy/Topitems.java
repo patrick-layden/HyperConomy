@@ -44,32 +44,32 @@ public class Topitems {
 				objects = he.getHyperObjects();
 			}
 			for (HyperObject ho:objects) {
-				boolean unavailable = false;
-				boolean allowed = false;
 				boolean stocked = false;
-				if (ho.getStock() > 0) {stocked = true;}
-				boolean banned = em.getShop(nameshop).isBanned(ho);
-				
+				if (ho.getStock() > 0.0) {stocked = true;}
+				boolean banned = false;
+				boolean allowed = false;
 				if (s != null) {
-					if (banned && !(allowed && stocked)) {
-						unavailable = true;
-					}
-				}
-				if (!unavailable) {
-					double samount = ho.getStock();
+					banned = s.isBanned(ho);
 					if (ho instanceof PlayerShopObject) {
-						PlayerShopObject pso = (PlayerShopObject)ho;
-						if (pso.getStatus() == HyperObjectStatus.NONE) {
-							if (!pso.getShop().isAllowed(em.getHyperPlayer(player))) {
-								continue;
-							}
+						if (s instanceof PlayerShop) {
+							PlayerShop ps = (PlayerShop)s;
+							allowed = ps.isAllowed(em.getHyperPlayer(player));
 						}
 					}
-					if (samount > 0) {
-						while (itemstocks.containsKey(samount * 100)) {
+					if ((!banned && stocked) || (allowed && stocked)) {
+						double samount = ho.getStock();
+						while (itemstocks.containsKey(samount)) {
 							samount = samount + .0000001;
 						}
-						itemstocks.put(samount * 100, ho);
+						itemstocks.put(samount, ho);
+					}
+				} else {
+					double samount = ho.getStock();
+					if (samount > 0) {
+						while (itemstocks.containsKey(samount)) {
+							samount = samount + .0000001;
+						}
+						itemstocks.put(samount, ho);
 					}
 				}
 			}
@@ -87,9 +87,9 @@ public class Topitems {
 						HyperObject ho = itemstocks.get(lk);
 						if (ho instanceof PlayerShopObject) {
 							PlayerShopObject pso = (PlayerShopObject)ho;
-							sender.sendMessage(L.applyColor("&f"+ho.getDisplayName() + ": &a" + Math.floor(lk)/100 + " &f(&e" + pso.getStatus().toString() + "&f)" ));
+							sender.sendMessage(L.applyColor("&f"+pso.getDisplayName() + ": &a" + pso.getStock() + " &f(&e" + pso.getStatus().toString() + "&f)" ));
 						} else {
-							sender.sendMessage(ChatColor.WHITE + ho.getDisplayName() + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + Math.floor(lk)/100);
+							sender.sendMessage(ChatColor.WHITE + ho.getDisplayName() + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + ho.getStock());
 						}
 					}
 					itemstocks.remove(lk);
