@@ -43,7 +43,7 @@ public class EconomyManager implements Listener {
 	private boolean useShops;
 	private boolean dataLoaded;
 	private ArrayList<Double> updateAfterLoad = new ArrayList<Double>();
-	public final double version = 1.23;
+	public final double version = 1.24;
 	
 	
 	
@@ -128,10 +128,17 @@ public class EconomyManager implements Listener {
 				yh.copyFromJar("objects");
 				yh.registerFileConfiguration("composites");
 				yh.registerFileConfiguration("objects");
-				hc.getEconomyManager().addUpdateAfterLoad(1.23);;
+				hc.getEconomyManager().addUpdateAfterLoad(1.23);
 				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.23' WHERE SETTING = 'version'");
 			}
 			if (version < 1.24) {
+				//update fixes frameshop table
+				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.24.");
+				hc.getSQLWrite().executeSynchronously("DROP TABLE hyperconomy_frame_shops");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
+				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.24' WHERE SETTING = 'version'");
+			}
+			if (version < 1.25) {
 				
 			}
 		} else {
@@ -150,7 +157,7 @@ public class EconomyManager implements Listener {
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE)");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL)");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, PRICE DOUBLE NOT NULL, STATUS VARCHAR(255) NOT NULL)");
-		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
+		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
 	}
 	
 	public void load3(QueryResult qr) {
