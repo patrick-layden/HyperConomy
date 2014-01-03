@@ -86,6 +86,7 @@ public class TempItem extends BasicObject implements HyperItem {
 	}
 	@Override
 	public void setStock(double stock) {
+		if (stock < 0.0) {stock = 0.0;}
 		this.stock = stock;
 	}
 	@Override

@@ -45,6 +45,7 @@ public class CompositeShopItem extends BasicShopObject implements PlayerShopItem
 	}
 	@Override
 	public void setStock(double stock) {
+		if (stock < 0.0) {stock = 0.0;}
 		double difference = stock - getStock();
 		for (Map.Entry<HyperItem,Double> entry : ((CompositeItem)ho).getComponents().entrySet()) {
 			PlayerShopItem pso = (PlayerShopItem) playerShop.getPlayerShopObject(entry.getKey());

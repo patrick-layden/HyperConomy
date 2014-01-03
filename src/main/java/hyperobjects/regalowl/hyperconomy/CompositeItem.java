@@ -253,6 +253,7 @@ public class CompositeItem extends BasicObject implements HyperItem {
 	public void setStaticprice(double staticprice) {}
 	@Override
 	public void setStock(double stock) {
+		if (stock < 0.0) {stock = 0.0;}
 		double difference = stock - getStock();
 		for (Map.Entry<HyperItem,Double> entry : components.entrySet()) {
 		    HyperObject ho = entry.getKey();

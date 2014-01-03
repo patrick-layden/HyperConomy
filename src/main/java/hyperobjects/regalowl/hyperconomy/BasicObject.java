@@ -209,6 +209,7 @@ public class BasicObject implements HyperObject {
 		this.staticprice = staticprice;
 	}
 	public void setStock(double stock) {
+		if (stock < 0.0) {stock = 0.0;}
 		String statement = "UPDATE hyperconomy_objects SET STOCK='" + stock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.stock = stock;

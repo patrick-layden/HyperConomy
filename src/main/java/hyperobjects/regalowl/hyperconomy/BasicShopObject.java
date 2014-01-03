@@ -58,6 +58,7 @@ public class BasicShopObject implements PlayerShopObject {
 		sw.addToQueue("UPDATE hyperconomy_shop_objects SET SHOP='"+playerShop.getName()+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
 	}
 	public void setStock(double stock) {
+		if (stock < 0.0) {stock = 0.0;}
 		this.stock = stock;
 		sw.addToQueue("UPDATE hyperconomy_shop_objects SET QUANTITY='"+stock+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
 	}
