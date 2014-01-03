@@ -258,7 +258,11 @@ public class BasicObject implements HyperObject {
 	 */
 	public int getMaxInitial() {
 		double medianStock = ((median * value) / startprice);
-		return (int) (Math.ceil(medianStock) - stock);
+		int maxInitial = (int) (Math.ceil(medianStock) - stock);
+		if (maxInitial < 0) {
+			maxInitial = 0;
+		}
+		return maxInitial;
 	}
 	
 	public double getPurchaseTax(double cost) {
