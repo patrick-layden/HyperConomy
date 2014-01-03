@@ -162,7 +162,7 @@ public class TransactionProcessor {
 				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
-			if (amount == 0) {
+			if (amount <= 0) {
 				response.addFailed(L.f(L.get("CANT_BUY_LESS_THAN_ONE"), name), hyperItem);
 				heh.fireTransactionEvent(pt, response);
 				return response;
