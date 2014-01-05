@@ -80,23 +80,6 @@ public class CompositeShopItem extends BasicShopObject implements PlayerShopItem
 	public void setDurability(int durability) {
 		//do nothing
 	}
-	
-
-	public double getCost(int amount) {
-		if (getPrice() != 0.0) {
-			return getPrice() * amount;
-		} else {
-			return ((CompositeItem)ho).getCost(amount);
-		}
-	}
-
-	public double getValue(int amount) {
-		if (getPrice() != 0.0) {
-			return getPrice() * amount;
-		} else {
-			return ((CompositeItem)ho).getValue(amount);
-		}
-	}
 
 	public double getValue(int amount, HyperPlayer hp) {
 		if (getPrice() != 0.0) {

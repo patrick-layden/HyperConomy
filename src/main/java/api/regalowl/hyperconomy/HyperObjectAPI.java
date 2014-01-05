@@ -106,6 +106,21 @@ public class HyperObjectAPI implements ObjectAPI {
 			double cost = bo.getCost(amount);
 			cost += hyperObject.getPurchaseTax(cost);
 			return cost;
+		} else if (hyperObject instanceof PlayerShopEnchant) {
+			PlayerShopEnchant he = (PlayerShopEnchant)hyperObject;
+			double cost = he.getCost(enchantClass);
+			cost += hyperObject.getPurchaseTax(cost);
+			return cost;
+		} else if (hyperObject instanceof PlayerShopItem) {
+			PlayerShopItem hi = (PlayerShopItem)hyperObject;
+			double cost = hi.getCost(amount);
+			cost += hyperObject.getPurchaseTax(cost);
+			return cost;
+		} else if (hyperObject instanceof BasicShopObject) {
+			BasicShopObject bo = (BasicShopObject)hyperObject;
+			double cost = bo.getCost(amount);
+			cost += hyperObject.getPurchaseTax(cost);
+			return cost;
 		}
 		return 0;
 	}
@@ -129,6 +144,24 @@ public class HyperObjectAPI implements ObjectAPI {
 			return value;
 		} else if (hyperObject instanceof BasicObject) {
 			BasicObject bo = (BasicObject)hyperObject;
+			double value = bo.getValue(amount);
+			value -= hyperPlayer.getSalesTax(value);
+			return value;
+		} else if (hyperObject instanceof PlayerShopEnchant) {
+			PlayerShopEnchant he = (PlayerShopEnchant)hyperObject;
+			if (enchantClass == null || enchantClass == EnchantmentClass.NONE) {
+				enchantClass = EnchantmentClass.DIAMOND;
+			}
+			double value = he.getValue(enchantClass, hyperPlayer);
+			value -= hyperPlayer.getSalesTax(value);
+			return value;
+		} else if (hyperObject instanceof PlayerShopItem) {
+			PlayerShopItem hi = (PlayerShopItem)hyperObject;
+			double value = hi.getValue(amount, hyperPlayer);
+			value -= hyperPlayer.getSalesTax(value);
+			return value;
+		} else if (hyperObject instanceof BasicShopObject) {
+			BasicShopObject bo = (BasicShopObject)hyperObject;
 			double value = bo.getValue(amount);
 			value -= hyperPlayer.getSalesTax(value);
 			return value;
@@ -156,6 +189,24 @@ public class HyperObjectAPI implements ObjectAPI {
 			return value;
 		} else if (hyperObject instanceof BasicObject) {
 			BasicObject bo = (BasicObject)hyperObject;
+			double value = bo.getValue(amount);
+			value -= hyperObject.getSalesTaxEstimate(value);
+			return value;
+		} else if (hyperObject instanceof PlayerShopEnchant) {
+			PlayerShopEnchant he = (PlayerShopEnchant)hyperObject;
+			if (enchantClass == null || enchantClass == EnchantmentClass.NONE) {
+				enchantClass = EnchantmentClass.DIAMOND;
+			}
+			double value = he.getValue(enchantClass);
+			value -= hyperObject.getSalesTaxEstimate(value);
+			return value;
+		} else if (hyperObject instanceof PlayerShopItem) {
+			PlayerShopItem hi = (PlayerShopItem)hyperObject;
+			double value = hi.getValue(amount);
+			value -= hyperObject.getSalesTaxEstimate(value);
+			return value;
+		} else if (hyperObject instanceof BasicShopObject) {
+			BasicShopObject bo = (BasicShopObject)hyperObject;
 			double value = bo.getValue(amount);
 			value -= hyperObject.getSalesTaxEstimate(value);
 			return value;

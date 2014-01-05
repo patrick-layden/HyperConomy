@@ -204,6 +204,15 @@ public class Enchant extends BasicObject implements HyperEnchant {
 			return value;
 		}
 	}
+	
+	@Override
+	public double getCost(int amount) {
+		return getCost(EnchantmentClass.DIAMOND) * amount;
+	}
+	@Override
+	public double getValue(int amount) {
+		return getValue(EnchantmentClass.DIAMOND) * amount;
+	}
 
 	public Enchantment getEnchantment() {
 		return Enchantment.getByName(getEnchantmentName());

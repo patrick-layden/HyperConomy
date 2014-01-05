@@ -43,21 +43,6 @@ public class ComponentShopItem extends BasicShopObject implements PlayerShopItem
 		//do nothing
 	}
 
-	public double getCost(int amount) {
-		if (price != 0.0) {
-			return price * amount;
-		} else {
-			return ((HyperItem)ho).getCost(amount);
-		}
-	}
-
-	public double getValue(int amount) {
-		if (price != 0.0) {
-			return price * amount;
-		} else {
-			return ((HyperItem)ho).getValue(amount);
-		}
-	}
 
 	public double getValue(int amount, HyperPlayer hp) {
 		if (price != 0.0) {

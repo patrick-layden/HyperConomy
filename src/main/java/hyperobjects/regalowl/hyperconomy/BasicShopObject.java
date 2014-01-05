@@ -197,7 +197,21 @@ public class BasicShopObject implements PlayerShopObject {
 
 
 
+	public double getCost(int amount) {
+		if (price != 0.0) {
+			return price * amount;
+		} else {
+			return ((HyperItem)ho).getCost(amount);
+		}
+	}
 
+	public double getValue(int amount) {
+		if (price != 0.0) {
+			return price * amount;
+		} else {
+			return ((HyperItem)ho).getValue(amount);
+		}
+	}
 
 
 

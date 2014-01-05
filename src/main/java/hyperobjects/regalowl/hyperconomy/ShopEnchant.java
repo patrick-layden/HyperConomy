@@ -50,6 +50,15 @@ public class ShopEnchant extends BasicShopObject implements PlayerShopEnchant {
 			return ((HyperEnchant)ho).getValue(enchantClass, hp);
 		}
 	}
+	
+	@Override
+	public double getCost(int amount) {
+		return getCost(EnchantmentClass.DIAMOND) * amount;
+	}
+	@Override
+	public double getValue(int amount) {
+		return getValue(EnchantmentClass.DIAMOND) * amount;
+	}
 
 
 	public Enchantment getEnchantment() {

@@ -66,6 +66,7 @@ public interface HyperObject extends Comparable<HyperObject> {
 	public int getMaxInitial();
 	public double getPurchaseTax(double cost);
 	public double getSalesTaxEstimate(double value);
-
+	public double getCost(int amount);
+	public double getValue(int amount);
 
 }
