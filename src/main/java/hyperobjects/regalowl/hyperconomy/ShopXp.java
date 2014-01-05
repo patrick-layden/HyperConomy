@@ -4,8 +4,8 @@ import org.bukkit.entity.Player;
 
 public class ShopXp extends BasicShopObject implements PlayerShopObject, HyperXP {
 
-	public ShopXp(PlayerShop playerShop, HyperObject ho, double stock, double price, HyperObjectStatus status) {
-		super(playerShop, ho, stock, price, status);
+	ShopXp(PlayerShop playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status) {
+		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status);
 	}
 
 	public int getBarXpPoints(Player player) {
@@ -67,16 +67,16 @@ public class ShopXp extends BasicShopObject implements PlayerShopObject, HyperXP
 	}
 	
 	public double getValue(int amount) {
-		if (price != 0.0) {
-			return price * amount;
+		if (sellPrice != 0.0) {
+			return sellPrice * amount;
 		} else {
 			return ((HyperXP)ho).getValue(amount);
 		}
 	}
 
 	public double getCost(int amount) {
-		if (price != 0.0) {
-			return price * amount;
+		if (buyPrice != 0.0) {
+			return buyPrice * amount;
 		} else {
 			return ((HyperXP)ho).getCost(amount);
 		}

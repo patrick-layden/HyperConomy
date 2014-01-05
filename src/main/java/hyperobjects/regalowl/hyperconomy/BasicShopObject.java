@@ -11,17 +11,20 @@ public class BasicShopObject implements PlayerShopObject {
 	protected PlayerShop playerShop;
 	protected HyperObject ho;
 	protected double stock;
-	protected double price;
+	protected double buyPrice;
+	protected double sellPrice;
 	protected HyperObjectStatus status;
+	protected int maxStock;
 	
-	
-	public BasicShopObject(PlayerShop playerShop, HyperObject ho, double stock, double price, HyperObjectStatus status) {
+	public BasicShopObject(PlayerShop playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status) {
 		hc = HyperConomy.hc;
 		sw = hc.getSQLWrite();
 		this.playerShop = playerShop;
 		this.ho = ho;
 		this.stock = stock;
-		this.price = price;
+		this.buyPrice = buyPrice;
+		this.sellPrice = sellPrice;
+		this.maxStock = maxStock;
 		this.status = status;
 	}
 	
@@ -42,11 +45,17 @@ public class BasicShopObject implements PlayerShopObject {
 	public double getStock() {
 		return stock;
 	}
-	public double getPrice() {
-		return price;
+	public double getBuyPrice() {
+		return buyPrice;
+	}
+	public double getSellPrice() {
+		return sellPrice;
 	}
 	public HyperObjectStatus getStatus() {
 		return status;
+	}
+	public int getMaxStock() {
+		return maxStock;
 	}
 	
 	public void setHyperObject(HyperObject ho) {
@@ -62,9 +71,17 @@ public class BasicShopObject implements PlayerShopObject {
 		this.stock = stock;
 		sw.addToQueue("UPDATE hyperconomy_shop_objects SET QUANTITY='"+stock+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
 	}
-	public void setPrice(double price) {
-		this.price = price;
-		sw.addToQueue("UPDATE hyperconomy_shop_objects SET PRICE='"+price+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
+	public void setBuyPrice(double buyPrice) {
+		this.buyPrice = buyPrice;
+		sw.addToQueue("UPDATE hyperconomy_shop_objects SET BUY_PRICE='"+buyPrice+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
+	}
+	public void setSellPrice(double sellPrice) {
+		this.sellPrice = sellPrice;
+		sw.addToQueue("UPDATE hyperconomy_shop_objects SET SELL_PRICE='"+sellPrice+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
+	}
+	public void setMaxStock(int maxStock) {
+		this.maxStock = maxStock;
+		sw.addToQueue("UPDATE hyperconomy_shop_objects SET MAX_STOCK='"+maxStock+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
 	}
 	public void setStatus(HyperObjectStatus status) {
 		this.status = status;
@@ -198,16 +215,16 @@ public class BasicShopObject implements PlayerShopObject {
 
 
 	public double getCost(int amount) {
-		if (price != 0.0) {
-			return price * amount;
+		if (buyPrice != 0.0) {
+			return buyPrice * amount;
 		} else {
 			return ((HyperItem)ho).getCost(amount);
 		}
 	}
 
 	public double getValue(int amount) {
-		if (price != 0.0) {
-			return price * amount;
+		if (sellPrice != 0.0) {
+			return sellPrice * amount;
 		} else {
 			return ((HyperItem)ho).getValue(amount);
 		}

@@ -403,7 +403,7 @@ SERVER_STARTING: &dThe web server is starting.
 SERVER_STOPPING: &dThe web server is stopping.
 SERVER_FAILED: &4The web server is failed.
 CANT_USE_ACCOUNT: You cannot play on this server using HyperConomy's global shop account.
-MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, status, setstock, or owner]
+MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, buyprice, sellprice, maxstock, status, setstock, or owner]
 MANAGESHOP_HELP2: &9You currently have the shop &a%n &9selected.
 MANAGESHOP_HELP3: &9The owner of &a%n &9is:
 MANAGESHOP_HELP4: &9The following players are allowed to manage the shop:
@@ -416,7 +416,8 @@ SHOP_ALREADY_EXISTS: &4A shop by that name already exists.
 SHOP_SELECTED: &aShop selected!
 CANT_MAKE_SHOP_LARGER_THAN: &4You cannot make a shop with a volume larger than &a%v &4blocks.
 SHOP_LIMIT_REACHED: &4You cannot make more than &a%v &4shops.
-MANAGESHOP_PRICE_HELP: &4Use /manageshop price [object] [price]
+MANAGESHOP_PRICE_HELP: &4Use /manageshop price [object] [price] or /manageshop buyprice... or /manageshop sellprice...
+MANAGESHOP_MAXSTOCK_HELP: &4Use /manageshop price [object] [max stock]
 MANAGESHOP_OWNER_HELP: &4Use /manageshop owner [name]
 MANAGESHOP_ADD_HELP: &4Use /manageshop add (object) (amount)
 MANAGESHOP_ALLOW_HELP: &4Use /manageshop allow [player]
@@ -425,6 +426,7 @@ MANAGESHOP_SETSHOP_HELP: &4Use /manageshop setshop [object] [amount]
 OWNER_SET: &6Owner set.
 STATUS_SET: &6Status set.
 PRICE_SET: &6Price set.
+MAXSTOCK_SET: &6Max stock set.
 STOCK_ADDED: &6Stock added to shop.
 STOCK_REMOVED: &6Stock removed from shop.
 ALL_STATUS_SET: &6All statuses set.
@@ -455,3 +457,4 @@ MAKEFRAMESHOP_INVALID: &4Invalid Parameters. Use /makeframeshop [object]
 NAME_IN_USE: &4That name/alias is already in use.
 NOT_IMPLEMENTED: &dThis message has not been implemented yet.
 CANNOT_PAY_NEGATIVE: &4You cannot pay a zero or negative amount.
+OVER_MAX_STOCK: &4This shop will not allow the sale of any more %n.

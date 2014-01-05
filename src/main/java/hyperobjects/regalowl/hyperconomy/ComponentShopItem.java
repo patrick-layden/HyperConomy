@@ -9,8 +9,8 @@ import org.bukkit.inventory.ItemStack;
 public class ComponentShopItem extends BasicShopObject implements PlayerShopItem {
 
 	
-	ComponentShopItem(PlayerShop playerShop, ComponentItem ho, double stock, double price, HyperObjectStatus status) {
-		super(playerShop, ho, stock, price, status);
+	ComponentShopItem(PlayerShop playerShop, ComponentItem ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status) {
+		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status);
 	}
 	
 
@@ -45,8 +45,8 @@ public class ComponentShopItem extends BasicShopObject implements PlayerShopItem
 
 
 	public double getValue(int amount, HyperPlayer hp) {
-		if (price != 0.0) {
-			return price * amount;
+		if (sellPrice != 0.0) {
+			return sellPrice * amount;
 		} else {
 			return ((HyperItem)ho).getValue(amount, hp);
 		}

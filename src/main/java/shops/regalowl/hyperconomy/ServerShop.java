@@ -7,7 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class ServerShop implements Shop, DataLoadListener, Comparable<Shop>{
+public class ServerShop implements Shop, Comparable<Shop>{
 	
 	private String name;
 	private String economy;
@@ -25,6 +25,8 @@ public class ServerShop implements Shop, DataLoadListener, Comparable<Shop>{
 	private ArrayList<String> inShop = new ArrayList<String>();
 	private boolean useshopexitmessage;
 	
+	private boolean loaded;
+	
 	private HyperConomy hc;
 	private EconomyManager em;
 	private LanguageFile L;
@@ -35,6 +37,7 @@ public class ServerShop implements Shop, DataLoadListener, Comparable<Shop>{
 	
 	
 	ServerShop(String name, String econ, HyperPlayer owner) {
+		loaded = false;
 		hc = HyperConomy.hc;
 		this.name = name;
 		this.economy = econ;
@@ -49,12 +52,12 @@ public class ServerShop implements Shop, DataLoadListener, Comparable<Shop>{
 		shopFile.set(name + ".owner", this.owner.getName());
 		shopFile.set(name + ".economy", econ);
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
-		hc.getHyperEventHandler().registerDataLoadListener(this);
-		if (getHyperEconomy().dataLoaded()) {
-			loadAvailable();
-		}
+		loadAvailable();
 	}
 	
+	public boolean isLoaded() {
+		return loaded;
+	}
 
 	
 	public int compareTo(Shop s) {
@@ -193,10 +196,7 @@ public class ServerShop implements Shop, DataLoadListener, Comparable<Shop>{
 	}
 	
 	
-	@Override
-	public void onDataLoad() {
-		loadAvailable();
-	}
+
 	public void loadAvailable() {
 		HyperEconomy he = getHyperEconomy();
 		availableObjects.clear();
@@ -208,6 +208,7 @@ public class ServerShop implements Shop, DataLoadListener, Comparable<Shop>{
 			HyperObject ho = he.getHyperObject(objectName);
 			availableObjects.remove(ho);
 		}
+		loaded = true;
 	}
 	public void saveAvailable() {
 		HyperEconomy he = getHyperEconomy();

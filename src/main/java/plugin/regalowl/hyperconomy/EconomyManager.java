@@ -27,10 +27,11 @@ public class EconomyManager implements Listener {
 
 	private HyperConomy hc;
 	private SQLRead sr;
-	private boolean economiesLoaded;
-	private BukkitTask wait;
+	private boolean dataLoaded;
+	private BukkitTask economyWait;
+	private BukkitTask dataWait;
 	private boolean loadActive;
-	
+	private boolean economiesLoaded;
 	
 	private ConcurrentHashMap<String, HyperEconomy> economies = new ConcurrentHashMap<String, HyperEconomy>();
 	private ConcurrentHashMap<String, HyperPlayer> hyperPlayers = new ConcurrentHashMap<String, HyperPlayer>();
@@ -41,18 +42,16 @@ public class EconomyManager implements Listener {
 	private long shopinterval;
 	private BukkitTask shopCheckTask;
 	private boolean useShops;
-	private boolean dataLoaded;
 	private ArrayList<Double> updateAfterLoad = new ArrayList<Double>();
-	public final double version = 1.24;
+	public final double version = 1.25;
 	
 	
 	
 	
 	public EconomyManager() {
 		hc = HyperConomy.hc;
-		dataLoaded = false;
-		loadActive = false;
 		economiesLoaded = false;
+		loadActive = false;
 		useShops = hc.gYH().gFC("config").getBoolean("config.use-shops");
 		shopinterval = hc.gYH().gFC("config").getLong("config.shopcheckinterval");
 		hc.getServer().getPluginManager().registerEvents(this, hc);
@@ -139,25 +138,49 @@ public class EconomyManager implements Listener {
 				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.24' WHERE SETTING = 'version'");
 			}
 			if (version < 1.25) {
+				//update adds buy/sell prices to player shops and a max stock setting
+				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.25.");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects_temp (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
+				hc.getSQLWrite().convertExecuteSynchronously("INSERT INTO hyperconomy_shop_objects_temp (SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,STATUS) SELECT SHOP,HYPEROBJECT,QUANTITY,PRICE,PRICE,STATUS FROM hyperconomy_shop_objects");
+				hc.getSQLWrite().executeSynchronously("DROP TABLE hyperconomy_shop_objects");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
+				hc.getSQLWrite().convertExecuteSynchronously("INSERT INTO hyperconomy_shop_objects (SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,MAX_STOCK,STATUS) SELECT SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,MAX_STOCK,STATUS FROM hyperconomy_shop_objects_temp");
+				hc.getSQLWrite().executeSynchronously("DROP TABLE hyperconomy_shop_objects_temp");
+				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.25' WHERE SETTING = 'version'");
+			}
+			if (version < 1.26) {
 				
 			}
 		} else {
-			createTables(hc.getSQLWrite());
+			createTables(hc.getSQLWrite(), false);
 		}
 		String query = "SELECT NAME FROM hyperconomy_objects WHERE ECONOMY='default'";
 		hc.getSQLRead().syncRead(this, "load3", query, null);
 	}
-	public void createTables(SQLWrite sw) {
+	public void createTables(SQLWrite sw, boolean copydatabase) {
+		if (copydatabase) {
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_settings");
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_objects");
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_players");
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_log");
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_history");
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_audit_log");
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_shop_objects");
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_frame_shops");		
+			
+		}
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL, VALUE TEXT, TIME DATETIME NOT NULL, PRIMARY KEY (SETTING))");
-		sw.convertExecuteSynchronously("DELETE FROM hyperconomy_settings");
-		sw.convertExecuteSynchronously("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getEconomyManager().getVersion()+"', NOW() )");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_players (PLAYER VARCHAR(255) NOT NULL PRIMARY KEY, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_log (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT)");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE)");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL)");
-		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, PRICE DOUBLE NOT NULL, STATUS VARCHAR(255) NOT NULL)");
+		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
+		if (!copydatabase) {
+			sw.convertExecuteSynchronously("DELETE FROM hyperconomy_settings");
+			sw.convertExecuteSynchronously("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getEconomyManager().getVersion()+"', NOW() )");
+		}
 	}
 	
 	public void load3(QueryResult qr) {
@@ -177,27 +200,70 @@ public class EconomyManager implements Listener {
 				for (String e : econs) {
 					economies.put(e, new HyperEconomy(e));
 				}
-				loadData();
-				waitForLoad();
+				waitForEconomyLoad();
 			}
 		});
 	}
-	private void waitForLoad() {
-		wait = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
+	private void waitForEconomyLoad() {
+		economyWait = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 			public void run() {
+				if (economiesLoaded) {return;}
 				boolean loaded = true;
 				for (HyperEconomy he : getEconomies()) {
-					if (!he.dataLoaded() || !dataLoaded) {
+					if (!he.dataLoaded()) {
 						loaded = false;
 					}
 				}
 				if (loaded) {
-					hc.getHyperLock().setLoadLock(false);
 					economiesLoaded = true;
-					wait.cancel();
+					hc.getHyperEventHandler().fireEconomyLoadEvent();
+					loadRemainingData();
+					economyWait.cancel();
+				}
+			}
+		}, 1L, 1L);
+	}
+	
+	
+	private void loadRemainingData() {
+		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			public void run() {
+				hyperPlayers.clear();
+				QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_players");
+				while (result.next()) {
+					HyperPlayer hplayer = new HyperPlayer(result.getString("PLAYER"), result.getString("ECONOMY"), result.getDouble("BALANCE"), result.getDouble("X"), result.getDouble("Y"), result.getDouble("Z"), result.getString("WORLD"), result.getString("HASH"), result.getString("SALT"));
+					hyperPlayers.put(hplayer.getName(), hplayer);
+				}
+				result.close();
+				hc.getServer().getScheduler().runTask(hc, new Runnable() {
+					public void run() {
+						addOnlinePlayers();
+						createGlobalShopAccount();
+						loadShops();
+						waitForDataLoad();
+					}
+				});
+			}
+		});
+	}
+	
+	private void waitForDataLoad() {
+		dataWait = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
+			public void run() {
+				if (dataLoaded) {return;}
+				boolean loaded = true;
+				for (Shop s : getShops()) {
+					if (!s.isLoaded()) {
+						loaded = false;
+					}
+				}
+				if (loaded) {
+					dataLoaded = true;
+					updateAfterLoad();
 					hc.getHyperEventHandler().fireDataLoadEvent();
 					loadActive = false;
-					updateAfterLoad();
+					hc.getHyperLock().setLoadLock(false);
+					dataWait.cancel();
 				}
 			}
 		}, 1L, 1L);
@@ -220,8 +286,8 @@ public class EconomyManager implements Listener {
 		if (restart) {hc.restart();}
 	}
 	
-	public boolean economiesLoaded() {
-		return economiesLoaded;
+	public boolean dataLoaded() {
+		return dataLoaded;
 	}
 	public HyperEconomy getEconomy(String name) {
 		for (Map.Entry<String,HyperEconomy> entry : economies.entrySet()) {
@@ -401,27 +467,7 @@ public class EconomyManager implements Listener {
 	
 	
 	
-	private void loadData() {
-		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
-			public void run() {
-				hyperPlayers.clear();
-				QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_players");
-				while (result.next()) {
-					HyperPlayer hplayer = new HyperPlayer(result.getString("PLAYER"), result.getString("ECONOMY"), result.getDouble("BALANCE"), result.getDouble("X"), result.getDouble("Y"), result.getDouble("Z"), result.getString("WORLD"), result.getString("HASH"), result.getString("SALT"));
-					hyperPlayers.put(hplayer.getName(), hplayer);
-				}
-				result.close();
-				hc.getServer().getScheduler().runTask(hc, new Runnable() {
-					public void run() {
-						addOnlinePlayers();
-						createGlobalShopAccount();
-						loadShops();
-						dataLoaded = true;
-					}
-				});
-			}
-		});
-	}
+
 	
 	
 	
@@ -435,7 +481,7 @@ public class EconomyManager implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		try {
-			if (!economiesLoaded()) {return;}
+			if (!dataLoaded()) {return;}
 			String name = event.getPlayer().getName();
 			if (name.equalsIgnoreCase(hc.gYH().gFC("config").getString("config.global-shop-account"))) {
 				if (hc.gYH().gFC("config").getBoolean("config.block-player-with-same-name-as-global-shop-account")) {
@@ -453,7 +499,7 @@ public class EconomyManager implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		try {
-			if (!economiesLoaded()) {return;}
+			if (!dataLoaded()) {return;}
 			Location l = event.getPlayer().getLocation();
 			String name = event.getPlayer().getName();
 			if (!hasAccount(name)) {
@@ -550,7 +596,7 @@ public class EconomyManager implements Listener {
 
 	public boolean hasAccount(String name) {
 		if (hc.useExternalEconomy()) {
-			if (hc.getEconomy().hasAccount(name)) {
+			if (hc.getEconomy().hasAccount(fixpN(name))) {
 				if (!hyperPlayers.containsKey(fixpN(name))) {
 					addPlayer(name);
 				}
@@ -595,19 +641,16 @@ public class EconomyManager implements Listener {
 	}
 	public void createGlobalShopAccount(){		
 		HyperConomy hc = HyperConomy.hc;
-		Log l = hc.getLog();
-		String globalaccount = hc.gYH().gFC("config").getString("config.global-shop-account");
-		if (hc.useExternalEconomy()) {
-			if (!hc.getEconomy().hasAccount(globalaccount)) {
-				getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
-				l.writeAuditLog(globalaccount, "setbalance", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), hc.getEconomy().getName());
+		String globalAccount = hc.gYH().gFC("config").getString("config.global-shop-account");
+		if (!hasAccount(globalAccount)) {
+			HyperPlayer ga = getHyperPlayer(globalAccount);
+			Double initialBalance = hc.gYH().gFC("config").getDouble("config.initialshopbalance");
+			ga.setBalance(initialBalance);
+			String economyName = "HyperConomy";
+			if (hc.useExternalEconomy()) {
+				economyName = hc.getEconomy().getName();
 			}
-		} else {
-			if (!hasAccount(globalaccount)) {
-				createPlayerAccount(globalaccount);
-				getHyperPlayer(globalaccount).setBalance(hc.gYH().gFC("config").getDouble("config.initialshopbalance"));
-				l.writeAuditLog(globalaccount, "setbalance", hc.gYH().gFC("config").getDouble("config.initialshopbalance"), "HyperConomy");
-			}
+			hc.getLog().writeAuditLog(ga.getName(), "setbalance", initialBalance, economyName);
 		}
 	}
 	

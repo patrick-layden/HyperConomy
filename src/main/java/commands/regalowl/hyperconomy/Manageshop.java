@@ -390,11 +390,99 @@ public class Manageshop implements CommandExecutor {
 			}
 			HyperObject ho = he.getHyperObject(args[1], cps);
 			if (ho instanceof PlayerShopObject) {
-				((PlayerShopObject) ho).setPrice(price);
+				((PlayerShopObject) ho).setBuyPrice(price);
+				((PlayerShopObject) ho).setSellPrice(price);
 				player.sendMessage(L.get("PRICE_SET"));
 				return true;
 			} else {
 				hc.getDataBukkit().writeError("Setting PlayerShopObject price failed.");
+				return true;
+			}
+		} else if (args[0].equalsIgnoreCase("buyprice") || args[0].equalsIgnoreCase("bp")) {
+			if (cps == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			if (args.length != 3) {
+				player.sendMessage(L.get("MANAGESHOP_PRICE_HELP"));
+				return true;
+			}
+			double price = 0.0;
+			try {
+				price = Double.parseDouble(args[2]);
+			} catch (Exception e) {
+				player.sendMessage(L.get("MANAGESHOP_PRICE_HELP"));
+				return true;
+			}
+			if (!he.objectTest(args[1])) {
+				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
+				return true;
+			}
+			HyperObject ho = he.getHyperObject(args[1], cps);
+			if (ho instanceof PlayerShopObject) {
+				((PlayerShopObject) ho).setBuyPrice(price);
+				player.sendMessage(L.get("PRICE_SET"));
+				return true;
+			} else {
+				hc.getDataBukkit().writeError("Setting PlayerShopObject buyprice failed.");
+				return true;
+			}
+		} else if (args[0].equalsIgnoreCase("sellprice") || args[0].equalsIgnoreCase("sp")) {
+			if (cps == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			if (args.length != 3) {
+				player.sendMessage(L.get("MANAGESHOP_PRICE_HELP"));
+				return true;
+			}
+			double price = 0.0;
+			try {
+				price = Double.parseDouble(args[2]);
+			} catch (Exception e) {
+				player.sendMessage(L.get("MANAGESHOP_PRICE_HELP"));
+				return true;
+			}
+			if (!he.objectTest(args[1])) {
+				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
+				return true;
+			}
+			HyperObject ho = he.getHyperObject(args[1], cps);
+			if (ho instanceof PlayerShopObject) {
+				((PlayerShopObject) ho).setSellPrice(price);
+				player.sendMessage(L.get("PRICE_SET"));
+				return true;
+			} else {
+				hc.getDataBukkit().writeError("Setting PlayerShopObject sellprice failed.");
+				return true;
+			}
+		} else if (args[0].equalsIgnoreCase("maxstock") || args[0].equalsIgnoreCase("ms")) {
+			if (cps == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			if (args.length != 3) {
+				player.sendMessage(L.get("MANAGESHOP_MAXSTOCK_HELP"));
+				return true;
+			}
+			int maxStock = 1000000;
+			try {
+				maxStock = Integer.parseInt(args[2]);
+			} catch (Exception e) {
+				player.sendMessage(L.get("MANAGESHOP_MAXSTOCK_HELP"));
+				return true;
+			}
+			if (!he.objectTest(args[1])) {
+				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
+				return true;
+			}
+			HyperObject ho = he.getHyperObject(args[1], cps);
+			if (ho instanceof PlayerShopObject) {
+				((PlayerShopObject) ho).setMaxStock(maxStock);
+				player.sendMessage(L.get("MAXSTOCK_SET"));
+				return true;
+			} else {
+				hc.getDataBukkit().writeError("Setting PlayerShopObject max stock failed.");
 				return true;
 			}
 		} else if (args[0].equalsIgnoreCase("status") || args[0].equalsIgnoreCase("s")) {

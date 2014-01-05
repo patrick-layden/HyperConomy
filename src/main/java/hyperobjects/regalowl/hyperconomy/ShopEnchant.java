@@ -8,8 +8,8 @@ public class ShopEnchant extends BasicShopObject implements PlayerShopEnchant {
 
 
 
-	ShopEnchant(PlayerShop playerShop, HyperEnchant ho, double stock, double price, HyperObjectStatus status) {
-		super(playerShop, ho, stock, price, status);
+	ShopEnchant(PlayerShop playerShop, HyperEnchant ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status) {
+		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status);
 	}
 
 	
@@ -28,24 +28,24 @@ public class ShopEnchant extends BasicShopObject implements PlayerShopEnchant {
 	}
 
 	public double getCost(EnchantmentClass enchantClass) {
-		if (price != 0.0) {
-			return price;
+		if (buyPrice != 0.0) {
+			return buyPrice;
 		} else {
 			return ((HyperEnchant)ho).getCost(enchantClass);
 		}
 	}
 
 	public double getValue(EnchantmentClass enchantClass) {
-		if (price != 0.0) {
-			return price;
+		if (sellPrice != 0.0) {
+			return sellPrice;
 		} else {
 			return ((HyperEnchant)ho).getValue(enchantClass);
 		}
 	}
 
 	public double getValue(EnchantmentClass enchantClass, HyperPlayer hp) {
-		if (price != 0.0) {
-			return price;
+		if (sellPrice != 0.0) {
+			return sellPrice;
 		} else {
 			return ((HyperEnchant)ho).getValue(enchantClass, hp);
 		}

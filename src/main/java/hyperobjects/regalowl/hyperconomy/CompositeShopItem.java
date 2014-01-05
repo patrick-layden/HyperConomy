@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemStack;
 public class CompositeShopItem extends BasicShopObject implements PlayerShopItem {
 
 
-	CompositeShopItem(PlayerShop playerShop, CompositeItem ci, double stock, double price, HyperObjectStatus status) {
-		super(playerShop, ci, stock, price, status);
+	CompositeShopItem(PlayerShop playerShop, CompositeItem ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status) {
+		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status);
 	}
 
 	public void setHyperObject(HyperItem ho) {
@@ -34,12 +34,22 @@ public class CompositeShopItem extends BasicShopObject implements PlayerShopItem
 		return stock;
 	}
 	@Override
-	public double getPrice() {
+	public double getBuyPrice() {
 		double price = 0;
 		for (Map.Entry<HyperItem,Double> entry : ((CompositeItem)ho).getComponents().entrySet()) {
 			PlayerShopItem pso = (PlayerShopItem) playerShop.getPlayerShopObject(entry.getKey());
 		    Double qty = entry.getValue();
-		    price += (pso.getPrice() * qty);
+		    price += (pso.getBuyPrice() * qty);
+		}
+		return price;
+	}
+	@Override
+	public double getSellPrice() {
+		double price = 0;
+		for (Map.Entry<HyperItem,Double> entry : ((CompositeItem)ho).getComponents().entrySet()) {
+			PlayerShopItem pso = (PlayerShopItem) playerShop.getPlayerShopObject(entry.getKey());
+		    Double qty = entry.getValue();
+		    price += (pso.getSellPrice() * qty);
 		}
 		return price;
 	}
@@ -82,8 +92,8 @@ public class CompositeShopItem extends BasicShopObject implements PlayerShopItem
 	}
 
 	public double getValue(int amount, HyperPlayer hp) {
-		if (getPrice() != 0.0) {
-			return getPrice() * amount;
+		if (getSellPrice() != 0.0) {
+			return getSellPrice() * amount;
 		} else {
 			return ((CompositeItem)ho).getValue(amount, hp);
 		}

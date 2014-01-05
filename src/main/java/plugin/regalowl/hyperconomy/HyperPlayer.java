@@ -30,13 +30,9 @@ public class HyperPlayer {
 		tp = new TransactionProcessor(this);
 		em = hc.getEconomyManager();
 		SQLWrite sw = hc.getSQLWrite();
-		try {
-			balance = hc.gYH().gFC("config").getDouble("config.starting-player-account-balance");
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-			balance = 0;
-		}
+		balance = hc.gYH().gFC("config").getDouble("config.starting-player-account-balance");
 		economy = "default";
+		boolean playerOnline = false;
 		for (Player p:Bukkit.getOnlinePlayers()) {
 			if (p.getName().equalsIgnoreCase(player)) {
 				name = p.getName();
@@ -45,11 +41,14 @@ public class HyperPlayer {
 				z = p.getLocation().getZ();
 				world = p.getLocation().getWorld().getName();
 				sw.addToQueue("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + x + "','" + y + "','" + z + "','" + world + "','','')");
-				return;
+				playerOnline = true;
+				break;
 			}
 		}
-		name = player;
-		sw.addToQueue("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','','')");
+		if (!playerOnline) {
+			name = player;
+			sw.addToQueue("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','','')");
+		}
 		createExternalAccount();
 	}
 	

@@ -34,7 +34,7 @@ public class TransactionProcessor {
 	private ItemStack giveItem;
 	private HyperObjectStatus status;
 	private PlayerTransaction pt;
-	
+	private boolean overMaxStock;
 	
 	
 	private boolean shopUnlimitedMoney;
@@ -54,8 +54,18 @@ public class TransactionProcessor {
 		this.pt = pt;
 		transactionType = pt.getTransactionType();
 		hyperObject = pt.getHyperObject();
+		amount = pt.getAmount();
+		if (amount <= 0) {
+			amount = 1;
+		}
+		overMaxStock = false;
 		if (hyperObject instanceof PlayerShopObject) {
-			status = ((PlayerShopObject) hyperObject).getStatus();
+			PlayerShopObject tpso = (PlayerShopObject)hyperObject;
+			status = tpso.getStatus();
+			int maxStock = tpso.getMaxStock();
+			if ((tpso.getStock() + amount) > maxStock) {
+				overMaxStock = true;
+			}
 		} else {
 			status = HyperObjectStatus.TRADE;
 		}
@@ -70,7 +80,7 @@ public class TransactionProcessor {
 		if (tradePartner == null) {
 			tradePartner = em.getGlobalShopAccount();
 		}
-		amount = pt.getAmount();
+
 		giveInventory = pt.getGiveInventory();
 		receiveInventory = pt.getReceiveInventory();
 		money = pt.getMoney();
@@ -276,6 +286,11 @@ public class TransactionProcessor {
 			}
 			if (amount <= 0) {
 				response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), hyperItem);
+				heh.fireTransactionEvent(pt, response);
+				return response;
+			}
+			if (overMaxStock) {
+				response.addFailed(L.f(L.get("OVER_MAX_STOCK"), name), hyperItem);
 				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
@@ -509,6 +524,11 @@ public class TransactionProcessor {
 						price = xp.getValue(amount);
 					}
 					if (hasBalance(price)) {
+						if (overMaxStock) {
+							response.addFailed(L.f(L.get("OVER_MAX_STOCK"), hyperItem.getDisplayName()), hyperItem);
+							heh.fireTransactionEvent(pt, response);
+							return response;
+						}
 						if (maxi == 0) {
 							price = xp.getValue(amount);
 						}
@@ -684,6 +704,11 @@ public class TransactionProcessor {
 				return response;
 			} else if (status == HyperObjectStatus.BUY) {
 				response.addFailed(L.f(L.get("BUY_ONLY_ITEM"), hyperObject.getDisplayName()), hyperObject);
+				heh.fireTransactionEvent(pt, response);
+				return response;
+			}
+			if (overMaxStock) {
+				response.addFailed(L.f(L.get("OVER_MAX_STOCK"), hyperItem.getDisplayName()), hyperItem);
 				heh.fireTransactionEvent(pt, response);
 				return response;
 			}

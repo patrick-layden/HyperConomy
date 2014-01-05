@@ -27,7 +27,7 @@ public class Copydatabase {
 		sender = csender;
 		L = hc.getLanguageFile();
 		includeHistory = false;
-		boolean useMySQL = hc.gYH().gQFC("config").gB("sql-connection.use-mysql");
+		boolean useMySQL = hc.gDB().useMySQL();
 
 		try {
 			mysqlMessage = L.get("COPYDATABASE_MYSQL");
@@ -60,7 +60,7 @@ public class Copydatabase {
 				db2.createDatabase();
 				if (!useMySQL) {
 					if (!db2.useMySQL()) {
-						sender.sendMessage(L.get("COPYDATABASE_CONNECTION_FAILED_MYSQL"));
+						sender.sendMessage(L.get("COPYDATABASE_CONNECTION_FAILED_SQLITE"));
 						return;
 					}
 				}
@@ -71,14 +71,7 @@ public class Copydatabase {
 						EconomyManager em = hc.getEconomyManager();
 						SQLRead sr = hc.getSQLRead();
 						hc.getHyperLock().setLoadLock(true);
-						em.createTables(sw);
-						sw.addToQueue("DELETE FROM hyperconomy_objects");
-						sw.addToQueue("DELETE FROM hyperconomy_players");
-						sw.addToQueue("DELETE FROM hyperconomy_audit_log");
-						sw.addToQueue("DELETE FROM hyperconomy_history");
-						sw.addToQueue("DELETE FROM hyperconomy_log");
-						sw.addToQueue("DELETE FROM hyperconomy_settings");
-						sw.addToQueue("DELETE FROM hyperconomy_shop_objects");
+						em.createTables(sw, true);
 						for (HyperObject ho : em.getHyperObjects()) {
 							if (ho instanceof HyperItem) {
 								HyperItem hi = (HyperItem)ho;
@@ -113,7 +106,7 @@ public class Copydatabase {
 						result.close();
 						result = sr.aSyncSelect("SELECT * FROM hyperconomy_shop_objects");
 						while (result.next()) {
-							sw.addToQueue("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, PRICE, STATUS) VALUES ('"+result.getString("SHOP")+"', '"+result.getString("HYPEROBJECT")+"', '"+result.getDouble("QUANTITY")+"', '"+result.getDouble("PRICE")+"', '"+result.getString("STATUS")+"')");
+							sw.addToQueue("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS) VALUES ('"+result.getString("SHOP")+"', '"+result.getString("HYPEROBJECT")+"', '"+result.getDouble("QUANTITY")+"', '"+result.getDouble("SELL_PRICE")+"', '"+result.getDouble("BUY_PRICE")+"', '"+result.getInt("MAX_STOCK")+"', '"+result.getString("STATUS")+"')");
 						}
 						result.close();
 						if (includeHistory) {
@@ -163,7 +156,7 @@ public class Copydatabase {
     				hc.getHyperLock().setLoadLock(false);
     				hc.getServer().getScheduler().runTask(hc, new Runnable() {
     		    		public void run() {
-    		    			if (hc.gYH().gQFC("config").gB("sql-connection.use-mysql")) {
+    		    			if (hc.gDB().useMySQL()) {
     		    				sender.sendMessage(mysqlMessage);
     		    			} else {
     		    				sender.sendMessage(sqliteMessage);

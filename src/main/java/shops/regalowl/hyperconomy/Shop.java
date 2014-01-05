@@ -81,5 +81,5 @@ public interface Shop extends Comparable<Shop>{
 	
 	public int getVolume();
 	public void deleteShop();
-	
+	public boolean isLoaded();
 }
