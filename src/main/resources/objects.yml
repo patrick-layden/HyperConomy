@@ -11020,6 +11020,132 @@ SLIME_BALL_0:
   initiation:
     initiation: true
     startprice: 100.0
+LUCK_1:
+  name:
+    display: luck_of_the_sea_1
+    aliases: luck1,luckofthesea1,
+  information:
+    type: ENCHANTMENT
+    material: LUCK
+    data: -1
+  value: 25.0
+  price:
+    static: false
+    staticprice: 50.0
+    ceiling: 1.0E99
+    floor: 0.0
+  stock:
+    stock: 0.0
+    median: 100.0
+    maxstock: 0.0
+  initiation:
+    initiation: true
+    startprice: 50.0
+LUCK_2:
+  name:
+    display: luck_of_the_sea_2
+    aliases: luck2,luckofthesea2,
+  information:
+    type: ENCHANTMENT
+    material: LUCK
+    data: -1
+  value: 100.0
+  price:
+    static: false
+    staticprice: 200.0
+    ceiling: 1.0E99
+    floor: 0.0
+  stock:
+    stock: 0.0
+    median: 100.0
+    maxstock: 0.0
+  initiation:
+    initiation: true
+    startprice: 200.0
+LUCK_3:
+  name:
+    display: luck_of_the_sea_3
+    aliases: luck3,luckofthesea3,
+  information:
+    type: ENCHANTMENT
+    material: LUCK
+    data: -1
+  value: 500.0
+  price:
+    static: false
+    staticprice: 1000.0
+    ceiling: 1.0E99
+    floor: 0.0
+  stock:
+    stock: 0.0
+    median: 50.0
+    maxstock: 0.0
+  initiation:
+    initiation: true
+    startprice: 1000.0
+LURE_1:
+  name:
+    display: lure_1
+    aliases: lure1,
+  information:
+    type: ENCHANTMENT
+    material: LURE
+    data: -1
+  value: 25.0
+  price:
+    static: false
+    staticprice: 50.0
+    ceiling: 1.0E99
+    floor: 0.0
+  stock:
+    stock: 0.0
+    median: 100.0
+    maxstock: 0.0
+  initiation:
+    initiation: true
+    startprice: 50.0
+LURE_2:
+  name:
+    display: lure_2
+    aliases: lure2,
+  information:
+    type: ENCHANTMENT
+    material: LURE
+    data: -1
+  value: 100.0
+  price:
+    static: false
+    staticprice: 200.0
+    ceiling: 1.0E99
+    floor: 0.0
+  stock:
+    stock: 0.0
+    median: 100.0
+    maxstock: 0.0
+  initiation:
+    initiation: true
+    startprice: 200.0 
+LURE_3:
+  name:
+    display: lure_3
+    aliases: lure3,
+  information:
+    type: ENCHANTMENT
+    material: LURE
+    data: -1
+  value: 500.0
+  price:
+    static: false
+    staticprice: 1000.0
+    ceiling: 1.0E99
+    floor: 0.0
+  stock:
+    stock: 0.0
+    median: 50.0
+    maxstock: 0.0
+  initiation:
+    initiation: true
+    startprice: 1000.0 
 DAMAGE_UNDEAD_1:
   name:
     display: smite_1
