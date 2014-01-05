@@ -23,7 +23,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 import regalowl.databukkit.CommonFunctions;
 
@@ -61,10 +63,12 @@ public class ChestShop implements Listener {
 		}
 
 	}
-	
+
 	public boolean isChestShopSign(Block b) {
 		try {
-			if (b == null) {return false;}
+			if (b == null) {
+				return false;
+			}
 			if (b.getType().equals(Material.WALL_SIGN)) {
 				Sign s = (Sign) b.getState();
 				String line2 = s.getLine(1).trim();
@@ -97,10 +101,12 @@ public class ChestShop implements Listener {
 			return false;
 		}
 	}
-	
+
 	public Sign getChestShopSign(Block b) {
 		try {
-			if (b == null) {return null;}
+			if (b == null) {
+				return null;
+			}
 			if (b.getState() instanceof Chest) {
 				Chest chest = (Chest) b.getState();
 				String world = chest.getBlock().getWorld().getName();
@@ -112,7 +118,7 @@ public class ChestShop implements Listener {
 						return s;
 					}
 				}
-			} else  if (b.getType().equals(Material.WALL_SIGN)) {
+			} else if (b.getType().equals(Material.WALL_SIGN)) {
 				Sign s = (Sign) b.getState();
 				String line2 = s.getLine(1).trim();
 				if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
@@ -144,10 +150,12 @@ public class ChestShop implements Listener {
 			return null;
 		}
 	}
-	
+
 	public boolean isChestShop(Block b, boolean includeSign) {
 		try {
-			if (b == null) {return false;}
+			if (b == null) {
+				return false;
+			}
 			if (b.getState() instanceof Chest) {
 				Chest chest = (Chest) b.getState();
 				String world = chest.getBlock().getWorld().getName();
@@ -425,18 +433,18 @@ public class ChestShop implements Listener {
 				sell = true;
 			}
 
-			String line34 = ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim();
+			String chestOwnerName = ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim();
 			String clicker = icevent.getWhoClicked().getName();
 			// if clicker is owner of chest return
-			if (clicker.equalsIgnoreCase(line34)) {
+			if (clicker.equalsIgnoreCase(chestOwnerName)) {
 				return;
 			}
-
-			if (icevent.getCurrentItem() == null) {
+			ItemStack clickedItem = icevent.getCurrentItem();
+			if (clickedItem == null) {
 				icevent.setCancelled(true);
 				return;
 			}
-			HyperItemStack his = new HyperItemStack(icevent.getCurrentItem());
+			HyperItemStack his = new HyperItemStack(clickedItem);
 			if (his.isDamaged()) {
 				icevent.setCancelled(true);
 				p.sendMessage(L.get("CHESTSHOP_CANT_TRADE_DAMAGED"));
@@ -463,43 +471,46 @@ public class ChestShop implements Listener {
 					setprice = false;
 				}
 			}
-			if (icevent.isShiftClick()) {
-				HyperPlayer hp = em.getHyperPlayer(p.getName());
-				HyperEconomy he = em.getEconomy(hp.getEconomy());
-				if (new HyperItemStack(icevent.getCurrentItem()).hasenchants()) {
-					icevent.setCancelled(true);
-					return;
-				}
 
-				HyperItem ho = he.getHyperItem(icevent.getCurrentItem());
-				if (ho == null) {
+			HyperPlayer chestOwner = em.getHyperPlayer(chestOwnerName);
+			HyperEconomy chestOwnerEconomy = em.getEconomy(chestOwner.getEconomy());
+			HyperPlayer clickPlayer = em.getHyperPlayer(p.getName());
+			HyperItem hyperItem = null;
+			if (!his.hasenchants()) {
+				hyperItem = chestOwnerEconomy.getHyperItem(clickedItem);
+				if (hyperItem == null) {
 					if (setprice) {
-						ho = new HyperItemStack(icevent.getCurrentItem()).generateTempItem();
+						hyperItem = his.generateTempItem();
 					} else {
 						icevent.setCancelled(true);
 						return;
 					}
 				}
+			}
 
-				int camount = icevent.getCurrentItem().getAmount();
-
+			Inventory shopInventory = icevent.getView().getTopInventory();
+			if (icevent.isShiftClick()) {
+				if (his.hasenchants()) {
+					icevent.setCancelled(true);
+					return;
+				}
+				int camount = clickedItem.getAmount();
 				if (slot < 27) {
 					if (buy) {
 						PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
-						pt.setHyperObject(ho);
-						pt.setTradePartner(em.getHyperPlayer(line34));
+						pt.setHyperObject(hyperItem);
+						pt.setTradePartner(chestOwner);
 						pt.setAmount(camount);
-						pt.setGiveInventory(icevent.getView().getTopInventory());
+						pt.setGiveInventory(shopInventory);
 						if (setprice) {
 							pt.setMoney(cf.twoDecimals((camount * staticprice)));
 							pt.setSetPrice(true);
 						}
-						TransactionResponse response = hp.processTransaction(pt);
+						TransactionResponse response = clickPlayer.processTransaction(pt);
 						response.sendMessages();
 					} else {
 						p.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
 					}
-
 				} else if (slot >= 27) {
 					if (sell) {
 						if (p.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("block-selling-in-creative-mode")) {
@@ -507,34 +518,31 @@ public class ChestShop implements Listener {
 							icevent.setCancelled(true);
 							return;
 						}
-						int itemamount = ho.count(icevent.getView().getTopInventory());
-
+						int itemamount = hyperItem.count(shopInventory);
 						if (itemamount > 0) {
-							int space = ho.getAvailableSpace(icevent.getView().getTopInventory());
+							int space = hyperItem.getAvailableSpace(shopInventory);
 							if (space >= camount) {
-								if (em.hasAccount(line34)) {
-									double bal = em.getHyperPlayer(line34).getBalance();
-									double cost = ho.getValue(camount);
-									if (setprice) {
-										cost = staticprice * camount;
-									}
-
-									if (bal >= cost) {
-										PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
-										pt.setHyperObject(ho);
-										pt.setTradePartner(em.getHyperPlayer(line34));
-										pt.setAmount(camount);
-										pt.setReceiveInventory(icevent.getView().getTopInventory());
-										if (setprice) {
-											pt.setMoney(cf.twoDecimals(cost));
-											pt.setSetPrice(true);
-										}
-										TransactionResponse response = hp.processTransaction(pt);
-										response.sendMessages();
-									} else {
-										L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), line34);
-									}
+								double bal = chestOwner.getBalance();
+								double cost = hyperItem.getValue(camount);
+								if (setprice) {
+									cost = staticprice * camount;
 								}
+								if (bal >= cost) {
+									PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
+									pt.setHyperObject(hyperItem);
+									pt.setTradePartner(chestOwner);
+									pt.setAmount(camount);
+									pt.setReceiveInventory(shopInventory);
+									if (setprice) {
+										pt.setMoney(cf.twoDecimals(cost));
+										pt.setSetPrice(true);
+									}
+									TransactionResponse response = clickPlayer.processTransaction(pt);
+									response.sendMessages();
+								} else {
+									L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), chestOwner.getName());
+								}
+
 							} else {
 								p.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
 							}
@@ -552,39 +560,33 @@ public class ChestShop implements Listener {
 				return;
 
 			} else if (icevent.isLeftClick()) {
-				HyperPlayer hp = em.getHyperPlayer(p.getName());
-				HyperEconomy he = em.getEconomy(hp.getEconomy());
-				if (!new HyperItemStack(icevent.getCurrentItem()).hasenchants()) {
-					HyperItem ho = he.getHyperItem(icevent.getCurrentItem());
-					if (ho == null && setprice) {
-						ho = new HyperItemStack(icevent.getCurrentItem()).generateTempItem();
-					}
-					if (slot < 27 && ho != null) {
-						String name = ho.getDisplayName();
+				if (!his.hasenchants()) {
+					if (slot < 27 && hyperItem != null) {
+						String name = hyperItem.getDisplayName();
 						if (buy) {
-							double price = ho.getValue(1);
+							double price = hyperItem.getValue(1);
 							if (setprice) {
 								price = staticprice;
 							}
 							p.sendMessage(L.get("LINE_BREAK"));
-							p.sendMessage(L.f(L.get("CHEST_SHOP_BUY_VALUE"), 1, price, name, line34));
+							p.sendMessage(L.f(L.get("CHEST_SHOP_BUY_VALUE"), 1, price, name, chestOwner.getName()));
 							p.sendMessage(L.get("LINE_BREAK"));
 						} else {
 							p.sendMessage(L.get("CANNOT_PURCHASE_ITEMS_FROM_CHEST"));
 						}
 
-					} else if (slot >= 27 && ho != null) {
-						String name = ho.getDisplayName();
+					} else if (slot >= 27 && hyperItem != null) {
+						String name = hyperItem.getDisplayName();
 						if (sell) {
-							int itemamount = ho.count(icevent.getView().getTopInventory());
+							int itemamount = hyperItem.count(shopInventory);
 
 							if (itemamount > 0) {
-								double price = ho.getValue(1, hp);
+								double price = hyperItem.getValue(1, clickPlayer);
 								if (setprice) {
 									price = staticprice;
 								}
 								p.sendMessage(L.get("LINE_BREAK"));
-								p.sendMessage(L.f(L.get("CHEST_SHOP_SELL_VALUE"), 1, price, name, line34));
+								p.sendMessage(L.f(L.get("CHEST_SHOP_SELL_VALUE"), 1, price, name, chestOwner.getName()));
 								p.sendMessage(L.get("LINE_BREAK"));
 							} else {
 								p.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
@@ -598,12 +600,16 @@ public class ChestShop implements Listener {
 					if (slot < 27) {
 						if (buy) {
 							double price = 0;
-							for (Enchantment enchantment : new HyperItemStack(icevent.getCurrentItem()).listEnchantments()) {
-								int lvl = new HyperItemStack(icevent.getCurrentItem()).getEnchantmentLevel( enchantment);
-								String nam = he.getEnchantNameWithoutLevel(enchantment.getName());
+							for (Enchantment enchantment : his.listEnchantments()) {
+								int lvl = his.getEnchantmentLevel(enchantment);
+								String nam = chestOwnerEconomy.getEnchantNameWithoutLevel(enchantment.getName());
+								if (nam == null) {
+									icevent.setCancelled(true);
+									return;
+								}
 								String fnam = nam + lvl;
-								HyperEnchant ho = he.getHyperEnchant(fnam);
-								price += ho.getValue(EnchantmentClass.fromString(p.getItemInHand().getType().name()), hp);
+								HyperEnchant ho = chestOwnerEconomy.getHyperEnchant(fnam);
+								price += ho.getValue(EnchantmentClass.fromString(p.getItemInHand().getType().name()), clickPlayer);
 								if (setprice) {
 									price = staticprice;
 								}
@@ -611,85 +617,73 @@ public class ChestShop implements Listener {
 							price = cf.twoDecimals(price);
 							if (new HyperItemStack(p.getItemInHand()).canEnchantItem()) {
 								p.sendMessage(L.get("LINE_BREAK"));
-								p.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, line34));
+								p.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, chestOwner.getName()));
 								p.sendMessage(L.get("LINE_BREAK"));
 							} else {
 								p.sendMessage(L.get("ITEM_CANNOT_ACCEPT_ENCHANTMENTS"));
 							}
-
 						} else {
 							p.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
 						}
-
 					} else {
-
 						p.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
-
 					}
 				}
-
 				icevent.setCancelled(true);
 				return;
 			} else if (icevent.isRightClick()) {
-				HyperPlayer hp = em.getHyperPlayer(p.getName());
-				HyperEconomy he = em.getEconomy(hp.getEconomy());
-				if (!new HyperItemStack(icevent.getCurrentItem()).hasenchants()) {
-					HyperItem ho = he.getHyperItem(icevent.getCurrentItem());
-					if (ho == null && setprice) {
-						ho = new HyperItemStack(icevent.getCurrentItem()).generateTempItem();
-					}
-					if (slot < 27 && ho != null) {
+				if (!his.hasenchants()) {
+					if (slot < 27 && hyperItem != null) {
 						if (buy) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
-							pt.setHyperObject(ho);
-							pt.setTradePartner(em.getHyperPlayer(line34));
+							pt.setHyperObject(hyperItem);
+							pt.setTradePartner(chestOwner);
 							pt.setAmount(1);
-							pt.setGiveInventory(icevent.getView().getTopInventory());
+							pt.setGiveInventory(shopInventory);
 							if (setprice) {
 								pt.setMoney(staticprice);
 								pt.setSetPrice(true);
 							}
-							TransactionResponse response = hp.processTransaction(pt);
+							TransactionResponse response = clickPlayer.processTransaction(pt);
 							response.sendMessages();
 
 						} else {
 							p.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
 						}
 
-					} else if (slot >= 27 && ho != null) {
+					} else if (slot >= 27 && hyperItem != null) {
 						if (sell) {
 							if (p.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("block-selling-in-creative-mode")) {
 								p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 								icevent.setCancelled(true);
 								return;
 							}
-							int itemamount = ho.count(icevent.getView().getTopInventory());
+							int itemamount = hyperItem.count(shopInventory);
 
 							if (itemamount > 0) {
-								int space = ho.getAvailableSpace(icevent.getView().getTopInventory());
+								int space = hyperItem.getAvailableSpace(shopInventory);
 								if (space >= 1) {
-									if (em.hasAccount(line34)) {
-										double bal = em.getHyperPlayer(line34).getBalance();
-										double cost = ho.getValue(1);
-										if (setprice) {
-											cost = staticprice;
-										}
-										if (bal >= cost) {
-											PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
-											pt.setHyperObject(ho);
-											pt.setTradePartner(em.getHyperPlayer(line34));
-											pt.setAmount(1);
-											pt.setReceiveInventory(icevent.getView().getTopInventory());
-											if (setprice) {
-												pt.setMoney(cost);
-												pt.setSetPrice(true);
-											}
-											TransactionResponse response = hp.processTransaction(pt);
-											response.sendMessages();
-										} else {
-											p.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), line34));
-										}
+									double bal = chestOwner.getBalance();
+									double cost = hyperItem.getValue(1);
+									if (setprice) {
+										cost = staticprice;
 									}
+									if (bal >= cost) {
+										PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
+										pt.setHyperObject(hyperItem);
+										pt.setTradePartner(chestOwner);
+										pt.setAmount(1);
+										pt.setReceiveInventory(shopInventory);
+										if (setprice) {
+											pt.setMoney(cost);
+											pt.setSetPrice(true);
+										}
+										TransactionResponse response = clickPlayer.processTransaction(pt);
+										response.sendMessages();
+									} else {
+										p.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), chestOwner.getName()));
+									}
+
 								} else {
 									p.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
 								}
@@ -699,25 +693,24 @@ public class ChestShop implements Listener {
 						} else {
 							p.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
 						}
-
 					}
 				} else {
 					if (slot < 27) {
 						if (buy) {
-							for (Enchantment enchantment : new HyperItemStack(icevent.getCurrentItem()).listEnchantments()) {
-								int lvl = new HyperItemStack(icevent.getCurrentItem()).getEnchantmentLevel(enchantment);
-								String nam = he.getEnchantNameWithoutLevel(enchantment.getName());
+							for (Enchantment enchantment : his.listEnchantments()) {
+								int lvl = his.getEnchantmentLevel(enchantment);
+								String nam = chestOwnerEconomy.getEnchantNameWithoutLevel(enchantment.getName());
 								String fnam = nam + lvl;
-								HyperObject ho = he.getHyperObject(fnam);
+								HyperObject ho = chestOwnerEconomy.getHyperObject(fnam);
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_ITEM);
 								pt.setHyperObject(ho);
-								pt.setTradePartner(em.getHyperPlayer(line34));
-								pt.setGiveItem(icevent.getCurrentItem());
+								pt.setTradePartner(chestOwner);
+								pt.setGiveItem(clickedItem);
 								if (setprice) {
 									pt.setMoney(staticprice);
 									pt.setSetPrice(true);
 								}
-								TransactionResponse response = hp.processTransaction(pt);
+								TransactionResponse response = clickPlayer.processTransaction(pt);
 								response.sendMessages();
 							}
 						} else {
@@ -733,7 +726,6 @@ public class ChestShop implements Listener {
 				icevent.setCancelled(true);
 				return;
 			}
-
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 		}

@@ -386,7 +386,7 @@ public class HyperEconomy {
 		for (HyperObject ho:hyperObjectsName.values()) {
 			if (ho instanceof HyperEnchant) {
 				HyperEnchant he = (HyperEnchant)ho;
-				if (ho.getType() == HyperObjectType.ENCHANTMENT && he.getEnchantmentName().equalsIgnoreCase(bukkitName)) {
+				if (he.getEnchantmentName().equalsIgnoreCase(bukkitName)) {
 					String name = ho.getName();
 					return name.substring(0, name.length() - 1);
 				}
