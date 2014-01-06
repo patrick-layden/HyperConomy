@@ -525,7 +525,7 @@ public class TransactionProcessor {
 					}
 					if (hasBalance(price)) {
 						if (overMaxStock) {
-							response.addFailed(L.f(L.get("OVER_MAX_STOCK"), hyperItem.getDisplayName()), hyperItem);
+							response.addFailed(L.f(L.get("OVER_MAX_STOCK"), hyperObject.getDisplayName()), hyperObject);
 							heh.fireTransactionEvent(pt, response);
 							return response;
 						}
@@ -708,7 +708,7 @@ public class TransactionProcessor {
 				return response;
 			}
 			if (overMaxStock) {
-				response.addFailed(L.f(L.get("OVER_MAX_STOCK"), hyperItem.getDisplayName()), hyperItem);
+				response.addFailed(L.f(L.get("OVER_MAX_STOCK"), hyperObject.getDisplayName()), hyperObject);
 				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
@@ -717,7 +717,6 @@ public class TransactionProcessor {
 				double price = hyperEnchant.getValue(EnchantmentClass.fromString(mater), hp);
 				double fprice = price;
 				if (hasBalance(fprice)) {
-					new HyperItemStack(p.getItemInHand()).removeEnchant(ench);
 					double shopstock = hyperObject.getStock();
 					double amountRemoved = hyperEnchant.removeEnchantment(p.getItemInHand());
 					hyperObject.setStock(shopstock + amountRemoved);

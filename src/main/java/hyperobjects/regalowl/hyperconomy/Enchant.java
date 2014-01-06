@@ -246,12 +246,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 		int lvl = his.getEnchantmentLevel(e);
 		if (getEnchantmentLevel() == lvl && his.containsEnchantment(e)) {
 			his.removeEnchant(e);
-			double dura = stack.getDurability();
-			double maxdura = stack.getType().getMaxDurability();
-			double duramult = (1 - dura / maxdura);
-			if (stack.getType().equals(Material.ENCHANTED_BOOK)) {
-				duramult = 1;
-			}
+			double duramult = his.getDurabilityMultiplier();
 			return duramult;
 		}
 		return 0;
