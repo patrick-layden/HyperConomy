@@ -415,6 +415,7 @@ MANAGESHOP_DELETE_CONFIRM: &cThe selected shop still has items in it. Type '/man
 SHOP_ALREADY_EXISTS: &4A shop by that name already exists.
 SHOP_SELECTED: &aShop selected!
 CANT_MAKE_SHOP_LARGER_THAN: &4You cannot make a shop with a volume larger than &a%v &4blocks.
+SHOP_INTERSECTS_SHOP: &4Your shop's region cannot intersect the shop %n.
 SHOP_LIMIT_REACHED: &4You cannot make more than &a%v &4shops.
 MANAGESHOP_PRICE_HELP: &4Use /manageshop price [object] [price] or /manageshop buyprice... or /manageshop sellprice...
 MANAGESHOP_MAXSTOCK_HELP: &4Use /manageshop price [object] [max stock]

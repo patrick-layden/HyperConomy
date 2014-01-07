@@ -191,9 +191,10 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			}
 		}
 		return false;
+	}	
+	public boolean inShop(Location l) {
+		return inShop(l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getWorld().getName());
 	}
-	
-	
 	public boolean inShop(Player player) {
 		Location l = player.getLocation();
 		return inShop(l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getWorld().getName());
@@ -560,5 +561,58 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	public void saveAllowed() {
 		shopFile.set(name + ".allowed", cf.implode(allowed, ","));
+	}
+
+
+	public ArrayList<Location> getShopBlockLocations() {
+		ArrayList<Location> shopBlockLocations = new ArrayList<Location>();
+		ArrayList<Integer> xvals = new ArrayList<Integer>();
+		ArrayList<Integer> yvals = new ArrayList<Integer>();
+		ArrayList<Integer> zvals = new ArrayList<Integer>();
+		if (p1x <= p2x) {
+			for (int c = 0; c < (p2x - p1x + 1); c++) {
+				xvals.add(p1x + c);
+			}
+		} else if (p1x > p2x) {
+			for (int c = 0; c < (p1x - p2x + 1); c++) {
+				xvals.add(p1x - c);
+			}
+		}
+		if (p1y <= p2y) {
+			for (int c = 0; c < (p2y - p1y + 1); c++) {
+				yvals.add(p1y + c);
+			}
+		} else if (p1y > p2y) {
+			for (int c = 0; c < (p1y - p2y + 1); c++) {
+				yvals.add(p1y - c);
+			}
+		}
+		if (p1z <= p2z) {
+			for (int c = 0; c < (p2z - p1z + 1); c++) {
+				zvals.add(p1z + c);
+			}
+		} else if (p1z > p2z) {
+			for (int c = 0; c < (p1z - p2z + 1); c++) {
+				zvals.add(p1z - c);
+			}
+		}
+		for (int x = 0; x < xvals.size(); x++) {
+			for (int y = 0; y < yvals.size(); y++) {
+				for (int z = 0; z < zvals.size(); z++) {
+					shopBlockLocations.add(new Location(Bukkit.getWorld(world), xvals.get(x), yvals.get(y), zvals.get(z)));
+				}
+			}
+		}
+		return shopBlockLocations;
+	}
+	
+	public boolean intersectsShop(Shop s, int volumeLimit) {
+		if (s.getVolume() > volumeLimit) {return false;}
+		for (Location l:s.getShopBlockLocations()) {
+			if (inShop(l)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

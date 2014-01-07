@@ -23,7 +23,7 @@ public interface Shop extends Comparable<Shop>{
 	public void setEconomy(String economy);
 	
 	public boolean inShop(int x, int y, int z, String world);
-	
+	public boolean inShop(Location l);
 	public boolean inShop(Player player);
 	public void sendEntryMessage(Player player);
 	public String getEconomy();
@@ -82,4 +82,12 @@ public interface Shop extends Comparable<Shop>{
 	public int getVolume();
 	public void deleteShop();
 	public boolean isLoaded();
+	public ArrayList<Location> getShopBlockLocations();
+	/**
+	 * @param s A shop.
+	 * @param volumeLimit A maximum volume for this test.
+	 * @return true if the given shop intersects with this shop, false if not.  If the given shop's volume is greater than the given volume limit,
+	 * it will automatically return false;
+	 */
+	public boolean intersectsShop(Shop s, int volumeLimit);
 }

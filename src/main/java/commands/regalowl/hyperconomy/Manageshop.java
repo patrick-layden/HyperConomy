@@ -312,6 +312,13 @@ public class Manageshop implements CommandExecutor {
 				newShop.deleteShop();
 				return true;
 			}
+			for (Shop s:em.getShops()) {
+				if (newShop.intersectsShop(s, 10000)) {
+					player.sendMessage(L.f(L.get("SHOP_INTERSECTS_SHOP"), s.getDisplayName()));
+					newShop.deleteShop();
+					return true;
+				}
+			}
 			for (HyperObject ho:he.getHyperObjects(newShop)) {
 				if (ho instanceof PlayerShopObject) {
 					((PlayerShopObject) ho).setStatus(HyperObjectStatus.NONE);
@@ -354,6 +361,14 @@ public class Manageshop implements CommandExecutor {
 				cps.setPoint1(priorLoc);
 				return true;
 			}
+			for (Shop s:em.getShops()) {
+				if (cps.intersectsShop(s, 10000)) {
+					if (cps.equals(s)) {continue;}
+					player.sendMessage(L.f(L.get("SHOP_INTERSECTS_SHOP"), s.getDisplayName()));
+					cps.setPoint1(priorLoc);
+					return true;
+				}
+			}
 			player.sendMessage(L.get("P1_SET"));
 		} else if (args[0].equalsIgnoreCase("set2") || args[0].equalsIgnoreCase("s2")) {
 			if (cps == null) {
@@ -366,6 +381,14 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.f(L.get("CANT_MAKE_SHOP_LARGER_THAN"), maxVolume));
 				cps.setPoint2(priorLoc);
 				return true;
+			}
+			for (Shop s:em.getShops()) {
+				if (cps.intersectsShop(s, 10000)) {
+					if (cps.equals(s)) {continue;}
+					player.sendMessage(L.f(L.get("SHOP_INTERSECTS_SHOP"), s.getDisplayName()));
+					cps.setPoint2(priorLoc);
+					return true;
+				}
 			}
 			player.sendMessage(L.get("P2_SET"));
 		} else if (args[0].equalsIgnoreCase("price") || args[0].equalsIgnoreCase("p")) {
