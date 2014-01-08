@@ -237,8 +237,14 @@ public class BasicShopObject implements PlayerShopObject {
 	}
 
 
-	
-	
+
+	public boolean nameStartsWith(String part) {
+		return ho.nameStartsWith(part);
+	}
+
+	public boolean nameContains(String part) {
+		return ho.nameContains(part);
+	}
 	
 	
 	

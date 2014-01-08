@@ -78,7 +78,7 @@ public class Browseshop {
 				HyperObject ho = he.getHyperObject(cname);
 				String displayName = ho.getDisplayName();
 				if (alphabetic) {
-					if (displayName.startsWith(input)) {
+					if (ho.nameStartsWith(input)) {
 						if (shop == null || !shop.isBanned(cname)) {
 							if (shop instanceof PlayerShop) {
 								PlayerShop ps = (PlayerShop)shop;
@@ -98,7 +98,7 @@ public class Browseshop {
 						}
 					}
 				} else {
-					if (displayName.contains(input)) {
+					if (ho.nameContains(input)) {
 						if (shop == null || !shop.isBanned(cname)) {
 							if (shop instanceof PlayerShop) {
 								PlayerShop ps = (PlayerShop)shop;

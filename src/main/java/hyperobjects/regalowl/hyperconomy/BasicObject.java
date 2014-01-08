@@ -396,4 +396,36 @@ public class BasicObject implements HyperObject {
 			return cost;
 		}
 	}
+
+	public boolean nameStartsWith(String part) {
+		part = part.toLowerCase();
+		if (displayName.toLowerCase().startsWith(part)) {
+			return true;
+		}
+		if (name.toLowerCase().startsWith(part)) {
+			return true;
+		}
+		for (String alias:aliases) {
+			if (alias.toLowerCase().startsWith(part)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean nameContains(String part) {
+		part = part.toLowerCase();
+		if (displayName.toLowerCase().contains(part)) {
+			return true;
+		}
+		if (name.toLowerCase().contains(part)) {
+			return true;
+		}
+		for (String alias:aliases) {
+			if (alias.toLowerCase().contains(part)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

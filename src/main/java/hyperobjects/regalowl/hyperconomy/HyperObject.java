@@ -68,5 +68,7 @@ public interface HyperObject extends Comparable<HyperObject> {
 	public double getSalesTaxEstimate(double value);
 	public double getCost(int amount);
 	public double getValue(int amount);
-
+	
+	public boolean nameStartsWith(String part);
+	public boolean nameContains(String part);
 }
