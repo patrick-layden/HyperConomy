@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import regalowl.databukkit.CommonFunctions;
 
 public class HyperObjectAPI implements ObjectAPI {
+	@Deprecated
 	public double getTheoreticalPurchasePrice(int id, int durability, int amount, String economy) {
 		if (economy == null) {
 			economy = "default";
@@ -17,8 +18,8 @@ public class HyperObjectAPI implements ObjectAPI {
 		HyperConomy hc = HyperConomy.hc;
 		CommonFunctions cf = hc.gCF();
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		@SuppressWarnings("deprecation")
-		ItemStack stack = new ItemStack(id, 1);
+		//@SuppressWarnings("deprecation")
+		ItemStack stack = new ItemStack(id);
 		stack.setDurability((short) durability);
 		HyperItem ho = he.getHyperItem(stack);
 		if (ho == null) {
@@ -29,14 +30,14 @@ public class HyperObjectAPI implements ObjectAPI {
 		return price;
 	}
 	
-	public double getTheoreticalPurchasePrice(Material type, short durability, int amount, String economy) {
+	public double getTheoreticalPurchasePrice(Material material, short durability, int amount, String economy) {
 		if (economy == null) {
 			economy = "default";
 		}
 		HyperConomy hc = HyperConomy.hc;
 		CommonFunctions cf = hc.gCF();
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		ItemStack stack = new ItemStack(type, 1);
+		ItemStack stack = new ItemStack(material);
 		stack.setDurability(durability);
 		HyperItem ho = he.getHyperItem(stack);
 		if (ho == null) {
@@ -46,7 +47,8 @@ public class HyperObjectAPI implements ObjectAPI {
 		price = cf.twoDecimals(price);
 		return price;
 	}
-
+	
+	@Deprecated
 	public double getTheoreticalSaleValue(int id, int durability, int amount, String economy) {
 		if (economy == null) {
 			economy = "default";
@@ -54,8 +56,8 @@ public class HyperObjectAPI implements ObjectAPI {
 		HyperConomy hc = HyperConomy.hc;
 		CommonFunctions cf = hc.gCF();
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		@SuppressWarnings("deprecation")
-		ItemStack stack = new ItemStack(id, 1);
+		//@SuppressWarnings("deprecation")
+		ItemStack stack = new ItemStack(id);
 		stack.setDurability((short) durability);
 		HyperItem ho = he.getHyperItem(stack);
 		if (ho == null) {
@@ -66,6 +68,25 @@ public class HyperObjectAPI implements ObjectAPI {
 		return value;
 	}
 
+	public double getTheoreticalSaleValue(Material material, short durability, int amount, String economy) {
+		if (economy == null) {
+			economy = "default";
+		}
+		HyperConomy hc = HyperConomy.hc;
+		CommonFunctions cf = hc.gCF();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		ItemStack stack = new ItemStack(material);
+		stack.setDurability(durability);
+		HyperItem ho = he.getHyperItem(stack);
+		if (ho == null) {
+			return 0.0;
+		}
+		Double value = ho.getValue(amount);
+		value = cf.twoDecimals(value);
+		return value;
+	}
+	
+    @Deprecated
 	public double getTruePurchasePrice(int id, int durability, int amount, String economy) {
 		if (economy == null) {
 			economy = "default";
@@ -73,8 +94,8 @@ public class HyperObjectAPI implements ObjectAPI {
 		HyperConomy hc = HyperConomy.hc;
 		CommonFunctions cf = hc.gCF();
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		@SuppressWarnings("deprecation")
-		ItemStack stack = new ItemStack(id, 1);
+		//@SuppressWarnings("deprecation")
+		ItemStack stack = new ItemStack(id);
 		stack.setDurability((short) durability);
 		HyperItem ho = he.getHyperItem(stack);
 		if (ho == null) {
@@ -86,13 +107,35 @@ public class HyperObjectAPI implements ObjectAPI {
 		price = cf.twoDecimals(price);
 		return price;
 	}
+    
+    public double getTruePurchasePrice(Material material, short durability, int amount, String economy) {
+		if (economy == null) {
+			economy = "default";
+		}
+		HyperConomy hc = HyperConomy.hc;
+		CommonFunctions cf = hc.gCF();
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		//@SuppressWarnings("deprecation")
+		ItemStack stack = new ItemStack(material);
+		stack.setDurability(durability);
+		HyperItem ho = he.getHyperItem(stack);
+		if (ho == null) {
+			return 0.0;
+		}
+		Double price = ho.getCost(amount);
+		double tax = ho.getPurchaseTax(price);
+		price = tax + price;
+		price = cf.twoDecimals(price);
+		return price;
+	}
 
+    @Deprecated
 	public double getTrueSaleValue(int id, int durability, int amount, Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		CommonFunctions cf = hc.gCF();
 		HyperEconomy he = hc.getEconomyManager().getHyperPlayer(player.getName()).getHyperEconomy();
-		@SuppressWarnings("deprecation")
-		ItemStack stack = new ItemStack(id, 1);
+		//@SuppressWarnings("deprecation")
+		ItemStack stack = new ItemStack(id);
 		stack.setDurability((short) durability);
 		HyperItem ho = he.getHyperItem(stack);
 		if (ho == null) {
@@ -106,13 +149,12 @@ public class HyperObjectAPI implements ObjectAPI {
 		return value;
 	}
 	
-	public double getTrueSaleValue(int id, int durability, int amount, Player player, String economy) {
+	public double getTrueSaleValue(Material material, short durability, int amount, Player player, String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		CommonFunctions cf = hc.gCF();
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-		@SuppressWarnings("deprecation")
-		ItemStack stack = new ItemStack(id, 1);
-		stack.setDurability((short) durability);
+		ItemStack stack = new ItemStack(material);
+		stack.setDurability(durability);
 		HyperItem ho = he.getHyperItem(stack);
 		if (ho == null) {
 			return 0.0;

@@ -2,6 +2,7 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +30,26 @@ public interface ObjectAPI
 	@Deprecated
 	double getTheoreticalPurchasePrice(int id, int durability, int amount, String nameOfEconomy);
 
+	
+	/**
+	 * 
+	 * @param material
+	 *            The Material of an item, enchantment, or custom object.
+	 * @param damageValue
+	 *            The durability value of an item, enchantment, or custom
+	 *            object.
+	 * @param amount
+	 *            The amount of the object.
+	 * @param nameOfEconomy
+	 *            The name of the economy that the object is a part of. Put
+	 *            "default" if SQL is not used or to specify the default
+	 *            economy.
+	 * @return The sale value of an object ignoring durability, tax, and all
+	 *         price modifiers.
+	 */
+	double getTheoreticalPurchasePrice(Material material, short durability, int amount, String nameOfEconomy);
+
+	
 	/**
 	 * 
 	 * @param id
@@ -47,7 +68,27 @@ public interface ObjectAPI
 	 */
 	@Deprecated
 	double getTheoreticalSaleValue(int id, int durability, int amount, String nameOfEconomy);
-
+	
+	
+	/**
+	 * 
+	 * @param material
+	 *            The Material of an item, enchantment, or custom object.
+	 * @param damageValue
+	 *            The durability value of an item, enchantment, or custom
+	 *            object.
+	 * @param amount
+	 *            The amount of the object.
+	 * @param nameOfEconomy
+	 *            The name of the economy that the object is a part of. Put
+	 *            "default" if SQL is not used or to specify the default
+	 *            economy.
+	 * @return The sale value of an object ignoring durability, tax, and all
+	 *         price modifiers.
+	 */
+	double getTheoreticalSaleValue(Material material, short durability, int amount, String nameOfEconomy);
+	
+	
 	/**
 	 * 
 	 * @param id
@@ -66,7 +107,27 @@ public interface ObjectAPI
 	 */
 	@Deprecated
 	double getTruePurchasePrice(int id, int durability, int amount, String nameOfEconomy);
+	
+	
+	/**
+	 * 
+	 * @param material
+	 *            The Material of an item, enchantment, or custom object.
+	 * @param damageValue
+	 *            The durability value of an item, enchantment, or custom
+	 *            object.
+	 * @param amount
+	 *            The amount of the object.
+	 * @param nameOfEconomy
+	 *            The name of the economy that the object is a part of. Put
+	 *            "default" if SQL is not used or to specify the default
+	 *            economy.
+	 * @return The purchase price of an object including taxes and all price
+	 *         modifiers.
+	 */
+	double getTruePurchasePrice(Material material, short durability, int amount, String nameOfEconomy);
 
+	
 	/**
 	 * 
 	 * @param id
@@ -81,8 +142,29 @@ public interface ObjectAPI
 	 * @return The sale value of an object including all taxes, durability, and
 	 *         price modifiers.
 	 */
-
+	@Deprecated
 	double getTrueSaleValue(int id, int durability, int amount, Player player);
+	
+	
+	/**
+	 * 
+	 * @param material
+	 *            The Material of an item, enchantment, or custom object.
+	 * @param damageValue
+	 *            The durability value of an item, enchantment, or custom
+	 *            object.
+	 * @param amount
+	 *            The amount of the object.
+	 * @param player
+	 *            The player that is selling the object, item, or enchantment.
+	 * @param nameOfEconomy
+	 *            The name of the economy that the object is a part of. Put
+	 *            "default" if SQL is not used or to specify the default
+	 *            economy.
+	 * @return The sale value of an object including all taxes, durability, and
+	 *         price modifiers.
+	 */
+	double getTrueSaleValue(Material material, short durability, int amount, Player player, String nameOfEconomy);
 	
 	double getTruePurchasePrice(HyperObject hyperObject, EnchantmentClass enchantClass, int amount);
 
