@@ -429,27 +429,27 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			return shopContents.get(hyperObject.getName());
 		}
 		if (hyperObject instanceof ComponentItem) {
-			ComponentShopItem pso = new ComponentShopItem(this, (ComponentItem)hyperObject, 0.0, 0.0, 0.0, 0, HyperObjectStatus.NONE);
+			ComponentShopItem pso = new ComponentShopItem(this, (ComponentItem)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, BUY_PRICE, SELL_PRICE, MAX_STOCK, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', '0.0', '1000000', 'none')");
 			return pso;
 		} else if (hyperObject instanceof CompositeItem) {
-			CompositeShopItem pso = new CompositeShopItem(this, (CompositeItem)hyperObject, 0.0, 0.0, 0.0, 0, HyperObjectStatus.NONE);
+			CompositeShopItem pso = new CompositeShopItem(this, (CompositeItem)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, BUY_PRICE, SELL_PRICE, MAX_STOCK, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', '0.0', '1000000', 'none')");
 			return pso;
 		} else if (hyperObject instanceof Xp) {
-			ShopXp pso = new ShopXp(this, (Xp)hyperObject, 0.0, 0.0, 0.0, 0, HyperObjectStatus.NONE);
+			ShopXp pso = new ShopXp(this, (Xp)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, BUY_PRICE, SELL_PRICE, MAX_STOCK, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', '0.0', '1000000', 'none')");
 			return pso;
 		} else if (hyperObject instanceof HyperEnchant) {
-			ShopEnchant pso = new ShopEnchant(ps, (HyperEnchant)hyperObject, 0.0, 0.0, 0.0, 0, HyperObjectStatus.NONE);
+			ShopEnchant pso = new ShopEnchant(ps, (HyperEnchant)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, BUY_PRICE, SELL_PRICE, MAX_STOCK, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', '0.0', '1000000', 'none')");
 			return pso;
 		} else if (hyperObject instanceof BasicObject) {
-			BasicShopObject pso = new BasicShopObject(this, (BasicObject)hyperObject, 0.0, 0.0, 0.0, 0, HyperObjectStatus.NONE);
+			BasicShopObject pso = new BasicShopObject(this, (BasicObject)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, BUY_PRICE, SELL_PRICE, MAX_STOCK, STATUS) VALUES ('"+name+"', '"+hyperObject.getName()+"', '0.0', '0.0', '0.0', '1000000', 'none')");
 			return pso;
