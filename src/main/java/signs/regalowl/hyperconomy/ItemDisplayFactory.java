@@ -31,8 +31,9 @@ public class ItemDisplayFactory implements Listener {
 	
 	private HyperConomy hc; 
 	private int refreshthreadid;
+	private final long refreshInterval = 4800L;
+	//private final long refreshInterval = 100L;
 	private ConcurrentHashMap<String, ItemDisplay> displays = new ConcurrentHashMap<String, ItemDisplay>();
-	private boolean loadActive;
 
 
 	ItemDisplayFactory() {
@@ -40,7 +41,6 @@ public class ItemDisplayFactory implements Listener {
 			hc = HyperConomy.hc;
 			if (hc.gYH().gFC("config").getBoolean("config.use-item-displays")) {
 				hc.getServer().getPluginManager().registerEvents(this, hc);
-				loadActive = false;
 				loadDisplays();
 				startRefreshThread();
 			}
@@ -50,32 +50,24 @@ public class ItemDisplayFactory implements Listener {
 	}
 	
 
-	
 	public void loadDisplays() {
 		try {
-			if (!loadActive) {
-				loadActive = true;
-				unloadDisplays();
-				FileConfiguration disp = hc.gYH().gFC("displays");
-				Iterator<String> it = disp.getKeys(false).iterator();
-				while (it.hasNext()) {
-					String key = it.next().toString();
-					String name = disp.getString(key + ".name");
-					double x = disp.getDouble(key + ".x");
-					double y = disp.getDouble(key + ".y");
-					double z = disp.getDouble(key + ".z");
-					World w = Bukkit.getWorld(disp.getString(key + ".world"));
-					Location l = new Location(w, x, y, z);
-					Chunk locChunk = l.getChunk();
-					if (locChunk.isLoaded()) {
-						ItemDisplay display = new ItemDisplay(key, l, name);
-						String hkey = (int)Math.floor(x) + ":" + (int)Math.floor(y) + ":" + (int)Math.floor(z) + ":" + w.getName();
-						displays.put(hkey, display);				
-						display.makeDisplay();
-						display.clearNearbyItems();
-					}
-				}
-				loadActive = false;
+			unloadDisplays();
+			FileConfiguration disp = hc.gYH().gFC("displays");
+			Iterator<String> it = disp.getKeys(false).iterator();
+			while (it.hasNext()) {
+				String key = it.next().toString();
+				String name = disp.getString(key + ".name");
+				double x = disp.getDouble(key + ".x");
+				double y = disp.getDouble(key + ".y");
+				double z = disp.getDouble(key + ".z");
+				World w = Bukkit.getWorld(disp.getString(key + ".world"));
+				Location l = new Location(w, x, y, z);
+				ItemDisplay display = new ItemDisplay(key, l, name);
+				String hkey = (int) Math.floor(x) + ":" + (int) Math.floor(y) + ":" + (int) Math.floor(z) + ":" + w.getName();
+				displays.put(hkey, display);
+				display.makeDisplay();
+				display.clearNearbyItems();
 			}
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
@@ -86,7 +78,7 @@ public class ItemDisplayFactory implements Listener {
 	public void unloadDisplays() {
 		for (ItemDisplay display:displays.values()) {
 			display.clearNearbyItems();
-			display.clearDisplay();
+			display.clear();
 		}
 		displays.clear();
 	}
@@ -100,7 +92,7 @@ public class ItemDisplayFactory implements Listener {
 					display.refresh();
 				}
 			}
-		}, 4800L, 4800L);
+		}, refreshInterval, refreshInterval);
 	}
 	
 	public void cancelRefreshThread() {
@@ -112,7 +104,7 @@ public class ItemDisplayFactory implements Listener {
 		String hkey = x + ":" + y + ":" + z + ":" + w.getName();
 		if (displays.containsKey(hkey)) {
 			ItemDisplay display = displays.get(hkey);
-			display.deleteDisplay();
+			display.delete();
 			displays.remove(hkey);
 			return true;
 		} 
@@ -131,7 +123,7 @@ public class ItemDisplayFactory implements Listener {
 			if (kx == x && kz == z && kw.equalsIgnoreCase(w.getName())) {
 				key = kx + ":" + ky + ":" + kz + ":" + kw;
 				ItemDisplay display = displays.get(key);
-				display.deleteDisplay();
+				display.delete();
 				displays.remove(key);
 				return true;
 			}
@@ -139,7 +131,7 @@ public class ItemDisplayFactory implements Listener {
 		return false;
 	}
 
-	public boolean testDisplay(double x, double y, double z, World w, String name) {
+	public boolean addDisplay(double x, double y, double z, World w, String name) {
 		x = Math.floor(x) + .5;
 		z = Math.floor(z) + .5;	
 		FileConfiguration disp = hc.gYH().gFC("displays");
@@ -173,6 +165,7 @@ public class ItemDisplayFactory implements Listener {
 		try {
 			Item droppedItem = event.getItemDrop();
 			for (ItemDisplay display:displays.values()) {
+				if (!display.isActive()) {continue;}
 				if (display.blockItemDrop(droppedItem)) {
 					event.setCancelled(true);
 					return;
@@ -185,21 +178,15 @@ public class ItemDisplayFactory implements Listener {
 	
 	
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onChunkLoad(ChunkLoadEvent event) {
 		try {
 			Chunk chunk = event.getChunk();
-			if (chunk == null) {
-				return;
-			}
+			if (chunk == null) {return;}
 			for (ItemDisplay display:displays.values()) {
-				if (display == null) {
-					continue;
-				}
-				Location l = display.getLocation();
-				if (l != null && chunk.equals(l.getChunk())) {
-					display.removeItem();
-					display.makeDisplay();
+				if (display == null) {continue;}
+				if (chunk.equals(display.getChunk())) {
+					display.refresh();
 					return;
 				}
 			}
@@ -208,19 +195,14 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onChunkUnload(ChunkUnloadEvent event) {
 		try {
 			Chunk chunk = event.getChunk();
-			if (chunk == null) {
-				return;
-			}
+			if (chunk == null) {return;}
 			for (ItemDisplay display:displays.values()) {
-				if (display == null) {
-					continue;
-				}
-				Location l = display.getLocation();
-				if (l != null && chunk.equals(l.getChunk())) {
+				if (display == null) {continue;}
+				if (chunk.equals(display.getChunk())) {
 					display.removeItem();
 					return;
 				}
@@ -260,6 +242,7 @@ public class ItemDisplayFactory implements Listener {
 		try {
 		Block bb = event.getBlock();
 		for (ItemDisplay display:displays.values()) {
+			if (!display.isActive()) {continue;}
 			if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
 				event.setCancelled(true);
 				display.removeItem();
@@ -276,10 +259,10 @@ public class ItemDisplayFactory implements Listener {
 		try {
 			Block bb = event.getBlock();
 			for (ItemDisplay display : displays.values()) {
+				if (!display.isActive()) {continue;}
 				if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
 					event.setCancelled(true);
-					display.removeItem();
-					display.makeDisplay();
+					display.refresh();
 				}
 			}
 			if (bb.getType().equals(Material.GRAVEL) || bb.getType().equals(Material.SAND)) {
@@ -288,10 +271,10 @@ public class ItemDisplayFactory implements Listener {
 					below = below.getRelative(BlockFace.DOWN);
 				}
 				for (ItemDisplay display : displays.values()) {
-					if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
+					if (!display.isActive()) {continue;}
+					if (display.getBaseBlock().equals(below) || display.getItemBlock().equals(below)) {
 						event.setCancelled(true);
-						display.removeItem();
-						display.makeDisplay();
+						display.refresh();
 					}
 				}
 			}
@@ -307,10 +290,10 @@ public class ItemDisplayFactory implements Listener {
 				Location l = event.getRetractLocation();
 				Block b = l.getBlock();
 				for (ItemDisplay display : displays.values()) {
+					if (!display.isActive()) {continue;}
 					if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
 						event.setCancelled(true);
-						display.removeItem();
-						display.makeDisplay();
+						display.refresh();
 					}
 				}
 			}
@@ -325,10 +308,10 @@ public class ItemDisplayFactory implements Listener {
 			List<Block> blocks = event.getBlocks();
 			for (Block cblock : blocks) {
 				for (ItemDisplay display : displays.values()) {
+					if (!display.isActive()) {continue;}
 					if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
 						event.setCancelled(true);
-						display.removeItem();
-						display.makeDisplay();
+						display.refresh();
 					}
 				}
 			}
@@ -344,10 +327,10 @@ public class ItemDisplayFactory implements Listener {
 				List<Block> blocks = event.blockList();
 				for (Block cblock : blocks) {
 					for (ItemDisplay display : displays.values()) {
+						if (!display.isActive()) {continue;}
 						if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
 							event.setCancelled(true);
-							display.removeItem();
-							display.makeDisplay();
+							display.refresh();
 						}
 					}
 				}
@@ -361,6 +344,7 @@ public class ItemDisplayFactory implements Listener {
 	public void onCreatureSpawnEvent(CreatureSpawnEvent event) {
 		try {
 			for (ItemDisplay display : displays.values()) {
+				if (!display.isActive()) {continue;}
 				if (display.blockEntityPickup(event.getEntity())) {
 					event.getEntity().setCanPickupItems(false);
 				}
