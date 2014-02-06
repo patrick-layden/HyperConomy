@@ -35,6 +35,7 @@ public class EconomyManager implements Listener {
 	
 	private ConcurrentHashMap<String, HyperEconomy> economies = new ConcurrentHashMap<String, HyperEconomy>();
 	private ConcurrentHashMap<String, HyperPlayer> hyperPlayers = new ConcurrentHashMap<String, HyperPlayer>();
+	private ConcurrentHashMap<String, HyperBank> hyperBanks = new ConcurrentHashMap<String, HyperBank>();
 	private ConcurrentHashMap<String, Shop> shops = new ConcurrentHashMap<String, Shop>();
 	
 	
@@ -43,7 +44,7 @@ public class EconomyManager implements Listener {
 	private BukkitTask shopCheckTask;
 	private boolean useShops;
 	private ArrayList<Double> updateAfterLoad = new ArrayList<Double>();
-	public final double version = 1.25;
+	public final double version = 1.26;
 	
 	
 	
@@ -149,6 +150,12 @@ public class EconomyManager implements Listener {
 				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.25' WHERE SETTING = 'version'");
 			}
 			if (version < 1.26) {
+				//adds banks
+				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.26.");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_banks (NAME VARCHAR(255) NOT NULL PRIMARY KEY, BALANCE DOUBLE NOT NULL DEFAULT '0', OWNERS VARCHAR(255), MEMBERS VARCHAR(255))");
+				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.26' WHERE SETTING = 'version'");
+			}
+			if (version < 1.27) {
 				
 			}
 		} else {
@@ -167,7 +174,7 @@ public class EconomyManager implements Listener {
 			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_audit_log");
 			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_shop_objects");
 			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_frame_shops");		
-			
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_banks");	
 		}
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL, VALUE TEXT, TIME DATETIME NOT NULL, PRIMARY KEY (SETTING))");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
@@ -177,6 +184,7 @@ public class EconomyManager implements Listener {
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL)");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
+		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_banks (NAME VARCHAR(255) NOT NULL PRIMARY KEY, BALANCE DOUBLE NOT NULL DEFAULT '0', OWNERS VARCHAR(255), MEMBERS VARCHAR(255))");
 		if (!copydatabase) {
 			sw.convertExecuteSynchronously("DELETE FROM hyperconomy_settings");
 			sw.convertExecuteSynchronously("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getEconomyManager().getVersion()+"', NOW() )");
@@ -232,9 +240,16 @@ public class EconomyManager implements Listener {
 				QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_players");
 				while (result.next()) {
 					HyperPlayer hplayer = new HyperPlayer(result.getString("PLAYER"), result.getString("ECONOMY"), result.getDouble("BALANCE"), result.getDouble("X"), result.getDouble("Y"), result.getDouble("Z"), result.getString("WORLD"), result.getString("HASH"), result.getString("SALT"));
-					hyperPlayers.put(hplayer.getName(), hplayer);
+					hyperPlayers.put(hplayer.getName().toLowerCase(), hplayer);
 				}
 				result.close();
+				hyperBanks.clear();
+				QueryResult result2 = sr.aSyncSelect("SELECT * FROM hyperconomy_banks");
+				while (result2.next()) {
+					HyperBank hBank = new HyperBank(result2.getString("NAME"), result2.getDouble("BALANCE"), result2.getString("OWNERS"), result2.getString("MEMBERS"));
+					hyperBanks.put(hBank.getName().toLowerCase(), hBank);
+				}
+				result2.close();
 				hc.getServer().getScheduler().runTask(hc, new Runnable() {
 					public void run() {
 						addOnlinePlayers();
@@ -470,6 +485,51 @@ public class EconomyManager implements Listener {
 
 	
 	
+	public HyperBank getHyperBank(String name) {
+		if (name == null) {return null;}
+		String bankName = name.toLowerCase();
+		if (hyperBanks.containsKey(bankName)) {
+			return hyperBanks.get(bankName);
+		}
+		return null;
+	}
+
+	public void addHyperBank(HyperBank hb) {
+		if (hb == null) {return;}
+		if (!hyperBanks.contains(hb)) {
+			hyperBanks.put(hb.getName().toLowerCase(), hb);
+		}
+	}
+	
+	public void removeHyperBank(HyperBank hb) {
+		if (hb == null) {return;}
+		if (hyperBanks.contains(hb)) {
+			hyperBanks.remove(hb.getName().toLowerCase());
+		}
+	}
+	
+	public boolean hasBank(String name) {
+		if (name == null) {return false;}
+		return hyperBanks.containsKey(name.toLowerCase());
+	}
+	
+	public ArrayList<HyperBank> getHyperBanks() {
+		ArrayList<HyperBank> hbs = new ArrayList<HyperBank>();
+		for (HyperBank hb:hyperBanks.values()) {
+			hbs.add(hb);
+		}
+		return hbs;
+	}
+	
+	public ArrayList<String> getHyperBankNames() {
+		ArrayList<String> hbs = new ArrayList<String>();
+		for (HyperBank hb:hyperBanks.values()) {
+			hbs.add(hb.getName());
+		}
+		return hbs;
+	}
+	
+	
 	
 	
 	
@@ -505,8 +565,8 @@ public class EconomyManager implements Listener {
 			if (!hasAccount(name)) {
 				addPlayer(name);
 			}
-			if (hyperPlayers.containsKey(name)) {
-				HyperPlayer hp = hyperPlayers.get(name);
+			if (hyperPlayers.containsKey(name.toLowerCase())) {
+				HyperPlayer hp = hyperPlayers.get(name.toLowerCase());
 				if (hp == null) {return;}
 				hp.setX(l.getX());
 				hp.setY(l.getY());
@@ -533,36 +593,36 @@ public class EconomyManager implements Listener {
 	
 	
 	public HyperPlayer getHyperPlayer(String player) {
-		player = fixpN(player);
-		if (hyperPlayers.containsKey(player) && hyperPlayers.get(player) != null) {
-			return hyperPlayers.get(player);
+		String playerName = player.toLowerCase();
+		if (hyperPlayers.containsKey(playerName) && hyperPlayers.get(playerName) != null) {
+			return hyperPlayers.get(playerName);
 		} else {
-			if (hyperPlayers.get(player) == null) {
-				hyperPlayers.remove(player);
+			if (hyperPlayers.get(playerName) == null) {
+				hyperPlayers.remove(playerName);
 			}
 			return addPlayer(player);
 		}
 	}
 	public HyperPlayer getHyperPlayer(Player player) {
-		String name = player.getName();
-		if (hyperPlayers.containsKey(name) && hyperPlayers.get(name) != null) {
-			return hyperPlayers.get(name);
+		String playerName = player.getName().toLowerCase();
+		if (hyperPlayers.containsKey(playerName) && hyperPlayers.get(playerName) != null) {
+			return hyperPlayers.get(playerName);
 		} else {
-			if (hyperPlayers.get(name) == null) {
-				hyperPlayers.remove(name);
+			if (hyperPlayers.get(playerName) == null) {
+				hyperPlayers.remove(playerName);
 			}
-			return addPlayer(name);
+			return addPlayer(player.getName());
 		}
 	}
 	
 	public void addHyperPlayer(HyperPlayer hp) {
 		if (!hyperPlayers.contains(hp)) {
-			hyperPlayers.put(hp.getName(), hp);
+			hyperPlayers.put(hp.getName().toLowerCase(), hp);
 		}
 	}
 	public void removeHyperPlayer(HyperPlayer hp) {
 		if (hyperPlayers.contains(hp)) {
-			hyperPlayers.remove(hp.getName());
+			hyperPlayers.remove(hp.getName().toLowerCase());
 		}
 	}
 	
@@ -578,19 +638,19 @@ public class EconomyManager implements Listener {
 	
 
 	public HyperPlayer addPlayer(String player) {
-		player = fixpN(player);
-		if (!hyperPlayers.containsKey(player)) {
+		String playerName = player.toLowerCase();
+		if (!hyperPlayers.containsKey(playerName)) {
 			HyperPlayer newHp = new HyperPlayer(player);
-			hyperPlayers.put(player, newHp);
+			hyperPlayers.put(playerName, newHp);
 			return newHp;
 		} else {
-			HyperPlayer hp = hyperPlayers.get(player);
+			HyperPlayer hp = hyperPlayers.get(playerName);
 			if (hp != null) {
 				return hp;
 			} else {
-				hyperPlayers.remove(player);
+				hyperPlayers.remove(playerName);
 				HyperPlayer newHp = new HyperPlayer(player);
-				hyperPlayers.put(player, newHp);
+				hyperPlayers.put(playerName, newHp);
 				return newHp;
 			}
 		}
@@ -599,9 +659,10 @@ public class EconomyManager implements Listener {
 
 
 	public boolean hasAccount(String name) {
+		String playerName = name.toLowerCase();
 		if (hc.useExternalEconomy()) {
-			if (hc.getEconomy().hasAccount(fixpN(name))) {
-				if (!hyperPlayers.containsKey(fixpN(name))) {
+			if (hc.getEconomy().hasAccount(name)) {
+				if (!hyperPlayers.containsKey(playerName)) {
 					addPlayer(name);
 				}
 				return true;
@@ -609,14 +670,13 @@ public class EconomyManager implements Listener {
 				return false;
 			}
 		} else {
-			return hyperPlayers.containsKey(fixpN(name));
+			return hyperPlayers.containsKey(playerName);
 		}
 	}
 	
 
 
 	public boolean createPlayerAccount(String player) {
-		player = fixpN(player);
 		if (!hasAccount(player)) {
 			addPlayer(player);
 			return true;

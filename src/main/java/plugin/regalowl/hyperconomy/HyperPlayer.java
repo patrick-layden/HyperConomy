@@ -9,7 +9,7 @@ import regalowl.databukkit.SQLWrite;
 
 
 
-public class HyperPlayer {
+public class HyperPlayer implements HyperAccount {
 
 	private HyperConomy hc;
 	private TransactionProcessor tp;

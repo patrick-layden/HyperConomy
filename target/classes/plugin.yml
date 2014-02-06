@@ -416,6 +416,11 @@ commands:
       permission: hyperconomy.frameshop
       permission-message: You do not have permission.
       aliases: [fs]
+   hcbank:
+      description: Manages banks.
+      permission: hyperconomy.bank
+      permission-message: You do not have permission.
+      aliases: [bank]      
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.
@@ -435,6 +440,7 @@ permissions:
             hyperconomy.topbalance: true
             hyperconomy.playershop: true
             hyperconomy.frameshop: true
+            hyperconomy.bank: true
     hyperconomy.use:
         description: Allows general use of HyperConomy.
         default: true
@@ -532,4 +538,7 @@ permissions:
         default: false
     hyperconomy.frameshop:
         description: Allows the use of the /frameshop command.
+        default: false
+    hyperconomy.bank:
+        description: Allows the use of the /hcbank command.
         default: false

@@ -181,6 +181,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		Bukkit.getServer().getPluginCommand("hcdelete").setExecutor(new Hcdelete());
 		Bukkit.getServer().getPluginCommand("hctest").setExecutor(new Hctest());
 		Bukkit.getServer().getPluginCommand("frameshop").setExecutor(new Frameshopcommand());
+		Bukkit.getServer().getPluginCommand("hcbank").setExecutor(new Hcbank());
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
