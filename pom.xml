@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>regalowl.databukkit</groupId>
 			<artifactId>databukkit</artifactId>
-			<version>0.0.39-SNAPSHOT</version>
+			<version>0.0.41-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -53,6 +53,7 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+							<minimizeJar>true</minimizeJar>
 							<filters>
 								<filter>
 									<artifact>*:*</artifact>

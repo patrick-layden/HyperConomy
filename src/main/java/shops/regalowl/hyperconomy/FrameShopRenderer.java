@@ -7,11 +7,15 @@ import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapPalette;
 import org.bukkit.map.MapView;
 import org.bukkit.map.MinecraftFont;
+
 import java.awt.Image;
 import java.net.URL;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
+
 import org.bukkit.map.MapRenderer;
+
 import regalowl.databukkit.CommonFunctions;
 
 
@@ -26,7 +30,8 @@ public class FrameShopRenderer extends MapRenderer {
     private CommonFunctions cf;
     private LanguageFile L;
     private ArrayList<String> renderedFor = new ArrayList<String>();
-    private final byte borderColor = MapPalette.DARK_BROWN;
+    @SuppressWarnings("deprecation")
+	private final byte borderColor = MapPalette.DARK_BROWN;
     
     public FrameShopRenderer(HyperObject ho) {
         super();
@@ -39,17 +44,20 @@ public class FrameShopRenderer extends MapRenderer {
     
     public Image getImage() {
     	if (ho instanceof HyperItem) {
+    		Image i = null;
     		HyperItem hi = (HyperItem)ho;
-    		URL url = null;
-    		if (hi.getData() == 0) {
-    			url = hc.getClass().getClassLoader().getResource("Images/"+hi.getMaterial().toLowerCase()+".png");
-    		} else {
-    			url = hc.getClass().getClassLoader().getResource("Images/"+hi.getMaterial().toLowerCase()+hi.getData()+".png");
-    		}
+    		URL url = hc.getClass().getClassLoader().getResource("Images/"+hi.getMaterial().toLowerCase()+"_"+hi.getData()+".png");
             try {
-            	Image unprocessedImage = ImageIO.read(url);
-            	if (unprocessedImage != null) {
-            		return unprocessedImage.getScaledInstance(60, 60, Image.SCALE_DEFAULT);
+            	i = ImageIO.read(url);
+            	if (i != null) {
+            		return i.getScaledInstance(60, 60, Image.SCALE_DEFAULT);
+            	}
+    		} catch (Exception e) {} 
+    		url = hc.getClass().getClassLoader().getResource("Images/"+hi.getMaterial().toLowerCase()+".png");
+            try {
+            	i = ImageIO.read(url);
+            	if (i != null) {
+            		return i.getScaledInstance(60, 60, Image.SCALE_DEFAULT);
             	}
     		} catch (Exception e) {} 
     	}
@@ -71,49 +79,50 @@ public class FrameShopRenderer extends MapRenderer {
 			}
 			
 			int fHeight = MinecraftFont.Font.getHeight();
-			canvas.drawText(7, fHeight, MinecraftFont.Font, applyMapColor(ho.getDisplayName(), MapPalette.RED));
-			//canvas.drawText(8, fHeight + 10, MinecraftFont.Font, applyMapColor("Sell: Left Click", MapPalette.DARK_GRAY));
-			//canvas.drawText(8, fHeight + 20, MinecraftFont.Font, applyMapColor("Buy: Right Click", MapPalette.DARK_GRAY));
 			
 			
-			String sell = "";
+			//adds item name
+			canvas.drawText(7, fHeight, MinecraftFont.Font, color(ho.getDisplayName(), MapPalette.BLUE));
+
+			
+			//adds sell price
+			double value = 0.0;
 			if (ho instanceof HyperEnchant) {
 				HyperEnchant he = (HyperEnchant)ho;
-				double value = he.getValue(EnchantmentClass.DIAMOND);
-				sell = "Sell (L Click): " + L.fCS(cf.twoDecimals((value - ho.getSalesTaxEstimate(value))));
+				value = he.getValue(EnchantmentClass.DIAMOND);
 			} else if (ho instanceof HyperItem) {
 				HyperItem hi = (HyperItem)ho;
-				double value = hi.getValue(1);
-				value = cf.twoDecimals((value - ho.getSalesTaxEstimate(value)));
-				sell = "Sell (L Click): " + L.fCS(value);
+				value = hi.getValue(1);
 			} else if (ho instanceof BasicObject) {
 				BasicObject bo = (BasicObject)ho;
-				double value = bo.getValue(1);
-				value = cf.twoDecimals((value - ho.getSalesTaxEstimate(value)));
-				sell = "Sell (L Click): " + L.fCS(value);
+				value = bo.getValue(1);
 			}
-			canvas.drawText(8, fHeight + 10, MinecraftFont.Font, applyMapColor(sell, MapPalette.LIGHT_GREEN));
+			String sell = color("Sell: ", MapPalette.DARK_GRAY) + color(L.fCS(cf.twoDecimals((value - ho.getSalesTaxEstimate(value)))), MapPalette.DARK_GREEN);
+			canvas.drawText(8, fHeight + 10, MinecraftFont.Font, sell);
 			
-			String buy = "";
+			
+			//adds buy price
+			double cost = 0.0;
 			if (ho instanceof HyperEnchant) {
 				HyperEnchant he = (HyperEnchant)ho;
-				double cost = he.getCost(EnchantmentClass.DIAMOND);
-				buy = "Buy (R Click): " + L.fCS(cf.twoDecimals((cost + ho.getPurchaseTax(cost))));
+				cost = he.getCost(EnchantmentClass.DIAMOND);
 			} else if (ho instanceof HyperItem) {
 				HyperItem hi = (HyperItem)ho;
-				double pcost = hi.getCost(1);
-				buy = "Buy (R Click): " + L.fCS(cf.twoDecimals((pcost + ho.getPurchaseTax(pcost))));
+				cost = hi.getCost(1);
 			} else if (ho instanceof BasicObject) {
 				BasicObject bo = (BasicObject)ho;
-				double pcost = bo.getCost(1);
-				buy = "Buy (R Click): " + L.fCS(cf.twoDecimals((pcost + ho.getPurchaseTax(pcost))));
+				cost = bo.getCost(1);
 			}
-			canvas.drawText(8, fHeight + 20, MinecraftFont.Font, applyMapColor(buy, MapPalette.LIGHT_GREEN));
-			
-			canvas.drawText(8, fHeight + 30, MinecraftFont.Font, applyMapColor("Stock: " + ho.getStock(), MapPalette.PALE_BLUE));
-			
+			String buy = color("Buy: ", MapPalette.DARK_GRAY) + color(L.fCS(cf.twoDecimals((cost + ho.getPurchaseTax(cost)))), MapPalette.DARK_GREEN);
+			canvas.drawText(8, fHeight + 20, MinecraftFont.Font, buy);
 			
 			
+			//adds stock info
+			String stock = color("Stock: ", MapPalette.DARK_GRAY) + color(cf.twoDecimals(ho.getStock())+"", MapPalette.DARK_GREEN);
+			canvas.drawText(8, fHeight + 30, MinecraftFont.Font, stock);
+			
+			
+			//draws image if it exists
 			if (image != null) {
 				canvas.drawImage(68, 68, image);
 			}
@@ -126,26 +135,30 @@ public class FrameShopRenderer extends MapRenderer {
 					}
 				}
 			}
-			
+			//creates border
 			for (int i=0;i<128;i++) {
 				canvas.setPixel(i, 0, borderColor);
 				canvas.setPixel(i, 1, borderColor);
 				canvas.setPixel(i, 2, borderColor);
+				canvas.setPixel(i, 3, borderColor);
 			}
 			for (int i=0;i<128;i++) {
 				canvas.setPixel(i, 127, borderColor);
 				canvas.setPixel(i, 126, borderColor);
 				canvas.setPixel(i, 125, borderColor);
+				canvas.setPixel(i, 124, borderColor);
 			}
 			for (int i=0;i<128;i++) {
 				canvas.setPixel(0, i, borderColor);
 				canvas.setPixel(1, i, borderColor);
 				canvas.setPixel(2, i, borderColor);
+				canvas.setPixel(3, i, borderColor);
 			}
 			for (int i=0;i<128;i++) {
 				canvas.setPixel(127, i, borderColor);
 				canvas.setPixel(126, i, borderColor);
 				canvas.setPixel(125, i, borderColor);
+				canvas.setPixel(124, i, borderColor);
 			}
 			
 			renderedFor.add(p.getName());
@@ -157,7 +170,7 @@ public class FrameShopRenderer extends MapRenderer {
     	renderedFor.clear();
     }
     
-    public String applyMapColor(String message, byte color) {
+    public String color(String message, byte color) {
     	return L.get("CC") + color + ";" + message;
     }
 }

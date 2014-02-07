@@ -4,6 +4,7 @@ package regalowl.hyperconomy;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -29,55 +30,38 @@ public class ItemDisplay {
 	private double x;
 	private double y;
 	private double z;
-	private World w;
+	private String w;
 	private int entityId;
-	private Block baseBlock;
-	private Block itemBlock;
+	private boolean active;
 	
 	ItemDisplay(String key, Location location, String name) {
 		this.hc = HyperConomy.hc;
 		this.location = location;
+		this.active = false;
 		HyperEconomy he = hc.getEconomyManager().getEconomy("default");
 		this.x = this.location.getX();
 		this.y = this.location.getY();
 		this.z = this.location.getZ();
-		this.w = this.location.getWorld();
+		this.w = this.location.getWorld().getName();
 		this.name = he.fixName(name);
 		this.key = key;
-		setProtectedBlocks();
 	}
 	
 	ItemDisplay(Location location, String name) {
 		this.hc = HyperConomy.hc;
 		this.location = location;
+		this.active = false;
 		HyperEconomy he = hc.getEconomyManager().getEconomy("default");
 		this.x = this.location.getX();
 		this.y = this.location.getY();
 		this.z = this.location.getZ();
-		this.w = this.location.getWorld();
+		this.w = this.location.getWorld().getName();
 		this.name = he.fixName(name);
 		storeDisplay();
-		setProtectedBlocks();
 	}
 	
-	private void setProtectedBlocks() {
-		int x = (int) Math.floor(this.x);
-		int y = (int) Math.floor(this.y - 1);
-		int z = (int) Math.floor(this.z);
-		Block cb = this.w.getBlockAt(x, y, z);
-		baseBlock = cb;
-		cb = w.getBlockAt(x, y + 1, z);
-		itemBlock = cb;
-	}
-	
-	public void clearDisplay() {
-		removeItem();
-		hc = null;
-		location = null;
-		w = null;
-		name = null;
-		item = null;
-		key = null;
+	public boolean isActive() {
+		return active;
 	}
 	
 	public String getKey() {
@@ -89,15 +73,25 @@ public class ItemDisplay {
 	}
 	
 	public Block getBaseBlock() {
-		return baseBlock;
+		int x = (int) Math.floor(this.x);
+		int y = (int) Math.floor(this.y - 1);
+		int z = (int) Math.floor(this.z);
+		return getWorld().getBlockAt(x, y, z);
 	}
 	
 	public Block getItemBlock() {
-		return itemBlock;
+		int x = (int) Math.floor(this.x);
+		int y = (int) Math.floor(this.y - 1);
+		int z = (int) Math.floor(this.z);
+		return getWorld().getBlockAt(x, y+1, z);
 	}
 	
 	public Location getLocation() {
 		return location;
+	}
+	
+	public Chunk getChunk() {
+		return location.getChunk();
 	}
 	
 	public String getName() {
@@ -124,16 +118,17 @@ public class ItemDisplay {
 		return entityId;
 	}
 	
-	public Item makeDisplay() {
+	public void makeDisplay() {
+		if (!location.getChunk().isLoaded()) {return;}
 		HyperEconomy he = hc.getEconomyManager().getEconomy("default");
-		Location l = new Location(w, x, y + 1, z);
+		Location l = new Location(getWorld(), x, y + 1, z);
 		ItemStack dropstack = he.getHyperItem(name).getItemStack();
 		dropstack.setDurability((short) he.getHyperItem(name).getDurability());
-		this.item = w.dropItem(l, dropstack);
+		this.item = getWorld().dropItem(l, dropstack);
 		this.entityId = item.getEntityId();
 		item.setVelocity(new Vector(0, 0, 0));
 		item.setMetadata("HyperConomy", new FixedMetadataValue(hc, "item_display"));
-		return item;
+		active = true;
 	}
 	
 	public void refresh() {
@@ -158,22 +153,40 @@ public class ItemDisplay {
 		disp.set(key + ".x", x);
 		disp.set(key + ".y", y);
 		disp.set(key + ".z", z);
-		disp.set(key + ".world", w.getName());
+		disp.set(key + ".world", getWorld().getName());
 	}
 	
 	public void removeItem() {
 		if (item != null) {
 			item.remove();
 		}
+		active = false;
 	}
 	
-	public void deleteDisplay() {
+	public void delete() {
 		FileConfiguration disp = hc.gYH().gFC("displays");
 		disp.set(key, null);
-		clearDisplay();
+		clear();
 	}
 	
+	public void clear() {
+		removeItem();
+		hc = null;
+		location = null;
+		w = null;
+		name = null;
+		item = null;
+		key = null;
+	}
+	
+	
+	/**
+	 *
+	 * @param droppedItem
+	 * @return true if the item drop event shop be blocked to prevent item stacking, false if not
+	 */
 	public boolean blockItemDrop(Item droppedItem) {
+		if (item == null) {return false;}
 		HyperItemStack dropped = new HyperItemStack(droppedItem.getItemStack());
 		HyperItemStack displayItem = new HyperItemStack(item.getItemStack());
 		Location l = droppedItem.getLocation();
@@ -230,9 +243,7 @@ public class ItemDisplay {
 	
 
 	public void clearNearbyItems() {
-		if (item == null) {
-			return;
-		}
+		if (item == null) {return;}
 		List<Entity> nearbyEntities = item.getNearbyEntities(7, 7, 7);
 		for (Entity entity : nearbyEntities) {
 			if (entity instanceof Item) {

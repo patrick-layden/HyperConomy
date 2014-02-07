@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 
 import regalowl.databukkit.SQLWrite;
+import regalowl.databukkit.WriteStatement;
 
 public class BasicShopObject implements PlayerShopObject {
 
@@ -60,32 +61,60 @@ public class BasicShopObject implements PlayerShopObject {
 	
 	public void setHyperObject(HyperObject ho) {
 		this.ho = ho;
-		sw.addToQueue("UPDATE hyperconomy_shop_objects SET HYPEROBJECT='"+ho.getName()+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET HYPEROBJECT=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		ws.addParameter(ho.getName());
+		ws.addParameter(playerShop.getName());
+		ws.addParameter(ho.getName());
+		sw.addToQueue(ws);
 	}
 	public void setShop(PlayerShop playerShop) {
 		this.playerShop = playerShop;
-		sw.addToQueue("UPDATE hyperconomy_shop_objects SET SHOP='"+playerShop.getName()+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SHOP=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		ws.addParameter(playerShop.getName());
+		ws.addParameter(playerShop.getName());
+		ws.addParameter(ho.getName());
+		sw.addToQueue(ws);
 	}
 	public void setStock(double stock) {
 		if (stock < 0.0) {stock = 0.0;}
 		this.stock = stock;
-		sw.addToQueue("UPDATE hyperconomy_shop_objects SET QUANTITY='"+stock+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET QUANTITY=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		ws.addParameter(stock);
+		ws.addParameter(playerShop.getName());
+		ws.addParameter(ho.getName());
+		sw.addToQueue(ws);
 	}
 	public void setBuyPrice(double buyPrice) {
 		this.buyPrice = buyPrice;
-		sw.addToQueue("UPDATE hyperconomy_shop_objects SET BUY_PRICE='"+buyPrice+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET BUY_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		ws.addParameter(buyPrice);
+		ws.addParameter(playerShop.getName());
+		ws.addParameter(ho.getName());
+		sw.addToQueue(ws);
 	}
 	public void setSellPrice(double sellPrice) {
 		this.sellPrice = sellPrice;
-		sw.addToQueue("UPDATE hyperconomy_shop_objects SET SELL_PRICE='"+sellPrice+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SELL_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		ws.addParameter(sellPrice);
+		ws.addParameter(playerShop.getName());
+		ws.addParameter(ho.getName());
+		sw.addToQueue(ws);
 	}
 	public void setMaxStock(int maxStock) {
 		this.maxStock = maxStock;
-		sw.addToQueue("UPDATE hyperconomy_shop_objects SET MAX_STOCK='"+maxStock+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET MAX_STOCK=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		ws.addParameter(maxStock);
+		ws.addParameter(playerShop.getName());
+		ws.addParameter(ho.getName());
+		sw.addToQueue(ws);
 	}
 	public void setStatus(HyperObjectStatus status) {
 		this.status = status;
-		sw.addToQueue("UPDATE hyperconomy_shop_objects SET STATUS='"+status.toString()+"' WHERE SHOP='"+playerShop.getName()+"' AND HYPEROBJECT='"+ho.getName()+"'");
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET STATUS=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		ws.addParameter(status.toString());
+		ws.addParameter(playerShop.getName());
+		ws.addParameter(ho.getName());
+		sw.addToQueue(ws);
 	}
 	
 	

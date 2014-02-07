@@ -143,6 +143,7 @@ public class TransactionSign implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteractEvent(PlayerInteractEvent ievent) {
+		if (ievent == null) {return;}
 		try {
 			if (!hc.gYH().gFC("config").getBoolean("config.use-transaction-signs")) {return;}
 			Player p = ievent.getPlayer();

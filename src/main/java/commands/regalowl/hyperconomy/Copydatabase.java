@@ -9,6 +9,7 @@ import regalowl.databukkit.DataBukkit;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
+import regalowl.databukkit.WriteStatement;
 
 
 public class Copydatabase {
@@ -106,7 +107,15 @@ public class Copydatabase {
 						result.close();
 						result = sr.aSyncSelect("SELECT * FROM hyperconomy_shop_objects");
 						while (result.next()) {
-							sw.addToQueue("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS) VALUES ('"+result.getString("SHOP")+"', '"+result.getString("HYPEROBJECT")+"', '"+result.getDouble("QUANTITY")+"', '"+result.getDouble("SELL_PRICE")+"', '"+result.getDouble("BUY_PRICE")+"', '"+result.getInt("MAX_STOCK")+"', '"+result.getString("STATUS")+"')");
+							WriteStatement ws = new WriteStatement("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS) VALUES (?,?,?,?,?,?,?)", hc.getDataBukkit());
+							ws.addParameter(result.getString("SHOP"));
+							ws.addParameter(result.getString("HYPEROBJECT"));
+							ws.addParameter(result.getDouble("QUANTITY"));
+							ws.addParameter(result.getDouble("SELL_PRICE"));
+							ws.addParameter(result.getDouble("BUY_PRICE"));
+							ws.addParameter(result.getInt("MAX_STOCK"));
+							ws.addParameter(result.getString("STATUS"));
+							sw.addToQueue(ws);
 						}
 						result.close();
 						if (includeHistory) {
