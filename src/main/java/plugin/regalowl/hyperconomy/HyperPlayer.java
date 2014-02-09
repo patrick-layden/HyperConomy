@@ -215,7 +215,7 @@ public class HyperPlayer implements HyperAccount {
 	
 	
 	public boolean hasSellPermission(Shop s) {
-		if (!hc.gYH().gQFC("config").gB("use-shop-permissions")) {
+		if (!hc.gYH().gQFC("config").gB("config.use-shop-permissions")) {
 			return true;
 		}
 		boolean hasPermission = false;
@@ -232,7 +232,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public boolean hasBuyPermission(Shop s) {
-		if (!hc.gYH().gQFC("config").gB("use-shop-permissions")) {
+		if (!(hc.gYH().gQFC("config").gB("config.use-shop-permissions"))) {
 			return true;
 		}
 		boolean hasPermission = false;
