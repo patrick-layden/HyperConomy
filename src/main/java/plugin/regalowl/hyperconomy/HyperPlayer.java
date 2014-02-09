@@ -219,7 +219,6 @@ public class HyperPlayer {
 			return true;
 		}
 		boolean hasPermission = false;
-
 		if (getPlayer().isPermissionSet("hyperconomy.shop")) {
 			hasPermission = getPlayer().hasPermission("hyperconomy.shop");
 		}
