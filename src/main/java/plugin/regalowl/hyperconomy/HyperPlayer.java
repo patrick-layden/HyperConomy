@@ -1,5 +1,7 @@
 package regalowl.hyperconomy;
 
+import static java.lang.System.out;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -215,10 +217,11 @@ public class HyperPlayer {
 	
 	
 	public boolean hasSellPermission(Shop s) {
-		if (!hc.gYH().gQFC("config").gB("use-shop-permissions")) {
+		if (!hc.gYH().gQFC("config").gB("config.use-shop-permissions")) {
 			return true;
 		}
 		boolean hasPermission = false;
+
 		if (getPlayer().isPermissionSet("hyperconomy.shop")) {
 			hasPermission = getPlayer().hasPermission("hyperconomy.shop");
 		}
@@ -232,7 +235,7 @@ public class HyperPlayer {
 	}
 	
 	public boolean hasBuyPermission(Shop s) {
-		if (!hc.gYH().gQFC("config").gB("use-shop-permissions")) {
+		if (!(hc.gYH().gQFC("config").gB("config.use-shop-permissions"))) {
 			return true;
 		}
 		boolean hasPermission = false;
