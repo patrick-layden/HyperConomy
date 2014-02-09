@@ -1,7 +1,5 @@
 package regalowl.hyperconomy;
 
-import static java.lang.System.out;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
