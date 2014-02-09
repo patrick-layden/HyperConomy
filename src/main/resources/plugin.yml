@@ -441,6 +441,7 @@ permissions:
             hyperconomy.playershop: true
             hyperconomy.frameshop: true
             hyperconomy.bank: true
+            hyperconomy.viewbanks: true
     hyperconomy.use:
         description: Allows general use of HyperConomy.
         default: true
@@ -541,4 +542,7 @@ permissions:
         default: false
     hyperconomy.bank:
         description: Allows the use of the /hcbank command.
+        default: false
+    hyperconomy.viewbanks:
+        description: Allows players to view all information about all banks.
         default: false

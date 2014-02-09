@@ -18,7 +18,7 @@ public class HyperBank implements HyperAccount {
 		this.hc = HyperConomy.hc;
 		this.name = name;
 		this.balance = 0.0;
-		owners.add(owner.getName());
+		owners.add(owner.getName().toLowerCase());
 		WriteStatement ws = new WriteStatement("INSERT INTO hyperconomy_banks (NAME, BALANCE, OWNERS, MEMBERS) VALUES (?,?,?,?)",hc.getDataBukkit());
 		ws.addParameter(name);
 		ws.addParameter(0.0);
@@ -115,6 +115,22 @@ public class HyperBank implements HyperAccount {
 			return true;
 		}
 		return false;
+	}
+	
+	public String getOwnersList() {
+		String list = hc.gCF().implode(owners, ",");
+		if (list.length() > 0) {
+			list = list.substring(0, list.length() - 1);
+		}
+		return list;
+	}
+	
+	public String getMembersList() {
+		String list = hc.gCF().implode(members, ",");
+		if (list.length() > 0) {
+			list = list.substring(0, list.length() - 1);
+		}
+		return list;
 	}
 
 	private void saveOwners() {

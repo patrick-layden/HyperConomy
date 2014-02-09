@@ -232,6 +232,9 @@ public class UpdateYML {
 		if (!yh.gFC("config").isSet("config.log-sql-statements")) {
 			yh.gFC("config").set("config.log-sql-statements", false);
 		}
+		if (!yh.gFC("config").isSet("config.max-bank-ownerships-per-player")) {
+			yh.gFC("config").set("config.max-bank-ownerships-per-player", 1);
+		}
 
 		yh.gFC("config").set("config.sql-connection.max-sql-threads", null);
 		yh.gFC("config").set("config.log-sqlwrite-errors", null);

@@ -459,3 +459,31 @@ NAME_IN_USE: &4That name/alias is already in use.
 NOT_IMPLEMENTED: &dThis message has not been implemented yet.
 CANNOT_PAY_NEGATIVE: &4You cannot pay a zero or negative amount.
 OVER_MAX_STOCK: &4This shop will not allow the sale of any more %n.
+HCBANK_HELP: &4Use /hcbank ['create', 'remove', 'addmember', 'removemember', 'addowner', 'removeowner', 'deposit', 'withdraw', 'info', or 'top']
+HCBANK_CREATE_HELP: &4Use /hcbank create [name]
+BANK_CREATED: &6Bank created.
+BANK_REMOVED: &6Bank removed.
+HCBANK_REMOVE_HELP: &4Use /hcbank remove [name]
+HCBANK_ADDMEMBER_HELP: &4Use /hcbank addmember [bank] [member]
+HCBANK_REMOVEMEMBER_HELP: &4Use /hcbank removemember [bank] [member]
+HCBANK_ADDOWNER_HELP: &4Use /hcbank addowner [bank] [owner]
+HCBANK_REMOVEOWNER_HELP: &4Use /hcbank removeowner [bank] [owner]
+HCBANK_DEPOSIT_HELP: &4Use /hcbank deposit [bank] [amount]
+HCBANK_WITHDRAW_HELP: &4Use /hcbank withdraw [bank] [amount]
+BANK_ALREADY_EXISTS: &4That bank already exists.
+BANK_NOT_EXIST: &4That bank doesn't exist.
+CANNOT_OWN_MORE_BANKS: &4You are not allowed to own any more banks.
+DONT_OWN_THIS_BANK: &4You don't own this bank.
+MEMBER_ADDED_BANK: &6Member added to bank.
+MEMBER_REMOVED_BANK: &6Member removed from bank.
+OWNER_ADDED_BANK: &6Owner added to bank.
+OWNER_REMOVED_BANK: &6Owner removed from bank.
+BANK_INSUFFICIENT_FUNDS: &4The bank has insufficient funds.
+DEPOSIT_SUCCESSFUL: &6Deposit successful.
+WITHDRAWAL_SUCCESSFUL: &6Withdrawal successful.
+NOT_MEMBER_OF_BANK: &4You are not a member of this bank.
+BANK_OWNER_OF: &9You are an owner of: &a%n
+BANK_MEMBER_OF: &9You are a member of: &a%n
+BANK_BALANCE: &9Bank balance: &a%v
+BANK_OWNERS: &9Bank owners: &b%n
+BANK_MEMBERS:&9Bank members: &b%n

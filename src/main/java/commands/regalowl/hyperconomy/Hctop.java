@@ -30,12 +30,8 @@ public class Hctop {
 				players.add(hp.getName());
 				balances.add(hp.getBalance());
 			}
-			
-
-			
 			ArrayList<String> splayers = new ArrayList<String>();
 			ArrayList<Double> sbalances = new ArrayList<Double>();
-			
 			while (balances.size() > 0) {
 				int topBalanceIndex = 0;
 				double topBalance = 0;
@@ -51,7 +47,6 @@ public class Hctop {
 				balances.remove(topBalanceIndex);
 				players.remove(topBalanceIndex);
 			}
-			
 			double serverTotal = 0.0;
 			for (int i = 0; i < sbalances.size(); i++) {
 				serverTotal += sbalances.get(i);
