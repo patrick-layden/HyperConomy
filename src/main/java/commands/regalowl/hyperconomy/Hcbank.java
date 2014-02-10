@@ -49,16 +49,16 @@ public class Hcbank implements CommandExecutor {
 					bankOwnerships++;
 				}
 			}
-			if (bankOwnerships > hc.gYH().gFC("config").getInt("config.max-bank-ownerships-per-player")) {
+			if (bankOwnerships > hc.gYH().gFC("config").getInt("config.max-bank-ownerships-per-player") && !player.hasPermission("hyperconomy.admin")) {
 				player.sendMessage(L.get("CANNOT_OWN_MORE_BANKS"));
 				return true;
 			}
 			HyperBank hb = new HyperBank(args[1], hp);
 			em.addHyperBank(hb);
 			player.sendMessage(L.get("BANK_CREATED"));
-		} else if (args[0].equalsIgnoreCase("remove")) {
+		} else if (args[0].equalsIgnoreCase("delete")) {
 			if (args.length != 2) {
-				player.sendMessage(L.get("HCBANK_REMOVE_HELP"));
+				player.sendMessage(L.get("HCBANK_DELETE_HELP"));
 				return true;
 			}
 			if (!em.hasBank(args[1])) {
@@ -70,8 +70,13 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
 				return true;
 			}
-			em.removeHyperBank(hb);
-			player.sendMessage(L.get("BANK_REMOVED"));
+			if (hb.getBalance() > 0) {
+				hb.delete();
+				player.sendMessage(L.get("BANK_DELETED_DISTRIBUTED"));
+			} else {
+				hb.delete();
+				player.sendMessage(L.get("BANK_DELETED"));
+			}
 		} else if (args[0].equalsIgnoreCase("addmember") || args[0].equalsIgnoreCase("am")) {
 			if (args.length != 3) {
 				player.sendMessage(L.get("HCBANK_ADDMEMBER_HELP"));
@@ -89,6 +94,10 @@ public class Hcbank implements CommandExecutor {
 			HyperPlayer account = em.getHyperPlayer(args[2]);
 			if (!hb.isOwner(hp)) {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
+				return true;
+			}
+			if (hb.isMember(account)) {
+				player.sendMessage(L.get("BANK_ALREADY_MEMBER"));
 				return true;
 			}
 			hb.addMember(account);
@@ -112,6 +121,10 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
 				return true;
 			}
+			if (!hb.isMember(account)) {
+				player.sendMessage(L.get("BANK_NOT_MEMBER"));
+				return true;
+			}
 			hb.removeMember(account);
 			player.sendMessage(L.get("MEMBER_REMOVED_BANK"));
 		} else  if (args[0].equalsIgnoreCase("addowner") || args[0].equalsIgnoreCase("ao")) {
@@ -131,6 +144,10 @@ public class Hcbank implements CommandExecutor {
 			HyperPlayer account = em.getHyperPlayer(args[2]);
 			if (!hb.isOwner(hp)) {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
+				return true;
+			}
+			if (hb.isOwner(account)) {
+				player.sendMessage(L.get("BANK_ALREADY_OWNER"));
 				return true;
 			}
 			hb.addOwner(account);
@@ -154,8 +171,17 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
 				return true;
 			}
-			hb.removeOwner(account);
-			player.sendMessage(L.get("OWNER_REMOVED_BANK"));
+			if (!hb.isOwner(account)) {
+				player.sendMessage(L.get("BANK_NOT_OWNER"));
+				return true;
+			}
+			if (hb.getOwners().size() == 1) {
+				hb.delete();
+				player.sendMessage(L.get("BANK_DELETED_DISTRIBUTED"));
+			} else {
+				hb.removeOwner(account);
+				player.sendMessage(L.get("OWNER_REMOVED_BANK"));
+			}
 		} else if (args[0].equalsIgnoreCase("deposit") || args[0].equalsIgnoreCase("d")) {
 			if (args.length != 3) {
 				player.sendMessage(L.get("HCBANK_DEPOSIT_HELP"));
@@ -170,6 +196,10 @@ public class Hcbank implements CommandExecutor {
 				amount = Double.parseDouble(args[2]);
 			} catch (Exception e) {
 				player.sendMessage(L.get("HCBANK_DEPOSIT_HELP"));
+				return true;
+			}
+			if (amount <= 0.0) {
+				player.sendMessage(L.get("TRANSFER_GREATER_THAN_ZERO"));
 				return true;
 			}
 			if (!hp.hasBalance(amount)) {
@@ -194,6 +224,10 @@ public class Hcbank implements CommandExecutor {
 				amount = Double.parseDouble(args[2]);
 			} catch (Exception e) {
 				player.sendMessage(L.get("HCBANK_WITHDRAW_HELP"));
+				return true;
+			}
+			if (amount <= 0.0) {
+				player.sendMessage(L.get("TRANSFER_GREATER_THAN_ZERO"));
 				return true;
 			}
 			HyperBank hb = em.getHyperBank(args[1]);
@@ -227,9 +261,10 @@ public class Hcbank implements CommandExecutor {
 				if (memberBanks.length() > 0) {
 					memberBanks = memberBanks.substring(0, memberBanks.length() - 1);
 				}
-				
+				player.sendMessage(L.get("LINE_BREAK"));
 				player.sendMessage(L.f(L.get("BANK_OWNER_OF"), ownerBanks));
 				player.sendMessage(L.f(L.get("BANK_MEMBER_OF"), memberBanks));
+				player.sendMessage(L.get("LINE_BREAK"));
 			}
 			if (args.length == 2) {
 				if (!em.hasBank(args[1])) {
@@ -238,9 +273,12 @@ public class Hcbank implements CommandExecutor {
 				}
 				HyperBank hb = em.getHyperBank(args[1]);
 				if (hb.isOwner(hp) || hp.getPlayer().hasPermission("hyperconomy.viewbanks")) {
+					player.sendMessage(L.get("LINE_BREAK"));
+					player.sendMessage(L.applyColor("&f" + hb.getName()));
 					player.sendMessage(L.f(L.get("BANK_BALANCE"), hb.getBalance()));
 					player.sendMessage(L.f(L.get("BANK_OWNERS"), hb.getOwnersList()));
 					player.sendMessage(L.f(L.get("BANK_MEMBERS"), hb.getMembersList()));
+					player.sendMessage(L.get("LINE_BREAK"));
 				} else if (hb.isMember(hp)) {
 					player.sendMessage(L.f(L.get("BANK_BALANCE"), hb.getBalance()));
 				} else {

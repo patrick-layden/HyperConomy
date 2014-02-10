@@ -35,6 +35,19 @@ public class HyperBank implements HyperAccount {
 		this.members = hc.gCF().explode(members, ",");
 	}
 	
+	public void delete() {
+		WriteStatement ws = new WriteStatement("DELETE FROM hyperconomy_banks WHERE NAME=?",hc.getDataBukkit());
+		ws.addParameter(name);
+		hc.getSQLWrite().addToQueue(ws);
+		hc.getEconomyManager().removeHyperBank(this);
+		if (balance > 0) {
+			double share = balance/owners.size();
+			for (HyperPlayer hp:getOwners()) {
+				hp.deposit(share);
+			}
+		}
+	}
+	
 	@Override
 	public String getName() {
 		return name;
@@ -118,7 +131,10 @@ public class HyperBank implements HyperAccount {
 	}
 	
 	public String getOwnersList() {
-		String list = hc.gCF().implode(owners, ",");
+		String list = "";
+		for (String owner:owners) {
+			list += hc.getEconomyManager().getHyperPlayer(owner).getName() + ",";
+		}
 		if (list.length() > 0) {
 			list = list.substring(0, list.length() - 1);
 		}
@@ -126,11 +142,30 @@ public class HyperBank implements HyperAccount {
 	}
 	
 	public String getMembersList() {
-		String list = hc.gCF().implode(members, ",");
+		String list = "";
+		for (String member:members) {
+			list += hc.getEconomyManager().getHyperPlayer(member).getName() + ",";
+		}
 		if (list.length() > 0) {
 			list = list.substring(0, list.length() - 1);
 		}
 		return list;
+	}
+	
+	public ArrayList<HyperPlayer> getOwners() {
+		ArrayList<HyperPlayer> ownersList = new ArrayList<HyperPlayer>();
+		for (String owner:owners) {
+			ownersList.add(hc.getEconomyManager().getHyperPlayer(owner));
+		}
+		return ownersList;
+	}
+	
+	public ArrayList<HyperPlayer> getMembers() {
+		ArrayList<HyperPlayer> membersList = new ArrayList<HyperPlayer>();
+		for (String member:members) {
+			membersList.add(hc.getEconomyManager().getHyperPlayer(member));
+		}
+		return membersList;
 	}
 
 	private void saveOwners() {
