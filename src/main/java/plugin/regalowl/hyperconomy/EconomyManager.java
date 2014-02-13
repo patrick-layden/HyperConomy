@@ -578,6 +578,7 @@ public class EconomyManager implements Listener {
 	
 
 	public HyperPlayer addPlayer(String player) {
+		if (!dataLoaded) {return null;}
 		player = fixpN(player);
 		if (!hyperPlayers.containsKey(player)) {
 			HyperPlayer newHp = new HyperPlayer(player);
