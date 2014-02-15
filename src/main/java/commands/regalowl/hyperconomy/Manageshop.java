@@ -285,7 +285,8 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("MANAGESHOP_CREATE_HELP"));
 				return true;
 			}
-			if (em.shopExists(args[1])){
+			String name = args[1].replace(".", "").replace(":", "");
+			if (em.shopExists(name)){
 				player.sendMessage(L.get("SHOP_ALREADY_EXISTS"));
 				return true;
 			}
@@ -294,7 +295,6 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.f(L.get("SHOP_LIMIT_REACHED"), maxShops));
 				return true;
 			}
-			String name = args[1];
 			int radius = 2;
 			if (args.length > 2) {
 				try {
