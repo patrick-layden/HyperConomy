@@ -28,7 +28,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	private boolean loaded;
 	
 	private HyperConomy hc;
-	private EconomyManager em;
 	private LanguageFile L;
 	private FileConfiguration shopFile;
 	
@@ -45,7 +44,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		if (owner == null) {
 			this.owner = hc.getEconomyManager().getGlobalShopAccount();
 		}
-		em = hc.getEconomyManager();
 		L = hc.getLanguageFile();
 		globalShop = false;
 		shopFile = hc.gYH().gFC("shops");
@@ -185,7 +183,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	public HyperEconomy getHyperEconomy() {
-		return em.getEconomy(economy);
+		return hc.getEconomyManager().getEconomy(economy);
 	}
 	
 	public String getName() {
@@ -350,7 +348,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	
 	public void deleteShop() {
 		shopFile.set(name, null);
-		em.removeShop(name);
+		hc.getEconomyManager().removeShop(name);
 	}
 
 	public void setOwner(HyperPlayer owner) {
