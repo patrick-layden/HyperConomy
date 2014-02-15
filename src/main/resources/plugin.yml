@@ -162,7 +162,7 @@ commands:
       description: Displays the current shop settings for the object you're holding or the one you specify. Also works as /os
       permission: hyperconomy.settings
       permission-message: You do not have permission.
-      aliases: [is, os, ens]
+      aliases: [os, ens]
    taxsettings:
       description: Displays the current tax values.
       permission: hyperconomy.settings

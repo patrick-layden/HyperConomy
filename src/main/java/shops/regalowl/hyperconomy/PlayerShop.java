@@ -36,7 +36,6 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private HyperConomy hc;
 	private LanguageFile L;
 	private FileConfiguration shopFile;
-	private EconomyManager em;
 	private PlayerShop ps;
 	private CommonFunctions cf;
 	
@@ -51,7 +50,6 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		this.owner = owner;
 		hc = HyperConomy.hc;
 		cf = hc.getDataBukkit().getCommonFunctions();
-		em = hc.getEconomyManager();
 		ps = this;
 		L = hc.getLanguageFile();
 		shopFile = hc.gYH().getFileConfiguration("shops");
@@ -66,7 +64,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private void loadPlayerShopObjects() {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
-				HyperEconomy he = em.getEconomy(economy);
+				HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 				BasicStatement statement = new BasicStatement("SELECT * FROM hyperconomy_shop_objects WHERE SHOP = ?", hc.getDataBukkit());
 				statement.addParameter(name);
 				QueryResult result = hc.getSQLRead().aSyncSelect(statement);
@@ -416,7 +414,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"'");
 		shopContents.clear();
 		shopFile.set(name, null);
-		em.removeShop(name);
+		hc.getEconomyManager().removeShop(name);
 	}
 	
 	public void removePlayerShopObject(HyperObject hyperObject) {
@@ -514,7 +512,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 
 	public HyperEconomy getHyperEconomy() {
-		return em.getEconomy(economy);
+		return hc.getEconomyManager().getEconomy(economy);
 	}
 
 
