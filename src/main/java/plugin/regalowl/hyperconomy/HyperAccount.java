@@ -8,5 +8,6 @@ public interface HyperAccount {
 	public void withdraw(double amount);
 	public void setBalance(double balance);
 	public boolean hasBalance(double balance);
+	public void sendMessage(String message);
 
 }

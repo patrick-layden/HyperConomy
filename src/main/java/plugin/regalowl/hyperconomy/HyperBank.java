@@ -180,5 +180,14 @@ public class HyperBank implements HyperAccount {
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);
 	}
+	
+	public void sendMessage(String message) {
+		for (HyperPlayer owner: getOwners()) {
+			owner.sendMessage(message);
+		}
+		for (HyperPlayer member: getMembers()) {
+			member.sendMessage(message);
+		}
+	}
 
 }

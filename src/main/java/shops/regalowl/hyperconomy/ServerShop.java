@@ -11,7 +11,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	
 	private String name;
 	private String economy;
-	private HyperPlayer owner;
+	private HyperAccount owner;
 	private String world;
 	private String message1;
 	private String message2;
@@ -35,7 +35,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
 	
 	
-	ServerShop(String name, String econ, HyperPlayer owner) {
+	ServerShop(String name, String econ, HyperAccount owner) {
 		loaded = false;
 		hc = HyperConomy.hc;
 		this.name = name;
@@ -320,7 +320,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return new Location(Bukkit.getWorld(world), p2x, p2y, p2z);
 	}
 	
-	public HyperPlayer getOwner() {
+	public HyperAccount getOwner() {
 		return owner;
 	}
 	public void updatePlayerStatus() {
@@ -351,7 +351,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc.getEconomyManager().removeShop(name);
 	}
 
-	public void setOwner(HyperPlayer owner) {
+	public void setOwner(HyperAccount owner) {
 		this.owner = owner;
 		shopFile.set(name + ".owner", owner.getName());
 	}

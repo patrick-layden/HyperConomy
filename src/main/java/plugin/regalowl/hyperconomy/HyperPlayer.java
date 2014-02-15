@@ -174,12 +174,11 @@ public class HyperPlayer implements HyperAccount {
 		}
 	}
 
-	public boolean sendMessage(String message) {
+	public void sendMessage(String message) {
 		if (getPlayer() != null) {
 			getPlayer().sendMessage(message);
-			return true;
+			return;
 		}
-		return false;
 	}
 	
 	public double getSalesTax(Double price) {

@@ -20,7 +20,7 @@ public class TransactionProcessor {
 
 	
 	private TransactionType transactionType;
-	private HyperPlayer tradePartner;
+	private HyperAccount tradePartner;
 	private HyperObject hyperObject;
 	private HyperItem hyperItem;
 	private HyperEnchant hyperEnchant;

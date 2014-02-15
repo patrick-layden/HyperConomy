@@ -17,7 +17,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 	private String name;
 	private String world;
-	private HyperPlayer owner;
+	private HyperAccount owner;
 	private ArrayList<String> allowed = new ArrayList<String>();
 	private String economy;
 	private String message1;
@@ -43,7 +43,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private ArrayList<String> inShop = new ArrayList<String>();
 	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
 	
-	PlayerShop(String shopName, String econ, HyperPlayer owner) {
+	PlayerShop(String shopName, String econ, HyperAccount owner) {
 		loaded = false;
 		this.name = shopName;
 		this.economy = econ;
@@ -390,11 +390,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		return new Location(Bukkit.getWorld(world), p2x, p2y, p2z);
 	}
 	
-	public HyperPlayer getOwner() {
+	public HyperAccount getOwner() {
 		return owner;
 	}
 	
-	public void setOwner(HyperPlayer owner) {
+	public void setOwner(HyperAccount owner) {
 		this.owner = owner;
 		shopFile.set(name + ".owner", owner.getName());
 	}

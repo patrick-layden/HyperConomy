@@ -34,6 +34,25 @@ public class Setshop {
 					em.addShop(shop);
 				}
 				player.sendMessage(L.get("P2_SET"));
+			} else if (args[0].equalsIgnoreCase("owner")) {
+				HyperAccount owner = null;
+				if (em.hasAccount(args[1])) {
+					owner = em.getHyperPlayer(args[1]);
+				} else {
+					if (em.hasBank(args[1])) {
+						owner = em.getHyperBank(args[1]);
+					} else {
+						player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
+					}
+				}
+				String name = args[2].replace(".", "").replace(":", "");
+				if (em.shopExists(name)) {
+					em.getShop(name).setOwner(owner);
+				} else {
+					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+					
+				}
+				player.sendMessage(L.get("OWNER_SET"));
 			}
 		} else {
 			player.sendMessage(L.get("SETSHOP_INVALID"));

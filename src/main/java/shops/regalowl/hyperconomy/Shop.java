@@ -30,8 +30,8 @@ public interface Shop extends Comparable<Shop>{
 	
 	public HyperEconomy getHyperEconomy();
 	public String getName();
-	public HyperPlayer getOwner();
-	public void setOwner(HyperPlayer owner);
+	public HyperAccount getOwner();
+	public void setOwner(HyperAccount owner);
 	public String getDisplayName();
 	
 	/**

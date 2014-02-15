@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 public class PlayerTransaction {
 	
 	private TransactionType transactionType;
-	private HyperPlayer tradePartner;
+	private HyperAccount tradePartner;
 	private HyperObject hyperObject;
 	private int amount;
 	private Inventory giveInventory;
@@ -25,7 +25,7 @@ public class PlayerTransaction {
 	public TransactionType getTransactionType() {
 		return transactionType;
 	}
-	public HyperPlayer getTradePartner() {
+	public HyperAccount getTradePartner() {
 		return tradePartner;
 	}
 	public HyperObject getHyperObject() {
@@ -57,7 +57,7 @@ public class PlayerTransaction {
 	public void setTransactionType(TransactionType transactionType) {
 		this.transactionType = transactionType;
 	}
-	public void setTradePartner(HyperPlayer tradePartner) {
+	public void setTradePartner(HyperAccount tradePartner) {
 		this.tradePartner = tradePartner;
 	}
 	public void setHyperObject(HyperObject hyperObject) {
