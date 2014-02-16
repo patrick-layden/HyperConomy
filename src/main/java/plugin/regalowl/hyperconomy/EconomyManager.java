@@ -28,6 +28,7 @@ public class EconomyManager implements Listener {
 	private HyperConomy hc;
 	private SQLRead sr;
 	private boolean dataLoaded;
+	private boolean playersLoaded;
 	private BukkitTask economyWait;
 	private BukkitTask dataWait;
 	private boolean loadActive;
@@ -52,6 +53,8 @@ public class EconomyManager implements Listener {
 	public EconomyManager() {
 		hc = HyperConomy.hc;
 		economiesLoaded = false;
+		dataLoaded = false;
+		playersLoaded = false;
 		loadActive = false;
 		useShops = hc.gYH().gFC("config").getBoolean("config.use-shops");
 		shopinterval = hc.gYH().gFC("config").getLong("config.shopcheckinterval");
@@ -243,6 +246,7 @@ public class EconomyManager implements Listener {
 					hyperPlayers.put(hplayer.getName().toLowerCase(), hplayer);
 				}
 				result.close();
+				playersLoaded = true;
 				hyperBanks.clear();
 				QueryResult result2 = sr.aSyncSelect("SELECT * FROM hyperconomy_banks");
 				while (result2.next()) {
@@ -638,7 +642,7 @@ public class EconomyManager implements Listener {
 	
 
 	public HyperPlayer addPlayer(String player) {
-		if (!dataLoaded) {return null;}
+		if (!playersLoaded) {return null;}
 		String playerName = player.toLowerCase();
 		if (!hyperPlayers.containsKey(playerName)) {
 			HyperPlayer newHp = new HyperPlayer(player);
