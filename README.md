@@ -14,4 +14,4 @@ Links
 * [Tickets] (http://dev.bukkit.org/server-mods/hyperconomy/tickets/)
 * [Documentation Wiki] (https://github.com/RegalOwl/HyperConomy/wiki)
 * [BukkitDev Page] (http://dev.bukkit.org/bukkit-plugins/hyperconomy/)
-* [Latest Deveopment Build] (https://buildhive.cloudbees.com/job/RegalOwl/job/HyperConomy/lastSuccessfulBuild/regalowl.hyperconomy$hyperconomy/)
+* [Latest Development Build] (https://buildhive.cloudbees.com/job/RegalOwl/job/HyperConomy/lastSuccessfulBuild/regalowl.hyperconomy$hyperconomy/)
