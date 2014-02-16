@@ -512,7 +512,12 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 
 	public HyperEconomy getHyperEconomy() {
-		return hc.getEconomyManager().getEconomy(economy);
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		if (he == null) {
+			hc.getDataBukkit().writeError("Null HyperEconomy for economy: " + economy + ", shop: " + name);
+			he = hc.getEconomyManager().getEconomy("default");
+		}
+		return he;
 	}
 
 
