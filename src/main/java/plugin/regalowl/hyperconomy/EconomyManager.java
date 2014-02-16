@@ -757,6 +757,9 @@ public class EconomyManager implements Listener {
 			if (name.equalsIgnoreCase("GlobalShop")) {continue;}
 			String owner = sh.getString(name + ".owner");
 			String economy = sh.getString(name + ".economy");
+			if (economy == null) {
+				economy = "default";
+			}
 			if (owner == null) {
 				owner = getGlobalShopAccount().getName();
 			}

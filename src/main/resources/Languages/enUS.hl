@@ -292,7 +292,7 @@ MESSAGE1_SET: &6Message 1 set!
 MESSAGE2_SET: &6Message 2 set!
 P1_SET: &6Shop location p1 has been set!
 P2_SET: &6Shop location p2 has been set!
-SETSHOP_INVALID: &4Invalid Parameters. Use /setshop ['p1'/'p2'] [name]
+SETSHOP_INVALID: &4Invalid Parameters. Use /setshop ['p1','p2', or 'owner'] [shop name]
 SETSHOPECONOMY_INVALID: &4Invalid Parameters.  Use /setshopeconomy [shop name] [economy]
 SHOP_ECONOMY_SET: &6Shop economy set!
 SETSTARTPRICE_INVALID: &4Invalid parameters. Use /setstartprice [item/enchantment name] [startprice] ('e')

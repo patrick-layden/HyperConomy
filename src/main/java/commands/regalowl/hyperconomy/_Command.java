@@ -202,9 +202,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("setmessage")) {
 			new Setmessage(args, sender);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setshop") && player != null) {
-			new Setshop(args, player);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("makedisplay") && player != null) {
 			new Makedisplay(args, player);
 			return true;
