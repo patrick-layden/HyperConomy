@@ -61,42 +61,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("classvalues")) {
 			new Classvalues(sender);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setvalue")) {
-			new Setvalue(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setstock")) {
-			new Setstock(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setstockall")) {
-			new Setstockall(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setmedian")) {
-			new Setmedian(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setstatic")) {
-			new Setstatic(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setinitiation")) {
-			new Setinitiation(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setinitiationall")) {
-			new Setinitiationall(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setstaticall")) {
-			new Setstaticall(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setstaticprice")) {
-			new Setstaticprice(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setstartprice")) {
-			new Setstartprice(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setceiling")) {
-			new Setceiling(args, sender, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setfloor")) {
-			new Setfloor(args, sender, playerecon);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("writeitems")) {
 			new Writeitems(args, sender);
 			return true;
@@ -172,9 +136,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("intervals")) {
 			new Intervals(sender, args);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setbalance")) {
-			new Setbalance(sender, args);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("removeitem")) {
 			new Removeitem(args, sender);
 			return true;
@@ -183,9 +144,6 @@ public class _Command {
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("notify")) {
 			new Notify(args, sender);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setstockmedianall")) {
-			new Setstockmedianall(sender, args, playerecon);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("scalebypercent")) {
 			new Scalebypercent(sender, args, playerecon);

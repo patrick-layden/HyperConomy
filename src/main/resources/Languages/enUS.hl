@@ -258,18 +258,15 @@ PERCENT_GREATER_THAN_0: &4Percent must be greater than 0!
 SCALEBYPERCENT_INVALID: &4Invalid Parameters.  Use /scalebypercent [setting] [percent] ('item' or 'enchantment')
 BALANCE_SET: &6Balance set!
 ACCOUNT_NOT_EXIST: &4That account doesn't exist!
-SETBALANCE_INVALID: &4Invalid Parameters.  Use /setbalance [account] [balance]
 CEILING_SET: &6%n ceiling set!
 DISPLAYNAME_SET: &6%n display name set!
 INVALID_NAME: &4Invalid name!
-SETCEILING_INVALID: &4Invalid parameters. Use /setceiling [item/enchantment name] [ceiling]
 SETCLASSVALUE_INVALID: &4Invalid Parameters. Use /setclassvalue [item class] [value]
 INVALID_ITEM_CLASS: &4Invalid item class.
 CLASSVALUE_SET: &6The classvalue for &b%n &6has been set.
 ECONOMY_SET: &6Economy set!
 SETECONOMY_INVALID: &4Invalid Parameters.  Use /seteconomy [name]
 FLOOR_SET: &6%n floor set!
-SETFLOOR_INVALID: &4Invalid parameters. Use /setfloor [item/enchantment name] [floor]
 SETINITIATION_INVALID: &4Invalid parameters. Use /setinitiation [item/enchantment name] ('e')
 INVALID_ENCHANTMENT_NAME: &4Invalid enchantment name!
 INVALID_ITEM_NAME: &4Invalid item name!
@@ -285,7 +282,6 @@ SHOP_INTERVAL_SET: &6Shop check interval set!
 SETLANGUAGE_INVALID: &4Use /setlanguage [language] ('o')
 LANGUAGE_NOT_FOUND: &4The specified language file was not found or cannot be overwritten.
 LANGUAGE_LOADED: &6%n loaded.
-SETMEDIAN_INVALID: &4Invalid parameters. Use /setmedian [item/enchantment name] [median] ('e')
 MEDIAN_SET: &6%n median set!
 SETMESSAGE_INVALID: &4Invalid Parameters.  Use /setmessage ['1'/'2'] [message] [shop]
 MESSAGE1_SET: &6Message 1 set!
@@ -295,18 +291,12 @@ P2_SET: &6Shop location p2 has been set!
 SETSHOP_INVALID: &4Invalid Parameters. Use /setshop ['p1','p2', or 'owner'] [shop name]
 SETSHOPECONOMY_INVALID: &4Invalid Parameters.  Use /setshopeconomy [shop name] [economy]
 SHOP_ECONOMY_SET: &6Shop economy set!
-SETSTARTPRICE_INVALID: &4Invalid parameters. Use /setstartprice [item/enchantment name] [startprice] ('e')
 START_PRICE_SET: &6%n start price set!
-SETSTATIC_INVALID: &4Invalid parameters. Use /setstatic [item/enchantment name] ('e')
-USE_DYNAMIC_PRICE: &6%n will now use a dynamic price.
-USE_STATIC_PRICE: &6%n will now use a static price.
-SETSTATICALL_INVALID: &4Invalid parameters. Use /setstaticall ['true', 'false', or 'copy']
+USE_DYNAMIC_PRICE: &6A dynamic price will now be used.
+USE_STATIC_PRICE: &6A static price will now be used.
 ALL_OBJECTS_SET_TO_STATIC: &6All objects set to static pricing: %n.
-SETSTATICPRICE_INVALID: &4Invalid parameters. Use /setstaticprice [item/enchantment name] [staticprice] ('e')
 STATIC_PRICE_SET: &6%n static price set!
-SETSTOCK_INVALID: &4Invalid parameters. Use /setstock [item/enchantment name] [stock] ('e')
 STOCK_SET: &6%n stock set!
-SETSTOCKALL_INVALID: &4Invalid parameters. Use /setstockall [stock]
 ALL_STOCKS_SET: &6All stocks set!
 SETSTOCKMEDIANALL_WARNING: &cAre you sure you wish to do this? All item and enchantment stocks will be set to their median with initial pricing disabled. Type '/setstockmedianall' confirm to proceed.
 SETSTOCKMEDIANALL_SUCCESS: &6Shop stocks of all items/enchantments have been set to their medians and initial pricing has been disabled.
@@ -317,7 +307,6 @@ INITIAL_TAX_SET: &6The initial tax rate has been set!
 STATIC_TAX_SET: &6The static tax rate has been set!
 SALES_TAX_SET: &6The sales tax rate has been set!
 PURCHASE_TAX_SET: &6The purchase tax rate has been set!
-SETVALUE_INVALID: &4Invalid parameters. Use /setvalue [item/enchantment name] [value] ('e')
 VALUE_SET: &6%n value set!
 TAXSETTINGS_INVALID: &4Invalid parameters. Use /taxsettings
 PURCHASE_TAX_PERCENT: &9Purchase Tax Percent: &a%v
@@ -446,14 +435,24 @@ ALLOWED_TO_MANAGE_SHOP: &6Player now allowed to manage shop.
 DISALLOWED_TO_MANAGE_SHOP: &6Player no longer allowed to manage shop.
 CHESTSHOP_CANT_TRADE_DAMAGED: &4Chest shops cannot trade damaged items.
 WORLD_NOT_FOUND: &4That world was not found, importing only accounts known to HyperConomy.
-HCSET_INVALID: &4Invalid parameters. Use /hcset [option] (arg1) (arg2) ... (argx)
+HCSET_INVALID: &4Invalid parameters. Use /hcset ['name','ceiling','displayname','static','stock','startprice','staticprice','value','median','floor','balance', or 'initiation']
+HCSET_DISPLAYNAME_INVALID: &4Invalid parameters. Use /hcset displayname [object] [new display name]
 HCDELETE_INVALID: &4Invalid parameters. Use /hcdelete [type] [name]
 HCDELETE_SUCCESS: &6Deletion successful.
 HCDELETE_OBJECT_INVALID: &4Invalid parameters. Use /hcdelete object [object name]
 HCDELETE_ACCOUNT_INVALID: &4Invalid parameters. Use /hcdelete account [account name]
 NAME_SET: &6Name set!
-HCSET_CEILING_INVALID: &4Invalid parameters. Use /hcset ceiling [new ceiling]
-HCSET_NAME_INVALID: &4Invalid parameters. Use /hcset name [new name]
+HCSET_CEILING_INVALID: &4Invalid parameters. Use /hcset ceiling [object] [new ceiling]
+HCSET_NAME_INVALID: &4Invalid parameters. Use /hcset name [old name] [new name]
+HCSET_STATIC_INVALID: &4Invalid parameters. Use /hcset static [object or ('all:true', 'all:false', or 'all:copy')]
+HCSET_INITIATION_INVALID: &4Invalid parameters. Use /hcset initiation [object or ('all:true', or 'all:false')]
+HCSET_STOCK_INVALID: &4Invalid parameters. Use /hcset stock [object or ('all', or 'all:median')] [stock]
+HCSET_STARTPRICE_INVALID: &4Invalid parameters. Use /hcset startprice [object] [price]
+HCSET_STATICPRICE_INVALID: &4Invalid parameters. Use /hcset staticprice [object] [price]
+HCSET_VALUE_INVALID: &4Invalid parameters. Use /hcset value [object] [value]
+HCSET_MEDIAN_INVALID: &4Invalid parameters. Use /hcset median [object] [median]
+HCSET_FLOOR_INVALID: &4Invalid parameters. Use /hcset floor [object] [floor]
+HCSET_BALANCE_INVALID: &4Invalid parameters. Use /hcset balance [account] [balance]
 MAKEFRAMESHOP_INVALID: &4Invalid Parameters. Use /makeframeshop [object]
 NAME_IN_USE: &4That name/alias is already in use.
 NOT_IMPLEMENTED: &dThis message has not been implemented yet.

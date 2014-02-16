@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.974.3
+version: 0.974.4
 author: RegalOwl
 website: http://dev.bukkit.org/server-mods/hyperconomy/
 load: STARTUP
@@ -109,51 +109,6 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [cvalues, cv]
-   setvalue:
-      description: Sets the value of an item.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [svalue]
-   setstock:
-      description: Sets the shop's stock of an item.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sstock, stock]
-   setmedian:
-      description: Sets an item's median stock quantity.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [smedian, median]
-   setstatic:
-      description: Toggles whether or not an item uses a static price.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sstatic, static]
-   setinitiation:
-      description: Toggles whether or not an item uses an initiation price.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sinitial, initial]
-   setstaticprice:
-      description: Sets the static price for an item.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [staticprice]
-   setstartprice:
-      description: Sets the initial price for an item.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [startprice]
-   setceiling:
-      description: Sets the ceiling for an object.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [ceiling]
-   setfloor:
-      description: Sets the floor for an object.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [floor]
    writeitems:
       description: Creates a list of all item names or enchantment names in the plugin's folder.
       permission: hyperconomy.admin
@@ -211,15 +166,6 @@ commands:
       description: Resets the shop stock, initiation, and static pricing.
       permission: hyperconomy.resetshop
       permission-message: You do not have permission.
-   setstockmedianall:
-      description: Sets the stock of everything in the shop to its median value.
-      permission: hyperconomy.setstockmedianall
-      permission-message: You do not have permission.
-   setbalance:
-      description: Sets an account's balance.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sb]
    scalebypercent:
       description: Scales the selected value the the given percent.
       permission: hyperconomy.scalebypercent
@@ -302,21 +248,6 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [lcat]
-   setstockall:
-      description: Sets the stock of all items to the specified amount.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [ssa]
-   setinitiationall:
-      description: Toggles initial pricing.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sia]
-   setstaticall:
-      description: Toggles static pricing.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [ssta]
    hyperlog:
       description: Displays HyperConomy log information.
       permission: hyperconomy.admin
@@ -431,7 +362,6 @@ permissions:
             hyperconomy.admin: true
             hyperconomy.list: true
             hyperconomy.resetshop: true
-            hyperconomy.setstockmedianall: true
             hyperconomy.scalebypercent: true
             hyperconomy.createsign: true
             hyperconomy.notify: true
@@ -497,9 +427,6 @@ permissions:
         default: false
     hyperconomy.resetshop:
         description: Allows the use of resetshop.
-        default: false
-    hyperconomy.setstockmedianall:
-        description: Allows the use of setstockmedianall.
         default: false
     hyperconomy.scalebypercent:
         description: Allows the use of scalebypercent.
