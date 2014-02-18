@@ -1,11 +1,9 @@
 CURRENCY: $
-ADD_CATEGORY_INVALID: &4Invalid Parameters.  Use /addcategory [name] [shop]
 SHOP_NOT_EXIST: &4That shop doesn't exist!
 CATEGORY_NOT_EXIST: &4That category does not exist!
 ADDED_TO: &6added to
 SHOP_ALREADY_HAS: &4The shop already has that item.
 OBJECT_NOT_IN_DATABASE: &9Sorry, that item or enchantment is not in the database.
-ADD_ITEM_INVALID: &4Invalid Parameters.  Use /additem [name/'all'] [shop]
 ALL_ITEMS_ADDED: &6All items have been added to
 BROWSE_SHOP_INVALID: &4Invalid Parameters.  Use /browseshop [Search string] (page) ('-a')
 REACHED_END: You have reached the end.
@@ -53,9 +51,7 @@ DIAMOND_VALUE: &9Diamond Value: &a%v
 BOOK_VALUE: &9Book Value: &a%v
 CLASSVALUES_INVALID: &4Invalid Parameters. Use /classvalues
 ECONOMY_EXPORTED: &6Economy exported to YML!
-EXPORT_PROCEED: &cThe will erase all data in your objects.yml file, type '/exporttoyml [economy] [confirm]' to proceed!
 ECONOMY_NOT_EXIST: &4That economy doesn't exist!
-EXPORTTOYML_INVALID: &4Invalid Parameters.  Use /exporttoyml [economy] ['confirm']
 ONLY_AVAILABLE_SQL: &cThis command is only available when SQL is enabled!
 COPYDATABASE_MYSQL_WARNING: &cThis will erase any existing SQLite HyperConomy tables.  Type '/copydatabase confirm' to proceed. The plugin will be locked during the transfer.
 COPYDATABASE_SQLITE_WARNING: &cThis will erase any existing MySQL HyperConomy tables.  Type '/copydatabase confirm' to proceed. The plugin will be locked during the transfer.
@@ -224,9 +220,7 @@ HYPERLOG_INVALID: &4Invalid Parameters.  Use /hyperlog Possible arguments(alias)
 HYPERLOG_INVALID_INCREMENT: &4Invalid increment.  Valid time increments are 'm', 'h', and 'd' such as '3d' or '1h'
 ITEMSETTINGS_INVALID: &4Invalid parameters. Hold an item and use /itemsettings (id) (damage value)
 LISTECONOMIES_INVALID: &4Invalid Parameters.  Use /listeconomies
-LISTSHOPS_INVALID: &4Invalid Parameters.  Use /listshops
 LOADED_INTO_ECONOMY: loaded into economy!
-IMPORTNEWITEMS_INVALID: &4Invalid Parameters.  Use /importnewitems [economy]
 ENABLE_ITEM_DISPLAYS: &4Item displays must be enabled to use this command.
 MAKEDISPLAY_INVALID: &4Invalid Parameters. Use /makedisplay [name]
 NOTIFY_INVALID: &4Invalid Parameters.  Use /notify [name/'all']
@@ -235,18 +229,14 @@ RECEIVE_NOTIFICATIONS: &6You will now receive notifications for all items and en
 NOT_RECEIVE_NOTIFICATIONS: &6You will no longer receive notifications for any item or enchantment.
 RECEIVE_NOTIFICATIONS_S: &6You will now receive notifications for %n.
 NOT_RECEIVE_NOTIFICATIONS_S: &6You will no longer receive notifications for %n.
-CATEGORY_NOT_EXIST: &4That category does not exist.
-REMOVECATEGORY_INVALID: &4Invalid Parameters.  Use /removecategory [name] [shop]
 REMOVED_FROM: &6%n removed from %e
 ITEMDISPLAYS_MUST_BE_ENABLED: &4Item displays must be enabled to use this command.
 DISPLAY_REMOVED: &6Display removed!
 NO_DISPLAY_DETECTED: &4There was no display detected where you're looking.
 NO_DISPLAY_DETECTED_HERE: &4There was no display detected in your vertical block column.
 ALL_REMOVED_FROM: &6All items and enchantments have been removed from %n.
-ALREADY_BEEN_REMOVED: &4That item has already been removed from the shop.
-REMOVEITEM_INVALID: &4Invalid Parameters.  Use /removeitem [name/'all'] [shop]
+ALREADY_BEEN_REMOVED: &4That object has already been removed from the shop.
 HAS_BEEN_REMOVED: &6%n has been removed!
-REMOVE_SHOP_INVALID: &4Invalid Parameters.  Use /removeshop [name]
 GLOBAL_SHOP_RENAMED: &6The global shop account has been successfully renamed!
 RENAMEECONOMYACCOUNT_INVALID: &4Invalid Parameters.  Use /renameeconomyaccount [new name]
 RESETSHOP_CONFIRM: &cAre you sure you wish to do this? All item and enchantments will be set to 0 stock and return to initial pricing. Type '/resetshop confirm' to proceed.
@@ -283,12 +273,20 @@ SETLANGUAGE_INVALID: &4Use /setlanguage [language] ('o')
 LANGUAGE_NOT_FOUND: &4The specified language file was not found or cannot be overwritten.
 LANGUAGE_LOADED: &6%n loaded.
 MEDIAN_SET: &6%n median set!
-SETMESSAGE_INVALID: &4Invalid Parameters.  Use /setmessage ['1'/'2'] [message] [shop]
 MESSAGE1_SET: &6Message 1 set!
 MESSAGE2_SET: &6Message 2 set!
 P1_SET: &6Shop location p1 has been set!
 P2_SET: &6Shop location p2 has been set!
-SETSHOP_INVALID: &4Invalid Parameters. Use /setshop ['p1','p2', or 'owner'] [shop name]
+SERVERSHOP_INVALID: &4Invalid Parameters. Use /servershop ['p1','p2','owner','list','remove','rename','message1','message2','allow','ban','addcategory','removecategory'] [shop name]
+SERVERSHOP_OWNER_INVALID: &4Invalid Parameters. Use /servershop owner [owner] [shop name]
+SERVERSHOP_REMOVE_INVALID: &4Invalid Parameters. Use /servershop remove [shop name]
+SERVERSHOP_RENAME_INVALID: &4Invalid Parameters. Use /servershop rename [name] [new name]
+SERVERSHOP_MESSAGE1_INVALID: &4Invalid Parameters. Use /servershop message1 [message] [name]
+SERVERSHOP_MESSAGE2_INVALID: &4Invalid Parameters. Use /servershop message2 [message] [name]
+SERVERSHOP_BAN_INVALID: &4Invalid Parameters. Use /servershop ban [object or "all"] [shop]
+SERVERSHOP_ADDCATEGORY_INVALID: &4Invalid Parameters. Use /servershop addcategory [category] [shop]
+SERVERSHOP_REMOVECATEGORY_INVALID: &4Invalid Parameters. Use /servershop removecategory [category] [shop]
+SERVERSHOP_ALLOW_INVALID: &4Invalid Parameters. Use /servershop allow [object or "all"] [shop]
 SETSHOPECONOMY_INVALID: &4Invalid Parameters.  Use /setshopeconomy [shop name] [economy]
 SHOP_ECONOMY_SET: &6Shop economy set!
 START_PRICE_SET: &6%n start price set!
@@ -373,14 +371,11 @@ ACCOUNT_NOT_FOUND: &4The specified account does not exist.
 SETCHESTOWNER_INVALID: &4Invalid parameters. Use /setchestowner [owner]
 LOOK_AT_VALID_CHESTSHOP: &4You must be looking at a valid chest shop!
 CHEST_OWNER_UPDATED: &6Chest owner updated!
-RENAMESHOP_INVALID: &4Invalid Parameters.  Use /renameshop [current name] [new name]
 SHOP_RENAMED: &6Shop renamed successfully!
 SWITCH_TO_SQLITE: [HyperConomy]There is a problem with your MySQL connection, defaulting to SQLite.
 SETPASSWORD_SUCCESS: &6Your password has been successfully set!
 SETPASSWORD_INVALID: &4Invalid Parameters.  Use /setpassword [password]
 ECONOMY_IMPORTED: &6All objects successfully imported from YML!
-IMPORT_PROCEED: &cThe will erase all object data in your HyperConomy database (hyperconomy_objects table), type '/importfromyml [economy] confirm' to proceed!
-IMPORTFROMYML_INVALID: &4Invalid parameters.  Use /importfromyml [economy]
 SOLD_ITEMS_FOR: &9&oYou sold your items for &a&o%c%v&9.
 CANT_SELL_CREATIVE: &4You're not allowed to sell items in creative mode.
 TRANSACTION_FAILED: &4Sorry, this transaction could not be completed.
@@ -492,3 +487,11 @@ BANK_NOT_MEMBER: &4The specified account is not a member of this bank.
 BANK_ALREADY_OWNER: &4The specified account is already an owner of this bank.
 BANK_NOT_OWNER: &4The specified account is not an owner of this bank.
 TRANSFER_GREATER_THAN_ZERO: &4Withdrawals and deposits must be a value greater than 0.
+TABLE_NOT_EXIST: &4The specified database table doesn't exist.
+CSV_CREATED: &6CSV file created.
+CSV_IMPORTED: &6CSV file imported.
+HCDATA_INVALID: &4Invalid parameters. Use /hcdata ['exportcsv','importcsv','exportyml' or 'importyml']
+HCDATA_EXPORTCSV_INVALID: &4Invalid parameters. Use /hcdata exportcsv [name of table]
+HCDATA_IMPORTCSV_INVALID: &4Invalid parameters. Use /hcdata importcsv [name of table]
+HCDATA_IMPORTYML_INVALID: &4Invalid parameters. Use /hcdata importyml [economy]
+HCDATA_EXPORTYML_INVALID: &4Invalid parameters. Use /hcdata exportyml [economy]

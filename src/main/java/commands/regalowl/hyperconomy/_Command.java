@@ -103,9 +103,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("importnewitems")) {
 			new Importnewitems(args, sender);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("exporttoyml")) {
-			new Exporttoyml(sender, args);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("copydatabase")) {
 			new Copydatabase(sender, args);
 			return true;
@@ -127,20 +124,8 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("evalue")) {
 			new Evalue(args, player, sender, playerecon);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("removeshop")) {
-			new Removeshop(sender, args);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("listshops")) {
-			new Listshops(sender, args);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("intervals")) {
 			new Intervals(sender, args);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("removeitem")) {
-			new Removeitem(args, sender);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("removecategory")) {
-			new Removecategory(args, sender);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("notify")) {
 			new Notify(args, sender);
@@ -148,17 +133,8 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("scalebypercent")) {
 			new Scalebypercent(sender, args, playerecon);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("resetshop")) {
-			new Resetshop(sender, args, playerecon);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("renameeconomyaccount")) {
 			new Renameeconomyaccount(sender, args);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("renameshop")) {
-			new Renameshop(sender, args);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setmessage")) {
-			new Setmessage(args, sender);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("makedisplay") && player != null) {
 			new Makedisplay(args, player);
@@ -204,9 +180,6 @@ public class _Command {
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("setpassword")) {
 			new Setpassword(args, player);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("importfromyml")) {
-			new Importfromyml(sender, args);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hctest")) {
 			//new Hctest(args, sender);

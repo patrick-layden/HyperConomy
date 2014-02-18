@@ -287,6 +287,9 @@ public class Hcset implements CommandExecutor {
 				} catch (Exception e) {
 					sender.sendMessage(L.get("HCSET_INITIATION_INVALID"));
 				}
+			} else {
+				sender.sendMessage(L.get("HCSET_INVALID"));
+				return true;
 			}
 			
 			

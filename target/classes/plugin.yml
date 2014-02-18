@@ -66,34 +66,11 @@ commands:
       permission: hyperconomy.top
       permission-message: You don't have permission to do this.
       aliases: [bs]
-   setshop:
-      description: Sets the shop location.
+   servershop:
+      description: Manages server shops.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [ss]
-   removeshop:
-      description: Removes a shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [rs]
-   additem:
-      description: Adds an item to a shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [ai]
-   removeitem:
-      description: Removes an item from a shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [ri]
-   renameshop:
-      description: Renames a shop to the given name.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   listshops:
-      description: Lists all shop names.
-      permission: hyperconomy.list
-      permission-message: You do not have permission.
    settax:
       description: Sets the sales tax for normal purchases.
       permission: hyperconomy.admin
@@ -162,10 +139,6 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [sm]
-   resetshop:
-      description: Resets the shop stock, initiation, and static pricing.
-      permission: hyperconomy.resetshop
-      permission-message: You do not have permission.
    scalebypercent:
       description: Scales the selected value the the given percent.
       permission: hyperconomy.scalebypercent
@@ -212,10 +185,11 @@ commands:
       description: Loads new items into the specified economy.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-   exporttoyml:
-      description: Exports the selected economy to the items and enchants yml files.
+   hcdata:
+      description: Exports data from HyperConomy.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+      aliases: [hcd]
    importfromyml:
       description: Replaces the selected economy with data from your YML files.
       permission: hyperconomy.admin
@@ -233,16 +207,6 @@ commands:
       description: Copys database from SQLite to MySQL and vice versa.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-   addcategory:
-      description: Adds a category to a shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [acat]
-   removecategory:
-      description: Removes a category from a shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [rcat]
    listcategories:
       description: Lists all categories.
       permission: hyperconomy.admin
@@ -361,7 +325,6 @@ permissions:
             hyperconomy.settings: true
             hyperconomy.admin: true
             hyperconomy.list: true
-            hyperconomy.resetshop: true
             hyperconomy.scalebypercent: true
             hyperconomy.createsign: true
             hyperconomy.notify: true
@@ -424,9 +387,6 @@ permissions:
         default: false
     hyperconomy.list:
         description: Allows the use of listshops.
-        default: false
-    hyperconomy.resetshop:
-        description: Allows the use of resetshop.
         default: false
     hyperconomy.scalebypercent:
         description: Allows the use of scalebypercent.

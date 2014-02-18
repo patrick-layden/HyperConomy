@@ -63,7 +63,7 @@ public class Topenchants {
 					double samount = he.getHyperObject(ho.getName(), em.getShop(player)).getStock();
 					if (samount > 0) {
 						while (enchantstocks.containsKey(samount * 100)) {
-							samount = samount + .0000001;
+							samount += .00001;
 						}
 						enchantstocks.put(samount * 100, ho.getDisplayName());
 					}

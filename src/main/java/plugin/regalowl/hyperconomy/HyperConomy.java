@@ -173,8 +173,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	}
 
 	private void registerCommands() {
-		Bukkit.getServer().getPluginCommand("addcategory").setExecutor(new Addcategory());
-		Bukkit.getServer().getPluginCommand("additem").setExecutor(new Additem());
 		Bukkit.getServer().getPluginCommand("manageshop").setExecutor(new Manageshop());
 		Bukkit.getServer().getPluginCommand("ymladditem").setExecutor(new Ymladditem());
 		Bukkit.getServer().getPluginCommand("hcset").setExecutor(new Hcset());
@@ -182,7 +180,8 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		Bukkit.getServer().getPluginCommand("hctest").setExecutor(new Hctest());
 		Bukkit.getServer().getPluginCommand("frameshop").setExecutor(new Frameshopcommand());
 		Bukkit.getServer().getPluginCommand("hcbank").setExecutor(new Hcbank());
-		Bukkit.getServer().getPluginCommand("setshop").setExecutor(new Setshop());
+		Bukkit.getServer().getPluginCommand("servershop").setExecutor(new Servershopcommand());
+		Bukkit.getServer().getPluginCommand("hcdata").setExecutor(new Hcdata());
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

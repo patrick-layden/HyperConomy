@@ -3,7 +3,6 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -59,7 +58,7 @@ public class Topitems {
 					if ((!banned && stocked) || (allowed && stocked)) {
 						double samount = ho.getStock();
 						while (itemstocks.containsKey(samount)) {
-							samount = samount + .0000001;
+							samount += .00001;
 						}
 						itemstocks.put(samount, ho);
 					}
@@ -67,7 +66,7 @@ public class Topitems {
 					double samount = ho.getStock();
 					if (samount > 0) {
 						while (itemstocks.containsKey(samount)) {
-							samount = samount + .0000001;
+							samount += .00001;
 						}
 						itemstocks.put(samount, ho);
 					}
