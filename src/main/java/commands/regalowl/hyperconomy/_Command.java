@@ -91,9 +91,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("economyinfo")) {
 			new Economyinfo(this, args, sender, player);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setshopeconomy")) {
-			new Setshopeconomy(args, sender);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("deleteeconomy")) {
 			new Deleteeconomy(args, sender);
 			return true;

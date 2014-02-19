@@ -43,7 +43,7 @@ public class Manageshop implements CommandExecutor {
 			if (s instanceof PlayerShop) {
 				PlayerShop ps = (PlayerShop)s;
 				if (ps.getOwner().equals(hp) || ps.isAllowed(hp) || player.hasPermission("hyperconomy.admin")) {
-					currentShop.put(hp, (PlayerShop)s);
+					currentShop.put(hp, ps);
 				}
 			}
 		}
@@ -77,7 +77,7 @@ public class Manageshop implements CommandExecutor {
 			}
 			Shop s = em.getShop(args[1]);
 			if (!(s instanceof PlayerShop)) {
-				player.sendMessage(L.get("ONLY_EDIT_OWN_SHOPS"));
+				player.sendMessage(L.get("ONLY_PLAYER_SHOPS"));
 				return true;
 			}
 			PlayerShop ps = (PlayerShop)s;

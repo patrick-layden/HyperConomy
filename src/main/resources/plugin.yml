@@ -134,11 +134,6 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [ints]
-   setmessage:
-      description: Sets the shop messages.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sm]
    scalebypercent:
       description: Scales the selected value the the given percent.
       permission: hyperconomy.scalebypercent
@@ -157,11 +152,6 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [se]
-   setshopeconomy:
-      description: Sets a shop to use the specified economy.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sse]
    createeconomy:
       description: Creates a new economy.
       permission: hyperconomy.admin
@@ -238,10 +228,6 @@ commands:
       permission-message: You do not have permission.
    repairsigns:
       description: Repairs InfoSigns within the given radii.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   hcweb:
-      description: Allows adjusting the web page from in-game.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
    hcclearhistory:

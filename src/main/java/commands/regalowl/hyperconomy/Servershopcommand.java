@@ -2,6 +2,7 @@ package regalowl.hyperconomy;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,8 +15,12 @@ import regalowl.databukkit.CommonFunctions;
 
 public class Servershopcommand implements CommandExecutor {
 	
+	
+	private HashMap<HyperPlayer, ServerShop> currentShop = new HashMap<HyperPlayer, ServerShop>();
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
+		EconomyManager em = hc.getEconomyManager();
 		LanguageFile L = hc.getLanguageFile();
 		CommonFunctions cf = hc.gCF();
 		if (hc.getHyperLock().isLocked(sender)) {
@@ -29,17 +34,56 @@ public class Servershopcommand implements CommandExecutor {
 		if (player == null) {
 			return true;
 		}
-		EconomyManager em = hc.getEconomyManager();
+		HyperPlayer hp = em.getHyperPlayer(player.getName());
+		if (em.inAnyShop(player)) {
+			Shop s = em.getShop(player);
+			if (s instanceof ServerShop) {
+				ServerShop ss = (ServerShop)s;
+				if (player.hasPermission("hyperconomy.admin")) {
+					currentShop.put(hp, ss);
+				}
+			}
+		}
+		ServerShop css = null;
+		if (currentShop.containsKey(hp)) {
+			css = currentShop.get(hp);
+		}
+
 		if (args.length == 0) {
 			player.sendMessage(L.get("SERVERSHOP_INVALID"));
+			if (css == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+			} else {
+				player.sendMessage(L.f(L.get("MANAGESHOP_HELP2"), css.getDisplayName()));
+			}
 			return true;
 		}
-		if (args[0].equalsIgnoreCase("p1")) {
+		
+		if (args[0].equalsIgnoreCase("select") || args[0].equalsIgnoreCase("s")) {
+			if (!em.shopExists(args[1])) {
+				player.sendMessage(L.get("SHOP_NOT_EXIST"));
+				return true;
+			}
+			Shop s = em.getShop(args[1]);
+			if (!(s instanceof ServerShop)) {
+				player.sendMessage(L.get("ONLY_SERVER_SHOPS"));
+				return true;
+			}
+			currentShop.put(hp, (ServerShop)s);
+			player.sendMessage(L.get("SHOP_SELECTED"));
+		} else if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("i")) {
+			if (css == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			player.sendMessage(L.f(L.get("MANAGESHOP_HELP2"), css.getDisplayName()));
+			player.sendMessage(L.f(L.get("MANAGESHOP_HELP3"), css.getName()) + " " + ChatColor.AQUA + css.getOwner().getName());
+			player.sendMessage(L.f(L.get("SERVERSHOP_ECONOMY_INFO"), css.getEconomy()));
+		} else if (args[0].equalsIgnoreCase("p1")) {
 			String name = args[1].replace(".", "").replace(":", "");
 			if (em.shopExists(name)) {
 				em.getShop(name).setPoint1(player.getLocation());
 			} else {
-				HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(player);
 				Shop shop = new ServerShop(name, hp.getEconomy(), hc.getEconomyManager().getGlobalShopAccount());
 				shop.setPoint1(player.getLocation());
 				shop.setPoint2(player.getLocation());
@@ -52,7 +96,6 @@ public class Servershopcommand implements CommandExecutor {
 			if (em.shopExists(name)) {
 				em.getShop(name).setPoint2(player.getLocation());
 			} else {
-				HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(player);
 				Shop shop = new ServerShop(name, hp.getEconomy(), hc.getEconomyManager().getGlobalShopAccount());
 				shop.setPoint1(player.getLocation());
 				shop.setPoint2(player.getLocation());
@@ -75,128 +118,117 @@ public class Servershopcommand implements CommandExecutor {
 						player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 					}
 				}
-				String name = args[2].replace(".", "").replace(":", "");
-				if (em.shopExists(name)) {
-					em.getShop(name).setOwner(owner);
-					player.sendMessage(L.get("OWNER_SET"));
-				} else {
-					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
 					return true;
 				}
+				css.setOwner(owner);
+				player.sendMessage(L.get("OWNER_SET"));
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_OWNER_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("remove")) {
 			try {
-				String name = args[1].replace(".", "").replace(":", "");
-				if (em.shopExists(name)) {
-					Shop shop = em.getShop(name);
-					shop.deleteShop();
-					sender.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), name));
-				} else {
-					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
+					return true;
 				}
+				css.deleteShop();
+				sender.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), css.getName()));
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_REMOVE_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("rename")) {
 			try {
-				String name = args[1].replace(".", "").replace(":", "");
-				if (em.shopExists(name)) {
-					String newName = args[2].replace(".", "").replace(":", "");
-					em.getShop(name).setName(newName);
-					sender.sendMessage(L.get("SHOP_RENAMED"));
-				} else {
-					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
+					return true;
 				}
+				String newName = args[1].replace(".", "").replace(":", "");
+				css.setName(newName);
+				sender.sendMessage(L.get("SHOP_RENAMED"));
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_RENAME_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("message1")) {
+		} else if (args[0].equalsIgnoreCase("message1") || args[0].equalsIgnoreCase("m1")) {
 			try {
-				String name = args[2].replace(".", "").replace(":", "");
-				if (em.shopExists(name)) {
-					hc.getEconomyManager().getShop(name).setMessage1(args[1].replace("_", " "));
-					sender.sendMessage(L.get("MESSAGE1_SET"));
-					hc.restart();
-				} else {
-					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
+					return true;
 				}
+				css.setMessage1(args[1].replace("_", " "));
+				sender.sendMessage(L.get("MESSAGE1_SET"));
+				hc.restart();
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_MESSAGE1_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("message2")) {
+		} else if (args[0].equalsIgnoreCase("message2") || args[0].equalsIgnoreCase("m2")) {
 			try {
-				String name = args[2].replace(".", "").replace(":", "");
-				if (em.shopExists(name)) {
-					hc.getEconomyManager().getShop(name).setMessage2(args[1].replace("_", " "));
-					sender.sendMessage(L.get("MESSAGE2_SET"));
-					hc.restart();
-				} else {
-					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
+					return true;
 				}
+				css.setMessage2(args[1].replace("_", " "));
+				sender.sendMessage(L.get("MESSAGE2_SET"));
+				hc.restart();
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_MESSAGE2_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("allow")) {
+		} else if (args[0].equalsIgnoreCase("allow") || args[0].equalsIgnoreCase("a")) {
 			try {
-				String shopName = args[2];
-				if (!em.shopExists(shopName)) {
-					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
 					return true;
 				}
-				Shop s = em.getShop(shopName);
 				if (args[1].equalsIgnoreCase("all")) {
-					s.unBanAllObjects();
-					sender.sendMessage(ChatColor.GOLD + L.get("ALL_ITEMS_ADDED") + " " + shopName.replace("_", " "));
+					css.unBanAllObjects();
+					sender.sendMessage(ChatColor.GOLD + L.get("ALL_ITEMS_ADDED") + " " + css.getDisplayName());
 					return true;
 				}
-				HyperObject ho = em.getEconomy(s.getEconomy()).getHyperObject(args[1]);
+				HyperObject ho = em.getEconomy(css.getEconomy()).getHyperObject(args[1]);
 				if (ho == null) {
 					sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 					return true;
 				}
-				if (!s.isBanned(ho)) {
+				if (!css.isBanned(ho)) {
 					sender.sendMessage(L.get("SHOP_ALREADY_HAS"));
 					return true;
 				}
 				ArrayList<HyperObject> add = new ArrayList<HyperObject>();
 				add.add(ho);
-				s.unBanObjects(add);
-				sender.sendMessage(ChatColor.GOLD + ho.getDisplayName() + " " + L.get("ADDED_TO") + " " + shopName.replace("_", " "));
+				css.unBanObjects(add);
+				sender.sendMessage(ChatColor.GOLD + ho.getDisplayName() + " " + L.get("ADDED_TO") + " " + css.getDisplayName());
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_ALLOW_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("ban")) {
+		} else if (args[0].equalsIgnoreCase("ban") || args[0].equalsIgnoreCase("b")) {
 			try {
-				String shopName = args[2];
-				if (!em.shopExists(shopName)) {
-					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
 					return true;
 				}
-				Shop s = em.getShop(shopName);
 				if (args[1].equalsIgnoreCase("all")) {
-					s.banAllObjects();
-					sender.sendMessage(L.f(L.get("ALL_REMOVED_FROM"), shopName.replace("_", " ")));
+					css.banAllObjects();
+					sender.sendMessage(L.f(L.get("ALL_REMOVED_FROM"), css.getDisplayName()));
 					return true;
 				}
-				HyperObject ho = em.getEconomy(s.getEconomy()).getHyperObject(args[1]);
+				HyperObject ho = em.getEconomy(css.getEconomy()).getHyperObject(args[1]);
 				if (ho == null) {
 					sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 					return true;
 				}
-				if (s.isBanned(ho)) {
+				if (css.isBanned(ho)) {
 					sender.sendMessage(L.get("ALREADY_BEEN_REMOVED"));
 					return true;
 				}
 				ArrayList<HyperObject> remove = new ArrayList<HyperObject>();
 				remove.add(ho);
-				s.banObjects(remove);
-				sender.sendMessage(L.f(L.get("REMOVED_FROM"), ho.getDisplayName(), shopName.replace("_", " ")));
+				css.banObjects(remove);
+				sender.sendMessage(L.f(L.get("REMOVED_FROM"), ho.getDisplayName(), css.getDisplayName()));
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_BAN_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("addcategory")) {
+		} else if (args[0].equalsIgnoreCase("addcategory") || args[0].equalsIgnoreCase("acat")) {
 			try {
 				FileConfiguration category = hc.gYH().gFC("categories");
 				String categoryString = category.getString(args[1]);
@@ -204,14 +236,12 @@ public class Servershopcommand implements CommandExecutor {
 					sender.sendMessage(L.get("CATEGORY_NOT_EXIST"));
 					return true;
 				}
-				String shopName = args[2];
-				if (!em.shopExists(shopName)) {
-					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
 					return true;
 				}
-				Shop s = em.getShop(shopName);
 				ArrayList<String> categoryNames = cf.explode(categoryString, ",");
-				HyperEconomy he = s.getHyperEconomy();
+				HyperEconomy he = css.getHyperEconomy();
 				ArrayList<HyperObject> add = new ArrayList<HyperObject>();
 				for (String name:categoryNames) {
 					HyperObject ho = he.getHyperObject(name);
@@ -219,12 +249,12 @@ public class Servershopcommand implements CommandExecutor {
 						add.add(ho);
 					}
 				}
-				s.unBanObjects(add);
-				sender.sendMessage(ChatColor.GOLD + args[1] + " " + L.get("ADDED_TO") + " " + shopName.replace("_", " "));
+				css.unBanObjects(add);
+				sender.sendMessage(ChatColor.GOLD + args[1] + " " + L.get("ADDED_TO") + " " + css.getDisplayName());
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_ADDCATEGORY_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("removecategory")) {
+		} else if (args[0].equalsIgnoreCase("removecategory") || args[0].equalsIgnoreCase("rcat")) {
 			try {
 				FileConfiguration category = hc.gYH().gFC("categories");
 				String categoryString = category.getString(args[1]);
@@ -232,14 +262,12 @@ public class Servershopcommand implements CommandExecutor {
 					sender.sendMessage(L.get("CATEGORY_NOT_EXIST"));
 					return true;
 				}
-				String shopName = args[2];
-				if (!em.shopExists(shopName)) {
-					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
 					return true;
 				}
-				Shop s = em.getShop(shopName);
 				ArrayList<String> categoryNames = cf.explode(categoryString, ",");
-				HyperEconomy he = s.getHyperEconomy();
+				HyperEconomy he = css.getHyperEconomy();
 				ArrayList<HyperObject> remove = new ArrayList<HyperObject>();
 				for (String name:categoryNames) {
 					HyperObject ho = he.getHyperObject(name);
@@ -247,10 +275,26 @@ public class Servershopcommand implements CommandExecutor {
 						remove.add(ho);
 					}
 				}
-				s.banObjects(remove);
-				sender.sendMessage(L.f(L.get("REMOVED_FROM"), args[1], shopName.replace("_", " ")));
+				css.banObjects(remove);
+				sender.sendMessage(L.f(L.get("REMOVED_FROM"), args[1], css.getDisplayName()));
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_REMOVECATEGORY_INVALID"));
+			}
+		} else if (args[0].equalsIgnoreCase("economy") || args[0].equalsIgnoreCase("e")) {
+			try {
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
+					return true;
+				}
+				String economy = args[1];
+				if (hc.getEconomyManager().economyExists(economy)) {
+					css.setEconomy(economy);
+					sender.sendMessage(L.get("SHOP_ECONOMY_SET"));
+				} else {
+					sender.sendMessage(L.get("ECONOMY_DOESNT_EXIST"));
+				}
+			} catch (Exception e) {
+				player.sendMessage(L.get("SERVERSHOP_ECONOMY_INVALID"));
 			}
 		} else {
 			player.sendMessage(L.get("SERVERSHOP_INVALID"));

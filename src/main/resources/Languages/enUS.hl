@@ -277,16 +277,18 @@ MESSAGE1_SET: &6Message 1 set!
 MESSAGE2_SET: &6Message 2 set!
 P1_SET: &6Shop location p1 has been set!
 P2_SET: &6Shop location p2 has been set!
-SERVERSHOP_INVALID: &4Invalid Parameters. Use /servershop ['p1','p2','owner','list','remove','rename','message1','message2','allow','ban','addcategory','removecategory'] [shop name]
-SERVERSHOP_OWNER_INVALID: &4Invalid Parameters. Use /servershop owner [owner] [shop name]
-SERVERSHOP_REMOVE_INVALID: &4Invalid Parameters. Use /servershop remove [shop name]
-SERVERSHOP_RENAME_INVALID: &4Invalid Parameters. Use /servershop rename [name] [new name]
-SERVERSHOP_MESSAGE1_INVALID: &4Invalid Parameters. Use /servershop message1 [message] [name]
-SERVERSHOP_MESSAGE2_INVALID: &4Invalid Parameters. Use /servershop message2 [message] [name]
-SERVERSHOP_BAN_INVALID: &4Invalid Parameters. Use /servershop ban [object or "all"] [shop]
-SERVERSHOP_ADDCATEGORY_INVALID: &4Invalid Parameters. Use /servershop addcategory [category] [shop]
-SERVERSHOP_REMOVECATEGORY_INVALID: &4Invalid Parameters. Use /servershop removecategory [category] [shop]
-SERVERSHOP_ALLOW_INVALID: &4Invalid Parameters. Use /servershop allow [object or "all"] [shop]
+SERVERSHOP_INVALID: &9Use &a/servershop &b['info','p1','p2','owner','list','remove','rename','message1','message2','allow','ban','addcategory','removecategory','economy'] [shop name]
+SERVERSHOP_OWNER_INVALID: &4Invalid Parameters. Use /servershop owner [owner]
+SERVERSHOP_REMOVE_INVALID: &4Invalid Parameters. Use /servershop remove
+SERVERSHOP_RENAME_INVALID: &4Invalid Parameters. Use /servershop rename [name]
+SERVERSHOP_MESSAGE1_INVALID: &4Invalid Parameters. Use /servershop message1 [message]
+SERVERSHOP_MESSAGE2_INVALID: &4Invalid Parameters. Use /servershop message2 [message]
+SERVERSHOP_BAN_INVALID: &4Invalid Parameters. Use /servershop ban [object or "all"]
+SERVERSHOP_ADDCATEGORY_INVALID: &4Invalid Parameters. Use /servershop addcategory [category]
+SERVERSHOP_REMOVECATEGORY_INVALID: &4Invalid Parameters. Use /servershop removecategory [category]
+SERVERSHOP_ALLOW_INVALID: &4Invalid Parameters. Use /servershop allow [object or "all"]
+SERVERSHOP_ECONOMY_INVALID: &4Invalid Parameters. Use /servershop economy [name of economy]
+SERVERSHOP_ECONOMY_INFO: &9The shop is part of the economy: &b%n
 SETSHOPECONOMY_INVALID: &4Invalid Parameters.  Use /setshopeconomy [shop name] [economy]
 SHOP_ECONOMY_SET: &6Shop economy set!
 START_PRICE_SET: &6%n start price set!
@@ -496,3 +498,5 @@ HCDATA_IMPORTCSV_INVALID: &4Invalid parameters. Use /hcdata importcsv [name of t
 HCDATA_IMPORTYML_INVALID: &4Invalid parameters. Use /hcdata importyml [economy]
 HCDATA_EXPORTYML_INVALID: &4Invalid parameters. Use /hcdata exportyml [economy]
 CANT_ADD_MORE_STOCK: &4You are not allowed to add any more stock of this object.
+ONLY_SERVER_SHOPS: &4This command can only be used with server shops.
+ONLY_PLAYER_SHOPS: &4This command can only be used with player shops.
