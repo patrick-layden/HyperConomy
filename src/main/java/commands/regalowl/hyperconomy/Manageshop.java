@@ -159,6 +159,11 @@ public class Manageshop implements CommandExecutor {
 			}
 			
 			HyperObject ho2 = he.getHyperObject(ho.getName(), cps);
+			int globalMaxStock = hc.gYH().gFC("config").getInt("config.max-stock-per-item-playershops");
+			if (ho2.getStock() + amount > globalMaxStock) {
+				player.sendMessage(L.get("CANT_ADD_MORE_STOCK"));
+				return true;
+			}
 			if (ho2 instanceof PlayerShopItem) {
 				PlayerShopItem pso = (PlayerShopItem)ho2;
 				int count = pso.count(player.getInventory());

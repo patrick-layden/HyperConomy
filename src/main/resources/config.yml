@@ -43,6 +43,7 @@ config:
   use-composite-items: false
   log-sql-statements: false
   max-bank-ownerships-per-player: 3
+  max-stock-per-item-playershops: 100000
   dynamic-tax:
     use-dynamic-tax: false
     money-floor: 0

@@ -235,6 +235,9 @@ public class UpdateYML {
 		if (!yh.gFC("config").isSet("config.max-bank-ownerships-per-player")) {
 			yh.gFC("config").set("config.max-bank-ownerships-per-player", 3);
 		}
+		if (!yh.gFC("config").isSet("config.max-stock-per-item-playershops")) {
+			yh.gFC("config").set("config.max-stock-per-item-playershops", 100000);
+		}
 
 		yh.gFC("config").set("config.sql-connection.max-sql-threads", null);
 		yh.gFC("config").set("config.log-sqlwrite-errors", null);

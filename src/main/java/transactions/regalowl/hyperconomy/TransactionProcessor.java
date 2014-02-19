@@ -63,7 +63,8 @@ public class TransactionProcessor {
 			PlayerShopObject tpso = (PlayerShopObject)hyperObject;
 			status = tpso.getStatus();
 			int maxStock = tpso.getMaxStock();
-			if ((tpso.getStock() + amount) > maxStock) {
+			int globalMaxStock = hc.gYH().gFC("config").getInt("config.max-stock-per-item-playershops");
+			if ((tpso.getStock() + amount) > maxStock || (tpso.getStock() + amount) > globalMaxStock) {
 				overMaxStock = true;
 			}
 		} else {
