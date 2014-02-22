@@ -286,9 +286,11 @@ public class CompositeItem extends BasicObject implements HyperItem {
 		for (Map.Entry<HyperItem,Double> entry : components.entrySet()) {
 		    HyperObject ho = entry.getKey();
 		    Double qty = entry.getValue();
-		    int ci = (int) Math.floor(ho.getMaxInitial() / qty);
-		    if (ci < maxInitial) {
-		    	maxInitial = ci;
+		    if (Boolean.parseBoolean(ho.getInitiation())) {
+			int ci = (int) Math.floor(ho.getMaxInitial() / qty);
+			if (ci < maxInitial) {
+			    maxInitial = ci;
+			}
 		    }
 		}
 		return maxInitial;
