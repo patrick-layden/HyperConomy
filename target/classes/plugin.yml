@@ -179,7 +179,6 @@ commands:
       description: Exports data from HyperConomy.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-      aliases: [hcd]
    importfromyml:
       description: Replaces the selected economy with data from your YML files.
       permission: hyperconomy.admin
@@ -310,7 +309,6 @@ permissions:
             hyperconomy.use: true
             hyperconomy.settings: true
             hyperconomy.admin: true
-            hyperconomy.list: true
             hyperconomy.scalebypercent: true
             hyperconomy.createsign: true
             hyperconomy.notify: true
@@ -318,6 +316,7 @@ permissions:
             hyperconomy.balanceall: true
             hyperconomy.topbalance: true
             hyperconomy.playershop: true
+            hyperconomy.playershop.create: true
             hyperconomy.frameshop: true
             hyperconomy.bank: true
             hyperconomy.viewbanks: true
@@ -334,6 +333,7 @@ permissions:
             hyperconomy.xp: true
             hyperconomy.chestshop: true
             hyperconomy.playershop: true
+            hyperconomy.playershop.create: true
             hyperconomy.buysign: true
             hyperconomy.sellsign: true
             hyperconomy.pay: true
@@ -371,9 +371,6 @@ permissions:
     hyperconomy.error:
         description: Displays error messages if plugin errors occur.
         default: false
-    hyperconomy.list:
-        description: Allows the use of listshops.
-        default: false
     hyperconomy.scalebypercent:
         description: Allows the use of scalebypercent.
         default: false
@@ -409,6 +406,9 @@ permissions:
         default: false
     hyperconomy.playershop:
         description: Allows the use of the /manageshop command.
+        default: false
+    hyperconomy.playershop.create:
+        description: Allows only the creation of player shops with /ms create.
         default: false
     hyperconomy.frameshop:
         description: Allows the use of the /frameshop command.

@@ -4,8 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 
 import regalowl.databukkit.FileTools;
+import regalowl.databukkit.QueryResult;
 
 public class Backup {
+
+	private String destinationPath;
+	
 	Backup() {
 		HyperConomy hc = HyperConomy.hc;
 		FileTools ft = hc.getFileTools();
@@ -22,13 +26,13 @@ public class Backup {
 		backupFiles.add("errors.log");
 		backupFiles.add("SQL.log");
 		String spath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";
-		String dpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "backups";
-		ft.makeFolder(dpath);
-		dpath = dpath + File.separator + ft.getTimeStamp();
-		ft.makeFolder(dpath);
+		destinationPath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "backups";
+		ft.makeFolder(destinationPath);
+		destinationPath = destinationPath + File.separator + ft.getTimeStamp();
+		ft.makeFolder(destinationPath);
 		for (int i = 0; i < backupFiles.size(); i++) {
 			if (ft.fileExists(spath + File.separator + backupFiles.get(i))) {
-				ft.copyFile(spath + File.separator + backupFiles.get(i), dpath + File.separator + backupFiles.get(i));
+				ft.copyFile(spath + File.separator + backupFiles.get(i), destinationPath + File.separator + backupFiles.get(i));
 			}
 		}
 
@@ -36,10 +40,27 @@ public class Backup {
 		backupFiles = ft.getFolderContents(spath + File.separator + "Languages");
 
 		spath += File.separator + "Languages";
-		dpath += File.separator + "Languages";
-		ft.makeFolder(dpath);
+		destinationPath += File.separator + "Languages";
+		ft.makeFolder(destinationPath);
 		for (int i = 0; i < backupFiles.size(); i++) {
-			ft.copyFile(spath + File.separator + backupFiles.get(i), dpath + File.separator + backupFiles.get(i));
+			ft.copyFile(spath + File.separator + backupFiles.get(i), destinationPath + File.separator + backupFiles.get(i));
 		}
+		
+		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			public void run() {
+				HyperConomy hc = HyperConomy.hc;
+				ArrayList<String> tables = hc.getEconomyManager().getTablesList();
+				FileTools ft = hc.getFileTools();
+				String folderPath = destinationPath + File.separator + "SQL_Tables";
+				ft.makeFolder(folderPath);
+				for (String table:tables) {
+					if (table.equalsIgnoreCase("history")) {continue;}
+					QueryResult data = hc.getSQLRead().aSyncSelect("SELECT * FROM hyperconomy_" + table);
+					String writePath = folderPath + File.separator + table + ".csv";
+					hc.getFileTools().writeCSV(data, writePath);
+				}
+			}
+		});
+		
 	}
 }

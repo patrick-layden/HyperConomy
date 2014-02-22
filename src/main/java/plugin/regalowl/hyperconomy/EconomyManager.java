@@ -48,7 +48,7 @@ public class EconomyManager implements Listener {
 	public final double version = 1.26;
 	
 	
-	
+	private ArrayList<String> tables = new ArrayList<String>();
 	
 	public EconomyManager() {
 		hc = HyperConomy.hc;
@@ -59,10 +59,23 @@ public class EconomyManager implements Listener {
 		useShops = hc.gYH().gFC("config").getBoolean("config.use-shops");
 		shopinterval = hc.gYH().gFC("config").getLong("config.shopcheckinterval");
 		hc.getServer().getPluginManager().registerEvents(this, hc);
+		tables.add("settings");
+		tables.add("objects");
+		tables.add("players");
+		tables.add("log");
+		tables.add("history");
+		tables.add("audit_log");
+		tables.add("shop_objects");
+		tables.add("frame_shops");
+		tables.add("banks");
 	}
 	
 	public double getVersion() {
 		return version;
+	}
+	
+	public ArrayList<String> getTablesList() {
+		return tables;
 	}
 	
 	public void addUpdateAfterLoad(double version) {

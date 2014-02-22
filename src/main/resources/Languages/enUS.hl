@@ -277,7 +277,7 @@ MESSAGE1_SET: &6Message 1 set!
 MESSAGE2_SET: &6Message 2 set!
 P1_SET: &6Shop location p1 has been set!
 P2_SET: &6Shop location p2 has been set!
-SERVERSHOP_INVALID: &9Use &a/servershop &b['info','p1','p2','owner','list','remove','rename','message1','message2','allow','ban','addcategory','removecategory','economy'] [shop name]
+SERVERSHOP_INVALID: &9Use &a/servershop &b['info','p1','p2','owner','list','remove','rename','message1','message2','allow','ban','addcategory','removecategory','economy','goto'] [shop name]
 SERVERSHOP_OWNER_INVALID: &4Invalid Parameters. Use /servershop owner [owner]
 SERVERSHOP_REMOVE_INVALID: &4Invalid Parameters. Use /servershop remove
 SERVERSHOP_RENAME_INVALID: &4Invalid Parameters. Use /servershop rename [name]
@@ -389,7 +389,7 @@ SERVER_STARTING: &dThe web server is starting.
 SERVER_STOPPING: &dThe web server is stopping.
 SERVER_FAILED: &4The web server is failed.
 CANT_USE_ACCOUNT: You cannot play on this server using HyperConomy's global shop account.
-MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, buyprice, sellprice, maxstock, status, setstock, or owner]
+MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, buyprice, sellprice, maxstock, status, setstock, owner, or goto]
 MANAGESHOP_HELP2: &9You currently have the shop &a%n &9selected.
 MANAGESHOP_HELP3: &9The owner of &a%n &9is:
 MANAGESHOP_HELP4: &9The following players are allowed to manage the shop:
@@ -490,6 +490,7 @@ BANK_ALREADY_OWNER: &4The specified account is already an owner of this bank.
 BANK_NOT_OWNER: &4The specified account is not an owner of this bank.
 TRANSFER_GREATER_THAN_ZERO: &4Withdrawals and deposits must be a value greater than 0.
 TABLE_NOT_EXIST: &4The specified database table doesn't exist.
+IMPORT_FILE_NOT_EXIST: &4The specified database import file doesn't exist.
 CSV_CREATED: &6CSV file created.
 CSV_IMPORTED: &6CSV file imported.
 HCDATA_INVALID: &4Invalid parameters. Use /hcdata ['exportcsv','importcsv','exportyml' or 'importyml']

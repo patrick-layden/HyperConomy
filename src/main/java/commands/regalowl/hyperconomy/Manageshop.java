@@ -285,7 +285,11 @@ public class Manageshop implements CommandExecutor {
 				hc.getDataBukkit().writeError("Setting PlayerShopObject stock failed in /ms remove.");
 				return true;
 			}
-		} else  if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("c")) {
+		} else if ((args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("c"))) {
+			if (!player.hasPermission("hyperconomy.playershop.create")) {
+				player.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+				return true;
+			}
 			if (args.length == 1) {
 				player.sendMessage(L.get("MANAGESHOP_CREATE_HELP"));
 				return true;
@@ -572,7 +576,11 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("ALLOWED_TO_MANAGE_SHOP"));
 			}
 			return true;
-		} else if (args[0].equalsIgnoreCase("owner") && player.hasPermission("hyperconomy.admin")) {
+		} else if (args[0].equalsIgnoreCase("owner")) {
+			if (!player.hasPermission("hyperconomy.admin")) {
+				player.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+				return true;
+			}
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
 				return true;
@@ -589,6 +597,16 @@ public class Manageshop implements CommandExecutor {
 			cps.setOwner(newOwner);
 			player.sendMessage(L.get("OWNER_SET"));
 			return true;
+		} else if (args[0].equalsIgnoreCase("goto")) {
+			if (!player.hasPermission("hyperconomy.admin")) {
+				player.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+				return true;
+			}
+			if (cps == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			player.teleport(cps.getLocation1());
 		} else {
 			player.sendMessage(L.get("MANAGESHOP_HELP"));
 			if (cps != null) {

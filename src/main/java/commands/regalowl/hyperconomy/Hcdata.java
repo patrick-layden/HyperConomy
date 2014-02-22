@@ -15,19 +15,12 @@ public class Hcdata implements CommandExecutor {
 	private HyperConomy hc;
 	private LanguageFile L;
 	private CommandSender cSender;
-	private ArrayList<String> tables = new ArrayList<String>();
+	private ArrayList<String> tables;
 	private String table;
 	
 	Hcdata() {
-		tables.add("settings");
-		tables.add("objects");
-		tables.add("players");
-		tables.add("log");
-		tables.add("history");
-		tables.add("audit_log");
-		tables.add("shop_objects");
-		tables.add("frame_shops");
-		tables.add("banks");
+		hc = HyperConomy.hc;
+		tables = hc.getEconomyManager().getTablesList();
 	}
 
 	
@@ -77,6 +70,10 @@ public class Hcdata implements CommandExecutor {
 				String path = hc.getDataBukkit().getPluginFolderPath();
 				ft.makeFolder(path + File.separator + "import_export");
 				path += File.separator + "import_export" + File.separator + table + ".csv";
+				if (!ft.fileExists(path)) {
+					sender.sendMessage(L.get("IMPORT_FILE_NOT_EXIST"));
+					return true;
+				}
 				QueryResult data = hc.getFileTools().readCSV(path);
 				ArrayList<String> columns = data.getColumnNames();
 				hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_" + table);

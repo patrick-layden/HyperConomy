@@ -296,6 +296,16 @@ public class Servershopcommand implements CommandExecutor {
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_ECONOMY_INVALID"));
 			}
+		} else if (args[0].equalsIgnoreCase("goto")) {
+			try {
+				if (css == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
+					return true;
+				}
+				player.teleport(css.getLocation1());
+			} catch (Exception e) {
+				player.sendMessage(L.get("SERVERSHOP_ECONOMY_INVALID"));
+			}
 		} else {
 			player.sendMessage(L.get("SERVERSHOP_INVALID"));
 			return true;
