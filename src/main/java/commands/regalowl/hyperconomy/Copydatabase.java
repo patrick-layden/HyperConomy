@@ -90,22 +90,22 @@ public class Copydatabase {
 						for (HyperPlayer hp : em.getHyperPlayers()) {
 							sw.addToQueue("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH)" + " VALUES ('" + hp.getName() + "','" + hp.getEconomy() + "','" + hp.getBalance() + "','" + hp.getX() + "','" + hp.getY() + "','" + hp.getZ() + "','" + hp.getWorld() + "','" + hp.getHash() + "')");
 						}
-						QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_audit_log");
+						QueryResult result = sr.select("SELECT * FROM hyperconomy_audit_log");
 						while (result.next()) {
 							sw.addToQueue("INSERT INTO hyperconomy_audit_log (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) VALUES ('" + result.getString("TIME") + "','" + result.getString("ACCOUNT") + "','" + result.getString("ACTION") + "','" + result.getDouble("AMOUNT") + "','" + result.getString("ECONOMY") + "')");
 						}
 						result.close();
-						result = sr.aSyncSelect("SELECT * FROM hyperconomy_log");
+						result = sr.select("SELECT * FROM hyperconomy_log");
 						while (result.next()) {
 							sw.addToQueue("INSERT INTO hyperconomy_log (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE) VALUES ('" + result.getString("TIME") + "','" + result.getString("CUSTOMER") + "','" + result.getString("ACTION") + "','" + result.getString("OBJECT") + "','" + result.getDouble("AMOUNT") + "','" + result.getDouble("MONEY") + "','" + result.getDouble("TAX") + "','" + result.getString("STORE") + "','" + result.getString("TYPE") + "')");
 						}
 						result.close();
-						result = sr.aSyncSelect("SELECT * FROM hyperconomy_settings");
+						result = sr.select("SELECT * FROM hyperconomy_settings");
 						while (result.next()) {
 							sw.addToQueue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME)" + " VALUES ('" + result.getString("SETTING") + "','" + result.getString("VALUE") + "','" + result.getString("TIME") + "')");
 						}
 						result.close();
-						result = sr.aSyncSelect("SELECT * FROM hyperconomy_shop_objects");
+						result = sr.select("SELECT * FROM hyperconomy_shop_objects");
 						while (result.next()) {
 							WriteStatement ws = new WriteStatement("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS) VALUES (?,?,?,?,?,?,?)", hc.getDataBukkit());
 							ws.addParameter(result.getString("SHOP"));
@@ -119,7 +119,7 @@ public class Copydatabase {
 						}
 						result.close();
 						if (includeHistory) {
-							result = sr.aSyncSelect("SELECT * FROM hyperconomy_history");
+							result = sr.select("SELECT * FROM hyperconomy_history");
 							while (result.next()) {
 								sw.addToQueue("INSERT INTO hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE)" + " VALUES ('" + result.getString("OBJECT") + "','" + result.getString("ECONOMY") + "','" + result.getString("TIME") + "','" + result.getDouble("PRICE") + "')");
 							}
@@ -157,7 +157,7 @@ public class Copydatabase {
 				hc.getServer().getScheduler().runTask(hc, new Runnable() {
 		    		public void run() {
 		    			if (sw != null) {
-		    				sender.sendMessage(sw.getBufferSize() + " statements remaining.");
+		    				sender.sendMessage("Writing to database, please wait.");
 		    			}
 		    		}
 		    	});

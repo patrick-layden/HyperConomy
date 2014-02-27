@@ -34,7 +34,7 @@ public class FrameShopHandler implements Listener {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				frameShops.clear();
-				QueryResult result = hc.getSQLRead().aSyncSelect("SELECT * FROM hyperconomy_frame_shops");
+				QueryResult result = hc.getSQLRead().select("SELECT * FROM hyperconomy_frame_shops");
 				while (result.next()) {
 					double x = result.getDouble("X");
 					double y = result.getDouble("Y");

@@ -146,7 +146,7 @@ public class Hyperlog {
 		SQLRead sr = HyperConomy.hc.getSQLRead();
 		ArrayList<String> entries = new ArrayList<String>();
 		LanguageFile L = hc.getLanguageFile();
-		QueryResult result = sr.aSyncSelect(statement);
+		QueryResult result = sr.select(statement);
 		while (result.next()) {
 			// int id = result.getInt(1);
 			String time = result.getString(2);

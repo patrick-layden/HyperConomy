@@ -312,10 +312,10 @@ public class Manageshop implements CommandExecutor {
 					//continue
 				}
 			}
-			PlayerShop newShop = new PlayerShop(name, hp.getEconomy(), hp);
 			Location l = player.getLocation();
-			newShop.setPoint1(player.getWorld().getName(), l.getBlockX() - radius, l.getBlockY() - radius, l.getBlockZ() - radius);
-			newShop.setPoint2(player.getWorld().getName(), l.getBlockX() + radius, l.getBlockY() + radius, l.getBlockZ() + radius);
+			Location p1 = new Location(player.getWorld(), l.getBlockX() - radius, l.getBlockY() - radius, l.getBlockZ() - radius);
+			Location p2 = new Location(player.getWorld(), l.getBlockX() + radius, l.getBlockY() + radius, l.getBlockZ() + radius);
+			PlayerShop newShop = new PlayerShop(name, hp.getEconomy(), hp, p1, p2);
 			if (newShop.getVolume() > maxVolume) {
 				player.sendMessage(L.f(L.get("CANT_MAKE_SHOP_LARGER_THAN"), maxVolume));
 				newShop.deleteShop();
@@ -576,6 +576,17 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("ALLOWED_TO_MANAGE_SHOP"));
 			}
 			return true;
+		} else if (args[0].equalsIgnoreCase("message") || args[0].equalsIgnoreCase("m")) {
+			try {
+				if (cps == null) {
+					player.sendMessage(L.get("NO_SHOP_SELECTED"));
+					return true;
+				}
+				cps.setMessage(args[1]);
+				sender.sendMessage(L.get("MESSAGE_SET"));
+			} catch (Exception e) {
+				player.sendMessage(L.get("MANAGESHOP_MESSAGE_INVALID"));
+			}
 		} else if (args[0].equalsIgnoreCase("owner")) {
 			if (!player.hasPermission("hyperconomy.admin")) {
 				player.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));

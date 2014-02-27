@@ -55,7 +55,7 @@ public class Backup {
 				ft.makeFolder(folderPath);
 				for (String table:tables) {
 					if (table.equalsIgnoreCase("history")) {continue;}
-					QueryResult data = hc.getSQLRead().aSyncSelect("SELECT * FROM hyperconomy_" + table);
+					QueryResult data = hc.getSQLRead().select("SELECT * FROM hyperconomy_" + table);
 					String writePath = folderPath + File.separator + table + ".csv";
 					hc.getFileTools().writeCSV(data, writePath);
 				}

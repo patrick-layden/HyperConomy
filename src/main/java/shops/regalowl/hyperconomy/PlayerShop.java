@@ -1,11 +1,11 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import regalowl.databukkit.BasicStatement;
@@ -20,45 +20,100 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private HyperAccount owner;
 	private ArrayList<String> allowed = new ArrayList<String>();
 	private String economy;
-	private String message1;
-	private String message2;
+	private String message;
 	private int p1x;
 	private int p1y;
 	private int p1z;
 	private int p2x;
 	private int p2y;
 	private int p2z;
+	private ConcurrentHashMap<String,PlayerShopObject> shopContents = new ConcurrentHashMap<String,PlayerShopObject>();
+	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
 	
-	private boolean useshopexitmessage;
-	
-	private boolean loaded;
+
 	
 	private HyperConomy hc;
 	private LanguageFile L;
-	private FileConfiguration shopFile;
 	private PlayerShop ps;
 	private CommonFunctions cf;
-	
-	private ConcurrentHashMap<String,PlayerShopObject> shopContents = new ConcurrentHashMap<String,PlayerShopObject>();
+	private boolean useshopexitmessage;
+	private boolean loaded;
 	private ArrayList<String> inShop = new ArrayList<String>();
-	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
 	
-	PlayerShop(String shopName, String econ, HyperAccount owner) {
+	
+	
+	PlayerShop(String name, String economy, HyperPlayer owner, String message, Location p1, Location p2, String banned_objects, String allowed_players) {
 		loaded = false;
-		this.name = shopName;
-		this.economy = econ;
-		this.owner = owner;
 		hc = HyperConomy.hc;
 		cf = hc.getDataBukkit().getCommonFunctions();
 		ps = this;
 		L = hc.getLanguageFile();
-		shopFile = hc.gYH().getFileConfiguration("shops");
-		shopFile.set(name + ".economy", economy);
-		shopFile.set(name + ".owner", owner.getName());
 		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
-		allowed = cf.explode(shopFile.getString(name + ".allowed"), ",");
-		loadAvailable();
+		this.name = name;
+		this.economy = economy;
+		this.owner = owner;
+		this.message = message;
+		this.world = p1.getWorld().getName();
+		this.p1x = p1.getBlockX();
+		this.p1y = p1.getBlockY();
+		this.p1z = p1.getBlockZ();
+		this.p2x = p2.getBlockX();
+		this.p2y = p2.getBlockY();
+		this.p2z = p2.getBlockZ();
+		this.allowed = cf.explode(allowed_players, ",");
+		HyperEconomy he = getHyperEconomy();
+		availableObjects.clear();
+		for (HyperObject ho:he.getHyperObjects()) {
+			availableObjects.add(ho);
+		}
+		ArrayList<String> unavailable = hc.gCF().explode(banned_objects,",");
+		for (String objectName : unavailable) {
+			HyperObject ho = hc.getEconomyManager().getEconomy(economy).getHyperObject(objectName);
+			availableObjects.remove(ho);
+		}
 		loadPlayerShopObjects();
+	}
+	
+	
+	PlayerShop(String shopName, String economy, HyperAccount owner, Location p1, Location p2) {
+		loaded = false;
+		hc = HyperConomy.hc;
+		cf = hc.getDataBukkit().getCommonFunctions();
+		ps = this;
+		L = hc.getLanguageFile();
+		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");
+		this.name = shopName;
+		this.economy = economy;
+		this.owner = owner;
+		this.world = p1.getWorld().getName();
+		this.message = "";
+		p1x = p1.getBlockX();
+		p1y = p1.getBlockY();
+		p1z = p1.getBlockZ();
+		p2x = p2.getBlockX();
+		p2y = p2.getBlockY();
+		p2z = p2.getBlockZ();
+		HashMap<String,String> values = new HashMap<String,String>();
+		values.put("NAME", name);
+		values.put("ECONOMY", economy);
+		values.put("OWNER", owner.getName());
+		values.put("WORLD", world);
+		values.put("P1X", p1x+"");
+		values.put("P1Y", p1y+"");
+		values.put("P1Z", p1z+"");
+		values.put("P2X", p2x+"");
+		values.put("P2Y", p2y+"");
+		values.put("P2Z", p2z+"");
+		values.put("ALLOWED_PLAYERS", "");
+		values.put("BANNED_OBJECTS", "");
+		values.put("MESSAGE", "");
+		values.put("TYPE", "player");
+		hc.getSQLWrite().performInsert("hyperconomy_shops", values);
+		HyperEconomy he = getHyperEconomy();
+		for (HyperObject ho:he.getHyperObjects()) {
+			availableObjects.add(ho);
+		}
+		loaded = true;
 	}
 	
 	private void loadPlayerShopObjects() {
@@ -67,7 +122,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 				BasicStatement statement = new BasicStatement("SELECT * FROM hyperconomy_shop_objects WHERE SHOP = ?", hc.getDataBukkit());
 				statement.addParameter(name);
-				QueryResult result = hc.getSQLRead().aSyncSelect(statement);
+				QueryResult result = hc.getSQLRead().select(statement);
 				while (result.next()) {
 					double buyPrice = result.getDouble("BUY_PRICE");
 					double sellPrice = result.getDouble("SELL_PRICE");
@@ -112,20 +167,28 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		p1x = x;
 		p1y = y;
 		p1z = z;
-		shopFile.set(name + ".world", world);
-		shopFile.set(name + ".p1.x", x);
-		shopFile.set(name + ".p1.y", y);
-		shopFile.set(name + ".p1.z", z);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("WORLD", world);
+		values.put("P1X", x+"");
+		values.put("P1Y", y+"");
+		values.put("P1Z", z+"");
+		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 	public void setPoint2(String world, int x, int y, int z) {
 		this.world = world;
 		p2x = x;
 		p2y = y;
 		p2z = z;
-		shopFile.set(name + ".world", world);
-		shopFile.set(name + ".p2.x", x);
-		shopFile.set(name + ".p2.y", y);
-		shopFile.set(name + ".p2.z", z);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("WORLD", world);
+		values.put("P2X", x+"");
+		values.put("P2Y", y+"");
+		values.put("P2Z", z+"");
+		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 	public void setPoint1(Location l) {
 		setPoint1(l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
@@ -135,47 +198,44 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	
-	
-	public void setMessage1(String message) {
-		message1 = message;
-		shopFile.set(name + ".shopmessage1", message1);
-		
+	public void setMessage(String message) {
+		this.message = message;
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("MESSAGE", message);
+		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 	
-	public void setMessage2(String message) {
-		message2 = message;
-		shopFile.set(name + ".shopmessage2", message2);
-	}
-	
-	public void setDefaultMessages() {
-		setMessage1("&aWelcome to %n");
-		setMessage2("&9Type &b/hc &9for help.");
+	public void setDefaultMessage() {
+		setMessage(L.get("SHOP_LINE_BREAK")+"%n&aWelcome to "+name+"%n&9Type &b/hc &9for help.%n"+L.get("SHOP_LINE_BREAK"));
 	}
 	
 	public void setWorld(String world) {
 		this.world = world;
-		shopFile.set(name + ".world", world);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("WORLD", world);
+		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 	
 	public void setName(String name) {
-		shopFile.set(this.name, null);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", this.name);
+		values.put("NAME", name);
+		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		this.name = name;
-		shopFile.set(this.name, this.name);
-		shopFile.set(name + ".world", world);
-		shopFile.set(name + ".p1.x", p1x);
-		shopFile.set(name + ".p1.y", p1y);
-		shopFile.set(name + ".p1.z", p1z);
-		shopFile.set(name + ".p2.x", p2x);
-		shopFile.set(name + ".p2.y", p2y);
-		shopFile.set(name + ".p2.z", p2z);
-		shopFile.set(name + ".shopmessage1", message1);
-		shopFile.set(name + ".shopmessage2", message2);
-		shopFile.set(name + ".economy", economy);
 	}
 	
 	public void setEconomy(String economy) {
 		this.economy = economy;
-		shopFile.set(name + ".economy", economy);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("ECONOMY", economy);
+		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 	
 	
@@ -203,14 +263,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void sendEntryMessage(Player player) {
-		if (message1 == null || message2 == null) {
-			message1 = "&aWelcome to %n";
-			message2 = "&9Type &b/hc &9for help.";
+		if (message == "") {setDefaultMessage();}
+		String[] lines = message.replace("_", " ").split("%n");
+		for (String line:lines) {
+			player.sendMessage(L.applyColor(line));
 		}
-		player.sendMessage(L.get("SHOP_LINE_BREAK"));
-		player.sendMessage(message1.replace("%n", name).replace("_", " ").replace("&","\u00A7"));
-		player.sendMessage(message2.replace("%n", name).replace("_", " ").replace("&","\u00A7"));
-		player.sendMessage(L.get("SHOP_LINE_BREAK"));
 	}
 	
 	public String getEconomy() {
@@ -226,18 +283,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	
-	public void loadAvailable() {
-		HyperEconomy he = getHyperEconomy();
-		availableObjects.clear();
-		for (HyperObject ho:he.getHyperObjects()) {
-			availableObjects.add(ho);
-		}
-		ArrayList<String> unavailable = hc.gCF().explode(shopFile.getString(name + ".unavailable"),",");
-		for (String objectName : unavailable) {
-			HyperObject ho = he.getHyperObject(objectName);
-			availableObjects.remove(ho);
-		}
-	}
+
 	public void saveAvailable() {
 		HyperEconomy he = getHyperEconomy();
 		ArrayList<String> unavailable = new ArrayList<String>();
@@ -247,11 +293,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				unavailable.add(ho.getName());
 			}
 		}
-		if (unavailable.isEmpty()) {
-			shopFile.set(name + ".unavailable", null);
-		} else {
-			shopFile.set(name + ".unavailable", hc.gCF().implode(unavailable,","));
-		}
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("BANNED_OBJECTS", hc.gCF().implode(unavailable,","));
+		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 	
 	public boolean isStocked(HyperObject ho) {
@@ -396,7 +442,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	public void setOwner(HyperAccount owner) {
 		this.owner = owner;
-		shopFile.set(name + ".owner", owner.getName());
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("OWNER", owner.getName());
+		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 
 
@@ -411,9 +461,13 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void deleteShop() {
-		hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"'");
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		hc.getSQLWrite().performDelete("hyperconomy_shops", conditions);
+		conditions = new HashMap<String,String>();
+		conditions.put("SHOP", name);
+		hc.getSQLWrite().performDelete("hyperconomy_shop_objects", conditions);
 		shopContents.clear();
-		shopFile.set(name, null);
 		hc.getEconomyManager().removeShop(name);
 	}
 	
@@ -504,13 +558,6 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 
-
-	public void setGlobal() {
-		//do nothing
-	}
-
-
-
 	public HyperEconomy getHyperEconomy() {
 		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
 		if (he == null) {
@@ -575,7 +622,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		return false;
 	}
 	public void saveAllowed() {
-		shopFile.set(name + ".allowed", cf.implode(allowed, ","));
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("ALLOWED_PLAYERS", cf.implode(allowed, ","));
+		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 
 

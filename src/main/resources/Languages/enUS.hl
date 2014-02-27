@@ -273,21 +273,21 @@ SETLANGUAGE_INVALID: &4Use /setlanguage [language] ('o')
 LANGUAGE_NOT_FOUND: &4The specified language file was not found or cannot be overwritten.
 LANGUAGE_LOADED: &6%n loaded.
 MEDIAN_SET: &6%n median set!
-MESSAGE1_SET: &6Message 1 set!
-MESSAGE2_SET: &6Message 2 set!
+MESSAGE_SET: &6Message set!
 P1_SET: &6Shop location p1 has been set!
 P2_SET: &6Shop location p2 has been set!
-SERVERSHOP_INVALID: &9Use &a/servershop &b['info','p1','p2','owner','list','remove','rename','message1','message2','allow','ban','addcategory','removecategory','economy','goto'] [shop name]
+SERVERSHOP_INVALID: &9Use &a/servershop &b['info','p1','p2','owner','list','removeshop','rename','message','allow','ban','addcategory','removecategory','economy','goto'] [shop name]
 SERVERSHOP_OWNER_INVALID: &4Invalid Parameters. Use /servershop owner [owner]
-SERVERSHOP_REMOVE_INVALID: &4Invalid Parameters. Use /servershop remove
+SERVERSHOP_REMOVE_INVALID: &4Invalid Parameters. Use /servershop removeshop
 SERVERSHOP_RENAME_INVALID: &4Invalid Parameters. Use /servershop rename [name]
-SERVERSHOP_MESSAGE1_INVALID: &4Invalid Parameters. Use /servershop message1 [message]
-SERVERSHOP_MESSAGE2_INVALID: &4Invalid Parameters. Use /servershop message2 [message]
+SERVERSHOP_MESSAGE_INVALID: &4Invalid Parameters. Use /servershop message [message]
 SERVERSHOP_BAN_INVALID: &4Invalid Parameters. Use /servershop ban [object or "all"]
 SERVERSHOP_ADDCATEGORY_INVALID: &4Invalid Parameters. Use /servershop addcategory [category]
 SERVERSHOP_REMOVECATEGORY_INVALID: &4Invalid Parameters. Use /servershop removecategory [category]
 SERVERSHOP_ALLOW_INVALID: &4Invalid Parameters. Use /servershop allow [object or "all"]
 SERVERSHOP_ECONOMY_INVALID: &4Invalid Parameters. Use /servershop economy [name of economy]
+SERVERSHOP_P1_INVALID: &4Invalid Parameters. Use /servershop p1 [name of shop]
+SERVERSHOP_P2_INVALID: &4Invalid Parameters. Use /servershop p2 [name of shop]
 SERVERSHOP_ECONOMY_INFO: &9The shop is part of the economy: &b%n
 SETSHOPECONOMY_INVALID: &4Invalid Parameters.  Use /setshopeconomy [shop name] [economy]
 SHOP_ECONOMY_SET: &6Shop economy set!
@@ -389,7 +389,7 @@ SERVER_STARTING: &dThe web server is starting.
 SERVER_STOPPING: &dThe web server is stopping.
 SERVER_FAILED: &4The web server is failed.
 CANT_USE_ACCOUNT: You cannot play on this server using HyperConomy's global shop account.
-MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, buyprice, sellprice, maxstock, status, setstock, owner, or goto]
+MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, buyprice, sellprice, maxstock, status, message, setstock, owner, or goto]
 MANAGESHOP_HELP2: &9You currently have the shop &a%n &9selected.
 MANAGESHOP_HELP3: &9The owner of &a%n &9is:
 MANAGESHOP_HELP4: &9The following players are allowed to manage the shop:
@@ -410,6 +410,7 @@ MANAGESHOP_ADD_HELP: &4Use /manageshop add (object) (amount)
 MANAGESHOP_ALLOW_HELP: &4Use /manageshop allow [player]
 MANAGESHOP_REMOVE_HELP: &4Use /manageshop remove [object] [amount]
 MANAGESHOP_SETSHOP_HELP: &4Use /manageshop setshop [object] [amount]
+MANAGESHOP_MESSAGE_INVALID: &4Use /manageshop message [new entry message]
 OWNER_SET: &6Owner set.
 STATUS_SET: &6Status set.
 PRICE_SET: &6Price set.

@@ -76,7 +76,7 @@ public class Audit {
 		} else if (type.equalsIgnoreCase("purchase")) {
 			query = "SELECT SUM(MONEY) AS total FROM hyperconomy_log WHERE CUSTOMER = '" + account + "' AND ACTION = 'purchase'";
 		}
-		QueryResult result = sr.aSyncSelect(query);
+		QueryResult result = sr.select(query);
 		double amount = 0.0;
 		if (result.next()) {
 			amount = result.getDouble("total");
@@ -94,7 +94,7 @@ public class Audit {
 	private Double getAuditLogTotal(String account) {
 		HyperConomy hc = HyperConomy.hc;
 		SQLRead sr = hc.getSQLRead();
-		QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
+		QueryResult result = sr.select("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
 		double tBalance = 0.0;
 		//double lastSetBalance = -1;
 		while (result.next()) {

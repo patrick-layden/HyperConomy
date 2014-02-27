@@ -55,7 +55,7 @@ public class HyperEconomy {
 			public void run() {
 				hyperObjectsName.clear();
 				hyperObjectsData.clear();
-				QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economy+"'");
+				QueryResult result = sr.select("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economy+"'");
 				while (result.next()) {
 					if (useComposites && compositeKeys.contains(result.getString("NAME").toLowerCase())) {continue;}
 					HyperObjectType type = HyperObjectType.fromString(result.getString("TYPE"));

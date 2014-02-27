@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -80,29 +81,33 @@ public class Servershopcommand implements CommandExecutor {
 			player.sendMessage(L.f(L.get("MANAGESHOP_HELP3"), css.getName()) + " " + ChatColor.AQUA + css.getOwner().getName());
 			player.sendMessage(L.f(L.get("SERVERSHOP_ECONOMY_INFO"), css.getEconomy()));
 		} else if (args[0].equalsIgnoreCase("p1")) {
-			String name = args[1].replace(".", "").replace(":", "");
-			if (em.shopExists(name)) {
-				em.getShop(name).setPoint1(player.getLocation());
-			} else {
-				Shop shop = new ServerShop(name, hp.getEconomy(), hc.getEconomyManager().getGlobalShopAccount());
-				shop.setPoint1(player.getLocation());
-				shop.setPoint2(player.getLocation());
-				shop.setDefaultMessages();
-				em.addShop(shop);
+			try {
+				String name = args[1].replace(".", "").replace(":", "");
+				if (em.shopExists(name)) {
+					em.getShop(name).setPoint1(player.getLocation());
+				} else {
+					Location l = player.getLocation();
+					Shop shop = new ServerShop(name, hp.getEconomy(), hc.getEconomyManager().getGlobalShopAccount(), l, l);
+					em.addShop(shop);
+				}
+				player.sendMessage(L.get("P1_SET"));
+			} catch (Exception e) {
+				player.sendMessage(L.get("SERVERSHOP_P1_INVALID"));
 			}
-			player.sendMessage(L.get("P1_SET"));
 		} else if (args[0].equalsIgnoreCase("p2")) {
-			String name = args[1].replace(".", "").replace(":", "");
-			if (em.shopExists(name)) {
-				em.getShop(name).setPoint2(player.getLocation());
-			} else {
-				Shop shop = new ServerShop(name, hp.getEconomy(), hc.getEconomyManager().getGlobalShopAccount());
-				shop.setPoint1(player.getLocation());
-				shop.setPoint2(player.getLocation());
-				shop.setDefaultMessages();
-				em.addShop(shop);
+			try {
+				String name = args[1].replace(".", "").replace(":", "");
+				if (em.shopExists(name)) {
+					em.getShop(name).setPoint2(player.getLocation());
+				} else {
+					Location l = player.getLocation();
+					Shop shop = new ServerShop(name, hp.getEconomy(), hc.getEconomyManager().getGlobalShopAccount(), l, l);
+					em.addShop(shop);
+				}
+				player.sendMessage(L.get("P2_SET"));
+			} catch (Exception e) {
+				player.sendMessage(L.get("SERVERSHOP_P2_INVALID"));
 			}
-			player.sendMessage(L.get("P2_SET"));
 		} else if (args[0].equalsIgnoreCase("list")) {
 			String shoplist = HyperConomy.hyperAPI.listShops().toString().replace("_", " ").replace("[", "").replace("]", "");
 			sender.sendMessage(ChatColor.AQUA + shoplist);
@@ -127,7 +132,7 @@ public class Servershopcommand implements CommandExecutor {
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_OWNER_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("remove")) {
+		} else if (args[0].equalsIgnoreCase("removeshop")) {
 			try {
 				if (css == null) {
 					player.sendMessage(L.get("NO_SHOP_SELECTED"));
@@ -150,29 +155,16 @@ public class Servershopcommand implements CommandExecutor {
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_RENAME_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("message1") || args[0].equalsIgnoreCase("m1")) {
+		} else if (args[0].equalsIgnoreCase("message") || args[0].equalsIgnoreCase("m")) {
 			try {
 				if (css == null) {
 					player.sendMessage(L.get("NO_SHOP_SELECTED"));
 					return true;
 				}
-				css.setMessage1(args[1].replace("_", " "));
-				sender.sendMessage(L.get("MESSAGE1_SET"));
-				hc.restart();
+				css.setMessage(args[1]);
+				sender.sendMessage(L.get("MESSAGE_SET"));
 			} catch (Exception e) {
-				player.sendMessage(L.get("SERVERSHOP_MESSAGE1_INVALID"));
-			}
-		} else if (args[0].equalsIgnoreCase("message2") || args[0].equalsIgnoreCase("m2")) {
-			try {
-				if (css == null) {
-					player.sendMessage(L.get("NO_SHOP_SELECTED"));
-					return true;
-				}
-				css.setMessage2(args[1].replace("_", " "));
-				sender.sendMessage(L.get("MESSAGE2_SET"));
-				hc.restart();
-			} catch (Exception e) {
-				player.sendMessage(L.get("SERVERSHOP_MESSAGE2_INVALID"));
+				player.sendMessage(L.get("SERVERSHOP_MESSAGE_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("allow") || args[0].equalsIgnoreCase("a")) {
 			try {

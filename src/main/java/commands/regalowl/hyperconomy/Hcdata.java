@@ -47,7 +47,7 @@ public class Hcdata implements CommandExecutor {
 				}
 				hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 					public void run() {
-						QueryResult data = hc.getSQLRead().aSyncSelect("SELECT * FROM hyperconomy_" + table);
+						QueryResult data = hc.getSQLRead().select("SELECT * FROM hyperconomy_" + table);
 						FileTools ft = hc.getFileTools();
 						String path = hc.getDataBukkit().getPluginFolderPath();
 						ft.makeFolder(path + File.separator + "import_export");

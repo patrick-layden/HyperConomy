@@ -54,7 +54,7 @@ public class History {
 
 	public Long getTimeCounter() {
 		Long value = 0L;
-		QueryResult result = sr.aSyncSelect("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'history_time_counter'");
+		QueryResult result = sr.select("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'history_time_counter'");
 		if (result.next()) {
 			try {
 				value = Long.parseLong(result.getString("VALUE"));
@@ -144,7 +144,7 @@ public class History {
 	public double getHistoricValue(String name, String economy, int count) {
 		try {
 			count -= 1;
-			QueryResult result = sr.aSyncSelect("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '" + name + "' AND ECONOMY = '" + economy + "' ORDER BY TIME DESC");
+			QueryResult result = sr.select("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '" + name + "' AND ECONOMY = '" + economy + "' ORDER BY TIME DESC");
 			int c = 0;
 			while (result.next()) {
 				if (c == count) {
@@ -213,7 +213,7 @@ public class History {
 		}
 
 		HashMap<HyperObject, ArrayList<Double>> allValues = new HashMap<HyperObject, ArrayList<Double>>();
-		QueryResult result = sr.aSyncSelect("SELECT OBJECT, PRICE FROM hyperconomy_history WHERE ECONOMY = '" + economy + "' ORDER BY TIME DESC");
+		QueryResult result = sr.select("SELECT OBJECT, PRICE FROM hyperconomy_history WHERE ECONOMY = '" + economy + "' ORDER BY TIME DESC");
 		while (result.next()) {
 			HyperObject ho = em.getEconomy(economy).getHyperObject(result.getString("OBJECT"));
 			double price = result.getDouble("PRICE");

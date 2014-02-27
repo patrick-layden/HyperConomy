@@ -10,14 +10,12 @@ public interface Shop extends Comparable<Shop>{
 	public int compareTo(Shop s);	
 	public void setPoint1(String world, int x, int y, int z);	
 	public void setPoint2(String world, int x, int y, int z);	
-	public void setGlobal();
 	
 	public void setPoint1(Location l);
 	public void setPoint2(Location l);
 	
-	public void setMessage1(String message);	
-	public void setMessage2(String message);	
-	public void setDefaultMessages();	
+	public void setMessage(String message);	
+	public void setDefaultMessage();	
 	public void setWorld(String world);	
 	public void setName(String name);	
 	public void setEconomy(String economy);

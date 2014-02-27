@@ -45,7 +45,7 @@ public class EconomyManager implements Listener {
 	private BukkitTask shopCheckTask;
 	private boolean useShops;
 	private ArrayList<Double> updateAfterLoad = new ArrayList<Double>();
-	public final double version = 1.26;
+	public final double version = 1.27;
 	
 	
 	private ArrayList<String> tables = new ArrayList<String>();
@@ -172,7 +172,15 @@ public class EconomyManager implements Listener {
 				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.26' WHERE SETTING = 'version'");
 			}
 			if (version < 1.27) {
+				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.27.");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shops (NAME VARCHAR(255) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_infosigns (NAME VARCHAR(255) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
+				hc.getEconomyManager().addUpdateAfterLoad(1.27);
+
+
 				
+				
+				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.27' WHERE SETTING = 'version'");
 			}
 		} else {
 			createTables(hc.getSQLWrite(), false);
@@ -191,6 +199,7 @@ public class EconomyManager implements Listener {
 			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_shop_objects");
 			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_frame_shops");		
 			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_banks");	
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_shops");
 		}
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL, VALUE TEXT, TIME DATETIME NOT NULL, PRIMARY KEY (SETTING))");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
@@ -201,6 +210,7 @@ public class EconomyManager implements Listener {
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_banks (NAME VARCHAR(255) NOT NULL PRIMARY KEY, BALANCE DOUBLE NOT NULL DEFAULT '0', OWNERS VARCHAR(255), MEMBERS VARCHAR(255))");
+		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shops (NAME VARCHAR(255) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
 		if (!copydatabase) {
 			sw.convertExecuteSynchronously("DELETE FROM hyperconomy_settings");
 			sw.convertExecuteSynchronously("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getEconomyManager().getVersion()+"', NOW() )");
@@ -220,7 +230,8 @@ public class EconomyManager implements Listener {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				economies.clear();
-				ArrayList<String> econs = sr.getStringList("SELECT DISTINCT ECONOMY FROM hyperconomy_objects");
+				//ArrayList<String> econs = sr.getStringList("SELECT DISTINCT ECONOMY FROM hyperconomy_objects");
+				ArrayList<String> econs = sr.getStringList("hyperconomy_objects", "ECONOMY", null);
 				for (String e : econs) {
 					economies.put(e, new HyperEconomy(e));
 				}
@@ -253,7 +264,7 @@ public class EconomyManager implements Listener {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				hyperPlayers.clear();
-				QueryResult result = sr.aSyncSelect("SELECT * FROM hyperconomy_players");
+				QueryResult result = sr.select("SELECT * FROM hyperconomy_players");
 				while (result.next()) {
 					HyperPlayer hplayer = new HyperPlayer(result.getString("PLAYER"), result.getString("ECONOMY"), result.getDouble("BALANCE"), result.getDouble("X"), result.getDouble("Y"), result.getDouble("Z"), result.getString("WORLD"), result.getString("HASH"), result.getString("SALT"));
 					hyperPlayers.put(hplayer.getName().toLowerCase(), hplayer);
@@ -261,17 +272,47 @@ public class EconomyManager implements Listener {
 				result.close();
 				playersLoaded = true;
 				hyperBanks.clear();
-				QueryResult result2 = sr.aSyncSelect("SELECT * FROM hyperconomy_banks");
-				while (result2.next()) {
-					HyperBank hBank = new HyperBank(result2.getString("NAME"), result2.getDouble("BALANCE"), result2.getString("OWNERS"), result2.getString("MEMBERS"));
+				result = sr.select("SELECT * FROM hyperconomy_banks");
+				while (result.next()) {
+					HyperBank hBank = new HyperBank(result.getString("NAME"), result.getDouble("BALANCE"), result.getString("OWNERS"), result.getString("MEMBERS"));
 					hyperBanks.put(hBank.getName().toLowerCase(), hBank);
 				}
-				result2.close();
+				result.close();
+				
+				shops.clear();
+				if (useShops) {
+					result = sr.select("SELECT * FROM hyperconomy_shops");
+					while (result.next()) {
+						String type = result.getString("TYPE");
+						if (type.equalsIgnoreCase("server")) {
+							String name = result.getString("NAME");
+							Location p1 = new Location(Bukkit.getWorld(result.getString("WORLD")), result.getInt("P1X"), result.getInt("P1Y"), result.getInt("P1Z"));
+							Location p2 = new Location(Bukkit.getWorld(result.getString("WORLD")), result.getInt("P2X"), result.getInt("P2Y"), result.getInt("P2Z"));
+							Shop shop = new ServerShop(name, result.getString("ECONOMY"), getHyperPlayer(result.getString("OWNER")), 
+									result.getString("MESSAGE"), p1, p2, result.getString("BANNED_OBJECTS"));
+							shops.put(name, shop);
+						} else if (type.equalsIgnoreCase("player")) {
+							if (!hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {continue;}
+							String name = result.getString("NAME");
+							Location p1 = new Location(Bukkit.getWorld(result.getString("WORLD")), result.getInt("P1X"), result.getInt("P1Y"), result.getInt("P1Z"));
+							Location p2 = new Location(Bukkit.getWorld(result.getString("WORLD")), result.getInt("P2X"), result.getInt("P2Y"), result.getInt("P2Z"));
+							Shop shop = new PlayerShop(name, result.getString("ECONOMY"), getHyperPlayer(result.getString("OWNER")), 
+									result.getString("MESSAGE"), p1, p2, result.getString("BANNED_OBJECTS"), result.getString("ALLOWED_PLAYERS"));
+							shops.put(name, shop);
+						}
+					}
+					result.close();
+				} else {
+					Shop shop = new ServerShop("GlobalShop", getGlobalShopAccount().getEconomy(), getGlobalShopAccount());
+					shops.put("GlobalShop", shop);
+				}
+				stopShopCheck();
+				startShopCheck();
+
 				hc.getServer().getScheduler().runTask(hc, new Runnable() {
 					public void run() {
 						addOnlinePlayers();
 						createGlobalShopAccount();
-						loadShops();
 						waitForDataLoad();
 					}
 				});
@@ -311,8 +352,69 @@ public class EconomyManager implements Listener {
 					he.updateNamesFromYml();
 				}
 				restart = true;
-			} else if (d.doubleValue() == 1.24) {
-				hc.getLogger().info("[HyperConomy]Updating for version 1.24.");
+			} else if (d.doubleValue() == 1.27) {
+				hc.getLogger().info("[HyperConomy]Importing YML shops for version 1.27.");
+				hc.gYH().registerFileConfiguration("shops");
+				FileConfiguration sh = hc.gYH().gFC("shops");
+				LanguageFile L = hc.getLanguageFile();
+				Iterator<String> it = sh.getKeys(false).iterator();
+				while (it.hasNext()) {
+					HashMap<String,String> values = new HashMap<String,String>();
+					Object element = it.next();
+					String name = element.toString(); 
+					String owner = sh.getString(name + ".owner");
+					if (owner == null || owner == "") {
+						owner = getGlobalShopAccount().getName();
+					}
+					String type = "player";
+					if (owner.equalsIgnoreCase(getGlobalShopAccount().getName())) {
+						type = "server";
+					}
+					values.put("NAME", name);
+					values.put("TYPE", type);
+					String economy = sh.getString(name + ".economy");
+					if (economy == null || economy == "") {
+						economy = "default";
+					}
+					values.put("ECONOMY", economy);
+					values.put("OWNER", owner);
+					String world = sh.getString(name + ".world");
+					if (world == null || world == "") {
+						world = "world";
+					}
+					values.put("WORLD", world);
+
+					String message1 = sh.getString(name + ".shopmessage1");
+					if (message1 == null || message1 == "") {
+						message1 = "&aWelcome to "+name+"";
+					}
+					String message2 = sh.getString(name + ".shopmessage2");
+					if (message2 == null || message2 == "") {
+						message2 = "&9Type &b/hc &9for help.";
+					}
+					String message = L.get("SHOP_LINE_BREAK")+"%n"+message1+"%n"+message2+"%n"+L.get("SHOP_LINE_BREAK");
+					values.put("MESSAGE", message);
+					values.put("P1X", sh.getString(name + ".p1.x"));
+					values.put("P1Y", sh.getString(name + ".p1.y"));
+					values.put("P1Z", sh.getString(name + ".p1.z"));
+					values.put("P2X", sh.getString(name + ".p2.x"));
+					values.put("P2Y", sh.getString(name + ".p2.y"));
+					values.put("P2Z", sh.getString(name + ".p2.z"));
+					String banned = sh.getString(name + ".unavailable");
+					if (banned == null) {
+						banned = "";
+					}
+					values.put("BANNED_OBJECTS", banned);
+					String allowed = sh.getString(name + ".allowed");
+					if (allowed == null) {
+						allowed = "";
+					}
+					values.put("ALLOWED_PLAYERS", allowed);
+					hc.getSQLWrite().performInsert("hyperconomy_shops", values);
+				}
+				restart = true;
+			} else if (d.doubleValue() == 1.28) {
+				hc.getLogger().info("[HyperConomy]Updating for version 1.28.");
 			}
 		}
 		if (restart) {hc.restart();}
@@ -746,57 +848,6 @@ public class EconomyManager implements Listener {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	private void loadShops() {
-		stopShopCheck();
-		shops.clear();
-		FileConfiguration sh = hc.gYH().gFC("shops");
-		if (!useShops) {
-			Shop shop = new ServerShop("GlobalShop", getGlobalShopAccount().getEconomy(), getGlobalShopAccount());
-			shop.setGlobal();
-			shops.put("GlobalShop", shop);
-			return;
-		}
-		Iterator<String> it = sh.getKeys(false).iterator();
-		while (it.hasNext()) {   			
-			Object element = it.next();
-			String name = element.toString(); 
-			if (name.equalsIgnoreCase("GlobalShop")) {continue;}
-			String owner = sh.getString(name + ".owner");
-			String economy = sh.getString(name + ".economy");
-			if (economy == null) {
-				economy = "default";
-			}
-			if (owner == null) {
-				owner = getGlobalShopAccount().getName();
-			}
-			if (owner.equalsIgnoreCase(getGlobalShopAccount().getName())) {
-				Shop shop = new ServerShop(name, economy, getHyperPlayer(owner));
-				shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
-				shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
-				shop.setMessage1(sh.getString(name + ".shopmessage1"));
-				shop.setMessage2(sh.getString(name + ".shopmessage2"));
-				shops.put(name, shop);
-			} else {
-				if (hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {
-					Shop shop = new PlayerShop(name, economy, getHyperPlayer(owner));
-					shop.setPoint1(sh.getString(name + ".world"), sh.getInt(name + ".p1.x"), sh.getInt(name + ".p1.y"), sh.getInt(name + ".p1.z"));
-					shop.setPoint2(sh.getString(name + ".world"), sh.getInt(name + ".p2.x"), sh.getInt(name + ".p2.y"), sh.getInt(name + ".p2.z"));
-					shop.setMessage1(sh.getString(name + ".shopmessage1"));
-					shop.setMessage2(sh.getString(name + ".shopmessage2"));
-					shops.put(name, shop);
-				}
-			}
-
-		}
-		startShopCheck();
-	}
 	
 	Shop getShop(Player player) {
 		if (player == null) {
