@@ -576,8 +576,8 @@ public class HyperObjectAPI implements ObjectAPI {
 	public TransactionResponse sellAll(Player p) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(p.getName());
-		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_ALL);
-		return hp.processTransaction(pt);
+		Sellall sa = new Sellall();
+		return sa.sellAll(hp, null);
 	}
 
 	public ArrayList<HyperObject> getAvailableObjects(Player p) {
@@ -700,9 +700,25 @@ public class HyperObjectAPI implements ObjectAPI {
 	public TransactionResponse sellAll(Player p, Inventory inventory) {
 		HyperConomy hc = HyperConomy.hc;
 		HyperPlayer hp = hc.getEconomyManager().getHyperPlayer(p.getName());
-		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_ALL);
-		pt.setGiveInventory(inventory);
-		return hp.processTransaction(pt);
+		EconomyManager em = hc.getEconomyManager();
+		HyperEconomy he = hp.getHyperEconomy();
+		TransactionResponse totalResponse = new TransactionResponse(hp);
+		for (int slot = 0; slot < inventory.getSize(); slot++) {
+			if (inventory.getItem(slot) == null) {continue;}
+			ItemStack stack = inventory.getItem(slot);
+			HyperItem hyperItem = he.getHyperItem(stack, em.getShop(hp.getPlayer()));
+			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+			pt.setGiveInventory(inventory);
+			pt.setHyperObject(hyperItem);
+			pt.setAmount(stack.getAmount());
+			TransactionResponse response = hp.processTransaction(pt);
+			if (response.successful()) {
+				totalResponse.addSuccess(response.getMessage(), response.getPrice(), response.getSuccessfulObjects().get(0));
+			} else {
+				totalResponse.addFailed(response.getMessage(), response.getFailedObjects().get(0));
+			}
+		}
+		return totalResponse;
 	}
 
 	public EnchantmentClass getEnchantmentClass(ItemStack stack) {

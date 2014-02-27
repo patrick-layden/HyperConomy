@@ -27,7 +27,7 @@ public class Notification implements TransactionListener {
 	public void onTransaction(PlayerTransaction pt, TransactionResponse response) {
 		if (response.successful()) {
 			TransactionType tt = pt.getTransactionType();
-			if (tt == TransactionType.BUY || tt == TransactionType.SELL || tt == TransactionType.SELL_ALL) {
+			if (tt == TransactionType.BUY || tt == TransactionType.SELL) {
 				if (pt.getHyperObject() != null) {
 					notificationQueue.add(pt.getHyperObject());
 					sendNotification();
