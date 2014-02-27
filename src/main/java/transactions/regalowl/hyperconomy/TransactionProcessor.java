@@ -113,8 +113,6 @@ public class TransactionProcessor {
 				} else {
 					return null;
 				}
-			case SELL_ALL:
-				return sellAll();
 			case SELL_TO_INVENTORY:
 				return sellToInventory();
 			case BUY_FROM_INVENTORY:
@@ -350,58 +348,7 @@ public class TransactionProcessor {
 	
 	
 	
-	public TransactionResponse sellAll() {
-		try {
-			LanguageFile L = hc.getLanguageFile();
-			TransactionResponse response = new TransactionResponse(hp);
-			if (hp == null) {
-				response.setFailed();
-				response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
-				heh.fireTransactionEvent(pt, response);
-				return response;
-			}
-			response.setSuccessful();
-			HyperEconomy econ = em.getEconomy(hp.getEconomy());
-			Inventory invent = null;
-			if (giveInventory == null) {
-				invent = hp.getPlayer().getInventory();
-			} else {
-				invent = giveInventory;
-			}
-			for (int slot = 0; slot < invent.getSize(); slot++) {
-				if (invent.getItem(slot) != null) {
-					ItemStack stack = invent.getItem(slot);
-					hyperItem = econ.getHyperItem(stack, em.getShop(hp.getPlayer()));
-					if (new HyperItemStack(stack).hasenchants() == false) {
-						if (hyperItem != null) {
-							if (!em.getShop(hp.getPlayer()).isBanned(hyperItem)) {
-								amount = hyperItem.count(hp.getInventory());
-								pt.setHyperObject(hyperItem);
-								TransactionResponse sresponse = sell();
-								if (sresponse.successful()) {
-									response.addSuccess(sresponse.getMessage(), sresponse.getPrice(), hyperItem);
-								} else {
-									response.addFailed(sresponse.getMessage(), hyperItem, stack);
-								}
-							} else {
-								response.addFailed(L.get("CANT_BE_TRADED"), hyperItem, stack);
-							}
-						} else {
-							response.addFailed(L.get("CANT_BE_TRADED"), hyperItem, stack);
-						}
-					} else {
-						response.addFailed(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"), hyperItem, stack);
-					}
-				} 
-			}
-			heh.fireTransactionEvent(pt, response);
-			return response;
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
-			return new TransactionResponse(hp);
-		}
-	}
+
 	
 	
 	

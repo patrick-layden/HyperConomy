@@ -12,7 +12,7 @@ public class TransactionResponse {
 	private ArrayList<String> messages = new ArrayList<String>();
 	private ArrayList<Double> prices = new ArrayList<Double>();
 	private ArrayList<HyperObject> failedObjects = new ArrayList<HyperObject>();
-	private ArrayList<ItemStack> failedItemStacks = new ArrayList<ItemStack>();
+	//private ArrayList<ItemStack> failedItemStacks = new ArrayList<ItemStack>();
 	private ArrayList<HyperObject> successfulObjects = new ArrayList<HyperObject>();
 	
 	TransactionResponse(HyperPlayer hp) {
@@ -20,12 +20,13 @@ public class TransactionResponse {
 		this.hp = hp;
 	}
 	
+	/*
 	public void addFailed(String message, HyperObject ho, ItemStack stack) {
 		messages.add(message);
 		failedObjects.add(ho);
 		failedItemStacks.add(stack);
 	}
-	
+	*/
 	public void addFailed(String message, HyperObject ho) {
 		messages.add(message);
 		failedObjects.add(ho);
@@ -83,9 +84,9 @@ public class TransactionResponse {
 		return failedObjects;
 	}
 	
-	public ArrayList<ItemStack> getFailedItemStacks() {
-		return failedItemStacks;
-	}
+	//public ArrayList<ItemStack> getFailedItemStacks() {
+	//	return failedItemStacks;
+	//}
 	
 	public ArrayList<HyperObject> getSuccessfulObjects() {
 		return successfulObjects;

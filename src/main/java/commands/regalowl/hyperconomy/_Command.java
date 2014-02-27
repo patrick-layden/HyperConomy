@@ -31,9 +31,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("sell") && (player != null)) {
 			new Sell(args, player, playerecon);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("sellall") && (player != null)) {
-			new Sellall(args, player);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("value")) {
 			new Value(args, sender, playerecon);
 			return true;
