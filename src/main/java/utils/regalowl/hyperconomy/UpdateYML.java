@@ -9,10 +9,6 @@ public class UpdateYML {
 	UpdateYML() {
 		HyperConomy hc = HyperConomy.hc;
 		YamlHandler yh = hc.getYamlHandler();
-		String t = yh.gFC("config").getString("config.signupdateinterval");
-		if (t == null) {
-			yh.gFC("config").set("config.signupdateinterval", 13);
-		}
 		String t2 = yh.gFC("config").getString("config.daystosavehistory");
 		if (t2 == null) {
 			yh.gFC("config").set("config.daystosavehistory", 30);

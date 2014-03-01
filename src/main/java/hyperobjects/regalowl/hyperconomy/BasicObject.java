@@ -115,9 +115,11 @@ public class BasicObject implements HyperObject {
 	public double getTotalStock() {
 		double totalStock = 0.0;
 		for (Shop s:hc.getEconomyManager().getShops()) {
-			if (s instanceof PlayerShop && ((PlayerShop) s).hasPlayerShopObject(this)) {
-				totalStock += ((PlayerShop) s).getPlayerShopObject(this).getStock();
-			}
+			if (!(s instanceof PlayerShop)) {continue;}
+			PlayerShop ps = (PlayerShop)s;
+			if (!ps.hasPlayerShopObject(this)) {continue;}
+			if (!ps.getEconomy().equalsIgnoreCase(economy)) {continue;}
+			totalStock += ((PlayerShop) s).getPlayerShopObject(this).getStock();
 		}
 		totalStock += stock;
 		return totalStock;

@@ -1,13 +1,14 @@
 package regalowl.hyperconomy;
 
 
+import java.util.HashMap;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class Repairsigns {
@@ -19,7 +20,6 @@ public class Repairsigns {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		EconomyManager em = hc.getEconomyManager();
-		FileConfiguration sns = hc.gYH().gFC("signs");
 		
 		if (args.length == 3 || args.length == 1) {
 			int xrad = Math.abs(Integer.parseInt(args[0]));
@@ -69,17 +69,24 @@ public class Repairsigns {
 										type = stype.toString();
 									}
 									if (type != null) {
-										String signKey = s.getBlock().getWorld().getName() + "|" + s.getBlock().getX() + "|" + s.getBlock().getY() + "|" + s.getBlock().getZ();
-											sns.set(signKey + ".itemname", objectName);
-											if (em.getEconomy("default").enchantTest(objectName)) {
-												sns.set(signKey + ".enchantclass", EnchantmentClass.DIAMOND.toString());
-											} else {
-												sns.set(signKey + ".enchantclass", EnchantmentClass.NONE.toString());
-											}
-											sns.set(signKey + ".multiplier", 1.0);
-											sns.set(signKey + ".type", type);
-											sns.set(signKey + ".economy", em.getHyperPlayer(player.getName()).getEconomy());
-											signsRepaired++;
+										HashMap<String,String> values = new HashMap<String,String>();
+										values.put("WORLD", s.getBlock().getWorld().getName());
+										values.put("X", s.getBlock().getX()+"");
+										values.put("Y", s.getBlock().getY()+"");
+										values.put("Z", s.getBlock().getZ()+"");
+										values.put("HYPEROBJECT", objectName);
+										values.put("TYPE", type.toString());
+										values.put("MULTIPLIER", "1");
+										values.put("ECONOMY", em.getHyperPlayer(player.getName()).getEconomy());
+										String eclass = "";
+										if (em.getEconomy("default").enchantTest(objectName)) {
+											eclass = EnchantmentClass.DIAMOND.toString();
+										} else {
+											eclass = EnchantmentClass.NONE.toString();
+										}
+										values.put("ECLASS", eclass);
+										hc.getSQLWrite().performInsert("hyperconomy_info_signs", values);
+										signsRepaired++;
 									}
 								}
 							}

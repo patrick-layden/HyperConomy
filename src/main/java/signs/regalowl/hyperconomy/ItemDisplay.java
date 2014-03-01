@@ -1,7 +1,7 @@
 package regalowl.hyperconomy;
 
 
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Chunk;
@@ -10,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -22,8 +21,6 @@ import org.bukkit.util.Vector;
 public class ItemDisplay {
 	
 	private HyperConomy hc;
-	
-	private String key;
 	private Item item;
 	private Location location;
 	private String name;
@@ -34,7 +31,7 @@ public class ItemDisplay {
 	private int entityId;
 	private boolean active;
 	
-	ItemDisplay(String key, Location location, String name) {
+	ItemDisplay(Location location, String name, boolean newDisplay) {
 		this.hc = HyperConomy.hc;
 		this.location = location;
 		this.active = false;
@@ -44,28 +41,19 @@ public class ItemDisplay {
 		this.z = this.location.getZ();
 		this.w = this.location.getWorld().getName();
 		this.name = he.fixName(name);
-		this.key = key;
-	}
-	
-	ItemDisplay(Location location, String name) {
-		this.hc = HyperConomy.hc;
-		this.location = location;
-		this.active = false;
-		HyperEconomy he = hc.getEconomyManager().getEconomy("default");
-		this.x = this.location.getX();
-		this.y = this.location.getY();
-		this.z = this.location.getZ();
-		this.w = this.location.getWorld().getName();
-		this.name = he.fixName(name);
-		storeDisplay();
+		if (newDisplay) {
+			HashMap<String,String> values = new HashMap<String,String>();
+			values.put("WORLD", w);
+			values.put("X", x+"");
+			values.put("Y", y+"");
+			values.put("Z", z+"");
+			values.put("HYPEROBJECT", name);
+			hc.getSQLWrite().performInsert("hyperconomy_item_displays", values);
+		}
 	}
 	
 	public boolean isActive() {
 		return active;
-	}
-	
-	public String getKey() {
-		return key;
 	}
 	
 	public Item getItem() {
@@ -136,26 +124,7 @@ public class ItemDisplay {
 		makeDisplay();
 	}
 	
-	public void storeDisplay() {
-		Iterator<String> it = hc.gYH().gFC("displays").getKeys(false).iterator();
-		int numdisplays = 0;
-		while (it.hasNext()) {
-			String key = it.next().toString();
-			int number = Integer.parseInt(key.substring(1, key.length()));
-			if (number > numdisplays) {
-				numdisplays = number;
-			}
-		}
-		numdisplays++;
-		FileConfiguration disp = hc.gYH().gFC("displays");
-		key = "d" + numdisplays;
-		disp.set(key + ".name", name);
-		disp.set(key + ".x", x);
-		disp.set(key + ".y", y);
-		disp.set(key + ".z", z);
-		disp.set(key + ".world", getWorld().getName());
-	}
-	
+
 	public void removeItem() {
 		if (item != null) {
 			item.remove();
@@ -164,8 +133,12 @@ public class ItemDisplay {
 	}
 	
 	public void delete() {
-		FileConfiguration disp = hc.gYH().gFC("displays");
-		disp.set(key, null);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		conditions.put("WORLD", w);
+		conditions.put("X", x+"");
+		conditions.put("Y", y+"");
+		conditions.put("Z", z+"");
+		hc.getSQLWrite().performDelete("hyperconomy_item_displays", conditions);
 		clear();
 	}
 	
@@ -176,7 +149,6 @@ public class ItemDisplay {
 		w = null;
 		name = null;
 		item = null;
-		key = null;
 	}
 	
 	

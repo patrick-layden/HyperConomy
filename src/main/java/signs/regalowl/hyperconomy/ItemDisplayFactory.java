@@ -1,8 +1,8 @@
 package regalowl.hyperconomy;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -10,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,6 +25,9 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.metadata.MetadataValue;
+
+import regalowl.databukkit.QueryResult;
+import regalowl.databukkit.SQLRead;
 
 public class ItemDisplayFactory implements Listener {
 	
@@ -53,22 +55,26 @@ public class ItemDisplayFactory implements Listener {
 	public void loadDisplays() {
 		try {
 			unloadDisplays();
-			FileConfiguration disp = hc.gYH().gFC("displays");
-			Iterator<String> it = disp.getKeys(false).iterator();
-			while (it.hasNext()) {
-				String key = it.next().toString();
-				String name = disp.getString(key + ".name");
-				double x = disp.getDouble(key + ".x");
-				double y = disp.getDouble(key + ".y");
-				double z = disp.getDouble(key + ".z");
-				World w = Bukkit.getWorld(disp.getString(key + ".world"));
-				Location l = new Location(w, x, y, z);
-				ItemDisplay display = new ItemDisplay(key, l, name);
-				String hkey = (int) Math.floor(x) + ":" + (int) Math.floor(y) + ":" + (int) Math.floor(z) + ":" + w.getName();
-				displays.put(hkey, display);
-				display.makeDisplay();
-				display.clearNearbyItems();
-			}
+			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+				public void run() {
+					SQLRead sr = hc.getSQLRead();
+					QueryResult result = sr.select("SELECT * FROM hyperconomy_item_displays");
+					while (result.next()) {
+						World w = Bukkit.getWorld(result.getString("WORLD"));
+						double x = result.getDouble("X");
+						double y = result.getDouble("Y");
+						double z = result.getDouble("Z");
+						String name = result.getString("HYPEROBJECT");
+						Location l = new Location(w,x,y,z);
+						ItemDisplay display = new ItemDisplay(l, name, false);
+						String hkey = (int) Math.floor(x) + ":" + (int) Math.floor(y) + ":" + (int) Math.floor(z) + ":" + w.getName();
+						displays.put(hkey, display);
+						display.makeDisplay();
+						display.clearNearbyItems();
+					}
+					result.close();
+				}
+			});
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 		}
@@ -134,20 +140,13 @@ public class ItemDisplayFactory implements Listener {
 	public boolean addDisplay(double x, double y, double z, World w, String name) {
 		x = Math.floor(x) + .5;
 		z = Math.floor(z) + .5;	
-		FileConfiguration disp = hc.gYH().gFC("displays");
-		Iterator<String> it = disp.getKeys(false).iterator();
-		while (it.hasNext()) {
-			String key = it.next().toString();
-			double tx = disp.getDouble(key + ".x");
-			double ty = disp.getDouble(key + ".y");
-			double tz = disp.getDouble(key + ".z");
-			World tw = Bukkit.getWorld(disp.getString(key + ".world"));
-			if (x == tx && y == ty && z == tz && w == tw) {
+		for (ItemDisplay display:displays.values()) {
+			if (x == display.getX() && y == display.getY() && z == display.getZ() && w.equals(display.getWorld())) {
 				return false;
 			}
 		}
 		Location l = new Location(w, x, y, z);
-		ItemDisplay display = new ItemDisplay(l, name);
+		ItemDisplay display = new ItemDisplay(l, name, true);
 		String hkey = (int)Math.floor(x) + ":" + (int)Math.floor(y) + ":" + (int)Math.floor(z) + ":" + w.getName();
 		displays.put(hkey, display);
 		Chunk locChunk = l.getChunk();
@@ -286,15 +285,15 @@ public class ItemDisplayFactory implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonRetractEvent(BlockPistonRetractEvent event) {
 		try {
-			if (hc.gYH().gFC("config").getBoolean("config.use-chest-shops")) {
-				Location l = event.getRetractLocation();
-				Block b = l.getBlock();
-				for (ItemDisplay display : displays.values()) {
-					if (!display.isActive()) {continue;}
-					if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
-						event.setCancelled(true);
-						display.refresh();
-					}
+			Location l = event.getRetractLocation();
+			Block b = l.getBlock();
+			for (ItemDisplay display : displays.values()) {
+				if (!display.isActive()) {
+					continue;
+				}
+				if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
+					event.setCancelled(true);
+					display.refresh();
 				}
 			}
 		} catch (Exception e) {
@@ -323,15 +322,15 @@ public class ItemDisplayFactory implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityExplodeEvent(EntityExplodeEvent event) {
 		try {
-			if (hc.gYH().gFC("config").getBoolean("config.use-chest-shops")) {
-				List<Block> blocks = event.blockList();
-				for (Block cblock : blocks) {
-					for (ItemDisplay display : displays.values()) {
-						if (!display.isActive()) {continue;}
-						if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
-							event.setCancelled(true);
-							display.refresh();
-						}
+			List<Block> blocks = event.blockList();
+			for (Block cblock : blocks) {
+				for (ItemDisplay display : displays.values()) {
+					if (!display.isActive()) {
+						continue;
+					}
+					if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
+						event.setCancelled(true);
+						display.refresh();
 					}
 				}
 			}

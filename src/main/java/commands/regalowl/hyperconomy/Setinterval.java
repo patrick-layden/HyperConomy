@@ -22,11 +22,6 @@ public class Setinterval {
     				hc.gYH().gFC("config").set("config.saveinterval", saveinterval);	
 	    			hc.gYH().startSaveTask(saveinterval);
 	    			sender.sendMessage(L.get("SAVE_INTERVAL_SET"));
-    			} else if (args[0].equalsIgnoreCase("sign")) {
-    				
-    				isign.setInterval(Long.parseLong(args[1]));
-    				hc.gYH().gFC("config").set("config.signupdateinterval", isign.getUpdateInterval());		    		
-	    			sender.sendMessage(L.get("SIGN_INTERVAL_SET"));
     			} else {
     				sender.sendMessage(L.get("SETINTERVAL_INVALID"));
     			}

@@ -86,9 +86,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		yh.registerFileConfiguration("categories");
 		yh.registerFileConfiguration("composites");
 		yh.registerFileConfiguration("config");
-		yh.registerFileConfiguration("displays");
 		yh.registerFileConfiguration("objects");
-		yh.registerFileConfiguration("signs");
 		yh.registerFileConfiguration("temp");
 		L = new LanguageFile();
 		hl = new HyperLock(true, false, false);

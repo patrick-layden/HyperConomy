@@ -264,10 +264,8 @@ INITIATION_TRUE: &6Initiation price is set to true for %n.
 INITIATION_FALSE: &6Initiation price is set to false for %n.
 ALL_OBJECTS_SET_TO: &6All objects set to initial pricing: %n
 SETINITIATIONALL_FALSE: &4Invalid parameters. Use /setinitiationall ['true' or 'false']
-SETINTERVAL_INVALID: &4Invalid Parameters.  Use /setinterval ['shop'/'log'/'save'/'sign'] [interval]
-SIGN_INTERVAL_SET: &6Sign update interval set!
+SETINTERVAL_INVALID: &4Invalid Parameters.  Use /setinterval ['shop'/'save'] [interval]
 SAVE_INTERVAL_SET: &6Save interval set!
-LOG_INTERVAL_SET: &6Log write interval set!
 SHOP_INTERVAL_SET: &6Shop check interval set!
 SETLANGUAGE_INVALID: &4Use /setlanguage [language] ('o')
 LANGUAGE_NOT_FOUND: &4The specified language file was not found or cannot be overwritten.

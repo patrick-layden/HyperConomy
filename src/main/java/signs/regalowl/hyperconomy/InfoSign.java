@@ -1,5 +1,7 @@
 package regalowl.hyperconomy;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -11,7 +13,6 @@ import org.bukkit.block.Sign;
 import regalowl.databukkit.CommonFunctions;
 
 public class InfoSign {
-	private String signKey;
 	private SignType type;
 	private String objectName;
 	private double multiplier;
@@ -28,44 +29,76 @@ public class InfoSign {
 	private String line2;
 	private String line3;
 	private String line4;
-	private boolean dataOk;
 	
 	private int timeValueHours;
 	private int timeValue;
 	private String increment;
 
-	InfoSign(String signKey, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass) {
+	InfoSign(Location signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass) {
 		this.multiplier = multiplier;
 		if (enchantClass == null) {
 			this.enchantClass = EnchantmentClass.DIAMOND;
 		} else {
 			this.enchantClass = enchantClass;
 		}
-		dataOk = setData(signKey, type, objectName, economy);
-		Sign s = getSign();
-		if (s != null) {
-			line1 = ChatColor.stripColor(s.getLine(0).trim());
-			line2 = ChatColor.stripColor(s.getLine(1).trim());
-			if (line1.length() > 13) {
-				line2 = ChatColor.DARK_BLUE + line1.substring(13, line1.length()) + line2;
-				line1 = ChatColor.DARK_BLUE + line1.substring(0, 13);
-			} else {
-				line1 = ChatColor.DARK_BLUE + line1;
-				line2 = ChatColor.DARK_BLUE + line2;
-			}
-			line3 = s.getLine(2);
-			line4 = s.getLine(3);
+		hc = HyperConomy.hc;
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		L = hc.getLanguageFile();
+		this.economy = "default";
+		if (economy != null) {
+			this.economy = economy;
 		}
+		this.world = signLoc.getWorld().getName();
+		this.x = signLoc.getBlockX();
+		this.y = signLoc.getBlockY();
+		this.z = signLoc.getBlockZ();
+		this.type = type;
+		this.objectName = he.fixName(objectName);
+		ho = he.getHyperObject(this.objectName);
+		if (!isValid()) {
+			deleteSign();
+			return;
+		}
+		Sign s = getSign();
+		line1 = ChatColor.stripColor(s.getLine(0).trim());
+		line2 = ChatColor.stripColor(s.getLine(1).trim());
+		if (line1.length() > 13) {
+			line2 = ChatColor.DARK_BLUE + line1.substring(13, line1.length()) + line2;
+			line1 = ChatColor.DARK_BLUE + line1.substring(0, 13);
+		} else {
+			line1 = ChatColor.DARK_BLUE + line1;
+			line2 = ChatColor.DARK_BLUE + line2;
+		}
+		line3 = s.getLine(2);
+		line4 = s.getLine(3);
 	}
 
-	InfoSign(String signKey, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass, String[] lines) {
+	
+	InfoSign(Location signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass, String[] lines) {
 		this.multiplier = multiplier;
 		if (enchantClass == null) {
 			this.enchantClass = EnchantmentClass.DIAMOND;
 		} else {
 			this.enchantClass = enchantClass;
 		}
-		dataOk = setData(signKey, type, objectName, economy);
+		hc = HyperConomy.hc;
+		HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
+		L = hc.getLanguageFile();
+		this.economy = "default";
+		this.world = signLoc.getWorld().getName();
+		this.x = signLoc.getBlockX();
+		this.y = signLoc.getBlockY();
+		this.z = signLoc.getBlockZ();
+		this.type = type;
+		this.objectName = he.fixName(objectName);
+		if (economy != null) {
+			this.economy = economy;
+		}
+		ho = he.getHyperObject(this.objectName);
+		if (!isValid()) {
+			deleteSign();
+			return;
+		}
 		line1 = ChatColor.stripColor(lines[0].trim());
 		line2 = ChatColor.stripColor(lines[1].trim());
 		if (line1.length() > 13) {
@@ -77,48 +110,21 @@ public class InfoSign {
 		}
 		line3 = lines[2];
 		line4 = lines[3];
+		HashMap<String,String> values = new HashMap<String,String>();
+		values.put("WORLD", world);
+		values.put("X", x+"");
+		values.put("Y", y+"");
+		values.put("Z", z+"");
+		values.put("HYPEROBJECT", objectName);
+		values.put("TYPE", type.toString());
+		values.put("MULTIPLIER", multiplier+"");
+		values.put("ECONOMY", economy+"");
+		values.put("ECLASS", enchantClass.toString());
+		hc.getSQLWrite().performInsert("hyperconomy_info_signs", values);
 	}
+	
 
-	public boolean setData(String signKey, SignType type, String objectName, String economy) {
-		try {
-			hc = HyperConomy.hc;
-			HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-			L = hc.getLanguageFile();
-			if (signKey == null || type == null || objectName == null || he == null) {
-				hc.gDB().writeError("DEBUG: infosign initialization null: " + signKey + ", " + objectName + ", " + economy);
-				return false;
-			}
-			this.economy = "default";
-			this.signKey = signKey;
-			this.world = signKey.substring(0, signKey.indexOf("|"));
-			signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
-			this.x = Integer.parseInt(signKey.substring(0, signKey.indexOf("|")));
-			signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
-			this.y = Integer.parseInt(signKey.substring(0, signKey.indexOf("|")));
-			signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
-			this.z = Integer.parseInt(signKey);
-			this.type = type;
-			this.objectName = he.fixName(objectName);
-			if (economy != null) {
-				this.economy = economy;
-			}
-			Location l = new Location(Bukkit.getWorld(world), x, y, z);
-			Chunk c = l.getChunk();
-			if (!c.isLoaded()) {
-				c.load();
-			}
-			Block signblock = Bukkit.getWorld(world).getBlockAt(x, y, z);
-			ho = he.getHyperObject(this.objectName);
-			if (signblock.getType().equals(Material.SIGN_POST) || signblock.getType().equals(Material.WALL_SIGN)) {
-				return true;
-			}
-			hc.gDB().writeError("DEBUG: infosign initialization failed: " + x + "," + y + "," + z + "," + world);
-			return false;
-		} catch (Exception e) {
-			hc.gDB().writeError(e, "InfoSign setData() passed signKey='" + signKey + "', SignType='" + type.toString() + "', objectName='" + objectName + "', economy='" + economy + "'");
-			return false;
-		}
-	}
+
 
 	public int getX() {
 		return x;
@@ -136,8 +142,8 @@ public class InfoSign {
 		return world;
 	}
 
-	public String getKey() {
-		return signKey;
+	public Location getLocation() {
+		return new Location(Bukkit.getWorld(world), x, y, z);
 	}
 
 	public SignType getType() {
@@ -160,23 +166,8 @@ public class InfoSign {
 		return enchantClass;
 	}
 
-	public boolean testData() {
-		getSign();
-		return dataOk;
-	}
 
 	public void update() {
-		if (!dataOk) {
-			return;
-		}
-		if (ho == null) {
-			HyperEconomy he = hc.getEconomyManager().getEconomy(economy);
-			ho = he.getHyperObject(objectName);
-			if (ho == null) {
-				hc.gDB().writeError("InfoSign HyperObject null after retry: " + objectName + "," + economy);
-				return;
-			}
-		}
 		CommonFunctions cf = hc.getCommonFunctions();
 		try {
 			switch (type) {
@@ -344,15 +335,13 @@ public class InfoSign {
 			hc.gDB().writeError(e);
 		}
 	}
-	
-	
-	@SuppressWarnings("deprecation")
+
 	private void updateHistorySign(int timevalueHours, int timevalue, String inc) {
 		try {
 			this.timeValueHours = timevalueHours;
 			this.timeValue = timevalue;
 			this.increment = inc;
-			hc.getServer().getScheduler().scheduleAsyncDelayedTask(hc, new Runnable() {
+			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 				public void run() {
 					String percentchange = hc.getHistory().getPercentChange(ho, timeValueHours);
 					String colorcode = getcolorCode(percentchange);
@@ -361,7 +350,7 @@ public class InfoSign {
 					if (line3.length() > 14) {
 						line3 = line3.substring(0, 13) + ")";
 					}
-					hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+					hc.getServer().getScheduler().runTask(hc, new Runnable() {
 						public void run() {
 							Sign s = getSign();
 							if (s != null) {
@@ -372,9 +361,9 @@ public class InfoSign {
 								s.update();
 							}
 						}
-					}, 0L);
+					});
 				}
-			}, 0L);
+			});
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 		}
@@ -398,11 +387,22 @@ public class InfoSign {
 	
 	
 	public void deleteSign() {
-		if (signKey != null && !signKey.equalsIgnoreCase("")) {
-			hc.gYH().gFC("signs").set(signKey, null);
-		}
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		conditions.put("WORLD", world);
+		conditions.put("X", x+"");
+		conditions.put("Y", y+"");
+		conditions.put("Z", z+"");
+		hc.getSQLWrite().performDelete("hyperconomy_info_signs", conditions);
 	}
 	
+	
+	public boolean isValid() {
+		Sign s = getSign();
+		if (s != null) {
+			return true;
+		}
+		return false;
+	}
 	
 	public Sign getSign() {
 		if (world == null) {
@@ -418,10 +418,8 @@ public class InfoSign {
 			Sign s = (Sign) signblock.getState();
 			return s;
 		} else {
-			dataOk = false;
 			return null;
 		}
-
 	}
 	
 }

@@ -3,7 +3,6 @@ api-version: 1.0
 config:
   shopcheckinterval: 6
   saveinterval: 24000
-  signupdateinterval: 5
   purchasetaxpercent: 3
   initialpurchasetaxpercent: 100
   statictaxpercent: 300

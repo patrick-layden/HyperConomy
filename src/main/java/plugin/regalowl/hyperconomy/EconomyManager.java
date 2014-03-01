@@ -68,6 +68,9 @@ public class EconomyManager implements Listener {
 		tables.add("shop_objects");
 		tables.add("frame_shops");
 		tables.add("banks");
+		tables.add("shops");
+		tables.add("info_signs");
+		tables.add("item_displays");
 	}
 	
 	public double getVersion() {
@@ -174,7 +177,8 @@ public class EconomyManager implements Listener {
 			if (version < 1.27) {
 				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.27.");
 				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shops (NAME VARCHAR(255) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
-				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_infosigns (NAME VARCHAR(255) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_info_signs (WORLD VARCHAR(255) NOT NULL, X INTEGER NOT NULL, Y INTEGER NOT NULL, Z INTEGER NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, TYPE VARCHAR(255) NOT NULL, MULTIPLIER INTEGER NOT NULL, ECONOMY VARCHAR(255) NOT NULL, ECLASS VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_item_displays (WORLD VARCHAR(255) NOT NULL, X DOUBLE NOT NULL, Y DOUBLE NOT NULL, Z DOUBLE NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
 				hc.getEconomyManager().addUpdateAfterLoad(1.27);
 
 
@@ -200,6 +204,8 @@ public class EconomyManager implements Listener {
 			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_frame_shops");		
 			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_banks");	
 			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_shops");
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_info_signs");
+			sw.convertExecuteSynchronously("DROP TABLE IF EXISTS hyperconomy_item_displays");
 		}
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(255) NOT NULL, VALUE TEXT, TIME DATETIME NOT NULL, PRIMARY KEY (SETTING))");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
@@ -211,6 +217,8 @@ public class EconomyManager implements Listener {
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_banks (NAME VARCHAR(255) NOT NULL PRIMARY KEY, BALANCE DOUBLE NOT NULL DEFAULT '0', OWNERS VARCHAR(255), MEMBERS VARCHAR(255))");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shops (NAME VARCHAR(255) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
+		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_info_signs (WORLD VARCHAR(255) NOT NULL, X INTEGER NOT NULL, Y INTEGER NOT NULL, Z INTEGER NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, TYPE VARCHAR(255) NOT NULL, MULTIPLIER INTEGER NOT NULL, ECONOMY VARCHAR(255) NOT NULL, ECLASS VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
+		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_item_displays (WORLD VARCHAR(255) NOT NULL, X DOUBLE NOT NULL, Y DOUBLE NOT NULL, Z DOUBLE NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
 		if (!copydatabase) {
 			sw.convertExecuteSynchronously("DELETE FROM hyperconomy_settings");
 			sw.convertExecuteSynchronously("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getEconomyManager().getVersion()+"', NOW() )");
@@ -231,7 +239,7 @@ public class EconomyManager implements Listener {
 			public void run() {
 				economies.clear();
 				//ArrayList<String> econs = sr.getStringList("SELECT DISTINCT ECONOMY FROM hyperconomy_objects");
-				ArrayList<String> econs = sr.getStringList("hyperconomy_objects", "ECONOMY", null);
+				ArrayList<String> econs = sr.getStringList("hyperconomy_objects", "DISTINCT ECONOMY", null);
 				for (String e : econs) {
 					economies.put(e, new HyperEconomy(e));
 				}
@@ -332,7 +340,11 @@ public class EconomyManager implements Listener {
 				}
 				if (loaded) {
 					dataLoaded = true;
-					updateAfterLoad();
+					boolean restart = updateAfterLoad();
+					if (restart) {
+						hc.restart();
+						return;
+					}
 					hc.getHyperEventHandler().fireDataLoadEvent();
 					loadActive = false;
 					hc.getHyperLock().setLoadLock(false);
@@ -343,7 +355,7 @@ public class EconomyManager implements Listener {
 	}
 	
 
-	private void updateAfterLoad() {
+	private boolean updateAfterLoad() {
 		boolean restart = false;
 		for (Double d:updateAfterLoad) {
 			if (d.doubleValue() == 1.23) {
@@ -412,12 +424,73 @@ public class EconomyManager implements Listener {
 					values.put("ALLOWED_PLAYERS", allowed);
 					hc.getSQLWrite().performInsert("hyperconomy_shops", values);
 				}
+				
+				hc.gYH().registerFileConfiguration("signs");
+				FileConfiguration sns = hc.gYH().gFC("signs");
+				hc.getLogger().info("[HyperConomy]Importing YML info signs for version 1.27.");
+				Iterator<String> iterat = sns.getKeys(false).iterator();
+				while (iterat.hasNext()) {
+					String signKey = iterat.next().toString();
+					String key = signKey;
+					String world = signKey.substring(0, signKey.indexOf("|"));
+					signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
+					int x = Integer.parseInt(signKey.substring(0, signKey.indexOf("|")));
+					signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
+					int y = Integer.parseInt(signKey.substring(0, signKey.indexOf("|")));
+					signKey = signKey.substring(signKey.indexOf("|") + 1, signKey.length());
+					int z = Integer.parseInt(signKey);
+					
+					String name = sns.getString(key + ".itemname");
+					SignType type = SignType.fromString(sns.getString(key + ".type"));
+					String economy = sns.getString(key + ".economy");
+					EnchantmentClass enchantClass = EnchantmentClass.fromString(sns.getString(key + ".enchantclass"));
+					int multiplier = sns.getInt(key + ".multiplier");
+					if (multiplier < 1) {
+						multiplier = 1;
+					}
+					HashMap<String,String> values = new HashMap<String,String>();
+					values.put("WORLD", world);
+					values.put("X", x+"");
+					values.put("Y", y+"");
+					values.put("Z", z+"");
+					values.put("HYPEROBJECT", name);
+					values.put("TYPE", type.toString());
+					values.put("MULTIPLIER", multiplier+"");
+					values.put("ECONOMY", economy);
+					values.put("ECLASS", enchantClass.toString());
+					hc.getSQLWrite().performInsert("hyperconomy_info_signs", values);
+				}
+				
+				
+				
+				hc.gYH().registerFileConfiguration("displays");
+				FileConfiguration displays = hc.gYH().gFC("displays");
+				hc.getLogger().info("[HyperConomy]Importing YML item displays for version 1.27.");
+				iterat = displays.getKeys(false).iterator();
+				while (iterat.hasNext()) {
+					String key = iterat.next().toString();
+					String name = displays.getString(key + ".name");
+					String world = displays.getString(key + ".world");
+					String x = displays.getString(key + ".x");
+					String y = displays.getString(key + ".y");
+					String z = displays.getString(key + ".z");
+					HashMap<String,String> values = new HashMap<String,String>();
+					values.put("WORLD", world);
+					values.put("X", x);
+					values.put("Y", y);
+					values.put("Z", z);
+					values.put("HYPEROBJECT", name);
+					hc.getSQLWrite().performInsert("hyperconomy_item_displays", values);
+				}
+				
+				
+				
 				restart = true;
 			} else if (d.doubleValue() == 1.28) {
 				hc.getLogger().info("[HyperConomy]Updating for version 1.28.");
 			}
 		}
-		if (restart) {hc.restart();}
+		return restart;
 	}
 	
 	public boolean dataLoaded() {
