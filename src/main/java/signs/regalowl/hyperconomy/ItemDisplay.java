@@ -106,6 +106,10 @@ public class ItemDisplay {
 		return entityId;
 	}
 	
+	public HyperItem getHyperItem() {
+		return hc.getEconomyManager().getDefaultEconomy().getHyperItem(name);
+	}
+	
 	public void makeDisplay() {
 		if (!location.getChunk().isLoaded()) {return;}
 		HyperEconomy he = hc.getEconomyManager().getEconomy("default");
@@ -126,9 +130,11 @@ public class ItemDisplay {
 	
 
 	public void removeItem() {
+		getChunk().load();
 		if (item != null) {
 			item.remove();
 		}
+		clearNearbyItems(.5,true,true);
 		active = false;
 	}
 	
@@ -214,30 +220,32 @@ public class ItemDisplay {
 	}
 	
 
-	public void clearNearbyItems() {
-		if (item == null) {return;}
-		List<Entity> nearbyEntities = item.getNearbyEntities(7, 7, 7);
+	public void clearNearbyItems(double radius, boolean removeDisplays, boolean removeSelf) {
+		HyperItem hi = getHyperItem();
+		if (hi == null) {return;}
+		Item tempItem = getWorld().dropItem(location, hi.getItemStack());
+		List<Entity> nearbyEntities = tempItem.getNearbyEntities(radius, radius, radius);
 		for (Entity entity : nearbyEntities) {
-			if (entity instanceof Item) {
-				Item nearbyItem = (Item) entity;
-				boolean display = false;
-				for (MetadataValue cmeta: nearbyItem.getMetadata("HyperConomy")) {
-					if (cmeta.asString().equalsIgnoreCase("item_display")) {
-						display = true;
-						break;
-					}
-				}
-				if (!nearbyItem.equals(item) && !display) {
-					if (nearbyItem.getItemStack().getType() == item.getItemStack().getType()) {
-						HyperItemStack near = new HyperItemStack(nearbyItem.getItemStack());
-						HyperItemStack displayItem = new HyperItemStack(item.getItemStack());
-						if (near.getDamageValue() == displayItem.getDamageValue()) {
-							entity.remove();
-						}
-					}
+			if (!(entity instanceof Item)) {continue;}
+			Item nearbyItem = (Item) entity;
+			boolean display = false;
+			for (MetadataValue cmeta: nearbyItem.getMetadata("HyperConomy")) {
+				if (cmeta.asString().equalsIgnoreCase("item_display")) {
+					display = true;
+					break;
 				}
 			}
+			if (nearbyItem.equals(tempItem)) {continue;}
+			if (nearbyItem.equals(item) && !removeSelf) {continue;}
+			if (nearbyItem.getItemStack().getType() != tempItem.getItemStack().getType()) {continue;}
+			if (!removeDisplays && display) {continue;}
+			HyperItemStack near = new HyperItemStack(nearbyItem.getItemStack());
+			HyperItemStack displayItem = new HyperItemStack(tempItem.getItemStack());
+			if (near.getDamageValue() == displayItem.getDamageValue()) {
+				entity.remove();
+			}
 		}
+		tempItem.remove();
 	}
 
 }

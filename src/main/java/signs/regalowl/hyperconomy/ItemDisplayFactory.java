@@ -70,7 +70,7 @@ public class ItemDisplayFactory implements Listener {
 						String hkey = (int) Math.floor(x) + ":" + (int) Math.floor(y) + ":" + (int) Math.floor(z) + ":" + w.getName();
 						displays.put(hkey, display);
 						display.makeDisplay();
-						display.clearNearbyItems();
+						display.clearNearbyItems(7,false,false);
 					}
 					result.close();
 				}
@@ -83,7 +83,7 @@ public class ItemDisplayFactory implements Listener {
 
 	public void unloadDisplays() {
 		for (ItemDisplay display:displays.values()) {
-			display.clearNearbyItems();
+			display.clearNearbyItems(.5,true,true);
 			display.clear();
 		}
 		displays.clear();
@@ -152,7 +152,7 @@ public class ItemDisplayFactory implements Listener {
 		Chunk locChunk = l.getChunk();
 		if (locChunk.isLoaded()) {
 			display.makeDisplay();
-			display.clearNearbyItems();
+			display.clearNearbyItems(7,false,false);
 		}
 		return true;
 	}
