@@ -132,7 +132,7 @@ public class InfoSignHandler implements Listener {
 						return;
 					}
 					InfoSign cs = signs.get(0);
-					if (cs.isValid()) {
+					if (cs.getSign() != null) {
 						cs.update();
 					} else {
 						cs.deleteSign();

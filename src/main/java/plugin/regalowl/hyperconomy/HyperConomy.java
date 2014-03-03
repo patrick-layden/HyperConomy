@@ -166,7 +166,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	}
 	
 	public void restart() {
-		disable(false);
+		disable(true);
 		load();
 		enable();
 	}

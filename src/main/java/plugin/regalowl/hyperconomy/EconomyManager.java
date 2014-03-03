@@ -30,7 +30,6 @@ public class EconomyManager implements Listener {
 	private boolean dataLoaded;
 	private boolean playersLoaded;
 	private BukkitTask economyWait;
-	private BukkitTask dataWait;
 	private boolean loadActive;
 	private boolean economiesLoaded;
 	
@@ -319,29 +318,25 @@ public class EconomyManager implements Listener {
 	}
 	
 	private void waitForDataLoad() {
-		dataWait = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
+		hc.getServer().getScheduler().runTaskLater(hc, new Runnable() {
 			public void run() {
 				if (dataLoaded) {return;}
-				boolean loaded = true;
 				for (Shop s : getShops()) {
 					if (!s.isLoaded()) {
-						loaded = false;
-					}
-				}
-				if (loaded) {
-					dataLoaded = true;
-					boolean restart = updateAfterLoad();
-					if (restart) {
-						hc.restart();
+						waitForDataLoad();
 						return;
 					}
-					hc.getHyperEventHandler().fireDataLoadEvent();
-					loadActive = false;
-					hc.getHyperLock().setLoadLock(false);
-					dataWait.cancel();
 				}
+				dataLoaded = true;
+				if (updateAfterLoad()) {
+					hc.restart();
+					return;
+				}
+				hc.getHyperEventHandler().fireDataLoadEvent();
+				loadActive = false;
+				hc.getHyperLock().setLoadLock(false);
 			}
-		}, 1L, 1L);
+		}, 1L);
 	}
 	
 

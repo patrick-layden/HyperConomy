@@ -55,11 +55,11 @@ public class InfoSign {
 		this.type = type;
 		this.objectName = he.fixName(objectName);
 		ho = he.getHyperObject(this.objectName);
-		if (!isValid()) {
+		Sign s = getSign();
+		if (s == null) {
 			deleteSign();
 			return;
 		}
-		Sign s = getSign();
 		line1 = ChatColor.stripColor(s.getLine(0).trim());
 		line2 = ChatColor.stripColor(s.getLine(1).trim());
 		if (line1.length() > 13) {
@@ -95,7 +95,7 @@ public class InfoSign {
 			this.economy = economy;
 		}
 		ho = he.getHyperObject(this.objectName);
-		if (!isValid()) {
+		if (getSign() == null) {
 			deleteSign();
 			return;
 		}
@@ -395,7 +395,7 @@ public class InfoSign {
 		hc.getSQLWrite().performDelete("hyperconomy_info_signs", conditions);
 	}
 	
-	
+	/*
 	public boolean isValid() {
 		Sign s = getSign();
 		if (s != null) {
@@ -403,6 +403,7 @@ public class InfoSign {
 		}
 		return false;
 	}
+	*/
 	
 	public Sign getSign() {
 		if (world == null) {
@@ -421,5 +422,6 @@ public class InfoSign {
 			return null;
 		}
 	}
+	
 	
 }
