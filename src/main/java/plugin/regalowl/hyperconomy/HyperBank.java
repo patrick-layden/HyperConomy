@@ -68,6 +68,17 @@ public class HyperBank implements HyperAccount {
 	}
 
 	@Override
+	public void setName(String newName) {
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET NAME=? WHERE NAME=?",hc.getDataBukkit());
+		ws.addParameter(newName);
+		ws.addParameter(this.name);
+		hc.getSQLWrite().addToQueue(ws);
+		this.name = newName;
+		hc.getEconomyManager().removeHyperBank(this);
+		hc.getEconomyManager().addHyperBank(this);
+	}
+	
+	@Override
 	public void setBalance(double balance) {
 		this.balance = balance;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET BALANCE=? WHERE NAME=?",hc.getDataBukkit());

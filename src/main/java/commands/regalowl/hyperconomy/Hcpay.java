@@ -15,10 +15,10 @@ public class Hcpay {
 					player.sendMessage(L.get("CANNOT_PAY_NEGATIVE"));
 					return;
 				}
-				if (em.hasAccount(recipient)) {
+				if (em.accountExists(recipient)) {
 					if (em.getHyperPlayer(player.getName()).hasBalance(amount)) {
 						em.getHyperPlayer(player.getName()).withdraw(amount);
-						em.getHyperPlayer(recipient).deposit(amount);
+						em.getAccount(recipient).deposit(amount);
 						player.sendMessage(L.f(L.get("MONEY_PAYED"), amount, recipient));
 					} else {
 						player.sendMessage(L.get("INSUFFICIENT_FUNDS"));

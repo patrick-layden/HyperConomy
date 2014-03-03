@@ -25,16 +25,16 @@ public class Audit {
 		em = hc.getEconomyManager();
 		try {
 			account = args[0];
-			if (!em.hasAccount(account)) {
+			if (!em.accountExists(account)) {
 				sender.sendMessage(L.get("ACCOUNT_NOT_FOUND"));
 				return;
 			}
 
 			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 	    		public void run() {
-	    			HyperPlayer hp = em.getHyperPlayer(account);
-	    			account = hp.getName();
-	    			cbalance = hp.getBalance();
+	    			HyperAccount ha = em.getAccount(account);
+	    			account = ha.getName();
+	    			cbalance = ha.getBalance();
 	    			logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
 	    			auditbalance = getAuditLogTotal(account);
 	    			hc.getServer().getScheduler().runTask(hc, new Runnable() {

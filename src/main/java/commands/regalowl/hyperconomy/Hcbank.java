@@ -86,7 +86,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
-			if (!em.hasAccount(args[2])) {
+			if (!em.hyperPlayerExists(args[2])) {
 				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 				return true;
 			}
@@ -111,7 +111,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
-			if (!em.hasAccount(args[2])) {
+			if (!em.hyperPlayerExists(args[2])) {
 				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 				return true;
 			}
@@ -136,7 +136,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
-			if (!em.hasAccount(args[2])) {
+			if (!em.hyperPlayerExists(args[2])) {
 				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 				return true;
 			}
@@ -161,7 +161,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
-			if (!em.hasAccount(args[2])) {
+			if (!em.hyperPlayerExists(args[2])) {
 				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 				return true;
 			}

@@ -16,10 +16,10 @@ public class Hcbalance {
 				sender.sendMessage(L.f(L.get("PLAYER_BALANCE_MESSAGE"), "", L.formatMoney(balance)));
 				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
     		} else if (args.length == 1 && sender.hasPermission("hyperconomy.balanceall")) {
-    			if (!em.hasAccount(args[0])) {
+    			if (!em.accountExists(args[0])) {
         			sender.sendMessage(L.get("PLAYER_NOT_FOUND"));
     			} else {
-    				Double balance = em.getHyperPlayer(args[0]).getBalance();
+    				Double balance = em.getAccount(args[0]).getBalance();
     				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
         			sender.sendMessage(L.f(L.get("BALANCE_MESSAGE"), args[0], L.formatMoney(balance)));
     				sender.sendMessage(L.get("SHOP_LINE_BREAK"));

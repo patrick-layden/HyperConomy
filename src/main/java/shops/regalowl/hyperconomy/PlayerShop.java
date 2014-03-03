@@ -597,27 +597,30 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	public ArrayList<String> getAllowed() {
 		return allowed;
 	}
-	public void addAllowed(HyperPlayer hp) {
-		if (!allowed.contains(hp.getName())) {
-			allowed.add(hp.getName());
+	public void addAllowed(HyperAccount ha) {
+		if (!allowed.contains(ha.getName())) {
+			allowed.add(ha.getName());
 		}
 		saveAllowed();
 	}
-	public void removeAllowed(HyperPlayer hp) {
-		if (allowed.contains(hp.getName())) {
-			allowed.remove(hp.getName());
+	public void removeAllowed(HyperAccount ha) {
+		if (allowed.contains(ha.getName())) {
+			allowed.remove(ha.getName());
 		}
 		saveAllowed();
 	}
-	public boolean isAllowed(HyperPlayer hp) {
-		if (allowed.contains(hp.getName())) {
+	public boolean isAllowed(HyperAccount ha) {
+		if (allowed.contains(ha.getName())) {
 			return true;
 		}
-		if (hp.getName().equalsIgnoreCase(owner.getName())) {
+		if (ha.getName().equalsIgnoreCase(owner.getName())) {
 			return true;
 		}
-		if (hp.getPlayer() != null && hp.getPlayer().hasPermission("hyperconomy.admin")) {
-			return true;
+		if (ha instanceof HyperPlayer) {
+			HyperPlayer hp = (HyperPlayer)ha;
+			if (hp.getPlayer() != null && hp.getPlayer().hasPermission("hyperconomy.admin")) {
+				return true;
+			}
 		}
 		return false;
 	}

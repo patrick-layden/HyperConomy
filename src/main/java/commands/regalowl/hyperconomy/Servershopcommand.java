@@ -114,7 +114,7 @@ public class Servershopcommand implements CommandExecutor {
 		} else if (args[0].equalsIgnoreCase("owner") || args[0].equalsIgnoreCase("o")) {
 			try {
 				HyperAccount owner = null;
-				if (em.hasAccount(args[1])) {
+				if (em.hyperPlayerExists(args[1])) {
 					owner = em.getHyperPlayer(args[1]);
 				} else {
 					if (em.hasBank(args[1])) {

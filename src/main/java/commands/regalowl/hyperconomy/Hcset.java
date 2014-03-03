@@ -249,9 +249,9 @@ public class Hcset implements CommandExecutor {
 			} else if (args[0].equalsIgnoreCase("balance") || args[0].equalsIgnoreCase("b")) {
 				try {
 					String accountName = args[1];
-					if (em.hasAccount(accountName)) {
+					if (em.accountExists(accountName)) {
 						Double balance = Double.parseDouble(args[2]);
-						em.getHyperPlayer(accountName).setBalance(balance);
+						em.getAccount(accountName).setBalance(balance);
 						sender.sendMessage(L.get("BALANCE_SET"));
 					} else {
 						sender.sendMessage(L.get("ACCOUNT_NOT_EXIST"));

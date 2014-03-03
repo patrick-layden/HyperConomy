@@ -563,11 +563,11 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("MANAGESHOP_ALLOW_HELP"));
 				return true;
 			}
-			if (!em.hasAccount(args[1])) {
+			if (!em.accountExists(args[1])) {
 				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 				return true;
 			}
-			HyperPlayer ap = em.getHyperPlayer(args[1]);
+			HyperAccount ap = em.getAccount(args[1]);
 			if (cps.isAllowed(ap)) {
 				cps.removeAllowed(ap);
 				player.sendMessage(L.get("DISALLOWED_TO_MANAGE_SHOP"));
@@ -600,11 +600,11 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("MANAGESHOP_OWNER_HELP"));
 				return true;
 			}
-			if (!em.hasAccount(args[1])) {
+			if (!em.accountExists(args[1])) {
 				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 				return true;
 			}
-			HyperPlayer newOwner = em.getHyperPlayer(args[1]);
+			HyperAccount newOwner = em.getAccount(args[1]);
 			cps.setOwner(newOwner);
 			player.sendMessage(L.get("OWNER_SET"));
 			return true;

@@ -49,7 +49,7 @@ public class Hcdelete implements CommandExecutor {
 				try {
 					if (args.length == 2) {
 						String name = args[1];
-						if (em.hasAccount(name)) {
+						if (em.hyperPlayerExists(name)) {
 							HyperPlayer hp = em.getHyperPlayer(name);
 							hp.delete();
 							sender.sendMessage(L.get("HCDELETE_SUCCESS"));

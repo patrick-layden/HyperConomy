@@ -18,8 +18,9 @@ import regalowl.databukkit.SQLWrite;
 
 
 
-public class HyperEconomy {
+public class HyperEconomy implements DataLoadListener {
 
+	private HyperAccount defaultAccount;
 	private ConcurrentHashMap<String, HyperObject> hyperObjectsName = new ConcurrentHashMap<String, HyperObject>();
 	private ConcurrentHashMap<String, HyperObject> hyperObjectsData = new ConcurrentHashMap<String, HyperObject>();
 	private ConcurrentHashMap<String, String> hyperObjectsAliases = new ConcurrentHashMap<String, String>();
@@ -29,7 +30,7 @@ public class HyperEconomy {
 	private boolean useComposites;
 	private HyperConomy hc;
 	private SQLRead sr;
-	private String economy;
+	private String economyName;
 	private boolean dataLoaded;
 	
 	private String xpName = null;
@@ -38,24 +39,37 @@ public class HyperEconomy {
 	HyperEconomy(String economy) {
 		dataLoaded = false;
 		hc = HyperConomy.hc;	
-		this.economy = economy;
+		this.economyName = economy;
 		sr = hc.getSQLRead();
 		useComposites = hc.gYH().gFC("config").getBoolean("config.use-composite-items");
 		loadCompositeKeys();
 		load();
 	}
 
+	@Override
+	public void onDataLoad() {
+		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			public void run() {
+				HashMap<String,String> conditions = new HashMap<String,String>();
+				conditions.put("NAME", economyName);
+				String account = sr.getString("hyperconomy_economies", "hyperaccount", conditions);
+				defaultAccount = hc.getEconomyManager().getAccount(account);
+			}
+		});
+	}
 
 	public boolean dataLoaded() {
 		return dataLoaded;
 	}
+	
+
 
 	private void load() {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				hyperObjectsName.clear();
 				hyperObjectsData.clear();
-				QueryResult result = sr.select("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economy+"'");
+				QueryResult result = sr.select("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economyName+"'");
 				while (result.next()) {
 					if (useComposites && compositeKeys.contains(result.getString("NAME").toLowerCase())) {continue;}
 					HyperObjectType type = HyperObjectType.fromString(result.getString("TYPE"));
@@ -145,7 +159,7 @@ public class HyperEconomy {
 					loaded = false;
 					continue;
 				}
-				HyperItem ho = new CompositeItem(name, economy);
+				HyperItem ho = new CompositeItem(name, economyName);
 				hyperObjectsName.put(ho.getName().toLowerCase(), ho);
 				hyperObjectsData.put(ho.getMaterialEnum() + "|" + ho.getData(), ho);
 				for (String alias:ho.getAliases()) {
@@ -171,10 +185,22 @@ public class HyperEconomy {
 	}
 	
 
+	public HyperAccount getDefaultAccount() {
+		return defaultAccount;
+	}
 	
+	public void setDefaultAccount(HyperAccount account) {
+		if (account == null) {return;}
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", economyName);
+		values.put("HYPERACCOUNT", account.getName());
+		hc.getSQLWrite().performUpdate("hyperconomy_economies", values, conditions);
+		this.defaultAccount = account;
+	}
 	
-	public String getEconomy() {
-		return economy;
+	public String getName() {
+		return economyName;
 	}
 	
 
@@ -484,7 +510,7 @@ public class HyperEconomy {
 				}
 				HashMap<String, String> values = new HashMap<String, String>();
 				values.put("NAME", itemname);
-				values.put("ECONOMY", economy);
+				values.put("ECONOMY", economyName);
 				values.put("DISPLAY_NAME", objects.getString(itemname + ".name.display"));
 				values.put("ALIASES", objects.getString(itemname + ".name.aliases"));
 				values.put("TYPE", objects.getString(itemname + ".information.type"));

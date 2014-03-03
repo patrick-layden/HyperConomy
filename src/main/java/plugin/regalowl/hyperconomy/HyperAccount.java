@@ -6,6 +6,7 @@ public interface HyperAccount {
 	public double getBalance();
 	public void deposit(double amount);
 	public void withdraw(double amount);
+	public void setName(String newName);
 	public void setBalance(double balance);
 	public boolean hasBalance(double balance);
 	public void sendMessage(String message);

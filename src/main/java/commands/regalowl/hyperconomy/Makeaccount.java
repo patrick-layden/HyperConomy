@@ -10,9 +10,9 @@ public class Makeaccount {
 		try {
 			if (args.length == 1) {
 				String account = args[0];
-				if (!em.hasAccount(account)) {
-					boolean success = em.createPlayerAccount(account);
-					if (success) {
+				if (!em.accountExists(account)) {
+					HyperPlayer hp = em.addPlayer(account);
+					if (hp != null) {
 						sender.sendMessage(L.get("MAKEACCOUNT_SUCCESS"));
 					} else {
 						sender.sendMessage(L.get("MAKEACCOUNT_FAILED"));

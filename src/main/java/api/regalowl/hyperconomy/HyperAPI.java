@@ -83,7 +83,7 @@ public class HyperAPI implements GeneralAPI {
 			}
 		}
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getEconomyManager().hasAccount(player)) {
+		if (hc.getEconomyManager().hyperPlayerExists(player)) {
 			return hc.getEconomyManager().getHyperPlayer(player).getX();
 		} else {
 			return 0.0;
@@ -97,7 +97,7 @@ public class HyperAPI implements GeneralAPI {
 			}
 		}
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getEconomyManager().hasAccount(player)) {
+		if (hc.getEconomyManager().hyperPlayerExists(player)) {
 			return hc.getEconomyManager().getHyperPlayer(player).getY();
 		} else {
 			return 0.0;
@@ -111,7 +111,7 @@ public class HyperAPI implements GeneralAPI {
 			}
 		}
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getEconomyManager().hasAccount(player)) {
+		if (hc.getEconomyManager().hyperPlayerExists(player)) {
 			return hc.getEconomyManager().getHyperPlayer(player).getZ();
 		} else {
 			return 0.0;
@@ -130,7 +130,7 @@ public class HyperAPI implements GeneralAPI {
 
 	public boolean checkHash(String player, String SHA256Hash) {
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getEconomyManager().hasAccount(player)) {
+		if (hc.getEconomyManager().hyperPlayerExists(player)) {
 			if (hc.getEconomyManager().getHyperPlayer(player).getHash().equals(SHA256Hash)) {
 				return true;
 			} else {
@@ -144,7 +144,7 @@ public class HyperAPI implements GeneralAPI {
 	
 	public String getSalt(String player) {
 		HyperConomy hc = HyperConomy.hc;
-		if (hc.getEconomyManager().hasAccount(player)) {
+		if (hc.getEconomyManager().hyperPlayerExists(player)) {
 			return hc.getEconomyManager().getHyperPlayer(player).getSalt();
 		} else {
 			return "";

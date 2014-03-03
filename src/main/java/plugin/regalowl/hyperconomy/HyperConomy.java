@@ -110,11 +110,13 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		db.createDatabase();
 		sw = db.getSQLWrite();
 		sr = db.getSQLRead();
-		if (config.getBoolean("config.log-sql-statements")) {
-			sw.setLogSQL(true);
-		}
+		sw.setLogSQL(config.getBoolean("config.log-sql-statements"));
 		setupExternalEconomy();
-		logEconomyState();
+		if (useExternalEconomy) {
+			log.info("[HyperConomy]Using external economy plugin via Vault.");
+		} else {
+			log.info("[HyperConomy]Using internal economy plugin.");
+		}
 		em.load();
 		l = new Log(this);
 		commandhandler = new _Command();
@@ -164,7 +166,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	}
 	
 	public void restart() {
-		disable(true);
+		disable(false);
 		load();
 		enable();
 	}
@@ -301,14 +303,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		if (economy.getName().equalsIgnoreCase("HyperConomy")) {
 			useExternalEconomy = false;
 			return;
-		}
-	}
-	
-	private void logEconomyState() {
-		if (useExternalEconomy) {
-			log.info("[HyperConomy]Using external economy plugin via Vault.");
-		} else {
-			log.info("[HyperConomy]Using internal economy plugin.");
 		}
 	}
 
