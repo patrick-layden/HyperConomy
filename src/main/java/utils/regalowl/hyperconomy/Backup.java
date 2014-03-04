@@ -40,10 +40,10 @@ public class Backup {
 		backupFiles = ft.getFolderContents(spath + File.separator + "Languages");
 
 		spath += File.separator + "Languages";
-		destinationPath += File.separator + "Languages";
-		ft.makeFolder(destinationPath);
+		String languagePath = destinationPath + File.separator + "Languages";
+		ft.makeFolder(languagePath);
 		for (int i = 0; i < backupFiles.size(); i++) {
-			ft.copyFile(spath + File.separator + backupFiles.get(i), destinationPath + File.separator + backupFiles.get(i));
+			ft.copyFile(spath + File.separator + backupFiles.get(i), languagePath + File.separator + backupFiles.get(i));
 		}
 		
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
