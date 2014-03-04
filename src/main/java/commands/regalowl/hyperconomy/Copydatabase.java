@@ -72,7 +72,7 @@ public class Copydatabase {
 						EconomyManager em = hc.getEconomyManager();
 						SQLRead sr = hc.getSQLRead();
 						hc.getHyperLock().setLoadLock(true);
-						em.createTables(sw, true);
+						em.getDatabaseUpdater().createTables(sw, true);
 						for (HyperObject ho : em.getHyperObjects()) {
 							if (ho instanceof HyperItem) {
 								HyperItem hi = (HyperItem)ho;

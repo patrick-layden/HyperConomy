@@ -69,10 +69,16 @@ public class ItemDisplayFactory implements Listener {
 						ItemDisplay display = new ItemDisplay(l, name, false);
 						String hkey = (int) Math.floor(x) + ":" + (int) Math.floor(y) + ":" + (int) Math.floor(z) + ":" + w.getName();
 						displays.put(hkey, display);
-						display.makeDisplay();
-						display.clearNearbyItems(7,false,false);
 					}
 					result.close();
+					hc.getServer().getScheduler().runTask(hc, new Runnable() {
+						public void run() {
+							for (ItemDisplay display:displays.values()) {
+								display.makeDisplay();
+								display.clearNearbyItems(7,false,false);
+							}
+						}
+					});
 				}
 			});
 		} catch (Exception e) {
