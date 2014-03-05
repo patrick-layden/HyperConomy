@@ -97,9 +97,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("importnewitems")) {
 			new Importnewitems(args, sender);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("copydatabase")) {
-			new Copydatabase(sender, args);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hyperlog")) {
 			new Hyperlog(args, sender);
 			return true;

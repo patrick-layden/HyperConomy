@@ -192,10 +192,6 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [yai, ya]
-   copydatabase:
-      description: Copys database from SQLite to MySQL and vice versa.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
    listcategories:
       description: Lists all categories.
       permission: hyperconomy.admin
