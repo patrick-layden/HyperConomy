@@ -5,6 +5,8 @@ import java.util.Iterator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import regalowl.hyperconomy.HyperObject;
+
 public class Importprices {
 
 	Importprices(String args[], CommandSender sender) {

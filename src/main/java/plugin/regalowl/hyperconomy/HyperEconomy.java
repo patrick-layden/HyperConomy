@@ -15,6 +15,7 @@ import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
+import regalowl.hyperconomy.HyperObject;
 
 
 
@@ -74,7 +75,7 @@ public class HyperEconomy implements DataLoadListener {
 					if (useComposites && compositeKeys.contains(result.getString("NAME").toLowerCase())) {continue;}
 					HyperObjectType type = HyperObjectType.fromString(result.getString("TYPE"));
 					if (type == HyperObjectType.ITEM) {
-						HyperItem hobj = new ComponentItem(result.getString("NAME"), result.getString("ECONOMY"), 
+						HyperObject hobj = new ComponentItem(result.getString("NAME"), result.getString("ECONOMY"), 
 								result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
 								result.getString("MATERIAL"), result.getInt("DATA"),
 								result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
@@ -159,7 +160,7 @@ public class HyperEconomy implements DataLoadListener {
 					loaded = false;
 					continue;
 				}
-				HyperItem ho = new CompositeItem(name, economyName);
+				HyperObject ho = new CompositeItem(name, economyName);
 				hyperObjectsName.put(ho.getName().toLowerCase(), ho);
 				hyperObjectsData.put(ho.getMaterialEnum() + "|" + ho.getData(), ho);
 				for (String alias:ho.getAliases()) {
@@ -253,83 +254,11 @@ public class HyperEconomy implements DataLoadListener {
 			ho = hyperObjectsName.get(name);
 			hyperObjectsName.remove(name);
 		}
-		if (ho instanceof HyperItem) {
-			HyperItem hi = (HyperItem)ho;
-			if (hyperObjectsData.containsKey(hi.getMaterialEnum() + "|" + hi.getData())) {
-				hyperObjectsData.remove(hi.getMaterialEnum() + "|" + hi.getData());
+		if (ho.getType() == HyperObjectType.ITEM) {
+			if (hyperObjectsData.containsKey(ho.getMaterialEnum() + "|" + ho.getData())) {
+				hyperObjectsData.remove(ho.getMaterialEnum() + "|" + ho.getData());
 			}
 		}
-	}
-	
-	public HyperItem getHyperItem(String name) {
-		HyperObject ho = getHyperObject(name);
-		if (ho != null && ho instanceof HyperItem) {
-			return (HyperItem)ho;
-		}
-		return null;
-	}
-	public HyperItem getHyperItem(ItemStack stack) {
-		HyperObject ho = getHyperObject(stack);
-		if (ho != null && ho instanceof HyperItem) {
-			return (HyperItem)ho;
-		}
-		return null;
-	}
-	public HyperItem getHyperItem(ItemStack stack, Shop s) {
-		HyperObject ho = getHyperObject(stack, s);
-		if (ho != null && ho instanceof HyperItem) {
-			return (HyperItem)ho;
-		}
-		return null;
-	}
-	public HyperEnchant getHyperEnchant(String name) {
-		HyperObject ho = getHyperObject(name);
-		if (ho != null && ho instanceof HyperEnchant) {
-			return (HyperEnchant)ho;
-		}
-		return null;
-	}
-	public BasicObject getBasicObject(String name) {
-		HyperObject ho = getHyperObject(name);
-		if (ho != null && ho instanceof BasicObject) {
-			return (BasicObject)ho;
-		}
-		return null;
-	}
-	public HyperItem getHyperItem(String name, Shop s) {
-		HyperObject ho = getHyperObject(name, s);
-		if (ho != null && ho instanceof HyperItem) {
-			return (HyperItem)ho;
-		}
-		return null;
-	}
-	public HyperEnchant getHyperEnchant(String name, Shop s) {
-		HyperObject ho = getHyperObject(name, s);
-		if (ho != null && ho instanceof HyperEnchant) {
-			return (HyperEnchant)ho;
-		}
-		return null;
-	}
-	public BasicObject getBasicObject(String name, Shop s) {
-		HyperObject ho = getHyperObject(name, s);
-		if (ho != null && ho instanceof BasicObject) {
-			return (BasicObject)ho;
-		}
-		return null;
-	}
-	public HyperXP getHyperXP() {
-		HyperObject ho = getHyperObject(xpName);
-		if (ho != null && ho instanceof HyperXP) {
-			return (HyperXP)ho;
-		}
-		return null;
-	}
-	public HyperXP getHyperXP(Shop s) {
-		HyperObject ho = getHyperObject(xpName, s);
-		if (ho != null && ho instanceof HyperXP) {
-			return (HyperXP)ho;
-		}
-		return null;
 	}
 	
 	
@@ -386,33 +315,12 @@ public class HyperEconomy implements DataLoadListener {
 		return names;
 	}
 	
-/*
-	public ArrayList<String> getItemNames() {
-		ArrayList<String> names = new ArrayList<String>();
-		for (HyperObject ho:hyperObjectsName.values()) {
-			if (ho.getType() == HyperObjectType.ITEM || ho.getType() == HyperObjectType.EXPERIENCE) {
-				names.add(ho.getName());
-			}
-		}
-		return names;
-	}
 
-	public ArrayList<String> getEnchantNames() {
-		ArrayList<String> names = new ArrayList<String>();
-		for (HyperObject ho:hyperObjectsName.values()) {
-			if (ho.getType() == HyperObjectType.ENCHANTMENT) {
-				names.add(ho.getName());
-			}
-		}
-		return names;
-	}
-	*/
 	
 	public String getEnchantNameWithoutLevel(String bukkitName) {
 		for (HyperObject ho:hyperObjectsName.values()) {
-			if (ho instanceof HyperEnchant) {
-				HyperEnchant he = (HyperEnchant)ho;
-				if (he.getEnchantmentName().equalsIgnoreCase(bukkitName)) {
+			if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+				if (ho.getEnchantmentName().equalsIgnoreCase(bukkitName)) {
 					String name = ho.getName();
 					return name.substring(0, name.length() - 1);
 				}
@@ -440,7 +348,7 @@ public class HyperEconomy implements DataLoadListener {
 		}
 		if (hyperObjectsName.containsKey(sname)) {
 			HyperObject ho = hyperObjectsName.get(sname);
-			if (ho instanceof HyperItem) {
+			if (ho.getType() == HyperObjectType.ITEM) {
 				return true;
 			}
 		}
@@ -455,7 +363,7 @@ public class HyperEconomy implements DataLoadListener {
 		}
 		if (hyperObjectsName.containsKey(sname)) {
 			HyperObject ho = hyperObjectsName.get(sname);
-			if (ho instanceof HyperEnchant) {
+			if (ho.getType() == HyperObjectType.ENCHANTMENT) {
 				return true;
 			}
 		}
@@ -578,13 +486,11 @@ public class HyperEconomy implements DataLoadListener {
 			String newtype = ho.getType().toString();
 			String newmaterial = "none";
 			int newdata = -1;
-			if (ho instanceof HyperItem) {
-				HyperItem hi = (HyperItem)ho;
-				newmaterial = hi.getMaterial();
-				newdata = hi.getData();
-			} else if (ho instanceof HyperEnchant) {
-				HyperEnchant he = (HyperEnchant)ho;
-				newmaterial = he.getEnchantmentName();
+			if (ho.getType() == HyperObjectType.ITEM) {
+				newmaterial = ho.getMaterial();
+				newdata = ho.getData();
+			} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+				newmaterial = ho.getEnchantmentName();
 			}
 			double newvalue = ho.getValue();
 			String newstatic = ho.getIsstatic();

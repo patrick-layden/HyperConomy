@@ -14,6 +14,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 
+import regalowl.hyperconomy.HyperObject;
+
 public class TransactionSign implements Listener {
 	private HyperConomy hc;
 	private EconomyManager em;

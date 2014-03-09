@@ -21,7 +21,7 @@ public class Evalue {
 			if ((requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				if (args.length == 2) {
 					String nam = args[0];
-					HyperEnchant ho = he.getHyperEnchant(nam, em.getShop(player));
+					HyperObject ho = he.getHyperObject(nam, em.getShop(player));
 					if (ho != null) {
 
 						String type = args[1];
@@ -39,7 +39,7 @@ public class Evalue {
 							int n = 0;
 							sender.sendMessage(L.get("LINE_BREAK"));
 							while (n < 9) {
-								double value = ho.getValue(EnchantmentClass.fromString(classtype[n]));
+								double value = ho.getSellPrice(EnchantmentClass.fromString(classtype[n]));
 								double salestax = hp.getSalesTax(value);
 								value = cf.twoDecimals(value - salestax);
 								sender.sendMessage(L.f(L.get("EVALUE_CLASS_SALE"), 1, value, nam, classtype[n]));
@@ -60,7 +60,7 @@ public class Evalue {
 							int n = 0;
 							sender.sendMessage(L.get("LINE_BREAK"));
 							while (n < 9) {
-								double cost = ho.getCost(EnchantmentClass.fromString(classtype[n]));
+								double cost = ho.getBuyPrice(EnchantmentClass.fromString(classtype[n]));
 								cost = cost + ho.getPurchaseTax(cost);
 								sender.sendMessage(L.f(L.get("EVALUE_CLASS_PURCHASE"), 1, cost, nam, classtype[n]));
 								n++;
@@ -89,11 +89,11 @@ public class Evalue {
 							int lvl = new HyperItemStack(player.getItemInHand()).getEnchantmentLevel(en);
 							String nam = he.getEnchantNameWithoutLevel(enchname);
 							String fnam = nam + lvl;
-							HyperEnchant ho = he.getHyperEnchant(fnam, em.getShop(player));
+							HyperObject ho = he.getHyperObject(fnam, em.getShop(player));
 							if (ho == null) {continue;}
 							String mater = player.getItemInHand().getType().name();
-							double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
-							double cost = ho.getCost(EnchantmentClass.fromString(mater));
+							double value = ho.getSellPrice(EnchantmentClass.fromString(mater), hp);
+							double cost = ho.getBuyPrice(EnchantmentClass.fromString(mater));
 							cost = cost + ho.getPurchaseTax(cost);
 							value = cf.twoDecimals(value);
 							cost = cf.twoDecimals(cost);

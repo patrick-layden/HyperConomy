@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.HyperObject;
 
 public class Browseshop {
 	
@@ -82,7 +83,7 @@ public class Browseshop {
 						if (shop == null || !shop.isBanned(cname)) {
 							if (shop instanceof PlayerShop) {
 								PlayerShop ps = (PlayerShop)shop;
-								PlayerShopObject pso = ps.getPlayerShopObject(ho);
+								HyperObject pso = ps.getPlayerShopObject(ho);
 								if (pso != null) {
 									if (pso.getStatus() == HyperObjectStatus.NONE) {
 										if (ps.isAllowed(em.getHyperPlayer(player))) {
@@ -102,7 +103,7 @@ public class Browseshop {
 						if (shop == null || !shop.isBanned(cname)) {
 							if (shop instanceof PlayerShop) {
 								PlayerShop ps = (PlayerShop)shop;
-								PlayerShopObject pso = ps.getPlayerShopObject(ho);
+								HyperObject pso = ps.getPlayerShopObject(ho);
 								if (pso != null) {
 									if (pso.getStatus() == HyperObjectStatus.NONE) {
 										if (ps.isAllowed(em.getHyperPlayer(player))) {
@@ -135,27 +136,24 @@ public class Browseshop {
 			            Double cost = 0.0;
 			            double stock = 0;
 			            HyperObject ho = he.getHyperObject(iname, em.getShop(player));
-			            if (ho instanceof HyperItem) {
-			            	HyperItem hi = (HyperItem)ho;
-							cost = hi.getCost(1);
+			            if (ho.getType() == HyperObjectType.ITEM) {
+							cost = ho.getBuyPrice(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = cf.twoDecimals(cost + taxpaid);
 							stock = cf.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
-						} else if (ho instanceof HyperEnchant) {
-							HyperEnchant hye = (HyperEnchant)ho;
-							cost = hye.getCost(EnchantmentClass.DIAMOND);
+						} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+							cost = ho.getBuyPrice(EnchantmentClass.DIAMOND);
 							cost = cost + ho.getPurchaseTax(cost);
 							stock = cf.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
-						} else if (ho instanceof BasicObject) {
+						} else {
 							BasicObject hi = (BasicObject)ho;
-							cost = hi.getCost(1);
+							cost = hi.getBuyPrice(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = cf.twoDecimals(cost + taxpaid);
 							stock = cf.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
 						}
-			            if (ho instanceof PlayerShopObject) {
-			            	PlayerShopObject pso = (PlayerShopObject)ho;
-			            	sender.sendMessage(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "; (&e" + pso.getStatus().toString()+ "&9)]"));
+			            if (ho.isShopObject()) {
+			            	sender.sendMessage(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "; (&e" + ho.getStatus().toString()+ "&9)]"));
 			            } else {
 			            	sender.sendMessage(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "]"));
 			            }			

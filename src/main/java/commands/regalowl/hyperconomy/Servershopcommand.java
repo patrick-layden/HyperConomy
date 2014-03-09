@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.HyperObject;
 
 public class Servershopcommand implements CommandExecutor {
 	

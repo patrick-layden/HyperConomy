@@ -7,6 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import regalowl.hyperconomy.HyperObject;
+
 public class Topenchants {
 	Topenchants(String args[], Player player, CommandSender sender, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
@@ -37,8 +39,7 @@ public class Topenchants {
 			}
 			SortedMap<Double, String> enchantstocks = new TreeMap<Double, String>();
 			for (HyperObject ho:he.getHyperObjects()) {
-				if (!(ho instanceof HyperEnchant)) {continue;}
-				PlayerShopObject pso = null;
+				if (!(ho.getType() == HyperObjectType.ENCHANTMENT)) {continue;}
 				boolean allowed = false;
 				boolean stocked = false;
 				boolean banned = false;
@@ -46,10 +47,9 @@ public class Topenchants {
 					banned = em.getShop(nameshop).isBanned(ho);
 				}
 				if (ho.getStock() > 0) {stocked = true;}
-				if (ho instanceof PlayerShopObject) {
-					pso = (PlayerShopObject)ho;
-					allowed = pso.getShop().isAllowed(em.getHyperPlayer(player));
-					if (pso.getStatus() == HyperObjectStatus.NONE && !allowed) {
+				if (ho.isShopObject()) {
+					allowed = ho.getShop().isAllowed(em.getHyperPlayer(player));
+					if (ho.getStatus() == HyperObjectStatus.NONE && !allowed) {
 						continue;
 					}
 				}

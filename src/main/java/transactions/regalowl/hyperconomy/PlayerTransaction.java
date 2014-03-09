@@ -3,6 +3,8 @@ package regalowl.hyperconomy;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import regalowl.hyperconomy.HyperObject;
+
 public class PlayerTransaction {
 	
 	private TransactionType transactionType;

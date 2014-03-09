@@ -3,6 +3,8 @@ package regalowl.hyperconomy;
 
 import org.bukkit.entity.Player;
 
+import regalowl.hyperconomy.HyperObject;
+
 public class Buy {
 	HyperConomy hc;
 	Buy(String args[], Player player, String playerecon) {
@@ -18,8 +20,7 @@ public class Buy {
 					int id = 0;
 					int amount = 0;
 					HyperObject ho = he.getHyperObject(name, em.getShop(player));
-					if (ho instanceof HyperItem) {
-						HyperItem hi = (HyperItem)ho;
+					if (ho.getType() == HyperObjectType.ITEM) {
 						if (args.length == 1) {
 							amount = 1;
 						} else {
@@ -33,7 +34,7 @@ public class Buy {
 								if (max.equalsIgnoreCase("max")) {
 									int space = 0;
 									if (id >= 0) {
-										space = hi.getAvailableSpace(player.getInventory());
+										space = ho.getAvailableSpace(player.getInventory());
 									}
 									amount = space;
 									int shopstock = (int) ho.getStock();
@@ -58,7 +59,7 @@ public class Buy {
 							player.sendMessage(L.get("CANT_BE_TRADED"));
 							return;
 						}
-					} else if (ho instanceof HyperXP) {
+					} else if (ho.getType() == HyperObjectType.EXPERIENCE) {
 						if (args.length == 1) {
 							amount = 1;
 						} else {

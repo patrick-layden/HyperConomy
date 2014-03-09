@@ -11,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import regalowl.hyperconomy.HyperObject;
+
 
 
 
@@ -111,10 +113,9 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			HyperObject ho2 = he.getHyperObject(ho.getName(), cps);
-			if (ho2 instanceof PlayerShopObject) {
-				PlayerShopObject pso = (PlayerShopObject)ho2;
-				pso.setStock(amount);
-				player.sendMessage(L.f(L.get("STOCK_SET"), pso.getName()));
+			if (ho2.isShopObject()) {
+				ho2.setStock(amount);
+				player.sendMessage(L.f(L.get("STOCK_SET"), ho2.getName()));
 				return true;
 			} else {
 				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
@@ -164,9 +165,8 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("CANT_ADD_MORE_STOCK"));
 				return true;
 			}
-			if (ho2 instanceof PlayerShopItem) {
-				PlayerShopItem pso = (PlayerShopItem)ho2;
-				int count = pso.count(player.getInventory());
+			if (ho2.getType() == HyperObjectType.ITEM) {
+				int count = ho2.count(player.getInventory());
 				if (amount > count) {
 					amount = count;
 				}
@@ -174,36 +174,34 @@ public class Manageshop implements CommandExecutor {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return true;
 				}
-				double amountRemoved = pso.remove(amount, player.getInventory());
-				((PlayerShopObject) pso).setStock(pso.getStock() + amountRemoved);
+				double amountRemoved = ho2.remove(amount, player.getInventory());
+				ho2.setStock(ho2.getStock() + amountRemoved);
 				player.sendMessage(L.get("STOCK_ADDED"));
 				return true;
-			} else if (ho2 instanceof PlayerShopEnchant) {
-				PlayerShopEnchant pso = (PlayerShopEnchant)ho2;
+			} else if (ho2.getType() == HyperObjectType.ENCHANTMENT) {
 				if (amount < 1) {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return true;
 				}
-				double removed = pso.removeEnchantment(player.getItemInHand());
+				double removed = ho2.removeEnchantment(player.getItemInHand());
 				if (removed > 0) {
-					((PlayerShopObject) pso).setStock(pso.getStock() + removed);
+					ho2.setStock(ho2.getStock() + removed);
 				} else {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}
 				return true;
-			} else if (ho2 instanceof ShopXp) {
-				ShopXp pso = (ShopXp)ho2;
+			} else if (ho.getType() == HyperObjectType.EXPERIENCE) {
 				if (amount < 1) {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return true;
 				}
-				int count = pso.getTotalXpPoints(player);
+				int count = hp.getTotalXpPoints();
 				if (amount > count) {
 					amount = count;
 				}
-				boolean success = pso.removeXp(player, amount);
-				if (success) {
-					((PlayerShopObject) pso).setStock(pso.getStock() + amount);
+				double rcount = ho2.remove(amount, hp);
+				if (rcount > 0) {
+					ho2.setStock(ho2.getStock() + amount);
 				} else {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}
@@ -233,51 +231,48 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
 				return true;
 			}
-			if (ho instanceof PlayerShopItem) {
-				PlayerShopItem pso = (PlayerShopItem)ho;
-				if (pso.getStock() < amount) {
-					amount = (int) Math.floor(pso.getStock());
+			if (ho.getType() == HyperObjectType.ITEM) {
+				if (ho.getStock() < amount) {
+					amount = (int) Math.floor(ho.getStock());
 				}
 				if (amount <= 0.0) {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return true;
 				}
-				int space = pso.getAvailableSpace(player.getInventory());
+				int space = ho.getAvailableSpace(player.getInventory());
 				if (space < amount) {
 					player.sendMessage(L.get("NOT_ENOUGH_SPACE"));
 					return true;
 				}
-				pso.add(amount, player.getInventory());
-				((PlayerShopObject) pso).setStock(pso.getStock() - amount);
+				ho.add(amount, player.getInventory());
+				ho.setStock(ho.getStock() - amount);
 				player.sendMessage(L.get("STOCK_REMOVED"));
 				return true;
-			} else if (ho instanceof PlayerShopEnchant) {
-				PlayerShopEnchant pso = (PlayerShopEnchant)ho;
-				if (pso.getStock() < 1) {
-					amount = (int) Math.floor(pso.getStock());
+			} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+				if (ho.getStock() < 1) {
+					amount = (int) Math.floor(ho.getStock());
 				}
 				if (amount < 1) {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return true;
 				}
-				double amountAdded = pso.addEnchantment(player.getItemInHand());
+				double amountAdded = ho.addEnchantment(player.getItemInHand());
 				if (amountAdded > 0) {
-					((PlayerShopObject) pso).setStock(pso.getStock() - amountAdded);
+					ho.setStock(ho.getStock() - amountAdded);
 				} else {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}
-			} else if (ho instanceof ShopXp) {
-				ShopXp pso = (ShopXp)ho;
-				if (pso.getStock() < amount) {
-					amount = (int) Math.floor(pso.getStock());
+			} else if (ho.getType() == HyperObjectType.EXPERIENCE) {
+				if (ho.getStock() < amount) {
+					amount = (int) Math.floor(ho.getStock());
 				}
 				if (amount < 1) {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return true;
 				}
-				boolean success = pso.addXp(player, amount);
+				boolean success = hp.addXp(amount);
 				if (success) {
-					((PlayerShopObject) pso).setStock(pso.getStock() - amount);
+					ho.setStock(ho.getStock() - amount);
 				} else {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}
@@ -329,8 +324,8 @@ public class Manageshop implements CommandExecutor {
 				}
 			}
 			for (HyperObject ho:he.getHyperObjects(newShop)) {
-				if (ho instanceof PlayerShopObject) {
-					((PlayerShopObject) ho).setStatus(HyperObjectStatus.NONE);
+				if (ho.isShopObject()) {
+					ho.setStatus(HyperObjectStatus.NONE);
 				}
 			}
 			em.addShop(newShop);
@@ -421,9 +416,9 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			HyperObject ho = he.getHyperObject(args[1], cps);
-			if (ho instanceof PlayerShopObject) {
-				((PlayerShopObject) ho).setBuyPrice(price);
-				((PlayerShopObject) ho).setSellPrice(price);
+			if (ho.isShopObject()) {
+				ho.setBuyPrice(price);
+				ho.setSellPrice(price);
 				player.sendMessage(L.get("PRICE_SET"));
 				return true;
 			} else {
@@ -451,8 +446,8 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			HyperObject ho = he.getHyperObject(args[1], cps);
-			if (ho instanceof PlayerShopObject) {
-				((PlayerShopObject) ho).setBuyPrice(price);
+			if (ho.isShopObject()) {
+				ho.setBuyPrice(price);
 				player.sendMessage(L.get("PRICE_SET"));
 				return true;
 			} else {
@@ -480,8 +475,8 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			HyperObject ho = he.getHyperObject(args[1], cps);
-			if (ho instanceof PlayerShopObject) {
-				((PlayerShopObject) ho).setSellPrice(price);
+			if (ho.isShopObject()) {
+				ho.setSellPrice(price);
 				player.sendMessage(L.get("PRICE_SET"));
 				return true;
 			} else {
@@ -509,8 +504,8 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			HyperObject ho = he.getHyperObject(args[1], cps);
-			if (ho instanceof PlayerShopObject) {
-				((PlayerShopObject) ho).setMaxStock(maxStock);
+			if (ho.isShopObject()) {
+				ho.setMaxStock(maxStock);
 				player.sendMessage(L.get("MAXSTOCK_SET"));
 				return true;
 			} else {
@@ -537,16 +532,16 @@ public class Manageshop implements CommandExecutor {
 			}
 			if (args[1].equalsIgnoreCase("all")) {
 				for (HyperObject ho:he.getHyperObjects(cps)) {
-					if (ho instanceof PlayerShopObject) {
-						((PlayerShopObject) ho).setStatus(status);
+					if (ho.isShopObject()) {
+						ho.setStatus(status);
 					}
 				}
 				player.sendMessage(L.get("ALL_STATUS_SET"));
 				return true;
 			} else {
 				HyperObject ho = he.getHyperObject(args[1], cps);
-				if (ho instanceof PlayerShopObject) {
-					((PlayerShopObject) ho).setStatus(status);
+				if (ho.isShopObject()) {
+					ho.setStatus(status);
 					player.sendMessage(L.get("STATUS_SET"));
 					return true;
 				} else {

@@ -3,6 +3,8 @@ package regalowl.hyperconomy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import regalowl.hyperconomy.HyperObject;
+
 public class Objectsettings {
 	Objectsettings(String args[], CommandSender sender, Player player, String playerecon) {
 		HyperConomy hc = HyperConomy.hc;
@@ -39,14 +41,7 @@ public class Objectsettings {
 					maxinitialitems = (int) (roundedtotalstock - sto);
 					double ceiling = ho.getCeiling();
 					double floor = ho.getFloor();
-					String objectType = "";
-					if (ho instanceof ComponentItem) {
-						objectType = "component";
-					} else if (ho instanceof CompositeItem) {
-						objectType = "composite";
-					} else {
-						objectType = "other";
-					}
+					String objectType = ho.getClass().getSimpleName();
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.f(L.get("SETTINGS_NAME"), nam));
 					sender.sendMessage(L.f(L.get("SETTINGS_DISPLAY"), ho.getDisplayName()));
@@ -89,14 +84,7 @@ public class Objectsettings {
 					maxinitialitems = (int) (roundedtotalstock - sto);
 					double ceiling = ho.getCeiling();
 					double floor = ho.getFloor();
-					String objectType = "";
-					if (ho instanceof ComponentItem) {
-						objectType = "component";
-					} else if (ho instanceof CompositeItem) {
-						objectType = "composite";
-					} else {
-						objectType = "other";
-					}
+					String objectType = ho.getClass().getSimpleName();
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.f(L.get("SETTINGS_NAME"), nam));
 					sender.sendMessage(L.f(L.get("SETTINGS_DISPLAY"), ho.getDisplayName()));

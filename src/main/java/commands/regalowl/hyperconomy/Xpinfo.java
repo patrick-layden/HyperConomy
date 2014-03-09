@@ -12,11 +12,11 @@ public class Xpinfo {
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0) {
-				HyperXP xp = em.getHyperPlayer(player).getHyperEconomy().getHyperXP();
-				int totalexp = xp.getTotalXpPoints(player);
+				HyperPlayer hp = em.getHyperPlayer(player);
+				int totalexp = hp.getTotalXpPoints();
 				int lvl = player.getLevel();
-				int xpfornextlvl = xp.getXpForNextLvl(lvl) - xp.getBarXpPoints(player);			
-				int xpfor30 = xp.getLvlXpPoints(30) - totalexp;				
+				int xpfornextlvl = hp.getXpForNextLvl(lvl) - hp.getBarXpPoints();			
+				int xpfor30 = hp.getLvlXpPoints(30) - totalexp;				
 				player.sendMessage(L.get("LINE_BREAK"));
 				player.sendMessage(L.f(L.get("TOTAL_XP_POINTS"), totalexp));
 				player.sendMessage(L.f(L.get("XP_FOR_NEXT_LVL"), xpfornextlvl));

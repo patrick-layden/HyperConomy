@@ -28,6 +28,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.HyperObject;
 
 public class ChestShop implements Listener {
 
@@ -480,12 +481,12 @@ public class ChestShop implements Listener {
 				chestOwnerEconomy = hPlayer.getHyperEconomy();
 			}
 			HyperPlayer clickPlayer = em.getHyperPlayer(p.getName());
-			HyperItem hyperItem = null;
+			HyperObject hyperObject = null;
 			if (!his.hasenchants()) {
-				hyperItem = chestOwnerEconomy.getHyperItem(clickedItem);
-				if (hyperItem == null) {
+				hyperObject = chestOwnerEconomy.getHyperObject(clickedItem);
+				if (hyperObject == null) {
 					if (setprice) {
-						hyperItem = his.generateTempItem();
+						hyperObject = his.generateTempItem();
 					} else {
 						icevent.setCancelled(true);
 						return;
@@ -503,7 +504,7 @@ public class ChestShop implements Listener {
 				if (slot < 27) {
 					if (buy) {
 						PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
-						pt.setHyperObject(hyperItem);
+						pt.setHyperObject(hyperObject);
 						pt.setTradePartner(chestOwner);
 						pt.setAmount(camount);
 						pt.setGiveInventory(shopInventory);
@@ -523,18 +524,18 @@ public class ChestShop implements Listener {
 							icevent.setCancelled(true);
 							return;
 						}
-						int itemamount = hyperItem.count(shopInventory);
+						int itemamount = hyperObject.count(shopInventory);
 						if (itemamount > 0) {
-							int space = hyperItem.getAvailableSpace(shopInventory);
+							int space = hyperObject.getAvailableSpace(shopInventory);
 							if (space >= camount) {
 								double bal = chestOwner.getBalance();
-								double cost = hyperItem.getValue(camount);
+								double cost = hyperObject.getSellPrice(camount);
 								if (setprice) {
 									cost = staticprice * camount;
 								}
 								if (bal >= cost) {
 									PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
-									pt.setHyperObject(hyperItem);
+									pt.setHyperObject(hyperObject);
 									pt.setTradePartner(chestOwner);
 									pt.setAmount(camount);
 									pt.setReceiveInventory(shopInventory);
@@ -566,10 +567,10 @@ public class ChestShop implements Listener {
 
 			} else if (icevent.isLeftClick()) {
 				if (!his.hasenchants()) {
-					if (slot < 27 && hyperItem != null) {
-						String name = hyperItem.getDisplayName();
+					if (slot < 27 && hyperObject != null) {
+						String name = hyperObject.getDisplayName();
 						if (buy) {
-							double price = hyperItem.getValue(1);
+							double price = hyperObject.getSellPrice(1);
 							if (setprice) {
 								price = staticprice;
 							}
@@ -580,13 +581,13 @@ public class ChestShop implements Listener {
 							p.sendMessage(L.get("CANNOT_PURCHASE_ITEMS_FROM_CHEST"));
 						}
 
-					} else if (slot >= 27 && hyperItem != null) {
-						String name = hyperItem.getDisplayName();
+					} else if (slot >= 27 && hyperObject != null) {
+						String name = hyperObject.getDisplayName();
 						if (sell) {
-							int itemamount = hyperItem.count(shopInventory);
+							int itemamount = hyperObject.count(shopInventory);
 
 							if (itemamount > 0) {
-								double price = hyperItem.getValue(1, clickPlayer);
+								double price = hyperObject.getSellPrice(1, clickPlayer);
 								if (setprice) {
 									price = staticprice;
 								}
@@ -613,8 +614,8 @@ public class ChestShop implements Listener {
 									return;
 								}
 								String fnam = nam + lvl;
-								HyperEnchant ho = chestOwnerEconomy.getHyperEnchant(fnam);
-								price += ho.getValue(EnchantmentClass.fromString(p.getItemInHand().getType().name()), clickPlayer);
+								HyperObject ho = chestOwnerEconomy.getHyperObject(fnam);
+								price += ho.getSellPrice(EnchantmentClass.fromString(p.getItemInHand().getType().name()), clickPlayer);
 								if (setprice) {
 									price = staticprice;
 								}
@@ -638,10 +639,10 @@ public class ChestShop implements Listener {
 				return;
 			} else if (icevent.isRightClick()) {
 				if (!his.hasenchants()) {
-					if (slot < 27 && hyperItem != null) {
+					if (slot < 27 && hyperObject != null) {
 						if (buy) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
-							pt.setHyperObject(hyperItem);
+							pt.setHyperObject(hyperObject);
 							pt.setTradePartner(chestOwner);
 							pt.setAmount(1);
 							pt.setGiveInventory(shopInventory);
@@ -656,26 +657,26 @@ public class ChestShop implements Listener {
 							p.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
 						}
 
-					} else if (slot >= 27 && hyperItem != null) {
+					} else if (slot >= 27 && hyperObject != null) {
 						if (sell) {
 							if (p.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("block-selling-in-creative-mode")) {
 								p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 								icevent.setCancelled(true);
 								return;
 							}
-							int itemamount = hyperItem.count(shopInventory);
+							int itemamount = hyperObject.count(shopInventory);
 
 							if (itemamount > 0) {
-								int space = hyperItem.getAvailableSpace(shopInventory);
+								int space = hyperObject.getAvailableSpace(shopInventory);
 								if (space >= 1) {
 									double bal = chestOwner.getBalance();
-									double cost = hyperItem.getValue(1);
+									double cost = hyperObject.getSellPrice(1);
 									if (setprice) {
 										cost = staticprice;
 									}
 									if (bal >= cost) {
 										PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
-										pt.setHyperObject(hyperItem);
+										pt.setHyperObject(hyperObject);
 										pt.setTradePartner(chestOwner);
 										pt.setAmount(1);
 										pt.setReceiveInventory(shopInventory);

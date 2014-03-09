@@ -9,6 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
+import regalowl.hyperconomy.HyperObject;
+
 public class FrameShop {
 
 	private HyperConomy hc;

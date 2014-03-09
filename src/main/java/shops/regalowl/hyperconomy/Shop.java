@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import regalowl.hyperconomy.HyperObject;
+
 public interface Shop extends Comparable<Shop>{
 	
 	public int compareTo(Shop s);	

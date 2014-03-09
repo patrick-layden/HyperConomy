@@ -300,6 +300,65 @@ public class HyperPlayer implements HyperAccount {
 			hc.getLog().writeAuditLog(name, "withdrawal", amount, "HyperConomy");
 		}
 	}
+	
+	
+	public int getBarXpPoints() {
+		int lvl = getPlayer().getLevel();
+		int exppoints = (int) Math.floor(((3.5 * lvl) + 6.7) * getPlayer().getExp() + .5);
+		return exppoints;
+	}
+
+	public int getXpForNextLvl(int lvl) {
+		int exppoints = (int) Math.floor(((3.5 * lvl) + 6.7) + .5);
+		return exppoints;
+	}
+
+	public int getLvlXpPoints(int lvl) {
+		int exppoints = (int) Math.floor((1.75 * Math.pow(lvl, 2)) + (5 * lvl) + .5);
+		return exppoints;
+	}
+
+	public int getTotalXpPoints() {
+		int lvl = getPlayer().getLevel();
+		int lvlxp = getLvlXpPoints(lvl);
+		int barxp = getBarXpPoints();
+		int totalxp = lvlxp + barxp;
+		return totalxp;
+	}
+
+	public int getLvlFromXP(int exp) {
+		double lvlraw = (Math.sqrt((exp * 7.0) + 25.0) - 5.0) * (2.0 / 7.0);
+		int lvl = (int) Math.floor(lvlraw);
+		if ((double) lvl > lvlraw) {
+			lvl = lvl - 1;
+		}
+		return lvl;
+	}
+	
+	public boolean addXp(int amount) {
+		if (getPlayer() == null || amount < 0) {return false;}
+		int totalxp = getTotalXpPoints();
+		int newxp = totalxp + amount;
+		int newlvl = getLvlFromXP(newxp);
+		newxp = newxp - getLvlXpPoints(newlvl);
+		float xpbarxp = (float) newxp / (float) getXpForNextLvl(newlvl);
+		getPlayer().setLevel(newlvl);
+		getPlayer().setExp(xpbarxp);
+		return true;
+	}
+	
+	public boolean removeXp(Player p, int amount) {
+		if (p == null || amount < 0) {return false;}
+		int totalxp = getTotalXpPoints();
+		int newxp = totalxp - amount;
+		if (newxp < 0) {return false;}
+		int newlvl = getLvlFromXP(newxp);
+		newxp = newxp - getLvlXpPoints(newlvl);
+		float xpbarxp = (float) newxp / (float) getXpForNextLvl(newlvl);
+		p.setLevel(newlvl);
+		p.setExp(xpbarxp);
+		return true;
+	}
 
 	
 }

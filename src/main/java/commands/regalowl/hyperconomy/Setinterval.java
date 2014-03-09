@@ -7,7 +7,6 @@ public class Setinterval {
 	Setinterval(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		EconomyManager em = hc.getEconomyManager();
-		InfoSignHandler isign = hc.getInfoSignHandler();
 		LanguageFile L = hc.getLanguageFile();
 		try {
     		if (args.length == 2) {

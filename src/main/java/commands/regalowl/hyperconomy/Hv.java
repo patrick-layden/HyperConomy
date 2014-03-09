@@ -30,24 +30,24 @@ public class Hv {
 					}
 				}
 				if (!new HyperItemStack(iinhand).hasenchants()) {
-					HyperItem ho = he.getHyperItem(player.getItemInHand(), em.getShop(player));
+					HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getShop(player));
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
 						String displayName = ho.getDisplayName();
-						double val = ho.getValue(amount, hp);
+						double val = ho.getSellPrice(amount, hp);
 						if (ho.isDurable() && amount > 1) {
 							int numberofitem = ho.count(player.getInventory());
 							if (amount - numberofitem > 0) {
 								int addamount = amount - numberofitem;
-								val = val + ho.getValue(addamount);
+								val = val + ho.getSellPrice(addamount);
 							}
 						}
 						double salestax = hp.getSalesTax(val);
 						val = cf.twoDecimals(val - salestax);
 						player.sendMessage(L.get("LINE_BREAK"));
 						player.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, displayName));
-						double cost = ho.getCost(amount);
+						double cost = ho.getBuyPrice(amount);
 						double taxpaid = ho.getPurchaseTax(cost);
 						cost = cf.twoDecimals(cost + taxpaid);
 						if (cost > Math.pow(10, 10)) {
@@ -72,9 +72,9 @@ public class Hv {
 						String enam = he.getEnchantNameWithoutLevel(enchname);
 						String fnam = enam + lvl;
 						String mater = player.getItemInHand().getType().name();
-						HyperEnchant ho = he.getHyperEnchant(fnam, em.getShop(player));
-						double value = ho.getValue(EnchantmentClass.fromString(mater), hp);
-						double cost = ho.getCost(EnchantmentClass.fromString(mater));
+						HyperObject ho = he.getHyperObject(fnam, em.getShop(player));
+						double value = ho.getSellPrice(EnchantmentClass.fromString(mater), hp);
+						double cost = ho.getBuyPrice(EnchantmentClass.fromString(mater));
 						cost = cost + ho.getPurchaseTax(cost);
 						value = cf.twoDecimals(value);
 						cost = cf.twoDecimals(cost);

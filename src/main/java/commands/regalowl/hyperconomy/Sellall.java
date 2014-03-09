@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+
 public class Sellall implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
@@ -81,7 +82,7 @@ public class Sellall implements CommandExecutor {
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
 			if (inventory.getItem(slot) == null) {continue;}
 			ItemStack stack = inventory.getItem(slot);
-			HyperItem hyperItem = he.getHyperItem(stack, em.getShop(trader.getPlayer()));
+			HyperObject hyperItem = he.getHyperObject(stack, em.getShop(trader.getPlayer()));
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 			pt.setTradePartner(tradePartner);
 			pt.setHyperObject(hyperItem);

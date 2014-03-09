@@ -7,6 +7,7 @@ import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
+import regalowl.hyperconomy.HyperObject;
 
 
 /**
@@ -106,15 +107,12 @@ public class History {
 		ArrayList<HyperObject> objects = em.getHyperObjects();
 		ArrayList<String> statements = new ArrayList<String>();
 		for (HyperObject object : objects) {
-			if (object instanceof HyperEnchant) {
-				HyperEnchant he = (HyperEnchant)object;
-				statements.add(getWriteStatement(object.getName(), object.getEconomy(), he.getValue(EnchantmentClass.DIAMOND)));
-			} else if (object instanceof HyperItem) {
-				HyperItem hi = (HyperItem)object;
-				statements.add(getWriteStatement(object.getName(), object.getEconomy(), hi.getValue(1)));
-			} else if (object instanceof BasicObject) {
-				BasicObject bo = (BasicObject)object;
-				statements.add(getWriteStatement(object.getName(), object.getEconomy(), bo.getValue(1)));
+			if (object.getType() == HyperObjectType.ENCHANTMENT) {
+				statements.add(getWriteStatement(object.getName(), object.getEconomy(), object.getSellPrice(EnchantmentClass.DIAMOND)));
+			} else if (object.getType() == HyperObjectType.ITEM) {
+				statements.add(getWriteStatement(object.getName(), object.getEconomy(), object.getBuyPrice(1)));
+			} else {
+				statements.add(getWriteStatement(object.getName(), object.getEconomy(), object.getBuyPrice(1)));
 			}
 		}
 		if (hc.getDataBukkit().useMySQL()) {
@@ -183,15 +181,12 @@ public class History {
 		}
 		double currentvalue = 0.0;
 		
-		if (ho instanceof HyperEnchant) {
-			HyperEnchant he = (HyperEnchant)ho;
-			currentvalue = he.getValue(EnchantmentClass.DIAMOND);
-		} else if (ho instanceof HyperItem) {
-			HyperItem hi = (HyperItem)ho;
-			currentvalue = hi.getValue(1);
-		} else if (ho instanceof BasicObject) {
-			BasicObject bo = (BasicObject)ho;
-			currentvalue = bo.getValue(1);
+		if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+			currentvalue = ho.getSellPrice(EnchantmentClass.DIAMOND);
+		} else if (ho.getType() == HyperObjectType.ITEM) {
+			currentvalue = ho.getSellPrice(1);
+		} else {
+			currentvalue = ho.getSellPrice(1);
 		}
 
 		percentChange = ((currentvalue - historicvalue) / historicvalue) * 100.0;
@@ -237,15 +232,12 @@ public class History {
 				if (historicValues.size() >= timevalue) {
 					double historicValue = historicValues.get(timevalue - 1);
 					double currentvalue = 0.0;
-					if (ho instanceof HyperEnchant) {
-						HyperEnchant he = (HyperEnchant)ho;
-						currentvalue = he.getValue(EnchantmentClass.DIAMOND);
-					} else if (ho instanceof HyperItem) {
-						HyperItem hi = (HyperItem)ho;
-						currentvalue = hi.getValue(1);
-					} else if (ho instanceof HyperXP) {
-						HyperXP bo = (HyperXP)ho;
-						currentvalue = bo.getValue(1);
+					if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+						currentvalue = ho.getSellPrice(EnchantmentClass.DIAMOND);
+					} else if (ho.getType() == HyperObjectType.ITEM) {
+						currentvalue = ho.getSellPrice(1);
+					} else {
+						currentvalue = ho.getSellPrice(1);
 					}
 					if (historicValue == 0.0) {
 						relevantValues.put(ho, "?");
@@ -260,7 +252,6 @@ public class History {
 				}
 			} else {
 				relevantValues.put(ho, "?");
-				hc.gDB().writeError("getPercentChange HyperObject missing: " + ho.getName() + ", economy: " + ho.getEconomy());
 			}
 		}
 		return relevantValues;

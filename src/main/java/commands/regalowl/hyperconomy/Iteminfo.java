@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.HyperObject;
 
 public class Iteminfo {
 	@SuppressWarnings("deprecation")
@@ -22,7 +23,7 @@ public class Iteminfo {
 			HyperEconomy he = hp.getHyperEconomy();
 			if (args.length == 0) {
 				String mat = player.getItemInHand().getType().toString();
-				HyperItem ho = he.getHyperItem(player.getItemInHand());
+				HyperObject ho = he.getHyperObject(player.getItemInHand());
 				String displayName = "";
 				if (ho == null) {
 					displayName = "Item not in database.";
@@ -62,9 +63,8 @@ public class Iteminfo {
 				double maxdura = player.getItemInHand().getType().getMaxDurability();
 				double durp = 100;
 
-				if (ho != null && ho instanceof HyperItem) {
-					HyperItem hi = (HyperItem) ho;
-					if (hi.isDurable()) {
+				if (ho != null && ho.getType() == HyperObjectType.ITEM) {
+					if (ho.isDurable()) {
 						durp = (1 - dura / maxdura) * 100;
 						durp = (long) Math.floor(durp + .5);
 					}
@@ -88,11 +88,10 @@ public class Iteminfo {
 				}
 				player.sendMessage(L.get("LINE_BREAK"));
 				player.sendMessage(ChatColor.BLUE + "Name: " + ChatColor.AQUA + "" + ho.getDisplayName());
-				if (ho != null && ho instanceof HyperItem) {
-					HyperItem hi = (HyperItem) ho;
-					player.sendMessage(ChatColor.BLUE + "Material: " + ChatColor.AQUA + "" + hi.getMaterial());
-					player.sendMessage(ChatColor.BLUE + "Damage Value: " + ChatColor.GREEN + "" + hi.getData());
-					player.sendMessage(ChatColor.BLUE + "Durability: " + ChatColor.GREEN + "" + hi.getDurability());
+				if (ho != null && ho.getType() == HyperObjectType.ITEM) {
+					player.sendMessage(ChatColor.BLUE + "Material: " + ChatColor.AQUA + "" + ho.getMaterial());
+					player.sendMessage(ChatColor.BLUE + "Damage Value: " + ChatColor.GREEN + "" + ho.getData());
+					player.sendMessage(ChatColor.BLUE + "Durability: " + ChatColor.GREEN + "" + ho.getDurability());
 				}
 				player.sendMessage(L.get("LINE_BREAK"));
 				return;

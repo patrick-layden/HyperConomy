@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 
 import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.HyperObject;
 
 public class Scalebypercent {
 	Scalebypercent(CommandSender sender, String[] args, String playerecon) {
@@ -38,9 +39,9 @@ public class Scalebypercent {
 						for (int c = 0; c < names.size(); c++) {
 							String cname = names.get(c);
 							HyperObject ho = he.getHyperObject(cname);
-							if (!(ho instanceof HyperItem) && onlyItems) {continue;}
-							if (!(ho instanceof HyperEnchant) && onlyEnchants) {continue;}
-							if (!(ho instanceof CompositeItem)) {
+							if (!(ho.getType() == HyperObjectType.ITEM) && onlyItems) {continue;}
+							if (!(ho.getType() == HyperObjectType.ENCHANTMENT) && onlyEnchants) {continue;}
+							if (!ho.isCompositeObject()) {
 								if (type.equalsIgnoreCase("value")) {
 									ho.setValue(cf.twoDecimals(ho.getValue() * percent));
 								} else if (type.equalsIgnoreCase("staticprice")) {

@@ -110,33 +110,6 @@ public class UpdateYML {
 		if (t27 == null) {
 			yh.gFC("config").set("config.dynamic-tax.money-floor", 0);
 		}
-		String t28 = yh.gFC("config").getString("config.web-page.use-web-page");
-		if (t28 == null) {
-			yh.gFC("config").set("config.web-page.use-web-page", false);
-			yh.gFC("config").set("config.web-page.background-color", "8FA685");
-			yh.gFC("config").set("config.web-page.font-color", "F2F2F2");
-			yh.gFC("config").set("config.web-page.border-color", "091926");
-			yh.gFC("config").set("config.web-page.increase-value-color", "C8D9B0");
-			yh.gFC("config").set("config.web-page.decrease-value-color", "F2B2A8");
-			yh.gFC("config").set("config.web-page.highlight-row-color", "8FA685");
-			yh.gFC("config").set("config.web-page.header-color", "091926");
-		}
-		String t30 = yh.gFC("config").getString("config.web-page.port");
-		if (t30 == null) {
-			yh.gFC("config").set("config.web-page.port", 7777);
-		}
-		String t50 = yh.gFC("config").getString("config.web-page.table-data-color");
-		if (t50 == null) {
-			yh.gFC("config").set("config.web-page.table-data-color", "314A59");
-		}
-		String t51 = yh.gFC("config").getString("config.web-page.font-size");
-		if (t51 == null) {
-			yh.gFC("config").set("config.web-page.font-size", 12);
-		}
-		String t52 = yh.gFC("config").getString("config.web-page.font");
-		if (t52 == null) {
-			yh.gFC("config").set("config.web-page.font", "verdana");
-		}
 		String t31 = yh.gFC("config").getString("config.run-automatic-backups");
 		if (t31 == null) {
 			yh.gFC("config").set("config.run-automatic-backups", true);

@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import regalowl.databukkit.QueryResult;
+import regalowl.hyperconomy.HyperObject;
 
 public class FrameShopHandler implements Listener {
 

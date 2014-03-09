@@ -3,6 +3,7 @@ package regalowl.hyperconomy;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import regalowl.hyperconomy.HyperObject;
 
 public class Hs {
 	Hs(String args[], Player player) {
@@ -30,7 +31,7 @@ public class Hs {
 						} catch (Exception e) {
 							String max = args[0];
 							if (max.equalsIgnoreCase("max")) {
-								HyperItem hi = he.getHyperItem(player.getItemInHand());
+								HyperObject hi = he.getHyperObject(player.getItemInHand());
 								amount = hi.count(player.getInventory());
 							} else {
 								player.sendMessage(L.get("HS_INVALID"));

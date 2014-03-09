@@ -3,6 +3,8 @@ package regalowl.hyperconomy;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
+import regalowl.hyperconomy.HyperObject;
+
 public class Sell {
 	HyperConomy hc;
 
@@ -22,8 +24,8 @@ public class Sell {
 					HyperObject ho = he.getHyperObject(name, em.getShop(player));
 					int amount = 0;
 
-					if (ho instanceof HyperItem) {
-						HyperItem hi = he.getHyperItem(name, em.getShop(player));
+					if (ho.getType() == HyperObjectType.ITEM) {
+						HyperObject hi = he.getHyperObject(name, em.getShop(player));
 						if (args.length == 1) {
 							amount = 1;
 						} else {
@@ -54,8 +56,7 @@ public class Sell {
 							player.sendMessage(L.get("CANT_BE_TRADED"));
 							return;
 						}
-					} else if (ho instanceof HyperXP) {
-						HyperXP xp = he.getHyperXP(em.getShop(player));
+					} else if (ho.getType() == HyperObjectType.EXPERIENCE) {
 						if (args.length == 1) {
 							amount = 1;
 						} else {
@@ -67,7 +68,7 @@ public class Sell {
 							} catch (Exception e) {
 								String max = args[1];
 								if (max.equalsIgnoreCase("max")) {
-									amount = xp.getTotalXpPoints(player);
+									amount = em.getHyperPlayer(player).getTotalXpPoints();
 								} else {
 									player.sendMessage(L.get("SELL_INVALID"));
 									return;

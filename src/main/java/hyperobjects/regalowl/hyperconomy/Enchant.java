@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 
 import regalowl.databukkit.CommonFunctions;
 
-public class Enchant extends BasicObject implements HyperEnchant {
+public class Enchant extends BasicObject implements HyperObject {
 
 	private String enchantName;
 
@@ -15,14 +15,14 @@ public class Enchant extends BasicObject implements HyperEnchant {
 		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
 		this.enchantName = enchantName;
 	}
-
+	@Override
 	public String getEnchantmentName() {
 		return enchantName;
 	}
 
 
 	
-	
+	@Override
 	public void setEnchantmentName(String enchantName) {
 		String statement = "UPDATE hyperconomy_objects SET MATERIAL='" + enchantName + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
@@ -30,44 +30,13 @@ public class Enchant extends BasicObject implements HyperEnchant {
 	}
 	
 
-	public double getclassValue(EnchantmentClass eclass) {
-		try {
-			double value;
-			if (eclass.equals(EnchantmentClass.LEATHER)) {
-				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.leather"));
-			} else if (eclass.equals(EnchantmentClass.WOOD)) {
-				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.wood"));
-			} else if (eclass.equals(EnchantmentClass.STONE)) {
-				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.stone"));
-			} else if (eclass.equals(EnchantmentClass.CHAINMAIL)) {
-				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.chainmail"));
-			} else if (eclass.equals(EnchantmentClass.IRON)) {
-				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.iron"));
-			} else if (eclass.equals(EnchantmentClass.GOLD)) {
-				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.gold"));
-			} else if (eclass.equals(EnchantmentClass.DIAMOND)) {
-				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.diamond"));
-			} else if (eclass.equals(EnchantmentClass.BOOK)) {
-				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.book"));
-			} else if (eclass.equals(EnchantmentClass.BOW)) {
-				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.bow"));
-			} else {
-				value = (hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.diamond"));
-			}
-			return value;
-		} catch (Exception e) {
-			String info = "ETransaction getclassValue() passed values eclass='" + eclass.toString() + "'";
-			hc.gDB().writeError(e, info);
-			return 0;
-		}
-	}
 	
-
-	public double getCost(EnchantmentClass eclass) {
+	@Override
+	public double getBuyPrice(EnchantmentClass eclass) {
 		try {
 			CommonFunctions cf = hc.gCF();
 			double cost = 0;
-			double classvalue = getclassValue(eclass);
+			double classvalue = EnchantmentClass.getclassValue(eclass);
 			boolean stax;
 			stax = Boolean.parseBoolean(getIsstatic());
 			if (!stax) {
@@ -109,11 +78,12 @@ public class Enchant extends BasicObject implements HyperEnchant {
 			return cost;
 		}
 	}
-	public double getValue(EnchantmentClass eclass) {
+	@Override
+	public double getSellPrice(EnchantmentClass eclass) {
 		try {
 			CommonFunctions cf = hc.gCF();
 			double cost = 0;
-			double classvalue = getclassValue(eclass);
+			double classvalue = EnchantmentClass.getclassValue(eclass);
 			boolean stax;
 			stax = Boolean.parseBoolean(getIsstatic());
 			if (!stax) {
@@ -153,12 +123,12 @@ public class Enchant extends BasicObject implements HyperEnchant {
 			return value;
 		}
 	}
-	
-	public double getValue(EnchantmentClass eclass, HyperPlayer hp) {
+	@Override
+	public double getSellPrice(EnchantmentClass eclass, HyperPlayer hp) {
 		try {
 			CommonFunctions cf = hc.gCF();
 			double cost = 0;
-			double classvalue = getclassValue(eclass);
+			double classvalue = EnchantmentClass.getclassValue(eclass);
 			boolean stax;
 			stax = Boolean.parseBoolean(getIsstatic());
 			HyperItemStack his = new HyperItemStack(hp.getPlayer().getItemInHand());
@@ -206,18 +176,22 @@ public class Enchant extends BasicObject implements HyperEnchant {
 	}
 	
 	@Override
-	public double getCost(int amount) {
-		return getCost(EnchantmentClass.DIAMOND) * amount;
+	public double getBuyPrice(int amount) {
+		return getBuyPrice(EnchantmentClass.DIAMOND) * amount;
 	}
 	@Override
-	public double getValue(int amount) {
-		return getValue(EnchantmentClass.DIAMOND) * amount;
+	public double getSellPrice(int amount) {
+		return getSellPrice(EnchantmentClass.DIAMOND) * amount;
 	}
-
+	@Override
+	public double getSellPrice(int amount, HyperPlayer hp) {
+		return getSellPrice(EnchantmentClass.DIAMOND, hp) * amount;
+	}
+	@Override
 	public Enchantment getEnchantment() {
 		return Enchantment.getByName(getEnchantmentName());
 	}
-	
+	@Override
 	public int getEnchantmentLevel() {
 		try {
 			int l = getName().length();
@@ -227,7 +201,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 			return 1;
 		}
 	}
-
+	@Override
 	public double addEnchantment(ItemStack stack) {
 		if (stack == null) {return 0;}
 		HyperItemStack his = new HyperItemStack(stack);
@@ -238,7 +212,7 @@ public class Enchant extends BasicObject implements HyperEnchant {
 		}
 		return 0;
 	}
-
+	@Override
 	public double removeEnchantment(ItemStack stack) {
 		if (stack == null) {return 0;}
 		HyperItemStack his = new HyperItemStack(stack);

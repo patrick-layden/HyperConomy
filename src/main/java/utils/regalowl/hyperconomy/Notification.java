@@ -1,10 +1,10 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import regalowl.hyperconomy.HyperObject;
 
 public class Notification implements TransactionListener {
 	
@@ -56,27 +56,16 @@ public class Notification implements TransactionListener {
 			double cost = 0.0;
 			int stock = 0;
 
-			if (ho instanceof HyperItem) {
-				HyperItem hi = (HyperItem)ho;
+			if (ho.getType() == HyperObjectType.ITEM) {
 				stock = (int) ho.getStock();
-				cost = hi.getCost(1);
+				cost = ho.getBuyPrice(1);
 				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getDisplayName(), econ);
 				if (!message.equalsIgnoreCase(previousmessage)) {
 					notify(message);
 					previousmessage = message;
 				}
-			} else if (ho instanceof BasicObject) {
-				BasicObject bo = (BasicObject)ho;
-				stock = (int) ho.getStock();
-				cost = bo.getCost(1);
-				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getDisplayName(), econ);
-				if (!message.equalsIgnoreCase(previousmessage)) {
-					notify(message);
-					previousmessage = message;
-				}
-			} else if (ho instanceof HyperEnchant) {
-				HyperEnchant hye = (HyperEnchant)ho;
-				cost = hye.getCost(EnchantmentClass.DIAMOND);
+			} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+				cost = ho.getBuyPrice(EnchantmentClass.DIAMOND);
 				cost = cost + ho.getPurchaseTax(cost);
 				stock = (int) ho.getStock();
 				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getDisplayName(), econ);
@@ -85,9 +74,13 @@ public class Notification implements TransactionListener {
 					previousmessage = message;
 				}
 			} else {
-				Logger log = Logger.getLogger("Minecraft");
-				log.info("HyperConomy ERROR #32--Notifcation Error");
-		    	Bukkit.broadcast(ChatColor.DARK_RED + "HyperConomy ERROR #32--Notifcation Error", "hyperconomy.error");
+				stock = (int) ho.getStock();
+				cost = ho.getBuyPrice(1);
+				String message = L.f(L.get("SQL_NOTIFICATION"), (double) stock, cost, ho.getDisplayName(), econ);
+				if (!message.equalsIgnoreCase(previousmessage)) {
+					notify(message);
+					previousmessage = message;
+				}
 			}
 		}
 		notificationQueue.remove(0);

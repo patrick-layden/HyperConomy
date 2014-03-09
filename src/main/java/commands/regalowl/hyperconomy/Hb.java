@@ -20,7 +20,7 @@ public class Hb {
 				if (hp.hasBuyPermission(em.getShop(player))) {
 					ItemStack iinhand = player.getItemInHand();
 					if (new HyperItemStack(iinhand).hasenchants() == false) {
-						HyperItem ho = he.getHyperItem(player.getItemInHand(), em.getShop(player));
+						HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getShop(player));
 						if (ho == null) {
 							player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 							return;

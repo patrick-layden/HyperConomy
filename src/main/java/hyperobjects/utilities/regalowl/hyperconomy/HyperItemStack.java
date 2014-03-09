@@ -11,6 +11,8 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.Potion;
 
+import regalowl.hyperconomy.HyperObject;
+
 public class HyperItemStack {
 
 	private HyperConomy hc;
@@ -256,7 +258,7 @@ public class HyperItemStack {
 	
 	
 	
-	public HyperItem generateTempItem(){
+	public HyperObject generateTempItem(){
 		if (stack.getType() == Material.AIR) {return null;}
 		String name = generateName(stack);
 		double value = 10.0;
@@ -293,6 +295,29 @@ public class HyperItemStack {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+
+	public double getDurabilityPercent() {
+		try {
+			double durabilitypercent = 1;
+			try {
+				double cdurability = stack.getDurability();
+				double maxdurability = stack.getData().getItemType().getMaxDurability();
+				durabilitypercent = (1 - (cdurability / maxdurability));
+			} catch (Exception e) {
+				durabilitypercent = 1;
+			}
+			if (durabilitypercent < 0) {
+				durabilitypercent = 1;
+			}
+			return durabilitypercent;
+		} catch (Exception e) {
+			String info = "getDurabilityPercent() passed values ItemStack='" + stack + "'";
+			hc.gDB().writeError(e, info);
+			double durabilitypercent = 1;
+			return durabilitypercent;
 		}
 	}
 	

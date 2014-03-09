@@ -2,7 +2,7 @@ package regalowl.hyperconomy;
 
 import java.util.ArrayList;
 
-import org.bukkit.inventory.ItemStack;
+import regalowl.hyperconomy.HyperObject;
 
 public class TransactionResponse {
 

@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.HyperObject;
 
 public class InfoSign {
 	private SignType type;
@@ -172,40 +173,34 @@ public class InfoSign {
 		try {
 			switch (type) {
 				case BUY:
-					if (ho instanceof HyperEnchant) {
-						HyperEnchant he = (HyperEnchant)ho;
-						double cost = he.getCost(enchantClass);
+					if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+						double cost = ho.getBuyPrice(enchantClass);
 						cost = cf.twoDecimals((cost + ho.getPurchaseTax(cost)) * multiplier);
 						line3 = ChatColor.WHITE + "Buy:";
 						line4 = ChatColor.GREEN + L.fCS(cost);
-					} else if (ho instanceof HyperItem) {
-						HyperItem hi = (HyperItem)ho;
-						double pcost = hi.getCost(1);
+					} else if (ho.getType() == HyperObjectType.ITEM) {
+						double pcost = ho.getBuyPrice(1);
 						line3 = ChatColor.WHITE + "Buy:";
 						line4 = ChatColor.GREEN + L.fCS(cf.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
-					} else if (ho instanceof BasicObject) {
-						BasicObject bo = (BasicObject)ho;
-						double pcost = bo.getCost(1);
+					} else {
+						double pcost = ho.getBuyPrice(1);
 						line3 = ChatColor.WHITE + "Buy:";
 						line4 = ChatColor.GREEN + L.fCS(cf.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
 					}
 					break;
 				case SELL:
-					if (ho instanceof HyperEnchant) {
-						HyperEnchant he = (HyperEnchant)ho;
-						double value = he.getValue(enchantClass);
+					if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+						double value = ho.getSellPrice(enchantClass);
 						value = cf.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "Sell:";
 						line4 = ChatColor.GREEN + L.fCS(value);
-					} else if (ho instanceof HyperItem) {
-						HyperItem hi = (HyperItem)ho;
-						double value = hi.getValue(1);
+					} else if (ho.getType() == HyperObjectType.ITEM) {
+						double value = ho.getSellPrice(1);
 						value = cf.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "Sell:";
 						line4 = ChatColor.GREEN + L.fCS(value);
-					} else if (ho instanceof BasicObject) {
-						BasicObject bo = (BasicObject)ho;
-						double value = bo.getValue(1);
+					} else {
+						double value = ho.getSellPrice(1);
 						value = cf.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "Sell:";
 						line4 = ChatColor.GREEN + L.fCS(value);
@@ -277,43 +272,38 @@ public class InfoSign {
 					updateHistorySign(timevalueHours, timevalue, increment);
 					break;
 				case TAX:
-					if (ho instanceof HyperEnchant) {
-						HyperEnchant he = (HyperEnchant)ho;
-						double price = he.getCost(enchantClass);
-						double taxpaid = cf.twoDecimals(he.getPurchaseTax(price) * multiplier);
+					if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+						double price = ho.getBuyPrice(enchantClass);
+						double taxpaid = cf.twoDecimals(ho.getPurchaseTax(price) * multiplier);
 						line3 = ChatColor.WHITE + "Tax:";
 						line4 = ChatColor.GREEN + "" + L.fCS(taxpaid);
-					} else if (ho instanceof HyperItem) {
-						HyperItem hi = (HyperItem)ho;
+					} else if (ho.getType() == HyperObjectType.ITEM) {
 						line3 = ChatColor.WHITE + "Tax:";
-						line4 = ChatColor.GREEN + L.fCS(cf.twoDecimals(hi.getPurchaseTax(hi.getCost(1) * multiplier)));
-					} else if (ho instanceof BasicObject) {
+						line4 = ChatColor.GREEN + L.fCS(cf.twoDecimals(ho.getPurchaseTax(ho.getBuyPrice(1) * multiplier)));
+					} else {
 						BasicObject bo = (BasicObject)ho;
 						line3 = ChatColor.WHITE + "Tax:";
-						line4 = ChatColor.GREEN + L.fCS(cf.twoDecimals(bo.getPurchaseTax(bo.getCost(1) * multiplier)));
+						line4 = ChatColor.GREEN + L.fCS(cf.twoDecimals(bo.getPurchaseTax(bo.getBuyPrice(1) * multiplier)));
 					}
 					break;
 				case SB:
-					if (ho instanceof HyperEnchant) {
-						HyperEnchant he = (HyperEnchant)ho;
-						double cost = he.getCost(enchantClass);
+					if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+						double cost = ho.getBuyPrice(enchantClass);
 						cost = cf.twoDecimals((cost + ho.getPurchaseTax(cost)) * multiplier);
 						line4 = ChatColor.WHITE + "B:" + "\u00A7a" + L.fCS(cost);
-						double value = he.getValue(enchantClass);
+						double value = ho.getSellPrice(enchantClass);
 						value = cf.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "S:" + ChatColor.GREEN + L.fCS(value);
-					} else if (ho instanceof HyperItem) {
-						HyperItem hi = (HyperItem)ho;
-						double pcost = hi.getCost(1);
+					} else if (ho.getType() == HyperObjectType.ITEM) {
+						double pcost = ho.getBuyPrice(1);
 						line4 = ChatColor.WHITE + "B:" + ChatColor.GREEN + L.fCS(cf.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
-						double value = hi.getValue(1);
+						double value = ho.getSellPrice(1);
 						value = cf.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "S:" + ChatColor.GREEN + L.fCS(value);
-					} else if (ho instanceof BasicObject) {
-						BasicObject bo = (BasicObject)ho;
-						double pcost = bo.getCost(1);
+					} else {
+						double pcost = ho.getBuyPrice(1);
 						line4 = ChatColor.WHITE + "B:" + ChatColor.GREEN + L.fCS(cf.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
-						double value = bo.getValue(1);
+						double value = ho.getSellPrice(1);
 						value = cf.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
 						line3 = ChatColor.WHITE + "S:" + ChatColor.GREEN + L.fCS(value);
 					}

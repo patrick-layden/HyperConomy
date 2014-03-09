@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitTask;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLRead;
 import regalowl.databukkit.SQLWrite;
+import regalowl.hyperconomy.HyperObject;
 
 public class EconomyManager implements Listener {
 
@@ -304,19 +305,17 @@ public class EconomyManager implements Listener {
 			values.put("STATICPRICE", ho.getStaticprice()+"");
 			values.put("STOCK", 0+"");
 			values.put("MEDIAN", ho.getMedian()+"");
-			values.put("INITIATION", ho.getInitiation());
+			values.put("INITIATION", "true");
 			values.put("STARTPRICE", ho.getStartprice()+"");
 			values.put("CEILING", ho.getCeiling()+"");
 			values.put("FLOOR", ho.getFloor()+"");
 			values.put("MAXSTOCK", ho.getMaxstock()+"");
-			if (ho instanceof HyperItem) {
-				HyperItem hi = (HyperItem)ho;
-				values.put("MATERIAL", hi.getMaterial());
-				values.put("DATA", hi.getData()+"");
-				values.put("DURABILITY", hi.getDurability()+"");
-			} else if (ho instanceof HyperEnchant) {
-				HyperEnchant he = (HyperEnchant)ho;
-				values.put("MATERIAL", he.getEnchantmentName());
+			if (ho.getType() == HyperObjectType.ITEM) {
+				values.put("MATERIAL", ho.getMaterial());
+				values.put("DATA", ho.getData()+"");
+				values.put("DURABILITY", ho.getDurability()+"");
+			} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+				values.put("MATERIAL", ho.getEnchantmentName());
 				values.put("DATA", "-1");
 				values.put("DURABILITY", "-1");
 			} else {

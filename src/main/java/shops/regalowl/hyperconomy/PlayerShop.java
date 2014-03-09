@@ -27,7 +27,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private int p2x;
 	private int p2y;
 	private int p2z;
-	private ConcurrentHashMap<String,PlayerShopObject> shopContents = new ConcurrentHashMap<String,PlayerShopObject>();
+	private ConcurrentHashMap<String,HyperObject> shopContents = new ConcurrentHashMap<String,HyperObject>();
 	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
 	
 
@@ -130,21 +130,14 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 					HyperObject ho = he.getHyperObject(result.getString("HYPEROBJECT"));
 					double stock = result.getDouble("QUANTITY");
 					HyperObjectStatus status = HyperObjectStatus.fromString(result.getString("STATUS"));
-					if (ho instanceof ComponentItem) {
-						ComponentShopItem pso = new ComponentShopItem(ps, (ComponentItem) ho, stock, buyPrice, sellPrice, maxStock, status);
+					if (ho.getType() == HyperObjectType.ITEM && ho.isCompositeObject()) {
+						HyperObject pso = new CompositeShopItem(ps, (CompositeItem)ho, stock, buyPrice, sellPrice, maxStock, status);
 						shopContents.put(ho.getName(), pso);
-					} else if (ho instanceof CompositeItem) {
-						CompositeShopItem pso = new CompositeShopItem(ps, (CompositeItem)ho, stock, buyPrice, sellPrice, maxStock, status);
+					} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+						HyperObject pso = new ShopEnchant(ps, ho, stock, buyPrice, sellPrice, maxStock, status);
 						shopContents.put(ho.getName(), pso);
-					} else if (ho instanceof Xp) {
-						ShopXp pso = new ShopXp(ps, (BasicObject) ho, stock, buyPrice, sellPrice, maxStock, status);
-						shopContents.put(ho.getName(), pso);
-					} else if (ho instanceof HyperEnchant) {
-						HyperEnchant hye = (HyperEnchant)ho;
-						ShopEnchant pso = new ShopEnchant(ps, hye, stock, buyPrice, sellPrice, maxStock, status);
-						shopContents.put(ho.getName(), pso);
-					} else if (ho instanceof BasicObject) {
-						BasicShopObject pso = new BasicShopObject(ps, (BasicObject) ho, stock, buyPrice, sellPrice, maxStock, status);
+					} else { 
+						BasicShopObject pso = new BasicShopObject(ps, ho, stock, buyPrice, sellPrice, maxStock, status);
 						shopContents.put(ho.getName(), pso);
 					}
 				}
@@ -301,10 +294,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public boolean isStocked(HyperObject ho) {
-		PlayerShopObject pso = null;
-		if (ho instanceof PlayerShopObject) {
-			pso = (PlayerShopObject)ho;
-		} else {
+		HyperObject pso = ho;
+		if (!ho.isShopObject()) {
 			pso = shopContents.get(ho.getName());
 		}
 		if (pso == null) {return false;}
@@ -315,12 +306,9 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		return isStocked(getHyperEconomy().getHyperObject(item));
 	}
 	public boolean isBanned(HyperObject ho) {
-		HyperObject co = null;
-		if (ho instanceof PlayerShopObject) {
-			PlayerShopObject pso = (PlayerShopObject)ho;
-			co = pso.getHyperObject();
-		} else {
-			co = ho;
+		HyperObject co = ho;
+		if (ho.isShopObject()) {
+			co = ho.getHyperObject();
 		}
 		if (availableObjects.contains(co)) {
 			return false;
@@ -332,9 +320,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	public boolean isTradeable(HyperObject ho) {
 		if (!isBanned(ho)) {
-			if (ho instanceof PlayerShopObject) {
-				PlayerShopObject pso = (PlayerShopObject)ho;
-				if (pso.getStatus() == HyperObjectStatus.NONE) {return false;}
+			if (ho.isShopObject()) {
+				if (ho.getStatus() == HyperObjectStatus.NONE) {return false;}
 				return true;
 			} else {
 				return true;
@@ -352,7 +339,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	public ArrayList<HyperObject> getTradeableObjects() {
 		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
-		for (PlayerShopObject pso:shopContents.values()) {
+		for (HyperObject pso:shopContents.values()) {
 			if (isTradeable(pso)) {
 				available.add(pso);
 			}
@@ -374,9 +361,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	public void unBanObjects(ArrayList<HyperObject> objects) {
 		for (HyperObject ho:objects) {
 			HyperObject add = null;
-			if (ho instanceof PlayerShopObject) {
-				PlayerShopObject pso = (PlayerShopObject)ho;
-				add = pso.getHyperObject();
+			if (ho.isShopObject()) {
+				add = ho.getHyperObject();
 			} else {
 				add = ho;
 			}
@@ -389,9 +375,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	public void banObjects(ArrayList<HyperObject> objects) {
 		for (HyperObject ho:objects) {
 			HyperObject remove = null;
-			if (ho instanceof PlayerShopObject) {
-				PlayerShopObject pso = (PlayerShopObject)ho;
-				remove = pso.getHyperObject();
+			if (ho.isShopObject()) {
+				remove = ho.getHyperObject();
 			} else {
 				remove = ho;
 			}
@@ -452,7 +437,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 	
 	public boolean isEmpty() {
-		for (PlayerShopObject pso:shopContents.values()) {
+		for (HyperObject pso:shopContents.values()) {
 			if (pso.getStock() > 0) {
 				return false;
 			}
@@ -472,7 +457,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void removePlayerShopObject(HyperObject hyperObject) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
+		HyperObject pso = getPlayerShopObject(hyperObject);
 		if (pso == null) {
 			return;
 		} else {
@@ -480,7 +465,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"' AND HYPEROBJECT = '"+hyperObject.getName()+"'");
 		}
 	}
-	public PlayerShopObject getPlayerShopObject(HyperObject hyperObject) {
+	public HyperObject getPlayerShopObject(HyperObject hyperObject) {
 		if (shopContents.containsKey(hyperObject.getName())) {
 			return shopContents.get(hyperObject.getName());
 		}
@@ -492,67 +477,25 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		ws.addParameter(0.0);
 		ws.addParameter(1000000);
 		ws.addParameter("none");
-		if (hyperObject instanceof ComponentItem) {
-			ComponentShopItem pso = new ComponentShopItem(this, (ComponentItem)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
-			shopContents.put(hyperObject.getName(), pso);
-			hc.getSQLWrite().addToQueue(ws);
-			return pso;
-		} else if (hyperObject instanceof CompositeItem) {
+		if (hyperObject.getType() == HyperObjectType.ITEM && hyperObject.isCompositeObject()) {
 			CompositeShopItem pso = new CompositeShopItem(this, (CompositeItem)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;
-		} else if (hyperObject instanceof Xp) {
-			ShopXp pso = new ShopXp(this, (Xp)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
+		} else if (hyperObject.getType() == HyperObjectType.ENCHANTMENT) {
+			HyperObject pso = new ShopEnchant(ps, hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;
-		} else if (hyperObject instanceof HyperEnchant) {
-			ShopEnchant pso = new ShopEnchant(ps, (HyperEnchant)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
-			shopContents.put(hyperObject.getName(), pso);
-			hc.getSQLWrite().addToQueue(ws);
-			return pso;
-		} else if (hyperObject instanceof BasicObject) {
-			BasicShopObject pso = new BasicShopObject(this, (BasicObject)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
+		} else {
+			HyperObject pso = new BasicShopObject(this, (BasicObject)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;
 		}
-		return null;
 	}
 	
-	public PlayerShopItem getPlayerShopItem(HyperObject hyperObject) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
-		if (pso != null && pso instanceof PlayerShopItem) {
-			return (PlayerShopItem)pso;
-		}
-		return null;
-	}
-	
-	public PlayerShopEnchant getPlayerShopEnchant(HyperObject hyperObject) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
-		if (pso != null && pso instanceof PlayerShopEnchant) {
-			return (PlayerShopEnchant)pso;
-		}
-		return null;
-	}
-	
-	public BasicShopObject getBasicShopObject(HyperObject hyperObject) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
-		if (pso != null && pso instanceof BasicShopObject) {
-			return (BasicShopObject)pso;
-		}
-		return null;
-	}
-	
-	public ShopXp getShopXp(HyperObject hyperObject) {
-		PlayerShopObject pso = getPlayerShopObject(hyperObject);
-		if (pso != null && pso instanceof ShopXp) {
-			return (ShopXp)pso;
-		}
-		return null;
-	}
-	
+
 	public boolean hasPlayerShopObject(HyperObject ho) {
 		return shopContents.containsKey(ho.getName());
 	}

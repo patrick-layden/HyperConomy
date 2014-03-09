@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import org.bukkit.map.MapRenderer;
 
 import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.HyperObject;
 
 
 
@@ -43,17 +44,16 @@ public class FrameShopRenderer extends MapRenderer {
     }
     
     public Image getImage() {
-    	if (ho instanceof HyperItem) {
+    	if (ho.getType() == HyperObjectType.ITEM) {
     		Image i = null;
-    		HyperItem hi = (HyperItem)ho;
-    		URL url = hc.getClass().getClassLoader().getResource("Images/"+hi.getMaterial().toLowerCase()+"_"+hi.getData()+".png");
+    		URL url = hc.getClass().getClassLoader().getResource("Images/"+ho.getMaterial().toLowerCase()+"_"+ho.getData()+".png");
             try {
             	i = ImageIO.read(url);
             	if (i != null) {
             		return i.getScaledInstance(60, 60, Image.SCALE_DEFAULT);
             	}
     		} catch (Exception e) {} 
-    		url = hc.getClass().getClassLoader().getResource("Images/"+hi.getMaterial().toLowerCase()+".png");
+    		url = hc.getClass().getClassLoader().getResource("Images/"+ho.getMaterial().toLowerCase()+".png");
             try {
             	i = ImageIO.read(url);
             	if (i != null) {
@@ -87,15 +87,12 @@ public class FrameShopRenderer extends MapRenderer {
 			
 			//adds sell price
 			double value = 0.0;
-			if (ho instanceof HyperEnchant) {
-				HyperEnchant he = (HyperEnchant)ho;
-				value = he.getValue(EnchantmentClass.DIAMOND);
-			} else if (ho instanceof HyperItem) {
-				HyperItem hi = (HyperItem)ho;
-				value = hi.getValue(1);
-			} else if (ho instanceof BasicObject) {
-				BasicObject bo = (BasicObject)ho;
-				value = bo.getValue(1);
+			if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+				value = ho.getSellPrice(EnchantmentClass.DIAMOND);
+			} else if (ho.getType() == HyperObjectType.ITEM) {
+				value = ho.getSellPrice(1);
+			} else {
+				value = ho.getSellPrice(1);
 			}
 			String sell = color("Sell: ", MapPalette.DARK_GRAY) + color(L.fCS(cf.twoDecimals((value - ho.getSalesTaxEstimate(value)))), MapPalette.DARK_GREEN);
 			canvas.drawText(8, fHeight + 10, MinecraftFont.Font, sell);
@@ -103,15 +100,12 @@ public class FrameShopRenderer extends MapRenderer {
 			
 			//adds buy price
 			double cost = 0.0;
-			if (ho instanceof HyperEnchant) {
-				HyperEnchant he = (HyperEnchant)ho;
-				cost = he.getCost(EnchantmentClass.DIAMOND);
-			} else if (ho instanceof HyperItem) {
-				HyperItem hi = (HyperItem)ho;
-				cost = hi.getCost(1);
-			} else if (ho instanceof BasicObject) {
-				BasicObject bo = (BasicObject)ho;
-				cost = bo.getCost(1);
+			if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+				cost = ho.getBuyPrice(EnchantmentClass.DIAMOND);
+			} else if (ho.getType() == HyperObjectType.ITEM) {
+				cost = ho.getBuyPrice(1);
+			} else {
+				cost = ho.getBuyPrice(1);
 			}
 			String buy = color("Buy: ", MapPalette.DARK_GRAY) + color(L.fCS(cf.twoDecimals((cost + ho.getPurchaseTax(cost)))), MapPalette.DARK_GREEN);
 			canvas.drawText(8, fHeight + 20, MinecraftFont.Font, buy);

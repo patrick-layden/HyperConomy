@@ -43,9 +43,7 @@ public class Hcdelete implements CommandExecutor {
 				} catch (Exception e) {
 					sender.sendMessage(L.get("HCDELETE_OBJECT_INVALID"));
 				}
-			}
-			
-			if (args[0].equalsIgnoreCase("account")) {
+			} else if (args[0].equalsIgnoreCase("account")) {
 				try {
 					if (args.length == 2) {
 						String name = args[1];
@@ -62,6 +60,8 @@ public class Hcdelete implements CommandExecutor {
 				} catch (Exception e) {
 					sender.sendMessage(L.get("HCDELETE_ACCOUNT_INVALID"));
 				}
+			} else {
+				//TODO
 			}
 			
 		} catch (Exception e) {

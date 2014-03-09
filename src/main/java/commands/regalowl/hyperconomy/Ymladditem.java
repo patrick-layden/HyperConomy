@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import regalowl.hyperconomy.HyperObject;
+
 public class Ymladditem implements CommandExecutor {
 	
 	

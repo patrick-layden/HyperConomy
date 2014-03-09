@@ -5,13 +5,14 @@ public enum HyperObjectType {
 	ITEM, ENCHANTMENT, EXPERIENCE;
 
 	public static HyperObjectType fromString(String type) {
+		type = type.toLowerCase();
 		if (type == null) {
 			return null;
-		} else if (type.equalsIgnoreCase("item")) {
+		} else if (type.contains("item")) {
 			return HyperObjectType.ITEM;
-		} else if (type.equalsIgnoreCase("enchantment")) {
+		} else if (type.contains("enchantment")) {
 			return HyperObjectType.ENCHANTMENT;
-		} else if (type.equalsIgnoreCase("experience")) {
+		} else if (type.contains("experience")) {
 			return HyperObjectType.EXPERIENCE;
 		} else {
 			return null;
@@ -27,7 +28,7 @@ public enum HyperObjectType {
 			case EXPERIENCE:
 				return "experience";
 			default:
-				return "";
+				return null;
 		}
 	}
 

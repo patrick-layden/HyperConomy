@@ -3,9 +3,12 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import regalowl.hyperconomy.HyperObject;
 
 public class Topitems {
 	Topitems(String args[], Player player, CommandSender sender, String playerecon) {
@@ -49,7 +52,7 @@ public class Topitems {
 				boolean allowed = false;
 				if (s != null) {
 					banned = s.isBanned(ho);
-					if (ho instanceof PlayerShopObject) {
+					if (ho.isShopObject()) {
 						if (s instanceof PlayerShop) {
 							PlayerShop ps = (PlayerShop)s;
 							allowed = ps.isAllowed(em.getHyperPlayer(player));
@@ -84,9 +87,8 @@ public class Topitems {
 					double lk = itemstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
 						HyperObject ho = itemstocks.get(lk);
-						if (ho instanceof PlayerShopObject) {
-							PlayerShopObject pso = (PlayerShopObject)ho;
-							sender.sendMessage(L.applyColor("&f"+pso.getDisplayName() + ": &a" + hc.gCF().twoDecimals(pso.getStock()) + " &f(&e" + pso.getStatus().toString() + "&f)" ));
+						if (ho.isShopObject()) {
+							sender.sendMessage(L.applyColor("&f"+ho.getDisplayName() + ": &a" + hc.gCF().twoDecimals(ho.getStock()) + " &f(&e" + ho.getStatus().toString() + "&f)" ));
 						} else {
 							sender.sendMessage(ChatColor.WHITE + ho.getDisplayName() + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + hc.gCF().twoDecimals(ho.getStock()));
 						}
