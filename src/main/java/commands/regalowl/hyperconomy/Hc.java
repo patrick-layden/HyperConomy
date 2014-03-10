@@ -22,7 +22,6 @@ public class Hc {
 				if (type.equalsIgnoreCase("sell")) {
 					sender.sendMessage(L.get("HC_SELL_SELL"));
 					sender.sendMessage(L.get("HC_SELL_HS"));
-					sender.sendMessage(L.get("HC_SELL_ESELL"));
 					sender.sendMessage(L.get("HC_SELL_SELLALL"));
 					sender.sendMessage(L.get("HC_SELL_MORE"));
 					sender.sendMessage(L.get("LINE_BREAK"));
@@ -30,7 +29,6 @@ public class Hc {
 					sender.sendMessage(L.get("LINE_BREAK"));
 					sender.sendMessage(L.get("HC_BUY_BUY"));
 					sender.sendMessage(L.get("HC_BUY_HB"));
-					sender.sendMessage(L.get("HC_BUY_EBUY"));
 					sender.sendMessage(L.get("HC_BUY_MORE"));
 					sender.sendMessage(L.get("LINE_BREAK"));
 				} else if (type.equalsIgnoreCase("shop")) {
@@ -79,11 +77,6 @@ public class Hc {
 						sender.sendMessage(L.get("HC_SELL_HS"));
 						sender.sendMessage(L.get("HC_HS_DETAIL"));
 						sender.sendMessage(L.get("LINE_BREAK"));
-					} else if (subtype.equalsIgnoreCase("esell")) {
-						sender.sendMessage(L.get("LINE_BREAK"));
-						sender.sendMessage(L.get("HC_SELL_ESELL"));
-						sender.sendMessage(L.get("HC_ESELL_DETAIL"));
-						sender.sendMessage(L.get("LINE_BREAK"));
 					} else if (subtype.equalsIgnoreCase("sellall")) {
 						sender.sendMessage(L.get("LINE_BREAK"));
 						sender.sendMessage(L.get("HC_SELL_SELLALL"));
@@ -100,11 +93,6 @@ public class Hc {
 						sender.sendMessage(L.get("LINE_BREAK"));
 						sender.sendMessage(L.get("HC_BUY_HB"));
 						sender.sendMessage(L.get("HC_HB_DETAIL"));
-						sender.sendMessage(L.get("LINE_BREAK"));
-					} else if (subtype.equalsIgnoreCase("ebuy")) {
-						sender.sendMessage(L.get("LINE_BREAK"));
-						sender.sendMessage(L.get("HC_BUY_EBUY"));
-						sender.sendMessage(L.get("HC_EBUY_DETAIL"));
 						sender.sendMessage(L.get("LINE_BREAK"));
 					}
 				} else if (type.equalsIgnoreCase("shop")) {

@@ -1,7 +1,6 @@
 package regalowl.hyperconomy;
 
-import java.util.HashMap;
-
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -291,42 +290,59 @@ public class ComponentItem extends BasicObject implements HyperObject {
 
 	@Override
 	public double getDamageMultiplier(int amount, Inventory inventory) {
+		Bukkit.broadcastMessage("getDamage");
 		try {
 			double damage = 0;
-			if (isDurable()) {
-				int heldslot = -1;
-				int totalitems = 0;
-				HashMap<Integer, ? extends ItemStack> stacks = inventory.all(materialEnum);
-				if (inventory.getType() == InventoryType.PLAYER) {
-					Player p = (Player) inventory.getHolder();
-					heldslot = p.getInventory().getHeldItemSlot();
-					HyperItemStack his = new HyperItemStack(stacks.get(heldslot));
-					if (p.getItemInHand().getType() == materialEnum && !his.hasenchants()) {
-						damage = new HyperItemStack(stacks.get(heldslot)).getDurabilityPercent();
-						totalitems++;
-					}
-				}
-				for (int slot = 0; slot < inventory.getSize(); slot++) {
-					if (slot == heldslot) {
-						continue;
-					}
-					HyperItemStack his = new HyperItemStack(stacks.get(heldslot));
-					if (stacks.get(slot) != null && totalitems < amount && !his.hasenchants()) {
-						damage = new HyperItemStack(stacks.get(slot)).getDurabilityPercent() + damage;
-						totalitems++;
-					}
-				}
-				damage = damage / amount;
-			} else {
-				damage = 1;
+			if (!isDurable()) {
+				Bukkit.broadcastMessage("not durable");
+				return 1;
 			}
+			int totalitems = 0;
+			int heldslot = -1;
+			if (inventory.getType() == InventoryType.PLAYER) {
+				Player p = (Player) inventory.getHolder();
+				heldslot = p.getInventory().getHeldItemSlot();
+				ItemStack ci = inventory.getItem(heldslot);
+				if (ci.getType() == materialEnum && !new HyperItemStack(ci).hasenchants()) {
+					damage = getDurabilityPercent(ci);
+					totalitems++;
+				}
+			}
+			for (int slot = 0; slot < inventory.getSize(); slot++) {
+				if (slot == heldslot) {continue;}
+				ItemStack ci = inventory.getItem(slot);
+				if (ci == null) {continue;}
+				if (!(ci.getType() == materialEnum)) {continue;}
+				if (new HyperItemStack(ci).hasenchants()) {continue;}
+				damage += getDurabilityPercent(ci);
+				totalitems++;
+				if (totalitems >= amount) {break;}
+			}
+			damage /= amount;
 			return damage;
 		} catch (Exception e) {
 			String info = "getDamageMultiplier() passed values amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
-			double damage = 0;
-			return damage;
-		}	
+			return 0;
+		}
+	}
+	
+	private double getDurabilityPercent(ItemStack stack) {
+		try {
+			double durabilityPercent = 1;
+			try {
+				double cDurability = stack.getDurability();
+				double maxDurability = stack.getData().getItemType().getMaxDurability();
+				durabilityPercent = Math.abs(1 - (cDurability / maxDurability));
+			} catch (Exception e) {
+				durabilityPercent = 1;
+			}
+			return durabilityPercent;
+		} catch (Exception e) {
+			String info = "getDurabilityPercent() passed values ItemStack='" + stack + "'";
+			hc.gDB().writeError(e, info);
+			return 1;
+		}
 	}
 
 }

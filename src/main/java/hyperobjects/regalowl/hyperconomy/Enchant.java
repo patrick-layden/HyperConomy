@@ -72,7 +72,7 @@ public class Enchant extends BasicObject implements HyperObject {
 			}
 			return cf.twoDecimals(cost);
 		} catch (Exception e) {
-			String info = "Calculation getEnchantCost() passed values name='" + getName() + "', material='" + eclass.toString() + "'";
+			String info = "getBuyPrice() passed values name='" + getName() + "', material='" + eclass.toString() + "'";
 			hc.gDB().writeError(e, info);
 			double cost = 99999999;
 			return cost;
@@ -117,7 +117,7 @@ public class Enchant extends BasicObject implements HyperObject {
 			}
 			return cf.twoDecimals(cost);
 		} catch (Exception e) {
-			String info = "Calculation getEnchantValue() passed values name='" + getName() + "', material='" + eclass.toString() + "'";
+			String info = "getSellPrice() passed values name='" + getName() + "', material='" + eclass.toString() + "'";
 			hc.gDB().writeError(e, info);
 			double value = 0;
 			return value;

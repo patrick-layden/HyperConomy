@@ -75,12 +75,10 @@ HC_PARAMS: &bType &a/hc params &bfor parameter help.
 HC_ECON: &bType &a/hc econ &bfor economy commands.
 HC_SELL_SELL: &a/sell &c[name] &e(amount/'max')
 HC_SELL_HS: &a/hs &e(amount/'max')
-HC_SELL_ESELL: &a/esell &c[name/'max']
 HC_SELL_SELLALL: &a/sellall
 HC_SELL_MORE: &bFor more help type &a/hc sell &c[command]
 HC_BUY_BUY: &a/buy &c[name] &e(amount/'max')
 HC_BUY_HB: &a/hb &e(amount/'max')
-HC_BUY_EBUY: &a/ebuy &c[name]
 HC_BUY_MORE: &bFor more help type &a/hc buy &c[command]
 HC_SHOP_MANAGESHOP: &a/manageshop &c['select', 'create', 'delete', 'add', 'remove', 'set1', 'set2', 'price', 'allow', or 'status']
 HC_INFO_VALUE: &a/value &c[name] &e(amount)
@@ -106,11 +104,9 @@ HC_PARAMS_NAME: &b[name] = item name
 HC_PARAMS_COMMAND: &a[command] = commmand name such as 'buy' or 'topitems'
 HC_SELL_DETAIL: &bSells 1 of the specified item if no parameters are given, an amount of the item, or all of the item in your inventory if the given parameter is 'max'.
 HC_HS_DETAIL: &bSells 1 of the item you're holding if no parameters are given, an amount of the item, or all of the item in your inventory if the given parameter is 'max'.
-HC_ESELL_DETAIL: &bSells the specified enchantment on the item you're holding or all of the item's enchantments if the given parameter is 'max'.
 HC_SELLALL_DETAIL: &bBe careful, this sells all the items in your inventory. This does not include armor slots, however.
 HC_BUY_DETAIL: &bBuys 1 of the specified item if no parameters are given, an amount of the item, or as many as your inventory can hold if the given parameter is 'max'.
 HC_HB_DETAIL: &bBuys 1 of the item you're holding if no parameters are given, an amount of the item, or as many as your inventory can hold if the given parameter is 'max'.
-HC_EBUY_DETAIL: &bBuys the given enchantment and puts it on the item you're holding.
 HC_MANAGESHOP_DETAIL: &bManages player created shops.  To select a shop either stand in it or type /ms select [shop].  Once selected you can create shops with /ms create [name], allow other players to manage your shop with /ms allow [name], add items with /ms add, remove items with /ms remove, delete shops with /ms delete, set the corners of the shop cuboid with /ms set1 and /ms set2, and you can set the status or price of items in the shop with /ms status [status] or /ms price [price]. Valid statuses are trade, buy, sell, and none. trade = buy or sell, buy = buy only, sell = sell only, none = not tradable.
 HC_VALUE_DETAIL: &bDisplays the value of the given item(s) name.  This value is theoretical and does not factor in item damage.
 HC_HV_DETAIL: &bDisplays the value of the item(s) you're holding. This factors in damage.  However, if you specify more of the item than you have in your inventory, the additional items will use a theoretical value.
@@ -122,9 +118,7 @@ HC_EVALUE_DETAIL: &bIf no parameters are given, displays the sell value, purchas
 HC_INVALID: &4Invalid Usage.  Use /hc
 HC_XPINFO_DETAIL: &bDisplays information about how much experience you have, how much experience is needed to level up, and how much experience is needed to reach level 30.
 ENCHANTMENT_NOT_IN_DATABASE: &9Sorry, that enchantment is not in the enchantment database.
-EBUY_INVALID: &4 Invalid Parameters. Use /ebuy [name]
 HAS_NO_ENCHANTMENTS: &4The item you're holding has no enchantments!
-ESELL_INVALID: &4Invalid Parameters. Use /esell [name/'max']
 LOG_BREAK: ---------------------------------
 DATABASE_CONNECTION_ERROR: Database connection error!  Check your config.yml settings.  Disabling HyperConomy....
 VAULT_NOT_FOUND: Vault not found, shutting down...

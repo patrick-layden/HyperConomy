@@ -25,13 +25,7 @@ public class _Command {
 		} else {
 			playerecon = nonPlayerEconomy;
 		}
-		if (cmd.getName().equalsIgnoreCase("buy") && (player != null)) {
-			new Buy(args, player, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("sell") && (player != null)) {
-			new Sell(args, player, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("value")) {
+		if (cmd.getName().equalsIgnoreCase("value")) {
 			new Value(args, sender, playerecon);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("heldbuy") && (player != null)) {
@@ -48,18 +42,6 @@ public class _Command {
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("settax")) {
 			new Settax(args, sender);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setclassvalue")) {
-			new Setclassvalue(args, sender);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("setinterval")) {
-			new Setinterval(args, sender);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("classvalues")) {
-			new Classvalues(sender);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("writeitems")) {
-			new Writeitems(args, sender);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("topitems")) {
 			new Topitems(args, player, sender, playerecon);
@@ -105,12 +87,6 @@ public class _Command {
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hcbackup")) {
 			new Hcbackup(sender);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("ebuy") && player != null) {
-			new Ebuy(player, args);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("esell") && player != null) {
-			new Esell(player, args);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("evalue")) {
 			new Evalue(args, player, sender, playerecon);

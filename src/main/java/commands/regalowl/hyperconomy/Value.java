@@ -15,55 +15,69 @@ public class Value {
 		LanguageFile L = hc.getLanguageFile();
 		Player player = null;
 		EconomyManager em = hc.getEconomyManager();
-		
+		if (sender instanceof Player) {
+			player = (Player) sender;
+		}
 		try {
-			if (sender instanceof Player) {
-				player = (Player) sender;
-			}
 			boolean requireShop = hc.gYH().gFC("config").getBoolean("config.limit-info-commands-to-shops");
-			if (player == null || (requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
-				String name = he.fixName(args[0]);
-				int amount;
-				if (args.length == 2) {
-					amount = Integer.parseInt(args[1]);
-					if (amount > 10000) {
-						amount = 10000;
-					}
-				} else {
-					amount = 1;
-				}
-				HyperObject ho = he.getHyperObject(name, em.getShop(player));
-				
-				if (ho != null) {
-					String displayName = ho.getDisplayName();
-					double val = ho.getSellPrice(amount);
-					double salestax = 0;
-					if (player != null) {
-						HyperPlayer hp = em.getHyperPlayer(player);
-						salestax = hp.getSalesTax(val);
-					}
-					val = cf.twoDecimals(val - salestax);
-					sender.sendMessage(L.get("LINE_BREAK"));
-					sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, displayName));
-					double cost = ho.getBuyPrice(amount);
-					double taxpaid = ho.getPurchaseTax(cost);
-					cost = cf.twoDecimals(cost + taxpaid);
-					if (cost > Math.pow(10, 10)) {
-						cost = -1;
-					}
-					double stock = 0;
-					stock = cf.twoDecimals(he.getHyperObject(name, em.getShop(player)).getStock());
-					sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, displayName));
-					sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, displayName));
-					sender.sendMessage(L.get("LINE_BREAK"));
-				} else {
-					sender.sendMessage(L.get("INVALID_ITEM_NAME"));
-					return;
-				}
-			} else {
+			if (player != null && requireShop && !em.inAnyShop(player) && !player.hasPermission("hyperconomy.admin")) {
 				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
 				return;
 			}
+			String name = he.fixName(args[0]);
+			HyperObject ho = he.getHyperObject(name, em.getShop(player));
+			if (ho == null) {
+				sender.sendMessage(L.get("INVALID_ITEM_NAME"));
+				return;
+			}
+			int amount = 1;
+			if (args.length > 1) {
+				amount = Integer.parseInt(args[1]);
+				if (amount > 10000) {
+					amount = 10000;
+				}
+			}
+			double val = 0;
+			double cost = 0;
+			if (player != null) {
+				HyperPlayer hp = em.getHyperPlayer(player);
+				if (ho.getType() == HyperObjectType.ITEM) {
+					val = ho.getSellPriceWithTax(amount, hp);
+					cost = ho.getBuyPriceWithTax(amount);
+				} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+					val = ho.getSellPrice(EnchantmentClass.DIAMOND, hp);
+					val -= hp.getSalesTax(val);
+					cost = ho.getBuyPrice(EnchantmentClass.DIAMOND);
+					cost += ho.getPurchaseTax(cost);
+				} else if (ho.getType() == HyperObjectType.EXPERIENCE) {
+					val = ho.getSellPrice(amount);
+					val -= hp.getSalesTax(val);
+					cost = ho.getBuyPriceWithTax(amount);
+				}
+			} else {
+				if (ho.getType() == HyperObjectType.ITEM) {
+					val = ho.getSellPrice(amount);
+					val -= ho.getSalesTaxEstimate(val);
+					cost = ho.getBuyPriceWithTax(amount);
+				} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+					val = ho.getSellPrice(EnchantmentClass.DIAMOND);
+					val -= ho.getSalesTaxEstimate(val);
+					cost = ho.getBuyPrice(EnchantmentClass.DIAMOND);
+					cost += ho.getPurchaseTax(cost);
+				} else if (ho.getType() == HyperObjectType.EXPERIENCE) {
+					val = ho.getSellPrice(amount);
+					val -= ho.getSalesTaxEstimate(val);
+					cost = ho.getBuyPriceWithTax(amount);
+				}
+			}
+
+
+			sender.sendMessage(L.get("LINE_BREAK"));
+			sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, ho.getDisplayName()));
+			sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, ho.getDisplayName()));
+			sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), cf.twoDecimals(ho.getStock()), ho.getDisplayName()));
+			sender.sendMessage(L.get("LINE_BREAK"));
+
 		} catch (Exception e) {
 			sender.sendMessage(L.get("VALUE_INVALID"));
 			return;
