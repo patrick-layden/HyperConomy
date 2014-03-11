@@ -232,7 +232,8 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		    Double qty = entry.getValue();
 		    value += (ho.getSellPrice(amount, hp) * qty);
 		}
-		return value;
+		double damageMultiplier = getDamageMultiplier(amount, hp.getPlayer().getInventory());
+		return value * damageMultiplier;
 	}
 	
 

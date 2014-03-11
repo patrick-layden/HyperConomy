@@ -30,8 +30,8 @@ public class Objectsettings {
 					val = ho.getValue();
 					stat = Boolean.parseBoolean(ho.getIsstatic());
 					statprice = ho.getStaticprice();
-					sto = ho.getStock();
-					double tsto = ho.getTotalStock();
+					sto = hc.gCF().round(ho.getStock(), 3);
+					double tsto = hc.gCF().round(ho.getTotalStock(),3);
 					med = ho.getMedian();
 					init = Boolean.parseBoolean(ho.getInitiation());
 					starprice = ho.getStartprice();
@@ -73,8 +73,8 @@ public class Objectsettings {
 					val = ho.getValue();
 					stat = Boolean.parseBoolean(ho.getIsstatic());
 					statprice = ho.getStaticprice();
-					sto = ho.getStock();
-					double tsto = ho.getTotalStock();
+					sto = hc.gCF().round(ho.getStock(), 3);
+					double tsto = hc.gCF().round(ho.getTotalStock(),3);
 					med = ho.getMedian();
 					init = Boolean.parseBoolean(ho.getInitiation());
 					starprice = ho.getStartprice();			

@@ -1,6 +1,5 @@
 package regalowl.hyperconomy;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -290,22 +289,19 @@ public class ComponentItem extends BasicObject implements HyperObject {
 
 	@Override
 	public double getDamageMultiplier(int amount, Inventory inventory) {
-		Bukkit.broadcastMessage("getDamage");
 		try {
 			double damage = 0;
-			if (!isDurable()) {
-				Bukkit.broadcastMessage("not durable");
-				return 1;
-			}
+			if (!isDurable()) {return 1;}
 			int totalitems = 0;
 			int heldslot = -1;
 			if (inventory.getType() == InventoryType.PLAYER) {
 				Player p = (Player) inventory.getHolder();
-				heldslot = p.getInventory().getHeldItemSlot();
-				ItemStack ci = inventory.getItem(heldslot);
+				ItemStack ci = p.getItemInHand();
 				if (ci.getType() == materialEnum && !new HyperItemStack(ci).hasenchants()) {
-					damage = getDurabilityPercent(ci);
+					damage += getDurabilityPercent(ci);
 					totalitems++;
+					heldslot = p.getInventory().getHeldItemSlot();
+					if (totalitems >= amount) {return damage;}
 				}
 			}
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
@@ -331,9 +327,9 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		try {
 			double durabilityPercent = 1;
 			try {
-				double cDurability = stack.getDurability();
+				double currentDurability = stack.getDurability();
 				double maxDurability = stack.getData().getItemType().getMaxDurability();
-				durabilityPercent = Math.abs(1 - (cDurability / maxDurability));
+				durabilityPercent = Math.abs(1 - (currentDurability / maxDurability));
 			} catch (Exception e) {
 				durabilityPercent = 1;
 			}

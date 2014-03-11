@@ -56,7 +56,7 @@ public class Hv {
 						double stock = 0;
 						stock = ho.getStock();
 						player.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, displayName));
-						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), stock, displayName));
+						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), cf.twoDecimals(stock), displayName));
 						player.sendMessage(L.get("LINE_BREAK"));
 					}
 				} else {
