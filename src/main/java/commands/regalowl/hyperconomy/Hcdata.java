@@ -3,9 +3,11 @@ package regalowl.hyperconomy;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+
 import regalowl.databukkit.FileTools;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLWrite;
@@ -152,6 +154,38 @@ public class Hcdata implements CommandExecutor {
 				}
 				em.getEconomy(economy).exportToYml();
 				sender.sendMessage(L.get("ECONOMY_EXPORTED"));
+			} catch (Exception e) {
+				sender.sendMessage(L.get("HCDATA_EXPORTYML_INVALID"));
+			}
+		} else if (args[0].equalsIgnoreCase("repair")) {
+			try {
+				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+					new Backup();
+				}
+				sender.sendMessage("repair attempted");
+			} catch (Exception e) {
+				sender.sendMessage(L.get("HCDATA_EXPORTYML_INVALID"));
+			}
+		} else if (args[0].equalsIgnoreCase("clearhistory")) {
+			try {
+				String statement = "DELETE FROM hyperconomy_history";
+				hc.getSQLWrite().addToQueue(statement);
+				sender.sendMessage(L.get("HCCLEARHISTORY_CLEARED"));
+			} catch (Exception e) {
+				sender.sendMessage(L.get("HCDATA_EXPORTYML_INVALID"));
+			}
+		} else if (args[0].equalsIgnoreCase("minimize")) {
+			try {
+				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+					new Backup();
+				}
+				String statement = "DELETE FROM hyperconomy_history";
+				hc.getSQLWrite().addToQueue(statement);
+				statement = "DELETE FROM hyperconomy_audit_log";
+				hc.getSQLWrite().addToQueue(statement);
+				statement = "DELETE FROM hyperconomy_log";
+				hc.getSQLWrite().addToQueue(statement);
+				sender.sendMessage("data minimized");
 			} catch (Exception e) {
 				sender.sendMessage(L.get("HCDATA_EXPORTYML_INVALID"));
 			}

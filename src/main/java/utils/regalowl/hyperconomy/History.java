@@ -131,14 +131,7 @@ public class History {
     public void stopHistoryLog() {
     	hc.getServer().getScheduler().cancelTask(historylogtaskid);
     }
-    
-	public void clearHistory() {
-		String statement = "DELETE FROM hyperconomy_history";
-		hc.getSQLWrite().addToQueue(statement);
-	}
-	
-	
-	
+
 	public double getHistoricValue(String name, String economy, int count) {
 		try {
 			count -= 1;

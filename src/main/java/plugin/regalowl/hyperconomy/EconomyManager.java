@@ -43,7 +43,7 @@ public class EconomyManager implements Listener {
 	private BukkitTask shopCheckTask;
 	private boolean useShops;
 	
-	public final double version = 1.27;
+	
 	
 	
 	
@@ -60,10 +60,7 @@ public class EconomyManager implements Listener {
 		hc.getServer().getPluginManager().registerEvents(this, hc);
 	}
 	
-	public double getVersion() {
-		return version;
-	}
-	
+
 	public ArrayList<String> getTablesList() {
 		return du.getTablesList();
 	}
