@@ -493,6 +493,9 @@ HCDATA_EXPORTCSV_INVALID: &4Invalid parameters. Use /hcdata exportcsv [name of t
 HCDATA_IMPORTCSV_INVALID: &4Invalid parameters. Use /hcdata importcsv [name of table or 'all']
 HCDATA_IMPORTYML_INVALID: &4Invalid parameters. Use /hcdata importyml [economy]
 HCDATA_EXPORTYML_INVALID: &4Invalid parameters. Use /hcdata exportyml [economy]
+MUST_DISABLE_COMPOSITES: &4You must disable composite items to use this command.
+NAME_REPAIR_ATTEMPTED: &6Name repair attempted.
+LOGS_CLEARED: &6HyperConomy log tables cleared.
 CANT_ADD_MORE_STOCK: &4You are not allowed to add any more stock of this object.
 ONLY_SERVER_SHOPS: &4This command can only be used with server shops.
 ONLY_PLAYER_SHOPS: &4This command can only be used with player shops.

@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import regalowl.databukkit.FileTools;
 import regalowl.databukkit.QueryResult;
 import regalowl.databukkit.SQLWrite;
+import regalowl.databukkit.YamlHandler;
 
 public class Hcdata implements CommandExecutor {
 	
@@ -157,42 +158,48 @@ public class Hcdata implements CommandExecutor {
 			} catch (Exception e) {
 				sender.sendMessage(L.get("HCDATA_EXPORTYML_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("repair")) {
-			try {
-				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
-					new Backup();
-				}
-				sender.sendMessage("repair attempted");
-			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDATA_EXPORTYML_INVALID"));
-			}
 		} else if (args[0].equalsIgnoreCase("clearhistory")) {
-			try {
-				String statement = "DELETE FROM hyperconomy_history";
-				hc.getSQLWrite().addToQueue(statement);
-				sender.sendMessage(L.get("HCCLEARHISTORY_CLEARED"));
-			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDATA_EXPORTYML_INVALID"));
+			String statement = "DELETE FROM hyperconomy_history";
+			hc.getSQLWrite().addToQueue(statement);
+			sender.sendMessage(L.get("HCCLEARHISTORY_CLEARED"));
+		} else if (args[0].equalsIgnoreCase("clearlogs")) {
+			if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+				new Backup();
 			}
-		} else if (args[0].equalsIgnoreCase("minimize")) {
+			String statement = "DELETE FROM hyperconomy_audit_log";
+			hc.getSQLWrite().addToQueue(statement);
+			statement = "DELETE FROM hyperconomy_log";
+			hc.getSQLWrite().addToQueue(statement);
+			sender.sendMessage(L.get("LOGS_CLEARED"));
+		} else if (args[0].equalsIgnoreCase("repairnames")) {
 			try {
+				if (hc.gYH().gFC("config").getBoolean("config.use-composite-items")) {
+					sender.sendMessage(L.get("MUST_DISABLE_COMPOSITES"));
+					return true;
+				}
 				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
 					new Backup();
 				}
-				String statement = "DELETE FROM hyperconomy_history";
-				hc.getSQLWrite().addToQueue(statement);
-				statement = "DELETE FROM hyperconomy_audit_log";
-				hc.getSQLWrite().addToQueue(statement);
-				statement = "DELETE FROM hyperconomy_log";
-				hc.getSQLWrite().addToQueue(statement);
-				sender.sendMessage("data minimized");
+				YamlHandler yh = hc.getYamlHandler();
+				yh.unRegisterFileConfiguration("composites");
+				yh.unRegisterFileConfiguration("objects");
+				yh.deleteConfigFile("composites");
+				yh.deleteConfigFile("objects");
+				yh.copyFromJar("composites");
+				yh.copyFromJar("objects");
+				yh.registerFileConfiguration("composites");
+				yh.registerFileConfiguration("objects");
+				for (HyperEconomy he : hc.getEconomyManager().getEconomies()) {
+					he.updateNamesFromYml();
+				}
+				sender.sendMessage(L.get("NAME_REPAIR_ATTEMPTED"));
+				hc.restart();
 			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDATA_EXPORTYML_INVALID"));
+				hc.gDB().writeError(e);
 			}
 		} else {
 			sender.sendMessage(L.get("HCDATA_INVALID"));
 		}
 		return true;
 	}
-
 }

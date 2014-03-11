@@ -128,6 +128,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 					double sellPrice = result.getDouble("SELL_PRICE");
 					int maxStock = result.getInt("MAX_STOCK");
 					HyperObject ho = he.getHyperObject(result.getString("HYPEROBJECT"));
+					if (ho == null) {continue;}
 					double stock = result.getDouble("QUANTITY");
 					HyperObjectStatus status = HyperObjectStatus.fromString(result.getString("STATUS"));
 					if (ho.getType() == HyperObjectType.ITEM && ho.isCompositeObject()) {
@@ -345,6 +346,14 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			}
 		}
 		return available;
+	}
+	
+	public ArrayList<HyperObject> getShopObjects() {
+		ArrayList<HyperObject> objects = new ArrayList<HyperObject>();
+		for (HyperObject pso:shopContents.values()) {
+			objects.add(pso);
+		}
+		return objects;
 	}
 	
 	public void unBanAllObjects() {

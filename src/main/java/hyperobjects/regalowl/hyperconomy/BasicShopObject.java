@@ -66,12 +66,12 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	}
 	@Override
 	public void setHyperObject(HyperObject ho) {
-		this.ho = ho;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET HYPEROBJECT=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
 		ws.addParameter(ho.getName());
 		ws.addParameter(playerShop.getName());
-		ws.addParameter(ho.getName());
+		ws.addParameter(this.ho.getName());
 		sw.addToQueue(ws);
+		this.ho = ho;
 	}
 	@Override
 	public void setShop(PlayerShop playerShop) {
