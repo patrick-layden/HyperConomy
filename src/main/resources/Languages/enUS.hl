@@ -95,7 +95,6 @@ HC_ECON_MORE: &bFor more help type &a/hc econ &c[command]
 HC_HCB_DETAIL: &bDisplays your balance if no account is specified, or the balance of the specified account.
 HC_HCP_DETAIL: &bRemoves the specified balance from your account and puts it in the specified account.
 HC_HCT_DETAIL: &bDisplays the top balances on the server.  10 results are displayed per page.
-HC_INFO_EVALUE: &a/evalue &d{enchantment name} {'b'/'s'/'a'}
 HC_INFO_MORE: &bFor more help type &a/hc info [command]
 HC_PARAMS_REQUIRED: &c[something] = required parameter
 HC_PARAMS_OPTIONAL: &e[something] = optional parameter
@@ -114,7 +113,6 @@ HC_II_DETAIL: &bDisplays information about the item you're holding.  If an id an
 HC_TOPITEMS_DETAIL: &bDisplays all of the items available in the global shop is not in a shop, or in the shop that the player is currently in. Items with the highest stock are shown first.  If no page is specified it shows the first page.
 HC_TOPENCHANTS_DETAIL: &bDisplays all of the enchantments available in all shops, if the player isn't in a shop, or in the shop that the player is currently in. Enchantments with the highest stock are shown first.  If no page is specified it shows the first page.
 HC_BROWSESHOP_DETAIL: &bSearches for items or enchantments that begin with the specified name.  It will display the items/enchantments in alphabetical order with their stock and purchase price.  If the player is in a shop it will only display items available in that shop.
-HC_EVALUE_DETAIL: &bIf no parameters are given, displays the sell value, purchase price, and shopstock of all the enchantments on the item you're holding. If given an enchantment name, you must also specify 'b' for buy, 's' for sell, or 'a' for amount. If 'b' for instance, it will display the purchase price for all the enchantment on all item classes. (gold, diamond, iron, etc.)
 HC_INVALID: &4Invalid Usage.  Use /hc
 HC_XPINFO_DETAIL: &bDisplays information about how much experience you have, how much experience is needed to level up, and how much experience is needed to reach level 30.
 ENCHANTMENT_NOT_IN_DATABASE: &9Sorry, that enchantment is not in the enchantment database.
@@ -203,12 +201,6 @@ SETTINGS_REACH_HYPERBOLIC: &9Stock needed for dynamic pricing mode: &b%v
 SETTINGS_TYPE: &9Type: &b%n
 SETTINGS_DISPLAY: &9Display Name: &b%n
 SETTINGS_ALIAS: &9Aliases: &b%n
-EVALUE_INVALID: &4Invalid Parameters. Use /evalue (name) ('b'/'s'/'a')
-EVALUE_STOCK: &9The global shop has &a%a &b%n &9available.
-EVALUE_CLASS_PURCHASE: &b%n &9on a &b%e &9item can be bought for: &a%c%p
-EVALUE_CLASS_SALE: &b%n &9on a &b%e &9item can be sold for: &a%c%p
-EVALUE_SALE: &b%n &9can be sold for: &a%c%p
-EVALUE_PURCHASE: &b%n &9can be purchased for: &a%c%p
 HYPERLOG_NORESULT: &9No results were found for your search.
 HYPERLOG_INVALID: &4Invalid Parameters.  Use /hyperlog Possible arguments(alias)[player(p), since(s), before(b), action(a), object(o), >amount(>a), <amount(<a), >money(>m), <money(<m), >tax(>t), <tax(<t), store(st), type(ty), >id, <id]
 HYPERLOG_INVALID_INCREMENT: &4Invalid increment.  Valid time increments are 'm', 'h', and 'd' such as '3d' or '1h'
