@@ -6,12 +6,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
@@ -141,6 +144,41 @@ public class FrameShopHandler implements Listener {
 			}
 		}
 
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onBlockPlaceEvent(BlockPlaceEvent event) {
+		Location placeLocation = event.getBlock().getLocation();
+		for (FrameShop fs:frameShops.values()) {
+			if (fs.getLocation().equals(placeLocation)) {
+				event.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onBlockBreakEvent(BlockBreakEvent event) {
+		Location breakLocation = event.getBlock().getLocation();
+		for (FrameShop fs:frameShops.values()) {
+			if (isAdjacent(fs.getLocation(), breakLocation)) {
+				Block attached = fs.getAttachedBlock();
+				if (attached == null) {continue;}
+				if (attached.equals(event.getBlock())) {
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	private boolean isAdjacent(Location l, Location l2) {
+		if (l == null || l2 == null) {return false;}
+		if (!l.getWorld().equals(l2.getWorld())) {return false;}
+		int matching = 0;
+		if (Math.abs(l.getBlockX() - l2.getBlockX()) == 0) {matching++;}
+		if (Math.abs(l.getBlockY() - l2.getBlockY()) == 0) {matching++;}
+		if (Math.abs(l.getBlockZ() - l2.getBlockZ()) == 0) {matching++;}
+		if (matching == 2) {return true;}
+		return false;
 	}
 
 }

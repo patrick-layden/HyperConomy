@@ -3,6 +3,7 @@ package regalowl.hyperconomy.shop;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.ItemStack;
@@ -133,6 +134,19 @@ public class FrameShop {
 				}
 			}
 		return null;
+	}
+	
+	public Location getLocation() {
+		return new Location(Bukkit.getWorld(world),x,y,z);
+	}
+	
+	public Block getAttachedBlock() {
+		Location l = getLocation();
+		if (l == null) {return null;}
+		ItemFrame frame = getFrame(l);
+		if (frame == null) {return null;}
+		Block b = l.getBlock().getRelative(frame.getAttachedFace());
+		return b;
 	}
 
 }

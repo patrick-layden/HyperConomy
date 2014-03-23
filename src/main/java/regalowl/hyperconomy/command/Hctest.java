@@ -1,16 +1,11 @@
 package regalowl.hyperconomy.command;
 
 
-
-
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.HyperObject;
+
 
 
 
@@ -25,6 +20,7 @@ public class Hctest implements CommandExecutor {
 	private HyperPlayer hp;
 */
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		/*
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy em = hc.getDataManager().getEconomy("default");
 		for (HyperObject ho:em.getHyperObjects()) {
@@ -32,7 +28,7 @@ public class Hctest implements CommandExecutor {
 				Bukkit.broadcastMessage(ho.getName());
 			}
 		}
-		
+		*/
 		return true;
 		/*
 		HyperConomy hc = HyperConomy.hc;
