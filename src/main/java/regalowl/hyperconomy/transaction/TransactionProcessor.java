@@ -72,7 +72,7 @@ public class TransactionProcessor {
 		if (hyperObject.isShopObject()) {
 			status = hyperObject.getStatus();
 			int maxStock = hyperObject.getMaxStock();
-			int globalMaxStock = hc.gYH().gFC("config").getInt("config.max-stock-per-item-playershops");
+			int globalMaxStock = hc.gYH().gFC("config").getInt("shop.max-stock-per-item-in-playershops");
 			if ((hyperObject.getStock() + amount) > maxStock || (hyperObject.getStock() + amount) > globalMaxStock) {
 				overMaxStock = true;
 			}
@@ -92,7 +92,7 @@ public class TransactionProcessor {
 		giveItem = pt.getGiveItem();
 		
 		
-		shopUnlimitedMoney = hc.gYH().gFC("config").getBoolean("config.shop-has-unlimited-money");
+		shopUnlimitedMoney = hc.gYH().gFC("config").getBoolean("shop.server-shops-have-unlimited-money");
 
 		switch (this.transactionType) {
 			case BUY:
@@ -204,7 +204,7 @@ public class TransactionProcessor {
 				return response;
 			}
 			hyperObject.add(amount, receiveInventory);
-			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("config.unlimited-stock-for-static-items")) {
+			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
 				hyperObject.setStock(shopstock - amount);
 			}
 			hp.withdraw(price);
@@ -276,7 +276,7 @@ public class TransactionProcessor {
 			}
 			int totalitems = hyperObject.count(giveInventory);
 			if (totalitems < amount) {
-				boolean sellRemaining = hc.gYH().gFC("config").getBoolean("config.sell-remaining-if-less-than-requested-amount");
+				boolean sellRemaining = hc.gYH().gFC("config").getBoolean("shop.sell-remaining-if-less-than-requested-amount");
 				if (sellRemaining) {
 					amount = totalitems;
 				} else {
@@ -315,7 +315,7 @@ public class TransactionProcessor {
 			}
 			double amountRemoved = hyperObject.remove(amount, giveInventory);
 			double shopstock = hyperObject.getStock();
-			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("config.unlimited-stock-for-static-items")) {
+			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
 				hyperObject.setStock(shopstock + amountRemoved);
 			}
 			int maxi2 = hyperObject.getMaxInitial();
@@ -397,7 +397,7 @@ public class TransactionProcessor {
 						float xpbarxp = (float) newxp / (float) hp.getXpForNextLvl(newlvl);
 						hp.getPlayer().setLevel(newlvl);
 						hp.getPlayer().setExp(xpbarxp);
-						if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("config.unlimited-stock-for-static-items")) {
+						if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
 							hyperObject.setStock(shopstock - amount);
 						}
 						hp.withdraw(price);
@@ -488,7 +488,7 @@ public class TransactionProcessor {
 						float xpbarxp = (float) newxp / (float) hp.getXpForNextLvl(newlvl);
 						hp.getPlayer().setLevel(newlvl);
 						hp.getPlayer().setExp(xpbarxp);
-						if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("config.unlimited-stock-for-static-items")) {
+						if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.gYH().gFC("config").getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
 							hyperObject.setStock(amount + hyperObject.getStock());
 						}
 						int maxi2 = hyperObject.getMaxInitial();
@@ -753,9 +753,9 @@ public class TransactionProcessor {
 							stax = Boolean.parseBoolean(hyperObject.getIsstatic());
 							double taxrate;
 							if (!stax) {
-								taxrate = hc.gYH().gFC("config").getDouble("config.enchanttaxpercent");
+								taxrate = hc.gYH().gFC("config").getDouble("tax.enchant");
 							} else {
-								taxrate = hc.gYH().gFC("config").getDouble("config.statictaxpercent");
+								taxrate = hc.gYH().gFC("config").getDouble("tax.static");
 							}
 							double taxpaid = price - (price / (1 + taxrate / 100));
 							taxpaid = cf.twoDecimals(taxpaid);

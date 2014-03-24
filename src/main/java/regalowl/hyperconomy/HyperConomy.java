@@ -31,6 +31,7 @@ import regalowl.hyperconomy.command.Hc;
 import regalowl.hyperconomy.command.Hcbank;
 import regalowl.hyperconomy.command.Hcdata;
 import regalowl.hyperconomy.command.Hcdelete;
+import regalowl.hyperconomy.command.Hceconomy;
 import regalowl.hyperconomy.command.Hcset;
 import regalowl.hyperconomy.command.Hctest;
 import regalowl.hyperconomy.command.Lockshop;
@@ -133,18 +134,18 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		HandlerList.unregisterAll(this);
 		em = new DataManager();
 		FileConfiguration config = yh.gFC("config");
-		if (config.getBoolean("config.sql-connection.use-mysql")) {
-			String username = config.getString("config.sql-connection.username");
-			String password = config.getString("config.sql-connection.password");
-			int port = config.getInt("config.sql-connection.port");
-			String host = config.getString("config.sql-connection.host");
-			String database = config.getString("config.sql-connection.database");
+		if (config.getBoolean("sql.use-mysql")) {
+			String username = config.getString("sql.mysql-connection.username");
+			String password = config.getString("sql.mysql-connection.password");
+			int port = config.getInt("sql.mysql-connection.port");
+			String host = config.getString("sql.mysql-connection.host");
+			String database = config.getString("sql.mysql-connection.database");
 			db.enableMySQL(host, database, username, password, port);
 		}
 		db.createDatabase();
 		sw = db.getSQLWrite();
 		sr = db.getSQLRead();
-		sw.setLogSQL(config.getBoolean("config.log-sql-statements"));
+		sw.setLogSQL(config.getBoolean("sql.log-sql-statements"));
 		setupExternalEconomy();
 		if (useExternalEconomy) {
 			log.info("[HyperConomy]Using external economy plugin via Vault.");
@@ -156,7 +157,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		commandhandler = new _Command();
 		not = new Notification();
 		new TransactionSign();
-		yh.startSaveTask(config.getLong("config.saveinterval"));
+		yh.startSaveTask(config.getLong("intervals.save"));
 		cs = new ChestShop();
 		cos = new ConsoleSettings("default");
 	}
@@ -221,6 +222,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		Bukkit.getServer().getPluginCommand("value").setExecutor(new Value());
 		Bukkit.getServer().getPluginCommand("lockshop").setExecutor(new Lockshop());
 		Bukkit.getServer().getPluginCommand("hc").setExecutor(new Hc());
+		Bukkit.getServer().getPluginCommand("hceconomy").setExecutor(new Hceconomy());
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -238,7 +240,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 			}
 		} catch (Exception e) {
 			if (db != null) {
-				db.writeError(e, "Unhandled command exception.");
+				db.writeError(e);
 				return true;
 			} else {
 				e.printStackTrace();
@@ -255,11 +257,11 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		} else {
 			vaultInstalled = false;
 		}
-		useExternalEconomy = yh.getFileConfiguration("config").getBoolean("config.use-external-economy-plugin");
+		useExternalEconomy = yh.getFileConfiguration("config").getBoolean("economy-plugin.use-external");
 		if (!vaultInstalled) {
 			useExternalEconomy = false;
 		}
-		if (vaultInstalled && yh.gFC("config").getBoolean("config.hook-internal-economy-into-vault")) {
+		if (vaultInstalled && yh.gFC("config").getBoolean("economy-plugin.hook-internal-economy-into-vault")) {
 			getServer().getServicesManager().register(Economy.class, new Economy_HyperConomy(), this, ServicePriority.Highest);
 			log.info("[HyperConomy]Internal economy hooked into Vault.");
 		}

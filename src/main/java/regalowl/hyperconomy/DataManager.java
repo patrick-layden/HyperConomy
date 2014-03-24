@@ -63,8 +63,8 @@ public class DataManager implements Listener {
 		dataLoaded = false;
 		playersLoaded = false;
 		loadActive = false;
-		useShops = hc.gYH().gFC("config").getBoolean("config.use-shops");
-		shopinterval = hc.gYH().gFC("config").getLong("config.shopcheckinterval");
+		useShops = hc.gYH().gFC("config").getBoolean("enable-feature.shops");
+		shopinterval = hc.gYH().gFC("config").getLong("intervals.shop-check");
 		du = new DatabaseUpdater();
 		hc.getServer().getPluginManager().registerEvents(this, hc);
 	}
@@ -164,7 +164,7 @@ public class DataManager implements Listener {
 									result.getString("MESSAGE"), p1, p2, result.getString("BANNED_OBJECTS"));
 							shops.put(name, shop);
 						} else if (type.equalsIgnoreCase("player")) {
-							if (!hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {continue;}
+							if (!hc.gYH().gFC("config").getBoolean("enable-feature.player-shops")) {continue;}
 							String name = result.getString("NAME");
 							Location p1 = new Location(Bukkit.getWorld(result.getString("WORLD")), result.getInt("P1X"), result.getInt("P1Y"), result.getInt("P1Z"));
 							Location p2 = new Location(Bukkit.getWorld(result.getString("WORLD")), result.getInt("P2X"), result.getInt("P2Y"), result.getInt("P2Z"));
@@ -297,7 +297,7 @@ public class DataManager implements Listener {
 		SQLWrite sw = hc.getSQLWrite();
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("NAME", economy);
-		values.put("HYPERACCOUNT", hc.gYH().gFC("config").getString("config.global-shop-account"));
+		values.put("HYPERACCOUNT", hc.gYH().gFC("config").getString("shop.default-server-shop-account"));
 		sw.performInsert("hyperconomy_economies", values);
 		for (HyperObject ho:defaultEconomy.getHyperObjects()) {
 			values = new HashMap<String,String>();
@@ -347,13 +347,13 @@ public class DataManager implements Listener {
 	
 	
 	public void createEconomyFromYml(String econ, boolean restart) {
-		if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+		if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
 			new Backup();
 		}
 		SQLWrite sw = hc.getSQLWrite();
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("NAME", econ);
-		values.put("HYPERACCOUNT", hc.gYH().gFC("config").getString("config.global-shop-account"));
+		values.put("HYPERACCOUNT", hc.gYH().gFC("config").getString("shop.default-server-shop-account"));
 		sw.performInsert("hyperconomy_economies", values);
 		FileConfiguration objects = hc.gYH().gFC("objects");
 		Iterator<String> it = objects.getKeys(false).iterator();
@@ -469,10 +469,8 @@ public class DataManager implements Listener {
 		try {
 			if (!dataLoaded()) {return;}
 			String name = event.getPlayer().getName();
-			if (name.equalsIgnoreCase(hc.gYH().gFC("config").getString("config.global-shop-account"))) {
-				if (hc.gYH().gFC("config").getBoolean("config.block-player-with-same-name-as-global-shop-account")) {
-					event.getPlayer().kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
-				}
+			if (name.equalsIgnoreCase(hc.gYH().gFC("config").getString("shop.default-server-shop-account"))) {
+				event.getPlayer().kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 			}
 			if (!hyperPlayerExists(name)) {
 				addPlayer(name);
@@ -506,10 +504,8 @@ public class DataManager implements Listener {
 	
 	private void addOnlinePlayers() {
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			if (p.getName().equalsIgnoreCase(hc.gYH().gFC("config").getString("config.global-shop-account"))) {
-				if (hc.gYH().gFC("config").getBoolean("config.block-player-with-same-name-as-global-shop-account")) {
-					p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
-				}
+			if (p.getName().equalsIgnoreCase(hc.gYH().gFC("config").getString("shop.default-server-shop-account"))) {
+				p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 			}
 			if (!hyperPlayerExists(p.getName())) {
 				addPlayer(p.getName());
@@ -630,10 +626,10 @@ public class DataManager implements Listener {
 	
 	public void createGlobalShopAccount(){		
 		HyperConomy hc = HyperConomy.hc;
-		String globalAccount = hc.gYH().gFC("config").getString("config.global-shop-account");
+		String globalAccount = hc.gYH().gFC("config").getString("shop.default-server-shop-account");
 		if (!accountExists(globalAccount)) {
 			HyperPlayer ga = getHyperPlayer(globalAccount);
-			Double initialBalance = hc.gYH().gFC("config").getDouble("config.initialshopbalance");
+			Double initialBalance = hc.gYH().gFC("config").getDouble("shop.default-server-shop-account-initial-balance");
 			ga.setBalance(initialBalance);
 			String economyName = "HyperConomy";
 			if (hc.useExternalEconomy()) {
@@ -644,7 +640,7 @@ public class DataManager implements Listener {
 	}
 	
 	public HyperPlayer getGlobalShopAccount() {
-		return getHyperPlayer(hc.gYH().gFC("config").getString("config.global-shop-account"));
+		return getHyperPlayer(hc.gYH().gFC("config").getString("shop.default-server-shop-account"));
 	}
 	
 	

@@ -52,7 +52,7 @@ public class HyperEconomy implements DataLoadListener {
 		hc = HyperConomy.hc;	
 		this.economyName = economy;
 		sr = hc.getSQLRead();
-		useComposites = hc.gYH().gFC("config").getBoolean("config.use-composite-items");
+		useComposites = hc.gYH().gFC("config").getBoolean("enable-feature.composite-items");
 		loadCompositeKeys();
 		load();
 	}

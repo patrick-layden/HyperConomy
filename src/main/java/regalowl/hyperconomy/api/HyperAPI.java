@@ -170,7 +170,7 @@ public class HyperAPI implements GeneralAPI {
 	}
 
 	public String getGlobalShopAccount() {
-		return HyperConomy.hc.gYH().gFC("config").getString("config.global-shop-account");
+		return HyperConomy.hc.gYH().gFC("config").getString("shop.default-server-shop-account");
 	}
 	
 	public boolean isItemDisplay(Item item) {

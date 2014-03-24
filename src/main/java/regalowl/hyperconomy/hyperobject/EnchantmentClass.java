@@ -39,25 +39,25 @@ public enum EnchantmentClass {
 		try {
 			HyperConomy hc = HyperConomy.hc;
 			if (eclass.equals(EnchantmentClass.LEATHER)) {
-				return hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.leather");
+				return hc.gYH().gFC("config").getDouble("enchantment.classvalue.leather");
 			} else if (eclass.equals(EnchantmentClass.WOOD)) {
-				return hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.wood");
+				return hc.gYH().gFC("config").getDouble("enchantment.classvalue.wood");
 			} else if (eclass.equals(EnchantmentClass.STONE)) {
-				return hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.stone");
+				return hc.gYH().gFC("config").getDouble("enchantment.classvalue.stone");
 			} else if (eclass.equals(EnchantmentClass.CHAINMAIL)) {
-				return hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.chainmail");
+				return hc.gYH().gFC("config").getDouble("enchantment.classvalue.chainmail");
 			} else if (eclass.equals(EnchantmentClass.IRON)) {
-				return hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.iron");
+				return hc.gYH().gFC("config").getDouble("enchantment.classvalue.iron");
 			} else if (eclass.equals(EnchantmentClass.GOLD)) {
-				return hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.gold");
+				return hc.gYH().gFC("config").getDouble("enchantment.classvalue.gold");
 			} else if (eclass.equals(EnchantmentClass.DIAMOND)) {
-				return hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.diamond");
+				return hc.gYH().gFC("config").getDouble("enchantment.classvalue.diamond");
 			} else if (eclass.equals(EnchantmentClass.BOOK)) {
-				return hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.book");
+				return hc.gYH().gFC("config").getDouble("enchantment.classvalue.book");
 			} else if (eclass.equals(EnchantmentClass.BOW)) {
-				return hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.bow");
+				return hc.gYH().gFC("config").getDouble("enchantment.classvalue.bow");
 			} else {
-				return hc.gYH().gFC("config").getDouble("config.enchantment.classvalue.diamond");
+				return hc.gYH().gFC("config").getDouble("enchantment.classvalue.diamond");
 			}
 		} catch (Exception e) {
 			String info = "getclassValue() passed values eclass='" + eclass.toString() + "'";

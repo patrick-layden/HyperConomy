@@ -23,7 +23,7 @@ public class Topitems {
 		HyperEconomy he = hc.getDataManager().getEconomy(playerecon);
 		DataManager em = hc.getDataManager();
 		try {
-			boolean requireShop = hc.gYH().gFC("config").getBoolean("config.limit-info-commands-to-shops");
+			boolean requireShop = hc.gYH().gFC("config").getBoolean("shop.limit-info-commands-to-shops");
 			if (args.length > 1) {
 				sender.sendMessage(L.get("TOPITEMS_INVALID"));
 				return;

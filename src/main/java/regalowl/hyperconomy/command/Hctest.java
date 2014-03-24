@@ -142,11 +142,7 @@ public class Hctest implements CommandExecutor {
 		emerald.setStock(0);
 		emerald.setIsstatic("false");
 		emerald.setInitiation("true");
-		config.set("config.purchasetaxpercent", 0);
-		config.set("config.sales-tax-percent", 0);
-		config.set("config.statictaxpercent", 0);
-		config.set("config.initialpurchasetaxpercent", 0);
-		config.set("config.enchanttaxpercent", 0);
+
 		
 		
 		

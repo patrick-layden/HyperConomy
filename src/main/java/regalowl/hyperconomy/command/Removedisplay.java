@@ -13,7 +13,7 @@ public class Removedisplay {
 	Removedisplay(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		if (!hc.gYH().gFC("config").getBoolean("config.use-item-displays")) {
+		if (!hc.gYH().gFC("config").getBoolean("enable-feature.item-displays")) {
 			player.sendMessage(L.get("ITEMDISPLAYS_MUST_BE_ENABLED"));
 			return;
 		}

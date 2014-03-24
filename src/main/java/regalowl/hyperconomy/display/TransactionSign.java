@@ -30,7 +30,7 @@ public class TransactionSign implements Listener {
 	public TransactionSign() {
 		hc = HyperConomy.hc;
 		em = hc.getDataManager();
-		if (hc.gYH().gFC("config").getBoolean("config.use-transaction-signs")) {
+		if (hc.gYH().gFC("config").getBoolean("enable-feature.transaction-signs")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
 		}
 	}
@@ -39,7 +39,7 @@ public class TransactionSign implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerItemHeldEvent(PlayerItemHeldEvent event) {
 		try {
-			if (hc.gYH().gFC("config").getBoolean("config.allow-scrolling-transaction-signs")) {
+			if (hc.gYH().gFC("config").getBoolean("enable-feature.scrolling-transaction-signs")) {
 				Player p = event.getPlayer();
 				HyperEconomy he = em.getHyperPlayer(p.getName()).getHyperEconomy();
 				Block b = null;
@@ -99,7 +99,7 @@ public class TransactionSign implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChangeEvent(SignChangeEvent scevent) {
 		try {
-			if (hc.gYH().gFC("config").getBoolean("config.use-transaction-signs")) {
+			if (hc.gYH().gFC("config").getBoolean("enable-feature.transaction-signs")) {
 				String line3 = ChatColor.stripColor(scevent.getLine(2)).trim();
 				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
 					String line4 = ChatColor.stripColor(scevent.getLine(3)).trim();
@@ -155,13 +155,13 @@ public class TransactionSign implements Listener {
 	public void onPlayerInteractEvent(PlayerInteractEvent ievent) {
 		if (ievent == null) {return;}
 		try {
-			if (!hc.gYH().gFC("config").getBoolean("config.use-transaction-signs")) {return;}
+			if (!hc.gYH().gFC("config").getBoolean("enable-feature.transaction-signs")) {return;}
 			Player p = ievent.getPlayer();
 			if (p == null) {return;}
 			HyperEconomy he = em.getHyperPlayer(p.getName()).getHyperEconomy();
 			if (p.isSneaking() && p.hasPermission("hyperconomy.admin")) {return;}
 			LanguageFile L = hc.getLanguageFile();
-			boolean requireShop = hc.gYH().gFC("config").getBoolean("config.require-transaction-signs-to-be-in-shop");
+			boolean requireShop = hc.gYH().gFC("config").getBoolean("shop.require-transaction-signs-to-be-in-shop");
 
 			Block b = null;
 			if (!ievent.hasBlock()) {
@@ -251,7 +251,7 @@ public class TransactionSign implements Listener {
 											return;
 										}
 										if (!requireShop || hp.hasSellPermission(em.getShop(p))) {
-											if (p.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("block-selling-in-creative-mode")) {
+											if (p.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("shop.block-selling-in-creative-mode")) {
 												p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 												ievent.setCancelled(true);
 												return;

@@ -65,8 +65,7 @@ LISTCATEGORIES_INVALID: &4Invalid Parameters.  Use /listcategories
 ALREADY_IN_DATABASE: &9That item is already in the database.
 ITEM_ADDED: &6Item added to objects.yml.  Use /importnewitems for it to become active.
 YMLADDITEM_INVALID: &4Use /ymladditem (name) (value) (median) (start price)
-ALL_BACKED_UP: &6All files have been backed up!
-HCBACKUP_INVALID: &4Invalid Parameters.  Use /hcbackup
+ALL_BACKED_UP: &6All files and database tables have been backed up!
 HC_BUY: &bType &a/hc buy &bfor buy commands.
 HC_SELL: &bType &a/hc sell &bfor sell commands.
 HC_SHOP: &bType &a/hc shop &bfor shop commands.
@@ -224,7 +223,6 @@ ALL_REMOVED_FROM: &6All items and enchantments have been removed from %n.
 ALREADY_BEEN_REMOVED: &4That object has already been removed from the shop.
 HAS_BEEN_REMOVED: &6%n has been removed!
 GLOBAL_SHOP_RENAMED: &6The global shop account has been successfully renamed!
-RENAMEECONOMYACCOUNT_INVALID: &4Invalid Parameters.  Use /renameeconomyaccount [new name]
 RESETSHOP_CONFIRM: &cAre you sure you wish to do this? All item and enchantments will be set to 0 stock and return to initial pricing. Type '/resetshop confirm' to proceed.
 RESETSHOP_SUCCESS: &6Shop stock, initiation, and static pricing have been reset!
 RESETSHOP_INVALID: &4Invalid Parameters.  Use /resetshop
@@ -491,3 +489,4 @@ LOGS_CLEARED: &6HyperConomy log tables cleared.
 CANT_ADD_MORE_STOCK: &4You are not allowed to add any more stock of this object.
 ONLY_SERVER_SHOPS: &4This command can only be used with server shops.
 ONLY_PLAYER_SHOPS: &4This command can only be used with player shops.
+HCECONOMY_INVALID: &4Invalid parameters. Use /hceconomy ['create','delete', or 'list']

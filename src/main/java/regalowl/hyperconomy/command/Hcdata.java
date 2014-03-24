@@ -138,7 +138,7 @@ public class Hcdata implements CommandExecutor {
 					sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
 					return true;
 				}
-				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
 					new Backup();
 				}
 				SQLWrite sw = hc.getSQLWrite();
@@ -155,7 +155,7 @@ public class Hcdata implements CommandExecutor {
 					sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
 					return true;
 				}
-				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
 					new Backup();
 				}
 				em.getEconomy(economy).exportToYml();
@@ -168,7 +168,7 @@ public class Hcdata implements CommandExecutor {
 			hc.getSQLWrite().addToQueue(statement);
 			sender.sendMessage(L.get("HCCLEARHISTORY_CLEARED"));
 		} else if (args[0].equalsIgnoreCase("clearlogs")) {
-			if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+			if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
 				new Backup();
 			}
 			String statement = "DELETE FROM hyperconomy_audit_log";
@@ -178,11 +178,11 @@ public class Hcdata implements CommandExecutor {
 			sender.sendMessage(L.get("LOGS_CLEARED"));
 		} else if (args[0].equalsIgnoreCase("repairnames")) {
 			try {
-				if (hc.gYH().gFC("config").getBoolean("config.use-composite-items")) {
+				if (hc.gYH().gFC("config").getBoolean("enable-feature.composite-items")) {
 					sender.sendMessage(L.get("MUST_DISABLE_COMPOSITES"));
 					return true;
 				}
-				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
 					new Backup();
 				}
 				YamlHandler yh = hc.getYamlHandler();
@@ -199,6 +199,13 @@ public class Hcdata implements CommandExecutor {
 				}
 				sender.sendMessage(L.get("NAME_REPAIR_ATTEMPTED"));
 				hc.restart();
+			} catch (Exception e) {
+				hc.gDB().writeError(e);
+			}
+		} else if (args[0].equalsIgnoreCase("backup")) {
+			try {
+				new Backup();
+				sender.sendMessage(L.get("ALL_BACKED_UP"));
 			} catch (Exception e) {
 				hc.gDB().writeError(e);
 			}

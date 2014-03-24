@@ -22,7 +22,7 @@ public class Topenchants {
 		DataManager em = hc.getDataManager();
 		LanguageFile L = hc.getLanguageFile();
 		try {
-			boolean requireShop = hc.gYH().gFC("config").getBoolean("config.limit-info-commands-to-shops");
+			boolean requireShop = hc.gYH().gFC("config").getBoolean("shop.limit-info-commands-to-shops");
 			if (args.length > 1) {
 				sender.sendMessage(L.get("TOPENCHANTS_INVALID"));
 				return;

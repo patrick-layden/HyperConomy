@@ -37,11 +37,11 @@ public class Manageshop implements CommandExecutor {
 			hc.getHyperLock().sendLockMessage(sender);
 			return true;
 		}
-		if (!hc.gYH().gFC("config").getBoolean("config.use-player-shops")) {
+		if (!hc.gYH().gFC("config").getBoolean("enable-feature.player-shops")) {
 			sender.sendMessage(L.get("PLAYERSHOPS_DISABLED"));
 			return true;
 		}
-		int maxVolume = hc.gYH().gFC("config").getInt("config.max-player-shop-volume");
+		int maxVolume = hc.gYH().gFC("config").getInt("shop.max-player-shop-volume");
 		DataManager em = hc.getDataManager();
 		Player player = null;
 		if (sender instanceof Player) {
@@ -170,7 +170,7 @@ public class Manageshop implements CommandExecutor {
 			}
 			
 			HyperObject ho2 = he.getHyperObject(ho.getName(), cps);
-			int globalMaxStock = hc.gYH().gFC("config").getInt("config.max-stock-per-item-playershops");
+			int globalMaxStock = hc.gYH().gFC("config").getInt("shop.max-stock-per-item-in-playershops");
 			if (ho2.getStock() + amount > globalMaxStock) {
 				player.sendMessage(L.get("CANT_ADD_MORE_STOCK"));
 				return true;
@@ -304,7 +304,7 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("SHOP_ALREADY_EXISTS"));
 				return true;
 			}
-			int maxShops = hc.gYH().gFC("config").getInt("config.max-shops-per-player");
+			int maxShops = hc.gYH().gFC("config").getInt("shop.max-player-shops-per-player");
 			if (em.getShops(hp).size() > maxShops && !player.hasPermission("hyperconomy.admin")) {
 				player.sendMessage(L.f(L.get("SHOP_LIMIT_REACHED"), maxShops));
 				return true;

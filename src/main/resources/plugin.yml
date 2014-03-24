@@ -114,29 +114,16 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [not]
-   renameeconomyaccount:
-      description: Renames the account used by the global shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
    seteconomy:
       description: Sets your economy to the specified one.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [se]
-   createeconomy:
-      description: Creates a new economy.
+   hceconomy:
+      description: Manages economies.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-      aliases: [cre]
-   deleteeconomy:
-      description: Deletes an economy.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   listeconomies:
-      description: Lists all economies.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [lec]
+      aliases: [he]
    economyinfo:
       description: Tells you what economy you are a part of.
       permission: hyperconomy.use
@@ -152,10 +139,6 @@ commands:
       permission-message: You do not have permission.
    importfromyml:
       description: Replaces the selected economy with data from your YML files.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   hcbackup:
-      description: Backs up all HyperConomy data.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
    ymladditem:

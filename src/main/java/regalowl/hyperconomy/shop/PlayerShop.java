@@ -61,7 +61,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		cf = hc.getDataBukkit().getCommonFunctions();
 		ps = this;
 		L = hc.getLanguageFile();
-		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
+		useshopexitmessage = hc.gYH().gFC("config").getBoolean("shop.display-shop-exit-message");	
 		this.name = name;
 		this.economy = economy;
 		this.owner = owner;
@@ -94,7 +94,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		cf = hc.getDataBukkit().getCommonFunctions();
 		ps = this;
 		L = hc.getLanguageFile();
-		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");
+		useshopexitmessage = hc.gYH().gFC("config").getBoolean("shop.display-shop-exit-message");
 		this.name = shopName;
 		this.economy = economy;
 		this.owner = owner;

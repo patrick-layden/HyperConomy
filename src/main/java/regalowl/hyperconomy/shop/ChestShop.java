@@ -70,7 +70,7 @@ public class ChestShop implements Listener {
 		allfaces.add(BlockFace.DOWN);
 		allfaces.add(BlockFace.UP);
 
-		if (hc.gYH().gFC("config").getBoolean("config.use-chest-shops")) {
+		if (hc.gYH().gFC("config").getBoolean("enable-feature.chest-shops")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
 		}
 
@@ -326,7 +326,7 @@ public class ChestShop implements Listener {
 				return;
 			}
 
-			if (hc.gYH().gFC("config").getBoolean("config.require-chest-shops-to-be-in-shop") && !em.inAnyShop(scevent.getPlayer())) {
+			if (hc.gYH().gFC("config").getBoolean("shop.require-chest-shops-to-be-in-shop") && !em.inAnyShop(scevent.getPlayer())) {
 				scevent.setLine(0, ChatColor.DARK_RED + "You must");
 				scevent.setLine(1, ChatColor.DARK_RED + "place your");
 				scevent.setLine(2, ChatColor.DARK_RED + "chest shop");
@@ -530,7 +530,7 @@ public class ChestShop implements Listener {
 					}
 				} else if (slot >= 27) {
 					if (sell) {
-						if (p.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("block-selling-in-creative-mode")) {
+						if (p.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("shop.block-selling-in-creative-mode")) {
 							p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 							icevent.setCancelled(true);
 							return;
@@ -670,7 +670,7 @@ public class ChestShop implements Listener {
 
 					} else if (slot >= 27 && hyperObject != null) {
 						if (sell) {
-							if (p.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("block-selling-in-creative-mode")) {
+							if (p.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("shop.block-selling-in-creative-mode")) {
 								p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 								icevent.setCancelled(true);
 								return;

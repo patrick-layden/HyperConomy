@@ -43,7 +43,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		loaded = false;
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
+		useshopexitmessage = hc.gYH().gFC("config").getBoolean("shop.display-shop-exit-message");	
 		globalShop = false;
 		this.name = name;
 		this.economy = economy;
@@ -74,7 +74,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		loaded = false;
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");
+		useshopexitmessage = hc.gYH().gFC("config").getBoolean("shop.display-shop-exit-message");
 		globalShop = false;
 		this.name = shopName;
 		this.economy = economy;
@@ -121,7 +121,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		loaded = false;
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		useshopexitmessage = hc.gYH().gFC("config").getBoolean("config.use-shop-exit-message");	
+		useshopexitmessage = hc.gYH().gFC("config").getBoolean("shop.display-shop-exit-message");	
 		globalShop = true;
 		this.name = name;
 		this.economy = economy;

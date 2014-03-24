@@ -12,11 +12,11 @@ public class Taxsettings {
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			FileConfiguration conf = hc.gYH().gFC("config");
-			Double purchasetaxpercent = conf.getDouble("config.purchasetaxpercent");
-			Double initialpurchasetaxpercent = conf.getDouble("config.initialpurchasetaxpercent");
-			Double statictaxpercent = conf.getDouble("config.statictaxpercent");
-			Double enchanttaxpercent = conf.getDouble("config.enchanttaxpercent");
-			Double salestaxpercent = conf.getDouble("config.sales-tax-percent");
+			Double purchasetaxpercent = conf.getDouble("tax.purchase");
+			Double initialpurchasetaxpercent = conf.getDouble("tax.initial");
+			Double statictaxpercent = conf.getDouble("tax.static");
+			Double enchanttaxpercent = conf.getDouble("tax.enchant");
+			Double salestaxpercent = conf.getDouble("tax.sales");
 			sender.sendMessage(L.get("LINE_BREAK"));
 			sender.sendMessage(L.f(L.get("PURCHASE_TAX_PERCENT"), purchasetaxpercent));
 			sender.sendMessage(L.f(L.get("INITIAL_TAX_PERCENT"), initialpurchasetaxpercent));

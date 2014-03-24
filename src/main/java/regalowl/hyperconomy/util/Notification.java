@@ -24,7 +24,7 @@ public class Notification implements TransactionListener {
 	
 	public Notification() {
 		hc = HyperConomy.hc;
-		usenotify = hc.gYH().gFC("config").getBoolean("config.use-notifications");
+		usenotify = hc.gYH().gFC("config").getBoolean("enable-feature.price-change-notifications");
 		if (!usenotify) {return;}
 		previousmessage = "";
 		notifrequests = 0;
@@ -46,7 +46,7 @@ public class Notification implements TransactionListener {
 	
 	
 	private void sendNotification() {
-		usenotify = hc.gYH().gFC("config").getBoolean("config.use-notifications");
+		usenotify = hc.gYH().gFC("config").getBoolean("enable-feature.price-change-notifications");
 		notifrequests++;
 		hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
 			public void run() {
@@ -98,7 +98,7 @@ public class Notification implements TransactionListener {
 	
 	private boolean checkNotify(String name) {
 		boolean note = false;
-		String notify = hc.gYH().gFC("config").getString("config.notify-for");
+		String notify = hc.gYH().gFC("config").getString("shop.send-price-change-notifications-for");
 		if (notify != null && name != null) {		
 			if (notify.contains("," + name + ",")) {
 				note = true;

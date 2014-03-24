@@ -22,7 +22,7 @@ public class Importprices {
 			if (args.length == 1) {
 				String economy = args[0];
 				if (em.economyExists(economy)) {
-					if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+					if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
 						new Backup();
 					}
 					FileConfiguration objects = hc.gYH().gFC("objects");

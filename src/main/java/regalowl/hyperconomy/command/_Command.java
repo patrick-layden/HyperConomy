@@ -61,20 +61,11 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("taxsettings")) {
 			new Taxsettings(sender);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("createeconomy")) {
-			new Createeconomy(args, sender);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("seteconomy")) {
 			new Seteconomy(this, args, sender, player);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("economyinfo")) {
 			new Economyinfo(this, args, sender, player);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("deleteeconomy")) {
-			new Deleteeconomy(args, sender);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("listeconomies")) {
-			new Listeconomies(args, sender);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("importnewitems")) {
 			new Importnewitems(args, sender);
@@ -85,9 +76,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("listcategories")) {
 			new Listcategories(sender);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("hcbackup")) {
-			new Hcbackup(sender);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("intervals")) {
 			new Intervals(sender, args);
 			return true;
@@ -96,9 +84,6 @@ public class _Command {
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("scalebypercent")) {
 			new Scalebypercent(sender, args, playerecon);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("renameeconomyaccount")) {
-			new Renameeconomyaccount(sender, args);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("makedisplay") && player != null) {
 			new Makedisplay(args, player);

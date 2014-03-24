@@ -24,7 +24,7 @@ public class Importnewitems {
 				economy = args[0];
 			}
 			if (em.economyExists(economy) || args[0].equalsIgnoreCase("update")) {
-				if (hc.gYH().gFC("config").getBoolean("config.run-automatic-backups")) {
+				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
 					new Backup();
 				}
 				yh.unRegisterFileConfiguration("objects");

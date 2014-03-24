@@ -37,7 +37,7 @@ public class HyperPlayer implements HyperAccount {
 		tp = new TransactionProcessor(this);
 		em = hc.getDataManager();
 		SQLWrite sw = hc.getSQLWrite();
-		balance = hc.gYH().gFC("config").getDouble("config.starting-player-account-balance");
+		balance = hc.gYH().gFC("config").getDouble("economy-plugin.starting-player-account-balance");
 		economy = "default";
 		boolean playerOnline = false;
 		for (Player p:Bukkit.getOnlinePlayers()) {
@@ -191,11 +191,11 @@ public class HyperPlayer implements HyperAccount {
 	public double getSalesTax(Double price) {
 		CommonFunctions cf = hc.gCF();
 		double salestax = 0;
-		if (hc.gYH().gFC("config").getBoolean("config.dynamic-tax.use-dynamic-tax")) {
-			double moneyfloor = hc.gYH().gFC("config").getDouble("config.dynamic-tax.money-floor");
-			double moneycap = hc.gYH().gFC("config").getDouble("config.dynamic-tax.money-cap");
+		if (hc.gYH().gFC("config").getBoolean("tax.dynamic.enable")) {
+			double moneyfloor = hc.gYH().gFC("config").getDouble("tax.dynamic.money-floor");
+			double moneycap = hc.gYH().gFC("config").getDouble("tax.dynamic.money-cap");
 			double cbal = getBalance();
-			double maxtaxrate = hc.gYH().gFC("config").getDouble("config.dynamic-tax.max-tax-percent") / 100.0;
+			double maxtaxrate = hc.gYH().gFC("config").getDouble("tax.dynamic.max-tax-percent") / 100.0;
 			if (cbal >= moneycap) {
 				salestax = price * maxtaxrate;
 			} else if (cbal <= moneyfloor) {
@@ -208,7 +208,7 @@ public class HyperPlayer implements HyperAccount {
 				salestax = price * taxrate;
 			}
 		} else {
-			double salestaxpercent = hc.gYH().gFC("config").getDouble("config.sales-tax-percent");
+			double salestaxpercent = hc.gYH().gFC("config").getDouble("tax.sales");
 			salestax = cf.twoDecimals((salestaxpercent / 100) * price);
 		}
 		return salestax;
@@ -221,7 +221,7 @@ public class HyperPlayer implements HyperAccount {
 	
 	
 	public boolean hasSellPermission(Shop s) {
-		if (!hc.gYH().gQFC("config").gB("config.use-shop-permissions")) {
+		if (!hc.gYH().gQFC("config").gB("enable-feature.per-shop-permissions")) {
 			return true;
 		}
 		boolean hasPermission = false;
@@ -238,7 +238,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public boolean hasBuyPermission(Shop s) {
-		if (!(hc.gYH().gQFC("config").gB("config.use-shop-permissions"))) {
+		if (!(hc.gYH().gQFC("config").gB("enable-feature.per-shop-permissions"))) {
 			return true;
 		}
 		boolean hasPermission = false;
