@@ -587,6 +587,12 @@ public class DataManager implements Listener {
 
 	public HyperPlayer addPlayer(String player) {
 		if (!playersLoaded) {return null;}
+		if (hasBank(player)) { //rename banks with same name as player
+			HyperBank hb = getHyperBank(player);
+			int c = 0;
+			while (hasBank(player + c)) {c++;}
+			hb.setName(player + c);
+		}
 		String playerName = player.toLowerCase();
 		if (!hyperPlayers.containsKey(playerName)) {
 			HyperPlayer newHp = new HyperPlayer(player);
