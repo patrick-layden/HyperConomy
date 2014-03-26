@@ -414,8 +414,8 @@ public class DataManager implements Listener {
 	public HyperBank getHyperBank(String name) {
 		if (name == null) {return null;}
 		String bankName = name.toLowerCase();
-		if (hyperBanks.containsKey(bankName)) {
-			return hyperBanks.get(bankName);
+		if (hyperBanks.containsKey(bankName.toLowerCase())) {
+			return hyperBanks.get(bankName.toLowerCase());
 		}
 		return null;
 	}
@@ -455,7 +455,14 @@ public class DataManager implements Listener {
 		return hbs;
 	}
 	
-	
+	public void renameBanksWithThisName(String name) {
+		if (hasBank(name)) {
+			HyperBank hb = getHyperBank(name);
+			int c = 0;
+			while (hasBank(name + c)) {c++;}
+			hb.setName(name + c);
+		}
+	}
 	
 	
 	
@@ -535,14 +542,7 @@ public class DataManager implements Listener {
 	public boolean hyperPlayerExists(String name) {
 		String playerName = name.toLowerCase();
 		if (hc.useExternalEconomy()) {
-			if (hc.getEconomy().hasAccount(name)) {
-				if (!hyperPlayers.containsKey(playerName)) {
-					addPlayer(name);
-				}
-				return true;
-			} else {
-				return false;
-			}
+			return hc.getEconomy().hasAccount(name);
 		} else {
 			return hyperPlayers.containsKey(playerName);
 		}
@@ -571,30 +571,27 @@ public class DataManager implements Listener {
 		return hps;
 	}
 	
-	
+	/*
 	public void addHyperPlayer(HyperPlayer hp) {
 		if (!hyperPlayers.contains(hp)) {
+			renameBanksWithThisName(hp.getName());
 			hyperPlayers.put(hp.getName().toLowerCase(), hp);
 		}
 	}
+	*/
 	public void removeHyperPlayer(HyperPlayer hp) {
 		if (hyperPlayers.contains(hp)) {
 			hyperPlayers.remove(hp.getName().toLowerCase());
 		}
 	}
-
+	 
 	
 
 	public HyperPlayer addPlayer(String player) {
 		if (!playersLoaded) {return null;}
-		if (hasBank(player)) { //rename banks with same name as player
-			HyperBank hb = getHyperBank(player);
-			int c = 0;
-			while (hasBank(player + c)) {c++;}
-			hb.setName(player + c);
-		}
 		String playerName = player.toLowerCase();
 		if (!hyperPlayers.containsKey(playerName)) {
+			renameBanksWithThisName(playerName);
 			HyperPlayer newHp = new HyperPlayer(player);
 			hyperPlayers.put(playerName, newHp);
 			return newHp;

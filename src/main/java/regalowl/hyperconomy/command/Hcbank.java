@@ -11,8 +11,10 @@ import org.bukkit.entity.Player;
 
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.util.LanguageFile;
 
 
@@ -48,6 +50,10 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("BANK_ALREADY_EXISTS"));
 				return true;
 			}
+			if (em.hyperPlayerExists(args[1])) {
+				player.sendMessage(L.get("ACCOUNT_ALREADY_EXISTS"));
+				return true;
+			}
 			ArrayList<HyperBank> allBanks = em.getHyperBanks();
 			int bankOwnerships = 0;
 			for (HyperBank hb:allBanks) {
@@ -76,6 +82,18 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
 				return true;
 			}
+			for (HyperEconomy he:hc.getDataManager().getEconomies()) {
+				if (he.getDefaultAccount() == hb) {
+					player.sendMessage(L.get("BANK_IN_USE_BY_ECONOMY"));
+					return true;
+				}
+			}
+			for (Shop s:hc.getDataManager().getShops()) {
+				if (s.getOwner() == hb) {
+					player.sendMessage(L.get("BANK_IN_USE_BY_SHOP"));
+					return true;
+				}
+			}
 			if (hb.getBalance() > 0) {
 				hb.delete();
 				player.sendMessage(L.get("BANK_DELETED_DISTRIBUTED"));
@@ -83,6 +101,22 @@ public class Hcbank implements CommandExecutor {
 				hb.delete();
 				player.sendMessage(L.get("BANK_DELETED"));
 			}
+		} else if (args[0].equalsIgnoreCase("rename")) {
+			if (args.length != 3) {
+				player.sendMessage(L.get("HCBANK_RENAME_HELP"));
+				return true;
+			}
+			if (!em.hasBank(args[1])) {
+				player.sendMessage(L.get("BANK_NOT_EXIST"));
+				return true;
+			}
+			HyperBank hb = em.getHyperBank(args[1]);
+			if (!hb.isOwner(hp)) {
+				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
+				return true;
+			}
+			hb.setName(args[2]);
+			player.sendMessage(L.get("BANK_RENAMED"));
 		} else if (args[0].equalsIgnoreCase("addmember") || args[0].equalsIgnoreCase("am")) {
 			if (args.length != 3) {
 				player.sendMessage(L.get("HCBANK_ADDMEMBER_HELP"));

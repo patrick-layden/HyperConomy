@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import regalowl.databukkit.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.shop.Shop;
 
 public class HyperBank implements HyperAccount {
 
@@ -47,6 +49,16 @@ public class HyperBank implements HyperAccount {
 				hp.deposit(share);
 			}
 		}
+		for (HyperEconomy he:hc.getDataManager().getEconomies()) {
+			if (he.getDefaultAccount() == this) {
+				he.setDefaultAccount(getOwners().get(0));
+			}
+		}
+		for (Shop s:hc.getDataManager().getShops()) {
+			if (s.getOwner() == this) {
+				s.setOwner(getOwners().get(0));
+			}
+		}
 	}
 	
 	@Override
@@ -77,6 +89,16 @@ public class HyperBank implements HyperAccount {
 		this.name = newName;
 		hc.getDataManager().removeHyperBank(this);
 		hc.getDataManager().addHyperBank(this);
+		for (HyperEconomy he:hc.getDataManager().getEconomies()) {
+			if (he.getDefaultAccount() == this) {
+				he.setDefaultAccount(this);
+			}
+		}
+		for (Shop s:hc.getDataManager().getShops()) {
+			if (s.getOwner() == this) {
+				s.setOwner(this);
+			}
+		}
 	}
 	
 	@Override

@@ -127,9 +127,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public void setName(String name) {
-		String statement = "UPDATE hyperconomy_players SET PLAYER='" + name + "' WHERE PLAYER = '" + this.name + "'";
-		hc.getSQLWrite().addToQueue(statement);
-		this.name = name;
+		//can't rename players yet
 	}
 	public void setEconomy(String economy) {
 		String statement = "UPDATE hyperconomy_players SET ECONOMY='" + economy + "' WHERE PLAYER = '" + name + "'";

@@ -438,11 +438,12 @@ NAME_IN_USE: &4That name/alias is already in use.
 NOT_IMPLEMENTED: &dThis message has not been implemented yet.
 CANNOT_PAY_NEGATIVE: &4You cannot pay a zero or negative amount.
 OVER_MAX_STOCK: &4This shop will not allow the sale of any more %n.
-HCBANK_HELP: &4Use /hcbank ['create', 'delete', 'addmember', 'removemember', 'addowner', 'removeowner', 'deposit', 'withdraw', 'info', or 'top']
+HCBANK_HELP: &4Use /hcbank ['create', 'delete', 'addmember', 'removemember', 'addowner', 'removeowner', 'deposit', 'withdraw', 'info', 'rename' or 'top']
 HCBANK_CREATE_HELP: &4Use /hcbank create [name]
 BANK_CREATED: &6Bank created.
 BANK_DELETED: &6Bank deleted.
 HCBANK_DELETE_HELP: &4Use /hcbank delete [name]
+HCBANK_RENAME_HELP: &4Use /hcbank rename [name] [new name]
 HCBANK_ADDMEMBER_HELP: &4Use /hcbank addmember [bank] [member]
 HCBANK_REMOVEMEMBER_HELP: &4Use /hcbank removemember [bank] [member]
 HCBANK_ADDOWNER_HELP: &4Use /hcbank addowner [bank] [owner]
@@ -454,6 +455,7 @@ BANK_NOT_EXIST: &4That bank doesn't exist.
 CANNOT_OWN_MORE_BANKS: &4You are not allowed to own any more banks.
 DONT_OWN_THIS_BANK: &4You don't own this bank.
 MEMBER_ADDED_BANK: &6Member added to bank.
+BANK_RENAMED: &6The bank has been renamed.
 MEMBER_REMOVED_BANK: &6Member removed from bank.
 OWNER_ADDED_BANK: &6Owner added to bank.
 OWNER_REMOVED_BANK: &6Owner removed from bank.
@@ -471,6 +473,8 @@ BANK_ALREADY_MEMBER: &4The specified account is already a member of this bank.
 BANK_NOT_MEMBER: &4The specified account is not a member of this bank.
 BANK_ALREADY_OWNER: &4The specified account is already an owner of this bank.
 BANK_NOT_OWNER: &4The specified account is not an owner of this bank.
+BANK_IN_USE_BY_ECONOMY: &4This bank is currently used as an economy's default account.
+BANK_IN_USE_BY_SHOP: &4This bank is the owner of a shop.
 TRANSFER_GREATER_THAN_ZERO: &4Withdrawals and deposits must be a value greater than 0.
 TABLE_NOT_EXIST: &4The specified database table doesn't exist.
 IMPORT_FILE_NOT_EXIST: &4The specified database import file doesn't exist.
