@@ -148,7 +148,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		sw.setLogSQL(config.getBoolean("sql.log-sql-statements"));
 		setupExternalEconomy();
 		if (useExternalEconomy) {
-			log.info("[HyperConomy]Using external economy plugin via Vault.");
+			log.info("[HyperConomy]Using external economy plugin ("+economy.getName()+") via Vault.");
 		} else {
 			log.info("[HyperConomy]Using internal economy plugin.");
 		}
