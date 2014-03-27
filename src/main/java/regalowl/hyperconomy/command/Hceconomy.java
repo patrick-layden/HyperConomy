@@ -33,37 +33,62 @@ public class Hceconomy implements CommandExecutor {
 		}
 		
 		if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("c")) {
-			if (em.economyExists(args[1])) {
-				sender.sendMessage(L.get("ECONOMY_ALREADY_EXISTS"));
-				return true;
+			try {
+				if (em.economyExists(args[1])) {
+					sender.sendMessage(L.get("ECONOMY_ALREADY_EXISTS"));
+					return true;
+				}
+				hc.getDataManager().createNewEconomy(args[1]);
+				sender.sendMessage(L.get("NEW_ECONOMY_CREATED"));
+			} catch (Exception e) {
+				sender.sendMessage(L.get("HCECONOMY_CREATE_INVALID"));
 			}
-			hc.getDataManager().createNewEconomy(args[1]);
-			sender.sendMessage(L.get("NEW_ECONOMY_CREATED"));
 		} else if (args[0].equalsIgnoreCase("delete")) {
-			String economy = args[1];
-			if (economy.equalsIgnoreCase("default")) {
-				sender.sendMessage(L.get("CANT_DELETE_DEFAULT_ECONOMY"));
-				return true;
-			}
-			if (!em.economyExists(economy)) {
-				sender.sendMessage(L.get("ECONOMY_DOESNT_EXIST"));
-				return true;
-			}
-			if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
-				new Backup();
-			}
-			for (Shop shop:em.getShops()) {
-				if (shop.getEconomy().equalsIgnoreCase(economy)) {
-					shop.setEconomy("default");
+			try {
+				String economy = args[1];
+				if (economy.equalsIgnoreCase("default")) {
+					sender.sendMessage(L.get("CANT_DELETE_DEFAULT_ECONOMY"));
+					return true;
 				}
-			}
-			for (HyperPlayer hp:em.getHyperPlayers()) {
-				if (hp.getEconomy().equalsIgnoreCase(economy)) {
-					hp.setEconomy("default");
+				if (!em.economyExists(economy)) {
+					sender.sendMessage(L.get("ECONOMY_DOESNT_EXIST"));
+					return true;
 				}
+				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
+					new Backup();
+				}
+				for (Shop shop:em.getShops()) {
+					if (shop.getEconomy().equalsIgnoreCase(economy)) {
+						shop.setEconomy("default");
+					}
+				}
+				for (HyperPlayer hp:em.getHyperPlayers()) {
+					if (hp.getEconomy().equalsIgnoreCase(economy)) {
+						hp.setEconomy("default");
+					}
+				}
+				em.deleteEconomy(economy);
+				sender.sendMessage(L.get("ECONOMY_DELETED"));
+			} catch (Exception e) {
+				sender.sendMessage(L.get("HCECONOMY_DELETE_INVALID"));
 			}
-			em.deleteEconomy(economy);
-			sender.sendMessage(L.get("ECONOMY_DELETED"));
+		} else if (args[0].equalsIgnoreCase("account")) {
+			try {
+				String economy = args[1];
+				if (!em.economyExists(economy)) {
+					sender.sendMessage(L.get("ECONOMY_DOESNT_EXIST"));
+					return true;
+				}
+				String account = args[2];
+				if (!em.accountExists(account)) {
+					sender.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
+					return true;
+				}
+				em.getEconomy(economy).setDefaultAccount(em.getAccount(account));
+				sender.sendMessage(L.get("HCECONOMY_ACCOUNT_SET"));
+			} catch (Exception e) {
+				sender.sendMessage(L.get("HCECONOMY_ACCOUNT_INVALID"));
+			}
 		} else if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("l")) {
 			ArrayList<String> economies = em.getEconomyList();
 			sender.sendMessage(ChatColor.AQUA + economies.toString());

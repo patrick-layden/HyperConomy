@@ -493,4 +493,8 @@ LOGS_CLEARED: &6HyperConomy log tables cleared.
 CANT_ADD_MORE_STOCK: &4You are not allowed to add any more stock of this object.
 ONLY_SERVER_SHOPS: &4This command can only be used with server shops.
 ONLY_PLAYER_SHOPS: &4This command can only be used with player shops.
-HCECONOMY_INVALID: &4Invalid parameters. Use /hceconomy ['create','delete', or 'list']
+HCECONOMY_INVALID: &4Invalid parameters. Use /hceconomy ['create','delete', 'account' or 'list']
+HCECONOMY_ACCOUNT_SET: &6Default economy account set.
+HCECONOMY_CREATE_INVALID: &4Invalid parameters. Use /hceconomy create [name]
+HCECONOMY_DELETE_INVALID: &4Invalid parameters. Use /hceconomy delete [name]
+HCECONOMY_ACCOUNT_INVALID: &4Invalid parameters. Use /hceconomy account [name] [account name]
