@@ -51,6 +51,7 @@ public class DataManager implements Listener {
 	private long shopinterval;
 	private BukkitTask shopCheckTask;
 	private boolean useShops;
+	private String defaultServerShopAccount;
 	
 	
 	
@@ -65,6 +66,7 @@ public class DataManager implements Listener {
 		loadActive = false;
 		useShops = hc.gYH().gFC("config").getBoolean("enable-feature.shops");
 		shopinterval = hc.gYH().gFC("config").getLong("intervals.shop-check");
+		defaultServerShopAccount = hc.gYH().gFC("config").getString("shop.default-server-shop-account");
 		du = new DatabaseUpdater();
 		hc.getServer().getPluginManager().registerEvents(this, hc);
 	}
@@ -142,6 +144,10 @@ public class DataManager implements Listener {
 					hyperPlayers.put(hplayer.getName().toLowerCase(), hplayer);
 				}
 				result.close();
+				if (!accountExists(defaultServerShopAccount)) {
+					HyperPlayer defaultAccount = getHyperPlayer(defaultServerShopAccount);
+					defaultAccount.setBalance(hc.getConfig().getDouble("shop.default-server-shop-account-initial-balance"));
+				}
 				playersLoaded = true;
 				hyperBanks.clear();
 				result = sr.select("SELECT * FROM hyperconomy_banks");
@@ -150,7 +156,6 @@ public class DataManager implements Listener {
 					hyperBanks.put(hBank.getName().toLowerCase(), hBank);
 				}
 				result.close();
-				
 				shops.clear();
 				if (useShops) {
 					result = sr.select("SELECT * FROM hyperconomy_shops");
@@ -175,16 +180,14 @@ public class DataManager implements Listener {
 					}
 					result.close();
 				} else {
-					Shop shop = new ServerShop("GlobalShop", getGlobalShopAccount().getEconomy(), getGlobalShopAccount());
+					Shop shop = new ServerShop("GlobalShop", getHyperPlayer(defaultServerShopAccount).getEconomy(), getHyperPlayer(defaultServerShopAccount));
 					shops.put("GlobalShop", shop);
 				}
 				stopShopCheck();
 				startShopCheck();
-
 				hc.getServer().getScheduler().runTask(hc, new Runnable() {
 					public void run() {
 						addOnlinePlayers();
-						createGlobalShopAccount();
 						waitForDataLoad();
 					}
 				});
@@ -297,7 +300,7 @@ public class DataManager implements Listener {
 		SQLWrite sw = hc.getSQLWrite();
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("NAME", economy);
-		values.put("HYPERACCOUNT", hc.gYH().gFC("config").getString("shop.default-server-shop-account"));
+		values.put("HYPERACCOUNT", defaultServerShopAccount);
 		sw.performInsert("hyperconomy_economies", values);
 		for (HyperObject ho:defaultEconomy.getHyperObjects()) {
 			values = new HashMap<String,String>();
@@ -538,7 +541,9 @@ public class DataManager implements Listener {
 		return null;
 	}
 	
-	
+	public HyperAccount getDefaultServerShopAccount() {
+		return getHyperPlayer(defaultServerShopAccount);
+	}
 	public boolean hyperPlayerExists(String name) {
 		String playerName = name.toLowerCase();
 		if (hc.useExternalEconomy()) {
@@ -626,7 +631,7 @@ public class DataManager implements Listener {
 		return player;
 	}
 	
-	
+	/*
 	public void createGlobalShopAccount(){		
 		HyperConomy hc = HyperConomy.hc;
 		String globalAccount = hc.gYH().gFC("config").getString("shop.default-server-shop-account");
@@ -645,7 +650,7 @@ public class DataManager implements Listener {
 	public HyperPlayer getGlobalShopAccount() {
 		return getHyperPlayer(hc.gYH().gFC("config").getString("shop.default-server-shop-account"));
 	}
-	
+	*/
 	
 	
 	

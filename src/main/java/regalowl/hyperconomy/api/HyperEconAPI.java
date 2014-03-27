@@ -56,18 +56,6 @@ public class HyperEconAPI implements EconomyAPI {
 		hc.getDataManager().getAccount(name).deposit(money);
 	}
 
-	public void withdrawShop(double money) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().getGlobalShopAccount().hasBalance(money)) {
-			hc.getDataManager().getGlobalShopAccount().withdraw(money);
-		}
-	}
-
-	public void depositShop(double money) {
-		HyperConomy hc = HyperConomy.hc;
-		hc.getDataManager().getGlobalShopAccount().deposit(money);
-	}
-
 	public void setBalance(double balance, String name) {
 		HyperConomy hc = HyperConomy.hc;
 		if (!hc.getDataManager().accountExists(name)) {
@@ -79,16 +67,6 @@ public class HyperEconAPI implements EconomyAPI {
 	public boolean checkAccount(String name) {
 		HyperConomy hc = HyperConomy.hc;
 		return hc.getDataManager().accountExists(name);
-	}
-
-	public boolean checkshopBalance(double money) {
-		HyperConomy hc = HyperConomy.hc;
-		return hc.getDataManager().getGlobalShopAccount().hasBalance(money);
-	}
-
-	public void checkshopAccount() {
-		HyperConomy hc = HyperConomy.hc;
-		hc.getDataManager().createGlobalShopAccount();
 	}
 
 	public double getBalance(String account) {

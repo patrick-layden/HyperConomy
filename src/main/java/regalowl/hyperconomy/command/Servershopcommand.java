@@ -96,7 +96,7 @@ public class Servershopcommand implements CommandExecutor {
 					em.getShop(name).setPoint1(player.getLocation());
 				} else {
 					Location l = player.getLocation();
-					Shop shop = new ServerShop(name, hp.getEconomy(), hc.getDataManager().getGlobalShopAccount(), l, l);
+					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					em.addShop(shop);
 				}
 				player.sendMessage(L.get("P1_SET"));
@@ -110,7 +110,7 @@ public class Servershopcommand implements CommandExecutor {
 					em.getShop(name).setPoint2(player.getLocation());
 				} else {
 					Location l = player.getLocation();
-					Shop shop = new ServerShop(name, hp.getEconomy(), hc.getDataManager().getGlobalShopAccount(), l, l);
+					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					em.addShop(shop);
 				}
 				player.sendMessage(L.get("P2_SET"));

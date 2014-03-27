@@ -18,14 +18,4 @@ public interface EconomyAPI {
 	int fractionalDigits();
 	String currencyName();
 	String currencyNamePlural();
-
-	
-	@Deprecated
-	boolean checkshopBalance(double money);
-	@Deprecated
-	void checkshopAccount();
-	@Deprecated
-	void withdrawShop(double money);
-	@Deprecated
-	void depositShop(double money);
 }

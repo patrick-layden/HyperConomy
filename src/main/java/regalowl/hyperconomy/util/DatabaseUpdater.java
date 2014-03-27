@@ -210,10 +210,10 @@ public class DatabaseUpdater {
 					String name = element.toString(); 
 					String owner = sh.getString(name + ".owner");
 					if (owner == null || owner == "") {
-						owner = hc.getDataManager().getGlobalShopAccount().getName();
+						owner = hc.getDataManager().getDefaultServerShopAccount().getName();
 					}
 					String type = "player";
-					if (owner.equalsIgnoreCase(hc.getDataManager().getGlobalShopAccount().getName())) {
+					if (owner.equalsIgnoreCase(hc.getDataManager().getDefaultServerShopAccount().getName())) {
 						type = "server";
 					}
 					values.put("NAME", name);

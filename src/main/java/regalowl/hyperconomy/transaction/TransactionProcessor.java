@@ -7,7 +7,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import regalowl.databukkit.CommonFunctions;
-import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -27,7 +26,6 @@ public class TransactionProcessor {
 
 	private HyperConomy hc;
 	private HyperEventHandler heh;
-	private DataManager em;
 	private LanguageFile L;
 	private HyperPlayer hp;
 
@@ -53,7 +51,6 @@ public class TransactionProcessor {
 	
 	public TransactionProcessor(HyperPlayer hp) {
 		hc = HyperConomy.hc;
-		em = hc.getDataManager();
 		L = hc.getLanguageFile();
 		this.hp = hp;
 		heh = hc.getHyperEventHandler();
@@ -81,7 +78,7 @@ public class TransactionProcessor {
 		}
 		tradePartner = pt.getTradePartner();
 		if (tradePartner == null) {
-			tradePartner = em.getGlobalShopAccount();
+			tradePartner = hp.getHyperEconomy().getDefaultAccount();
 		}
 
 		giveInventory = pt.getGiveInventory();
@@ -129,14 +126,14 @@ public class TransactionProcessor {
 	
 	
 	private void resetBalanceIfUnlimited() {
-		if (shopUnlimitedMoney && tradePartner.equals(em.getGlobalShopAccount())) {
+		if (shopUnlimitedMoney && tradePartner.equals(hp.getHyperEconomy().getDefaultAccount())) {
 			tradePartner.setBalance(0);
 		}
 	}
 	
 	private boolean hasBalance(double price) {
 		if (!tradePartner.hasBalance(price)) {
-			if (shopUnlimitedMoney && tradePartner.equals(em.getGlobalShopAccount())) {
+			if (shopUnlimitedMoney && tradePartner.equals(hp.getHyperEconomy().getDefaultAccount())) {
 				return true;
 			} else {
 				return false;

@@ -51,6 +51,7 @@ public class HyperEconomy implements DataLoadListener {
 		dataLoaded = false;
 		hc = HyperConomy.hc;	
 		this.economyName = economy;
+		hc.getHyperEventHandler().registerDataLoadListener(this);
 		sr = hc.getSQLRead();
 		useComposites = hc.gYH().gFC("config").getBoolean("enable-feature.composite-items");
 		loadCompositeKeys();
@@ -65,6 +66,9 @@ public class HyperEconomy implements DataLoadListener {
 				conditions.put("NAME", economyName);
 				String account = sr.getString("hyperconomy_economies", "hyperaccount", conditions);
 				defaultAccount = hc.getDataManager().getAccount(account);
+				if (defaultAccount == null) {
+					defaultAccount = hc.getDataManager().getHyperPlayer(account);
+				} 
 			}
 		});
 	}
