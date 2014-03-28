@@ -15,13 +15,15 @@
  */
 package regalowl.hyperconomy.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
+import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.account.HyperBank;
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.HyperEconAPI;
 
 public class Economy_HyperConomy implements Economy {
@@ -131,42 +133,119 @@ public class Economy_HyperConomy implements Economy {
     }
 
 	public EconomyResponse createBank(String name, String player) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "HyperConomy does not support bank accounts!");
+		DataManager dm = hc.getDataManager();
+		LanguageFile L = hc.getLanguageFile();
+		if (dm.hasBank(name)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_ALREADY_EXISTS"));
+		}
+		HyperPlayer hp = dm.getHyperPlayer(player);
+		HyperBank hb = new HyperBank(name, hp);
+		dm.addHyperBank(hb);
+		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 	}
 
 	public EconomyResponse deleteBank(String name) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "HyperConomy does not support bank accounts!");
+		DataManager dm = hc.getDataManager();
+		LanguageFile L = hc.getLanguageFile();
+		if (!dm.hasBank(name)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
+		}
+		HyperBank hb = dm.getHyperBank(name);
+		hb.delete();
+		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 	}
 
 	public EconomyResponse bankHas(String name, double amount) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "HyperConomy does not support bank accounts!");
+		DataManager dm = hc.getDataManager();
+		LanguageFile L = hc.getLanguageFile();
+		if (!dm.hasBank(name)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
+		}
+		HyperBank hb = dm.getHyperBank(name);
+		double balance = hb.getBalance();
+		if (balance < amount) {
+			return new EconomyResponse(0, balance, ResponseType.FAILURE, L.get("INSUFFICIENT_FUNDS"));
+		} else {
+			return new EconomyResponse(0, balance, ResponseType.SUCCESS, "");
+		}
 	}
 
 	public EconomyResponse bankWithdraw(String name, double amount) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "HyperConomy does not support bank accounts!");
+		DataManager dm = hc.getDataManager();
+		EconomyResponse er = bankHas(name, amount);
+		if (!er.transactionSuccess()) {
+			return er;
+		} else {
+			HyperBank hb = dm.getHyperBank(name);
+			hb.setBalance(hb.getBalance() - amount);
+			return new EconomyResponse(amount, hb.getBalance(), ResponseType.SUCCESS, "");
+		}
 	}
 
 	public EconomyResponse bankDeposit(String name, double amount) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "HyperConomy does not support bank accounts!");
+		DataManager dm = hc.getDataManager();
+		LanguageFile L = hc.getLanguageFile();
+		if (!dm.hasBank(name)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
+		} else {
+			HyperBank hb = dm.getHyperBank(name);
+			hb.setBalance(hb.getBalance() + amount);
+			return new EconomyResponse(amount, hb.getBalance(), ResponseType.SUCCESS, "");
+		}
 	}
 
 	public EconomyResponse isBankOwner(String name, String playerName) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "HyperConomy does not support bank accounts!");
+		DataManager dm = hc.getDataManager();
+		LanguageFile L = hc.getLanguageFile();
+		if (!dm.hasBank(name)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
+		}
+		if (!dm.hyperPlayerExists(name)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player is not bank's owner.");
+		}
+		HyperBank hb = dm.getHyperBank(name);
+		HyperPlayer hp = dm.getHyperPlayer(playerName);
+		if (hb.isOwner(hp)) {
+			return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
+		} else {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player is not bank's owner.");
+		}
 	}
 
 	public EconomyResponse isBankMember(String name, String playerName) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "HyperConomy does not support bank accounts!");
+		DataManager dm = hc.getDataManager();
+		LanguageFile L = hc.getLanguageFile();
+		if (!dm.hasBank(name)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
+		}
+		if (!dm.hyperPlayerExists(name)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player is not a bank member.");
+		}
+		HyperBank hb = dm.getHyperBank(name);
+		HyperPlayer hp = dm.getHyperPlayer(playerName);
+		if (hb.isMember(hp)) {
+			return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
+		} else {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player is not a bank member.");
+		}
 	}
 
 	public EconomyResponse bankBalance(String name) {
-		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "HyperConomy does not support bank accounts!");
+		DataManager dm = hc.getDataManager();
+		LanguageFile L = hc.getLanguageFile();
+		if (!dm.hasBank(name)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
+		}
+		HyperBank hb = dm.getHyperBank(name);
+		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, null);
 	}
 
 	public List<String> getBanks() {
-		return new ArrayList<String>();
+		DataManager dm = hc.getDataManager();
+		return dm.getHyperBankNames();
 	}
 
 	public boolean hasBankSupport() {
-		return false;
+		return true;
 	}
 }
