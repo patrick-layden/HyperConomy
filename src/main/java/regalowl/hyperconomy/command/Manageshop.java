@@ -587,7 +587,7 @@ public class Manageshop implements CommandExecutor {
 					player.sendMessage(L.get("NO_SHOP_SELECTED"));
 					return true;
 				}
-				cps.setMessage(args[1]);
+				cps.setMessage(args[1].replace("%s", " "));
 				sender.sendMessage(L.get("MESSAGE_SET"));
 			} catch (Exception e) {
 				player.sendMessage(L.get("MANAGESHOP_MESSAGE_INVALID"));
