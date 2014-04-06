@@ -170,7 +170,7 @@ public class Servershopcommand implements CommandExecutor {
 					player.sendMessage(L.get("NO_SHOP_SELECTED"));
 					return true;
 				}
-				css.setMessage(args[1].replace("%s", " "));
+				css.setMessage(args[1].replace("_", " "));
 				sender.sendMessage(L.get("MESSAGE_SET"));
 			} catch (Exception e) {
 				player.sendMessage(L.get("SERVERSHOP_MESSAGE_INVALID"));
