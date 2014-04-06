@@ -86,11 +86,6 @@ commands:
       permission: hyperconomy.settings
       permission-message: You do not have permission.
       aliases: [tsettings, ts]
-   evalue:
-      description: Gets the value of an enchantment.
-      permission: hyperconomy.value
-      permission-message: You don't have permission to do this.
-      aliases: [ev]
    hc:
       description: Displays economy help.
       permission: hyperconomy.use
@@ -129,23 +124,15 @@ commands:
       permission: hyperconomy.use
       permission-message: You do not have permission.
       aliases: [ei]
-   importnewitems:
-      description: Loads new items into the specified economy.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
    hcdata:
       description: Exports data from HyperConomy.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-   importfromyml:
-      description: Replaces the selected economy with data from your YML files.
+   additem:
+      description: Adds the item you're holding to the database.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-   ymladditem:
-      description: Adds the item you're holding to the yml item database.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [yai, ya]
+      aliases: [ai]
    listcategories:
       description: Lists all categories.
       permission: hyperconomy.admin
@@ -171,10 +158,6 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [sela]
-   importprices:
-      description: Imports all prices from objects.yml.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
    repairsigns:
       description: Repairs InfoSigns within the given radii.
       permission: hyperconomy.admin

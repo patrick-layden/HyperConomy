@@ -21,8 +21,6 @@ public class ShopEnchant extends BasicShopObject implements HyperObject {
 		return ho.getEnchantmentName();
 	}
 	@Override
-	public void setEnchantmentName(String name) {}
-	@Override
 	public double getBuyPrice(EnchantmentClass enchantClass) {
 		if (buyPrice != 0.0) {
 			return buyPrice;

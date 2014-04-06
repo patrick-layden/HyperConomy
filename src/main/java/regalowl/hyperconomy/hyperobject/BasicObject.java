@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -516,6 +515,11 @@ public class BasicObject implements HyperObject {
 	@Override
 	public double remove(int amount, HyperPlayer hp) {return 0;}
 	
+	//GENERAL SERIALIZED DATA METHODS
+	@Override
+	public String getData() {return "";}
+	@Override
+	public void setData(String data) {}
 
 	//ITEM METHODS
 	@Override
@@ -531,21 +535,9 @@ public class BasicObject implements HyperObject {
 	@Override
 	public ItemStack getItemStack(int amount) {return null;}
 	@Override
-	public void setData(int data) {}
+	public void setItemStack(ItemStack stack) {}
 	@Override
-	public void setDurability(int durability) {}
-	@Override
-	public void setMaterial(String material) {}
-	@Override
-	public void setMaterial(Material material) {}
-	@Override
-	public String getMaterial() {return null;}
-	@Override
-	public Material getMaterialEnum() {return null;}
-	@Override
-	public int getData() {return 0;}
-	@Override
-	public int getDurability() {return 0;}
+	public boolean matchesItemStack(ItemStack stack) {return false;}
 	@Override
 	public boolean isDurable() {return false;}
 	@Override
@@ -576,8 +568,6 @@ public class BasicObject implements HyperObject {
 	public double addEnchantment(ItemStack stack) {return 0;}
 	@Override
 	public double removeEnchantment(ItemStack stack) {return 0;}
-	@Override
-	public void setEnchantmentName(String name) {}
 	@Override
 	public String getEnchantmentName() {return null;}
 	

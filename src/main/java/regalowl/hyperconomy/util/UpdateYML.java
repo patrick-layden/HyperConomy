@@ -2,7 +2,7 @@ package regalowl.hyperconomy.util;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import regalowl.databukkit.YamlHandler;
+import regalowl.databukkit.file.YamlHandler;
 import regalowl.hyperconomy.HyperConomy;
 
 

@@ -4,7 +4,7 @@ package regalowl.hyperconomy.command;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import regalowl.databukkit.SQLWrite;
+import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.util.LanguageFile;

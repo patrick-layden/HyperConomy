@@ -2,11 +2,13 @@ package regalowl.hyperconomy.command;
 
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -14,12 +16,14 @@ import org.bukkit.inventory.ItemStack;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class Ymladditem implements CommandExecutor {
+public class Additem implements CommandExecutor {
 	
+	
+	private ArrayList<String> usedNames = new ArrayList<String>();
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender == null) {return true;}
@@ -44,7 +48,7 @@ public class Ymladditem implements CommandExecutor {
 					return true;
 				}
 				if (displayName.equalsIgnoreCase("help")) {
-					player.sendMessage(L.get("YMLADDITEM_INVALID"));
+					player.sendMessage(L.get("ADDITEM_INVALID"));
 					return true;
 				}
 			}
@@ -85,31 +89,43 @@ public class Ymladditem implements CommandExecutor {
 				return true;
 			}
 			ItemStack stack = player.getItemInHand();
-			HyperItemStack his = new HyperItemStack(stack);
-			String name = stack.getType() + "_" + his.getDamageValue();
+			SerializableItemStack sis = new SerializableItemStack(stack);
+			String name = stack.getType() + "_" + stack.getDurability();
 			if (econ.objectTest(name) || name.equalsIgnoreCase("")) {
 				name = generateName(stack);
 			}
-			FileConfiguration objects = hc.gYH().gFC("objects");
-			objects.set(name + ".information.type", "item");
-			objects.set(name + ".information.material", stack.getType().toString());
-			String aliases = displayName.replace("_", "") + ",";
-			int data = his.getDamageValue();
-			objects.set(name + ".information.data", data);
-			objects.set(name + ".value", value);
-			objects.set(name + ".price.static", false);
-			objects.set(name + ".price.staticprice", value*2);
-			objects.set(name + ".stock.stock", 0);
-			objects.set(name + ".stock.median", median);
-			objects.set(name + ".initiation.initiation", true);
-			objects.set(name + ".initiation.startprice", value*2);
-			objects.set(name + ".name.display", displayName);
-			objects.set(name + ".name.aliases", aliases);
+			if (displayName.equalsIgnoreCase("") || econ.objectTest(displayName)) {
+				displayName = generateName(stack);
+			}
+			String aliases = displayName.replace("_", "");
+			if (econ.objectTest(aliases)) {
+				aliases = "";
+			} else {
+				aliases += ",";
+			}
+			HashMap<String,String> values = new HashMap<String,String>();
+			values.put("NAME", name);
+			values.put("DISPLAY_NAME", displayName);
+			values.put("ALIASES", aliases);
+			values.put("ECONOMY", econ.getName());
+			values.put("TYPE", "item");
+			values.put("VALUE", value+"");
+			values.put("STATIC", "false");
+			values.put("STATICPRICE", value*2+"");
+			values.put("STOCK", 0+"");
+			values.put("MEDIAN", median+"");
+			values.put("INITIATION", "true");
+			values.put("STARTPRICE", value*2+"");
+			values.put("CEILING", "1000000000");
+			values.put("FLOOR", "0");
+			values.put("MAXSTOCK", "1000000000");
+			values.put("DATA", sis.serialize());
+			hc.getSQLWrite().performInsert("hyperconomy_objects", values);
 			player.sendMessage(L.get("ITEM_ADDED"));
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			player.sendMessage(L.get("YMLADDITEM_INVALID"));
+			player.sendMessage(L.get("ADDITEM_INVALID"));
 			return true;
 		}
 	}
@@ -119,30 +135,41 @@ public class Ymladditem implements CommandExecutor {
 		HyperConomy hc = HyperConomy.hc;
 		DataManager em = hc.getDataManager();
 		if (stack.getType() == Material.AIR) {return;}
-		String displayName = generateName(stack);
-		HyperItemStack his = new HyperItemStack(stack);
-		String name = stack.getType() + "_" + his.getDamageValue();
-		String aliases = displayName.replace("_", "") + ",";
-		double value = 10.0;
-		int median = 10000;
-		double startprice = 20.0;
-		int data = his.getDamageValue();
 		HyperEconomy econ = em.getHyperPlayer(player.getName()).getHyperEconomy();
 		HyperObject ho =  econ.getHyperObject(stack);
 		if (ho != null) {return;}
-		FileConfiguration objects = hc.gYH().gFC("objects");
-		objects.set(name + ".information.type", "item");
-		objects.set(name + ".information.material", player.getItemInHand().getType().toString());
-		objects.set(name + ".information.data", data);
-		objects.set(name + ".value", value);
-		objects.set(name + ".price.static", false);
-		objects.set(name + ".price.staticprice", startprice);
-		objects.set(name + ".stock.stock", 0);
-		objects.set(name + ".stock.median", median);
-		objects.set(name + ".initiation.initiation", true);
-		objects.set(name + ".initiation.startprice", startprice);
-		objects.set(name + ".name.display", displayName);
-		objects.set(name + ".name.aliases", aliases);
+		SerializableItemStack sis = new SerializableItemStack(stack);
+		String name = stack.getType() + "_" + stack.getDurability();
+		if (econ.objectTest(name) || name.equalsIgnoreCase("")) {
+			name = generateName(stack);
+		}
+		String displayName = generateName(stack);
+		String aliases = displayName.replace("_", "");
+		if (econ.objectTest(aliases)) {
+			aliases = "";
+		} else {
+			aliases += ",";
+		}
+		double value = 10.0;
+		int median = 10000;
+		HashMap<String,String> values = new HashMap<String,String>();
+		values.put("NAME", name);
+		values.put("DISPLAY_NAME", displayName);
+		values.put("ALIASES", aliases);
+		values.put("ECONOMY", econ.getName());
+		values.put("TYPE", "item");
+		values.put("VALUE", value+"");
+		values.put("STATIC", "false");
+		values.put("STATICPRICE", value*2+"");
+		values.put("STOCK", 0+"");
+		values.put("MEDIAN", median+"");
+		values.put("INITIATION", "true");
+		values.put("STARTPRICE", value*2+"");
+		values.put("CEILING", "1000000000");
+		values.put("FLOOR", "0");
+		values.put("MAXSTOCK", "1000000000");
+		values.put("DATA", sis.serialize());
+		hc.getSQLWrite().performInsert("hyperconomy_objects", values);
 	}
 	
 	private String generateName(ItemStack stack) {
@@ -155,6 +182,7 @@ public class Ymladditem implements CommandExecutor {
 		if (nameInUse(name)) {
 			return generateGenericName();
 		}
+		usedNames.add(name);
 		return name;
 	}
 	
@@ -169,11 +197,16 @@ public class Ymladditem implements CommandExecutor {
 	}
 	
 	private boolean nameInUse(String name) {
-		if (HyperConomy.hc.gYH().gFC("objects").isSet(name)) {
+		if (HyperConomy.hc.getDataManager().getDefaultEconomy().objectTest(name)) {
 			return true;
-		} else {
-			return false;
 		}
+		for (String cName:usedNames) {
+			if (cName.equalsIgnoreCase(name)) {
+				return true;
+			}
+		}
+		return false;
+		
 	}
 	
 	private void addAll(Player p) {

@@ -493,7 +493,7 @@ public class ChestShop implements Listener {
 			}
 			HyperPlayer clickPlayer = em.getHyperPlayer(p.getName());
 			HyperObject hyperObject = null;
-			if (!his.hasenchants()) {
+			if (!his.hasEnchants()) {
 				hyperObject = chestOwnerEconomy.getHyperObject(clickedItem);
 				if (hyperObject == null) {
 					if (setprice) {
@@ -507,7 +507,7 @@ public class ChestShop implements Listener {
 
 			Inventory shopInventory = icevent.getView().getTopInventory();
 			if (icevent.isShiftClick()) {
-				if (his.hasenchants()) {
+				if (his.hasEnchants()) {
 					icevent.setCancelled(true);
 					return;
 				}
@@ -577,7 +577,7 @@ public class ChestShop implements Listener {
 				return;
 
 			} else if (icevent.isLeftClick()) {
-				if (!his.hasenchants()) {
+				if (!his.hasEnchants()) {
 					if (slot < 27 && hyperObject != null) {
 						String name = hyperObject.getDisplayName();
 						if (buy) {
@@ -649,7 +649,7 @@ public class ChestShop implements Listener {
 				icevent.setCancelled(true);
 				return;
 			} else if (icevent.isRightClick()) {
-				if (!his.hasenchants()) {
+				if (!his.hasEnchants()) {
 					if (slot < 27 && hyperObject != null) {
 						if (buy) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);

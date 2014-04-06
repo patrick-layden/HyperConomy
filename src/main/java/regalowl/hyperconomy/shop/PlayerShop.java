@@ -8,10 +8,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import regalowl.databukkit.BasicStatement;
 import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.QueryResult;
-import regalowl.databukkit.WriteStatement;
+import regalowl.databukkit.sql.BasicStatement;
+import regalowl.databukkit.sql.QueryResult;
+import regalowl.databukkit.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;

@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import regalowl.databukkit.FileTools;
+import regalowl.databukkit.file.FileTools;
 import regalowl.hyperconomy.HyperConomy;
 
 public class LanguageFile {

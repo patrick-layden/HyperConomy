@@ -18,13 +18,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.DataBukkit;
-import regalowl.databukkit.FileTools;
-import regalowl.databukkit.SQLRead;
-import regalowl.databukkit.SQLWrite;
-import regalowl.databukkit.YamlHandler;
+import regalowl.databukkit.file.FileTools;
+import regalowl.databukkit.file.YamlHandler;
+import regalowl.databukkit.sql.SQLRead;
+import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.api.HyperAPI;
 import regalowl.hyperconomy.api.HyperEconAPI;
 import regalowl.hyperconomy.api.HyperObjectAPI;
+import regalowl.hyperconomy.command.Additem;
 import regalowl.hyperconomy.command.Buy;
 import regalowl.hyperconomy.command.Frameshopcommand;
 import regalowl.hyperconomy.command.Hc;
@@ -40,7 +41,6 @@ import regalowl.hyperconomy.command.Sell;
 import regalowl.hyperconomy.command.Sellall;
 import regalowl.hyperconomy.command.Servershopcommand;
 import regalowl.hyperconomy.command.Value;
-import regalowl.hyperconomy.command.Ymladditem;
 import regalowl.hyperconomy.command._Command;
 import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.display.ItemDisplayFactory;
@@ -117,12 +117,8 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		yh = db.getYamlHandler();
 		yh.copyFromJar("categories");
 		yh.copyFromJar("config");
-		yh.copyFromJar("objects");
-		yh.copyFromJar("composites");
 		yh.registerFileConfiguration("categories");
-		yh.registerFileConfiguration("composites");
 		yh.registerFileConfiguration("config");
-		yh.registerFileConfiguration("objects");
 		L = new LanguageFile();
 		hl = new HyperLock(true, false, false);
 		new UpdateYML();
@@ -208,7 +204,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 
 	private void registerCommands() {
 		Bukkit.getServer().getPluginCommand("manageshop").setExecutor(new Manageshop());
-		Bukkit.getServer().getPluginCommand("ymladditem").setExecutor(new Ymladditem());
+		Bukkit.getServer().getPluginCommand("additem").setExecutor(new Additem());
 		Bukkit.getServer().getPluginCommand("hcset").setExecutor(new Hcset());
 		Bukkit.getServer().getPluginCommand("hcdelete").setExecutor(new Hcdelete());
 		Bukkit.getServer().getPluginCommand("hctest").setExecutor(new Hctest());

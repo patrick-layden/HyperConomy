@@ -63,8 +63,8 @@ COPYDATABASE_STARTED: &6Database copy started successfully...this may take some 
 COPYDATABASE_SQLITE: &6SQLite database successfully copied to MySQL database.
 LISTCATEGORIES_INVALID: &4Invalid Parameters.  Use /listcategories
 ALREADY_IN_DATABASE: &9That item is already in the database.
-ITEM_ADDED: &6Item added to objects.yml.  Use /importnewitems for it to become active.
-YMLADDITEM_INVALID: &4Use /ymladditem (name) (value) (median) (start price)
+ITEM_ADDED: &6Item added to database.  Restart HyperConomy for it to become active to become active.
+ADDITEM_INVALID: &4Use /additem (name) (value) (median) (start price)
 ALL_BACKED_UP: &6All files and database tables have been backed up!
 HC_BUY: &bType &a/hc buy &bfor buy commands.
 HC_SELL: &bType &a/hc sell &bfor sell commands.
@@ -186,7 +186,6 @@ XP_FOR_LVL_30: &9Experience Needed For Level 30: &a%v
 XPINFO_INVALID: &4Invalid Parameters.  Use /xpinfo
 SHOP_LINE_BREAK: &8--------------------
 ENCHANTMENT_NOT_IN_DATABASE: &9Sorry, that enchantment is not in the enchantment database.
-SETTINGS_INVALID: &4Invalid parameters. Use /enchantsettings [enchantment] or /es [enchantment]
 SETTINGS_NAME: &9Name: &b%n
 SETTINGS_VALUE: &9Value: &b%v
 SETTINGS_STARTPRICE: &9Use Start Price: &b%s&9, &a%v
@@ -203,7 +202,7 @@ SETTINGS_ALIAS: &9Aliases: &b%n
 HYPERLOG_NORESULT: &9No results were found for your search.
 HYPERLOG_INVALID: &4Invalid Parameters.  Use /hyperlog Possible arguments(alias)[player(p), since(s), before(b), action(a), object(o), >amount(>a), <amount(<a), >money(>m), <money(<m), >tax(>t), <tax(<t), store(st), type(ty), >id, <id]
 HYPERLOG_INVALID_INCREMENT: &4Invalid increment.  Valid time increments are 'm', 'h', and 'd' such as '3d' or '1h'
-ITEMSETTINGS_INVALID: &4Invalid parameters. Hold an item and use /itemsettings (id) (damage value)
+ITEMSETTINGS_INVALID: &4Invalid parameters. Hold an item and use /itemsettings (object name)
 LISTECONOMIES_INVALID: &4Invalid Parameters.  Use /listeconomies
 LOADED_INTO_ECONOMY: loaded into economy!
 ENABLE_ITEM_DISPLAYS: &4Item displays must be enabled to use this command.
@@ -417,7 +416,7 @@ CHESTSHOP_CANT_TRADE_DAMAGED: &4Chest shops cannot trade damaged items.
 WORLD_NOT_FOUND: &4That world was not found, importing only accounts known to HyperConomy.
 HCSET_INVALID: &4Invalid parameters. Use /hcset ['name','ceiling','displayname','static','stock','startprice','staticprice','value','median','floor','balance', or 'initiation']
 HCSET_DISPLAYNAME_INVALID: &4Invalid parameters. Use /hcset displayname [object] [new display name]
-HCDELETE_INVALID: &4Invalid parameters. Use /hcdelete [type] [name]
+HCDELETE_INVALID: &4Invalid parameters. Use /hcdelete ['object' or 'account'] [name]
 HCDELETE_SUCCESS: &6Deletion successful.
 HCDELETE_OBJECT_INVALID: &4Invalid parameters. Use /hcdelete object [object name]
 HCDELETE_ACCOUNT_INVALID: &4Invalid parameters. Use /hcdelete account [account name]
@@ -482,9 +481,11 @@ CSV_CREATED: &6CSV file created.
 CSVS_CREATED: &6The HyperConomy database has been exported to CSV files.
 CSV_IMPORTED: &6CSV file imported.
 CSVS_IMPORTED: &6The HyperConomy database has been imported from CSV files.
-HCDATA_INVALID: &4Invalid parameters. Use /hcdata ['exportcsv','importcsv','exportyml' or 'importyml']
+HCDATA_INVALID: &4Invalid parameters. Use /hcdata ['exportcsv','importcsv','exportyml']
 HCDATA_EXPORTCSV_INVALID: &4Invalid parameters. Use /hcdata exportcsv [name of table or 'all']
 HCDATA_IMPORTCSV_INVALID: &4Invalid parameters. Use /hcdata importcsv [name of table or 'all']
+HCDATA_IMPORTMISSING_INVALID: &4Invalid parameters. Use /hcdata importmissing (economy)
+HCDATA_SETDEFAULTPRICES_INVALID: &4Invalid parameters. Use /hcdata setdefaultprices (economy)
 HCDATA_IMPORTYML_INVALID: &4Invalid parameters. Use /hcdata importyml [economy]
 HCDATA_EXPORTYML_INVALID: &4Invalid parameters. Use /hcdata exportyml [economy]
 MUST_DISABLE_COMPOSITES: &4You must disable composite items to use this command.
@@ -498,3 +499,6 @@ HCECONOMY_ACCOUNT_SET: &6Default economy account set.
 HCECONOMY_CREATE_INVALID: &4Invalid parameters. Use /hceconomy create [name]
 HCECONOMY_DELETE_INVALID: &4Invalid parameters. Use /hceconomy delete [name]
 HCECONOMY_ACCOUNT_INVALID: &4Invalid parameters. Use /hceconomy account [name] [account name]
+EVALUE_STOCK: &9The global shop has &a%a &b%n &9available.
+EVALUE_SALE: &b%n &9can be sold for: &a%c%p
+EVALUE_PURCHASE: &b%n &9can be purchased for: &a%c%p

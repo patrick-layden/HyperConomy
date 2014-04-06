@@ -2,7 +2,7 @@ package regalowl.hyperconomy.account;
 
 import java.util.ArrayList;
 
-import regalowl.databukkit.WriteStatement;
+import regalowl.databukkit.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.shop.Shop;

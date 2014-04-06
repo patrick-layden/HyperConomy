@@ -120,7 +120,7 @@ public class ItemDisplay {
 		HyperEconomy he = hc.getDataManager().getEconomy("default");
 		Location l = new Location(getWorld(), x, y + 1, z);
 		ItemStack dropstack = he.getHyperObject(name).getItemStack();
-		dropstack.setDurability((short) he.getHyperObject(name).getDurability());
+		dropstack.setDurability((short) he.getHyperObject(name).getItemStack().getDurability());
 		this.item = getWorld().dropItem(l, dropstack);
 		this.entityId = item.getEntityId();
 		item.setVelocity(new Vector(0, 0, 0));

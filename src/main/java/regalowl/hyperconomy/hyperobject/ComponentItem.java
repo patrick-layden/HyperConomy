@@ -10,54 +10,30 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
-import org.bukkit.potion.Potion;
 
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 
 public class ComponentItem extends BasicObject implements HyperObject {
 
-	protected String material;
-	protected Material materialEnum;
-	protected int data;
-	protected int durability;
+	protected SerializableItemStack sis;
 
 	
 
-	public ComponentItem(String name, String economy, String displayName, String aliases, String type, String material, int data, int durability, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
+	public ComponentItem(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String base64ItemData) {
 		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
-		this.material = material;
-		this.materialEnum = Material.matchMaterial(material);
-		this.data = data;
-		this.durability = durability;
-	}
-	
-	@Override
-	public String getMaterial() {
-		return material;
-	}
-	@Override
-	public Material getMaterialEnum() {
-		return materialEnum;
-	}
-	@Override
-	public int getData() {
-		return data;
-	}
-	@Override
-	public int getDurability() {
-		return durability;
+		this.sis = new SerializableItemStack(base64ItemData);
 	}
 	
 	@Override
 	public Image getImage(int width, int height) {
 		Image i = null;
 		URL url = null;
-		if (getMaterialEnum() == Material.POTION) {
+		if (sis.getMaterialEnum() == Material.POTION) {
 			url = hc.getClass().getClassLoader().getResource("Images/potion.png");
 		} else {
-			url = hc.getClass().getClassLoader().getResource("Images/" + getMaterial().toLowerCase() + "_" + getData() + ".png");
+			url = hc.getClass().getClassLoader().getResource("Images/" + sis.getMaterial().toLowerCase() + "_" + sis.getData() + ".png");
 		}
 		try {
 			i = ImageIO.read(url);
@@ -67,36 +43,10 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		} catch (Exception e) {}
 		return null;
 	}
-	@Override
-	public void setMaterial(String material) {
-		String statement = "UPDATE hyperconomy_objects SET MATERIAL='" + material + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-		hc.getSQLWrite().addToQueue(statement);
-		this.material = material;
-		this.materialEnum = Material.matchMaterial(material);
-	}
-	@Override
-	public void setMaterial(Material material) {
-		String materialS = material.toString();
-		String statement = "UPDATE hyperconomy_objects SET MATERIAL='" + materialS + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-		hc.getSQLWrite().addToQueue(statement);
-		this.material = materialS;
-		this.materialEnum = material;
-	}
-	@Override
-	public void setData(int data) {
-		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-		hc.getSQLWrite().addToQueue(statement);
-		this.data = data;
-	}
-	@Override
-	public void setDurability(int durability) {
-		String statement = "UPDATE hyperconomy_objects SET DURABILITY='" + durability + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
-		hc.getSQLWrite().addToQueue(statement);
-		this.durability = durability;
-	}
+
 	@Override
 	public boolean isDurable() {
-		if (materialEnum != null && materialEnum.getMaxDurability() > 0) {
+		if (sis.getMaterialEnum() != null && sis.getMaterialEnum().getMaxDurability() > 0) {
 			return true;
 		}
 		return false;
@@ -157,8 +107,8 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
 			ItemStack stack = inventory.getItem(slot);
 			HyperItemStack his = new HyperItemStack(stack);
-			if (stack != null && !his.hasenchants()) {
-				if (stack.getType() == materialEnum && his.getDamageValue() == data) {
+			if (stack != null && !his.hasEnchants()) {
+				if (stack.getType() == sis.getMaterialEnum() && his.getDamageValue() == sis.getData()) {
 					totalitems += stack.getAmount();
 				}
 			}
@@ -176,35 +126,44 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				HyperItemStack his = new HyperItemStack(citem);
 				if (citem == null) {
 					availablespace += maxstack;
-				} else if (citem.getType() == materialEnum && his.getDamageValue() == data) {
+				} else if (citem.getType() == sis.getMaterialEnum() && his.getDamageValue() == sis.getData()) {
 					availablespace += (maxstack - citem.getAmount());
 				}
 			}
 			return availablespace;
 		} catch (Exception e) {
-			String info = "getAvailableSpace() passed values inventory='" + inventory.getName() + "', data='" + data + "'";
+			String info = "getAvailableSpace() passed values inventory='" + inventory.getName() + "', data='" + sis.getData() + "'";
 			hc.gDB().writeError(e, info);
 			int availablespace = 0;
 			return availablespace;
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public ItemStack getItemStack(int amount) {
-		MaterialData md = new MaterialData(materialEnum);
-		md.setData((byte) data);
-		ItemStack stack = md.toItemStack();
-		if (materialEnum == Material.POTION && data != 0) {
-			Potion pot = Potion.fromDamage(data);
-			stack = pot.toItemStack(amount);
-		}
+		ItemStack stack = sis.getItem();
 		stack.setAmount(amount);
 		return stack;
 	}
 	@Override
 	public ItemStack getItemStack() {
-		return getItemStack(1);
+		return sis.getItem();
+	}
+	@Override
+	public boolean matchesItemStack(ItemStack stack) {
+		if (stack == null) {return false;}
+		SerializableItemStack sis = new SerializableItemStack(stack);
+		return sis.equals(this.sis);
+	}
+	@Override
+	public String getData() {
+		return sis.serialize();
+	}
+	@Override
+	public void setData(String data) {
+		sis = new SerializableItemStack(data);
+		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		hc.getSQLWrite().addToQueue(statement);
 	}
 
 	
@@ -218,7 +177,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				int pamount = 0;
 				ItemStack citem = inventory.getItem(slot);
 				HyperItemStack his = new HyperItemStack(citem);
-				if (citem != null && citem.getType() == materialEnum && data == his.getDamageValue()) {
+				if (citem != null && citem.getType() == sis.getMaterialEnum() && sis.getData() == his.getDamageValue()) {
 					int currentamount = citem.getAmount();
 					if ((maxstack - currentamount) >= amount) {
 						pamount = amount;
@@ -242,7 +201,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				}
 			}
 			if (amount != 0) {
-				String info = "Error adding items to inventory; + '" + amount + "' remaining. Transaction addBoughtItems() passed values inventory='" + inventory.getName() + "', data='" + data + "', amount='" + amount + "'";
+				String info = "Error adding items to inventory; + '" + amount + "' remaining. Transaction addBoughtItems() passed values inventory='" + inventory.getName() + "', data='" + sis.getData() + "', amount='" + amount + "'";
 				hc.gDB().writeError(info);
 			}
 			if (inventory.getType() == InventoryType.PLAYER) {
@@ -250,7 +209,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				p.updateInventory();
 			}
 		} catch (Exception e) {
-			String info = "add() passed values inventory='" + inventory.getName() + "', data='" + data + "', amount='" + amount + "'";
+			String info = "add() passed values inventory='" + inventory.getName() + "', data='" + sis.getData() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
 		}
 	}
@@ -264,8 +223,8 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				Player p = (Player) inventory.getHolder();
 				ItemStack hstack = p.getItemInHand();
 				HyperItemStack his = new HyperItemStack(hstack);
-				if (hstack != null && !his.hasenchants()) {
-					if (hstack.getType() == materialEnum && his.getDamageValue() == data) {
+				if (hstack != null && !his.hasEnchants()) {
+					if (hstack.getType() == sis.getMaterialEnum() && his.getDamageValue() == sis.getData()) {
 						if (remainingAmount >= hstack.getAmount()) {
 							remainingAmount -= hstack.getAmount();
 							amountRemoved += hstack.getAmount() * his.getDurabilityMultiplier();
@@ -281,8 +240,8 @@ public class ComponentItem extends BasicObject implements HyperObject {
 			for (int i = 0; i < inventory.getSize(); i++) {
 				ItemStack stack = inventory.getItem(i);
 				HyperItemStack his = new HyperItemStack(stack);
-				if (stack != null && !his.hasenchants()) {
-					if (stack.getType() == materialEnum && his.getDamageValue() == data) {
+				if (stack != null && !his.hasEnchants()) {
+					if (stack.getType() == sis.getMaterialEnum() && his.getDamageValue() == sis.getData()) {
 						if (remainingAmount >= stack.getAmount()) {
 							remainingAmount -= stack.getAmount();
 							amountRemoved += stack.getAmount() * his.getDurabilityMultiplier();
@@ -296,13 +255,13 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				}
 			}
 			if (remainingAmount != 0) {
-				hc.gDB().writeError("remove() failure.  Items not successfully removed.  Passed data = '" + data + "', amount = '" + amount + "'");
+				hc.gDB().writeError("remove() failure.  Items not successfully removed.  Passed data = '" + sis.getData() + "', amount = '" + amount + "'");
 				return amountRemoved;	
 			} else {
 				return amountRemoved;
 			}
 		} catch (Exception e) {
-			String info = "remove() passed values inventory='" + inventory.getName() + "', data='" + data + "', amount='" + amount + "'";
+			String info = "remove() passed values inventory='" + inventory.getName() + "', data='" + sis.getData() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
 			return -1;
 		}
@@ -319,7 +278,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 			if (inventory.getType() == InventoryType.PLAYER) {
 				Player p = (Player) inventory.getHolder();
 				ItemStack ci = p.getItemInHand();
-				if (ci.getType() == materialEnum && !new HyperItemStack(ci).hasenchants()) {
+				if (ci.getType() == sis.getMaterialEnum() && !new HyperItemStack(ci).hasEnchants()) {
 					damage += getDurabilityPercent(ci);
 					totalitems++;
 					heldslot = p.getInventory().getHeldItemSlot();
@@ -330,8 +289,8 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				if (slot == heldslot) {continue;}
 				ItemStack ci = inventory.getItem(slot);
 				if (ci == null) {continue;}
-				if (!(ci.getType() == materialEnum)) {continue;}
-				if (new HyperItemStack(ci).hasenchants()) {continue;}
+				if (!(ci.getType() == sis.getMaterialEnum())) {continue;}
+				if (new HyperItemStack(ci).hasEnchants()) {continue;}
 				damage += getDurabilityPercent(ci);
 				totalitems++;
 				if (totalitems >= amount) {break;}

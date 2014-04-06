@@ -15,8 +15,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.scheduler.BukkitTask;
 
-import regalowl.databukkit.QueryResult;
-import regalowl.databukkit.SQLRead;
+import regalowl.databukkit.sql.QueryResult;
+import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;

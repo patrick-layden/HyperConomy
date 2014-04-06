@@ -67,9 +67,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("economyinfo")) {
 			new Economyinfo(this, args, sender, player);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("importnewitems")) {
-			new Importnewitems(args, sender);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("hyperlog")) {
 			new Hyperlog(args, sender);
 			return true;
@@ -93,9 +90,6 @@ public class _Command {
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("setlanguage")) {
 			new Setlanguage(args, sender);
-			return true;
-		} else if (cmd.getName().equalsIgnoreCase("importprices")) {
-			new Importprices(args, sender);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("repairsigns") && player != null) {
 			new Repairsigns(args, player);

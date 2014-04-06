@@ -42,7 +42,7 @@ public class Sellall implements CommandExecutor {
 			player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 			return true;
 		}
-		try {
+		//try {
 			if (em.inAnyShop(player)) {
 				Shop s = em.getShop(player);
 				if (em.getHyperPlayer(player).hasSellPermission(em.getShop(player))) {
@@ -69,10 +69,10 @@ public class Sellall implements CommandExecutor {
 			} else {
 				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
 			}
-		} catch (Exception e) {
-			player.sendMessage(L.get("SELLALL_INVALID"));
-			return true;
-		}
+		//} catch (Exception e) {
+		//	player.sendMessage(L.get("SELLALL_INVALID"));
+		//	return true;
+		//}
 		return true;
 	}
 	
@@ -94,10 +94,11 @@ public class Sellall implements CommandExecutor {
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
 			if (inventory.getItem(slot) == null) {continue;}
 			ItemStack stack = inventory.getItem(slot);
-			HyperObject hyperItem = he.getHyperObject(stack, em.getShop(trader.getPlayer()));
+			HyperObject ho = he.getHyperObject(stack, em.getShop(trader.getPlayer()));
+			if (ho == null) {continue;}
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 			pt.setTradePartner(tradePartner);
-			pt.setHyperObject(hyperItem);
+			pt.setHyperObject(ho);
 			pt.setAmount(stack.getAmount());
 			TransactionResponse response = trader.processTransaction(pt);
 			if (response.successful()) {

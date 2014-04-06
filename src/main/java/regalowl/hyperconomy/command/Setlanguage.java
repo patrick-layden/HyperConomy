@@ -5,7 +5,7 @@ import java.io.File;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-import regalowl.databukkit.FileTools;
+import regalowl.databukkit.file.FileTools;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.util.LanguageFile;
 

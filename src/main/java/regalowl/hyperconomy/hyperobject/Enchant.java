@@ -11,28 +11,33 @@ import org.bukkit.inventory.ItemStack;
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.serializable.SerializableEnchantment;
 
 public class Enchant extends BasicObject implements HyperObject {
 
-	private String enchantName;
+	private SerializableEnchantment se;
 
 	
-	public Enchant(String name, String economy, String displayName, String aliases, String type, String enchantName, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
+	public Enchant(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String base64ItemData) {
 		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
-		this.enchantName = enchantName;
+		this.se = new SerializableEnchantment(base64ItemData);
 	}
 	@Override
 	public String getEnchantmentName() {
-		return enchantName;
+		return se.getEnchantmentName();
 	}
 
 
 	
 	@Override
-	public void setEnchantmentName(String enchantName) {
-		String statement = "UPDATE hyperconomy_objects SET MATERIAL='" + enchantName + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+	public String getData() {
+		return se.serialize();
+	}
+	@Override
+	public void setData(String data) {
+		se = new SerializableEnchantment(data);
+		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		this.enchantName = enchantName;
 	}
 	
 	
@@ -208,17 +213,11 @@ public class Enchant extends BasicObject implements HyperObject {
 	}
 	@Override
 	public Enchantment getEnchantment() {
-		return Enchantment.getByName(getEnchantmentName());
+		return se.getEnchantment();
 	}
 	@Override
 	public int getEnchantmentLevel() {
-		try {
-			int l = getName().length();
-			String lev = getName().substring(l - 1, l);
-			return Integer.parseInt(lev);
-		} catch (Exception e) {
-			return 1;
-		}
+		return se.getLvl();
 	}
 	@Override
 	public double addEnchantment(ItemStack stack) {

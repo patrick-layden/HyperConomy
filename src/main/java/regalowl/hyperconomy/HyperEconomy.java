@@ -1,26 +1,24 @@
 package regalowl.hyperconomy;
 
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.QueryResult;
-import regalowl.databukkit.SQLRead;
-import regalowl.databukkit.SQLWrite;
+import regalowl.databukkit.file.FileTools;
+import regalowl.databukkit.sql.QueryResult;
+import regalowl.databukkit.sql.SQLRead;
+import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.event.DataLoadListener;
 import regalowl.hyperconomy.hyperobject.ComponentItem;
 import regalowl.hyperconomy.hyperobject.CompositeItem;
 import regalowl.hyperconomy.hyperobject.Enchant;
-import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.hyperobject.Xp;
@@ -33,11 +31,10 @@ public class HyperEconomy implements DataLoadListener {
 
 	private HyperAccount defaultAccount;
 	private ConcurrentHashMap<String, HyperObject> hyperObjectsName = new ConcurrentHashMap<String, HyperObject>();
-	private ConcurrentHashMap<String, HyperObject> hyperObjectsData = new ConcurrentHashMap<String, HyperObject>();
 	private ConcurrentHashMap<String, String> hyperObjectsAliases = new ConcurrentHashMap<String, String>();
 	
 
-	private ArrayList<String> compositeKeys = new ArrayList<String>();
+	private HashMap<String,String> composites = new HashMap<String,String>();
 	private boolean useComposites;
 	private HyperConomy hc;
 	private SQLRead sr;
@@ -54,7 +51,7 @@ public class HyperEconomy implements DataLoadListener {
 		hc.getHyperEventHandler().registerDataLoadListener(this);
 		sr = hc.getSQLRead();
 		useComposites = hc.gYH().gFC("config").getBoolean("enable-feature.composite-items");
-		loadCompositeKeys();
+		//loadCompositeKeys();
 		load();
 	}
 
@@ -82,21 +79,22 @@ public class HyperEconomy implements DataLoadListener {
 	private void load() {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
-				hyperObjectsName.clear();
-				hyperObjectsData.clear();
-				QueryResult result = sr.select("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economyName+"'");
+				composites.clear();
+				QueryResult result = sr.select("SELECT * FROM hyperconomy_composites");
 				while (result.next()) {
-					if (useComposites && compositeKeys.contains(result.getString("NAME").toLowerCase())) {continue;}
+					composites.put(result.getString("NAME").toLowerCase(), result.getString("COMPONENTS"));
+				}
+				hyperObjectsName.clear();
+				result = sr.select("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economyName+"'");
+				while (result.next()) {
+					if (useComposites && composites.containsKey(result.getString("NAME").toLowerCase())) {continue;}
 					HyperObjectType type = HyperObjectType.fromString(result.getString("TYPE"));
 					if (type == HyperObjectType.ITEM) {
 						HyperObject hobj = new ComponentItem(result.getString("NAME"), result.getString("ECONOMY"), 
-								result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
-								result.getString("MATERIAL"), result.getInt("DATA"),
-								result.getInt("DURABILITY"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
+								result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
+								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
 						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
-						hyperObjectsData.put(hobj.getMaterialEnum() + "|" + hobj.getData(), hobj);
 						for (String alias:hobj.getAliases()) {
 							hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
 						}
@@ -105,9 +103,9 @@ public class HyperEconomy implements DataLoadListener {
 					} else if (type == HyperObjectType.ENCHANTMENT) {
 						HyperObject hobj = new Enchant(result.getString("NAME"), result.getString("ECONOMY"), 
 								result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
-								result.getString("MATERIAL"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
+								result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
+								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
 						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
 						for (String alias:hobj.getAliases()) {
 							hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
@@ -131,34 +129,18 @@ public class HyperEconomy implements DataLoadListener {
 				}
 				result.close();
 				if (xpName == null) {xpName = "xp";}
-				hc.getServer().getScheduler().runTask(hc, new Runnable() {
-					public void run() {
-						loadComposites();
-						dataLoaded = true;
-					}
-				});
+				if (!useComposites) {
+					dataLoaded = true;
+					return;
+				}
+				loadComposites();
+				dataLoaded = true;
 			}
 		});
 	}
 	
-	private void loadCompositeKeys() {
-		if (!useComposites) {
-			return;
-		}
-		compositeKeys.clear();
-		FileConfiguration composites = hc.gYH().gFC("composites");
-		Iterator<String> it = composites.getKeys(false).iterator();
-		while (it.hasNext()) {
-			compositeKeys.add(it.next().toString().toLowerCase());
-		}
-	}
-	
 	private void loadComposites() {
-		if (!useComposites) {
-			return;
-		}
 		boolean loaded = false;
-		FileConfiguration composites = hc.gYH().gFC("composites");
 		int counter = 0;
 		while (!loaded) {
 			counter++;
@@ -167,16 +149,16 @@ public class HyperEconomy implements DataLoadListener {
 				return;
 			}
 			loaded = true;
-			Iterator<String> it = composites.getKeys(false).iterator();
-			while (it.hasNext()) {
-				String name = it.next().toString();
+			QueryResult result = sr.select("SELECT * FROM hyperconomy_composites");
+			while (result.next()) {
+				String name = result.getString("NAME");
 				if (!componentsLoaded(name)) {
 					loaded = false;
 					continue;
 				}
-				HyperObject ho = new CompositeItem(name, economyName);
+				HyperObject ho = new CompositeItem(name, economyName, result.getString("DISPLAY_NAME"), result.getString("ALIASES"), 
+						result.getString("TYPE"), result.getString("COMPONENTS"), result.getString("DATA"));
 				hyperObjectsName.put(ho.getName().toLowerCase(), ho);
-				hyperObjectsData.put(ho.getMaterialEnum() + "|" + ho.getData(), ho);
 				for (String alias:ho.getAliases()) {
 					hyperObjectsAliases.put(alias.toLowerCase(), ho.getName().toLowerCase());
 				}
@@ -187,7 +169,7 @@ public class HyperEconomy implements DataLoadListener {
 	}
 	private boolean componentsLoaded(String name) {
 		CommonFunctions cf = hc.gCF();
-		HashMap<String,String> tempComponents = cf.explodeMap(hc.gYH().gFC("composites").getString(name + ".components"));
+		HashMap<String,String> tempComponents = cf.explodeMap(composites.get(name.toLowerCase()));
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
 		    String oname = entry.getKey();
 		    HyperObject ho = getHyperObject(oname);
@@ -225,15 +207,16 @@ public class HyperEconomy implements DataLoadListener {
 	}
 	public HyperObject getHyperObject(ItemStack stack, Shop s) {
 		if (stack == null) {return null;}
-		HyperItemStack his = new HyperItemStack(stack);
 		if (s != null && s instanceof PlayerShop) {
-			if (hyperObjectsData.containsKey(his.getKey())) {
-				HyperObject ho = hyperObjectsData.get(his.getKey());
+			for (HyperObject ho:hyperObjectsName.values()) {
+				if (ho.getType() != HyperObjectType.ITEM) {continue;}
+				if (!ho.matchesItemStack(stack)) {continue;}
 				return (HyperObject) ((PlayerShop) s).getPlayerShopObject(ho);
 			}
 		} else {
-			if (hyperObjectsData.containsKey(his.getKey())) {
-				return hyperObjectsData.get(his.getKey());
+			for (HyperObject ho:hyperObjectsName.values()) {
+				if (ho.getType() != HyperObjectType.ITEM) {continue;}
+				if (ho.matchesItemStack(stack)) {return ho;}
 			}
 		}
 		return null;
@@ -261,17 +244,11 @@ public class HyperEconomy implements DataLoadListener {
 	public HyperObject getHyperObject(String name) {
 		return getHyperObject(name, null);
 	}
-	
+
 	public void removeHyperObject(String name) {
-		HyperObject ho = null;
-		if (hyperObjectsName.containsKey(name)) {
-			ho = hyperObjectsName.get(name);
-			hyperObjectsName.remove(name);
-		}
-		if (ho.getType() == HyperObjectType.ITEM) {
-			if (hyperObjectsData.containsKey(ho.getMaterialEnum() + "|" + ho.getData())) {
-				hyperObjectsData.remove(ho.getMaterialEnum() + "|" + ho.getData());
-			}
+		HyperObject ho = getHyperObject(name);
+		if (hyperObjectsName.containsKey(ho.getName().toLowerCase())) {
+			hyperObjectsName.remove(ho.getName().toLowerCase());
 		}
 	}
 	
@@ -312,7 +289,6 @@ public class HyperEconomy implements DataLoadListener {
 
 	public void clearData() {
 		hyperObjectsName.clear();
-		hyperObjectsData.clear();
 	}
 
 
@@ -417,71 +393,51 @@ public class HyperEconomy implements DataLoadListener {
 	
 	
 	public ArrayList<String> loadNewItems() {
-		FileConfiguration objects = hc.gYH().gFC("objects");
 		ArrayList<String> objectsAdded = new ArrayList<String>();
-		SQLWrite sw = hc.getSQLWrite();
-		ArrayList<String> keys = getObjectKeys();
-		Iterator<String> it = objects.getKeys(false).iterator();
-		while (it.hasNext()) {
-			String itemname = it.next().toString();
-			if (!keys.contains(itemname.toLowerCase())) {
-				objectsAdded.add(itemname);
-				String category = objects.getString(itemname + ".information.category");
-				if (category == null) {
-					category = "unknown";
-				}
-				HashMap<String, String> values = new HashMap<String, String>();
-				values.put("NAME", itemname);
-				values.put("ECONOMY", economyName);
-				values.put("DISPLAY_NAME", objects.getString(itemname + ".name.display"));
-				values.put("ALIASES", objects.getString(itemname + ".name.aliases"));
-				values.put("TYPE", objects.getString(itemname + ".information.type"));
-				values.put("VALUE", objects.getDouble(itemname + ".value") + "");
-				values.put("STATIC", objects.getString(itemname + ".price.static"));
-				values.put("STATICPRICE", objects.getDouble(itemname + ".price.staticprice") + "");
-				values.put("STOCK", objects.getDouble(itemname + ".stock.stock") + "");
-				values.put("MEDIAN", objects.getDouble(itemname + ".stock.median") + "");
-				values.put("INITIATION", objects.getString(itemname + ".initiation.initiation"));
-				values.put("STARTPRICE", objects.getDouble(itemname + ".initiation.startprice") + "");
-				values.put("CEILING", objects.getDouble(itemname + ".price.ceiling") + "");
-				values.put("FLOOR", objects.getDouble(itemname + ".price.floor") + "");
-				values.put("MAXSTOCK", objects.getDouble(itemname + ".stock.maxstock") + "");
-				if (objects.getString(itemname + ".information.type").equalsIgnoreCase("item")) {
-					values.put("MATERIAL", objects.getString(itemname + ".information.material"));
-					values.put("DATA", objects.getInt(itemname + ".information.data") + "");
-					values.put("DURABILITY", objects.getInt(itemname + ".information.data") + "");
-				} else if (objects.getString(itemname + ".information.type").equalsIgnoreCase("enchantment")) {
-					values.put("MATERIAL", objects.getString(itemname + ".information.material"));
-					values.put("DATA", "-1");
-					values.put("DURABILITY", "-1");
-				} else if (objects.getString(itemname + ".information.type").equalsIgnoreCase("experience")) {
-					values.put("MATERIAL", "none");
-					values.put("DATA", "-1");
-					values.put("DURABILITY", "-1");
-				}
-				sw.performInsert("hyperconomy_objects", values);
-			}
+		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
+		FileTools ft = hc.getFileTools();
+		if (!ft.fileExists(defaultObjectsPath)) {
+			ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
 		}
+		SQLWrite sw = hc.getSQLWrite();
+		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
+		ArrayList<String> columns = data.getColumnNames();
+		while (data.next()) {
+			String objectName = data.getString("NAME");
+			if (hyperObjectsName.keySet().contains(objectName.toLowerCase())) {continue;}
+			objectsAdded.add(objectName);
+			HashMap<String, String> values = new HashMap<String, String>();
+			for (String column : columns) {
+				values.put(column, data.getString(column));
+			}
+			sw.performInsert("hyperconomy_objects", values);
+		}
+		ft.deleteFile(defaultObjectsPath);
 		hc.restart();
 		return objectsAdded;
 	}
 	
+	
 	public void updateNamesFromYml() {
-		FileConfiguration objects = hc.gYH().gFC("objects");
-		Iterator<String> it = objects.getKeys(false).iterator();
-		while (it.hasNext()) {
-			String name = it.next().toString();
-			String aliasString = objects.getString(name + ".name.aliases");
+		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
+		FileTools ft = hc.getFileTools();
+		if (!ft.fileExists(defaultObjectsPath)) {
+			ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
+		}
+		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
+		while (data.next()) {
+			String objectName = data.getString("NAME");
+			String aliasString = data.getString("ALIASES");
 			ArrayList<String> names = hc.gCF().explode(aliasString, ",");
-			String displayName = objects.getString(name + ".name.display");
+			String displayName = data.getString("DISPLAY_NAME");
 			names.add(displayName);
-			names.add(name);
+			names.add(objectName);
 			for (String cname:names) {
 				HyperObject ho = getHyperObject(cname);
 				if (ho == null) {continue;}
 				ho.setAliases(hc.gCF().explode(aliasString, ","));
 				ho.setDisplayName(displayName);
-				ho.setName(name);
+				ho.setName(objectName);
 			}
 		}
 		for (Shop s:hc.getDataManager().getShops()) {
@@ -492,55 +448,7 @@ public class HyperEconomy implements DataLoadListener {
 				}
 			}
 		}
-	}
-	
-	
-	public void exportToYml() {
-		FileConfiguration objects = hc.gYH().gFC("objects");
-		ArrayList<String> names = getNames();
-		Collections.sort(names, String.CASE_INSENSITIVE_ORDER);
-		for (int i = 0; i < names.size(); i++) {
-			String name = names.get(i);
-			objects.set(name, null);
-			HyperObject ho = getHyperObject(name);
-			String displayName = ho.getDisplayName();
-			String aliases = ho.getAliasesString();
-			String newtype = ho.getType().toString();
-			String newmaterial = "none";
-			int newdata = -1;
-			if (ho.getType() == HyperObjectType.ITEM) {
-				newmaterial = ho.getMaterial();
-				newdata = ho.getData();
-			} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
-				newmaterial = ho.getEnchantmentName();
-			}
-			double newvalue = ho.getValue();
-			String newstatic = ho.getIsstatic();
-			double newstaticprice = ho.getStaticprice();
-			double newstock = ho.getStock();
-			double newmedian = ho.getMedian();
-			String newinitiation = ho.getInitiation();
-			double newstartprice = ho.getStartprice();
-			double newceiling = ho.getCeiling();
-			double newfloor = ho.getFloor();
-			double newmaxstock = ho.getMaxstock();
-			objects.set(name + ".name.display", displayName);
-			objects.set(name + ".name.aliases", aliases);
-			objects.set(name + ".information.type", newtype);
-			objects.set(name + ".information.material", newmaterial);
-			objects.set(name + ".information.data", newdata);
-			objects.set(name + ".value", newvalue);
-			objects.set(name + ".price.static", Boolean.parseBoolean(newstatic));
-			objects.set(name + ".price.staticprice", newstaticprice);
-			objects.set(name + ".stock.stock", newstock);
-			objects.set(name + ".stock.median", newmedian);
-			objects.set(name + ".initiation.initiation", Boolean.parseBoolean(newinitiation));
-			objects.set(name + ".initiation.startprice", newstartprice);
-			objects.set(name + ".price.ceiling", newceiling);
-			objects.set(name + ".price.floor", newfloor);
-			objects.set(name + ".stock.maxstock", newmaxstock);
-		}
-		hc.gYH().saveYamls();
+		ft.deleteFile(defaultObjectsPath);
 	}
 
 	public String getXpName() {

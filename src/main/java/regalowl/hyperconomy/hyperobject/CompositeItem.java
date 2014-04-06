@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -15,30 +12,22 @@ import regalowl.hyperconomy.hyperobject.HyperObject;
 
 public class CompositeItem extends ComponentItem implements HyperObject {
 
-	private FileConfiguration composites;
 	private CommonFunctions cf;
 	
 	private ConcurrentHashMap<HyperObject,Double> components = new ConcurrentHashMap<HyperObject,Double>();
 	
 	
-	public CompositeItem(String name, String economy) {
-		super(name,economy,"","","","", 0,0, 0, "",0,0,0,"",0,0,0,0);
+	public CompositeItem(String name, String economy, String displayName, String aliases, String type, String composites, String data) {
+		super(name,economy,"","","",0,"",0,0,0,"",0,0,0,0,data);
 		hc = HyperConomy.hc;
 		cf = hc.gCF();
-		composites = hc.gYH().gFC("composites");
-		this.displayName = composites.getString(this.name + ".name.display");
-		String sAliases = composites.getString(this.name + ".name.aliases");
-		ArrayList<String> tAliases = hc.gCF().explode(sAliases, ",");
+		this.displayName = displayName;
+		ArrayList<String> tAliases = hc.gCF().explode(aliases, ",");
 		for (String cAlias:tAliases) {
 			this.aliases.add(cAlias);
 		}
-		this.type = HyperObjectType.fromString(composites.getString(this.name + ".information.type"));
-		this.material = composites.getString(this.name + ".information.material");
-		this.materialEnum = Material.matchMaterial(this.material);
-		this.data = composites.getInt(this.name + ".information.data");
-		this.durability = composites.getInt(this.name + ".information.data");
-		
-		HashMap<String,String> tempComponents = cf.explodeMap(composites.getString(this.name + ".components"));
+		this.type = HyperObjectType.fromString(type);
+		HashMap<String,String> tempComponents = cf.explodeMap(composites);
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
 		    String oname = entry.getKey();
 		    String amountString = entry.getValue();
@@ -56,7 +45,6 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		}
 	}
 
-	
 	
 	//The following methods calculate the HyperObject's values based on the CompositeItem's component items.
 	
@@ -239,44 +227,20 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	
 
-	//Override the following getter/setter methods to store data in composites.yml
+	
+	
+	
+	
+	//Override the following getter/setter methods to store data in composites table
 
 	@Override
 	public void setType(HyperObjectType type) {
 		this.type = type;
-		composites.set(this.name + ".information.type", this.type.toString());
-	}
-	@Override
-	public void setMaterial(String material) {
-		this.material = material;
-		this.materialEnum = Material.matchMaterial(material);
-		composites.set(this.name + ".information.material", this.material);
-	}
-	@Override
-	public void setMaterial(Material material) {
-		String materialS = material.toString();
-		this.material = materialS;
-		this.materialEnum = material;
-		composites.set(this.name + ".information.material", materialS);
-	}
-	@Override
-	public void setData(int data) {
-		this.data = data;
-		composites.set(this.name + ".information.data", this.data);
-	}
-	@Override
-	public void setDurability(int durability) {
-		this.durability = durability;
-		composites.set(this.name + ".information.durability", this.durability);
-	}
-	@Override
-	public ConcurrentHashMap<HyperObject,Double> getComponents() {
-		return components;
+		String statement = "UPDATE hyperconomy_composites SET TYPE='" + type + "' WHERE NAME = '" + this.name + "'";
+		hc.getSQLWrite().addToQueue(statement);
 	}
 
 
-	
-	
 	//The setStock method updates the stock for all component items to the correct level.
 	
 	@Override
@@ -294,16 +258,15 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	@Override
 	public boolean isCompositeObject() {return true;}
 	
-
-
-	
-	
-	
-	
-	//Override the following methods to prevent database changes.
+	@Override
+	public ConcurrentHashMap<HyperObject,Double> getComponents() {
+		return components;
+	}
 	
 	@Override
 	public void setName(String name) {
+		String statement = "UPDATE hyperconomy_composites SET NAME='" + name + "' WHERE NAME = '" + this.name + "'";
+		hc.getSQLWrite().addToQueue(statement);
 		this.name = name;
 	}
 	@Override
@@ -313,6 +276,8 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	@Override
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+		String statement = "UPDATE hyperconomy_composites SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "'";
+		hc.getSQLWrite().addToQueue(statement);
 	}
 	@Override
 	public void setAliases(ArrayList<String> newAliases) {
@@ -320,17 +285,33 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		for (String cAlias:newAliases) {
 			aliases.add(cAlias);
 		}
+		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
+		String statement = "UPDATE hyperconomy_composites SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "'";
+		hc.getSQLWrite().addToQueue(statement);
 	}
 	@Override
 	public void addAlias(String addAlias) {
 		if (aliases.contains(addAlias)) {return;}
 		aliases.add(addAlias);
+		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
+		String statement = "UPDATE hyperconomy_composites SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "'";
+		hc.getSQLWrite().addToQueue(statement);
 	}
 	@Override
 	public void removeAlias(String removeAlias) {
 		if (!aliases.contains(removeAlias)) {return;}
 		aliases.remove(removeAlias);
+		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
+		String statement = "UPDATE hyperconomy_composites SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "'";
+		hc.getSQLWrite().addToQueue(statement);
 	}
+
+
+	
+	
+	
+	
+	//Override the following methods to prevent database changes.
 	@Override
 	public void setMedian(double median) {}
 	@Override

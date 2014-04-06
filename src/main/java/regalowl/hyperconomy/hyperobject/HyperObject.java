@@ -5,7 +5,6 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -101,6 +100,14 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * @return The HyperObject's maximum stock value.
 	 */
 	public double getMaxstock();
+	/**
+	 * @return The HyperObject's serialized data String.
+	 */
+	public String getData();
+	/**Sets the HyperObject's serialized data.
+	 * @param data 
+	 */
+	public void setData(String data);
 
 	/**Sets the HyperObject's name to the given name.
 	 * @param name 
@@ -295,43 +302,20 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * @return
 	 */
 	public ItemStack getItemStack();
+	/**Sets this HyperObject's ItemStack representation.  (Can only be used with items.)
+	 * @param stack
+	 */
+	public void setItemStack(ItemStack stack);
 	/**Returns the ItemStack representation of this HyperObject and applies the given quantity. (Can only be used with items.)
 	 * @param amount
 	 * @return
 	 */
 	public ItemStack getItemStack(int amount);
-	/**Sets the HyperObject's data value. (Can only be used with items.)
-	 * @param data
-	 */
-	public void setData(int data);
-	/**Sets the HyperObject's durability value. (Can only be used with items.)
-	 * @param data
-	 */
-	public void setDurability(int durability);
-	/**Sets the HyperObject's Material value. (Can only be used with items.)
-	 * @param data
-	 */
-	public void setMaterial(String material);
-	/**Sets the HyperObject's Material value. (Can only be used with items.)
-	 * @param data
-	 */
-	public void setMaterial(Material material);
 	/**
-	 * @return The HyperObject's material in String form. (Can only be used with items.)
+	 * @param stack
+	 * @return True if this HyperObject represents the given ItemStack, false if not.
 	 */
-	public String getMaterial();
-	/**
-	 * @return The HyperObject's Material. (Can only be used with items.)
-	 */
-	public Material getMaterialEnum();
-	/**
-	 * @return The HyperObject's data value. (Can only be used with items.)
-	 */
-	public int getData();
-	/**
-	 * @return The HyperObjects durability value. (Can only be used with items.)
-	 */
-	public int getDurability();
+	public boolean matchesItemStack(ItemStack stack);
 	/**
 	 * @return True if this HyperObject has durability, false if not. (Can only be used with items.)
 	 */
@@ -392,10 +376,6 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * @return 1 if successful, 0 if not.
 	 */
 	public double removeEnchantment(ItemStack stack);
-	/**Sets this HyperObject's enchantment name. (Can only be used with Enchantments.)
-	 * @param name
-	 */
-	public void setEnchantmentName(String name);
 	/**
 	 * @return The HyperObject's Enchantment name. (Can only be used with Enchantments.)
 	 */

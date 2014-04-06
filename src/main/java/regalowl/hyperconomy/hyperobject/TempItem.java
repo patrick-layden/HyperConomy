@@ -3,36 +3,15 @@ package regalowl.hyperconomy.hyperobject;
 
 import java.util.ArrayList;
 
-import org.bukkit.Material;
 
 public class TempItem extends ComponentItem implements HyperObject {
 
 
-	public TempItem(String name, String economy, String displayName, String aliases, String type, String material, int data, int durability, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
-		super(name, economy, displayName, aliases, type, material, data, durability, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
+	public TempItem(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String itemData) {
+		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, itemData);
 	}
 	
 	//Override all set methods to prevent database changes.
-	
-	@Override
-	public void setMaterial(String material) {
-		this.material = material;
-		this.materialEnum = Material.matchMaterial(material);
-	}
-	@Override
-	public void setMaterial(Material material) {
-		String materialS = material.toString();
-		this.material = materialS;
-		this.materialEnum = material;
-	}
-	@Override
-	public void setData(int data) {
-		this.data = data;
-	}
-	@Override
-	public void setDurability(int durability) {
-		this.durability = durability;
-	}
 	@Override
 	public void setName(String name) {
 		this.name = name;

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.QueryResult;
-import regalowl.databukkit.SQLRead;
-import regalowl.databukkit.SQLWrite;
+import regalowl.databukkit.sql.QueryResult;
+import regalowl.databukkit.sql.SQLRead;
+import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.display.InfoSignHandler;

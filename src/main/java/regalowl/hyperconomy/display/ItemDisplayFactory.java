@@ -26,8 +26,8 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.metadata.MetadataValue;
 
-import regalowl.databukkit.QueryResult;
-import regalowl.databukkit.SQLRead;
+import regalowl.databukkit.sql.QueryResult;
+import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.HyperConomy;
 
 public class ItemDisplayFactory implements Listener {

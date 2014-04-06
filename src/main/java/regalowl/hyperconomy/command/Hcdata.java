@@ -4,17 +4,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import regalowl.databukkit.FileTools;
-import regalowl.databukkit.QueryResult;
-import regalowl.databukkit.SQLWrite;
-import regalowl.databukkit.YamlHandler;
+import regalowl.databukkit.file.FileTools;
+import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.util.Backup;
 import regalowl.hyperconomy.util.LanguageFile;
 
@@ -131,37 +131,50 @@ public class Hcdata implements CommandExecutor {
 			} catch (Exception e) {
 				sender.sendMessage(L.get("HCDATA_IMPORTCSV_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("importyml")) {
+		} else if (args[0].equalsIgnoreCase("importmissing")) { 
 			try {
-				String economy = args[1];
-				if (!em.economyExists(economy)) {
+				String economy = "default";
+				if (args.length > 1) {
+					economy = args[1];
+				}
+				if (em.economyExists(economy)) {
+					if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
+					ArrayList<String> added = em.getEconomy(economy).loadNewItems();
+					sender.sendMessage(ChatColor.GOLD + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
+				} else {
 					sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
-					return true;
 				}
-				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
-					new Backup();
-				}
-				SQLWrite sw = hc.getSQLWrite();
-				sw.addToQueue("DELETE FROM hyperconomy_objects WHERE ECONOMY = '" + economy + "'");
-				em.createEconomyFromYml(economy, true);
-				sender.sendMessage(L.get("ECONOMY_IMPORTED"));	
 			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDATA_IMPORTYML_INVALID"));
+				sender.sendMessage(L.get("HCDATA_IMPORTMISSING_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("exportyml")) {
+		} else if (args[0].equalsIgnoreCase("setdefaultprices")) { 
 			try {
-				String economy = args[1];
-				if (!em.economyExists(economy)) {
+				String economy = "default";
+				if (args.length > 1) {
+					economy = args[1];
+				}
+				if (em.economyExists(economy)) {
+					if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
+					String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
+					FileTools ft = hc.getFileTools();
+					if (!ft.fileExists(defaultObjectsPath)) {
+						ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
+					}
+					QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
+					while (data.next()) {
+						String objectName = data.getString("NAME");
+						HyperObject ho = em.getEconomy(economy).getHyperObject(objectName);
+						ho.setStartprice(data.getDouble("STARTPRICE"));
+						ho.setStaticprice(data.getDouble("STATICPRICE"));
+						ho.setValue(data.getDouble("VALUE"));
+					}
+					ft.deleteFile(defaultObjectsPath);
+					sender.sendMessage(L.get("PRICES_IMPORTED"));
+				} else {
 					sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
-					return true;
 				}
-				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
-					new Backup();
-				}
-				em.getEconomy(economy).exportToYml();
-				sender.sendMessage(L.get("ECONOMY_EXPORTED"));
 			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDATA_EXPORTYML_INVALID"));
+				sender.sendMessage(L.get("HCDATA_SETDEFAULTPRICES_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("clearhistory")) {
 			String statement = "DELETE FROM hyperconomy_history";
@@ -182,18 +195,7 @@ public class Hcdata implements CommandExecutor {
 					sender.sendMessage(L.get("MUST_DISABLE_COMPOSITES"));
 					return true;
 				}
-				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
-					new Backup();
-				}
-				YamlHandler yh = hc.getYamlHandler();
-				yh.unRegisterFileConfiguration("composites");
-				yh.unRegisterFileConfiguration("objects");
-				yh.deleteConfigFile("composites");
-				yh.deleteConfigFile("objects");
-				yh.copyFromJar("composites");
-				yh.copyFromJar("objects");
-				yh.registerFileConfiguration("composites");
-				yh.registerFileConfiguration("objects");
+				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
 				for (HyperEconomy he : hc.getDataManager().getEconomies()) {
 					he.updateNamesFromYml();
 				}

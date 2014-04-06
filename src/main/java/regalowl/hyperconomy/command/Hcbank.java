@@ -314,7 +314,7 @@ public class Hcbank implements CommandExecutor {
 				HyperBank hb = em.getHyperBank(args[1]);
 				if (hb.isOwner(hp) || hp.getPlayer().hasPermission("hyperconomy.viewbanks")) {
 					player.sendMessage(L.get("LINE_BREAK"));
-					player.sendMessage(L.applyColor("&f" + hb.getName()));
+					player.sendMessage(L.applyColor("&b&o" + hb.getName()));
 					player.sendMessage(L.f(L.get("BANK_BALANCE"), hb.getBalance()));
 					player.sendMessage(L.f(L.get("BANK_OWNERS"), hb.getOwnersList()));
 					player.sendMessage(L.f(L.get("BANK_MEMBERS"), hb.getMembersList()));

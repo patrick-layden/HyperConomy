@@ -37,7 +37,7 @@ public class Hv {
 						amount = 10000;
 					}
 				}
-				if (!new HyperItemStack(iinhand).hasenchants()) {
+				if (!new HyperItemStack(iinhand).hasEnchants()) {
 					HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getShop(player));
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));

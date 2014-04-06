@@ -9,10 +9,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.Potion;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 public class HyperItemStack {
 
@@ -177,7 +177,7 @@ public class HyperItemStack {
 
 	
 	
-	public boolean hasenchants() {
+	public boolean hasEnchants() {
 		try {
 			boolean hasenchants = false;
 			if (stack != null && !stack.getType().equals(Material.AIR)) {
@@ -219,20 +219,7 @@ public class HyperItemStack {
 		if (stack == null) {return 0;}
 		return cleanDamageValue();
 	}
-	@SuppressWarnings("deprecation")
-	public int getpotionDV() {
-		if (stack == null) {return 0;}
-		if (stack.getType() != Material.POTION) {
-			return stack.getData().getData();
-		}
-		try {
-			Potion p = Potion.fromItemStack(stack);
-			return p.toDamageValue();
-		} catch (Exception IllegalArgumentException) {
-			return stack.getData().getData();
-		}
-	}
-	
+
 	public double getDurabilityMultiplier() {
 		double duramult = 1;
 		if (isDurable()) {
@@ -265,8 +252,8 @@ public class HyperItemStack {
 		double value = 10.0;
 		double median = 10000;
 		double startprice = 20.0;
-		int data = getDamageValue();
-		return new TempItem(name, "default", name, "", "item", stack.getType().toString(), data, data, value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0);
+		SerializableItemStack sis = new SerializableItemStack(stack);
+		return new TempItem(name, "default", name, "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, sis.serialize());
 	}
 	public String generateName(ItemStack stack) {
 		String name = stack.getData().toString().toLowerCase();

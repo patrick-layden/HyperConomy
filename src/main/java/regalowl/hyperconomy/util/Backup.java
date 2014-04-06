@@ -3,8 +3,8 @@ package regalowl.hyperconomy.util;
 import java.io.File;
 import java.util.ArrayList;
 
-import regalowl.databukkit.FileTools;
-import regalowl.databukkit.QueryResult;
+import regalowl.databukkit.file.FileTools;
+import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.HyperConomy;
 
 public class Backup {

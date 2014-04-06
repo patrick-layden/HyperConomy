@@ -181,7 +181,7 @@ public class TransactionProcessor {
 				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
-			if (hyperObject.getMaterialEnum() == null) {
+			if (hyperObject.getItemStack().getType() == null) {
 				response.addFailed(L.f(L.get("CANNOT_BE_PURCHASED_WITH"), name), hyperObject);
 				heh.fireTransactionEvent(pt, response);
 				return response;
@@ -220,7 +220,7 @@ public class TransactionProcessor {
 			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
-			String info = "Transaction buy() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', data='" + hyperObject.getData() + "', amount='" + amount + "'";
+			String info = "Transaction buy() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
 			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);
@@ -266,7 +266,7 @@ public class TransactionProcessor {
 				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
-			if (hyperObject.getMaterialEnum() == null) {
+			if (hyperObject.getItemStack().getType() == null) {
 				response.addFailed(L.f(L.get("CANNOT_BE_SOLD_WITH"), name), hyperObject);
 				heh.fireTransactionEvent(pt, response);
 				return response;
@@ -338,7 +338,7 @@ public class TransactionProcessor {
 			return response;
 
 		} catch (Exception e) {
-			String info = "Transaction sell() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', data='" + hyperObject.getData() + "', amount='" + amount + "'";
+			String info = "Transaction sell() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + ", amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
 			heh.fireTransactionEvent(pt, new TransactionResponse(hp));
 			return new TransactionResponse(hp);

@@ -55,7 +55,7 @@ public class Hs {
 						player.sendMessage(L.get("CANT_BE_TRADED"));
 					} else {
 						ItemStack iinhand = player.getItemInHand();
-						if (new HyperItemStack(iinhand).hasenchants() == false) {
+						if (new HyperItemStack(iinhand).hasEnchants() == false) {
 							Shop s = em.getShop(player);
 							if (!s.isBanned(ho.getName())) {
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);

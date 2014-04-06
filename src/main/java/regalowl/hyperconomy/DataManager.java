@@ -1,15 +1,14 @@
 package regalowl.hyperconomy;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,9 +17,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
-import regalowl.databukkit.QueryResult;
-import regalowl.databukkit.SQLRead;
-import regalowl.databukkit.SQLWrite;
+import regalowl.databukkit.file.FileTools;
+import regalowl.databukkit.sql.QueryResult;
+import regalowl.databukkit.sql.SQLRead;
+import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -97,7 +97,8 @@ public class DataManager implements Listener {
 	}
 	public void load2(QueryResult qr) {
 		if (!qr.next()) {
-			HyperConomy.hc.getDataManager().createEconomyFromYml("default", false);
+			HyperConomy.hc.getDataManager().createEconomyFromDefaultCSV("default", false);
+			initializeComposites();
 		}
 		hc.getSQLWrite().afterWrite(this, "load3");
 	}
@@ -206,10 +207,6 @@ public class DataManager implements Listener {
 					}
 				}
 				dataLoaded = true;
-				if (hc.getDataManager().getDatabaseUpdater().updateAfterLoad()) {
-					hc.restart();
-					return;
-				}
 				hc.getHyperEventHandler().fireDataLoadEvent();
 				loadActive = false;
 				hc.getHyperLock().setLoadLock(false);
@@ -320,9 +317,7 @@ public class DataManager implements Listener {
 			values.put("FLOOR", ho.getFloor()+"");
 			values.put("MAXSTOCK", ho.getMaxstock()+"");
 			if (ho.getType() == HyperObjectType.ITEM) {
-				values.put("MATERIAL", ho.getMaterial());
-				values.put("DATA", ho.getData()+"");
-				values.put("DURABILITY", ho.getDurability()+"");
+				values.put("DATA", ho.getData());
 			} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
 				values.put("MATERIAL", ho.getEnchantmentName());
 				values.put("DATA", "-1");
@@ -349,58 +344,56 @@ public class DataManager implements Listener {
 
 	
 	
-	public void createEconomyFromYml(String econ, boolean restart) {
+	public void createEconomyFromDefaultCSV(String econ, boolean restart) {
 		if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
 			new Backup();
 		}
+		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
+		FileTools ft = hc.getFileTools();
+		if (!ft.fileExists(defaultObjectsPath)) {
+			ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
+		}
 		SQLWrite sw = hc.getSQLWrite();
+		sw.addToQueue("DELETE FROM hyperconomy_economies WHERE NAME = '"+econ+"'");
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("NAME", econ);
 		values.put("HYPERACCOUNT", hc.gYH().gFC("config").getString("shop.default-server-shop-account"));
 		sw.performInsert("hyperconomy_economies", values);
-		FileConfiguration objects = hc.gYH().gFC("objects");
-		Iterator<String> it = objects.getKeys(false).iterator();
-		while (it.hasNext()) {
-			String itemname = it.next().toString();
-			String category = objects.getString(itemname + ".information.category");
-			if (category == null) {
-				category = "unknown";
-			}
-			
-			values = new HashMap<String,String>();
-			values.put("NAME", itemname);
-			values.put("ECONOMY", econ);
-			values.put("DISPLAY_NAME", objects.getString(itemname + ".name.display"));
-			values.put("ALIASES", objects.getString(itemname + ".name.aliases"));
-			values.put("TYPE", objects.getString(itemname + ".information.type"));
-			values.put("VALUE", objects.getDouble(itemname + ".value")+"");
-			values.put("STATIC", objects.getString(itemname + ".price.static"));
-			values.put("STATICPRICE", objects.getDouble(itemname + ".price.staticprice")+"");
-			values.put("STOCK", objects.getDouble(itemname + ".stock.stock")+"");
-			values.put("MEDIAN", objects.getDouble(itemname + ".stock.median")+"");
-			values.put("INITIATION", objects.getString(itemname + ".initiation.initiation"));
-			values.put("STARTPRICE", objects.getDouble(itemname + ".initiation.startprice")+"");
-			values.put("CEILING", objects.getDouble(itemname + ".price.ceiling")+"");
-			values.put("FLOOR", objects.getDouble(itemname + ".price.floor")+"");
-			values.put("MAXSTOCK", objects.getDouble(itemname + ".stock.maxstock")+"");
-			if (objects.getString(itemname + ".information.type").equalsIgnoreCase("item")) {
-				values.put("MATERIAL", objects.getString(itemname + ".information.material"));
-				values.put("DATA", objects.getInt(itemname + ".information.data")+"");
-				values.put("DURABILITY", objects.getInt(itemname + ".information.data")+"");
-			} else if (objects.getString(itemname + ".information.type").equalsIgnoreCase("enchantment")) {
-				values.put("MATERIAL", objects.getString(itemname + ".information.material"));
-				values.put("DATA", "-1");
-				values.put("DURABILITY", "-1");
-			} else if (objects.getString(itemname + ".information.type").equalsIgnoreCase("experience")) {
-				values.put("MATERIAL", "none");
-				values.put("DATA", "-1");
-				values.put("DURABILITY", "-1");
+		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
+		ArrayList<String> columns = data.getColumnNames();
+		sw.addToQueue("DELETE FROM hyperconomy_objects WHERE ECONOMY = '"+econ+"'");
+		while (data.next()) {
+			values = new HashMap<String, String>();
+			for (String column : columns) {
+				values.put(column, data.getString(column));
 			}
 			sw.performInsert("hyperconomy_objects", values);
 		}
+		ft.deleteFile(defaultObjectsPath);
 		if (restart) {
 			hc.restart();
 		}
+	}
+	
+	public void initializeComposites() {
+		if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
+		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultComposites.csv";
+		FileTools ft = hc.getFileTools();
+		if (!ft.fileExists(defaultObjectsPath)) {
+			ft.copyFileFromJar("defaultComposites.csv", defaultObjectsPath);
+		}
+		SQLWrite sw = hc.getSQLWrite();
+		sw.addToQueue("DELETE FROM hyperconomy_composites");
+		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
+		ArrayList<String> columns = data.getColumnNames();
+		while (data.next()) {
+			HashMap<String, String> values = new HashMap<String, String>();
+			for (String column : columns) {
+				values.put(column, data.getString(column));
+			}
+			sw.performInsert("hyperconomy_composites", values);
+		}
+		ft.deleteFile(defaultObjectsPath);
 	}
 	
 	

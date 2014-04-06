@@ -3,15 +3,13 @@ package regalowl.hyperconomy.hyperobject;
 import java.awt.Image;
 import java.util.ArrayList;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import regalowl.databukkit.SQLWrite;
-import regalowl.databukkit.WriteStatement;
+import regalowl.databukkit.sql.SQLWrite;
+import regalowl.databukkit.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.PlayerShop;
 
 public class BasicShopObject extends BasicObject implements HyperObject {
@@ -213,20 +211,20 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	public double getSalesTaxEstimate(double value) {return 0;}
 	@Override
 	public void delete() {}
-	
-	@Override
-	public void setMaterial(String material) {}
-	@Override
-	public void setMaterial(Material material) {}
-	@Override
-	public void setData(int data) {}
-	@Override
-	public void setDurability(int durability) {}
+
 
 
 	
 	
 	//The following methods don't apply to PlayerShop objects and have been overridden to forward the request to the PlayerShop object's parent object.
+	@Override
+	public String getData() {
+		return ho.getData();
+	}
+	@Override
+	public void setData(String data) {
+		ho.setData(data);
+	}
 	@Override
 	public Image getImage(int width, int height) {
 		return ho.getImage(width, height);
@@ -313,22 +311,6 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	}
 	
 	
-	@Override
-	public String getMaterial() {
-		return ho.getMaterial();
-	}
-	@Override
-	public Material getMaterialEnum() {
-		return ho.getMaterialEnum();
-	}
-	@Override
-	public int getData() {
-		return ho.getData();
-	}
-	@Override
-	public int getDurability() {
-		return ho.getDurability();
-	}
 	@Override
 	public boolean isDurable() {
 		return ho.isDurable();
