@@ -22,9 +22,10 @@ import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.file.YamlHandler;
 import regalowl.databukkit.sql.SQLRead;
 import regalowl.databukkit.sql.SQLWrite;
+import regalowl.hyperconomy.api.API;
+import regalowl.hyperconomy.api.EconomyAPI;
 import regalowl.hyperconomy.api.HyperAPI;
 import regalowl.hyperconomy.api.HyperEconAPI;
-import regalowl.hyperconomy.api.HyperObjectAPI;
 import regalowl.hyperconomy.command.Additem;
 import regalowl.hyperconomy.command.Buy;
 import regalowl.hyperconomy.command.Frameshopcommand;
@@ -61,9 +62,8 @@ import regalowl.hyperconomy.util.UpdateYML;
 
 public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public static HyperConomy hc;
-	public static HyperAPI hyperAPI;
-	public static HyperEconAPI hyperEconAPI;
-	public static HyperObjectAPI hyperObjectAPI;
+	public static API api;
+	public static EconomyAPI economyApi;
 	
 	private DataManager em;
 	private DataBukkit db;
@@ -108,9 +108,8 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public void load() {
 		enabled = false;
 		hc = this;
-		hyperAPI = new HyperAPI();
-		hyperEconAPI = new HyperEconAPI();
-		hyperObjectAPI = new HyperObjectAPI();
+		api = new HyperAPI();
+		economyApi = new HyperEconAPI();
 		db = new DataBukkit(this);
 		cf = db.getCommonFunctions();
 		ft = db.getFileTools();

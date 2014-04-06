@@ -118,7 +118,15 @@ public class Servershopcommand implements CommandExecutor {
 				player.sendMessage(L.get("SERVERSHOP_P2_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("list")) {
-			String shoplist = HyperConomy.hyperAPI.listShops().toString().replace("_", " ").replace("[", "").replace("]", "");
+			ArrayList<Shop> shops = em.getShops();
+			String sList = "";
+			for (Shop s:shops) {
+				if (s instanceof ServerShop) {
+					sList += s.getDisplayName() + ",";
+				}
+			}
+			sList = sList.substring(0, sList.length() - 1);
+			String shoplist = sList.replace("_", " ");
 			sender.sendMessage(ChatColor.AQUA + shoplist);
 		} else if (args[0].equalsIgnoreCase("owner") || args[0].equalsIgnoreCase("o")) {
 			try {

@@ -63,8 +63,8 @@ COPYDATABASE_STARTED: &6Database copy started successfully...this may take some 
 COPYDATABASE_SQLITE: &6SQLite database successfully copied to MySQL database.
 LISTCATEGORIES_INVALID: &4Invalid Parameters.  Use /listcategories
 ALREADY_IN_DATABASE: &9That item is already in the database.
-ITEM_ADDED: &6Item added to database.  Restart HyperConomy for it to become active to become active.
-ADDITEM_INVALID: &4Use /additem (name) (value) (median) (start price)
+ITEM_ADDED: &6Item added.
+ADDITEM_INVALID: &4Use /additem (name) (value)
 ALL_BACKED_UP: &6All files and database tables have been backed up!
 HC_BUY: &bType &a/hc buy &bfor buy commands.
 HC_SELL: &bType &a/hc sell &bfor sell commands.
@@ -407,7 +407,7 @@ BUY_ONLY_ITEM: &cOnly purchases are allowed for this object.
 NO_TRADE_ITEM: &cThis object cannot currently be bought or sold.
 PLAYERSHOPS_DISABLED: &cSorry, player shops are currently disabled.
 AIR_CANT_BE_TRADED: &4Air cannot be traded.
-INVENTORY_ADDED: &9Attempted to add all items in your inventory to objects.yml with generated names.
+INVENTORY_ADDED: &9Attempted to add all new items in your inventory.
 MUST_TRANSFER_MORE_THAN_ZERO: &4You must transfer more than 0 items.
 NOT_ENOUGH_SPACE: &4You don't have enough space to transfer the items.
 ALLOWED_TO_MANAGE_SHOP: &6Player now allowed to manage shop.

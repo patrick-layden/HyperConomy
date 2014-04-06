@@ -2,126 +2,30 @@ package regalowl.hyperconomy.api;
 
 import java.util.ArrayList;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.command.Additem;
+import regalowl.hyperconomy.command.Sellall;
 import regalowl.hyperconomy.display.ItemDisplayFactory;
+import regalowl.hyperconomy.hyperobject.EnchantmentClass;
+import regalowl.hyperconomy.hyperobject.HyperItemStack;
+import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
+import regalowl.hyperconomy.transaction.PlayerTransaction;
+import regalowl.hyperconomy.transaction.TransactionResponse;
+import regalowl.hyperconomy.transaction.TransactionType;
 
-public class HyperAPI implements GeneralAPI {
+public class HyperAPI implements API {
 
-	public String listShops() {
-		HyperConomy hc = HyperConomy.hc;
-		CommonFunctions cf = hc.gCF();
-		return cf.implode(hc.getDataManager().listShops(),",");
-	}
-
-	public String listEconomies() {
-		HyperConomy hc = HyperConomy.hc;
-		CommonFunctions cf = hc.gCF();
-		return cf.implode(hc.getDataManager().getEconomyList(),",");
-	}
-
-	public int getShopP1X(String shop) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().shopExists(shop)) {
-			return hc.getDataManager().getShop(shop).getP1x();
-		} else {
-			return 0;
-		}
-	}
-
-	public int getShopP1Y(String shop) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().shopExists(shop)) {
-			return hc.getDataManager().getShop(shop).getP1y();
-		} else {
-			return 0;
-		}
-	}
-
-	public int getShopP1Z(String shop) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().shopExists(shop)) {
-			return hc.getDataManager().getShop(shop).getP1z();
-		} else {
-			return 0;
-		}
-	}
-
-	public int getShopP2X(String shop) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().shopExists(shop)) {
-			return hc.getDataManager().getShop(shop).getP2x();
-		} else {
-			return 0;
-		}
-	}
-
-	public int getShopP2Y(String shop) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().shopExists(shop)) {
-			return hc.getDataManager().getShop(shop).getP2y();
-		} else {
-			return 0;
-		}
-	}
-
-	public int getShopP2Z(String shop) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().shopExists(shop)) {
-			return hc.getDataManager().getShop(shop).getP2z();
-		} else {
-			return 0;
-		}
-	}
-
-	public double getPlayerX(String player) {
-		for (Player op:Bukkit.getOnlinePlayers()) {
-			if (op.getName().equalsIgnoreCase(player)) {
-				return op.getLocation().getX();
-			}
-		}
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().hyperPlayerExists(player)) {
-			return hc.getDataManager().getHyperPlayer(player).getX();
-		} else {
-			return 0.0;
-		}
-	}
-
-	public double getPlayerY(String player) {
-		for (Player op:Bukkit.getOnlinePlayers()) {
-			if (op.getName().equalsIgnoreCase(player)) {
-				return op.getLocation().getY();
-			}
-		}
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().hyperPlayerExists(player)) {
-			return hc.getDataManager().getHyperPlayer(player).getY();
-		} else {
-			return 0.0;
-		}
-	}
-
-	public double getPlayerZ(String player) {
-		for (Player op:Bukkit.getOnlinePlayers()) {
-			if (op.getName().equalsIgnoreCase(player)) {
-				return op.getLocation().getZ();
-			}
-		}
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().hyperPlayerExists(player)) {
-			return hc.getDataManager().getHyperPlayer(player).getZ();
-		} else {
-			return 0.0;
-		}
-	}
 
 	public String getPlayerShop(Player player) {
 		HyperConomy hc = HyperConomy.hc;
@@ -156,22 +60,11 @@ public class HyperAPI implements GeneralAPI {
 		}
 	}
 
-	public double getAPIVersion() {
-		return 0;
-	}
 
-	public String getShopEconomy(String shop) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getDataManager().shopExists(shop)) {
-			return hc.getDataManager().getShop(shop).getEconomy();
-		} else {
-			return "";
-		}
-	}
-
-	public String getGlobalShopAccount() {
+	public String getDefaultServerShopAccountName() {
 		return HyperConomy.hc.gYH().gFC("config").getString("shop.default-server-shop-account");
 	}
+	
 	
 	public boolean isItemDisplay(Item item) {
 		try {
@@ -188,30 +81,6 @@ public class HyperAPI implements GeneralAPI {
 			HyperConomy.hc.gDB().writeError(e);
 			return false;
 		}
-	}
-
-	public ArrayList<String> getPlayerShopList() {
-		HyperConomy hc = HyperConomy.hc;
-		ArrayList<Shop> shops = hc.getDataManager().getShops();
-		ArrayList<String> names = new ArrayList<String>();
-		for (Shop s:shops) {
-			if (s instanceof PlayerShop) {
-				names.add(s.getName());
-			}
-		}
-		return names;
-	}
-
-	public ArrayList<String> getServerShopList() {
-		HyperConomy hc = HyperConomy.hc;
-		ArrayList<Shop> shops = hc.getDataManager().getShops();
-		ArrayList<String> names = new ArrayList<String>();
-		for (Shop s:shops) {
-			if (s instanceof ServerShop) {
-				names.add(s.getName());
-			}
-		}
-		return names;
 	}
 
 	public Shop getShop(String name) {
@@ -236,5 +105,175 @@ public class HyperAPI implements GeneralAPI {
 		}
 		return null;
 	}
+	
+	
+
+	public EnchantmentClass getEnchantmentClass(ItemStack stack) {
+		return new HyperItemStack(stack).getEnchantmentClass();
+	}
+	
+	
+	
+
+	
+	
+	public HyperObject getHyperObject(String name, String economy) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
+		return he.getHyperObject(name);
+	}
+	
+	public HyperObject getHyperObject(ItemStack stack, String economy) { 
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
+		return he.getHyperObject(stack);
+	}
+	public HyperObject getHyperObject(ItemStack stack, String economy, Shop s) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
+		return he.getHyperObject(stack, s);
+	}
+	public HyperObject getHyperObject(String name, String economy, Shop s) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
+		return he.getHyperObject(name, s);
+	}
+	
+
+
+	
+	public HyperPlayer getHyperPlayer(String name) {
+		HyperConomy hc = HyperConomy.hc;
+		return hc.getDataManager().getHyperPlayer(name);
+	}
+	
+	public ArrayList<HyperObject> getEnchantmentHyperObjects(ItemStack stack, String player) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(player);
+		return new HyperItemStack(stack).getEnchantmentObjects(hp.getEconomy());
+	}
+
+	public TransactionResponse buy(Player p, HyperObject o, int amount) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+		pt.setHyperObject(o);
+		pt.setAmount(amount);
+		return hp.processTransaction(pt);
+	}
+
+	public TransactionResponse buy(Player p, HyperObject o, int amount, Shop shop) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+		pt.setHyperObject(o);
+		pt.setAmount(amount);
+		pt.setTradePartner(shop.getOwner());
+		return hp.processTransaction(pt);
+	}
+	
+	public TransactionResponse sell(Player p, HyperObject o, int amount ) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+		pt.setHyperObject(o);
+		pt.setAmount(amount);
+		return hp.processTransaction(pt);
+	}
+	
+	public TransactionResponse sell(Player p, HyperObject o, int amount, Shop shop) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+		pt.setHyperObject(o);
+		pt.setAmount(amount);
+		pt.setTradePartner(shop.getOwner());
+		return hp.processTransaction(pt);
+	}
+
+	public TransactionResponse sellAll(Player p) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		Sellall sa = new Sellall();
+		return sa.sellAll(hp, null);
+	}
+
+	public ArrayList<HyperObject> getAvailableObjects(Player p) {
+		HyperConomy hc = HyperConomy.hc;
+		Shop s = hc.getDataManager().getShop(p);
+		if (s != null) {
+			return s.getTradeableObjects();
+		}
+		return new ArrayList<HyperObject>();
+	}
+
+	public ArrayList<HyperObject> getAvailableObjects(Player p, int startingPosition, int limit) {
+		ArrayList<HyperObject> availableObjects = getAvailableObjects(p);
+		ArrayList<HyperObject> availableSubset = new ArrayList<HyperObject>();
+		for (int i = startingPosition; i <= limit; i++) {
+			if (availableObjects.indexOf(i) != -1) {
+				availableSubset.add(availableObjects.get(i));
+			}
+		}
+		return availableSubset;
+	}
+	
+	public ArrayList<HyperObject> getAvailableObjects(String shopname) {
+		HyperConomy hc = HyperConomy.hc;
+		Shop s = hc.getDataManager().getShop(shopname);
+		if (s != null) {
+			return s.getTradeableObjects();
+		}
+		return new ArrayList<HyperObject>();
+	}
+
+	public ArrayList<HyperObject> getAvailableObjects(String shopname, int startingPosition, int limit) {
+		ArrayList<HyperObject> availableObjects = getAvailableObjects(shopname);
+		ArrayList<HyperObject> availableSubset = new ArrayList<HyperObject>();
+		for (int i = startingPosition; i <= limit; i++) {
+			if (availableObjects.indexOf(i) != -1) {
+				availableSubset.add(availableObjects.get(i));
+			}
+		}
+		return availableSubset;
+	}
+	
+
+
+	public TransactionResponse sellAll(Player p, Inventory inventory) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		DataManager em = hc.getDataManager();
+		HyperEconomy he = hp.getHyperEconomy();
+		TransactionResponse totalResponse = new TransactionResponse(hp);
+		for (int slot = 0; slot < inventory.getSize(); slot++) {
+			if (inventory.getItem(slot) == null) {continue;}
+			ItemStack stack = inventory.getItem(slot);
+			HyperObject hyperItem = he.getHyperObject(stack, em.getShop(hp.getPlayer()));
+			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+			pt.setGiveInventory(inventory);
+			pt.setHyperObject(hyperItem);
+			pt.setAmount(stack.getAmount());
+			TransactionResponse response = hp.processTransaction(pt);
+			if (response.successful()) {
+				totalResponse.addSuccess(response.getMessage(), response.getPrice(), response.getSuccessfulObjects().get(0));
+			} else {
+				totalResponse.addFailed(response.getMessage(), response.getFailedObjects().get(0));
+			}
+		}
+		return totalResponse;
+	}
+
+	@Override
+	public boolean addItemToEconomy(ItemStack stack, String economyName, String requestedName) {
+		Additem ai = new Additem();
+		HyperObject hobj = ai.generateNewHyperObject(stack, economyName, requestedName, 0);
+		return ai.addItem(hobj, economyName);
+	}
+
+	
+	
+	
+	
 
 }

@@ -73,8 +73,6 @@ public class HyperEconomy implements DataLoadListener {
 	public boolean dataLoaded() {
 		return dataLoaded;
 	}
-	
-
 
 	private void load() {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
@@ -453,5 +451,14 @@ public class HyperEconomy implements DataLoadListener {
 
 	public String getXpName() {
 		return xpName;
+	}
+	
+	public void addHyperObject(HyperObject hobj) {
+		hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
+		for (String alias:hobj.getAliases()) {
+			hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
+		}
+		hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
+		hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 	}
 }

@@ -24,16 +24,16 @@ import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.api.HyperEconAPI;
+import regalowl.hyperconomy.api.EconomyAPI;
 
 public class Economy_HyperConomy implements Economy {
 	private final String name = "HyperConomy";
 	private HyperConomy hc;
-	private HyperEconAPI api;
+	private EconomyAPI api;
 
 	public Economy_HyperConomy() {
 		hc = HyperConomy.hc;
-		api = HyperConomy.hyperEconAPI;
+		api = HyperConomy.economyApi;
 	}
 
 	public boolean isEnabled() {
