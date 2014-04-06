@@ -37,45 +37,39 @@ public class Sellall implements CommandExecutor {
 		} else {
 			return true;
 		}
-		
+
 		if (player.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("shop.block-selling-in-creative-mode")) {
 			player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 			return true;
 		}
-		//try {
-			if (em.inAnyShop(player)) {
-				Shop s = em.getShop(player);
-				if (em.getHyperPlayer(player).hasSellPermission(em.getShop(player))) {
-					if (args.length == 0) {
-						TransactionResponse response = sellAll(em.getHyperPlayer(player), s.getOwner());
-						response.sendMessages();
-						if (response.getFailedObjects().size() == 0) {
-							player.sendMessage(L.get("LINE_BREAK"));
-							player.sendMessage(L.get("ALL_ITEMS_SOLD"));
-							player.sendMessage(L.f(L.get("SOLD_ITEMS_FOR"), response.getTotalPrice()));
-							player.sendMessage(L.get("LINE_BREAK"));
-						} else {
-							player.sendMessage(L.get("LINE_BREAK"));
-							player.sendMessage(L.get("ONE_OR_MORE_CANT_BE_TRADED"));
-							player.sendMessage(L.f(L.get("SOLD_ITEMS_FOR"), response.getTotalPrice()));
-							player.sendMessage(L.get("LINE_BREAK"));
-						}
+		if (em.inAnyShop(player)) {
+			Shop s = em.getShop(player);
+			if (em.getHyperPlayer(player).hasSellPermission(em.getShop(player))) {
+				if (args.length == 0) {
+					TransactionResponse response = sellAll(em.getHyperPlayer(player), s.getOwner());
+					response.sendMessages();
+					if (response.getFailedObjects().size() == 0) {
+						player.sendMessage(L.get("LINE_BREAK"));
+						player.sendMessage(L.get("ALL_ITEMS_SOLD"));
+						player.sendMessage(L.f(L.get("SOLD_ITEMS_FOR"), response.getTotalPrice()));
+						player.sendMessage(L.get("LINE_BREAK"));
 					} else {
-						player.sendMessage(L.get("SELLALL_INVALID"));
+						player.sendMessage(L.get("LINE_BREAK"));
+						player.sendMessage(L.get("ONE_OR_MORE_CANT_BE_TRADED"));
+						player.sendMessage(L.f(L.get("SOLD_ITEMS_FOR"), response.getTotalPrice()));
+						player.sendMessage(L.get("LINE_BREAK"));
 					}
 				} else {
-					player.sendMessage(L.get("NO_TRADE_PERMISSION"));
+					player.sendMessage(L.get("SELLALL_INVALID"));
 				}
 			} else {
-				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
+				player.sendMessage(L.get("NO_TRADE_PERMISSION"));
 			}
-		//} catch (Exception e) {
-		//	player.sendMessage(L.get("SELLALL_INVALID"));
-		//	return true;
-		//}
+		} else {
+			player.sendMessage(L.get("MUST_BE_IN_SHOP"));
+		}
 		return true;
 	}
-	
 	
 	
 	
