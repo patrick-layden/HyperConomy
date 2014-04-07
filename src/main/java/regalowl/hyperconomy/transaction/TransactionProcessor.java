@@ -720,8 +720,7 @@ public class TransactionProcessor {
 			Player p = hp.getPlayer();
 			String nenchant = hyperObject.getEnchantmentName();
 			Enchantment ench = Enchantment.getByName(nenchant);
-			int shopstock = 0;
-			shopstock = (int) hyperObject.getStock();
+			double shopstock = hyperObject.getStock();
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getDisplayName()), hyperObject);
 				heh.fireTransactionEvent(pt, response);
@@ -731,14 +730,14 @@ public class TransactionProcessor {
 				heh.fireTransactionEvent(pt, response);
 				return response;
 			}
-			if (shopstock >= 1) {
+			if (shopstock >= 1.0) {
 				String mater = p.getItemInHand().getType().toString();
 				double price = hyperObject.getBuyPrice(EnchantmentClass.fromString(mater));
 				price = price + hyperObject.getPurchaseTax(price);
 				if (!new HyperItemStack(p.getItemInHand()).containsEnchantment(ench)) {
 					if (hp.hasBalance(price)) {
 						if (new HyperItemStack(p.getItemInHand()).canAcceptEnchantment(ench)) {
-							hyperObject.setStock(shopstock - 1);
+							hyperObject.setStock(shopstock - 1.0);
 							hp.withdraw(price);
 							tradePartner.deposit(price);
 							resetBalanceIfUnlimited();
