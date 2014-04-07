@@ -147,7 +147,10 @@ public class HyperEconomy implements DataLoadListener {
 				return;
 			}
 			loaded = true;
-			QueryResult result = sr.select("SELECT * FROM hyperconomy_composites");
+			QueryResult result = sr.select("SELECT hyperconomy_objects.NAME, hyperconomy_objects.DISPLAY_NAME, "
+					+ "hyperconomy_objects.ALIASES, hyperconomy_objects.TYPE, hyperconomy_composites.COMPONENTS,"
+					+ " hyperconomy_objects.DATA FROM hyperconomy_composites, hyperconomy_objects WHERE "
+					+ "hyperconomy_composites.NAME = hyperconomy_objects.NAME");
 			while (result.next()) {
 				String name = result.getString("NAME");
 				if (!componentsLoaded(name)) {

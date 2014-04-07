@@ -488,6 +488,8 @@ HCDATA_IMPORTMISSING_INVALID: &4Invalid parameters. Use /hcdata importmissing (e
 HCDATA_SETDEFAULTPRICES_INVALID: &4Invalid parameters. Use /hcdata setdefaultprices (economy)
 HCDATA_IMPORTYML_INVALID: &4Invalid parameters. Use /hcdata importyml [economy]
 HCDATA_EXPORTYML_INVALID: &4Invalid parameters. Use /hcdata exportyml [economy]
+HCDATA_UPDATEITEMSTACK_INVALID: &4Invalid parameters. Use /hcdata updateitemstack [object]
+HCDATA_ITEMSTACK_UPDATED: &6ItemStack updated!
 MUST_DISABLE_COMPOSITES: &4You must disable composite items to use this command.
 NAME_REPAIR_ATTEMPTED: &6Name repair attempted.
 LOGS_CLEARED: &6HyperConomy log tables cleared.
@@ -502,3 +504,4 @@ HCECONOMY_ACCOUNT_INVALID: &4Invalid parameters. Use /hceconomy account [name] [
 EVALUE_STOCK: &9The global shop has &a%a &b%n &9available.
 EVALUE_SALE: &b%n &9can be sold for: &a%c%p
 EVALUE_PURCHASE: &b%n &9can be purchased for: &a%c%p
+OBJECT_NOT_FOUND: &4Object not found.

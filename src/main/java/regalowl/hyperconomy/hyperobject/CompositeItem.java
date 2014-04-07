@@ -215,6 +215,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		}
 		return value;
 	}
+	@Override
 	public double getSellPrice(int amount, HyperPlayer hp) {
 		double value = 0;
 		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
@@ -230,16 +231,6 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	
 	
 	
-	
-	//Override the following getter/setter methods to store data in composites table
-
-	@Override
-	public void setType(HyperObjectType type) {
-		this.type = type;
-		String statement = "UPDATE hyperconomy_composites SET TYPE='" + type + "' WHERE NAME = '" + this.name + "'";
-		hc.getSQLWrite().addToQueue(statement);
-	}
-
 
 	//The setStock method updates the stock for all component items to the correct level.
 	
@@ -264,6 +255,29 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	
 	@Override
+	public void setComponents(String components) {
+		String statement = "UPDATE hyperconomy_composites SET COMPONENTS='" + components + "' WHERE NAME = '" + this.name + "'";
+		hc.getSQLWrite().addToQueue(statement);
+		this.components.clear();
+		HashMap<String,String> tempComponents = cf.explodeMap(components);
+		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
+		    String oname = entry.getKey();
+		    String amountString = entry.getValue();
+		    double amount = 0.0;
+		    if (amountString.contains("/")) {
+				int top = Integer.parseInt(amountString.substring(0, amountString.indexOf("/")));
+				int bottom = Integer.parseInt(amountString.substring(amountString.indexOf("/") + 1, amountString.length()));
+				amount = ((double)top/(double)bottom);
+		    } else {
+		    	int number = Integer.parseInt(amountString);
+		    	amount = (double)number;
+		    }
+		    HyperObject ho = hc.getDataManager().getEconomy(economy).getHyperObject(oname);
+		    this.components.put(ho, amount);
+		}
+	}
+	
+	@Override
 	public void setName(String name) {
 		String statement = "UPDATE hyperconomy_composites SET NAME='" + name + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
@@ -279,32 +293,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		String statement = "UPDATE hyperconomy_composites SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
 	}
-	@Override
-	public void setAliases(ArrayList<String> newAliases) {
-		aliases.clear();
-		for (String cAlias:newAliases) {
-			aliases.add(cAlias);
-		}
-		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
-		String statement = "UPDATE hyperconomy_composites SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "'";
-		hc.getSQLWrite().addToQueue(statement);
-	}
-	@Override
-	public void addAlias(String addAlias) {
-		if (aliases.contains(addAlias)) {return;}
-		aliases.add(addAlias);
-		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
-		String statement = "UPDATE hyperconomy_composites SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "'";
-		hc.getSQLWrite().addToQueue(statement);
-	}
-	@Override
-	public void removeAlias(String removeAlias) {
-		if (!aliases.contains(removeAlias)) {return;}
-		aliases.remove(removeAlias);
-		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
-		String statement = "UPDATE hyperconomy_composites SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "'";
-		hc.getSQLWrite().addToQueue(statement);
-	}
+
 
 
 	
@@ -330,8 +319,9 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	public void setIsstatic(String isstatic) {}
 	@Override
 	public void setStaticprice(double staticprice) {}
-	
-	
+	@Override
+	public void setType(HyperObjectType type) {}
+
 	
 	
 

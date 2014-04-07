@@ -548,6 +548,8 @@ public class BasicObject implements HyperObject {
 	//COMPOSITE ITEM METHODS
 	@Override
 	public ConcurrentHashMap<HyperObject, Double> getComponents() {return null;}
+	@Override
+	public void setComponents(String components) {}
 	
 	
 	

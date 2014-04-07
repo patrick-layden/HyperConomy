@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.sql.QueryResult;
@@ -15,6 +18,7 @@ import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.util.Backup;
 import regalowl.hyperconomy.util.LanguageFile;
 
@@ -203,6 +207,36 @@ public class Hcdata implements CommandExecutor {
 				hc.restart();
 			} catch (Exception e) {
 				hc.gDB().writeError(e);
+			}
+		} else if (args[0].equalsIgnoreCase("updateitemstack") || args[0].equalsIgnoreCase("uis")) {
+			try {
+				if (args.length != 2) {
+					sender.sendMessage(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
+					return true;
+				}
+				Player p = null;
+				if (sender instanceof Player) {
+					p = (Player)sender;
+				}
+				if (p == null) {
+					sender.sendMessage(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
+					return true;
+				}
+				HyperObject ho = em.getHyperPlayer(p).getHyperEconomy().getHyperObject(args[1]);
+				if (ho == null) {
+					sender.sendMessage(L.get("OBJECT_NOT_FOUND"));
+					return true;
+				}
+				ItemStack stack = p.getItemInHand();
+				if (stack.getType() == Material.AIR) {
+					sender.sendMessage(L.get("AIR_CANT_BE_TRADED"));
+					return true;
+				}
+				SerializableItemStack sis = new SerializableItemStack(stack);
+				ho.setData(sis.serialize());
+				sender.sendMessage(L.get("HCDATA_ITEMSTACK_UPDATED"));
+			} catch (Exception e) {
+				sender.sendMessage(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("backup")) {
 			try {

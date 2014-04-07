@@ -3,7 +3,7 @@ package regalowl.hyperconomy.command;
 
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,12 +12,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.display.InfoSign;
-import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.display.SignType;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.util.LanguageFile;

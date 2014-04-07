@@ -337,6 +337,10 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * composite items.)
 	 */
 	public ConcurrentHashMap<HyperObject,Double> getComponents();
+	/**Sets this object's component list string.  (Can only be used with composite items.)
+	 * @param components
+	 */
+	public void setComponents(String components);
 	
 	
 	//ENCHANTMENT METHODS

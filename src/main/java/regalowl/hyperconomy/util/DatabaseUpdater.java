@@ -23,7 +23,7 @@ public class DatabaseUpdater {
 
 	private HyperConomy hc;
 	private ArrayList<String> tables = new ArrayList<String>();
-	public final double version = 1.29;
+	public final double version = 1.30;
 	
 	public DatabaseUpdater() {
 		hc = HyperConomy.hc;
@@ -72,7 +72,7 @@ public class DatabaseUpdater {
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_info_signs (WORLD VARCHAR(255) NOT NULL, X INTEGER NOT NULL, Y INTEGER NOT NULL, Z INTEGER NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, TYPE VARCHAR(255) NOT NULL, MULTIPLIER INTEGER NOT NULL, ECONOMY VARCHAR(255) NOT NULL, ECLASS VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_item_displays (WORLD VARCHAR(255) NOT NULL, X DOUBLE NOT NULL, Y DOUBLE NOT NULL, Z DOUBLE NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
 		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_economies (NAME VARCHAR(255) NOT NULL PRIMARY KEY, HYPERACCOUNT VARCHAR(255) NOT NULL)");
-		sw.convertExecuteSynchronously(sw.longText("CREATE TABLE IF NOT EXISTS hyperconomy_composites (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), COMPONENTS VARCHAR(1000), TYPE TINYTEXT, DATA TEXT)"));
+		sw.convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_composites (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), COMPONENTS VARCHAR(1000))");
 		if (!copydatabase) {
 			sw.convertExecuteSynchronously("DELETE FROM hyperconomy_settings");
 			sw.convertExecuteSynchronously("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getDataManager().getDatabaseUpdater().getVersion()+"', NOW() )");
@@ -92,14 +92,12 @@ public class DatabaseUpdater {
 			double version = Double.parseDouble(qr.getString("VALUE"));
 			if (version < 1.24) {
 				//update fixes frameshop table
-				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.24.");
 				hc.getSQLWrite().executeSynchronously("DROP TABLE hyperconomy_frame_shops");
 				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
 				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.24' WHERE SETTING = 'version'");
 			}
 			if (version < 1.25) {
 				//update adds buy/sell prices to player shops and a max stock setting
-				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.25.");
 				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects_temp (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
 				hc.getSQLWrite().convertExecuteSynchronously("INSERT INTO hyperconomy_shop_objects_temp (SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,STATUS) SELECT SHOP,HYPEROBJECT,QUANTITY,PRICE,PRICE,STATUS FROM hyperconomy_shop_objects");
 				hc.getSQLWrite().executeSynchronously("DROP TABLE hyperconomy_shop_objects");
@@ -110,13 +108,11 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.26) {
 				//adds banks
-				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.26.");
 				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_banks (NAME VARCHAR(255) NOT NULL PRIMARY KEY, BALANCE DOUBLE NOT NULL DEFAULT '0', OWNERS VARCHAR(255), MEMBERS VARCHAR(255))");
 				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.26' WHERE SETTING = 'version'");
 			}
 			if (version < 1.27) {
 				//moves shops, infosigns, economies, and item displays to the database
-				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.27.");
 				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shops (NAME VARCHAR(255) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
 				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_info_signs (WORLD VARCHAR(255) NOT NULL, X INTEGER NOT NULL, Y INTEGER NOT NULL, Z INTEGER NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, TYPE VARCHAR(255) NOT NULL, MULTIPLIER INTEGER NOT NULL, ECONOMY VARCHAR(255) NOT NULL, ECLASS VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
 				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_item_displays (WORLD VARCHAR(255) NOT NULL, X DOUBLE NOT NULL, Y DOUBLE NOT NULL, Z DOUBLE NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");	
@@ -248,7 +244,6 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.28) {
 				//removes id increment field and adds SHOP, HYPEROBJECT primary key to shop objects table to guarantee no duplicates
-				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.28.");
 				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects_temp (SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL, PRIMARY KEY(SHOP, HYPEROBJECT))");
 				hc.getSQLWrite().executeSynchronously("INSERT INTO hyperconomy_shop_objects_temp (SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS) SELECT SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS FROM hyperconomy_shop_objects");
 				hc.getSQLWrite().executeSynchronously("DROP TABLE hyperconomy_shop_objects");
@@ -258,9 +253,7 @@ public class DatabaseUpdater {
 				hc.getSQLWrite().executeSynchronously("UPDATE hyperconomy_settings SET VALUE = '1.28' WHERE SETTING = 'version'");
 			}
 			if (version < 1.29) {
-				//removes item data fields and adds single item data text field to hyperobjects table, imports composites.yml to database
-				hc.getLogger().info("[HyperConomy]Updating HyperConomy database to version 1.29.");
-
+				//removes item data fields and adds single item data text field to hyperobjects table; imports composites.yml to database
 				hc.getSQLWrite().convertExecuteSynchronously(hc.getSQLWrite().longText("CREATE TABLE IF NOT EXISTS hyperconomy_composites (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), COMPONENTS VARCHAR(1000), TYPE TINYTEXT, DATA TEXT)"));
 				hc.gYH().registerFileConfiguration("composites");
 				FileConfiguration cps = hc.gYH().gFC("composites");
@@ -329,6 +322,16 @@ public class DatabaseUpdater {
 				hc.getSQLWrite().addToQueue("UPDATE hyperconomy_settings SET VALUE = '1.29' WHERE SETTING = 'version'");
 				hc.restart();
 				return;
+			}
+			if (version < 1.30) {
+				//removes unnecessary fields from composites table
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_composites_temp (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), COMPONENTS VARCHAR(1000))");
+				hc.getSQLWrite().executeSynchronously("INSERT INTO hyperconomy_composites_temp (NAME, DISPLAY_NAME, COMPONENTS) SELECT NAME, DISPLAY_NAME, COMPONENTS FROM hyperconomy_composites");
+				hc.getSQLWrite().executeSynchronously("DROP TABLE hyperconomy_composites");
+				hc.getSQLWrite().convertExecuteSynchronously("CREATE TABLE IF NOT EXISTS hyperconomy_composites (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), COMPONENTS VARCHAR(1000))");
+				hc.getSQLWrite().executeSynchronously("INSERT INTO hyperconomy_composites (NAME, DISPLAY_NAME, COMPONENTS) SELECT NAME, DISPLAY_NAME, COMPONENTS FROM hyperconomy_composites_temp");
+				hc.getSQLWrite().addToQueue("DROP TABLE hyperconomy_composites_temp");
+				hc.getSQLWrite().addToQueue("UPDATE hyperconomy_settings SET VALUE = '1.30' WHERE SETTING = 'version'");
 			}
 		} else {
 			createTables(hc.getSQLWrite(), false);
