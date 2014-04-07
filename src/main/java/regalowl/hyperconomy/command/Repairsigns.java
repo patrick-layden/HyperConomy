@@ -3,6 +3,7 @@ package regalowl.hyperconomy.command;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,8 +12,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
+import regalowl.databukkit.sql.QueryResult;
+import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.display.InfoSign;
 import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.display.SignType;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
@@ -76,6 +80,12 @@ public class Repairsigns {
 										type = stype.toString();
 									}
 									if (type != null) {
+										HashMap<String,String> conditions = new HashMap<String,String>();
+										conditions.put("WORLD", s.getBlock().getWorld().getName());
+										conditions.put("X", s.getBlock().getX()+"");
+										conditions.put("Y", s.getBlock().getY()+"");
+										conditions.put("Z", s.getBlock().getZ()+"");
+										hc.getSQLWrite().performDelete("hyperconomy_info_signs", conditions);
 										HashMap<String,String> values = new HashMap<String,String>();
 										values.put("WORLD", s.getBlock().getWorld().getName());
 										values.put("X", s.getBlock().getX()+"");
@@ -102,9 +112,12 @@ public class Repairsigns {
 				}
 			}
 			if (signsRepaired > 0) {
-				InfoSignHandler is = hc.getInfoSignHandler();
-				is.reloadSigns();
-				is.updateSigns();
+				hc.getInfoSignHandler().reloadSigns();
+				hc.getServer().getScheduler().runTaskLater(hc, new Runnable() {
+					public void run() {
+						HyperConomy.hc.getInfoSignHandler().updateSigns();
+					}
+				}, 60L);
 				player.sendMessage(L.f(L.get("X_SIGNS_REPAIRED"), signsRepaired));
 			} else {
 				player.sendMessage(L.get("NO_SIGNS_FOUND"));
