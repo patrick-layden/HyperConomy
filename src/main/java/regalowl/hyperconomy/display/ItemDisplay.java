@@ -4,6 +4,7 @@ package regalowl.hyperconomy.display;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,7 +28,6 @@ public class ItemDisplay {
 	
 	private HyperConomy hc;
 	private Item item;
-	private Location location;
 	private String name;
 	private double x;
 	private double y;
@@ -38,13 +38,12 @@ public class ItemDisplay {
 	
 	ItemDisplay(Location location, String name, boolean newDisplay) {
 		this.hc = HyperConomy.hc;
-		this.location = location;
 		this.active = false;
 		HyperEconomy he = hc.getDataManager().getEconomy("default");
-		this.x = this.location.getX();
-		this.y = this.location.getY();
-		this.z = this.location.getZ();
-		this.w = this.location.getWorld().getName();
+		this.x = location.getX();
+		this.y = location.getY();
+		this.z = location.getZ();
+		this.w = location.getWorld().getName();
 		this.name = he.fixName(name);
 		if (newDisplay) {
 			HashMap<String,String> values = new HashMap<String,String>();
@@ -80,11 +79,11 @@ public class ItemDisplay {
 	}
 	
 	public Location getLocation() {
-		return location;
+		return new Location(Bukkit.getWorld(w),x,y,z);
 	}
 	
 	public Chunk getChunk() {
-		return location.getChunk();
+		return getLocation().getChunk();
 	}
 	
 	public String getName() {
@@ -92,19 +91,19 @@ public class ItemDisplay {
 	}
 	
 	public double getX() {
-		return location.getX();
+		return x;
 	}
 	
 	public double getY() {
-		return location.getY();
+		return y;
 	}
 	
 	public double getZ() {
-		return location.getZ();
+		return z;
 	}
 	
 	public World getWorld() {
-		return location.getWorld();
+		return Bukkit.getWorld(w);
 	}
 	
 	public int getEntityId() {
@@ -116,7 +115,7 @@ public class ItemDisplay {
 	}
 	
 	public void makeDisplay() {
-		if (!location.getChunk().isLoaded()) {return;}
+		if (!getLocation().getChunk().isLoaded()) {return;}
 		HyperEconomy he = hc.getDataManager().getEconomy("default");
 		Location l = new Location(getWorld(), x, y + 1, z);
 		ItemStack dropstack = he.getHyperObject(name).getItemStack();
@@ -156,7 +155,6 @@ public class ItemDisplay {
 	public void clear() {
 		removeItem();
 		hc = null;
-		location = null;
 		w = null;
 		name = null;
 		item = null;
@@ -183,10 +181,10 @@ public class ItemDisplay {
 		int da = displayItem.getDamageValue();
 		if (type == dropType) {
 			if (da == dropda) {
-				if (dropworld.equals(location.getWorld())) {
-					if (Math.abs(dropx - location.getX()) < 10) {
-						if (Math.abs(dropz - location.getZ()) < 10) {
-							if (Math.abs(dropy - location.getY()) < 30) {
+				if (dropworld.equals(getWorld())) {
+					if (Math.abs(dropx - x) < 10) {
+						if (Math.abs(dropz - z) < 10) {
+							if (Math.abs(dropy - y) < 30) {
 								return true;
 							} else {
 								droppedItem.setVelocity(new Vector(0,0,0));
@@ -194,7 +192,7 @@ public class ItemDisplay {
 								while (dblock.getType().equals(Material.AIR)) {
 									dblock = dblock.getRelative(BlockFace.DOWN);
 								}
-								if (dblock.getLocation().getY() <= (location.getBlockY() + 10)) {
+								if (dblock.getLocation().getY() <= (y + 10)) {
 									return true;
 								}
 							}
@@ -228,7 +226,7 @@ public class ItemDisplay {
 	public void clearNearbyItems(double radius, boolean removeDisplays, boolean removeSelf) {
 		HyperObject hi = getHyperObject();
 		if (hi == null) {return;}
-		Item tempItem = getWorld().dropItem(location, hi.getItemStack());
+		Item tempItem = getWorld().dropItem(getLocation(), hi.getItemStack());
 		List<Entity> nearbyEntities = tempItem.getNearbyEntities(radius, radius, radius);
 		for (Entity entity : nearbyEntities) {
 			if (!(entity instanceof Item)) {continue;}

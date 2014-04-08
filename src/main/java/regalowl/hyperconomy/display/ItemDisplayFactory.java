@@ -37,6 +37,7 @@ public class ItemDisplayFactory implements Listener {
 	private final long refreshInterval = 4800L;
 	//private final long refreshInterval = 100L;
 	private ConcurrentHashMap<String, ItemDisplay> displays = new ConcurrentHashMap<String, ItemDisplay>();
+	private QueryResult dbData;
 
 
 	public ItemDisplayFactory() {
@@ -59,21 +60,22 @@ public class ItemDisplayFactory implements Listener {
 			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 				public void run() {
 					SQLRead sr = hc.getSQLRead();
-					QueryResult result = sr.select("SELECT * FROM hyperconomy_item_displays");
-					while (result.next()) {
-						World w = Bukkit.getWorld(result.getString("WORLD"));
-						double x = result.getDouble("X");
-						double y = result.getDouble("Y");
-						double z = result.getDouble("Z");
-						String name = result.getString("HYPEROBJECT");
-						Location l = new Location(w,x,y,z);
-						ItemDisplay display = new ItemDisplay(l, name, false);
-						String hkey = (int) Math.floor(x) + ":" + (int) Math.floor(y) + ":" + (int) Math.floor(z) + ":" + w.getName();
-						displays.put(hkey, display);
-					}
-					result.close();
+					dbData = sr.select("SELECT * FROM hyperconomy_item_displays");
 					hc.getServer().getScheduler().runTask(hc, new Runnable() {
 						public void run() {
+							while (dbData.next()) {
+								World w = Bukkit.getWorld(dbData.getString("WORLD"));
+								double x = dbData.getDouble("X");
+								double y = dbData.getDouble("Y");
+								double z = dbData.getDouble("Z");
+								String name = dbData.getString("HYPEROBJECT");
+								Location l = new Location(w,x,y,z);
+								ItemDisplay display = new ItemDisplay(l, name, false);
+								String hkey = (int) Math.floor(x) + ":" + (int) Math.floor(y) + ":" + (int) Math.floor(z) + ":" + w;
+								displays.put(hkey, display);
+							}
+							dbData.close();
+							dbData = null;
 							for (ItemDisplay display:displays.values()) {
 								display.makeDisplay();
 								display.clearNearbyItems(7,false,false);

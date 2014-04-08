@@ -29,6 +29,7 @@ public class FrameShopHandler implements Listener {
 	private HyperConomy hc;
 	private DataManager em;
 	private HashMap<String, FrameShop> frameShops = new HashMap<String, FrameShop>();
+	private QueryResult dbData;
 
 	public FrameShopHandler() {
 		hc = HyperConomy.hc;
@@ -41,24 +42,29 @@ public class FrameShopHandler implements Listener {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				frameShops.clear();
-				QueryResult result = hc.getSQLRead().select("SELECT * FROM hyperconomy_frame_shops");
-				while (result.next()) {
-					double x = result.getDouble("X");
-					double y = result.getDouble("Y");
-					double z = result.getDouble("Z");
-					World w = Bukkit.getWorld(result.getString("WORLD"));
-					Location l = new Location(w, x, y, z);
-					Shop s = em.getShop(result.getString("SHOP"));
-					String economy = em.getDefaultEconomy().getName();
-					if (s != null) {
-						economy = s.getEconomy();
-					}
-					HyperObject ho = em.getEconomy(economy).getHyperObject(result.getString("HYPEROBJECT"), s);
-					FrameShop fs = new FrameShop((short) (int) result.getInt("ID"), l, ho, s, result.getInt("TRADE_AMOUNT"));
-					frameShops.put(fs.getKey(), fs);
+				dbData = hc.getSQLRead().select("SELECT * FROM hyperconomy_frame_shops");
+				hc.getServer().getScheduler().runTask(hc, new Runnable() {
+					public void run() {
+						while (dbData.next()) {
+							double x = dbData.getDouble("X");
+							double y = dbData.getDouble("Y");
+							double z = dbData.getDouble("Z");
+							World w = Bukkit.getWorld(dbData.getString("WORLD"));
+							Location l = new Location(w, x, y, z);
+							Shop s = em.getShop(dbData.getString("SHOP"));
+							String economy = em.getDefaultEconomy().getName();
+							if (s != null) {
+								economy = s.getEconomy();
+							}
+							HyperObject ho = em.getEconomy(economy).getHyperObject(dbData.getString("HYPEROBJECT"), s);
+							FrameShop fs = new FrameShop((short) (int) dbData.getInt("ID"), l, ho, s, dbData.getInt("TRADE_AMOUNT"));
+							frameShops.put(fs.getKey(), fs);
 
-				}
-				result.close();
+						}
+						dbData.close();
+						dbData = null;
+					}
+				});
 			}
 		});
 	}

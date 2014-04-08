@@ -28,6 +28,7 @@ public class InfoSignHandler implements Listener {
 	private ConcurrentHashMap<Integer, InfoSign> infoSigns = new ConcurrentHashMap<Integer, InfoSign>();
 	private AtomicInteger signCounter = new AtomicInteger();
 	private final long signUpdateInterval = 1L;
+	private QueryResult dbData;
 
 
 	public InfoSignHandler() {
@@ -44,13 +45,18 @@ public class InfoSignHandler implements Listener {
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
 				SQLRead sr = hc.getSQLRead();
-				QueryResult result = sr.select("SELECT * FROM hyperconomy_info_signs");
-				while (result.next()) {
-					Location l = new Location(Bukkit.getWorld(result.getString("WORLD")), result.getInt("X"),result.getInt("Y"),result.getInt("Z"));
-					infoSigns.put(signCounter.getAndIncrement(), new InfoSign(l, SignType.fromString(result.getString("TYPE")), result.getString("HYPEROBJECT"), 
-							result.getDouble("MULTIPLIER"), result.getString("ECONOMY"), EnchantmentClass.fromString(result.getString("ECLASS"))));
-				}
-				result.close();
+				dbData = sr.select("SELECT * FROM hyperconomy_info_signs");
+				hc.getServer().getScheduler().runTask(hc, new Runnable() {
+					public void run() {
+						while (dbData.next()) {
+							Location l = new Location(Bukkit.getWorld(dbData.getString("WORLD")), dbData.getInt("X"),dbData.getInt("Y"),dbData.getInt("Z"));
+							infoSigns.put(signCounter.getAndIncrement(), new InfoSign(l, SignType.fromString(dbData.getString("TYPE")), dbData.getString("HYPEROBJECT"), 
+									dbData.getDouble("MULTIPLIER"), dbData.getString("ECONOMY"), EnchantmentClass.fromString(dbData.getString("ECLASS"))));
+						}
+						dbData.close();
+						dbData = null;
+					}
+				});
 			}
 		});
 	}

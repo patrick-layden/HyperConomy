@@ -40,7 +40,6 @@ public class HyperEconomy implements DataLoadListener {
 	private SQLRead sr;
 	private String economyName;
 	private boolean dataLoaded;
-	
 	private String xpName = null;
 	
 

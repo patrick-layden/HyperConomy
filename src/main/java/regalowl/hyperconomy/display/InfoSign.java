@@ -102,10 +102,6 @@ public class InfoSign {
 			this.economy = economy;
 		}
 		ho = he.getHyperObject(this.objectName);
-		if (getSign() == null) {
-			deleteSign();
-			return;
-		}
 		line1 = ChatColor.stripColor(lines[0].trim());
 		line2 = ChatColor.stripColor(lines[1].trim());
 		if (line1.length() > 13) {
@@ -128,6 +124,10 @@ public class InfoSign {
 		values.put("ECONOMY", economy+"");
 		values.put("ECLASS", enchantClass.toString());
 		hc.getSQLWrite().performInsert("hyperconomy_info_signs", values);
+		if (getSign() == null) {
+			deleteSign();
+			return;
+		}
 	}
 	
 

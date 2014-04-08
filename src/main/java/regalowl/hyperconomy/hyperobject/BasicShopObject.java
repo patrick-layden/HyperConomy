@@ -25,7 +25,6 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	protected int maxStock;
 	
 	public BasicShopObject(PlayerShop playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status) {
-		new BasicObject();
 		hc = HyperConomy.hc;
 		sw = hc.getSQLWrite();
 		this.playerShop = playerShop;
