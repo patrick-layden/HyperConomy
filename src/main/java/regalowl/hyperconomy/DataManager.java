@@ -25,7 +25,6 @@ import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
@@ -320,17 +319,7 @@ public class DataManager implements Listener {
 			values.put("CEILING", ho.getCeiling()+"");
 			values.put("FLOOR", ho.getFloor()+"");
 			values.put("MAXSTOCK", ho.getMaxstock()+"");
-			if (ho.getType() == HyperObjectType.ITEM) {
-				values.put("DATA", ho.getData());
-			} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
-				values.put("MATERIAL", ho.getEnchantmentName());
-				values.put("DATA", "-1");
-				values.put("DURABILITY", "-1");
-			} else {
-				values.put("MATERIAL", "none");
-				values.put("DATA", "-1");
-				values.put("DURABILITY", "-1");
-			}
+			values.put("DATA", ho.getData());
 			sw.performInsert("hyperconomy_objects", values);
 		}
 		hc.restart();
