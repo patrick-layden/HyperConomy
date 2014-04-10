@@ -144,18 +144,30 @@ public class HyperAPI implements API {
 	
 	public HyperPlayer getHyperPlayer(String name) {
 		HyperConomy hc = HyperConomy.hc;
-		return hc.getDataManager().getHyperPlayer(name);
+		DataManager dm = hc.getDataManager();
+		if (dm.hyperPlayerExists(name)) {
+			return dm.getHyperPlayer(name);
+		} else {
+			return null;
+		}
 	}
+		
 	
 	public ArrayList<HyperObject> getEnchantmentHyperObjects(ItemStack stack, String player) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperPlayer hp = hc.getDataManager().getHyperPlayer(player);
-		return new HyperItemStack(stack).getEnchantmentObjects(hp.getEconomy());
+		DataManager dm = hc.getDataManager();
+		if (dm.hyperPlayerExists(player)) {
+			HyperPlayer hp = hc.getDataManager().getHyperPlayer(player);
+			return new HyperItemStack(stack).getEnchantmentObjects(hp.getEconomy());
+		} else {
+			return new HyperItemStack(stack).getEnchantmentObjects("default");
+		}
+
 	}
 
 	public TransactionResponse buy(Player p, HyperObject o, int amount) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p);
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 		pt.setHyperObject(o);
 		pt.setAmount(amount);
@@ -164,7 +176,7 @@ public class HyperAPI implements API {
 
 	public TransactionResponse buy(Player p, HyperObject o, int amount, Shop shop) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p);
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 		pt.setHyperObject(o);
 		pt.setAmount(amount);
@@ -174,7 +186,7 @@ public class HyperAPI implements API {
 	
 	public TransactionResponse sell(Player p, HyperObject o, int amount ) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p);
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 		pt.setHyperObject(o);
 		pt.setAmount(amount);
@@ -183,7 +195,7 @@ public class HyperAPI implements API {
 	
 	public TransactionResponse sell(Player p, HyperObject o, int amount, Shop shop) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p);
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 		pt.setHyperObject(o);
 		pt.setAmount(amount);
@@ -193,7 +205,7 @@ public class HyperAPI implements API {
 
 	public TransactionResponse sellAll(Player p) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p);
 		Sellall sa = new Sellall();
 		return sa.sellAll(hp, null);
 	}
@@ -242,7 +254,7 @@ public class HyperAPI implements API {
 
 	public TransactionResponse sellAll(Player p, Inventory inventory) {
 		HyperConomy hc = HyperConomy.hc;
-		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p.getName());
+		HyperPlayer hp = hc.getDataManager().getHyperPlayer(p);
 		DataManager em = hc.getDataManager();
 		HyperEconomy he = hp.getHyperEconomy();
 		TransactionResponse totalResponse = new TransactionResponse(hp);

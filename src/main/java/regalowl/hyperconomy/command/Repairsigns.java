@@ -90,7 +90,7 @@ public class Repairsigns {
 										values.put("HYPEROBJECT", objectName);
 										values.put("TYPE", type.toString());
 										values.put("MULTIPLIER", "1");
-										values.put("ECONOMY", em.getHyperPlayer(player.getName()).getEconomy());
+										values.put("ECONOMY", em.getHyperPlayer(player).getEconomy());
 										String eclass = "";
 										if (em.getEconomy("default").enchantTest(objectName)) {
 											eclass = EnchantmentClass.DIAMOND.toString();

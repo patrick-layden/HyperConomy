@@ -63,7 +63,7 @@ public class HyperEconomy implements DataLoadListener {
 				String account = sr.getString("hyperconomy_economies", "hyperaccount", conditions);
 				defaultAccount = hc.getDataManager().getAccount(account);
 				if (defaultAccount == null) {
-					defaultAccount = hc.getDataManager().getHyperPlayer(account);
+					defaultAccount = hc.getDataManager().getAccount(account);
 				} 
 			}
 		});

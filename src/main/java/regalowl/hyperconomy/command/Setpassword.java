@@ -20,7 +20,7 @@ public class Setpassword {
 		LanguageFile L = hc.getLanguageFile();
 
 		if (args.length == 1 && player != null) {
-			HyperPlayer hp = hc.getDataManager().getHyperPlayer(player.getName());
+			HyperPlayer hp = hc.getDataManager().getHyperPlayer(player);
 			String salt = generateSecureSalt();
 			hp.setSalt(salt);
 			String hash = sha256Digest(args[0] + salt);

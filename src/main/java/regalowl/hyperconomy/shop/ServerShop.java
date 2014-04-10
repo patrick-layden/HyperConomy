@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
-import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.util.LanguageFile;
 
@@ -39,7 +38,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	private ArrayList<String> inShop = new ArrayList<String>();
 	
 	
-	public ServerShop(String name, String economy, HyperPlayer owner, String message, Location p1, Location p2, String banned_objects) {
+	public ServerShop(String name, String economy, HyperAccount owner, String message, Location p1, Location p2, String banned_objects) {
 		loaded = false;
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
@@ -117,7 +116,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	 * @param economy
 	 * @param owner
 	 */
-	public ServerShop(String name, String economy, HyperPlayer owner) {
+	public ServerShop(String name, String economy, HyperAccount owner) {
 		loaded = false;
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
@@ -398,7 +397,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 				if (inShop(p)) {
 					inShop.add(p.getName());
 					sendEntryMessage(p);
-					hc.getDataManager().getHyperPlayer(p.getName()).setEconomy(economy);
+					hc.getDataManager().getHyperPlayer(p).setEconomy(economy);
 				}
 			}
 		}

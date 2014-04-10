@@ -22,7 +22,7 @@ public class Makedisplay {
 		}
 		DataManager em = hc.getDataManager();
 		ItemDisplayFactory itdi = hc.getItemDisplay();
-		HyperPlayer hp = em.getHyperPlayer(player.getName());
+		HyperPlayer hp = em.getHyperPlayer(player);
 		HyperEconomy he = hp.getHyperEconomy();
 		
 		if (args.length == 1) {

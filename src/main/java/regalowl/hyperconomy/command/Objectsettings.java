@@ -17,7 +17,7 @@ public class Objectsettings {
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0 && player != null) {
-				HyperPlayer hp = em.getHyperPlayer(player.getName());
+				HyperPlayer hp = em.getHyperPlayer(player);
 				HyperEconomy he = hp.getHyperEconomy();
 				HyperObject hob = he.getHyperObject(player.getItemInHand());
 				if (hob == null) {

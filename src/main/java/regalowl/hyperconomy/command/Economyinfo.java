@@ -15,7 +15,7 @@ public class Economyinfo {
 		try {
 			if (args.length == 0) {
 				if (player != null) {
-					sender.sendMessage(L.f(L.get("PART_OF_ECONOMY"), em.getHyperPlayer(player.getName()).getEconomy()));
+					sender.sendMessage(L.f(L.get("PART_OF_ECONOMY"), em.getHyperPlayer(player).getEconomy()));
 				} else {
 					sender.sendMessage(L.f(L.get("PART_OF_ECONOMY"), command.getNonPlayerEconomy()));
 				}

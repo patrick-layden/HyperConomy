@@ -138,6 +138,9 @@ public class Economy_HyperConomy implements Economy {
 		if (dm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_ALREADY_EXISTS"));
 		}
+		if (!dm.hyperPlayerExists(player)) {
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
+		}
 		HyperPlayer hp = dm.getHyperPlayer(player);
 		HyperBank hb = new HyperBank(name, hp);
 		dm.addHyperBank(hb);
@@ -201,14 +204,14 @@ public class Economy_HyperConomy implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
 		if (!dm.hyperPlayerExists(name)) {
-			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player is not bank's owner.");
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
 		HyperBank hb = dm.getHyperBank(name);
 		HyperPlayer hp = dm.getHyperPlayer(playerName);
 		if (hb.isOwner(hp)) {
 			return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 		} else {
-			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player is not bank's owner.");
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_OWNER"));
 		}
 	}
 
@@ -219,14 +222,14 @@ public class Economy_HyperConomy implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
 		if (!dm.hyperPlayerExists(name)) {
-			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player is not a bank member.");
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
 		HyperBank hb = dm.getHyperBank(name);
 		HyperPlayer hp = dm.getHyperPlayer(playerName);
 		if (hb.isMember(hp)) {
 			return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 		} else {
-			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player is not a bank member.");
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_MEMBER"));
 		}
 	}
 

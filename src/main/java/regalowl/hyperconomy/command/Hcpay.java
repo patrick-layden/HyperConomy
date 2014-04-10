@@ -20,8 +20,8 @@ public class Hcpay {
 					return;
 				}
 				if (em.accountExists(recipient)) {
-					if (em.getHyperPlayer(player.getName()).hasBalance(amount)) {
-						em.getHyperPlayer(player.getName()).withdraw(amount);
+					if (em.getHyperPlayer(player).hasBalance(amount)) {
+						em.getHyperPlayer(player).withdraw(amount);
 						em.getAccount(recipient).deposit(amount);
 						player.sendMessage(L.f(L.get("MONEY_PAYED"), amount, recipient));
 					} else {

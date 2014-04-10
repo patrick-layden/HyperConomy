@@ -36,7 +36,7 @@ public class Hcbank implements CommandExecutor {
 			player = (Player)sender;
 		}
 		if (player == null) {return true;}
-		HyperPlayer hp = em.getHyperPlayer(player.getName());
+		HyperPlayer hp = em.getHyperPlayer(player);
 		if (args.length == 0) {
 			player.sendMessage(L.get("HCBANK_HELP"));
 			return true;

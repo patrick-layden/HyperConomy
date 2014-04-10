@@ -41,7 +41,7 @@ public class TransactionSign implements Listener {
 		try {
 			if (hc.gYH().gFC("config").getBoolean("enable-feature.scrolling-transaction-signs")) {
 				Player p = event.getPlayer();
-				HyperEconomy he = em.getHyperPlayer(p.getName()).getHyperEconomy();
+				HyperEconomy he = em.getHyperPlayer(p).getHyperEconomy();
 				Block b = null;
 				try {
 					b = p.getTargetBlock(null, 500);
@@ -158,7 +158,7 @@ public class TransactionSign implements Listener {
 			if (!hc.gYH().gFC("config").getBoolean("enable-feature.transaction-signs")) {return;}
 			Player p = ievent.getPlayer();
 			if (p == null) {return;}
-			HyperEconomy he = em.getHyperPlayer(p.getName()).getHyperEconomy();
+			HyperEconomy he = em.getHyperPlayer(p).getHyperEconomy();
 			if (p.isSneaking() && p.hasPermission("hyperconomy.admin")) {return;}
 			LanguageFile L = hc.getLanguageFile();
 			boolean requireShop = hc.gYH().gFC("config").getBoolean("shop.require-transaction-signs-to-be-in-shop");

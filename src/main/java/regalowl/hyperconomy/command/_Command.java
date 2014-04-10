@@ -24,7 +24,7 @@ public class _Command {
 		player = null;
 		if (sender instanceof Player) {
 			player = (Player) sender;
-			playerecon = em.getHyperPlayer(player.getName()).getEconomy();
+			playerecon = em.getHyperPlayer(player).getEconomy();
 		} else {
 			playerecon = nonPlayerEconomy;
 		}

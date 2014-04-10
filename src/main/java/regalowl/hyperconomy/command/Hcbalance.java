@@ -15,7 +15,7 @@ public class Hcbalance {
 		try {
 			if (args.length == 0 && player != null) {
 				double balance = 0;
-				balance = em.getHyperPlayer(player.getName()).getBalance();
+				balance = em.getHyperPlayer(player).getBalance();
 				sender.sendMessage(L.get("SHOP_LINE_BREAK"));
 				sender.sendMessage(L.f(L.get("PLAYER_BALANCE_MESSAGE"), "", L.formatMoney(balance)));
 				sender.sendMessage(L.get("SHOP_LINE_BREAK"));

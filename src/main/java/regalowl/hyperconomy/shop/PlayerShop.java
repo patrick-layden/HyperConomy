@@ -55,7 +55,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	
 	
-	public PlayerShop(String name, String economy, HyperPlayer owner, String message, Location p1, Location p2, String banned_objects, String allowed_players) {
+	public PlayerShop(String name, String economy, HyperAccount owner, String message, Location p1, Location p2, String banned_objects, String allowed_players) {
 		loaded = false;
 		hc = HyperConomy.hc;
 		cf = hc.getDataBukkit().getCommonFunctions();
@@ -547,7 +547,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				if (inShop(p)) {
 					inShop.add(p.getName());
 					sendEntryMessage(p);
-					hc.getDataManager().getHyperPlayer(p.getName()).setEconomy(economy);
+					hc.getDataManager().getHyperPlayer(p).setEconomy(economy);
 				}
 			}
 		}

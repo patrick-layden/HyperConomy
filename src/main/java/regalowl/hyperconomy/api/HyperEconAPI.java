@@ -29,7 +29,7 @@ public class HyperEconAPI implements EconomyAPI {
 		if (!hc.getDataManager().hyperPlayerExists(player.getName())) {
 			return;
 		}
-		hc.getDataManager().getHyperPlayer(player.getName()).withdraw(money);
+		hc.getDataManager().getHyperPlayer(player).withdraw(money);
 	}
 
 	public void withdrawAccount(double money, String name) {
@@ -45,7 +45,7 @@ public class HyperEconAPI implements EconomyAPI {
 		if (!hc.getDataManager().hyperPlayerExists(player.getName())) {
 			return;
 		}
-		hc.getDataManager().getHyperPlayer(player.getName()).deposit(money);
+		hc.getDataManager().getHyperPlayer(player).deposit(money);
 	}
 
 	public void depositAccount(double money, String name) {

@@ -24,7 +24,7 @@ public class Hv {
 		DataManager em = hc.getDataManager();
 		int amount;
 		try {
-			HyperPlayer hp = em.getHyperPlayer(player.getName());
+			HyperPlayer hp = em.getHyperPlayer(player);
 			HyperEconomy he = hp.getHyperEconomy();
 			boolean requireShop = hc.gYH().gFC("config").getBoolean("shop.limit-info-commands-to-shops");
 			if ((requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {

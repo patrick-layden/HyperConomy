@@ -48,7 +48,7 @@ public class Manageshop implements CommandExecutor {
 			player = (Player)sender;
 		}
 		if (player == null) {return true;}
-		HyperPlayer hp = em.getHyperPlayer(player.getName());
+		HyperPlayer hp = em.getHyperPlayer(player);
 		HyperEconomy he = em.getEconomy(hp.getEconomy());
 		if (em.inAnyShop(player)) {
 			Shop s = em.getShop(player);

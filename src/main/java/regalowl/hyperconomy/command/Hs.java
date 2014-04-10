@@ -27,7 +27,7 @@ public class Hs {
 				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 				return;
 			}
-			HyperPlayer hp = em.getHyperPlayer(player.getName());
+			HyperPlayer hp = em.getHyperPlayer(player);
 			HyperEconomy he = hp.getHyperEconomy();
 			if (em.inAnyShop(player)) {
 				if (hp.hasSellPermission(em.getShop(player))) {

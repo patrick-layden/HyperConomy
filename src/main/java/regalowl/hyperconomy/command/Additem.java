@@ -62,7 +62,7 @@ public class Additem implements CommandExecutor {
 				player.sendMessage(L.get("AIR_CANT_BE_TRADED"));
 				return true;
 			}
-			HyperEconomy econ = em.getHyperPlayer(player.getName()).getHyperEconomy();
+			HyperEconomy econ = em.getHyperPlayer(player).getHyperEconomy();
 			HyperObject ho =  econ.getHyperObject(player.getItemInHand());
 			if (ho != null) {
 				player.sendMessage(L.get("ALREADY_IN_DATABASE"));

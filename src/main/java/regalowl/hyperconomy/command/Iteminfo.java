@@ -16,7 +16,7 @@ public class Iteminfo {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		DataManager em = hc.getDataManager();
-		HyperPlayer hp = em.getHyperPlayer(player.getName());
+		HyperPlayer hp = em.getHyperPlayer(player);
 		HyperEconomy he = hp.getHyperEconomy();
 		SerializableItemStack sis = null;
 		HyperObject ho = null;

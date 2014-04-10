@@ -26,7 +26,7 @@ public class Hb {
 		double amount;
 		boolean ma = false;
 		try {
-			HyperPlayer hp = em.getHyperPlayer(player.getName());
+			HyperPlayer hp = em.getHyperPlayer(player);
 			HyperEconomy he = hp.getHyperEconomy();
 			if (em.inAnyShop(player)) {
 				if (hp.hasBuyPermission(em.getShop(player))) {

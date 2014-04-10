@@ -44,7 +44,7 @@ public class Servershopcommand implements CommandExecutor {
 		if (player == null) {
 			return true;
 		}
-		HyperPlayer hp = em.getHyperPlayer(player.getName());
+		HyperPlayer hp = em.getHyperPlayer(player);
 		if (em.inAnyShop(player)) {
 			Shop s = em.getShop(player);
 			if (s instanceof ServerShop) {

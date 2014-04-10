@@ -151,7 +151,7 @@ public class DataManager implements Listener {
 						playerData.close();
 						playerData = null;
 						if (!accountExists(defaultServerShopAccount)) {
-							HyperPlayer defaultAccount = getHyperPlayer(defaultServerShopAccount);
+							HyperAccount defaultAccount = getAccount(defaultServerShopAccount);
 							defaultAccount.setBalance(hc.getConfig().getDouble("shop.default-server-shop-account-initial-balance"));
 						}
 						addOnlinePlayers();
@@ -178,7 +178,7 @@ public class DataManager implements Listener {
 									String name = shopData.getString("NAME");
 									Location p1 = new Location(Bukkit.getWorld(shopData.getString("WORLD")), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
 									Location p2 = new Location(Bukkit.getWorld(shopData.getString("WORLD")), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
-									Shop shop = new ServerShop(name, shopData.getString("ECONOMY"), getHyperPlayer(shopData.getString("OWNER")), 
+									Shop shop = new ServerShop(name, shopData.getString("ECONOMY"), getAccount(shopData.getString("OWNER")), 
 											shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"));
 									shops.put(name, shop);
 								} else if (type.equalsIgnoreCase("player")) {
@@ -186,7 +186,7 @@ public class DataManager implements Listener {
 									String name = shopData.getString("NAME");
 									Location p1 = new Location(Bukkit.getWorld(shopData.getString("WORLD")), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
 									Location p2 = new Location(Bukkit.getWorld(shopData.getString("WORLD")), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
-									Shop shop = new PlayerShop(name, shopData.getString("ECONOMY"), getHyperPlayer(shopData.getString("OWNER")), 
+									Shop shop = new PlayerShop(name, shopData.getString("ECONOMY"), getAccount(shopData.getString("OWNER")), 
 											shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"), shopData.getString("ALLOWED_PLAYERS"));
 									shops.put(name, shop);
 								}
@@ -196,7 +196,7 @@ public class DataManager implements Listener {
 						}
 					});
 				} else {
-					Shop shop = new ServerShop("GlobalShop", getHyperPlayer(defaultServerShopAccount).getEconomy(), getHyperPlayer(defaultServerShopAccount));
+					Shop shop = new ServerShop("GlobalShop", "default", getAccount(defaultServerShopAccount));
 					shops.put("GlobalShop", shop);
 				}
 				stopShopCheck();
@@ -528,7 +528,7 @@ public class DataManager implements Listener {
 	}
 	
 	public HyperAccount getDefaultServerShopAccount() {
-		return getHyperPlayer(defaultServerShopAccount);
+		return getAccount(defaultServerShopAccount);
 	}
 	public boolean hyperPlayerExists(String name) {
 		String playerName = name.toLowerCase();
@@ -539,8 +539,9 @@ public class DataManager implements Listener {
 		}
 	}
 	
-
+	
 	public HyperPlayer getHyperPlayer(String player) {
+		if (player == null || player.equals("")) {return null;}
 		String playerName = player.toLowerCase();
 		if (hyperPlayers.containsKey(playerName) && hyperPlayers.get(playerName) != null) {
 			return hyperPlayers.get(playerName);
@@ -551,9 +552,12 @@ public class DataManager implements Listener {
 			return addPlayer(player);
 		}
 	}
+	
 	public HyperPlayer getHyperPlayer(Player player) {
+		if (player == null) {return null;}
 		return getHyperPlayer(player.getName());
 	}
+	
 	public ArrayList<HyperPlayer> getHyperPlayers() {
 		ArrayList<HyperPlayer> hps = new ArrayList<HyperPlayer>();
 		for (HyperPlayer hp:hyperPlayers.values()) {

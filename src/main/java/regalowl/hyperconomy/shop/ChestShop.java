@@ -491,7 +491,7 @@ public class ChestShop implements Listener {
 				HyperPlayer hPlayer = (HyperPlayer)chestOwner;
 				chestOwnerEconomy = hPlayer.getHyperEconomy();
 			}
-			HyperPlayer clickPlayer = em.getHyperPlayer(p.getName());
+			HyperPlayer clickPlayer = em.getHyperPlayer(p);
 			HyperObject hyperObject = null;
 			if (!his.hasEnchants()) {
 				hyperObject = chestOwnerEconomy.getHyperObject(clickedItem);

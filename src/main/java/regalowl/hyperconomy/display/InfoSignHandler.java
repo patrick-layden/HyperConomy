@@ -69,7 +69,7 @@ public class InfoSignHandler implements Listener {
 			if (p.hasPermission("hyperconomy.createsign")) {
 				String[] lines = scevent.getLines();
 				String economy = "default";
-				HyperPlayer hp = em.getHyperPlayer(p.getName());
+				HyperPlayer hp = em.getHyperPlayer(p);
 				economy = "default";
 				if (hp != null && hp.getEconomy() != null) {
 					economy = hp.getEconomy();
