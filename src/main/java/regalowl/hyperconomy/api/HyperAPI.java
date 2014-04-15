@@ -106,6 +106,33 @@ public class HyperAPI implements API {
 		return null;
 	}
 	
+	@Override
+	public ArrayList<String> getServerShopList() {
+		HyperConomy hc = HyperConomy.hc;
+		ArrayList<String> serverShops = new ArrayList<String>();
+		for (Shop s:hc.getDataManager().getShops()) {
+			if (s instanceof ServerShop) {
+				serverShops.add(s.getName());
+			}
+		}
+		return serverShops;
+	}
+
+	@Override
+	public ArrayList<String> getPlayerShopList() {
+		HyperConomy hc = HyperConomy.hc;
+		ArrayList<String> playerShops = new ArrayList<String>();
+		for (Shop s:hc.getDataManager().getShops()) {
+			if (s instanceof PlayerShop) {
+				playerShops.add(s.getName());
+			}
+		}
+		return playerShops;
+	}
+	
+	public String getDefaultServerShopAccount() {
+		return HyperConomy.hc.gYH().gFC("config").getString("shop.default-server-shop-account");
+	}
 	
 
 	public EnchantmentClass getEnchantmentClass(ItemStack stack) {
@@ -282,6 +309,8 @@ public class HyperAPI implements API {
 		HyperObject hobj = ai.generateNewHyperObject(stack, economyName, requestedName, 0);
 		return ai.addItem(hobj, economyName);
 	}
+
+
 
 	
 	

@@ -362,6 +362,12 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * @return
 	 */
 	public double getSellPrice(EnchantmentClass enchantClass, HyperPlayer hp);
+	/**Returns the sell price for this Enchantment HyperObject.  This method will take into account damage to the enchanted item. 
+	 * (Can only be used with Enchantments.)
+	 * @param enchantClass
+	 * @return
+	 */
+	public double getSellPriceWithTax(EnchantmentClass enchantClass, HyperPlayer hp);
 	/**
 	 * @return The HyperObject in Enchantment form. (Can only be used with Enchantments.)
 	 */

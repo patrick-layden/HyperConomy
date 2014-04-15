@@ -244,6 +244,12 @@ public class Enchant extends BasicObject implements HyperObject {
 		return 0;
 	}
 
+	@Override
+	public double getSellPriceWithTax(EnchantmentClass eclass, HyperPlayer hp) {
+		double price = getSellPrice(eclass, hp);
+		price -= hp.getSalesTax(price);
+		return cf.twoDecimals(price);
+	}
 
 	
 

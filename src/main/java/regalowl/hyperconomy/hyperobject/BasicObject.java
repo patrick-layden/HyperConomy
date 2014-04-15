@@ -563,6 +563,8 @@ public class BasicObject implements HyperObject {
 	@Override
 	public double getSellPrice(EnchantmentClass enchantClass, HyperPlayer hp) {return 0;}
 	@Override
+	public double getSellPriceWithTax(EnchantmentClass enchantClass, HyperPlayer hp) {return 0;}
+	@Override
 	public Enchantment getEnchantment() {return null;}
 	@Override
 	public int getEnchantmentLevel() {return 0;}
