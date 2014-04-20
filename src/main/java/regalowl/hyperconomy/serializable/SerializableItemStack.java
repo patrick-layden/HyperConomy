@@ -139,10 +139,12 @@ public class SerializableItemStack extends SerializableObject implements Seriali
 		if (getClass() != obj.getClass())
 			return false;
 		SerializableItemStack other = (SerializableItemStack) obj;
-		if (data != other.data)
-			return false;
-		if (durability != other.durability)
-			return false;
+		if (considerDamage()) {
+			if (data != other.data)
+				return false;
+			if (durability != other.durability)
+				return false;
+		}
 		if (itemMeta == null) {
 			if (other.itemMeta != null)
 				return false;
@@ -153,6 +155,18 @@ public class SerializableItemStack extends SerializableObject implements Seriali
 				return false;
 		} else if (!material.equals(other.material))
 			return false;
+		return true;
+	}
+	
+	public boolean considerDamage() {
+		Material m = Material.matchMaterial(material);
+		boolean ignoreDamage = HyperConomy.hc.getConf().getBoolean("enable-feature.treat-damaged-items-as-equals-to-undamaged-ones");
+		if (!ignoreDamage) {
+			return true;
+		}
+		if (m != null && m.getMaxDurability() > 0) {
+			return false;
+		}
 		return true;
 	}
 
