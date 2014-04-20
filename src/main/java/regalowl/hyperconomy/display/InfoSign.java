@@ -62,6 +62,10 @@ public class InfoSign {
 		this.type = type;
 		this.objectName = he.fixName(objectName);
 		ho = he.getHyperObject(this.objectName);
+		if (ho == null) {
+			deleteSign();
+			return;
+		}
 		Sign s = getSign();
 		if (s == null) {
 			deleteSign();
@@ -102,6 +106,10 @@ public class InfoSign {
 			this.economy = economy;
 		}
 		ho = he.getHyperObject(this.objectName);
+		if (ho == null) {
+			deleteSign();
+			return;
+		}
 		line1 = ChatColor.stripColor(lines[0].trim());
 		line2 = ChatColor.stripColor(lines[1].trim());
 		if (line1.length() > 13) {
@@ -383,6 +391,7 @@ public class InfoSign {
 	
 	
 	public void deleteSign() {
+		hc.getInfoSignHandler().removeSign(this);
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		conditions.put("WORLD", world);
 		conditions.put("X", x+"");

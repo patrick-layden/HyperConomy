@@ -34,6 +34,10 @@ public class FrameShop {
 	@SuppressWarnings("deprecation")
 	FrameShop(Location l, HyperObject ho, Shop s, int amount) {
 		hc = HyperConomy.hc;
+		if (ho == null) {
+			delete();
+			return;
+		}
 		x = l.getBlockX();
 		y = l.getBlockY();
 		z = l.getBlockZ();
@@ -53,6 +57,10 @@ public class FrameShop {
 
 	FrameShop(short mapId, Location l, HyperObject ho, Shop s, int amount) {
 		hc = HyperConomy.hc;
+		if (ho == null) {
+			delete();
+			return;
+		}
 		this.mapId = mapId;
 		x = l.getBlockX();
 		y = l.getBlockY();
@@ -61,7 +69,9 @@ public class FrameShop {
 		this.ho = ho;
 		this.tradeAmount = amount;
 		this.s = s;
-		render();
+		if (ho != null) {
+			render();
+		}
 	}
 
 	public short getMapId() {
@@ -92,8 +102,7 @@ public class FrameShop {
 		}
 		ItemFrame frame = getFrame(l);
 		if (frame == null) {
-			hc.getFrameShopHandler().removeFrameShop(getKey());
-			hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_frame_shops WHERE ID = '" + mapId + "'");
+			delete();
 			return;
 		}
 		@SuppressWarnings("deprecation")
@@ -147,6 +156,11 @@ public class FrameShop {
 		if (frame == null) {return null;}
 		Block b = l.getBlock().getRelative(frame.getAttachedFace());
 		return b;
+	}
+	
+	public void delete() {
+		hc.getFrameShopHandler().removeFrameShop(getKey());
+		hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_frame_shops WHERE ID = '" + mapId + "'");
 	}
 
 }

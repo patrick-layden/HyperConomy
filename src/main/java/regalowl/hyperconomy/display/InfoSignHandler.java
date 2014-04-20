@@ -111,10 +111,15 @@ public class InfoSignHandler implements Listener {
 			InfoSign is = getInfoSign(b.getLocation());
 			if (is != null) {
 				is.deleteSign();
-				infoSigns.remove(is);
 			}
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
+		}
+	}
+	
+	public void removeSign(InfoSign is) {
+		if (infoSigns.contains(is)) {
+			infoSigns.remove(is);
 		}
 	}
 
@@ -146,7 +151,6 @@ public class InfoSignHandler implements Listener {
 						cs.update();
 					} else {
 						cs.deleteSign();
-						infoSigns.remove(cs);
 					}
 					signs.remove(0);
 				}
