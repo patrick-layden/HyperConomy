@@ -26,7 +26,7 @@ public class Hv {
 		try {
 			HyperPlayer hp = em.getHyperPlayer(player);
 			HyperEconomy he = hp.getHyperEconomy();
-			boolean requireShop = hc.gYH().gFC("config").getBoolean("shop.limit-info-commands-to-shops");
+			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
 			if ((requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				ItemStack iinhand = player.getItemInHand();
 				if (args.length == 0) {

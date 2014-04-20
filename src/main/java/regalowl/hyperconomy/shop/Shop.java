@@ -83,7 +83,6 @@ public interface Shop extends Comparable<Shop>{
 	
 	public int getVolume();
 	public void deleteShop();
-	public boolean isLoaded();
 	public ArrayList<Location> getShopBlockLocations();
 	/**
 	 * @param s A shop.

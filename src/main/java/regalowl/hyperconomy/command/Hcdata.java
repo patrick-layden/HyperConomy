@@ -142,7 +142,7 @@ public class Hcdata implements CommandExecutor {
 					economy = args[1];
 				}
 				if (em.economyExists(economy)) {
-					if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
+					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 					ArrayList<String> added = em.getEconomy(economy).loadNewItems();
 					sender.sendMessage(ChatColor.GOLD + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
 				} else {
@@ -158,7 +158,7 @@ public class Hcdata implements CommandExecutor {
 					economy = args[1];
 				}
 				if (em.economyExists(economy)) {
-					if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
+					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 					String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
 					FileTools ft = hc.getFileTools();
 					if (!ft.fileExists(defaultObjectsPath)) {
@@ -185,7 +185,7 @@ public class Hcdata implements CommandExecutor {
 			hc.getSQLWrite().addToQueue(statement);
 			sender.sendMessage(L.get("HCCLEARHISTORY_CLEARED"));
 		} else if (args[0].equalsIgnoreCase("clearlogs")) {
-			if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
+			if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {
 				new Backup();
 			}
 			String statement = "DELETE FROM hyperconomy_audit_log";
@@ -195,11 +195,11 @@ public class Hcdata implements CommandExecutor {
 			sender.sendMessage(L.get("LOGS_CLEARED"));
 		} else if (args[0].equalsIgnoreCase("repairnames")) {
 			try {
-				if (hc.gYH().gFC("config").getBoolean("enable-feature.composite-items")) {
+				if (hc.getConf().getBoolean("enable-feature.composite-items")) {
 					sender.sendMessage(L.get("MUST_DISABLE_COMPOSITES"));
 					return true;
 				}
-				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
+				if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 				for (HyperEconomy he : hc.getDataManager().getEconomies()) {
 					he.updateNamesFromYml();
 				}

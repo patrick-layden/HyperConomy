@@ -21,23 +21,23 @@ public class Settax {
 				String type = args[0];
 				if (type.equalsIgnoreCase("purchase")) {
 					taxrate = Double.parseDouble(args[1]);
-					hc.gYH().gFC("config").set("tax.purchase", taxrate);
+					hc.getConf().set("tax.purchase", taxrate);
 					sender.sendMessage(L.get("PURCHASE_TAX_SET"));
 				} else if (type.equalsIgnoreCase("sales")) {
 					taxrate = Double.parseDouble(args[1]);
-					hc.gYH().gFC("config").set("tax.sales", taxrate);
+					hc.getConf().set("tax.sales", taxrate);
 					sender.sendMessage(L.get("SALES_TAX_SET"));
 				} else if (type.equalsIgnoreCase("static")) {
 					taxrate = Double.parseDouble(args[1]);
-					hc.gYH().gFC("config").set("tax.static", taxrate);
+					hc.getConf().set("tax.static", taxrate);
 					sender.sendMessage(L.get("STATIC_TAX_SET"));
 				} else if (type.equalsIgnoreCase("initial")) {
 					taxrate = Double.parseDouble(args[1]);
-					hc.gYH().gFC("config").set("tax.initial", taxrate);
+					hc.getConf().set("tax.initial", taxrate);
 					sender.sendMessage(L.get("INITIAL_TAX_SET"));
 				} else if (type.equalsIgnoreCase("enchant")) {
 					taxrate = Double.parseDouble(args[1]);
-					hc.gYH().gFC("config").set("tax.enchant", taxrate);
+					hc.getConf().set("tax.enchant", taxrate);
 					sender.sendMessage(L.get("ENCHANT_TAX_SET"));
 				} else {
 					sender.sendMessage(L.get("SETTAX_INVALID"));

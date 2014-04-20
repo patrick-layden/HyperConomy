@@ -38,7 +38,7 @@ public class Sell implements CommandExecutor {
 		HyperEconomy he = hp.getHyperEconomy();
 
 		try {
-			if (player.getGameMode() == GameMode.CREATIVE && hc.gYH().gQFC("config").gB("shop.block-selling-in-creative-mode")) {
+			if (player.getGameMode() == GameMode.CREATIVE && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
 				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
 				return true;
 			}

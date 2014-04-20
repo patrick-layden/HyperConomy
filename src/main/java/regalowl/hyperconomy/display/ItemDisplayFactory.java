@@ -43,7 +43,7 @@ public class ItemDisplayFactory implements Listener {
 	public ItemDisplayFactory() {
 		try {
 			hc = HyperConomy.hc;
-			if (hc.gYH().gFC("config").getBoolean("enable-feature.item-displays")) {
+			if (hc.getConf().getBoolean("enable-feature.item-displays")) {
 				hc.getServer().getPluginManager().registerEvents(this, hc);
 				loadDisplays();
 				startRefreshThread();

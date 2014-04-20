@@ -33,7 +33,7 @@ public class InfoSignHandler implements Listener {
 
 	public InfoSignHandler() {
 		hc = HyperConomy.hc;
-		if (hc.gYH().gFC("config").getBoolean("enable-feature.info-signs")) {
+		if (hc.getConf().getBoolean("enable-feature.info-signs")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
 			loadSigns();
 		}

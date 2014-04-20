@@ -25,6 +25,7 @@ import regalowl.hyperconomy.hyperobject.HyperObjectStatus;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.hyperobject.ShopEnchant;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class PlayerShop implements Shop, Comparable<Shop> {
 
@@ -50,23 +51,21 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private PlayerShop ps;
 	private CommonFunctions cf;
 	private boolean useshopexitmessage;
-	private boolean loaded;
 	private ArrayList<String> inShop = new ArrayList<String>();
 	
 	
 	
-	public PlayerShop(String name, String economy, HyperAccount owner, String message, Location p1, Location p2, String banned_objects, String allowed_players) {
-		loaded = false;
+	public PlayerShop(String name, String economy, HyperAccount owner, String message, SimpleLocation p1, SimpleLocation p2, String banned_objects, String allowed_players) {
 		hc = HyperConomy.hc;
 		cf = hc.getDataBukkit().getCommonFunctions();
 		ps = this;
 		L = hc.getLanguageFile();
-		useshopexitmessage = hc.gYH().gFC("config").getBoolean("shop.display-shop-exit-message");	
+		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");	
 		this.name = name;
 		this.economy = economy;
 		this.owner = owner;
 		this.message = message;
-		this.world = p1.getWorld().getName();
+		this.world = p1.getWorld();
 		this.p1x = p1.getBlockX();
 		this.p1y = p1.getBlockY();
 		this.p1z = p1.getBlockZ();
@@ -88,17 +87,16 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	
-	public PlayerShop(String shopName, String economy, HyperAccount owner, Location p1, Location p2) {
-		loaded = false;
+	public PlayerShop(String shopName, String economy, HyperAccount owner, SimpleLocation p1, SimpleLocation p2) {
 		hc = HyperConomy.hc;
 		cf = hc.getDataBukkit().getCommonFunctions();
 		ps = this;
 		L = hc.getLanguageFile();
-		useshopexitmessage = hc.gYH().gFC("config").getBoolean("shop.display-shop-exit-message");
+		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");
 		this.name = shopName;
 		this.economy = economy;
 		this.owner = owner;
-		this.world = p1.getWorld().getName();
+		this.world = p1.getWorld();
 		this.message = "";
 		p1x = p1.getBlockX();
 		p1y = p1.getBlockY();
@@ -126,44 +124,37 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		for (HyperObject ho:he.getHyperObjects()) {
 			availableObjects.add(ho);
 		}
-		loaded = true;
-	}
-	
-	private void loadPlayerShopObjects() {
-		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
-			public void run() {
-				HyperEconomy he = hc.getDataManager().getEconomy(economy);
-				BasicStatement statement = new BasicStatement("SELECT * FROM hyperconomy_shop_objects WHERE SHOP = ?", hc.getDataBukkit());
-				statement.addParameter(name);
-				QueryResult result = hc.getSQLRead().select(statement);
-				while (result.next()) {
-					double buyPrice = result.getDouble("BUY_PRICE");
-					double sellPrice = result.getDouble("SELL_PRICE");
-					int maxStock = result.getInt("MAX_STOCK");
-					HyperObject ho = he.getHyperObject(result.getString("HYPEROBJECT"));
-					if (ho == null) {continue;}
-					double stock = result.getDouble("QUANTITY");
-					HyperObjectStatus status = HyperObjectStatus.fromString(result.getString("STATUS"));
-					if (ho.getType() == HyperObjectType.ITEM && ho.isCompositeObject()) {
-						HyperObject pso = new CompositeShopItem(ps, (CompositeItem)ho, stock, buyPrice, sellPrice, maxStock, status);
-						shopContents.put(ho.getName(), pso);
-					} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
-						HyperObject pso = new ShopEnchant(ps, ho, stock, buyPrice, sellPrice, maxStock, status);
-						shopContents.put(ho.getName(), pso);
-					} else { 
-						BasicShopObject pso = new BasicShopObject(ps, ho, stock, buyPrice, sellPrice, maxStock, status);
-						shopContents.put(ho.getName(), pso);
-					}
-				}
-				result.close();
-				loaded = true;
-			}
-		});
 	}
 
-	public boolean isLoaded() {
-		return loaded;
+	private void loadPlayerShopObjects() {
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
+		BasicStatement statement = new BasicStatement("SELECT * FROM hyperconomy_shop_objects WHERE SHOP = ?", hc.getDataBukkit());
+		statement.addParameter(name);
+		QueryResult result = hc.getSQLRead().select(statement);
+		while (result.next()) {
+			double buyPrice = result.getDouble("BUY_PRICE");
+			double sellPrice = result.getDouble("SELL_PRICE");
+			int maxStock = result.getInt("MAX_STOCK");
+			HyperObject ho = he.getHyperObject(result.getString("HYPEROBJECT"));
+			if (ho == null) {
+				continue;
+			}
+			double stock = result.getDouble("QUANTITY");
+			HyperObjectStatus status = HyperObjectStatus.fromString(result.getString("STATUS"));
+			if (ho.getType() == HyperObjectType.ITEM && ho.isCompositeObject()) {
+				HyperObject pso = new CompositeShopItem(ps, (CompositeItem) ho, stock, buyPrice, sellPrice, maxStock, status);
+				shopContents.put(ho.getName(), pso);
+			} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+				HyperObject pso = new ShopEnchant(ps, ho, stock, buyPrice, sellPrice, maxStock, status);
+				shopContents.put(ho.getName(), pso);
+			} else {
+				BasicShopObject pso = new BasicShopObject(ps, ho, stock, buyPrice, sellPrice, maxStock, status);
+				shopContents.put(ho.getName(), pso);
+			}
+		}
+		result.close();
 	}
+
 	
 	public int compareTo(Shop s) {
 		return name.compareTo(s.getName());

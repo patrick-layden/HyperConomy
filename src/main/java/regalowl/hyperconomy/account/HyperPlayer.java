@@ -37,7 +37,7 @@ public class HyperPlayer implements HyperAccount {
 		tp = new TransactionProcessor(this);
 		em = hc.getDataManager();
 		SQLWrite sw = hc.getSQLWrite();
-		balance = hc.gYH().gFC("config").getDouble("economy-plugin.starting-player-account-balance");
+		balance = hc.getConf().getDouble("economy-plugin.starting-player-account-balance");
 		economy = "default";
 		boolean playerOnline = false;
 		for (Player p:Bukkit.getOnlinePlayers()) {
@@ -73,7 +73,11 @@ public class HyperPlayer implements HyperAccount {
 		this.world = world;
 		this.hash = hash;
 		this.salt = salt;
-		createExternalAccount();
+		hc.getServer().getScheduler().runTask(hc, new Runnable() {
+			public void run() {
+				createExternalAccount();
+			}
+		});
 	}
 	
 	private void createExternalAccount() {
@@ -82,7 +86,6 @@ public class HyperPlayer implements HyperAccount {
 			hc.getEconomy().createPlayerAccount(name);
 			setBalance(balance);
 		}
-
 	}
 	
 	public String getName() {
@@ -189,11 +192,11 @@ public class HyperPlayer implements HyperAccount {
 	public double getSalesTax(Double price) {
 		CommonFunctions cf = hc.gCF();
 		double salestax = 0;
-		if (hc.gYH().gFC("config").getBoolean("tax.dynamic.enable")) {
-			double moneyfloor = hc.gYH().gFC("config").getDouble("tax.dynamic.money-floor");
-			double moneycap = hc.gYH().gFC("config").getDouble("tax.dynamic.money-cap");
+		if (hc.getConf().getBoolean("tax.dynamic.enable")) {
+			double moneyfloor = hc.getConf().getDouble("tax.dynamic.money-floor");
+			double moneycap = hc.getConf().getDouble("tax.dynamic.money-cap");
 			double cbal = getBalance();
-			double maxtaxrate = hc.gYH().gFC("config").getDouble("tax.dynamic.max-tax-percent") / 100.0;
+			double maxtaxrate = hc.getConf().getDouble("tax.dynamic.max-tax-percent") / 100.0;
 			if (cbal >= moneycap) {
 				salestax = price * maxtaxrate;
 			} else if (cbal <= moneyfloor) {
@@ -206,7 +209,7 @@ public class HyperPlayer implements HyperAccount {
 				salestax = price * taxrate;
 			}
 		} else {
-			double salestaxpercent = hc.gYH().gFC("config").getDouble("tax.sales");
+			double salestaxpercent = hc.getConf().getDouble("tax.sales");
 			salestax = cf.twoDecimals((salestaxpercent / 100) * price);
 		}
 		return salestax;
@@ -219,7 +222,7 @@ public class HyperPlayer implements HyperAccount {
 	
 	
 	public boolean hasSellPermission(Shop s) {
-		if (!hc.gYH().gQFC("config").gB("enable-feature.per-shop-permissions")) {
+		if (!hc.getConf().getBoolean("enable-feature.per-shop-permissions")) {
 			return true;
 		}
 		boolean hasPermission = false;
@@ -236,7 +239,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public boolean hasBuyPermission(Shop s) {
-		if (!(hc.gYH().gQFC("config").gB("enable-feature.per-shop-permissions"))) {
+		if (!(hc.getConf().getBoolean("enable-feature.per-shop-permissions"))) {
 			return true;
 		}
 		boolean hasPermission = false;

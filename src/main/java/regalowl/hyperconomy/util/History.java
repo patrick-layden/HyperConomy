@@ -41,13 +41,13 @@ public class History {
 	
 	public History() {
 		hc = HyperConomy.hc;
-		useHistory = hc.gYH().gFC("config").getBoolean("enable-feature.price-history-storage");
+		useHistory = hc.getConf().getBoolean("enable-feature.price-history-storage");
 		if (!useHistory) {return;}
 		em = hc.getDataManager();
 		isign = hc.getInfoSignHandler();
 		sw = hc.getSQLWrite();
 		sr = hc.getSQLRead();
-		daysToSaveHistory = hc.gYH().gFC("config").getInt("history.days-to-save");
+		daysToSaveHistory = hc.getConf().getInt("history.days-to-save");
 		lastTime = System.currentTimeMillis();
 		timeCounter = getTimeCounter();
 		startTimer();

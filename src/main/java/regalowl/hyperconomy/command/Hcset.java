@@ -98,7 +98,7 @@ public class Hcset implements CommandExecutor {
 				try {
 					String name = args[1];
 					if (name.equalsIgnoreCase("all:copy") || name.equalsIgnoreCase("all:true") || name.equalsIgnoreCase("all:false")) {
-						if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
+						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 						boolean state = false;
 						boolean copy = false;
 						String message = "";
@@ -149,7 +149,7 @@ public class Hcset implements CommandExecutor {
 						stock = Double.parseDouble(args[2]);
 					}
 					if (name.equalsIgnoreCase("all")) {
-						if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
+						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 						ArrayList<HyperObject> hyperObjects = he.getHyperObjects();
 						for (HyperObject ho:hyperObjects) {
 							if (ho instanceof CompositeItem) {continue;}
@@ -159,7 +159,7 @@ public class Hcset implements CommandExecutor {
 						ih.updateSigns();
 						return true;
 					} else if (name.equalsIgnoreCase("all:median")) {
-						if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
+						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 						for (HyperObject ho:he.getHyperObjects()) {
 							if ((ho instanceof CompositeItem)) {continue;}
 							ho.setStock(ho.getMedian());
@@ -272,7 +272,7 @@ public class Hcset implements CommandExecutor {
 				try {
 					String name = args[1];
 					if (name.equalsIgnoreCase("all:true") || name.equalsIgnoreCase("all:false")) {
-						if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
+						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 						boolean state = false;
 						String message = "";
 						if (name.equalsIgnoreCase("all:false")) {

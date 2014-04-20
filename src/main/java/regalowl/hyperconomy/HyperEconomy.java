@@ -39,19 +39,69 @@ public class HyperEconomy implements DataLoadListener {
 	private HyperConomy hc;
 	private SQLRead sr;
 	private String economyName;
-	private boolean dataLoaded;
 	private String xpName = null;
 	
 
 	HyperEconomy(String economy) {
-		dataLoaded = false;
 		hc = HyperConomy.hc;	
 		this.economyName = economy;
 		hc.getHyperEventHandler().registerDataLoadListener(this);
 		sr = hc.getSQLRead();
-		useComposites = hc.gYH().gFC("config").getBoolean("enable-feature.composite-items");
-		//loadCompositeKeys();
-		load();
+		useComposites = hc.getConf().getBoolean("enable-feature.composite-items");
+
+		composites.clear();
+		QueryResult result = sr.select("SELECT * FROM hyperconomy_composites");
+		while (result.next()) {
+			composites.put(result.getString("NAME").toLowerCase(), result.getString("COMPONENTS"));
+		}
+		hyperObjectsName.clear();
+		result = sr.select("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economyName+"'");
+		while (result.next()) {
+			if (useComposites && composites.containsKey(result.getString("NAME").toLowerCase())) {continue;}
+			HyperObjectType type = HyperObjectType.fromString(result.getString("TYPE"));
+			if (type == HyperObjectType.ITEM) {
+				HyperObject hobj = new ComponentItem(result.getString("NAME"), result.getString("ECONOMY"), 
+						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
+						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
+				hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
+				for (String alias:hobj.getAliases()) {
+					hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
+				}
+				hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
+				hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
+			} else if (type == HyperObjectType.ENCHANTMENT) {
+				HyperObject hobj = new Enchant(result.getString("NAME"), result.getString("ECONOMY"), 
+						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
+						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
+						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
+				hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
+				for (String alias:hobj.getAliases()) {
+					hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
+				}
+				hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
+				hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
+			} else if (type == HyperObjectType.EXPERIENCE) {
+				HyperObject hobj = new Xp(result.getString("NAME"), result.getString("ECONOMY"), 
+						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
+						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
+						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
+				hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
+				xpName = result.getString("NAME");
+				for (String alias:hobj.getAliases()) {
+					hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
+				}
+				hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
+				hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
+			}
+		}
+		result.close();
+		if (xpName == null) {xpName = "xp";}
+		if (useComposites) {
+			loadComposites();
+		}
 	}
 
 	@Override
@@ -69,72 +119,6 @@ public class HyperEconomy implements DataLoadListener {
 		});
 	}
 
-	public boolean dataLoaded() {
-		return dataLoaded;
-	}
-
-	private void load() {
-		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
-			public void run() {
-				composites.clear();
-				QueryResult result = sr.select("SELECT * FROM hyperconomy_composites");
-				while (result.next()) {
-					composites.put(result.getString("NAME").toLowerCase(), result.getString("COMPONENTS"));
-				}
-				hyperObjectsName.clear();
-				result = sr.select("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economyName+"'");
-				while (result.next()) {
-					if (useComposites && composites.containsKey(result.getString("NAME").toLowerCase())) {continue;}
-					HyperObjectType type = HyperObjectType.fromString(result.getString("TYPE"));
-					if (type == HyperObjectType.ITEM) {
-						HyperObject hobj = new ComponentItem(result.getString("NAME"), result.getString("ECONOMY"), 
-								result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
-								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
-						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
-						for (String alias:hobj.getAliases()) {
-							hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
-						}
-						hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
-						hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
-					} else if (type == HyperObjectType.ENCHANTMENT) {
-						HyperObject hobj = new Enchant(result.getString("NAME"), result.getString("ECONOMY"), 
-								result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
-								result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
-								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
-						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
-						for (String alias:hobj.getAliases()) {
-							hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
-						}
-						hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
-						hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
-					} else if (type == HyperObjectType.EXPERIENCE) {
-						HyperObject hobj = new Xp(result.getString("NAME"), result.getString("ECONOMY"), 
-								result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
-								result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
-								result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-								result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
-						hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
-						xpName = result.getString("NAME");
-						for (String alias:hobj.getAliases()) {
-							hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
-						}
-						hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
-						hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
-					}
-				}
-				result.close();
-				if (xpName == null) {xpName = "xp";}
-				if (!useComposites) {
-					dataLoaded = true;
-					return;
-				}
-				loadComposites();
-				dataLoaded = true;
-			}
-		});
-	}
 	
 	private void loadComposites() {
 		boolean loaded = false;

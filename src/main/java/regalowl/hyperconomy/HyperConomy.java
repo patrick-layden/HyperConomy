@@ -9,7 +9,6 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -54,6 +53,7 @@ import regalowl.hyperconomy.util.ConsoleSettings;
 import regalowl.hyperconomy.util.DisabledProtection;
 import regalowl.hyperconomy.util.Economy_HyperConomy;
 import regalowl.hyperconomy.util.History;
+import regalowl.hyperconomy.util.HyperConfig;
 import regalowl.hyperconomy.util.HyperLock;
 import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
@@ -89,6 +89,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private CommonFunctions cf;
 	private FileTools ft;
 	private ConsoleSettings cos;
+	private HyperConfig hConfig;
 
 	@Override
 	public void onLoad() {
@@ -118,9 +119,10 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		yh.copyFromJar("config");
 		yh.registerFileConfiguration("categories");
 		yh.registerFileConfiguration("config");
+		new UpdateYML();
+		hConfig = new HyperConfig(yh.gFC("config"));
 		L = new LanguageFile();
 		hl = new HyperLock(true, false, false);
-		new UpdateYML();
 		heh = new HyperEventHandler();
 		heh.registerDataLoadListener(this);
 		hookVault();
@@ -128,19 +130,18 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public void enable() {
 		HandlerList.unregisterAll(this);
 		em = new DataManager();
-		FileConfiguration config = yh.gFC("config");
-		if (config.getBoolean("sql.use-mysql")) {
-			String username = config.getString("sql.mysql-connection.username");
-			String password = config.getString("sql.mysql-connection.password");
-			int port = config.getInt("sql.mysql-connection.port");
-			String host = config.getString("sql.mysql-connection.host");
-			String database = config.getString("sql.mysql-connection.database");
+		if (hConfig.getBoolean("sql.use-mysql")) {
+			String username = hConfig.getString("sql.mysql-connection.username");
+			String password = hConfig.getString("sql.mysql-connection.password");
+			int port = hConfig.getInt("sql.mysql-connection.port");
+			String host = hConfig.getString("sql.mysql-connection.host");
+			String database = hConfig.getString("sql.mysql-connection.database");
 			db.enableMySQL(host, database, username, password, port);
 		}
 		db.createDatabase();
 		sw = db.getSQLWrite();
 		sr = db.getSQLRead();
-		sw.setLogSQL(config.getBoolean("sql.log-sql-statements"));
+		sw.setLogSQL(hConfig.getBoolean("sql.log-sql-statements"));
 		setupExternalEconomy();
 		if (useExternalEconomy) {
 			log.info("[HyperConomy]Using external economy plugin ("+economy.getName()+") via Vault.");
@@ -152,7 +153,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		commandhandler = new _Command();
 		not = new Notification();
 		new TransactionSign();
-		yh.startSaveTask(config.getLong("intervals.save"));
+		yh.startSaveTask(hConfig.getLong("intervals.save"));
 		cs = new ChestShop();
 		cos = new ConsoleSettings("default");
 	}
@@ -299,11 +300,16 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		return hl;
 	}
 
+	
 	public YamlHandler getYamlHandler() {
 		return yh;
 	}
 	public YamlHandler gYH() {
 		return yh;
+	}
+	
+	public HyperConfig getConf() {
+		return hConfig;
 	}
 	
 	public DataManager getDataManager() {

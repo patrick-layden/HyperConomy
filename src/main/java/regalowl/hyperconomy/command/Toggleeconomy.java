@@ -11,11 +11,11 @@ public class Toggleeconomy {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		try {
-			if (hc.gYH().gFC("config").getBoolean("economy-plugin.use-external")) {
-				hc.gYH().gFC("config").set("economy-plugin.use-external", false);
+			if (hc.getConf().getBoolean("economy-plugin.use-external")) {
+				hc.getConf().set("economy-plugin.use-external", false);
 				sender.sendMessage(L.get("TOGGLEECONOMY_DISABLED"));
 			} else {
-				hc.gYH().gFC("config").set("economy-plugin.use-external", true);
+				hc.getConf().set("economy-plugin.use-external", true);
 				sender.sendMessage(L.get("TOGGLEECONOMY_ENABLED"));
 			}
 		} catch (Exception e) {

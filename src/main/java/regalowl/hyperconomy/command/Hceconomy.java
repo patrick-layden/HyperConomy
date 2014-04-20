@@ -54,7 +54,7 @@ public class Hceconomy implements CommandExecutor {
 					sender.sendMessage(L.get("ECONOMY_DOESNT_EXIST"));
 					return true;
 				}
-				if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
+				if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {
 					new Backup();
 				}
 				for (Shop shop:em.getShops()) {

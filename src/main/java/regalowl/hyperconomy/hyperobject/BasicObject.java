@@ -316,15 +316,15 @@ public class BasicObject implements HyperObject {
 	public double getPurchaseTax(double cost) {
 		double tax = 0.0;
 		if (Boolean.parseBoolean(getIsstatic())) {
-			tax = hc.gYH().gFC("config").getDouble("tax.static") / 100.0;
+			tax = hc.getConf().getDouble("tax.static") / 100.0;
 		} else {
 			if (getType() == HyperObjectType.ENCHANTMENT) {
-				tax = hc.gYH().gFC("config").getDouble("tax.enchant") / 100.0;
+				tax = hc.getConf().getDouble("tax.enchant") / 100.0;
 			} else {
 				if (Boolean.parseBoolean(getInitiation())) {
-					tax = hc.gYH().gFC("config").getDouble("tax.initial") / 100.0;
+					tax = hc.getConf().getDouble("tax.initial") / 100.0;
 				} else {
-					tax = hc.gYH().gFC("config").getDouble("tax.purchase") / 100.0;
+					tax = hc.getConf().getDouble("tax.purchase") / 100.0;
 				}
 			}
 		}
@@ -333,10 +333,10 @@ public class BasicObject implements HyperObject {
 	@Override
 	public double getSalesTaxEstimate(double value) {
 		double salestax = 0;
-		if (hc.gYH().gFC("config").getBoolean("tax.dynamic-tax.use-dynamic-tax")) {
+		if (hc.getConf().getBoolean("tax.dynamic.enable")) {
 			return 0.0;
 		} else {
-			double salestaxpercent = hc.gYH().gFC("config").getDouble("tax.sales");
+			double salestaxpercent = hc.getConf().getDouble("tax.sales");
 			salestax = (salestaxpercent / 100) * value;
 		}
 		return cf.twoDecimals(salestax);

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,6 +21,7 @@ import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class Servershopcommand implements CommandExecutor {
 	
@@ -95,7 +95,7 @@ public class Servershopcommand implements CommandExecutor {
 				if (em.shopExists(name)) {
 					em.getShop(name).setPoint1(player.getLocation());
 				} else {
-					Location l = player.getLocation();
+					SimpleLocation l = new SimpleLocation(player.getLocation());
 					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					em.addShop(shop);
 				}
@@ -109,7 +109,7 @@ public class Servershopcommand implements CommandExecutor {
 				if (em.shopExists(name)) {
 					em.getShop(name).setPoint2(player.getLocation());
 				} else {
-					Location l = player.getLocation();
+					SimpleLocation l = new SimpleLocation(player.getLocation());
 					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					em.addShop(shop);
 				}

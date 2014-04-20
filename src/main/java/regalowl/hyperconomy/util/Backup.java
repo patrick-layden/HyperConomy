@@ -17,12 +17,7 @@ public class Backup {
 
 		ArrayList<String> backupFiles = new ArrayList<String>();
 		backupFiles.add("config.yml");
-		backupFiles.add("displays.yml");
-		backupFiles.add("objects.yml");
-		backupFiles.add("shops.yml");
-		backupFiles.add("signs.yml");
 		backupFiles.add("categories.yml");
-		backupFiles.add("composites.yml");
 		backupFiles.add("HyperConomy.db");
 		backupFiles.add("errors.log");
 		backupFiles.add("SQL.log");

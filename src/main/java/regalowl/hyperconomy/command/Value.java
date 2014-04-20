@@ -34,7 +34,7 @@ public class Value implements CommandExecutor {
 			he = hp.getHyperEconomy();
 		}
 		try {
-			boolean requireShop = hc.gYH().gFC("config").getBoolean("shop.limit-info-commands-to-shops");
+			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
 			if (player != null && requireShop && !em.inAnyShop(player) && !player.hasPermission("hyperconomy.admin")) {
 				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
 				return true;

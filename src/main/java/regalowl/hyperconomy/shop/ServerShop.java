@@ -12,6 +12,7 @@ import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class ServerShop implements Shop, Comparable<Shop>{
 	
@@ -33,22 +34,20 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	private HyperConomy hc;
 	private LanguageFile L;
 	private boolean useshopexitmessage;
-	private boolean loaded;
 	private boolean globalShop;
 	private ArrayList<String> inShop = new ArrayList<String>();
 	
 	
-	public ServerShop(String name, String economy, HyperAccount owner, String message, Location p1, Location p2, String banned_objects) {
-		loaded = false;
+	public ServerShop(String name, String economy, HyperAccount owner, String message, SimpleLocation p1, SimpleLocation p2, String banned_objects) {
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		useshopexitmessage = hc.gYH().gFC("config").getBoolean("shop.display-shop-exit-message");	
+		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");	
 		globalShop = false;
 		this.name = name;
 		this.economy = economy;
 		this.owner = owner;
 		this.message = message;
-		this.world = p1.getWorld().getName();
+		this.world = p1.getWorld();
 		this.p1x = p1.getBlockX();
 		this.p1y = p1.getBlockY();
 		this.p1z = p1.getBlockZ();
@@ -65,20 +64,18 @@ public class ServerShop implements Shop, Comparable<Shop>{
 			HyperObject ho = hc.getDataManager().getEconomy(economy).getHyperObject(objectName);
 			availableObjects.remove(ho);
 		}
-		loaded = true;
 	}
 	
 	
-	public ServerShop(String shopName, String economy, HyperAccount owner, Location p1, Location p2) {
-		loaded = false;
+	public ServerShop(String shopName, String economy, HyperAccount owner, SimpleLocation p1, SimpleLocation p2) {
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		useshopexitmessage = hc.gYH().gFC("config").getBoolean("shop.display-shop-exit-message");
+		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");
 		globalShop = false;
 		this.name = shopName;
 		this.economy = economy;
 		this.owner = owner;
-		this.world = p1.getWorld().getName();
+		this.world = p1.getWorld();
 		this.message = "";
 		p1x = p1.getBlockX();
 		p1y = p1.getBlockY();
@@ -107,7 +104,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		for (HyperObject ho:he.getHyperObjects()) {
 			availableObjects.add(ho);
 		}
-		loaded = true;
 	}
 	
 	/**
@@ -117,21 +113,15 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	 * @param owner
 	 */
 	public ServerShop(String name, String economy, HyperAccount owner) {
-		loaded = false;
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
-		useshopexitmessage = hc.gYH().gFC("config").getBoolean("shop.display-shop-exit-message");	
+		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");	
 		globalShop = true;
 		this.name = name;
 		this.economy = economy;
 		this.owner = owner;
-		loaded = true;
 	}
 	
-	public boolean isLoaded() {
-		return loaded;
-	}
-
 	
 	public int compareTo(Shop s) {
 		return name.compareTo(s.getName());

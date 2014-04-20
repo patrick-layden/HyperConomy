@@ -61,7 +61,7 @@ public class Hcbank implements CommandExecutor {
 					bankOwnerships++;
 				}
 			}
-			if (bankOwnerships > hc.gYH().gFC("config").getInt("bank.max-ownerships-per-player") && !player.hasPermission("hyperconomy.admin")) {
+			if (bankOwnerships > hc.getConf().getInt("bank.max-ownerships-per-player") && !player.hasPermission("hyperconomy.admin")) {
 				player.sendMessage(L.get("CANNOT_OWN_MORE_BANKS"));
 				return true;
 			}

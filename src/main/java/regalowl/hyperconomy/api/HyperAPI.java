@@ -62,7 +62,7 @@ public class HyperAPI implements API {
 
 
 	public String getDefaultServerShopAccountName() {
-		return HyperConomy.hc.gYH().gFC("config").getString("shop.default-server-shop-account");
+		return HyperConomy.hc.getConf().getString("shop.default-server-shop-account");
 	}
 	
 	
@@ -131,7 +131,7 @@ public class HyperAPI implements API {
 	}
 	
 	public String getDefaultServerShopAccount() {
-		return HyperConomy.hc.gYH().gFC("config").getString("shop.default-server-shop-account");
+		return HyperConomy.hc.getConf().getString("shop.default-server-shop-account");
 	}
 	
 

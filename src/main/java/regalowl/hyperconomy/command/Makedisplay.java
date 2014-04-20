@@ -16,7 +16,7 @@ public class Makedisplay {
 	Makedisplay(String[] args, Player player) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		if (!hc.gYH().gFC("config").getBoolean("enable-feature.item-displays")) {
+		if (!hc.getConf().getBoolean("enable-feature.item-displays")) {
 			player.sendMessage(L.get("ENABLE_ITEM_DISPLAYS"));
 			return;
 		}

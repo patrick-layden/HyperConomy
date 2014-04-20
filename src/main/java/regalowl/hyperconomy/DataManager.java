@@ -21,6 +21,7 @@ import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
 import regalowl.databukkit.sql.SQLWrite;
+import regalowl.databukkit.sql.SyncSQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -28,17 +29,18 @@ import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
-import regalowl.hyperconomy.util.Backup;
 import regalowl.hyperconomy.util.DatabaseUpdater;
+import regalowl.hyperconomy.util.HyperConfig;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class DataManager implements Listener {
 
 	private HyperConomy hc;
 	private SQLRead sr;
+	private SyncSQLWrite ssw;
 	private boolean dataLoaded;
 	private boolean playersLoaded;
 	private boolean loadActive;
-	private boolean economiesLoaded;
 	
 	private ConcurrentHashMap<String, HyperEconomy> economies = new ConcurrentHashMap<String, HyperEconomy>();
 	private ConcurrentHashMap<String, HyperPlayer> hyperPlayers = new ConcurrentHashMap<String, HyperPlayer>();
@@ -51,21 +53,20 @@ public class DataManager implements Listener {
 	private BukkitTask shopCheckTask;
 	private boolean useShops;
 	private String defaultServerShopAccount;
+	private HyperConfig config;
 	
-	private QueryResult playerData;
-	private QueryResult shopData;
 	
 	
 	
 	public DataManager() {
 		hc = HyperConomy.hc;
-		economiesLoaded = false;
 		dataLoaded = false;
 		playersLoaded = false;
 		loadActive = false;
-		useShops = hc.gYH().gFC("config").getBoolean("enable-feature.shops");
-		shopinterval = hc.gYH().gFC("config").getLong("intervals.shop-check");
-		defaultServerShopAccount = hc.gYH().gFC("config").getString("shop.default-server-shop-account");
+		config = hc.getConf();
+		useShops = config.getBoolean("enable-feature.shops");
+		shopinterval = config.getLong("intervals.shop-check");
+		defaultServerShopAccount = config.getString("shop.default-server-shop-account");
 		du = new DatabaseUpdater();
 		hc.getServer().getPluginManager().registerEvents(this, hc);
 	}
@@ -84,144 +85,131 @@ public class DataManager implements Listener {
 	public void load() {
 		if (loadActive) {return;}
 		loadActive = true;
-		try {
-			hc = HyperConomy.hc;
-			sr = hc.getSQLRead();
-			String query = "SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'version'";
-			hc.getSQLRead().setErrorLogging(false);
-			hc.getSQLRead().syncRead(du, "updateTables", query, null);
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-		}
-	}
-	public void load2(QueryResult qr) {
-		if (!qr.next()) {
-			HyperConomy.hc.getDataManager().createEconomyFromDefaultCSV("default", false);
-			initializeComposites();
-		}
-		hc.getSQLWrite().afterWrite(this, "load3");
-	}
-	public void load3() {
-		hc.getDataManager().load4();
-	}
-	public void load4() {
+		hc = HyperConomy.hc;
+		sr = hc.getSQLRead();
+		ssw = hc.getDataBukkit().getSyncSQLWrite();
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
-				economies.clear();
-				ArrayList<String> econs = sr.getStringList("hyperconomy_economies", "NAME", null);
-				for (String e : econs) {
-					economies.put(e, new HyperEconomy(e));
+				try {
+					hc.getSQLRead().setErrorLogging(false);
+					QueryResult qr = sr.select("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'version'");
+					hc.getSQLRead().setErrorLogging(true);
+					du.updateTables(qr);
+					qr = sr.select("SELECT * FROM hyperconomy_objects WHERE economy = 'default'");
+					if (!qr.next()) {setupDefaultEconomy();}
+					economies.clear();
+					ArrayList<String> econs = sr.getStringList("hyperconomy_economies", "NAME", null);
+					for (String e : econs) {
+						economies.put(e, new HyperEconomy(e));
+					}
+					hc.getHyperEventHandler().fireEconomyLoadEvent();
+					loadData();
+					stopShopCheck();
+					startShopCheck();
+					dataLoaded = true;
+					hc.getHyperEventHandler().fireDataLoadEvent();
+					loadActive = false;
+					hc.getHyperLock().setLoadLock(false);
+				} catch (Exception e) {
+					hc.gDB().writeError(e);
 				}
-				waitForEconomyLoad();
 			}
 		});
 	}
-	private void waitForEconomyLoad() {
-		hc.getServer().getScheduler().runTaskLater(hc, new Runnable() {
-			public void run() {
-				if (economiesLoaded) {return;}
-				for (HyperEconomy he : getEconomies()) {
-					if (!he.dataLoaded()) {
-						waitForEconomyLoad();
-						return;
-					}
-				}
-				economiesLoaded = true;
-				hc.getHyperEventHandler().fireEconomyLoadEvent();
-				loadRemainingData();
+	private void setupDefaultEconomy() {
+		//set up default hyperconomy_objects and economies if they don't exist
+		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
+		FileTools ft = hc.getFileTools();
+		if (ft.fileExists(defaultObjectsPath)) {ft.deleteFile(defaultObjectsPath);}
+		ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
+		HashMap<String,String> values = new HashMap<String,String>();
+		values.put("NAME", "default");
+		values.put("HYPERACCOUNT", config.getString("shop.default-server-shop-account"));
+		ssw.performInsert("hyperconomy_economies", values);
+		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
+		ArrayList<String> columns = data.getColumnNames();
+		while (data.next()) {
+			values = new HashMap<String, String>();
+			for (String column : columns) {
+				values.put(column, data.getString(column));
 			}
-		}, 1L);
+			ssw.performInsert("hyperconomy_objects", values);
+		}
+		ft.deleteFile(defaultObjectsPath);
+
+		//set up default hyperconomy_composites if they don't exist
+		defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultComposites.csv";
+		if (ft.fileExists(defaultObjectsPath)) {ft.deleteFile(defaultObjectsPath);}
+		ft.copyFileFromJar("defaultComposites.csv", defaultObjectsPath);
+		data = hc.getFileTools().readCSV(defaultObjectsPath);
+		columns = data.getColumnNames();
+		while (data.next()) {
+			values = new HashMap<String, String>();
+			for (String column : columns) {
+				values.put(column, data.getString(column));
+			}
+			ssw.performInsert("hyperconomy_composites", values);
+		}
+		ft.deleteFile(defaultObjectsPath);
 	}
-	
-	
-	private void loadRemainingData() {
-		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+
+	private void loadData() {
+		//load players
+		hyperPlayers.clear();
+		QueryResult playerData = sr.select("SELECT * FROM hyperconomy_players");
+		while (playerData.next()) {
+			HyperPlayer hplayer = new HyperPlayer(playerData.getString("PLAYER"), playerData.getString("ECONOMY"), 
+					playerData.getDouble("BALANCE"), playerData.getDouble("X"), playerData.getDouble("Y"), playerData.getDouble("Z"), 
+					playerData.getString("WORLD"), playerData.getString("HASH"), playerData.getString("SALT"));
+			hyperPlayers.put(hplayer.getName().toLowerCase(), hplayer);
+		}
+		playerData.close();
+		if (!accountExists(defaultServerShopAccount)) {
+			HyperAccount defaultAccount = getAccount(defaultServerShopAccount);
+			defaultAccount.setBalance(hc.getConfig().getDouble("shop.default-server-shop-account-initial-balance"));
+		}
+		hc.getServer().getScheduler().runTask(hc, new Runnable() {
 			public void run() {
-				//load players
-				hyperPlayers.clear();
-				playerData = sr.select("SELECT * FROM hyperconomy_players");
-				hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
-					public void run() {
-						while (playerData.next()) {
-							HyperPlayer hplayer = new HyperPlayer(playerData.getString("PLAYER"), playerData.getString("ECONOMY"), 
-									playerData.getDouble("BALANCE"), playerData.getDouble("X"), playerData.getDouble("Y"), playerData.getDouble("Z"), 
-									playerData.getString("WORLD"), playerData.getString("HASH"), playerData.getString("SALT"));
-							hyperPlayers.put(hplayer.getName().toLowerCase(), hplayer);
-						}
-						playerData.close();
-						playerData = null;
-						if (!accountExists(defaultServerShopAccount)) {
-							HyperAccount defaultAccount = getAccount(defaultServerShopAccount);
-							defaultAccount.setBalance(hc.getConfig().getDouble("shop.default-server-shop-account-initial-balance"));
-						}
-						addOnlinePlayers();
-						playersLoaded = true;
-					}
-				});
-				//load banks
-				hyperBanks.clear();
-				QueryResult bankData = sr.select("SELECT * FROM hyperconomy_banks");
-				while (bankData.next()) {
-					HyperBank hBank = new HyperBank(bankData.getString("NAME"), bankData.getDouble("BALANCE"), bankData.getString("OWNERS"), bankData.getString("MEMBERS"));
-					hyperBanks.put(hBank.getName().toLowerCase(), hBank);
-				}
-				bankData.close();
-				//load shops
-				shops.clear();
-				if (useShops) {
-					shopData = sr.select("SELECT * FROM hyperconomy_shops");
-					hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
-						public void run() {
-							while (shopData.next()) {
-								String type = shopData.getString("TYPE");
-								if (type.equalsIgnoreCase("server")) {
-									String name = shopData.getString("NAME");
-									Location p1 = new Location(Bukkit.getWorld(shopData.getString("WORLD")), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
-									Location p2 = new Location(Bukkit.getWorld(shopData.getString("WORLD")), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
-									Shop shop = new ServerShop(name, shopData.getString("ECONOMY"), getAccount(shopData.getString("OWNER")), 
-											shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"));
-									shops.put(name, shop);
-								} else if (type.equalsIgnoreCase("player")) {
-									if (!hc.gYH().gFC("config").getBoolean("enable-feature.player-shops")) {continue;}
-									String name = shopData.getString("NAME");
-									Location p1 = new Location(Bukkit.getWorld(shopData.getString("WORLD")), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
-									Location p2 = new Location(Bukkit.getWorld(shopData.getString("WORLD")), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
-									Shop shop = new PlayerShop(name, shopData.getString("ECONOMY"), getAccount(shopData.getString("OWNER")), 
-											shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"), shopData.getString("ALLOWED_PLAYERS"));
-									shops.put(name, shop);
-								}
-							}
-							shopData.close();
-							shopData = null;
-						}
-					});
-				} else {
-					Shop shop = new ServerShop("GlobalShop", "default", getAccount(defaultServerShopAccount));
-					shops.put("GlobalShop", shop);
-				}
-				stopShopCheck();
-				startShopCheck();
-				waitForDataLoad();
+				addOnlinePlayers();
+				playersLoaded = true;
 			}
 		});
-	}
-	
-	private void waitForDataLoad() {
-		hc.getServer().getScheduler().runTaskLater(hc, new Runnable() {
-			public void run() {
-				if (dataLoaded) {return;}
-				for (Shop s : getShops()) {
-					if (!s.isLoaded()) {
-						waitForDataLoad();
-						return;
-					}
+		//load banks
+		hyperBanks.clear();
+		QueryResult bankData = sr.select("SELECT * FROM hyperconomy_banks");
+		while (bankData.next()) {
+			HyperBank hBank = new HyperBank(bankData.getString("NAME"), bankData.getDouble("BALANCE"), bankData.getString("OWNERS"), bankData.getString("MEMBERS"));
+			hyperBanks.put(hBank.getName().toLowerCase(), hBank);
+		}
+		bankData.close();
+		//load shops
+		shops.clear();
+		if (useShops) {
+			QueryResult shopData = sr.select("SELECT * FROM hyperconomy_shops");
+			while (shopData.next()) {
+				String type = shopData.getString("TYPE");
+				if (type.equalsIgnoreCase("server")) {
+					String name = shopData.getString("NAME");
+					SimpleLocation p1 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
+					SimpleLocation p2 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
+					Shop shop = new ServerShop(name, shopData.getString("ECONOMY"), getAccount(shopData.getString("OWNER")), 
+							shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"));
+					shops.put(name, shop);
+				} else if (type.equalsIgnoreCase("player")) {
+					if (!config.getBoolean("enable-feature.player-shops")) {continue;}
+					String name = shopData.getString("NAME");
+					SimpleLocation p1 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
+					SimpleLocation p2 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
+					Shop shop = new PlayerShop(name, shopData.getString("ECONOMY"), getAccount(shopData.getString("OWNER")), 
+							shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"), shopData.getString("ALLOWED_PLAYERS"));
+					shops.put(name, shop);
 				}
-				dataLoaded = true;
-				hc.getHyperEventHandler().fireDataLoadEvent();
-				loadActive = false;
-				hc.getHyperLock().setLoadLock(false);
 			}
-		}, 1L);
+			shopData.close();
+		} else {
+			Shop shop = new ServerShop("GlobalShop", "default", getAccount(defaultServerShopAccount));
+			shops.put("GlobalShop", shop);
+		}
 	}
 	
 
@@ -336,9 +324,9 @@ public class DataManager implements Listener {
 	}
 
 	
-	
+	/*
 	public void createEconomyFromDefaultCSV(String econ, boolean restart) {
-		if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {
+		if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {
 			new Backup();
 		}
 		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
@@ -350,7 +338,7 @@ public class DataManager implements Listener {
 		sw.addToQueue("DELETE FROM hyperconomy_economies WHERE NAME = '"+econ+"'");
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("NAME", econ);
-		values.put("HYPERACCOUNT", hc.gYH().gFC("config").getString("shop.default-server-shop-account"));
+		values.put("HYPERACCOUNT", hc.getConf().getString("shop.default-server-shop-account"));
 		sw.performInsert("hyperconomy_economies", values);
 		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
 		ArrayList<String> columns = data.getColumnNames();
@@ -367,28 +355,8 @@ public class DataManager implements Listener {
 			hc.restart();
 		}
 	}
-	
-	public void initializeComposites() {
-		if (hc.gYH().gFC("config").getBoolean("enable-feature.automatic-backups")) {new Backup();}
-		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultComposites.csv";
-		FileTools ft = hc.getFileTools();
-		if (!ft.fileExists(defaultObjectsPath)) {
-			ft.copyFileFromJar("defaultComposites.csv", defaultObjectsPath);
-		}
-		SQLWrite sw = hc.getSQLWrite();
-		sw.addToQueue("DELETE FROM hyperconomy_composites");
-		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
-		ArrayList<String> columns = data.getColumnNames();
-		while (data.next()) {
-			HashMap<String, String> values = new HashMap<String, String>();
-			for (String column : columns) {
-				values.put(column, data.getString(column));
-			}
-			sw.performInsert("hyperconomy_composites", values);
-		}
-		ft.deleteFile(defaultObjectsPath);
-	}
-	
+	*/
+
 	
 
 	
@@ -465,7 +433,7 @@ public class DataManager implements Listener {
 		try {
 			if (!dataLoaded()) {return;}
 			String name = event.getPlayer().getName();
-			if (name.equalsIgnoreCase(hc.gYH().gFC("config").getString("shop.default-server-shop-account"))) {
+			if (name.equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
 				event.getPlayer().kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 			}
 			if (!hyperPlayerExists(name)) {
@@ -500,7 +468,7 @@ public class DataManager implements Listener {
 	
 	private void addOnlinePlayers() {
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			if (p.getName().equalsIgnoreCase(hc.gYH().gFC("config").getString("shop.default-server-shop-account"))) {
+			if (p.getName().equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
 				p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 			}
 			if (!hyperPlayerExists(p.getName())) {

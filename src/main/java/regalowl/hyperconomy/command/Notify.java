@@ -18,11 +18,11 @@ public class Notify {
 			HyperEconomy he = em.getEconomy("default");
 			String itemname = he.fixName(args[0]);
 			if (args.length == 1) {
-				if (hc.gYH().gFC("config").getBoolean("enable-feature.price-change-notifications")) {
+				if (hc.getConf().getBoolean("enable-feature.price-change-notifications")) {
 					if (he.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
 						if (!itemname.equalsIgnoreCase("all")) {
 							boolean note = false;
-							String notify = hc.gYH().gFC("config").getString("shop.send-price-change-notifications-for");
+							String notify = hc.getConf().getString("shop.send-price-change-notifications-for");
 							if (notify != null) {
 								if (notify.contains("," + itemname + ",")) {
 									note = true;
@@ -36,12 +36,12 @@ public class Notify {
 								if (itemname.equalsIgnoreCase(notify.substring(0, itemname.length()))) {
 									notify = notify.substring(itemname.length() + 1, notify.length());
 								}
-								hc.gYH().gFC("config").set("shop.send-price-change-notifications-for", notify);
+								hc.getConf().set("shop.send-price-change-notifications-for", notify);
 								//sender.sendMessage(ChatColor.GOLD + "You will no longer receive notifications for " + itemname);
 								sender.sendMessage(L.f(L.get("NOT_RECEIVE_NOTIFICATIONS_S"), itemname));
 							} else {
 								notify = notify + itemname + ",";
-								hc.gYH().gFC("config").set("shop.send-price-change-notifications-for", notify);
+								hc.getConf().set("shop.send-price-change-notifications-for", notify);
 								//sender.sendMessage(ChatColor.GOLD + "You will now receive notifications for " + itemname);
 								sender.sendMessage(L.f(L.get("RECEIVE_NOTIFICATIONS_S"), itemname));
 							}
@@ -53,12 +53,12 @@ public class Notify {
 								namelist = namelist + items.get(i) + ",";
 								i++;
 							}
-							String notify = hc.gYH().gFC("config").getString("shop.send-price-change-notifications-for");
+							String notify = hc.getConf().getString("shop.send-price-change-notifications-for");
 							if (notify.equalsIgnoreCase(namelist)) {
-								hc.gYH().gFC("config").set("shop.send-price-change-notifications-for", "");
+								hc.getConf().set("shop.send-price-change-notifications-for", "");
 								sender.sendMessage(L.get("NOT_RECEIVE_NOTIFICATIONS"));
 							} else {
-								hc.gYH().gFC("config").set("shop.send-price-change-notifications-for", namelist);
+								hc.getConf().set("shop.send-price-change-notifications-for", namelist);
 								sender.sendMessage(L.get("RECEIVE_NOTIFICATIONS"));
 							}
 						}

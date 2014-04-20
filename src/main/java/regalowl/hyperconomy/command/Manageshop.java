@@ -22,6 +22,7 @@ import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 
 
@@ -37,11 +38,11 @@ public class Manageshop implements CommandExecutor {
 			hc.getHyperLock().sendLockMessage(sender);
 			return true;
 		}
-		if (!hc.gYH().gFC("config").getBoolean("enable-feature.player-shops")) {
+		if (!hc.getConf().getBoolean("enable-feature.player-shops")) {
 			sender.sendMessage(L.get("PLAYERSHOPS_DISABLED"));
 			return true;
 		}
-		int maxVolume = hc.gYH().gFC("config").getInt("shop.max-player-shop-volume");
+		int maxVolume = hc.getConf().getInt("shop.max-player-shop-volume");
 		DataManager em = hc.getDataManager();
 		Player player = null;
 		if (sender instanceof Player) {
@@ -170,7 +171,7 @@ public class Manageshop implements CommandExecutor {
 			}
 			
 			HyperObject ho2 = he.getHyperObject(ho.getName(), cps);
-			int globalMaxStock = hc.gYH().gFC("config").getInt("shop.max-stock-per-item-in-playershops");
+			int globalMaxStock = hc.getConf().getInt("shop.max-stock-per-item-in-playershops");
 			if (ho2.getStock() + amount > globalMaxStock) {
 				player.sendMessage(L.get("CANT_ADD_MORE_STOCK"));
 				return true;
@@ -304,7 +305,7 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("SHOP_ALREADY_EXISTS"));
 				return true;
 			}
-			int maxShops = hc.gYH().gFC("config").getInt("shop.max-player-shops-per-player");
+			int maxShops = hc.getConf().getInt("shop.max-player-shops-per-player");
 			if (em.getShops(hp).size() > maxShops && !player.hasPermission("hyperconomy.admin")) {
 				player.sendMessage(L.f(L.get("SHOP_LIMIT_REACHED"), maxShops));
 				return true;
@@ -318,8 +319,8 @@ public class Manageshop implements CommandExecutor {
 				}
 			}
 			Location l = player.getLocation();
-			Location p1 = new Location(player.getWorld(), l.getBlockX() - radius, l.getBlockY() - radius, l.getBlockZ() - radius);
-			Location p2 = new Location(player.getWorld(), l.getBlockX() + radius, l.getBlockY() + radius, l.getBlockZ() + radius);
+			SimpleLocation p1 = new SimpleLocation(player.getWorld().getName(), l.getBlockX() - radius, l.getBlockY() - radius, l.getBlockZ() - radius);
+			SimpleLocation p2 = new SimpleLocation(player.getWorld().getName(), l.getBlockX() + radius, l.getBlockY() + radius, l.getBlockZ() + radius);
 			PlayerShop newShop = new PlayerShop(name, hp.getEconomy(), hp, p1, p2);
 			if (newShop.getVolume() > maxVolume) {
 				player.sendMessage(L.f(L.get("CANT_MAKE_SHOP_LARGER_THAN"), maxVolume));
