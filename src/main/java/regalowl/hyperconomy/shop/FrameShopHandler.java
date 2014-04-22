@@ -117,9 +117,11 @@ public class FrameShopHandler implements Listener {
 						ps = (PlayerShop) s;
 					}
 					if (p.isSneaking() && p.hasPermission("hyperconomy.admin")) {
+						fs.delete();
 						return;
 					}
 					if (ps != null && ps.isAllowed(hp) && p.isSneaking()) {
+						fs.delete();
 						return;
 					}
 					event.setCancelled(true);
