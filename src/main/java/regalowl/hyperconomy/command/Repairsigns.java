@@ -67,6 +67,9 @@ public class Repairsigns {
 								objectName = em.getEconomy("default").fixName(objectName);
 								if (em.getEconomy("default").objectTest(objectName)) {
 									String ttype = ChatColor.stripColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
+									if (ttype.contains("[")) {
+										continue;
+									}
 									if (ttype.startsWith("s:")) {
 										ttype = "SB";
 									}
