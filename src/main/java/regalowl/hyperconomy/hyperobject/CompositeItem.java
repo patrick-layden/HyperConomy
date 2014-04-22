@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 
@@ -17,7 +18,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	private ConcurrentHashMap<HyperObject,Double> components = new ConcurrentHashMap<HyperObject,Double>();
 	
 	
-	public CompositeItem(String name, String economy, String displayName, String aliases, String type, String composites, String data) {
+	public CompositeItem(HyperEconomy he, String name, String economy, String displayName, String aliases, String type, String composites, String data) {
 		super(name,economy,"","","",0,"",0,0,0,"",0,0,0,0,data);
 		hc = HyperConomy.hc;
 		cf = hc.gCF();
@@ -40,7 +41,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		    	int number = Integer.parseInt(amountString);
 		    	amount = (double)number;
 		    }
-		    HyperObject ho = hc.getDataManager().getEconomy(economy).getHyperObject(oname);
+		    HyperObject ho = he.getHyperObject(oname);
 		    this.components.put(ho, amount);
 		}
 	}

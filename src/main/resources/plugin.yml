@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.HyperConomy
-version: 0.974.53
+version: 0.974.54
 author: RegalOwl
 website: http://dev.bukkit.org/server-mods/hyperconomy/
 load: STARTUP

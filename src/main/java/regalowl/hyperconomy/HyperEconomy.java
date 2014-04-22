@@ -42,7 +42,7 @@ public class HyperEconomy implements DataLoadListener {
 	private String xpName = null;
 	
 
-	HyperEconomy(String economy) {
+	public HyperEconomy(String economy) {
 		hc = HyperConomy.hc;	
 		this.economyName = economy;
 		hc.getHyperEventHandler().registerDataLoadListener(this);
@@ -140,7 +140,7 @@ public class HyperEconomy implements DataLoadListener {
 					loaded = false;
 					continue;
 				}
-				HyperObject ho = new CompositeItem(name, economyName, result.getString("DISPLAY_NAME"), result.getString("ALIASES"), 
+				HyperObject ho = new CompositeItem(this, name, economyName, result.getString("DISPLAY_NAME"), result.getString("ALIASES"), 
 						result.getString("TYPE"), result.getString("COMPONENTS"), result.getString("DATA"));
 				hyperObjectsName.put(ho.getName().toLowerCase(), ho);
 				for (String alias:ho.getAliases()) {
