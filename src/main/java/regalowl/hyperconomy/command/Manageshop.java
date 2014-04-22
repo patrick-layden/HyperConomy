@@ -197,6 +197,7 @@ public class Manageshop implements CommandExecutor {
 				double removed = ho2.removeEnchantment(player.getItemInHand());
 				if (removed > 0) {
 					ho2.setStock(ho2.getStock() + removed);
+					player.sendMessage(L.get("STOCK_ADDED"));
 				} else {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}
@@ -213,6 +214,7 @@ public class Manageshop implements CommandExecutor {
 				double rcount = ho2.remove(amount, hp);
 				if (rcount > 0) {
 					ho2.setStock(ho2.getStock() + amount);
+					player.sendMessage(L.get("STOCK_ADDED"));
 				} else {
 					player.sendMessage(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}
