@@ -234,6 +234,14 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		conditions.put("NAME", name);
 		values.put("ECONOMY", economy);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
+		ArrayList<HyperObject> newAvailableObjects = new ArrayList<HyperObject>();
+		for (HyperObject ho:availableObjects) {
+			HyperObject nObj = he.getHyperObject(ho.getName());
+			newAvailableObjects.add(nObj);
+		}
+		availableObjects.clear();
+		availableObjects.addAll(newAvailableObjects);
 	}
 	
 	
