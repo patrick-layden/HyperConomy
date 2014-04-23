@@ -1,5 +1,8 @@
 package regalowl.hyperconomy.account;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -22,6 +25,7 @@ public class HyperPlayer implements HyperAccount {
 	private TransactionProcessor tp;
 	private DataManager em;
 	private String name;
+	private String uuid;
 	private String economy;
 	private double balance;
 	private double x;
@@ -39,32 +43,50 @@ public class HyperPlayer implements HyperAccount {
 		SQLWrite sw = hc.getSQLWrite();
 		balance = hc.getConf().getDouble("economy-plugin.starting-player-account-balance");
 		economy = "default";
-		boolean playerOnline = false;
-		for (Player p:Bukkit.getOnlinePlayers()) {
-			if (p.getName().equalsIgnoreCase(player)) {
-				name = p.getName();
-				x = p.getLocation().getX();
-				y = p.getLocation().getY();
-				z = p.getLocation().getZ();
-				world = p.getLocation().getWorld().getName();
-				sw.addToQueue("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + x + "','" + y + "','" + z + "','" + world + "','','')");
-				playerOnline = true;
-				break;
-			}
-		}
-		if (!playerOnline) {
+		Player p = getPlayer();
+		if (p != null) {
+			name = p.getName();
+			uuid = p.getUniqueId().toString();
+			x = p.getLocation().getX();
+			y = p.getLocation().getY();
+			z = p.getLocation().getZ();
+			world = p.getLocation().getWorld().getName();
+			HashMap<String,String> values = new HashMap<String,String>();
+			values.put("NAME", name);
+			values.put("UUID", uuid);
+			values.put("ECONOMY", economy);
+			values.put("BALANCE", balance+"");
+			values.put("X", x+"");
+			values.put("Y", y+"");
+			values.put("Z", z+"");
+			values.put("WORLD", world);
+			values.put("HASH", "");
+			values.put("SALT", "");
+			sw.performInsert("hyperconomy_players", values);
+		} else {
 			name = player;
-			sw.addToQueue("INSERT INTO hyperconomy_players (PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT)" + " VALUES ('" + name + "','" + economy + "','" + balance + "','" + 0 + "','" + 0 + "','" + 0 + "','" + "world" + "','','')");
+			HashMap<String,String> values = new HashMap<String,String>();
+			values.put("NAME", name);
+			values.put("ECONOMY", economy);
+			values.put("BALANCE", balance+"");
+			values.put("X", "0");
+			values.put("Y", "0");
+			values.put("Z", "0");
+			values.put("WORLD", "world");
+			values.put("HASH", "");
+			values.put("SALT", "");
+			sw.performInsert("hyperconomy_players", values);
 		}
 		createExternalAccount();
 	}
 	
 	
-	public HyperPlayer(String name, String economy, double balance, double x, double y, double z, String world, String hash, String salt) {
+	public HyperPlayer(String name, String uuid, String economy, double balance, double x, double y, double z, String world, String hash, String salt) {
 		hc = HyperConomy.hc;
 		tp = new TransactionProcessor(this);
 		em = hc.getDataManager();
 		this.name = name;
+		this.uuid = uuid;
 		this.economy = economy;
 		this.balance = balance;
 		this.x = x;
@@ -76,6 +98,7 @@ public class HyperPlayer implements HyperAccount {
 		hc.getServer().getScheduler().runTask(hc, new Runnable() {
 			public void run() {
 				createExternalAccount();
+				checkUUID();
 			}
 		});
 	}
@@ -88,8 +111,36 @@ public class HyperPlayer implements HyperAccount {
 		}
 	}
 	
+	public void checkUUID() {
+		if (uuid == null || uuid == "") {
+			@SuppressWarnings("deprecation")
+			Player p = Bukkit.getPlayer(name);
+			if (p == null) {return;}
+			setUUID(p.getUniqueId().toString());
+			if (uuid == null || uuid == "") {return;}
+		}
+		Player p = Bukkit.getPlayer(UUID.fromString(uuid));
+		if (p == null) {return;}
+		if (p.getName().equals(name)) {return;}
+		if (hc.useExternalEconomy()) {
+			double oldBalance = getBalance();
+			setBalance(0.0);
+			setName(p.getName());
+			setBalance(oldBalance);
+		} else {
+			setName(p.getName());
+		}
+	}
+	
 	public String getName() {
 		return name;
+	}
+	public UUID getUUID() {
+		if (uuid == null || uuid == "") {return null;}
+		return UUID.fromString(uuid);
+	}
+	public String getUUIDString() {
+		return uuid;
 	}
 	public String getEconomy() {
 		return economy;
@@ -125,56 +176,103 @@ public class HyperPlayer implements HyperAccount {
 	
 	public void delete() {
 		hc.getDataManager().removeHyperPlayer(this);
-		String statement = "DELETE FROM hyperconomy_players WHERE PLAYER = '" + this.name + "'";
-		hc.getSQLWrite().addToQueue(statement);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		hc.getSQLWrite().performDelete("hyperconomy_players", conditions);
 	}
 	
 	public void setName(String name) {
-		//can't rename players yet
+		hc.getDataManager().removeHyperPlayer(this);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", this.name);
+		values.put("NAME", name);
+		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
+		this.name = name;
+		hc.getDataManager().addHyperPlayer(this);
 	}
+	public void setUUID(String uuid) {
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", this.name);
+		values.put("UUID", uuid);
+		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
+		this.uuid = uuid;
+	}
+	
 	public void setEconomy(String economy) {
-		String statement = "UPDATE hyperconomy_players SET ECONOMY='" + economy + "' WHERE PLAYER = '" + name + "'";
-		hc.getSQLWrite().addToQueue(statement);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("ECONOMY", economy);
+		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.economy = economy;
 	}
 	public void setX(double x) {
-		String statement = "UPDATE hyperconomy_players SET X='" + x + "' WHERE PLAYER = '" + name + "'";
-		hc.getSQLWrite().addToQueue(statement);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("X", x+"");
+		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.x = x;
 	}
 	public void setY(double y) {
-		String statement = "UPDATE hyperconomy_players SET Y='" + y + "' WHERE PLAYER = '" + name + "'";
-		hc.getSQLWrite().addToQueue(statement);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("Y", y+"");
+		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.y = y;
 	}
 	public void setZ(double z) {
-		String statement = "UPDATE hyperconomy_players SET Z='" + z + "' WHERE PLAYER = '" + name + "'";
-		hc.getSQLWrite().addToQueue(statement);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("Z", z+"");
+		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.z = z;
 	}
 	public void setWorld(String world) {
-		String statement = "UPDATE hyperconomy_players SET WORLD='" + world + "' WHERE PLAYER = '" + name + "'";
-		hc.getSQLWrite().addToQueue(statement);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("WORLD", world);
+		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.world = world;
 	}
 	public void setHash(String hash) {
-		String statement = "UPDATE hyperconomy_players SET HASH='" + hash + "' WHERE PLAYER = '" + name + "'";
-		hc.getSQLWrite().addToQueue(statement);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("HASH", hash);
+		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.hash = hash;
 	}
 	public void setSalt(String salt) {
-		String statement = "UPDATE hyperconomy_players SET SALT='" + salt + "' WHERE PLAYER = '" + name + "'";
-		hc.getSQLWrite().addToQueue(statement);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("SALT", salt);
+		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.salt = salt;
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	public Player getPlayer() {
-		return Bukkit.getPlayer(name);
+		UUID id = getUUID();
+		Player p = null;
+		if (id != null) {
+			p = Bukkit.getPlayer(id);
+		}
+		if (p == null && name != null) {
+			p = Bukkit.getPlayer(name);
+		}
+		return p;
 	}
 	
 	public Inventory getInventory() {
-		Player p = Bukkit.getPlayer(name);
+		Player p = getPlayer();
 		if (p != null) {
 			return p.getInventory();
 		} else {
@@ -273,16 +371,16 @@ public class HyperPlayer implements HyperAccount {
 			hc.getEconomy().depositPlayer(name, balance);
 			hc.getLog().writeAuditLog(name, "setbalance", balance, hc.getEconomy().getName());
 		} else {
-			this.balance = balance;
-			String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";
-			hc.getSQLWrite().addToQueue(statement);
-			hc.getLog().writeAuditLog(name, "setbalance", balance, "HyperConomy");
+			setInternalBalance(balance);
 		}
 	}
 	public void setInternalBalance(double balance) {
 		this.balance = balance;
-		String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";
-		hc.getSQLWrite().addToQueue(statement);
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		values.put("BALANCE", balance+"");
+		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		hc.getLog().writeAuditLog(name, "setbalance", balance, "HyperConomy");
 	}
 	public void deposit(double amount) {
@@ -291,8 +389,11 @@ public class HyperPlayer implements HyperAccount {
 			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getEconomy().getName());
 		} else {
 			this.balance += amount;
-			String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";
-			hc.getSQLWrite().addToQueue(statement);
+			HashMap<String,String> conditions = new HashMap<String,String>();
+			HashMap<String,String> values = new HashMap<String,String>();
+			conditions.put("NAME", name);
+			values.put("BALANCE", balance+"");
+			hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 			hc.getLog().writeAuditLog(name, "deposit", amount, "HyperConomy");
 		}
 	}
@@ -303,8 +404,11 @@ public class HyperPlayer implements HyperAccount {
 			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getEconomy().getName());
 		} else {
 			this.balance -= amount;
-			String statement = "UPDATE hyperconomy_players SET BALANCE='" + balance + "' WHERE PLAYER = '" + name + "'";
-			hc.getSQLWrite().addToQueue(statement);
+			HashMap<String,String> conditions = new HashMap<String,String>();
+			HashMap<String,String> values = new HashMap<String,String>();
+			conditions.put("NAME", name);
+			values.put("BALANCE", balance+"");
+			hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 			hc.getLog().writeAuditLog(name, "withdrawal", amount, "HyperConomy");
 		}
 	}

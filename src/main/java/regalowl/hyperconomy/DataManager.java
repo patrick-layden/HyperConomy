@@ -158,7 +158,7 @@ public class DataManager implements Listener {
 		hyperPlayers.clear();
 		QueryResult playerData = sr.select("SELECT * FROM hyperconomy_players");
 		while (playerData.next()) {
-			HyperPlayer hplayer = new HyperPlayer(playerData.getString("PLAYER"), playerData.getString("ECONOMY"), 
+			HyperPlayer hplayer = new HyperPlayer(playerData.getString("NAME"), playerData.getString("UUID"), playerData.getString("ECONOMY"), 
 					playerData.getDouble("BALANCE"), playerData.getDouble("X"), playerData.getDouble("Y"), playerData.getDouble("Z"), 
 					playerData.getString("WORLD"), playerData.getString("HASH"), playerData.getString("SALT"));
 			hyperPlayers.put(hplayer.getName().toLowerCase(), hplayer);
@@ -438,6 +438,9 @@ public class DataManager implements Listener {
 			}
 			if (!hyperPlayerExists(name)) {
 				addPlayer(name);
+			} else {
+				HyperPlayer hp = getHyperPlayer(name);
+				hp.checkUUID();
 			}
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
@@ -540,6 +543,13 @@ public class DataManager implements Listener {
 			hyperPlayers.remove(hp.getName().toLowerCase());
 		}
 	}
+	
+	public void addHyperPlayer(HyperPlayer hp) {
+		if (!hyperPlayers.contains(hp)) {
+			hyperPlayers.put(hp.getName().toLowerCase(), hp);
+		}
+	}
+	
 	 
 	
 
@@ -581,6 +591,7 @@ public class DataManager implements Listener {
 		}
 		return player;
 	}
+	
 
 
 	//SHOP FUNCTIONS
