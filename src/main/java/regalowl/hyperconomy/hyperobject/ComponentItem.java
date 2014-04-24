@@ -215,10 +215,10 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				if (matchesItemStack(heldStack)) {
 					if (amount >= heldStack.getAmount()) {
 						amount -= heldStack.getAmount();
-						amountRemoved += heldStack.getAmount() * getDurabilityPercent();
+						amountRemoved += heldStack.getAmount() * getDurabilityPercent(heldStack);
 						inventory.clear(p.getInventory().getHeldItemSlot());
 					} else {
-						amountRemoved += amount * getDurabilityPercent();
+						amountRemoved += amount * getDurabilityPercent(heldStack);
 						heldStack.setAmount(heldStack.getAmount() - amount);
 						return amountRemoved;
 					}
@@ -229,10 +229,10 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				if (matchesItemStack(currentItem)) {
 					if (amount >= currentItem.getAmount()) {
 						amount -= currentItem.getAmount();
-						amountRemoved += currentItem.getAmount() * getDurabilityPercent();
+						amountRemoved += currentItem.getAmount() * getDurabilityPercent(currentItem);
 						inventory.clear(slot);
 					} else {
-						amountRemoved += amount * getDurabilityPercent();
+						amountRemoved += amount * getDurabilityPercent(currentItem);
 						currentItem.setAmount(currentItem.getAmount() - amount);
 						return amountRemoved;
 					}
