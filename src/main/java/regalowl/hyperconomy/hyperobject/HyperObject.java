@@ -317,6 +317,14 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 */
 	public boolean matchesItemStack(ItemStack stack);
 	/**
+	 * @return True if this HyperObject is damaged, false if not. (Can only be used with items.)
+	 */
+	public boolean isDamaged();
+	/**
+	 * @return A number between 1 and 0 representing the HyperObject's durability remaining percentage.  (Can only be used with items.)
+	 */
+	public double getDurabilityPercent();
+	/**
 	 * @return True if this HyperObject has durability, false if not. (Can only be used with items.)
 	 */
 	public boolean isDurable();

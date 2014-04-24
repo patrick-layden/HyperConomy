@@ -24,7 +24,7 @@ public class HyperItemStack {
 		this.stack = stack;
 	}
 	
-	
+
 	public String getKey() {
 		return stack.getType().toString() + "|" + getDamageValue();
 	}

@@ -2,13 +2,10 @@ package regalowl.hyperconomy.command;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
@@ -54,21 +51,16 @@ public class Hs {
 					if (ho == null) {
 						player.sendMessage(L.get("CANT_BE_TRADED"));
 					} else {
-						ItemStack iinhand = player.getItemInHand();
-						if (new HyperItemStack(iinhand).hasEnchants() == false) {
-							Shop s = em.getShop(player);
-							if (!s.isBanned(ho.getName())) {
-								PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-								pt.setHyperObject(ho);
-								pt.setAmount(amount);
-								pt.setTradePartner(s.getOwner());
-								TransactionResponse response = hp.processTransaction(pt);
-								response.sendMessages();
-							} else {
-								player.sendMessage(L.get("CANT_BE_TRADED"));
-							}
+						Shop s = em.getShop(player);
+						if (!s.isBanned(ho.getName())) {
+							PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+							pt.setHyperObject(ho);
+							pt.setAmount(amount);
+							pt.setTradePartner(s.getOwner());
+							TransactionResponse response = hp.processTransaction(pt);
+							response.sendMessages();
 						} else {
-							player.sendMessage(L.get("CANT_BUY_SELL_ENCHANTED_ITEMS"));
+							player.sendMessage(L.get("CANT_BE_TRADED"));
 						}
 					}
 				} else {

@@ -105,12 +105,9 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	public int count(Inventory inventory) {
 		int totalitems = 0;
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
-			ItemStack stack = inventory.getItem(slot);
-			HyperItemStack his = new HyperItemStack(stack);
-			if (stack != null && !his.hasEnchants()) {
-				if (stack.getType() == sis.getMaterialEnum() && his.getDamageValue() == sis.getData()) {
-					totalitems += stack.getAmount();
-				}
+			ItemStack currentItem = inventory.getItem(slot);
+			if (matchesItemStack(currentItem)) {
+				totalitems += currentItem.getAmount();
 			}
 		}
 		return totalitems;
@@ -122,20 +119,17 @@ public class ComponentItem extends BasicObject implements HyperObject {
 			int maxstack = stack.getMaxStackSize();
 			int availablespace = 0;
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
-				ItemStack citem = inventory.getItem(slot);
-				HyperItemStack his = new HyperItemStack(citem);
-				if (citem == null) {
+				ItemStack currentItem = inventory.getItem(slot);
+				if (currentItem == null) {
 					availablespace += maxstack;
-				} else if (citem.getType() == sis.getMaterialEnum() && his.getDamageValue() == sis.getData()) {
-					availablespace += (maxstack - citem.getAmount());
+				} else if (matchesItemStack(currentItem)) {
+					availablespace += (maxstack - currentItem.getAmount());
 				}
 			}
 			return availablespace;
 		} catch (Exception e) {
-			String info = "getAvailableSpace() passed values inventory='" + inventory.getName() + "', data='" + sis.getData() + "'";
-			hc.gDB().writeError(e, info);
-			int availablespace = 0;
-			return availablespace;
+			hc.gDB().writeError(e);
+			return 0;
 		}
 	}
 	
@@ -172,36 +166,35 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	public void add(int amount, Inventory inventory) {
 		try {
 			ItemStack stack = getItemStack();
-			int maxstack = stack.getMaxStackSize();
+			int maxStack = stack.getMaxStackSize();
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
-				int pamount = 0;
-				ItemStack citem = inventory.getItem(slot);
-				HyperItemStack his = new HyperItemStack(citem);
-				if (citem != null && citem.getType() == sis.getMaterialEnum() && sis.getData() == his.getDamageValue()) {
-					int currentamount = citem.getAmount();
-					if ((maxstack - currentamount) >= amount) {
-						pamount = amount;
-						citem.setAmount(pamount + currentamount);
+				ItemStack currentItem = inventory.getItem(slot);
+				if (matchesItemStack(currentItem)) {
+					int stackSize = currentItem.getAmount();
+					int availableSpace = maxStack - stackSize;
+					if (availableSpace == 0) {continue;}
+					if (availableSpace < amount) {
+						amount -= availableSpace;
+						currentItem.setAmount(maxStack);
 					} else {
-						pamount = maxstack - currentamount;
-						citem.setAmount(maxstack);
+						currentItem.setAmount(amount + stackSize);
+						amount = 0;
 					}
 				} else if (inventory.getItem(slot) == null) {
-					if (amount > maxstack) {
-						pamount = maxstack;
+					if (amount > maxStack) {
+						stack.setAmount(maxStack);
+						inventory.setItem(slot, stack);
+						amount -= maxStack;
 					} else {
-						pamount = amount;
+						stack.setAmount(amount);
+						inventory.setItem(slot, stack);
+						amount = 0;
 					}
-					stack.setAmount(pamount);
-					inventory.setItem(slot, stack);
 				}
-				amount -= pamount;
-				if (amount <= 0) {
-					break;
-				}
+				if (amount <= 0) {break;}
 			}
 			if (amount != 0) {
-				String info = "Error adding items to inventory; + '" + amount + "' remaining. Transaction addBoughtItems() passed values inventory='" + inventory.getName() + "', data='" + sis.getData() + "', amount='" + amount + "'";
+				String info = "ComponentItem add() failure; " + amount + " remaining.";
 				hc.gDB().writeError(info);
 			}
 			if (inventory.getType() == InventoryType.PLAYER) {
@@ -209,61 +202,51 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				p.updateInventory();
 			}
 		} catch (Exception e) {
-			String info = "add() passed values inventory='" + inventory.getName() + "', data='" + sis.getData() + "', amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
+			hc.gDB().writeError(e);
 		}
 	}
 	@Override
 	public double remove(int amount, Inventory inventory) {
 		try {
-			int remainingAmount = 0;
 			double amountRemoved = 0;
-			remainingAmount = amount;
 			if (inventory.getType() == InventoryType.PLAYER) {
 				Player p = (Player) inventory.getHolder();
-				ItemStack hstack = p.getItemInHand();
-				HyperItemStack his = new HyperItemStack(hstack);
-				if (hstack != null && !his.hasEnchants()) {
-					if (hstack.getType() == sis.getMaterialEnum() && his.getDamageValue() == sis.getData()) {
-						if (remainingAmount >= hstack.getAmount()) {
-							remainingAmount -= hstack.getAmount();
-							amountRemoved += hstack.getAmount() * his.getDurabilityMultiplier();
-							inventory.clear(p.getInventory().getHeldItemSlot());
-						} else {
-							amountRemoved += remainingAmount * his.getDurabilityMultiplier();
-							hstack.setAmount(hstack.getAmount() - remainingAmount);
-							return amountRemoved;
-						}
+				ItemStack heldStack = p.getItemInHand();
+				if (matchesItemStack(heldStack)) {
+					if (amount >= heldStack.getAmount()) {
+						amount -= heldStack.getAmount();
+						amountRemoved += heldStack.getAmount() * getDurabilityPercent();
+						inventory.clear(p.getInventory().getHeldItemSlot());
+					} else {
+						amountRemoved += amount * getDurabilityPercent();
+						heldStack.setAmount(heldStack.getAmount() - amount);
+						return amountRemoved;
 					}
 				}
 			}
-			for (int i = 0; i < inventory.getSize(); i++) {
-				ItemStack stack = inventory.getItem(i);
-				HyperItemStack his = new HyperItemStack(stack);
-				if (stack != null && !his.hasEnchants()) {
-					if (stack.getType() == sis.getMaterialEnum() && his.getDamageValue() == sis.getData()) {
-						if (remainingAmount >= stack.getAmount()) {
-							remainingAmount -= stack.getAmount();
-							amountRemoved += stack.getAmount() * his.getDurabilityMultiplier();
-							inventory.clear(i);
-						} else {
-							amountRemoved += remainingAmount * his.getDurabilityMultiplier();
-							stack.setAmount(stack.getAmount() - remainingAmount);
-							return amountRemoved;
-						}
+			for (int slot = 0; slot < inventory.getSize(); slot++) {
+				ItemStack currentItem = inventory.getItem(slot);
+				if (matchesItemStack(currentItem)) {
+					if (amount >= currentItem.getAmount()) {
+						amount -= currentItem.getAmount();
+						amountRemoved += currentItem.getAmount() * getDurabilityPercent();
+						inventory.clear(slot);
+					} else {
+						amountRemoved += amount * getDurabilityPercent();
+						currentItem.setAmount(currentItem.getAmount() - amount);
+						return amountRemoved;
 					}
 				}
 			}
-			if (remainingAmount != 0) {
-				hc.gDB().writeError("remove() failure.  Items not successfully removed.  Passed data = '" + sis.getData() + "', amount = '" + amount + "'");
+			if (amount != 0) {
+				hc.gDB().writeError("remove() failure.  Items not successfully removed; amount = '" + amount + "'");
 				return amountRemoved;	
 			} else {
 				return amountRemoved;
 			}
 		} catch (Exception e) {
-			String info = "remove() passed values inventory='" + inventory.getName() + "', data='" + sis.getData() + "', amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
-			return -1;
+			hc.gDB().writeError(e);
+			return 0;
 		}
 	}
 	
@@ -303,23 +286,32 @@ public class ComponentItem extends BasicObject implements HyperObject {
 			return 0;
 		}
 	}
-	
+
 	private double getDurabilityPercent(ItemStack stack) {
-		try {
-			double durabilityPercent = 1;
-			try {
-				double currentDurability = stack.getDurability();
-				double maxDurability = stack.getData().getItemType().getMaxDurability();
-				durabilityPercent = Math.abs(1 - (currentDurability / maxDurability));
-			} catch (Exception e) {
-				durabilityPercent = 1;
-			}
-			return durabilityPercent;
-		} catch (Exception e) {
-			String info = "getDurabilityPercent() passed values ItemStack='" + stack + "'";
-			hc.gDB().writeError(e, info);
-			return 1;
+		double currentDurability = stack.getDurability();
+		double maxDurability = stack.getType().getMaxDurability();
+		if (maxDurability == 0) {return 1;}
+		return Math.abs(1 - (currentDurability / maxDurability));
+	}
+	
+	@Override
+	public double getDurabilityPercent() {
+		double durabilityMultiplier = 1;
+		if (isDurable()) {
+			double maxDurability = sis.getMaterialEnum().getMaxDurability();
+			durabilityMultiplier = (1 - sis.getDurability() / maxDurability);
 		}
+		return durabilityMultiplier;
+	}
+	
+	@Override
+	public boolean isDamaged() {
+		if (sis.getMaterialEnum().getMaxDurability() > 0) {
+			if (sis.getDurability() > 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

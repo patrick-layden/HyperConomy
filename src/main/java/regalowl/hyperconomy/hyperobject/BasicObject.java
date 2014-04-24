@@ -542,7 +542,10 @@ public class BasicObject implements HyperObject {
 	public boolean isDurable() {return false;}
 	@Override
 	public double getDamageMultiplier(int amount, Inventory inventory) {return 1;}
-	
+	@Override
+	public boolean isDamaged() {return false;}
+	@Override
+	public double getDurabilityPercent() {return 1;}
 	
 	
 	//COMPOSITE ITEM METHODS
@@ -604,6 +607,7 @@ public class BasicObject implements HyperObject {
 	public void setStatus(HyperObjectStatus status) {}
 	@Override
 	public void setHyperObject(HyperObject ho) {}
+
 
 
 
