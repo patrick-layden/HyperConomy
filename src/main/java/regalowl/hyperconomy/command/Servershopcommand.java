@@ -125,7 +125,9 @@ public class Servershopcommand implements CommandExecutor {
 					sList += s.getDisplayName() + ",";
 				}
 			}
-			sList = sList.substring(0, sList.length() - 1);
+			if (sList.length() > 0) {
+				sList = sList.substring(0, sList.length() - 1);
+			}
 			String shoplist = sList.replace("_", " ");
 			sender.sendMessage(ChatColor.AQUA + shoplist);
 		} else if (args[0].equalsIgnoreCase("owner") || args[0].equalsIgnoreCase("o")) {
