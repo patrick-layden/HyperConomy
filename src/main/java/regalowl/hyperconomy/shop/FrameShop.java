@@ -12,12 +12,14 @@ import org.bukkit.map.MapView;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HModType;
+import regalowl.hyperconomy.event.HyperObjectModificationListener;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 
-public class FrameShop {
+public class FrameShop implements HyperObjectModificationListener {
 
 	private HyperConomy hc;
 	private short mapId;
@@ -32,8 +34,9 @@ public class FrameShop {
 	private Shop s;
 
 	@SuppressWarnings("deprecation")
-	FrameShop(Location l, HyperObject ho, Shop s, int amount) {
+	public FrameShop(Location l, HyperObject ho, Shop s, int amount) {
 		hc = HyperConomy.hc;
+		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
 			delete();
 			return;
@@ -55,8 +58,9 @@ public class FrameShop {
 		render();
 	}
 
-	FrameShop(short mapId, Location l, HyperObject ho, Shop s, int amount) {
+	public FrameShop(short mapId, Location l, HyperObject ho, Shop s, int amount) {
 		hc = HyperConomy.hc;
+		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
 			delete();
 			return;
@@ -70,6 +74,13 @@ public class FrameShop {
 		this.tradeAmount = amount;
 		this.s = s;
 		if (ho != null) {
+			render();
+		}
+	}
+	
+	@Override
+	public void onHyperObjectModification(HyperObject ho, HModType type) {
+		if (this.ho.equals(ho)) {
 			render();
 		}
 	}
@@ -123,7 +134,7 @@ public class FrameShop {
 		pt.setHyperObject(ho);
 		TransactionResponse response = hp.processTransaction(pt);
 		response.sendMessages();
-		render();
+		//render();
 	}
 
 	public void sell(HyperPlayer hp) {
@@ -132,7 +143,7 @@ public class FrameShop {
 		pt.setHyperObject(ho);
 		TransactionResponse response = hp.processTransaction(pt);
 		response.sendMessages();
-		render();
+		//render();
 	}
 
 	public ItemFrame getFrame(Location loc) {

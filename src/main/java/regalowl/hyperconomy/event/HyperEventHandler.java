@@ -1,8 +1,12 @@
 package regalowl.hyperconomy.event;
 
+
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.bukkit.scheduler.BukkitRunnable;
+
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
@@ -10,89 +14,105 @@ import regalowl.hyperconomy.transaction.TransactionResponse;
 public class HyperEventHandler {
 	
 	private HyperConomy hc;
-    private CopyOnWriteArrayList<DataLoadListener> dataLoadListeners = new CopyOnWriteArrayList<DataLoadListener>();
-    private CopyOnWriteArrayList<EconomyLoadListener> economyLoadListeners = new CopyOnWriteArrayList<EconomyLoadListener>();
-    private CopyOnWriteArrayList<TransactionListener> transactionListeners = new CopyOnWriteArrayList<TransactionListener>();
-    private CopyOnWriteArrayList<ShopCreationListener> shopCreationListeners = new CopyOnWriteArrayList<ShopCreationListener>();
-    
-    
+	private CopyOnWriteArrayList<HyperListener> listeners = new CopyOnWriteArrayList<HyperListener>();
+	
     public HyperEventHandler() {
     	hc = HyperConomy.hc;
     }
     
     public void clearListeners() {
-    	dataLoadListeners.clear();
-    	transactionListeners.clear();
-    	shopCreationListeners.clear();
-    	economyLoadListeners.clear();
+    	listeners.clear();
     }
     
-    public synchronized void registerEconomyLoadListener(EconomyLoadListener listener) {
-    	economyLoadListeners.add(listener);
+    public synchronized void registerListener(HyperListener listener) {
+    	listeners.add(listener);
     }
-    public synchronized void fireEconomyLoadEvent() {
+    public void fireEconomyLoadEvent() {
 		hc.getServer().getScheduler().runTask(hc, new Runnable() {
 			public void run() {
-		        for (EconomyLoadListener listener : economyLoadListeners) {
-		        	listener.onEconomyLoad();
+		        for (HyperListener listener : listeners) {
+		        	if (listener instanceof EconomyLoadListener) {
+		        		EconomyLoadListener l = (EconomyLoadListener)listener;
+		        		l.onEconomyLoad();
+		        	}
 		        }
 			}
 		});
     }    
     
-    public synchronized void registerDataLoadListener(DataLoadListener listener) {
-    	dataLoadListeners.add(listener);
-    }
-    public synchronized void fireDataLoadEvent() {
+    public void fireDataLoadEvent() {
 		hc.getServer().getScheduler().runTask(hc, new Runnable() {
 			public void run() {
-		        for (DataLoadListener listener : dataLoadListeners) {
-		        	listener.onDataLoad();
+		        for (HyperListener listener : listeners) {
+		        	if (listener instanceof DataLoadListener) {
+		        		DataLoadListener l = (DataLoadListener)listener;
+		        		l.onDataLoad();
+		        	}
 		        }
 			}
 		});
     }
+
     
-    public synchronized void registerTransactionListener(TransactionListener listener) {
-    	transactionListeners.add(listener);
+    public void fireTransactionEvent(PlayerTransaction transaction, TransactionResponse response) {
+    	new TransactionTask(transaction, response).runTask(hc);
     }
-    public synchronized void fireTransactionEvent(PlayerTransaction transaction, TransactionResponse response) {
-    	new TransactionEvent(transaction, response);
-    }
-    private class TransactionEvent {
+    private class TransactionTask extends BukkitRunnable {
     	private PlayerTransaction transaction;
     	private TransactionResponse response;
-    	TransactionEvent(PlayerTransaction trans, TransactionResponse resp) {
-    		transaction = trans;
-    		response = resp;
-    		hc.getServer().getScheduler().runTask(hc, new Runnable() {
-    			public void run() {
-    		        for (TransactionListener listener : transactionListeners) {
-    		        	listener.onTransaction(transaction, response);
-    		        }
-    			}
-    		});
+    	public TransactionTask(PlayerTransaction transaction, TransactionResponse response) {
+    		this.transaction = transaction;
+    		this.response = response;
     	}
+		public void run() {
+	        for (HyperListener listener : listeners) {
+	        	if (listener instanceof TransactionListener) {
+	        		TransactionListener l = (TransactionListener)listener;
+	        		l.onTransaction(transaction, response);
+	        	}
+	        }
+		}
     }
     
-    public synchronized void registerShopCreationListener(ShopCreationListener listener) {
-    	shopCreationListeners.add(listener);
+    
+    
+    public void fireShopCreationEvent(Shop s) {
+    	new ShopCreationTask(s).runTask(hc);
     }
-    public synchronized void fireShopCreationEvent(Shop s) {
-    	new ShopCreationEvent(s);
-    }
-    private class ShopCreationEvent {
+    private class ShopCreationTask extends BukkitRunnable {
     	private Shop s;
-    	ShopCreationEvent(Shop shop) {
-    		s = shop;
-    		hc.getServer().getScheduler().runTask(hc, new Runnable() {
-    			public void run() {
-    		        for (ShopCreationListener listener : shopCreationListeners) {
-    		        	listener.onShopCreation(s);
-    		        }
-    			}
-    		});
+    	public ShopCreationTask(Shop s) {
+    		this.s = s;
     	}
+		public void run() {
+	        for (HyperListener listener : listeners) {
+	        	if (listener instanceof ShopCreationListener) {
+	        		ShopCreationListener l = (ShopCreationListener)listener;
+	        		l.onShopCreation(s);
+	        	}
+	        }
+		}
+    }
+    
+    
+    public void fireHyperObjectModificationEvent(HyperObject ho, HModType type) {
+    	new HyperObjectModificationTask(ho, type).runTask(hc);
+    }
+    private class HyperObjectModificationTask extends BukkitRunnable {
+    	private HyperObject ho;
+    	private HModType type;
+    	public HyperObjectModificationTask(HyperObject ho, HModType type) {
+    		this.ho = ho;
+    		this.type = type;
+    	}
+		public void run() {
+	        for (HyperListener listener : listeners) {
+	        	if (listener instanceof HyperObjectModificationListener) {
+	        		HyperObjectModificationListener l = (HyperObjectModificationListener)listener;
+	        		l.onHyperObjectModification(ho, type);
+	        	}
+	        }
+		}
     }
 
 }

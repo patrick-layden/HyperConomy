@@ -45,7 +45,7 @@ public class HyperEconomy implements DataLoadListener {
 	public HyperEconomy(String economy) {
 		hc = HyperConomy.hc;	
 		this.economyName = economy;
-		hc.getHyperEventHandler().registerDataLoadListener(this);
+		hc.getHyperEventHandler().registerListener(this);
 		sr = hc.getSQLRead();
 		useComposites = hc.getConf().getBoolean("enable-feature.composite-items");
 

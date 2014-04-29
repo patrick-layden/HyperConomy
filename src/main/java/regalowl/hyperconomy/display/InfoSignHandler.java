@@ -2,6 +2,7 @@ package regalowl.hyperconomy.display;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.Bukkit;
@@ -20,23 +21,30 @@ import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HModType;
+import regalowl.hyperconomy.event.HyperObjectModificationListener;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
+import regalowl.hyperconomy.hyperobject.HyperObject;
 
-public class InfoSignHandler implements Listener {
+public class InfoSignHandler implements Listener, HyperObjectModificationListener {
 
 	private HyperConomy hc;
 	private ConcurrentHashMap<Integer, InfoSign> infoSigns = new ConcurrentHashMap<Integer, InfoSign>();
 	private AtomicInteger signCounter = new AtomicInteger();
 	private final long signUpdateInterval = 1L;
 	private QueryResult dbData;
-
+	private AtomicBoolean updateActive = new AtomicBoolean();
+	private AtomicBoolean repeatUpdate = new AtomicBoolean();
 
 	public InfoSignHandler() {
 		hc = HyperConomy.hc;
+		updateActive.set(false);
+		repeatUpdate.set(false);
 		if (hc.getConf().getBoolean("enable-feature.info-signs")) {
 			hc.getServer().getPluginManager().registerEvents(this, hc);
 			loadSigns();
 		}
+		hc.getHyperEventHandler().registerListener(this);
 	}
 
 	private void loadSigns() {
@@ -55,6 +63,11 @@ public class InfoSignHandler implements Listener {
 						}
 						dbData.close();
 						dbData = null;
+					}
+				});
+				hc.getServer().getScheduler().runTask(hc, new Runnable() {
+					public void run() {
+						updateSigns();
 					}
 				});
 			}
@@ -122,29 +135,38 @@ public class InfoSignHandler implements Listener {
 			infoSigns.remove(is);
 		}
 	}
+	
+	@Override
+	public void onHyperObjectModification(HyperObject ho, HModType type) {
+		updateSigns();
+	}
 
 	public void updateSigns() {
-		if (hc.getHyperLock().fullLock() || !hc.enabled()) {
+		if (hc.getHyperLock().fullLock() || !hc.enabled()) {return;}
+		if (updateActive.get()) {
+			repeatUpdate.set(true);
 			return;
 		}
-		SignUpdater su = new SignUpdater(getInfoSigns());
-		su.update();
+		updateActive.set(true);
+		new SignUpdater();
 	}
 	
 	private class SignUpdater {
 		private ArrayList<InfoSign> signs;
 		private BukkitTask updateTask;
-		
-		SignUpdater(ArrayList<InfoSign> signs) {
-			this.signs = signs;
-		}
-		
-		public void update() {
+		SignUpdater() {
+			this.signs = getInfoSigns();
 			updateTask = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
 				public void run() {
 					if (signs.isEmpty()) {
-						updateTask.cancel();
-						return;
+						if (repeatUpdate.get()) {
+							signs = getInfoSigns();
+							repeatUpdate.set(false);
+						} else {
+							updateTask.cancel();
+							updateActive.set(false);
+							return;
+						}
 					}
 					InfoSign cs = signs.get(0);
 					if (cs.getSign() != null) {
@@ -157,6 +179,7 @@ public class InfoSignHandler implements Listener {
 			}, signUpdateInterval, signUpdateInterval);
 		}
 	}
+	
 	
 	public void reloadSigns() {
 		loadSigns();

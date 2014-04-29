@@ -124,7 +124,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		L = new LanguageFile();
 		hl = new HyperLock(true, false, false);
 		heh = new HyperEventHandler();
-		heh.registerDataLoadListener(this);
+		heh.registerListener(this);
 		hookVault();
 	}
 	public void enable() {
@@ -163,7 +163,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		itdi = new ItemDisplayFactory();
 		registerCommands();
 		isign = new InfoSignHandler();
-		isign.updateSigns();
 		fsh = new FrameShopHandler();
 		enabled = true;
 		hl.setLoadLock(false);

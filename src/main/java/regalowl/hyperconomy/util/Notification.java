@@ -28,7 +28,7 @@ public class Notification implements TransactionListener {
 		if (!usenotify) {return;}
 		previousmessage = "";
 		notifrequests = 0;
-		hc.getHyperEventHandler().registerTransactionListener(this);
+		hc.getHyperEventHandler().registerListener(this);
 	}
 	
 

@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HModType;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 
@@ -158,6 +159,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		sis = new SerializableItemStack(data);
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.DATA);
 	}
 
 	

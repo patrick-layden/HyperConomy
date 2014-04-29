@@ -9,6 +9,7 @@ import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HModType;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 
 public class CompositeItem extends ComponentItem implements HyperObject {
@@ -276,6 +277,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		    HyperObject ho = hc.getDataManager().getEconomy(economy).getHyperObject(oname);
 		    this.components.put(ho, amount);
 		}
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.COMPONENTS);
 	}
 	
 	@Override
@@ -283,16 +285,19 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		String statement = "UPDATE hyperconomy_composites SET NAME='" + name + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.name = name;
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.NAME);
 	}
 	@Override
 	public void setEconomy(String economy) {
 		this.economy = economy;
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.ECONOMY);
 	}
 	@Override
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 		String statement = "UPDATE hyperconomy_composites SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.DISPLAY_NAME);
 	}
 
 

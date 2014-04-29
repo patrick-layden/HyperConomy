@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.hyperobject.CompositeItem;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.util.Backup;
@@ -32,7 +31,6 @@ public class Hcset implements CommandExecutor {
 		}
 		DataManager em = hc.getDataManager();
 		LanguageFile L = hc.getLanguageFile();
-		InfoSignHandler ih = hc.getInfoSignHandler();
 		try {
 			String economy = hc.getConsoleSettings().getEconomy(sender);
 			Player p = null;
@@ -67,7 +65,6 @@ public class Hcset implements CommandExecutor {
 					if (he.objectTest(name)) {
 						he.getHyperObject(name).setCeiling(ceiling);
 						sender.sendMessage(L.f(L.get("CEILING_SET"), name));
-						ih.updateSigns();
 					} else {
 						sender.sendMessage(L.get("INVALID_NAME"));
 					}
@@ -87,7 +84,6 @@ public class Hcset implements CommandExecutor {
 						}
 						ho.setDisplayName(newName);
 						sender.sendMessage(L.f(L.get("DISPLAYNAME_SET"), newName));
-						ih.updateSigns();
 					} else {
 						sender.sendMessage(L.get("INVALID_NAME"));
 					}
@@ -122,7 +118,6 @@ public class Hcset implements CommandExecutor {
 							ho.setIsstatic(state+"");
 						}
 						sender.sendMessage(L.f(L.get("ALL_OBJECTS_SET_TO_STATIC"), message));
-						ih.updateSigns();
 						return true;
 					}
 					HyperObject ho = he.getHyperObject(name);
@@ -156,7 +151,6 @@ public class Hcset implements CommandExecutor {
 							ho.setStock(stock);
 						}
 						sender.sendMessage(L.get("ALL_STOCKS_SET"));
-						ih.updateSigns();
 						return true;
 					} else if (name.equalsIgnoreCase("all:median")) {
 						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
@@ -166,7 +160,6 @@ public class Hcset implements CommandExecutor {
 							ho.setInitiation("false");
 						}
 						sender.sendMessage(L.get("SETSTOCKMEDIANALL_SUCCESS"));
-						ih.updateSigns();
 						return true;
 					}
 					HyperObject ho = he.getHyperObject(name);
@@ -176,7 +169,6 @@ public class Hcset implements CommandExecutor {
 					}
 					ho.setStock(stock);
 					sender.sendMessage(L.f(L.get("STOCK_SET"), ho.getDisplayName()));
-					ih.updateSigns();
 				} catch (Exception e) {
 					sender.sendMessage(L.get("HCSET_STOCK_INVALID"));
 				}
@@ -191,7 +183,6 @@ public class Hcset implements CommandExecutor {
 					Double price = Double.parseDouble(args[2]);
 					ho.setStartprice(price);
 					sender.sendMessage(L.f(L.get("START_PRICE_SET"), ho.getDisplayName()));
-					ih.updateSigns();
 				} catch (Exception e) {
 					sender.sendMessage(L.get("HCSET_STARTPRICE_INVALID"));
 				}
@@ -206,7 +197,6 @@ public class Hcset implements CommandExecutor {
 					Double price = Double.parseDouble(args[2]);
 					ho.setStaticprice(price);
 					sender.sendMessage(L.f(L.get("STATIC_PRICE_SET"), ho.getDisplayName()));
-					ih.updateSigns();
 				} catch (Exception e) {
 					sender.sendMessage(L.get("HCSET_STATICPRICE_INVALID"));
 				}
@@ -221,7 +211,6 @@ public class Hcset implements CommandExecutor {
 					Double value = Double.parseDouble(args[2]);
 					ho.setValue(value);
 					sender.sendMessage(L.f(L.get("VALUE_SET"), ho.getDisplayName()));
-					ih.updateSigns();
 				} catch (Exception e) {
 					sender.sendMessage(L.get("HCSET_VALUE_INVALID"));
 				}
@@ -236,7 +225,6 @@ public class Hcset implements CommandExecutor {
 					Double median = Double.parseDouble(args[2]);
 					ho.setMedian(median);
 					sender.sendMessage(L.f(L.get("MEDIAN_SET"), ho.getDisplayName()));
-					ih.updateSigns();
 				} catch (Exception e) {
 					sender.sendMessage(L.get("HCSET_MEDIAN_INVALID"));
 				}
@@ -251,7 +239,6 @@ public class Hcset implements CommandExecutor {
 					Double floor = Double.parseDouble(args[2]);
 					ho.setFloor(floor);
 					sender.sendMessage(L.f(L.get("FLOOR_SET"), ho.getDisplayName()));
-					ih.updateSigns();
 				} catch (Exception e) {
 					sender.sendMessage(L.get("HCSET_FLOOR_INVALID"));
 				}
@@ -288,7 +275,6 @@ public class Hcset implements CommandExecutor {
 							ho.setInitiation(state+"");
 						}
 						sender.sendMessage(L.f(L.get("ALL_OBJECTS_SET_TO"), message));
-						ih.updateSigns();
 						return true;
 					}
 					HyperObject ho = he.getHyperObject(name);
@@ -300,11 +286,9 @@ public class Hcset implements CommandExecutor {
 					if (isInitial) {
 						ho.setInitiation("false");
 						sender.sendMessage(L.f(L.get("INITIATION_FALSE"), ho.getDisplayName()));
-						ih.updateSigns();
 					} else {
 						ho.setInitiation("true");
 						sender.sendMessage(L.f(L.get("INITIATION_TRUE"), ho.getDisplayName()));
-						ih.updateSigns();
 					}
 				} catch (Exception e) {
 					sender.sendMessage(L.get("HCSET_INITIATION_INVALID"));

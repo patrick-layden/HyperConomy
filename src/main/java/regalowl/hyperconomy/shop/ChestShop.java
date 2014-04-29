@@ -419,6 +419,7 @@ public class ChestShop implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onInventoryClickEvent(InventoryClickEvent icevent) {
 		try {
+			@SuppressWarnings("deprecation")
 			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
 			if (hc.getHyperLock().isLocked(p)) {
 				if (isChestShop(icevent.getInventory().getHolder())) {

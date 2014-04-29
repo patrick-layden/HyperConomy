@@ -10,7 +10,6 @@ import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.event.HyperEventHandler;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.hyperobject.HyperItemStack;
@@ -156,7 +155,6 @@ public class TransactionProcessor {
 			CommonFunctions cf = hc.gCF();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
-			InfoSignHandler isign = hc.getInfoSignHandler();
 			String name = hyperObject.getDisplayName();
 			if (receiveInventory == null) {
 				receiveInventory = hp.getPlayer().getInventory();
@@ -216,7 +214,6 @@ public class TransactionProcessor {
 				type = "static";
 			}
 			log.writeSQLLog(hp.getName(), "purchase", name, (double) amount, cf.twoDecimals(price - taxpaid), cf.twoDecimals(taxpaid), tradePartner.getName(), type);
-			isign.updateSigns();
 			heh.fireTransactionEvent(pt, response);
 			return response;
 		} catch (Exception e) {
@@ -247,7 +244,6 @@ public class TransactionProcessor {
 			CommonFunctions cf = hc.gCF();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
-			InfoSignHandler isign = hc.getInfoSignHandler();
 			String name = hyperObject.getDisplayName();
 			if (giveInventory == null) {
 				giveInventory = hp.getPlayer().getInventory();
@@ -333,7 +329,6 @@ public class TransactionProcessor {
 				type = "static";
 			}
 			log.writeSQLLog(hp.getName(), "sale", name, (double) amount, cf.twoDecimals(price - salestax), cf.twoDecimals(salestax), tradePartner.getName(), type);
-			isign.updateSigns();
 			heh.fireTransactionEvent(pt, response);
 			return response;
 
@@ -369,7 +364,6 @@ public class TransactionProcessor {
 			CommonFunctions cf = hc.gCF();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
-			InfoSignHandler isign = hc.getInfoSignHandler();
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getDisplayName()), hyperObject);
 				heh.fireTransactionEvent(pt, response);
@@ -409,7 +403,6 @@ public class TransactionProcessor {
 							type = "static";
 						}
 						log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, cf.twoDecimals(price), cf.twoDecimals(taxpaid), tradePartner.getName(), type);
-						isign.updateSigns();
 					} else {
 						response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
 					}
@@ -447,7 +440,6 @@ public class TransactionProcessor {
 			CommonFunctions cf = hc.gCF();
 			LanguageFile L = hc.getLanguageFile();
 			Log log = hc.getLog();
-			InfoSignHandler isign = hc.getInfoSignHandler();
 			if (status == HyperObjectStatus.NONE) {
 				response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getDisplayName()), hyperObject);
 				heh.fireTransactionEvent(pt, response);
@@ -505,8 +497,6 @@ public class TransactionProcessor {
 							type = "static";
 						}
 						log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), (double) amount, cf.twoDecimals(price - salestax), cf.twoDecimals(salestax), tradePartner.getName(), type);
-
-						isign.updateSigns();
 					} else {
 						response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
 					}
@@ -637,7 +627,6 @@ public class TransactionProcessor {
 		}
 		CommonFunctions cf = hc.gCF();
 		Log log = hc.getLog();
-		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
 			String nenchant = "";
 			Player p = hp.getPlayer();
@@ -681,8 +670,6 @@ public class TransactionProcessor {
 						type = "static";
 					}
 					log.writeSQLLog(p.getName(), "sale", hyperObject.getDisplayName(), 1.0, fprice - salestax, salestax, tradePartner.getName(), type);
-
-					isign.updateSigns();
 				} else {
 					response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
 				}
@@ -715,7 +702,6 @@ public class TransactionProcessor {
 		}
 		CommonFunctions cf = hc.gCF();
 		Log log = hc.getLog();
-		InfoSignHandler isign = hc.getInfoSignHandler();
 		try {
 			Player p = hp.getPlayer();
 			String nenchant = hyperObject.getEnchantmentName();
@@ -765,8 +751,6 @@ public class TransactionProcessor {
 								type = "static";
 							}
 							log.writeSQLLog(p.getName(), "purchase", hyperObject.getDisplayName(), 1.0, price, taxpaid, tradePartner.getName(), type);
-
-							isign.updateSigns();
 						} else {
 							response.addFailed(L.get("ITEM_CANT_ACCEPT_ENCHANTMENT"), hyperObject);
 						}

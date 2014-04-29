@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.util.Backup;
@@ -20,7 +19,6 @@ public class Scalebypercent {
 		try {
 			HyperEconomy he = hc.getDataManager().getEconomy(playerecon);
 			CommonFunctions cf = hc.gCF();
-			InfoSignHandler isign = hc.getInfoSignHandler();
 			ArrayList<String> names = he.getNames();
 			boolean onlyItems = false;
 			boolean onlyEnchants = false;
@@ -62,7 +60,6 @@ public class Scalebypercent {
 							}
 						}
 						sender.sendMessage(L.get("ADJUSTMENT_SUCCESSFUL"));
-						isign.updateSigns();
 					} else {
 						sender.sendMessage(L.get("SCALEBYPERCENT_TYPES"));
 					}
