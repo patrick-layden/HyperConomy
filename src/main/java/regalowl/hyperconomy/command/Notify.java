@@ -2,77 +2,114 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
+import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.event.TransactionListener;
+import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.transaction.PlayerTransaction;
+import regalowl.hyperconomy.transaction.TransactionResponse;
+import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.LanguageFile;
+public class Notify implements CommandExecutor, TransactionListener {
 
-public class Notify {
-	Notify(String[] args, CommandSender sender) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
-		DataManager em = hc.getDataManager();
+	private HyperConomy hc;
+	private CommonFunctions cf;
+	private LanguageFile L;
+	private ArrayList<String> notifyNames = new ArrayList<String>();
+	private boolean enabled;
+
+	
+	public Notify() {
+		hc = HyperConomy.hc;
+		L = hc.getLanguageFile();
+		cf = hc.getCommonFunctions();
+		enabled = hc.getConf().getBoolean("enable-feature.price-change-notifications");
+		notifyNames = cf.explode(hc.getConf().getString("shop.send-price-change-notifications-for"), ",");
+		hc.getHyperEventHandler().registerListener(this);
+	}
+	
+	public String getNotifyString() {
+		return cf.implode(notifyNames, ",");
+	}
+	
+	public void saveNotifyNames() {
+		hc.getConf().set("shop.send-price-change-notifications-for", getNotifyString());
+	}
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		try {
-			HyperEconomy he = em.getEconomy("default");
-			String itemname = he.fixName(args[0]);
-			if (args.length == 1) {
-				if (hc.getConf().getBoolean("enable-feature.price-change-notifications")) {
-					if (he.objectTest(itemname) || itemname.equalsIgnoreCase("all")) {
-						if (!itemname.equalsIgnoreCase("all")) {
-							boolean note = false;
-							String notify = hc.getConf().getString("shop.send-price-change-notifications-for");
-							if (notify != null) {
-								if (notify.contains("," + itemname + ",")) {
-									note = true;
-								}
-								if (notify.length() >= itemname.length() && itemname.equalsIgnoreCase(notify.substring(0, itemname.length()))) {
-									note = true;
-								}
-							}
-							if (note) {
-								notify = notify.replace("," + itemname + ",", ",");
-								if (itemname.equalsIgnoreCase(notify.substring(0, itemname.length()))) {
-									notify = notify.substring(itemname.length() + 1, notify.length());
-								}
-								hc.getConf().set("shop.send-price-change-notifications-for", notify);
-								//sender.sendMessage(ChatColor.GOLD + "You will no longer receive notifications for " + itemname);
-								sender.sendMessage(L.f(L.get("NOT_RECEIVE_NOTIFICATIONS_S"), itemname));
-							} else {
-								notify = notify + itemname + ",";
-								hc.getConf().set("shop.send-price-change-notifications-for", notify);
-								//sender.sendMessage(ChatColor.GOLD + "You will now receive notifications for " + itemname);
-								sender.sendMessage(L.f(L.get("RECEIVE_NOTIFICATIONS_S"), itemname));
-							}
-						} else {
-							ArrayList<String> items = he.getNames();
-							String namelist = "";
-							int i = 0;
-							while (i < items.size()) {
-								namelist = namelist + items.get(i) + ",";
-								i++;
-							}
-							String notify = hc.getConf().getString("shop.send-price-change-notifications-for");
-							if (notify.equalsIgnoreCase(namelist)) {
-								hc.getConf().set("shop.send-price-change-notifications-for", "");
-								sender.sendMessage(L.get("NOT_RECEIVE_NOTIFICATIONS"));
-							} else {
-								hc.getConf().set("shop.send-price-change-notifications-for", namelist);
-								sender.sendMessage(L.get("RECEIVE_NOTIFICATIONS"));
-							}
-						}
-					} else {
-						sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
-					}
-				} else {
-					sender.sendMessage(L.get("NOTIFICATIONS_DISABLED"));
+			HyperEconomy he = hc.getDataManager().getEconomy("default");
+			HyperObject ho = he.getHyperObject(args[0]);
+			if (!enabled) {
+				sender.sendMessage(L.get("NOTIFICATIONS_DISABLED"));
+				return true;
+			}
+			if (args[0].equalsIgnoreCase("all")) {
+				notifyNames.clear();
+				for (String cName:he.getNames()) {
+					notifyNames.add(cName);
 				}
+				saveNotifyNames();
+				sender.sendMessage(L.get("RECEIVE_NOTIFICATIONS"));
+				return true;
+			}
+			if (args[0].equalsIgnoreCase("none")) {
+				notifyNames.clear();
+				saveNotifyNames();
+				sender.sendMessage(L.get("NOT_RECEIVE_NOTIFICATIONS"));
+				return true;
+			}
+			if (ho == null) {
+				sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
+				return true;
+			}
+			if (notifyNames.contains(ho.getName())) {
+				notifyNames.remove(ho.getName());
+				saveNotifyNames();
+				sender.sendMessage(L.f(L.get("NOT_RECEIVE_NOTIFICATIONS_S"), ho.getDisplayName()));
 			} else {
-				sender.sendMessage(L.get("NOTIFY_INVALID"));
+				notifyNames.add(ho.getName());
+				saveNotifyNames();
+				sender.sendMessage(L.f(L.get("RECEIVE_NOTIFICATIONS_S"), ho.getDisplayName()));
 			}
 		} catch (Exception e) {
 			sender.sendMessage(L.get("NOTIFY_INVALID"));
 		}
+		return true;
 	}
+	
+	
+	public void onTransaction(PlayerTransaction pt, TransactionResponse response) {
+		if (response.successful()) {
+			TransactionType tt = pt.getTransactionType();
+			if (tt == TransactionType.BUY || tt == TransactionType.SELL) {
+				if (pt.getHyperObject() != null) {
+					HyperObject ho = pt.getHyperObject();
+					if (notifyNames.contains(ho.getName())) {
+						String message = L.f(L.get("SQL_NOTIFICATION"), ho.getStock(), ho.getBuyPriceWithTax(1), ho.getDisplayName(), ho.getEconomy());
+						sendNotification(message);
+					}
+				}
+			}
+		}
+	}
+
+	private void sendNotification(String message) {
+		Player[] players = Bukkit.getOnlinePlayers();
+		for (int i = 0; i < players.length; i++) {
+			Player p = players[i];
+			if (p.hasPermission("hyperconomy.notify")) {
+				p.sendMessage(message);
+			}
+		}
+	}
+	
+	
 }

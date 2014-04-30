@@ -76,9 +76,6 @@ public class _Command {
 		} else if (cmd.getName().equalsIgnoreCase("intervals")) {
 			new Intervals(sender, args);
 			return true;
-		} else if (cmd.getName().equalsIgnoreCase("notify")) {
-			new Notify(args, sender);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("scalebypercent")) {
 			new Scalebypercent(sender, args, playerecon);
 			return true;

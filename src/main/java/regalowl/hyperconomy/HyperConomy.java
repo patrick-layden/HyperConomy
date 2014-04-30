@@ -37,6 +37,7 @@ import regalowl.hyperconomy.command.Hcset;
 import regalowl.hyperconomy.command.Hctest;
 import regalowl.hyperconomy.command.Lockshop;
 import regalowl.hyperconomy.command.Manageshop;
+import regalowl.hyperconomy.command.Notify;
 import regalowl.hyperconomy.command.Sell;
 import regalowl.hyperconomy.command.Sellall;
 import regalowl.hyperconomy.command.Servershopcommand;
@@ -57,7 +58,6 @@ import regalowl.hyperconomy.util.HyperConfig;
 import regalowl.hyperconomy.util.HyperLock;
 import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
-import regalowl.hyperconomy.util.Notification;
 import regalowl.hyperconomy.util.UpdateYML;
 
 public class HyperConomy extends JavaPlugin implements DataLoadListener {
@@ -72,7 +72,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private InfoSignHandler isign;
 	private _Command commandhandler;
 	private History hist;
-	private Notification not;
 	private ItemDisplayFactory itdi;
 	private SQLWrite sw;
 	private SQLRead sr;
@@ -151,7 +150,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		em.load();
 		l = new Log(this);
 		commandhandler = new _Command();
-		not = new Notification();
 		new TransactionSign();
 		yh.startSaveTask(hConfig.getLong("intervals.save"));
 		cs = new ChestShop();
@@ -218,6 +216,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		Bukkit.getServer().getPluginCommand("lockshop").setExecutor(new Lockshop());
 		Bukkit.getServer().getPluginCommand("hc").setExecutor(new Hc());
 		Bukkit.getServer().getPluginCommand("hceconomy").setExecutor(new Hceconomy());
+		Bukkit.getServer().getPluginCommand("notify").setExecutor(new Notify());
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -324,10 +323,6 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 
 	public Log getLog() {
 		return l;
-	}
-
-	public Notification getNotify() {
-		return not;
 	}
 
 	public InfoSignHandler getInfoSignHandler() {
