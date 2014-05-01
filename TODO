@@ -9,6 +9,9 @@
 - Make notifications configurable per player.
 - Only load HyperPlayers for online players.
 - Make commands purchasable. (Command Objects)
+- Make /browseshop index based on display name, not name.
+- Make sure /sellall sells all possible items.
+- Find what causes attempted player duplication in database.
 
 
 **Moderate Priority**
