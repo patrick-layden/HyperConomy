@@ -13,6 +13,7 @@
 
 **Moderate Priority**
 
+- Convert remaining commands to CommandExecutor format.
 - Add FAQ entry to lower all prices.
 - Time based stock increase/decrease ability and also target stock (increase/decrease to reach target and then remain there once reached)
 - Add documentation for economies, selecting economies, entering shops, etc

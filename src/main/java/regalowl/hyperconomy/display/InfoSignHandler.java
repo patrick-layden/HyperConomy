@@ -161,6 +161,11 @@ public class InfoSignHandler implements Listener, HyperObjectModificationListene
 					if (signs.isEmpty()) {
 						if (repeatUpdate.get()) {
 							signs = getInfoSigns();
+							if (signs.isEmpty()) {
+								updateTask.cancel();
+								updateActive.set(false);
+								return;
+							}
 							repeatUpdate.set(false);
 						} else {
 							updateTask.cancel();
