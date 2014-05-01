@@ -1,0 +1,44 @@
+***High Priority***
+
+- Allow customization of InfoSign colors.
+- Fix missing hyperobject error related to price history when using HyperConomy Web.
+- Make it so admins can't set negative settings using /hcset.
+- Finish web api with api key.
+- Make frame shops work with player shops.
+- Make it possible for bank names to be the same as player names (will prevent issues with players changing names to bank names).
+- Make notifications configurable per player.
+- Only load HyperPlayers for online players.
+- Make commands purchasable. (Command Objects)
+
+
+**Moderate Priority**
+
+- Add FAQ entry to lower all prices.
+- Time based stock increase/decrease ability and also target stock (increase/decrease to reach target and then remain there once reached)
+- Add documentation for economies, selecting economies, entering shops, etc
+- Add FAQ entry for money not being removed from balance (wrong economy plugin).
+- make frame shops customizable
+- Possibly move sell/buy transactionprocessor methods to hyperobject.
+- Make InfoSigns display prices from the shop they're in.
+- Move hyperitemstack methods to hyperobject.
+- Look into finishing max stock option for server shops.
+- Look into adding ability to create buy/sell only HyperObjects (separate from player shops)
+- Limit number of chest shops per player.
+- Option for chest shop stocks to change global stock.
+
+
+*Low Priority*
+
+- Look for ways to load less data to memory.
+- Set up tax with player shops.
+- Option to disable shop entry message.
+- Player to player trading
+- Mail box purchase chests (could work well with web purchases)
+- Multiple currency support
+- Standalone PHP price page.
+
+
+
+
+
+
