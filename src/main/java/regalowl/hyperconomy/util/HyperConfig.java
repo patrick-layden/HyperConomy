@@ -91,16 +91,20 @@ public class HyperConfig {
 	}
 	
 	private class SetTask extends BukkitRunnable {
-		private String path;
+		private String key;
 		private Object obj;
 		
-    	public SetTask(String path, Object obj) {
-    		this.path = path;
+    	public SetTask(String key, Object obj) {
+    		this.key = key;
     		this.obj = obj;
     	}
     	
 		public void run() {
-			fc.set(path, obj);
+			fc.set(key, obj);
+			String o = fc.getString(key);
+			if (o != null) {
+				hConfig.put(key, o);
+			}
 		}
     }
 	
