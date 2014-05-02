@@ -14,6 +14,18 @@ public class UpdateYML {
 		YamlHandler yh = hc.getYamlHandler();
 		FileConfiguration cfg = yh.gFC("config");
 		
+		//migrates old MySQL config if it exists
+		if (cfg.isSet("config.sql-connection.use-mysql")) {
+			cfg.set("sql.use-mysql", cfg.getBoolean("config.sql-connection.use-mysql"));
+			cfg.set("sql.mysql-connection.username", cfg.getString("config.sql-connection.username"));
+			cfg.set("sql.mysql-connection.port", cfg.getInt("config.sql-connection.port"));
+			cfg.set("sql.mysql-connection.password", cfg.getString("config.sql-connection.password"));
+			cfg.set("sql.mysql-connection.host", cfg.getString("config.sql-connection.host"));
+			cfg.set("sql.mysql-connection.database", cfg.getString("config.sql-connection.database"));
+		}
+
+		
+		
 		if (!cfg.isSet("enable-feature.shops")) {
 			cfg.set("enable-feature.shops", true);
 		}

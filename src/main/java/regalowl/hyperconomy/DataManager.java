@@ -125,7 +125,7 @@ public class DataManager implements Listener {
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("NAME", "default");
 		values.put("HYPERACCOUNT", config.getString("shop.default-server-shop-account"));
-		ssw.performInsert("hyperconomy_economies", values);
+		ssw.queueInsert("hyperconomy_economies", values);
 		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
 		ArrayList<String> columns = data.getColumnNames();
 		while (data.next()) {
@@ -133,7 +133,7 @@ public class DataManager implements Listener {
 			for (String column : columns) {
 				values.put(column, data.getString(column));
 			}
-			ssw.performInsert("hyperconomy_objects", values);
+			ssw.queueInsert("hyperconomy_objects", values);
 		}
 		ft.deleteFile(defaultObjectsPath);
 
@@ -148,9 +148,10 @@ public class DataManager implements Listener {
 			for (String column : columns) {
 				values.put(column, data.getString(column));
 			}
-			ssw.performInsert("hyperconomy_composites", values);
+			ssw.queueInsert("hyperconomy_composites", values);
 		}
 		ft.deleteFile(defaultObjectsPath);
+		ssw.writeQueue();
 	}
 
 	private void loadData() {
