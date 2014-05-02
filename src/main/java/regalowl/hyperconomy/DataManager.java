@@ -165,14 +165,14 @@ public class DataManager implements Listener {
 			hyperPlayers.put(hplayer.getName().toLowerCase(), hplayer);
 		}
 		playerData.close();
+		playersLoaded = true;
 		if (!accountExists(defaultServerShopAccount)) {
-			HyperAccount defaultAccount = getAccount(defaultServerShopAccount);
+			HyperAccount defaultAccount = addPlayer(defaultServerShopAccount);
 			defaultAccount.setBalance(hc.getConfig().getDouble("shop.default-server-shop-account-initial-balance"));
 		}
 		hc.getServer().getScheduler().runTask(hc, new Runnable() {
 			public void run() {
 				addOnlinePlayers();
-				playersLoaded = true;
 			}
 		});
 		//load banks
