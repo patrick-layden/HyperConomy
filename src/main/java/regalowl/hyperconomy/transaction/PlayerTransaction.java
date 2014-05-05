@@ -18,6 +18,7 @@ public class PlayerTransaction {
 	private boolean setPrice;
 	private boolean chargeTax;
 	private ItemStack giveItem;
+	private boolean obeyShops;
 	
 	
 	public PlayerTransaction(TransactionType type) {
@@ -55,6 +56,9 @@ public class PlayerTransaction {
 	public ItemStack getGiveItem() {
 		return giveItem;
 	}
+	public boolean obeyShops() {
+		return obeyShops;
+	}
 	
 	
 	public void setTransactionType(TransactionType transactionType) {
@@ -86,6 +90,9 @@ public class PlayerTransaction {
 	}
 	public void setGiveItem(ItemStack giveItem) {
 		this.giveItem = giveItem;
+	}
+	public void setObeyShops(boolean obeyShops) {
+		this.obeyShops = obeyShops;
 	}
 
 	

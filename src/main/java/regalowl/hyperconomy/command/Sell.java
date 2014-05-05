@@ -1,6 +1,5 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -38,25 +37,9 @@ public class Sell implements CommandExecutor {
 		HyperEconomy he = hp.getHyperEconomy();
 
 		try {
-			if (player.getGameMode() == GameMode.CREATIVE && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
-				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
-				return true;
-			}
-			if (!em.inAnyShop(player)) {
-				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
-				return true;
-			}
 			Shop s = em.getShop(player);
-			if (!hp.hasSellPermission(em.getShop(player))) {
-				player.sendMessage(L.get("NO_TRADE_PERMISSION"));
-				return true;
-			}
 			String name = he.fixName(args[0]);
 			HyperObject ho = he.getHyperObject(name, em.getShop(player));
-			if (s.isBanned(ho)) {
-				player.sendMessage(L.get("CANT_BE_TRADED"));
-				return true;
-			}
 			int amount = 1;
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("max")) {
@@ -75,6 +58,7 @@ public class Sell implements CommandExecutor {
 				amount = 10000;
 			}
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+			pt.setObeyShops(true);
 			pt.setHyperObject(ho);
 			pt.setAmount(amount);
 			pt.setTradePartner(s.getOwner());

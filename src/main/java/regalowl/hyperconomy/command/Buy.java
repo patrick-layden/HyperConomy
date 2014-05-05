@@ -35,21 +35,9 @@ public class Buy implements CommandExecutor {
 		HyperPlayer hp = em.getHyperPlayer(player);
 		HyperEconomy he = hp.getHyperEconomy();
 		try {
-			if (!em.inAnyShop(player)) {
-				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
-				return true;
-			}
 			Shop s = em.getShop(player);
-			if (!hp.hasBuyPermission(em.getShop(player))) {
-				player.sendMessage(L.get("NO_TRADE_PERMISSION"));
-				return true;
-			}
 			String name = he.fixName(args[0]);
 			HyperObject ho = he.getHyperObject(name, em.getShop(player));
-			if (s.isBanned(ho)) {
-				player.sendMessage(L.get("CANT_BE_TRADED"));
-				return true;
-			}
 			int amount = 1;
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("max")) {
@@ -65,6 +53,7 @@ public class Buy implements CommandExecutor {
 				}
 			}
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+			pt.setObeyShops(true);
 			pt.setHyperObject(ho);
 			pt.setAmount(amount);
 			pt.setTradePartner(s.getOwner());
