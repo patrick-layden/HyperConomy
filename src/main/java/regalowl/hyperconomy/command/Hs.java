@@ -1,6 +1,5 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
@@ -20,54 +19,39 @@ public class Hs {
 		DataManager em = hc.getDataManager();
 		int amount;
 		try {
-			if (player.getGameMode() == GameMode.CREATIVE && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
-				player.sendMessage(L.get("CANT_SELL_CREATIVE"));
-				return;
-			}
 			HyperPlayer hp = em.getHyperPlayer(player);
 			HyperEconomy he = hp.getHyperEconomy();
-			if (em.inAnyShop(player)) {
-				if (hp.hasSellPermission(em.getShop(player))) {
-					if (args.length == 0) {
-						amount = 1;
-					} else {
-						try {
-							amount = Integer.parseInt(args[0]);
-							if (amount > 10000) {
-								amount = 10000;
-							}
-						} catch (Exception e) {
-							String max = args[0];
-							if (max.equalsIgnoreCase("max")) {
-								HyperObject hi = he.getHyperObject(player.getItemInHand());
-								amount = hi.count(player.getInventory());
-							} else {
-								player.sendMessage(L.get("HS_INVALID"));
-								return;
-							}
-						}
-					}
-					HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getShop(player));
-					if (ho == null) {
-						player.sendMessage(L.get("CANT_BE_TRADED"));
-					} else {
-						Shop s = em.getShop(player);
-						if (!s.isBanned(ho.getName())) {
-							PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-							pt.setHyperObject(ho);
-							pt.setAmount(amount);
-							pt.setTradePartner(s.getOwner());
-							TransactionResponse response = hp.processTransaction(pt);
-							response.sendMessages();
-						} else {
-							player.sendMessage(L.get("CANT_BE_TRADED"));
-						}
-					}
-				} else {
-					player.sendMessage(L.get("NO_TRADE_PERMISSION"));
-				}
+			if (args.length == 0) {
+				amount = 1;
 			} else {
-				player.sendMessage(L.get("MUST_BE_IN_SHOP"));
+				try {
+					amount = Integer.parseInt(args[0]);
+					if (amount > 10000) {
+						amount = 10000;
+					}
+				} catch (Exception e) {
+					String max = args[0];
+					if (max.equalsIgnoreCase("max")) {
+						HyperObject hi = he.getHyperObject(player.getItemInHand());
+						amount = hi.count(player.getInventory());
+					} else {
+						player.sendMessage(L.get("HS_INVALID"));
+						return;
+					}
+				}
+			}
+			HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getShop(player));
+			if (ho == null) {
+				player.sendMessage(L.get("CANT_BE_TRADED"));
+			} else {
+				Shop s = em.getShop(player);
+				PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+				pt.setObeyShops(true);
+				pt.setHyperObject(ho);
+				pt.setAmount(amount);
+				pt.setTradePartner(s.getOwner());
+				TransactionResponse response = hp.processTransaction(pt);
+				response.sendMessages();
 			}
 		} catch (Exception e) {
 			player.sendMessage(L.get("HS_INVALID"));
