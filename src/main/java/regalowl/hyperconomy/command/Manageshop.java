@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.command;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
@@ -626,6 +627,19 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			player.teleport(cps.getLocation1());
+		} else if (args[0].equalsIgnoreCase("list")) {
+			ArrayList<Shop> shops = em.getShops();
+			String sList = "";
+			for (Shop s:shops) {
+				if (s instanceof PlayerShop) {
+					sList += s.getDisplayName() + ",";
+				}
+			}
+			if (sList.length() > 0) {
+				sList = sList.substring(0, sList.length() - 1);
+			}
+			String shoplist = sList.replace("_", " ");
+			sender.sendMessage(ChatColor.AQUA + shoplist);
 		} else {
 			player.sendMessage(L.get("MANAGESHOP_HELP"));
 			if (cps != null) {
