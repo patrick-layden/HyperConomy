@@ -628,6 +628,10 @@ public class Manageshop implements CommandExecutor {
 			}
 			player.teleport(cps.getLocation1());
 		} else if (args[0].equalsIgnoreCase("list")) {
+			if (!player.hasPermission("hyperconomy.admin")) {
+				player.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+				return true;
+			}
 			ArrayList<Shop> shops = em.getShops();
 			String sList = "";
 			for (Shop s:shops) {
