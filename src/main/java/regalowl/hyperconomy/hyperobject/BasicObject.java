@@ -500,7 +500,7 @@ public class BasicObject implements HyperObject {
 	@Override
 	public boolean nameContains(String part) {
 		part = part.toLowerCase();
-		if (displayName.toLowerCase().contains(part)) {
+		if (displayName != null && displayName.toLowerCase().contains(part)) {
 			return true;
 		}
 		if (name.toLowerCase().contains(part)) {
