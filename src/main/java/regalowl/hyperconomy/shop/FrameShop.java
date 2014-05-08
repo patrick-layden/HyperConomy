@@ -65,6 +65,10 @@ public class FrameShop implements HyperObjectModificationListener {
 			delete();
 			return;
 		}
+		if (l == null || l.getWorld() == null) {
+			delete();
+			return;
+		}
 		this.mapId = mapId;
 		x = l.getBlockX();
 		y = l.getBlockY();
