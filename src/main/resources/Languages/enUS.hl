@@ -385,7 +385,7 @@ CANT_MAKE_SHOP_LARGER_THAN: &4You cannot make a shop with a volume larger than &
 SHOP_INTERSECTS_SHOP: &4Your shop's region cannot intersect the shop %n.
 SHOP_LIMIT_REACHED: &4You cannot make more than &a%v &4shops.
 MANAGESHOP_PRICE_HELP: &4Use /manageshop price [object] [price] or /manageshop buyprice... or /manageshop sellprice...
-MANAGESHOP_MAXSTOCK_HELP: &4Use /manageshop price [object] [max stock]
+MANAGESHOP_MAXSTOCK_HELP: &4Use /manageshop maxstock [object] [max stock]
 MANAGESHOP_OWNER_HELP: &4Use /manageshop owner [name]
 MANAGESHOP_ADD_HELP: &4Use /manageshop add (object) (amount)
 MANAGESHOP_ALLOW_HELP: &4Use /manageshop allow [player]
