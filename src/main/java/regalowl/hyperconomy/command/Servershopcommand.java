@@ -315,7 +315,7 @@ public class Servershopcommand implements CommandExecutor {
 				}
 				player.teleport(css.getLocation1());
 			} catch (Exception e) {
-				player.sendMessage(L.get("SERVERSHOP_ECONOMY_INVALID"));
+				player.sendMessage(L.get("SERVERSHOP_GOTO_INVALID"));
 			}
 		} else {
 			player.sendMessage(L.get("SERVERSHOP_INVALID"));
