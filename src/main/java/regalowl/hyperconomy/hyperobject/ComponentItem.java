@@ -281,6 +281,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				if (totalitems >= amount) {break;}
 			}
 			damage /= amount;
+			if (damage == 0) {return 1;}
 			return damage;
 		} catch (Exception e) {
 			String info = "getDamageMultiplier() passed values amount='" + amount + "'";
