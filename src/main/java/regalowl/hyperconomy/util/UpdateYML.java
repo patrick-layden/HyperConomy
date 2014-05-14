@@ -23,6 +23,10 @@ public class UpdateYML {
 			cfg.set("sql.mysql-connection.host", cfg.getString("config.sql-connection.host"));
 			cfg.set("sql.mysql-connection.database", cfg.getString("config.sql-connection.database"));
 		}
+		
+		if (cfg.isSet("config.global-shop-account")) {
+			cfg.set("shop.default-server-shop-account", cfg.getString("config.global-shop-account"));
+		}
 
 		
 		

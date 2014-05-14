@@ -97,6 +97,7 @@ public class DatabaseUpdater {
 				FileConfiguration sh = hc.gYH().gFC("shops");
 				//LanguageFile L = hc.getLanguageFile();
 				Iterator<String> it = sh.getKeys(false).iterator();
+				String defaultServerShopAccount = hc.getConf().getString("shop.default-server-shop-account");
 				while (it.hasNext()) {
 					HashMap<String,String> values = new HashMap<String,String>();
 					Object element = it.next();
@@ -106,7 +107,7 @@ public class DatabaseUpdater {
 						owner = "hyperconomy";
 					}
 					String type = "player";
-					if (owner.equalsIgnoreCase("hyperconomy")) {
+					if (owner.equalsIgnoreCase(defaultServerShopAccount)) {
 						type = "server";
 					}
 					values.put("NAME", name);
