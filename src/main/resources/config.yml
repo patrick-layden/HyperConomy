@@ -12,6 +12,7 @@ enable-feature:
   per-shop-permissions: false
   price-change-notifications: true
   treat-damaged-items-as-equals-to-undamaged-ones: true
+  debug-mode: false
 economy-plugin:
   use-external: true
   hook-internal-economy-into-vault: false

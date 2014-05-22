@@ -69,6 +69,9 @@ public class UpdateYML {
 		if (!cfg.isSet("enable-feature.treat-damaged-items-as-equals-to-undamaged-ones")) {
 			cfg.set("enable-feature.treat-damaged-items-as-equals-to-undamaged-ones", true);
 		}
+		if (!cfg.isSet("enable-feature.debug-mode")) {
+			cfg.set("enable-feature.debug-mode", false);
+		}
 		
 		
 		if (!cfg.isSet("economy-plugin.use-external")) {

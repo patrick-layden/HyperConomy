@@ -51,6 +51,7 @@ import regalowl.hyperconomy.event.HyperEventHandler;
 import regalowl.hyperconomy.shop.ChestShop;
 import regalowl.hyperconomy.shop.FrameShopHandler;
 import regalowl.hyperconomy.util.ConsoleSettings;
+import regalowl.hyperconomy.util.DebugMode;
 import regalowl.hyperconomy.util.DisabledProtection;
 import regalowl.hyperconomy.util.Economy_HyperConomy;
 import regalowl.hyperconomy.util.History;
@@ -89,6 +90,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private FileTools ft;
 	private ConsoleSettings cos;
 	private HyperConfig hConfig;
+	private DebugMode dMode;
 
 	@Override
 	public void onLoad() {
@@ -121,6 +123,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		new UpdateYML();
 		hConfig = new HyperConfig(yh.gFC("config"));
 		L = new LanguageFile();
+		dMode = new DebugMode();
 		hl = new HyperLock(true, false, false);
 		heh = new HyperEventHandler();
 		heh.registerListener(this);
@@ -391,6 +394,9 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public String getFolderPath() {
 		String folderpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";
 		return folderpath;
+	}
+	public DebugMode getDebugMode() {
+		return dMode;
 	}
 
 }

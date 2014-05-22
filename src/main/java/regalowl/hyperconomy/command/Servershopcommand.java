@@ -101,6 +101,7 @@ public class Servershopcommand implements CommandExecutor {
 				}
 				player.sendMessage(L.get("P1_SET"));
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_P1_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("p2")) {
@@ -115,6 +116,7 @@ public class Servershopcommand implements CommandExecutor {
 				}
 				player.sendMessage(L.get("P2_SET"));
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_P2_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("list")) {
@@ -149,6 +151,7 @@ public class Servershopcommand implements CommandExecutor {
 				css.setOwner(owner);
 				player.sendMessage(L.get("OWNER_SET"));
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_OWNER_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("removeshop")) {
@@ -160,6 +163,7 @@ public class Servershopcommand implements CommandExecutor {
 				css.deleteShop();
 				sender.sendMessage(L.f(L.get("HAS_BEEN_REMOVED"), css.getName()));
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_REMOVE_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("rename")) {
@@ -172,6 +176,7 @@ public class Servershopcommand implements CommandExecutor {
 				css.setName(newName);
 				sender.sendMessage(L.get("SHOP_RENAMED"));
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_RENAME_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("message") || args[0].equalsIgnoreCase("m")) {
@@ -183,6 +188,7 @@ public class Servershopcommand implements CommandExecutor {
 				css.setMessage(args[1].replace("_", " "));
 				sender.sendMessage(L.get("MESSAGE_SET"));
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_MESSAGE_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("allow") || args[0].equalsIgnoreCase("a")) {
@@ -210,6 +216,7 @@ public class Servershopcommand implements CommandExecutor {
 				css.unBanObjects(add);
 				sender.sendMessage(ChatColor.GOLD + ho.getDisplayName() + " " + L.get("ADDED_TO") + " " + css.getDisplayName());
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_ALLOW_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("ban") || args[0].equalsIgnoreCase("b")) {
@@ -237,6 +244,7 @@ public class Servershopcommand implements CommandExecutor {
 				css.banObjects(remove);
 				sender.sendMessage(L.f(L.get("REMOVED_FROM"), ho.getDisplayName(), css.getDisplayName()));
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_BAN_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("addcategory") || args[0].equalsIgnoreCase("acat")) {
@@ -263,6 +271,7 @@ public class Servershopcommand implements CommandExecutor {
 				css.unBanObjects(add);
 				sender.sendMessage(ChatColor.GOLD + args[1] + " " + L.get("ADDED_TO") + " " + css.getDisplayName());
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_ADDCATEGORY_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("removecategory") || args[0].equalsIgnoreCase("rcat")) {
@@ -289,6 +298,7 @@ public class Servershopcommand implements CommandExecutor {
 				css.banObjects(remove);
 				sender.sendMessage(L.f(L.get("REMOVED_FROM"), args[1], css.getDisplayName()));
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_REMOVECATEGORY_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("economy") || args[0].equalsIgnoreCase("e")) {
@@ -305,6 +315,7 @@ public class Servershopcommand implements CommandExecutor {
 					sender.sendMessage(L.get("ECONOMY_DOESNT_EXIST"));
 				}
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_ECONOMY_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("goto")) {
@@ -315,6 +326,7 @@ public class Servershopcommand implements CommandExecutor {
 				}
 				player.teleport(css.getLocation1());
 			} catch (Exception e) {
+				hc.getDebugMode().handleError(e);
 				player.sendMessage(L.get("SERVERSHOP_GOTO_INVALID"));
 			}
 		} else {
