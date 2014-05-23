@@ -72,6 +72,9 @@ public class UpdateYML {
 		if (!cfg.isSet("enable-feature.debug-mode")) {
 			cfg.set("enable-feature.debug-mode", false);
 		}
+		if (!cfg.isSet("enable-feature.uuid-support")) {
+			cfg.set("enable-feature.uuid-support", true);
+		}
 		
 		
 		if (!cfg.isSet("economy-plugin.use-external")) {

@@ -13,6 +13,7 @@ enable-feature:
   price-change-notifications: true
   treat-damaged-items-as-equals-to-undamaged-ones: true
   debug-mode: false
+  uuid-support: true
 economy-plugin:
   use-external: true
   hook-internal-economy-into-vault: false

@@ -46,7 +46,9 @@ public class HyperPlayer implements HyperAccount {
 		Player p = getPlayer();
 		if (p != null) {
 			name = p.getName();
-			uuid = p.getUniqueId().toString();
+			if (hc.getConf().getBoolean("enable-feature.uuid-support")) {
+				uuid = p.getUniqueId().toString();
+			}
 			x = p.getLocation().getX();
 			y = p.getLocation().getY();
 			z = p.getLocation().getZ();
@@ -112,6 +114,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public void checkUUID() {
+		if (!hc.getConf().getBoolean("enable-feature.uuid-support")) {return;}
 		if (uuid == null || uuid == "") {
 			@SuppressWarnings("deprecation")
 			Player p = Bukkit.getPlayer(name);
@@ -262,7 +265,7 @@ public class HyperPlayer implements HyperAccount {
 	public Player getPlayer() {
 		UUID id = getUUID();
 		Player p = null;
-		if (id != null) {
+		if (id != null && hc.getConf().getBoolean("enable-feature.uuid-support")) {
 			p = Bukkit.getPlayer(id);
 		}
 		if (p == null && name != null) {
