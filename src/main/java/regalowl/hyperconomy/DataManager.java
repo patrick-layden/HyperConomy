@@ -26,6 +26,7 @@ import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.shop.GlobalShop;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
@@ -185,30 +186,33 @@ public class DataManager implements Listener {
 		bankData.close();
 		//load shops
 		shops.clear();
-		if (useShops) {
-			QueryResult shopData = sr.select("SELECT * FROM hyperconomy_shops");
-			while (shopData.next()) {
-				String type = shopData.getString("TYPE");
-				if (type.equalsIgnoreCase("server")) {
-					String name = shopData.getString("NAME");
-					SimpleLocation p1 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
-					SimpleLocation p2 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
-					Shop shop = new ServerShop(name, shopData.getString("ECONOMY"), getAccount(shopData.getString("OWNER")), 
-							shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"));
-					shops.put(name, shop);
-				} else if (type.equalsIgnoreCase("player")) {
-					if (!config.getBoolean("enable-feature.player-shops")) {continue;}
-					String name = shopData.getString("NAME");
-					SimpleLocation p1 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
-					SimpleLocation p2 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
-					Shop shop = new PlayerShop(name, shopData.getString("ECONOMY"), getAccount(shopData.getString("OWNER")), 
-							shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"), shopData.getString("ALLOWED_PLAYERS"));
-					shops.put(name, shop);
-				}
+		QueryResult shopData = sr.select("SELECT * FROM hyperconomy_shops");
+		while (shopData.next()) {
+			String type = shopData.getString("TYPE");
+			if (type.equalsIgnoreCase("server")) {
+				if (!useShops) {continue;}
+				String name = shopData.getString("NAME");
+				SimpleLocation p1 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
+				SimpleLocation p2 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
+				Shop shop = new ServerShop(name, shopData.getString("ECONOMY"), getAccount(shopData.getString("OWNER")), shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"));
+				shops.put(name, shop);
+			} else if (type.equalsIgnoreCase("player")) {
+				if (!useShops) {continue;}
+				if (!config.getBoolean("enable-feature.player-shops")) {continue;}
+				String name = shopData.getString("NAME");
+				SimpleLocation p1 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
+				SimpleLocation p2 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
+				Shop shop = new PlayerShop(name, shopData.getString("ECONOMY"), getAccount(shopData.getString("OWNER")), shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"), shopData.getString("ALLOWED_PLAYERS"));
+				shops.put(name, shop);
+			} else if (type.equalsIgnoreCase("global")) {
+				if (useShops) {continue;}
+				Shop shop = new GlobalShop("GlobalShop", "default", getAccount(defaultServerShopAccount), shopData.getString("BANNED_OBJECTS"));
+				shops.put("GlobalShop", shop);
 			}
-			shopData.close();
-		} else {
-			Shop shop = new ServerShop("GlobalShop", "default", getAccount(defaultServerShopAccount));
+		}
+		shopData.close();
+		if (!useShops && shops.size() == 0) {
+			Shop shop = new GlobalShop("GlobalShop", "default", getAccount(defaultServerShopAccount));
 			shops.put("GlobalShop", shop);
 		}
 	}

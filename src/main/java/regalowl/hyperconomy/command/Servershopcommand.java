@@ -18,6 +18,7 @@ import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.shop.GlobalShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.util.LanguageFile;
@@ -26,7 +27,7 @@ import regalowl.hyperconomy.util.SimpleLocation;
 public class Servershopcommand implements CommandExecutor {
 	
 	
-	private HashMap<HyperPlayer, ServerShop> currentShop = new HashMap<HyperPlayer, ServerShop>();
+	private HashMap<HyperPlayer, Shop> currentShop = new HashMap<HyperPlayer, Shop>();
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
@@ -54,7 +55,7 @@ public class Servershopcommand implements CommandExecutor {
 				}
 			}
 		}
-		ServerShop css = null;
+		Shop css = null;
 		if (currentShop.containsKey(hp)) {
 			css = currentShop.get(hp);
 		}
@@ -75,11 +76,11 @@ public class Servershopcommand implements CommandExecutor {
 				return true;
 			}
 			Shop s = em.getShop(args[1]);
-			if (!(s instanceof ServerShop)) {
+			if (!(s instanceof ServerShop || s instanceof GlobalShop)) {
 				player.sendMessage(L.get("ONLY_SERVER_SHOPS"));
 				return true;
 			}
-			currentShop.put(hp, (ServerShop)s);
+			currentShop.put(hp, s);
 			player.sendMessage(L.get("SHOP_SELECTED"));
 		} else if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("i")) {
 			if (css == null) {
@@ -123,7 +124,7 @@ public class Servershopcommand implements CommandExecutor {
 			ArrayList<Shop> shops = em.getShops();
 			String sList = "";
 			for (Shop s:shops) {
-				if (s instanceof ServerShop) {
+				if (s instanceof ServerShop || s instanceof GlobalShop) {
 					sList += s.getDisplayName() + ",";
 				}
 			}

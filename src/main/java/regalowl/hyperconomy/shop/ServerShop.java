@@ -34,7 +34,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	private HyperConomy hc;
 	private LanguageFile L;
 	private boolean useshopexitmessage;
-	private boolean globalShop;
 	private ArrayList<String> inShop = new ArrayList<String>();
 	
 	
@@ -42,7 +41,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
 		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");	
-		globalShop = false;
 		this.name = name;
 		this.economy = economy;
 		this.owner = owner;
@@ -71,7 +69,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
 		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");
-		globalShop = false;
 		this.name = shopName;
 		this.economy = economy;
 		this.owner = owner;
@@ -105,22 +102,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 			availableObjects.add(ho);
 		}
 	}
-	
-	/**
-	 * Constructor for global shop.
-	 * @param name
-	 * @param economy
-	 * @param owner
-	 */
-	public ServerShop(String name, String economy, HyperAccount owner) {
-		hc = HyperConomy.hc;
-		L = hc.getLanguageFile();
-		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");	
-		globalShop = true;
-		this.name = name;
-		this.economy = economy;
-		this.owner = owner;
-	}
+
 	
 	
 	public int compareTo(Shop s) {
@@ -212,9 +194,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	public boolean inShop(int x, int y, int z, String world) {
-		if (globalShop) {
-			return true;
-		}
 		if (world.equalsIgnoreCase(this.world)) {
 			int rangex = Math.abs(p1x - p2x);
 			if (Math.abs(x - p1x) <= rangex && Math.abs(x - p2x) <= rangex) {
@@ -238,7 +217,6 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	public void sendEntryMessage(Player player) {
-		if (globalShop) {return;}
 		if (message == "") {setDefaultMessage();}
 		String[] lines = message.replace("_", " ").split("%n");
 		for (String line:lines) {

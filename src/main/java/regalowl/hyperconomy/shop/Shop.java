@@ -91,4 +91,5 @@ public interface Shop extends Comparable<Shop>{
 	 * it will automatically return false;
 	 */
 	public boolean intersectsShop(Shop s, int volumeLimit);
+	public void saveAvailable();
 }
