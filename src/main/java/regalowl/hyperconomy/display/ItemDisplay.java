@@ -207,13 +207,10 @@ public class ItemDisplay {
 	
 	public boolean blockEntityPickup(Entity entity) {
 		if (entity.getType() == EntityType.SKELETON || entity.getType() == EntityType.ZOMBIE || entity.getType() == EntityType.PIG_ZOMBIE) {
-			Location el = entity.getLocation();	
-			World ew = el.getWorld();
-			double ex = el.getX();
-			double ez = el.getZ();
-			if (w.equals(ew)) {
-				if (Math.abs(ex - x) < 1000) {
-					if (Math.abs(ez - z) < 1000) {
+			Location entityLocation = entity.getLocation();	
+			if (Bukkit.getWorld(w).equals(entityLocation.getWorld())) {
+				if (Math.abs(entityLocation.getX() - x) < 1000) {
+					if (Math.abs(entityLocation.getZ() - z) < 1000) {
 						return true;
 					}
 				}
