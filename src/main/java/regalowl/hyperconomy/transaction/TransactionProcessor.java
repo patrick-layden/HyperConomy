@@ -531,7 +531,12 @@ public class TransactionProcessor {
 	public void sellEnchant() {
 		try {
 			Player p = hp.getPlayer();
-			if (!(new HyperItemStack(p.getItemInHand()).containsEnchantment(hyperObject.getEnchantment()))) {
+			HyperItemStack his = new HyperItemStack(p.getItemInHand());
+			if (!(his.containsEnchantment(hyperObject.getEnchantment()))) {
+				response.addFailed(L.f(L.get("ITEM_DOESNT_HAVE_ENCHANTMENT"), hyperObject.getDisplayName()), hyperObject);
+				return;
+			}
+			if (his.getEnchantmentLevel(hyperObject.getEnchantment()) != hyperObject.getEnchantmentLevel()) {
 				response.addFailed(L.f(L.get("ITEM_DOESNT_HAVE_ENCHANTMENT"), hyperObject.getDisplayName()), hyperObject);
 				return;
 			}
