@@ -13,7 +13,7 @@
 		</repository>
     	<repository>
 			<id>regalowl-repo</id>
-			<url>http://www.regalowl.net:8080/archiva/repository/snapshots/</url>
+			<url>http://www.regalowl.net:8080/repository/snapshots/</url>
 		</repository>
 	</repositories>
 	<scm>
