@@ -17,6 +17,8 @@ package regalowl.hyperconomy.util;
 
 import java.util.List;
 
+import org.bukkit.OfflinePlayer;
+
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
@@ -35,7 +37,7 @@ public class Economy_HyperConomy implements Economy {
 		hc = HyperConomy.hc;
 		api = HyperConomy.economyApi;
 	}
-
+	@Override
 	public boolean isEnabled() {
 		if (hc == null) {
 			return false;
@@ -43,19 +45,49 @@ public class Economy_HyperConomy implements Economy {
 			return hc.isEnabled();
 		}
 	}
-
+	@Override
 	public String getName() {
 		return name;
 	}
-
+	
+	
+	@Override
 	public double getBalance(String playerName) {
 		return api.getBalance(playerName);
 	}
-
+    @Override
+    public double getBalance(String playerName, String world) {
+        return getBalance(playerName);
+    }
+	@Override
+	public double getBalance(OfflinePlayer player) {
+		return getBalance(player.getName());
+	}
+	@Override
+	public double getBalance(OfflinePlayer player, String world) {
+		return getBalance(player.getName(), world);
+	}
+	
+	
+	@Override
 	public boolean createPlayerAccount(String playerName) {
 		return api.createAccount(playerName);
 	}
-
+	@Override
+    public boolean createPlayerAccount(String playerName, String worldName) {
+        return createPlayerAccount(playerName);
+    }
+	@Override
+	public boolean createPlayerAccount(OfflinePlayer player) {
+		return createPlayerAccount(player.getName());
+	}
+	@Override
+	public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
+		return createPlayerAccount(player.getName());
+	}
+	
+	
+	@Override
 	public EconomyResponse withdrawPlayer(String playerName, double amount) {
 		if (amount < 0) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");
@@ -71,7 +103,22 @@ public class Economy_HyperConomy implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account does not exist");
 		}
 	}
-
+	@Override
+    public EconomyResponse withdrawPlayer(String playerName, String worldName, double amount) {
+        return withdrawPlayer(playerName, amount);
+    }
+	@Override
+	public EconomyResponse withdrawPlayer(OfflinePlayer player, double amount) {
+		return withdrawPlayer(player.getName(), amount);
+	}
+	@Override
+	public EconomyResponse withdrawPlayer(OfflinePlayer player, String worldName, double amount) {
+		return withdrawPlayer(player.getName(), amount);
+	}
+	
+	
+	
+	@Override
 	public EconomyResponse depositPlayer(String playerName, double amount) {
 		if (amount < 0) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative funds");
@@ -83,55 +130,79 @@ public class Economy_HyperConomy implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account does not exist");
 		}
 	}
-
+	@Override
+    public EconomyResponse depositPlayer(String playerName, String worldName, double amount) {
+        return depositPlayer(playerName, amount);
+    }
+	@Override
+	public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
+		 return depositPlayer(player.getName(), amount);
+	}
+	@Override
+	public EconomyResponse depositPlayer(OfflinePlayer player, String worldName, double amount) {
+		 return depositPlayer(player.getName(), amount);
+	}
+	
+	
+	@Override
 	public String format(double amount) {
 		return api.formatMoney(amount);
 	}
-
+	@Override
 	public String currencyNameSingular() {
 		return api.currencyNamePlural();
 	}
-
+	@Override
 	public String currencyNamePlural() {
 		return api.currencyName();
 	}
-
+	
+	
+	@Override
 	public boolean has(String playerName, double amount) {
 		return api.checkFunds(amount, playerName);
 	}
-
+	@Override
+    public boolean has(String playerName, String worldName, double amount) {
+        return has(playerName, amount);
+    }
+	@Override
+	public boolean has(OfflinePlayer player, double amount) {
+		return has(player.getName(), amount);
+	}
+	@Override
+	public boolean has(OfflinePlayer player, String worldName, double amount) {
+		return has(player.getName(), amount);
+	}
+	
+	
+	@Override
 	public boolean hasAccount(String playerName) {
 		return api.checkAccount(playerName);
 	}
-
+	@Override
+    public boolean hasAccount(String playerName, String worldName) {
+        return hasAccount(playerName);
+    }
+	@Override
+	public boolean hasAccount(OfflinePlayer player) {
+		return hasAccount(player.getName());
+	}
+	@Override
+	public boolean hasAccount(OfflinePlayer player, String world) {
+		return hasAccount(player.getName(), world);
+	}
+	
+	
+	@Override
 	public int fractionalDigits() {
 		return api.fractionalDigits();
 	}
 
-    public boolean hasAccount(String playerName, String worldName) {
-        return hasAccount(playerName);
-    }
 
-    public double getBalance(String playerName, String world) {
-        return getBalance(playerName);
-    }
 
-    public boolean has(String playerName, String worldName, double amount) {
-        return has(playerName, amount);
-    }
 
-    public EconomyResponse withdrawPlayer(String playerName, String worldName, double amount) {
-        return withdrawPlayer(playerName, amount);
-    }
-
-    public EconomyResponse depositPlayer(String playerName, String worldName, double amount) {
-        return depositPlayer(playerName, amount);
-    }
-
-    public boolean createPlayerAccount(String playerName, String worldName) {
-        return createPlayerAccount(playerName);
-    }
-
+	@Override
 	public EconomyResponse createBank(String name, String player) {
 		DataManager dm = hc.getDataManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -146,7 +217,11 @@ public class Economy_HyperConomy implements Economy {
 		dm.addHyperBank(hb);
 		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 	}
-
+	@Override
+	public EconomyResponse createBank(String name, OfflinePlayer player) {
+		return createBank(name, player.getName());
+	}
+	@Override
 	public EconomyResponse deleteBank(String name) {
 		DataManager dm = hc.getDataManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -157,7 +232,7 @@ public class Economy_HyperConomy implements Economy {
 		hb.delete();
 		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 	}
-
+	@Override
 	public EconomyResponse bankHas(String name, double amount) {
 		DataManager dm = hc.getDataManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -172,7 +247,7 @@ public class Economy_HyperConomy implements Economy {
 			return new EconomyResponse(0, balance, ResponseType.SUCCESS, "");
 		}
 	}
-
+	@Override
 	public EconomyResponse bankWithdraw(String name, double amount) {
 		DataManager dm = hc.getDataManager();
 		EconomyResponse er = bankHas(name, amount);
@@ -184,7 +259,7 @@ public class Economy_HyperConomy implements Economy {
 			return new EconomyResponse(amount, hb.getBalance(), ResponseType.SUCCESS, "");
 		}
 	}
-
+	@Override
 	public EconomyResponse bankDeposit(String name, double amount) {
 		DataManager dm = hc.getDataManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -196,7 +271,7 @@ public class Economy_HyperConomy implements Economy {
 			return new EconomyResponse(amount, hb.getBalance(), ResponseType.SUCCESS, "");
 		}
 	}
-
+	@Override
 	public EconomyResponse isBankOwner(String name, String playerName) {
 		DataManager dm = hc.getDataManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -214,7 +289,11 @@ public class Economy_HyperConomy implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_OWNER"));
 		}
 	}
-
+	@Override
+	public EconomyResponse isBankOwner(String name, OfflinePlayer player) {
+		return isBankOwner(name, player.getName());
+	}
+	@Override
 	public EconomyResponse isBankMember(String name, String playerName) {
 		DataManager dm = hc.getDataManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -232,7 +311,11 @@ public class Economy_HyperConomy implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_MEMBER"));
 		}
 	}
-
+	@Override
+	public EconomyResponse isBankMember(String name, OfflinePlayer player) {
+		return isBankMember(name, player.getName());
+	}
+	@Override
 	public EconomyResponse bankBalance(String name) {
 		DataManager dm = hc.getDataManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -242,13 +325,37 @@ public class Economy_HyperConomy implements Economy {
 		HyperBank hb = dm.getHyperBank(name);
 		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, null);
 	}
-
+	@Override
 	public List<String> getBanks() {
 		DataManager dm = hc.getDataManager();
 		return dm.getHyperBankNames();
 	}
-
+	@Override
 	public boolean hasBankSupport() {
 		return true;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
