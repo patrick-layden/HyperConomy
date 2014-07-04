@@ -40,7 +40,7 @@ public class BasicObject implements HyperObject {
 	protected double maxstock;
 	
 	/**
-	 * Constructor for BasicShopObjects
+	 * Constructor for BasicObjects
 	 */
 	public BasicObject() {
 		hc = HyperConomy.hc;
@@ -329,6 +329,24 @@ public class BasicObject implements HyperObject {
 		return maxInitial;
 	}
 	
+	@Override
+	public void checkInitiationStatus() {
+		if (((getMedian() * getValue()) / getTotalStock()) <= getStartprice()) {
+			setInitiation("false");
+		}
+	}
+	
+	@Override
+	public String getStatusString() {
+		String status = "dynamic";
+		if (Boolean.parseBoolean(getInitiation())) {
+			status = "initial";
+		} else if (Boolean.parseBoolean(getIsstatic())) {
+			status = "static";
+		}
+		return status;
+	}
+	
 
 	@Override
 	public double getPurchaseTax(double cost) {
@@ -389,48 +407,51 @@ public class BasicObject implements HyperObject {
 	@Override
 	public double getBuyPrice(int amount) {
 		try {
-			double cost = 0;
-			boolean isstatic = Boolean.parseBoolean(getIsstatic());
-			if (isstatic == false) {
-				double shopstock = 0;
-				double oshopstock = 0;
-				double value = 0;
-				double median = 0;
-				shopstock = getTotalStock();
-				oshopstock = shopstock;
-				value = getValue();
-				median = getMedian();
-				shopstock = shopstock - 1;
-				int counter = 0;
-				while (counter < amount) {
-					double price = ((median * value) / shopstock);
-					price = applyCeilingFloor(price);
-					shopstock = shopstock - 1;
-					cost = cost + price;
-					counter++;
-				}
-				boolean initial = Boolean.parseBoolean(getInitiation());
-				if (initial == true) {
-					double icost = 0;
-					icost = getStartprice();
-					if (cost < (icost * amount) && oshopstock > 1) {
-						setInitiation("false");
-					} else {
-						double price = applyCeilingFloor(icost);
-						cost = price * amount;
-					}
-				}
+			double totalPrice = 0;
+			if (Boolean.parseBoolean(getIsstatic())) {
+				totalPrice = applyCeilingFloor(getStaticprice()) * amount;
 			} else {
-				double staticcost = getStaticprice();
-				double price = applyCeilingFloor(staticcost);
-				cost = price * amount;
+				double currentStock = getTotalStock() - 1;
+				for (int i = 0; i < amount; i++) {
+					if (currentStock <= 0) {
+						totalPrice = Math.pow(10, 21);
+						break;
+					}
+					totalPrice += applyCeilingFloor((getMedian() * getValue()) / currentStock);
+					currentStock--;
+				}
+				if (Boolean.parseBoolean(getInitiation()) && totalPrice > (getStartprice() * amount)) {
+					totalPrice = applyCeilingFloor(getStartprice()) * amount;
+				}
 			}
-			return cf.twoDecimals(cost);
+			return cf.twoDecimals(totalPrice);
 		} catch (Exception e) {
-			String info = "getBuyPrice() passed values name='" + getName() + "', amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
-			double cost = 99999999;
-			return cost;
+			hc.gDB().writeError(e);
+			return Math.pow(10, 21);
+		}
+	}
+	
+
+	@Override
+	public double getSellPrice(int amount) {
+		try {
+			double totalPrice = 0;
+			if (Boolean.parseBoolean(getIsstatic())) {
+				totalPrice = applyCeilingFloor(getStaticprice()) * amount;
+			} else {
+				double currentStock = getTotalStock();
+				for (int i = 0; i < amount; i++) {
+					totalPrice += applyCeilingFloor((getMedian() * getValue()) / currentStock);
+					currentStock++;
+				}
+				if (Boolean.parseBoolean(getInitiation()) && totalPrice > (getStartprice() * amount)) {
+					totalPrice = applyCeilingFloor(getStartprice()) * amount;
+				}
+			}
+			return cf.twoDecimals(totalPrice);
+		} catch (Exception e) {
+			hc.gDB().writeError(e);
+			return 0;
 		}
 	}
 	
@@ -439,48 +460,6 @@ public class BasicObject implements HyperObject {
 		return getSellPrice(amount);
 	}
 	
-	@Override
-	public double getSellPrice(int amount) {
-		try {
-			double cost = 0;
-			int counter = 0;
-			Boolean initial = false;
-			initial = Boolean.parseBoolean(getInitiation());
-			boolean isstatic = false;
-			isstatic = Boolean.parseBoolean(getIsstatic());
-			if (!isstatic) {
-				double shopstock = 0;
-				double value = 0;
-				double median = 0;
-				double icost = 0;
-				shopstock = getTotalStock();
-				value = getValue();
-				median = getMedian();
-				icost = getStartprice();
-				while (counter < amount) {
-					double price = ((median * value) / shopstock);
-					price = applyCeilingFloor(price);
-					shopstock = shopstock + 1;
-					cost = cost + price;
-					counter++;
-				}
-				if (initial == true) {
-					double price = applyCeilingFloor(icost);
-					cost = price * amount;
-				}
-			} else {
-				double statprice = getStaticprice();
-				double price = applyCeilingFloor(statprice);
-				cost = price * amount;
-			}
-			return cf.twoDecimals(cost);
-		} catch (Exception e) {
-			String info = getName() + "', amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
-			double cost = 99999999;
-			return cost;
-		}
-	}
 	@Override
 	public boolean nameStartsWith(String part) {
 		part = part.toLowerCase();
@@ -625,6 +604,8 @@ public class BasicObject implements HyperObject {
 	public void setStatus(HyperObjectStatus status) {}
 	@Override
 	public void setHyperObject(HyperObject ho) {}
+
+
 
 
 

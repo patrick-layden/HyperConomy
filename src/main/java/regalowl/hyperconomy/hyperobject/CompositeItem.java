@@ -247,6 +247,14 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		    ho.setStock(newStock);
 		}
 	}
+	
+	
+	@Override
+	public void checkInitiationStatus() {
+		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
+		    entry.getKey().checkInitiationStatus();
+		}
+	}
 
 	@Override
 	public boolean isCompositeObject() {return true;}

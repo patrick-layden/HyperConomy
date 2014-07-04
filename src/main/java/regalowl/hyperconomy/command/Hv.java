@@ -58,9 +58,6 @@ public class Hv {
 						double cost = ho.getBuyPrice(amount);
 						double taxpaid = ho.getPurchaseTax(cost);
 						cost = cf.twoDecimals(cost + taxpaid);
-						if (cost > Math.pow(10, 10)) {
-							cost = -1;
-						}
 						double stock = 0;
 						stock = ho.getStock();
 						player.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, displayName));

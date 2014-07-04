@@ -197,10 +197,17 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * @return
 	 */
 	public boolean nameContains(String part);
-	/**Returns the maximum quantity that can be sold.  (Prevents pricing problems when switching between initial and dynamic pricing.)
-	 * @return
+	/**
+	 * @return Returns the maximum quantity that can be sold.  (Prevents pricing problems when switching between initial and dynamic pricing.)
 	 */
 	public int getMaxInitial();
+	/**
+	 * @return Returns 'initial', 'static', or 'dynamic'.)
+	 */
+	public String getStatusString();
+	/**Changes the HyperObject to dynamic mode if the stock has reached the proper level.)
+	 */
+	public void checkInitiationStatus();
 	/**Makes sure the specified price complies with this HyperObject's ceiling and floor values.  If the specified value is greater than the ceiling,
 	 * it will be set to the ceiling, and if it it is less than the floor it will be set to the floor value.
 	 * @param value

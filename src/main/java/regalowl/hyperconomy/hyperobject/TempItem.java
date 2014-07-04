@@ -86,8 +86,8 @@ public class TempItem extends ComponentItem implements HyperObject {
 		if (!aliases.contains(removeAlias)) {return;}
 		aliases.remove(removeAlias);
 	}
-
-	
+	@Override
+	public void checkInitiationStatus() {}
 	
 	
 

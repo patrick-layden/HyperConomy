@@ -122,7 +122,12 @@ public class HyperPlayer implements HyperAccount {
 			setUUID(p.getUniqueId().toString());
 			if (uuid == null || uuid == "") {return;}
 		}
-		Player p = Bukkit.getPlayer(UUID.fromString(uuid));
+		Player p = null;
+		try {
+			p = Bukkit.getPlayer(UUID.fromString(uuid));
+		} catch (IllegalArgumentException e) {
+			return;
+		}
 		if (p == null) {return;}
 		if (p.getName().equals(name)) {return;}
 		if (hc.useExternalEconomy()) {
@@ -140,7 +145,11 @@ public class HyperPlayer implements HyperAccount {
 	}
 	public UUID getUUID() {
 		if (uuid == null || uuid == "") {return null;}
-		return UUID.fromString(uuid);
+		try {
+			return UUID.fromString(uuid);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 	public String getUUIDString() {
 		return uuid;

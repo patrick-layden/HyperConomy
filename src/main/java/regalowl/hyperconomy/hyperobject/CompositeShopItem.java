@@ -65,7 +65,12 @@ public class CompositeShopItem extends BasicShopObject implements HyperObject {
 	public boolean isCompositeObject() {return true;}
 
 
-	
+	@Override
+	public void checkInitiationStatus() {
+		for (Map.Entry<HyperObject,Double> entry : ho.getComponents().entrySet()) {
+			entry.getKey().checkInitiationStatus();
+		}
+	}
 
 	
 	

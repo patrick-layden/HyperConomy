@@ -52,54 +52,11 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		}
 		return false;
 	}
+	
+
 	@Override
 	public double getSellPrice(int amount, HyperPlayer hp) {
-		try {
-			double totalvalue = 0;
-			double damage = 0;
-			boolean isstatic = false;
-			isstatic = Boolean.parseBoolean(getIsstatic());
-			if (!isstatic) {
-				damage = getDamageMultiplier(amount, hp.getPlayer().getInventory());
-				double shopstock = 0;
-				double value = 0;
-				double median = 0;
-				double icost = 0;
-				shopstock = getTotalStock();
-				value = getValue();
-				median = getMedian();
-				icost = getStartprice();
-				if (icost >= ((median * value) / shopstock) && shopstock > 1) {
-					setInitiation("false");
-				}
-				int counter = 0;
-				while (counter < amount) {
-					double price = ((median * value) / shopstock);
-					price = applyCeilingFloor(price);
-					shopstock = shopstock + 1;
-					totalvalue = totalvalue + price;
-					counter++;
-				}
-				totalvalue = totalvalue * damage;
-				Boolean initial = false;
-				initial = Boolean.parseBoolean(getInitiation());
-				if (initial == true) {
-					double ivalue = applyCeilingFloor(icost);
-					totalvalue = ivalue * damage * amount;
-				}
-			} else {
-				damage = getDamageMultiplier(amount, hp.getPlayer().getInventory());
-				double statprice = getStaticprice();
-				double svalue = applyCeilingFloor(statprice);
-				totalvalue = svalue * amount * damage;
-			}
-			return cf.twoDecimals(totalvalue);
-		} catch (Exception e) {
-			String info = "getSellPrice() passed values name='" + getName() + "', amount='" + amount + "', player='" + hp.getName() + "'";
-			hc.gDB().writeError(e, info);
-			double totalvalue = 0;
-			return totalvalue;
-		}
+		return super.getSellPrice(amount) * getDamageMultiplier(amount, hp.getPlayer().getInventory());
 	}
 
 	@Override

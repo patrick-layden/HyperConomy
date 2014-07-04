@@ -173,7 +173,11 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	}
 	@Override
 	public boolean isShopObject() {return true;}
-
+	
+	@Override
+	public void checkInitiationStatus() {
+		ho.checkInitiationStatus();
+	}
 	
 	
 	

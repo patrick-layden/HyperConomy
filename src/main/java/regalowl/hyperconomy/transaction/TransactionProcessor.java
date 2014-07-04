@@ -204,10 +204,6 @@ public class TransactionProcessor {
 
 	public void buy() {
 		try {
-			//if (hyperObject.getItemStack().getType() == null) {
-			//	response.addFailed(L.f(L.get("CANNOT_BE_PURCHASED_WITH"), name), hyperObject);
-			//	return;
-			//}
 			double price = hyperObject.getBuyPrice(amount);
 			double taxpaid = hyperObject.getPurchaseTax(price);
 			price = cf.twoDecimals(price + taxpaid);
@@ -227,15 +223,10 @@ public class TransactionProcessor {
 			hp.withdraw(price);
 			tradePartner.deposit(price);
 			resetBalanceIfUnlimited();
+			hyperObject.checkInitiationStatus();
 			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, hyperObject.getDisplayName(), cf.twoDecimals(taxpaid)), price, hyperObject);
 			response.setSuccessful();
-			String type = "dynamic";
-			if (Boolean.parseBoolean(hyperObject.getInitiation())) {
-				type = "initial";
-			} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
-				type = "static";
-			}
-			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), (double) amount, cf.twoDecimals(price - taxpaid), cf.twoDecimals(taxpaid), tradePartner.getName(), type);
+			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), (double) amount, cf.twoDecimals(price - taxpaid), cf.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "Transaction buy() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
@@ -260,15 +251,10 @@ public class TransactionProcessor {
 			hp.withdraw(price);
 			tradePartner.deposit(price);
 			resetBalanceIfUnlimited();
+			hyperObject.checkInitiationStatus();
 			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, cf.twoDecimals(price), hyperObject.getDisplayName(), cf.twoDecimals(taxpaid)), cf.twoDecimals(price), hyperObject);
 			response.setSuccessful();
-			String type = "dynamic";
-			if (Boolean.parseBoolean(hyperObject.getInitiation())) {
-				type = "initial";
-			} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
-				type = "static";
-			}
-			log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, cf.twoDecimals(price), cf.twoDecimals(taxpaid), tradePartner.getName(), type);
+			log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, cf.twoDecimals(price), cf.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "Transaction buyXP() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
@@ -287,7 +273,8 @@ public class TransactionProcessor {
 			Player p = hp.getPlayer();
 			Enchantment ench = hyperObject.getEnchantment();
 			double price = hyperObject.getBuyPrice(EnchantmentClass.fromString(p.getItemInHand().getType().toString()));
-			price = price + hyperObject.getPurchaseTax(price);
+			double taxpaid = hyperObject.getPurchaseTax(price);
+			price += taxpaid;
 			if (new HyperItemStack(p.getItemInHand()).containsEnchantment(ench)) {
 				response.addFailed(L.get("ITEM_ALREADY_HAS_ENCHANTMENT"), hyperObject);
 				return;
@@ -306,24 +293,10 @@ public class TransactionProcessor {
 			resetBalanceIfUnlimited();
 			String levelString = hyperObject.getName().substring(hyperObject.getName().length() - 1, hyperObject.getName().length());
 			new HyperItemStack(p.getItemInHand()).addEnchantment(ench, Integer.parseInt(levelString));
-			double taxrate;
-			if (!Boolean.parseBoolean(hyperObject.getIsstatic())) {
-				taxrate = hc.getConf().getDouble("tax.enchant");
-			} else {
-				taxrate = hc.getConf().getDouble("tax.static");
-			}
-			double taxpaid = price - (price / (1 + taxrate / 100));
-			taxpaid = cf.twoDecimals(taxpaid);
-			price = cf.twoDecimals(price);
+			hyperObject.checkInitiationStatus();
 			response.addSuccess(L.f(L.get("ENCHANTMENT_PURCHASE_MESSAGE"), 1, price, hyperObject.getDisplayName(), cf.twoDecimals(taxpaid)), cf.twoDecimals(price), hyperObject);
 			response.setSuccessful();
-			String type = "dynamic";
-			if (Boolean.parseBoolean(hyperObject.getInitiation())) {
-				type = "initial";
-			} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
-				type = "static";
-			}
-			log.writeSQLLog(p.getName(), "purchase", hyperObject.getDisplayName(), 1.0, price, taxpaid, tradePartner.getName(), type);
+			log.writeSQLLog(p.getName(), "purchase", hyperObject.getDisplayName(), 1.0, cf.twoDecimals(price), cf.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "ETransaction buyEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "'";
 			hc.gDB().writeError(e, info);
@@ -397,7 +370,6 @@ public class TransactionProcessor {
 	public void sell() {
 		try {
 			String name = hyperObject.getDisplayName();
-
 			if (hyperObject.getItemStack().getType() == null) {
 				response.addFailed(L.f(L.get("CANNOT_BE_SOLD_WITH"), name), hyperObject);
 				return;
@@ -417,42 +389,19 @@ public class TransactionProcessor {
 				return;
 			}
 			double price = hyperObject.getSellPrice(amount, hp);
-			int maxi = hyperObject.getMaxInitial();
-			boolean isstatic = false;
-			boolean isinitial = false;
-			isinitial = Boolean.parseBoolean(hyperObject.getInitiation());
-			isstatic = Boolean.parseBoolean(hyperObject.getIsstatic());
-			if ((amount > maxi) && !isstatic && isinitial) {
-				amount = maxi;
-				price = hyperObject.getSellPrice(amount, hp);
-			}
-			if (maxi == 0) {
-				price = hyperObject.getSellPrice(amount, hp);
-			}
 			double amountRemoved = hyperObject.remove(amount, giveInventory);
 			double shopstock = hyperObject.getStock();
 			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
 				hyperObject.setStock(shopstock + amountRemoved);
 			}
-			int maxi2 = hyperObject.getMaxInitial();
-			if (maxi2 == 0) {
-				hyperObject.setInitiation("false");
-			}
 			double salestax = hp.getSalesTax(price);
 			hp.deposit(price - salestax);
 			tradePartner.withdraw(price - salestax);
 			resetBalanceIfUnlimited();
+			hyperObject.checkInitiationStatus();
 			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, cf.twoDecimals(price), name, cf.twoDecimals(salestax)), cf.twoDecimals(price - salestax), hyperObject);
 			response.setSuccessful();
-			String type = "dynamic";
-			if (Boolean.parseBoolean(hyperObject.getInitiation())) {
-				type = "initial";
-			} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
-				type = "static";
-			}
-			log.writeSQLLog(hp.getName(), "sale", name, (double) amount, cf.twoDecimals(price - salestax), cf.twoDecimals(salestax), tradePartner.getName(), type);
-			return;
-
+			log.writeSQLLog(hp.getName(), "sale", name, (double) amount, cf.twoDecimals(price - salestax), cf.twoDecimals(salestax), tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "Transaction sell() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + ", amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
@@ -471,43 +420,22 @@ public class TransactionProcessor {
 				return;
 			}
 			double price = hyperObject.getSellPrice(amount);
-			int maxi = hyperObject.getMaxInitial();
-			boolean itax;
-			boolean stax;
-			itax = Boolean.parseBoolean(hyperObject.getInitiation());
-			stax = Boolean.parseBoolean(hyperObject.getIsstatic());
-			if (amount > (maxi) && !stax && itax) {
-				amount = maxi;
-				price = hyperObject.getSellPrice(amount);
-			}
 			if (!hasBalance(price)) {
 				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
 				return;
-			}
-			if (maxi == 0) {
-				price = hyperObject.getSellPrice(amount);
 			}
 			hyperObject.remove(amount, hp);
 			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
 				hyperObject.setStock(amount + hyperObject.getStock());
 			}
-			int maxi2 = hyperObject.getMaxInitial();
-			if (maxi2 == 0) {
-				hyperObject.setInitiation("false");
-			}
 			double salestax = cf.twoDecimals(hp.getSalesTax(price));
 			hp.deposit(price - salestax);
 			tradePartner.withdraw(price - salestax);
 			resetBalanceIfUnlimited();
+			hyperObject.checkInitiationStatus();
 			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, cf.twoDecimals(price), hyperObject.getDisplayName(), salestax), cf.twoDecimals(price), hyperObject);
 			response.setSuccessful();
-			String type = "dynamic";
-			if (Boolean.parseBoolean(hyperObject.getInitiation())) {
-				type = "initial";
-			} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
-				type = "static";
-			}
-			log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), (double) amount, cf.twoDecimals(price - salestax), cf.twoDecimals(salestax), tradePartner.getName(), type);
+			log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), (double) amount, cf.twoDecimals(price - salestax), cf.twoDecimals(salestax), tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "Transaction sellXP() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
@@ -553,16 +481,10 @@ public class TransactionProcessor {
 			hp.deposit(price - salestax);
 			tradePartner.withdraw(price - salestax);
 			resetBalanceIfUnlimited();
-			price = cf.twoDecimals(price);
+			hyperObject.checkInitiationStatus();
 			response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, cf.twoDecimals(price), hyperObject.getDisplayName(), cf.twoDecimals(salestax)), cf.twoDecimals(price - salestax), hyperObject);
 			response.setSuccessful();
-			String type = "dynamic";
-			if (Boolean.parseBoolean(hyperObject.getInitiation())) {
-				type = "initial";
-			} else if (Boolean.parseBoolean(hyperObject.getIsstatic())) {
-				type = "static";
-			}
-			log.writeSQLLog(p.getName(), "sale", hyperObject.getDisplayName(), 1.0, price - salestax, salestax, tradePartner.getName(), type);
+			log.writeSQLLog(p.getName(), "sale", hyperObject.getDisplayName(), 1.0, cf.twoDecimals(price - salestax), cf.twoDecimals(salestax), tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "ETransaction sellEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "'";
 			hc.gDB().writeError(e, info);
