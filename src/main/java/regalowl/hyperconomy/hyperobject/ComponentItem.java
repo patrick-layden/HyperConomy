@@ -55,8 +55,8 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	
 
 	@Override
-	public double getSellPrice(int amount, HyperPlayer hp) {
-		return super.getSellPrice(amount) * getDamageMultiplier(amount, hp.getPlayer().getInventory());
+	public double getSellPrice(double amount, HyperPlayer hp) {
+		return super.getSellPrice(amount) * getDamageMultiplier((int)Math.ceil(amount), hp.getPlayer().getInventory());
 	}
 
 	@Override

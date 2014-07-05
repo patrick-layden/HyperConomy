@@ -46,15 +46,15 @@ public class ShopEnchant extends BasicShopObject implements HyperObject {
 	}
 	
 	@Override
-	public double getBuyPrice(int amount) {
+	public double getBuyPrice(double amount) {
 		return getBuyPrice(EnchantmentClass.DIAMOND) * amount;
 	}
 	@Override
-	public double getSellPrice(int amount) {
+	public double getSellPrice(double amount) {
 		return getSellPrice(EnchantmentClass.DIAMOND) * amount;
 	}
 	@Override
-	public double getSellPrice(int amount, HyperPlayer hp) {
+	public double getSellPrice(double amount, HyperPlayer hp) {
 		return getSellPrice(EnchantmentClass.DIAMOND, hp) * amount;
 	}
 

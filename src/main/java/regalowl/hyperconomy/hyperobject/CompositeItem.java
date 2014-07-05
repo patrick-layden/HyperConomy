@@ -197,36 +197,29 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		return maxInitial;
 	}
 	@Override
-	public double getBuyPrice(int amount) {
+	public double getBuyPrice(double amount) {
 		double cost = 0;
 		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
 			HyperObject ho = entry.getKey();
-		    Double qty = entry.getValue();
-		    cost += (ho.getBuyPrice(amount) * qty);
+		    Double compositeFactor = entry.getValue();
+		    cost += (ho.getBuyPrice(amount * compositeFactor));
 		}
 		return cost;
 	}
 	
 	@Override
-	public double getSellPrice(int amount) {
+	public double getSellPrice(double amount) {
 		double value = 0;
 		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
 			HyperObject ho = entry.getKey();
-		    Double qty = entry.getValue();
-		    value += (ho.getSellPrice(amount) * qty);
+		    Double compositeFactor = entry.getValue();
+		    value += (ho.getSellPrice(amount * compositeFactor));
 		}
 		return value;
 	}
 	@Override
-	public double getSellPrice(int amount, HyperPlayer hp) {
-		double value = 0;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-			HyperObject ho = entry.getKey();
-		    Double qty = entry.getValue();
-		    value += (ho.getSellPrice(amount, hp) * qty);
-		}
-		double damageMultiplier = getDamageMultiplier(amount, hp.getPlayer().getInventory());
-		return value * damageMultiplier;
+	public double getSellPrice(double amount, HyperPlayer hp) {
+		return getSellPrice(amount) * getDamageMultiplier((int)Math.ceil(amount), hp.getPlayer().getInventory());
 	}
 	
 

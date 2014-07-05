@@ -213,7 +213,7 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * @param value
 	 * @return
 	 */
-	public double applyCeilingFloor(double value);
+	public double applyCeilingFloor(double value, double quantity);
 	
 	/**
 	 * @param width of image (if negative width with be based on height, preserving aspect ratio)
@@ -241,31 +241,31 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * @param amount
 	 * @return
 	 */
-	public double getBuyPriceWithTax(int amount);
+	public double getBuyPriceWithTax(double amount);
 	/**Returns the buy price for the given quantity of this HyperObject.
 	 * @param amount
 	 * @return
 	 */
-	public double getBuyPrice(int amount);
+	public double getBuyPrice(double amount);
 	/**Returns the actual sell price (excluding tax) for this HyperObject and HyperPlayer.  The HyperPlayer is needed in case the item being sold is
 	 * damaged.  The player's inventory will be checked for damaged items.
 	 * @param amount
 	 * @param hp
 	 * @return
 	 */
-	public double getSellPrice(int amount, HyperPlayer hp);
+	public double getSellPrice(double amount, HyperPlayer hp);
 	/**Returns the complete sell price for this HyperObject including sales tax. The HyperPlayer is needed in case the item being sold is
 	 * damaged.  The player's inventory will be checked for damaged items.
 	 * @param amount 
 	 * @param hp
 	 * @return
 	 */
-	public double getSellPriceWithTax(int amount, HyperPlayer hp);
+	public double getSellPriceWithTax(double amount, HyperPlayer hp);
 	/**Returns a theoretical sale price excluding any damage to the item being sold etc.
 	 * @param amount
 	 * @return
 	 */
-	public double getSellPrice(int amount);
+	public double getSellPrice(double amount);
 	
 	
 	//GENERAL ADD/REMOVE METHODS

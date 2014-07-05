@@ -95,8 +95,8 @@ public class Value implements CommandExecutor {
 
 
 			sender.sendMessage(L.get("LINE_BREAK"));
-			sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, ho.getDisplayName()));
-			sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, ho.getDisplayName()));
+			sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, cf.twoDecimals(val), ho.getDisplayName()));
+			sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cf.twoDecimals(cost), ho.getDisplayName()));
 			sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), cf.twoDecimals(ho.getStock()), ho.getDisplayName()));
 			sender.sendMessage(L.get("LINE_BREAK"));
 

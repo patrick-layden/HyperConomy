@@ -144,19 +144,19 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 
 
 	@Override
-	public double getSellPriceWithTax(int amount, HyperPlayer hp) {
+	public double getSellPriceWithTax(double amount, HyperPlayer hp) {
 		return getSellPrice(amount);//PlayerShop objects aren't taxed.
 	}
 	@Override
-	public double getSellPrice(int amount, HyperPlayer hp) {
+	public double getSellPrice(double amount, HyperPlayer hp) {
 		return getSellPrice(amount);//PlayerShop objects aren't taxed.
 	}
 	@Override
-	public double getBuyPriceWithTax(int amount) {
+	public double getBuyPriceWithTax(double amount) {
 		return getBuyPrice(amount);//PlayerShop objects aren't taxed.
 	}
 	@Override
-	public double getBuyPrice(int amount) {
+	public double getBuyPrice(double amount) {
 		if (getBuyPrice() != 0.0) {
 			return getBuyPrice() * amount;
 		} else {
@@ -164,7 +164,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		}
 	}
 	@Override
-	public double getSellPrice(int amount) {
+	public double getSellPrice(double amount) {
 		if (getSellPrice() != 0.0) {
 			return getSellPrice() * amount;
 		} else {
@@ -183,7 +183,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	
 	//The following methods don't apply to PlayerShop objects and have been overridden to prevent database changes.
 	@Override
-	public double applyCeilingFloor(double value) {return value;}
+	public double applyCeilingFloor(double value, double quantity) {return value;}
 	@Override
 	public void setName(String name) {}
 	@Override

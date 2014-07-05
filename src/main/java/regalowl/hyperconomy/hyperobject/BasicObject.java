@@ -379,9 +379,9 @@ public class BasicObject implements HyperObject {
 	}
 	
 	@Override
-	public double applyCeilingFloor(double price) {
-		double floor = getFloor();
-		double ceiling = getCeiling();
+	public double applyCeilingFloor(double price, double quantity) {
+		double floor = getFloor() * quantity;
+		double ceiling = getCeiling() * quantity;
 		if (price > ceiling) {
 			price = ceiling;
 		} else if (price < floor) {
@@ -391,40 +391,36 @@ public class BasicObject implements HyperObject {
 	}
 	
 	@Override
-	public double getSellPriceWithTax(int amount, HyperPlayer hp) {
+	public double getSellPriceWithTax(double amount, HyperPlayer hp) {
 		double price = getSellPrice(amount, hp);
 		price -= hp.getSalesTax(price);
 		return cf.twoDecimals(price);
 	}
 	
 	@Override
-	public double getBuyPriceWithTax(int amount) {
+	public double getBuyPriceWithTax(double amount) {
 		double price = getBuyPrice(amount);
 		price += getPurchaseTax(price);
 		return cf.twoDecimals(price);
 	}
-
+	
 	@Override
-	public double getBuyPrice(int amount) {
+	public double getSellPrice(double amount) {
 		try {
 			double totalPrice = 0;
 			if (Boolean.parseBoolean(getIsstatic())) {
-				totalPrice = applyCeilingFloor(getStaticprice()) * amount;
+				totalPrice = getStaticprice() * amount;
 			} else {
-				double currentStock = getTotalStock() - 1;
-				for (int i = 0; i < amount; i++) {
-					if (currentStock <= 0) {
-						totalPrice = Math.pow(10, 21);
-						break;
-					}
-					totalPrice += applyCeilingFloor((getMedian() * getValue()) / currentStock);
-					currentStock--;
+				if (getTotalStock() <= 0) {
+					totalPrice = Math.pow(10, 21);
+				} else {
+					totalPrice = (Math.log(getTotalStock() + amount) - Math.log(getTotalStock())) * getMedian() * getValue();
 				}
 				if (Boolean.parseBoolean(getInitiation()) && totalPrice > (getStartprice() * amount)) {
-					totalPrice = applyCeilingFloor(getStartprice()) * amount;
+					totalPrice = getStartprice() * amount;
 				}
 			}
-			return cf.twoDecimals(totalPrice);
+			return applyCeilingFloor(totalPrice, amount);
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 			return Math.pow(10, 21);
@@ -433,22 +429,22 @@ public class BasicObject implements HyperObject {
 	
 
 	@Override
-	public double getSellPrice(int amount) {
+	public double getBuyPrice(double amount) {
 		try {
 			double totalPrice = 0;
 			if (Boolean.parseBoolean(getIsstatic())) {
-				totalPrice = applyCeilingFloor(getStaticprice()) * amount;
+				totalPrice = getStaticprice() * amount;
 			} else {
-				double currentStock = getTotalStock();
-				for (int i = 0; i < amount; i++) {
-					totalPrice += applyCeilingFloor((getMedian() * getValue()) / currentStock);
-					currentStock++;
+				if (getTotalStock() - amount <= 0) {
+					totalPrice = Math.pow(10, 21);
+				} else {
+					totalPrice = (Math.log(getTotalStock()) - Math.log(getTotalStock() - amount)) * getMedian() * getValue();
 				}
 				if (Boolean.parseBoolean(getInitiation()) && totalPrice > (getStartprice() * amount)) {
-					totalPrice = applyCeilingFloor(getStartprice()) * amount;
+					totalPrice = getStartprice() * amount;
 				}
 			}
-			return cf.twoDecimals(totalPrice);
+			return applyCeilingFloor(totalPrice, amount);
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 			return 0;
@@ -456,7 +452,7 @@ public class BasicObject implements HyperObject {
 	}
 	
 	@Override
-	public double getSellPrice(int amount, HyperPlayer hp) {
+	public double getSellPrice(double amount, HyperPlayer hp) {
 		return getSellPrice(amount);
 	}
 	
