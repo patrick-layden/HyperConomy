@@ -137,6 +137,10 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
 				return true;
 			}
+			if (!cps.inShop(player)) {
+				player.sendMessage(L.get("MANAGESHOP_EDIT_INSIDE_ONLY"));
+				return true;
+			}
 			int amount = 1;
 			HyperObject ho = null;
 			if (args.length == 1) {
@@ -226,6 +230,10 @@ public class Manageshop implements CommandExecutor {
 		} else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("r")) {
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			if (!cps.inShop(player)) {
+				player.sendMessage(L.get("MANAGESHOP_EDIT_INSIDE_ONLY"));
 				return true;
 			}
 			if (args.length < 2) {

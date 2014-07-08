@@ -385,6 +385,7 @@ SHOP_SELECTED: &aShop selected!
 CANT_MAKE_SHOP_LARGER_THAN: &4You cannot make a shop with a volume larger than &a%v &4blocks.
 SHOP_INTERSECTS_SHOP: &4Your shop's region cannot intersect the shop %n.
 SHOP_LIMIT_REACHED: &4You cannot make more than &a%v &4shops.
+MANAGESHOP_EDIT_INSIDE_ONLY: &4You must be inside the selected shop to edit its contents.
 MANAGESHOP_PRICE_HELP: &4Use /manageshop price [object] [price] or /manageshop buyprice... or /manageshop sellprice...
 MANAGESHOP_MAXSTOCK_HELP: &4Use /manageshop maxstock [object] [max stock]
 MANAGESHOP_OWNER_HELP: &4Use /manageshop owner [name]
