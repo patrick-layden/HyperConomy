@@ -12,6 +12,6 @@ Installation
 Links
 ---------
 * [Tickets] (http://dev.bukkit.org/server-mods/hyperconomy/tickets/)
-* [Documentation Wiki] (https://github.com/RegalOwl/HyperConomy/wiki)
+* [Documentation Wiki] (https://github.com/RegalOwl/HyperConomy-Documentation/tree/master/Wiki)
 * [BukkitDev Page] (http://dev.bukkit.org/bukkit-plugins/hyperconomy/)
 * [Latest Development Build] (https://buildhive.cloudbees.com/job/RegalOwl/job/HyperConomy/lastSuccessfulBuild/regalowl.hyperconomy$hyperconomy/)
