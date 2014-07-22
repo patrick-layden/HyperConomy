@@ -492,6 +492,7 @@ HCDATA_IMPORTYML_INVALID: &4Invalid parameters. Use /hcdata importyml [economy]
 HCDATA_EXPORTYML_INVALID: &4Invalid parameters. Use /hcdata exportyml [economy]
 HCDATA_UPDATEITEMSTACK_INVALID: &4Invalid parameters. Use /hcdata updateitemstack [object]
 HCDATA_ITEMSTACK_UPDATED: &6ItemStack updated!
+HCDATA_ACCOUNTS_PURGED: &6%v unnecessary player accounts removed!
 MUST_DISABLE_COMPOSITES: &4You must disable composite items to use this command.
 NAME_REPAIR_ATTEMPTED: &6Name repair attempted.
 LOGS_CLEARED: &6HyperConomy log tables cleared.

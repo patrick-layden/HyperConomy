@@ -167,7 +167,7 @@ public class HyperBank implements HyperAccount {
 	public String getOwnersList() {
 		String list = "";
 		for (String owner:owners) {
-			list += hc.getDataManager().getHyperPlayer(owner).getName() + ",";
+			list += hc.getHyperPlayerManager().getHyperPlayer(owner).getName() + ",";
 		}
 		if (list.length() > 0) {
 			list = list.substring(0, list.length() - 1);
@@ -178,7 +178,7 @@ public class HyperBank implements HyperAccount {
 	public String getMembersList() {
 		String list = "";
 		for (String member:members) {
-			list += hc.getDataManager().getHyperPlayer(member).getName() + ",";
+			list += hc.getHyperPlayerManager().getHyperPlayer(member).getName() + ",";
 		}
 		if (list.length() > 0) {
 			list = list.substring(0, list.length() - 1);
@@ -189,7 +189,7 @@ public class HyperBank implements HyperAccount {
 	public ArrayList<HyperPlayer> getOwners() {
 		ArrayList<HyperPlayer> ownersList = new ArrayList<HyperPlayer>();
 		for (String owner:owners) {
-			ownersList.add(hc.getDataManager().getHyperPlayer(owner));
+			ownersList.add(hc.getHyperPlayerManager().getHyperPlayer(owner));
 		}
 		return ownersList;
 	}
@@ -197,7 +197,7 @@ public class HyperBank implements HyperAccount {
 	public ArrayList<HyperPlayer> getMembers() {
 		ArrayList<HyperPlayer> membersList = new ArrayList<HyperPlayer>();
 		for (String member:members) {
-			membersList.add(hc.getDataManager().getHyperPlayer(member));
+			membersList.add(hc.getHyperPlayerManager().getHyperPlayer(member));
 		}
 		return membersList;
 	}

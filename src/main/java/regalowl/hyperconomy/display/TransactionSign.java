@@ -41,7 +41,7 @@ public class TransactionSign implements Listener {
 		try {
 			if (hc.getConf().getBoolean("enable-feature.scrolling-transaction-signs")) {
 				Player p = event.getPlayer();
-				HyperEconomy he = em.getHyperPlayer(p).getHyperEconomy();
+				HyperEconomy he = em.getHyperPlayerManager().getHyperPlayer(p).getHyperEconomy();
 				Block b = null;
 				try {
 					b = p.getTargetBlock(null, 500);
@@ -158,7 +158,7 @@ public class TransactionSign implements Listener {
 			if (!hc.getConf().getBoolean("enable-feature.transaction-signs")) {return;}
 			Player p = ievent.getPlayer();
 			if (p == null) {return;}
-			HyperEconomy he = em.getHyperPlayer(p).getHyperEconomy();
+			HyperEconomy he = em.getHyperPlayerManager().getHyperPlayer(p).getHyperEconomy();
 			if (p.isSneaking() && p.hasPermission("hyperconomy.admin")) {return;}
 			LanguageFile L = hc.getLanguageFile();
 			boolean requireShop = hc.getConf().getBoolean("shop.require-transaction-signs-to-be-in-shop");
@@ -205,7 +205,7 @@ public class TransactionSign implements Listener {
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.buysign")) {
 									if ((em.inAnyShop(p) && requireShop) || !requireShop) {
-										HyperPlayer hp = em.getHyperPlayer(p);
+										HyperPlayer hp = em.getHyperPlayerManager().getHyperPlayer(p);
 										if (hp == null) {
 											ievent.setCancelled(true);
 											return;
@@ -245,7 +245,7 @@ public class TransactionSign implements Listener {
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
 									if ((em.inAnyShop(p) && requireShop) || !requireShop) {
-										HyperPlayer hp = em.getHyperPlayer(p);
+										HyperPlayer hp = em.getHyperPlayerManager().getHyperPlayer(p);
 										if (hp == null) {
 											ievent.setCancelled(true);
 											return;

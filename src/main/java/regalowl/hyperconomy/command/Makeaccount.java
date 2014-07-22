@@ -16,7 +16,7 @@ public class Makeaccount {
 			if (args.length == 1) {
 				String account = args[0];
 				if (!em.accountExists(account)) {
-					HyperPlayer hp = em.addPlayer(account);
+					HyperPlayer hp = em.getHyperPlayerManager().addPlayer(account);
 					if (hp != null) {
 						sender.sendMessage(L.get("MAKEACCOUNT_SUCCESS"));
 					} else {

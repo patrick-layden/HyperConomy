@@ -373,7 +373,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 				if (inShop(p)) {
 					inShop.add(p.getName());
 					sendEntryMessage(p);
-					hc.getDataManager().getHyperPlayer(p).setEconomy(economy);
+					hc.getHyperPlayerManager().getHyperPlayer(p).setEconomy(economy);
 				}
 			}
 		}

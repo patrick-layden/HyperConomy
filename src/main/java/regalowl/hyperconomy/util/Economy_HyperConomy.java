@@ -24,6 +24,7 @@ import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperPlayerManager;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.EconomyAPI;
@@ -205,14 +206,15 @@ public class Economy_HyperConomy implements Economy {
 	@Override
 	public EconomyResponse createBank(String name, String player) {
 		DataManager dm = hc.getDataManager();
+		HyperPlayerManager hpm = hc.getHyperPlayerManager();
 		LanguageFile L = hc.getLanguageFile();
 		if (dm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_ALREADY_EXISTS"));
 		}
-		if (!dm.hyperPlayerExists(player)) {
+		if (!hpm.hyperPlayerExists(player)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
-		HyperPlayer hp = dm.getHyperPlayer(player);
+		HyperPlayer hp = hpm.getHyperPlayer(player);
 		HyperBank hb = new HyperBank(name, hp);
 		dm.addHyperBank(hb);
 		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
@@ -274,15 +276,16 @@ public class Economy_HyperConomy implements Economy {
 	@Override
 	public EconomyResponse isBankOwner(String name, String playerName) {
 		DataManager dm = hc.getDataManager();
+		HyperPlayerManager hpm = hc.getHyperPlayerManager();
 		LanguageFile L = hc.getLanguageFile();
 		if (!dm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
-		if (!dm.hyperPlayerExists(name)) {
+		if (!hpm.hyperPlayerExists(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
 		HyperBank hb = dm.getHyperBank(name);
-		HyperPlayer hp = dm.getHyperPlayer(playerName);
+		HyperPlayer hp = hpm.getHyperPlayer(playerName);
 		if (hb.isOwner(hp)) {
 			return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 		} else {
@@ -296,15 +299,16 @@ public class Economy_HyperConomy implements Economy {
 	@Override
 	public EconomyResponse isBankMember(String name, String playerName) {
 		DataManager dm = hc.getDataManager();
+		HyperPlayerManager hpm = hc.getHyperPlayerManager();
 		LanguageFile L = hc.getLanguageFile();
 		if (!dm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
-		if (!dm.hyperPlayerExists(name)) {
+		if (!hpm.hyperPlayerExists(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
 		HyperBank hb = dm.getHyperBank(name);
-		HyperPlayer hp = dm.getHyperPlayer(playerName);
+		HyperPlayer hp = hpm.getHyperPlayer(playerName);
 		if (hb.isMember(hp)) {
 			return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 		} else {

@@ -12,6 +12,7 @@
 - Make /browseshop index based on display name, not name.
 - Find what causes attempted player duplication in database.
 - Allow /hcset to work with categories
+- Switch to 3 digit fractional balances to prevent rounding issues
 
 
 **Moderate Priority**

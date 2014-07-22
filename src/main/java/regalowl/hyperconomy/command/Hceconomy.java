@@ -62,7 +62,7 @@ public class Hceconomy implements CommandExecutor {
 						shop.setEconomy("default");
 					}
 				}
-				for (HyperPlayer hp:em.getHyperPlayers()) {
+				for (HyperPlayer hp:em.getHyperPlayerManager().getHyperPlayers()) {
 					if (hp.getEconomy().equalsIgnoreCase(economy)) {
 						hp.setEconomy("default");
 					}

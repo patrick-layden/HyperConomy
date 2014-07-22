@@ -122,12 +122,14 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		yh.registerFileConfiguration("config");
 		new UpdateYML();
 		hConfig = new HyperConfig(yh.gFC("config"));
-		L = new LanguageFile();
 		dMode = new DebugMode();
+		dMode.syncDebugConsoleMessage("HyperConomy loaded with Debug Mode enabled.  Configuration files created and loaded.");
+		L = new LanguageFile();
 		hl = new HyperLock(true, false, false);
 		heh = new HyperEventHandler();
 		heh.registerListener(this);
 		hookVault();
+		
 	}
 	public void enable() {
 		HandlerList.unregisterAll(this);
@@ -141,6 +143,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 			db.enableMySQL(host, database, username, password, port);
 		}
 		db.createDatabase();
+		dMode.syncDebugConsoleMessage("Database created.");
 		sw = db.getSQLWrite();
 		sr = db.getSQLRead();
 		sw.setLogSQL(hConfig.getBoolean("sql.log-sql-statements"));
@@ -150,6 +153,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		} else {
 			log.info("[HyperConomy]Using internal economy plugin.");
 		}
+		dMode.syncDebugConsoleMessage("Data loading started.");
 		em.load();
 		l = new Log(this);
 		commandhandler = new _Command();
@@ -180,14 +184,14 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		if (hist != null) {
 			hist.stopHistoryLog();
 		}
+		if (em != null) {
+			em.shutDown();
+		}
 		if (db != null) {
 			db.shutDown();
 			db = null;
 		}
 		getServer().getScheduler().cancelTasks(this);
-		if (em != null) {
-			em.clearData();
-		}
 		if (protect) {
 			new DisabledProtection();
 		}
@@ -315,6 +319,10 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	
 	public DataManager getDataManager() {
 		return em;
+	}
+	
+	public HyperPlayerManager getHyperPlayerManager() {
+		return em.getHyperPlayerManager();
 	}
 
 	public Economy getEconomy() {

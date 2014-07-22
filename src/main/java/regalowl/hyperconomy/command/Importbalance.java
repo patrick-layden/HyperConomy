@@ -36,7 +36,7 @@ public class Importbalance {
 						sender.sendMessage(L.get("PLAYERS_IMPORTED"));
 					} else {
 						ArrayList<String> players = new ArrayList<String>();
-						for (HyperPlayer hp:em.getHyperPlayers()) {
+						for (HyperPlayer hp:em.getHyperPlayerManager().getHyperPlayers()) {
 							players.add(hp.getName());
 						}
 						for (String player:players) {

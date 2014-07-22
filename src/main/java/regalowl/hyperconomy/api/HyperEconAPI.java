@@ -80,7 +80,7 @@ public class HyperEconAPI implements EconomyAPI {
 	public boolean createAccount(String account) {
 		HyperConomy hc = HyperConomy.hc;
 		if (!hc.getDataManager().accountExists(account)) {
-			HyperPlayer hp = hc.getDataManager().addPlayer(account);
+			HyperPlayer hp = hc.getHyperPlayerManager().addPlayer(account);
 			if (hp != null) {
 				return true;
 			}

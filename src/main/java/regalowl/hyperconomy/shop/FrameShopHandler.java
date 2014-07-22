@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperPlayerManager;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 
@@ -28,12 +29,14 @@ public class FrameShopHandler implements Listener {
 
 	private HyperConomy hc;
 	private DataManager em;
+	private HyperPlayerManager hpm;
 	private HashMap<String, FrameShop> frameShops = new HashMap<String, FrameShop>();
 	private QueryResult dbData;
 
 	public FrameShopHandler() {
 		hc = HyperConomy.hc;
 		em = hc.getDataManager();
+		hpm = hc.getHyperPlayerManager();
 		hc.getServer().getPluginManager().registerEvents(this, hc);
 		load();
 	}
@@ -110,7 +113,7 @@ public class FrameShopHandler implements Listener {
 			if (entity instanceof ItemFrame) {
 				if (frameShopExists(entity.getLocation())) {
 					FrameShop fs = getFrameShop(entity.getLocation());
-					HyperPlayer hp = em.getHyperPlayer(p);
+					HyperPlayer hp = hpm.getHyperPlayer(p);
 					Shop s = fs.getShop();
 					PlayerShop ps = null;
 					if (s instanceof PlayerShop) {
@@ -145,7 +148,7 @@ public class FrameShopHandler implements Listener {
 				if (frameShopExists(l)) {
 					event.setCancelled(true);
 					Player p = event.getPlayer();
-					HyperPlayer hp = em.getHyperPlayer(p);
+					HyperPlayer hp = hpm.getHyperPlayer(p);
 					FrameShop fs = getFrameShop(l);
 					fs.buy(hp);
 				}

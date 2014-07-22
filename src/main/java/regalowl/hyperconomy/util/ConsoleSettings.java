@@ -3,19 +3,19 @@ package regalowl.hyperconomy.util;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperPlayerManager;
 
 public class ConsoleSettings {
 
 	private HyperConomy hc;
-	private DataManager em;
+	private HyperPlayerManager hpm;
 	private String economy;
 	
 	public ConsoleSettings(String economy) {
 		this.economy = economy;
 		this.hc = HyperConomy.hc;
-		em = hc.getDataManager();
+		hpm = hc.getHyperPlayerManager();
 	}
 	
 	public String getConsoleEconomy() {
@@ -30,7 +30,7 @@ public class ConsoleSettings {
 		String econ = economy;
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			econ = em.getHyperPlayer(player).getEconomy();
+			econ = hpm.getHyperPlayer(player).getEconomy();
 		}
 		return econ;
 	}

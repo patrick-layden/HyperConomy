@@ -17,6 +17,7 @@ import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.util.Backup;
@@ -242,6 +243,12 @@ public class Hcdata implements CommandExecutor {
 			try {
 				new Backup();
 				sender.sendMessage(L.get("ALL_BACKED_UP"));
+			} catch (Exception e) {
+				hc.gDB().writeError(e);
+			}
+		} else if (args[0].equalsIgnoreCase("purgeaccounts")) {
+			try {
+				sender.sendMessage(L.f(L.get("HCDATA_ACCOUNTS_PURGED"), hc.getHyperPlayerManager().purgeDeadAccounts()));
 			} catch (Exception e) {
 				hc.gDB().writeError(e);
 			}

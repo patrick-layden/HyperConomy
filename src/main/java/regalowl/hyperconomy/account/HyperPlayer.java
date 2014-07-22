@@ -104,6 +104,7 @@ public class HyperPlayer implements HyperAccount {
 			}
 		});
 	}
+
 	
 	private void createExternalAccount() {
 		if (!hc.useExternalEconomy()) {return;}
@@ -186,22 +187,39 @@ public class HyperPlayer implements HyperAccount {
 		return salt;
 	}
 	
+	public boolean safeToDelete() {
+		if (balance > 0) {return false;}
+		if (getPlayer() != null) {return false;}
+		if (em.getShops(this).size() > 0) {return false;}
+		for (HyperEconomy he:em.getEconomies()) {
+			if (he.getDefaultAccount().equals(this)) {
+				return false;
+			}
+		}
+		for (HyperBank hb:em.getHyperBanks()) {
+			if (hb.isOwner(this) || hb.isMember(this)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public void delete() {
-		hc.getDataManager().removeHyperPlayer(this);
+		hc.getHyperPlayerManager().removeHyperPlayer(this);
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		conditions.put("NAME", name);
 		hc.getSQLWrite().performDelete("hyperconomy_players", conditions);
 	}
 	
 	public void setName(String name) {
-		hc.getDataManager().removeHyperPlayer(this);
+		hc.getHyperPlayerManager().removeHyperPlayer(this);
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", this.name);
 		values.put("NAME", name);
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.name = name;
-		hc.getDataManager().addHyperPlayer(this);
+		hc.getHyperPlayerManager().addHyperPlayer(this);
 	}
 	public void setUUID(String uuid) {
 		HashMap<String,String> conditions = new HashMap<String,String>();

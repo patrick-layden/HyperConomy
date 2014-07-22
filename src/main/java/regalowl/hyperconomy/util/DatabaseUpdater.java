@@ -64,12 +64,14 @@ public class DatabaseUpdater {
 			double version = Double.parseDouble(qr.getString("VALUE"));
 			if (version < 1.24) {
 				//update fixes frameshop table
+				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.24");
 				sw.queue("DROP TABLE hyperconomy_frame_shops");
 				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
 				sw.queue("UPDATE hyperconomy_settings SET VALUE = '1.24' WHERE SETTING = 'version'");
 			}
 			if (version < 1.25) {
 				//update adds buy/sell prices to player shops and a max stock setting
+				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.25");
 				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects_temp (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
 				sw.writeQueue();
 				sw.convertQueue("INSERT INTO hyperconomy_shop_objects_temp (SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,STATUS) SELECT SHOP,HYPEROBJECT,QUANTITY,PRICE,PRICE,STATUS FROM hyperconomy_shop_objects");
@@ -82,11 +84,13 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.26) {
 				//adds banks
+				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.26");
 				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_banks (NAME VARCHAR(255) NOT NULL PRIMARY KEY, BALANCE DOUBLE NOT NULL DEFAULT '0', OWNERS VARCHAR(255), MEMBERS VARCHAR(255))");
 				sw.queue("UPDATE hyperconomy_settings SET VALUE = '1.26' WHERE SETTING = 'version'");
 			}
 			if (version < 1.27) {
 				//moves shops, infosigns, economies, and item displays to the database
+				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.27");
 				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shops (NAME VARCHAR(255) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
 				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_info_signs (WORLD VARCHAR(255) NOT NULL, X INTEGER NOT NULL, Y INTEGER NOT NULL, Z INTEGER NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, TYPE VARCHAR(255) NOT NULL, MULTIPLIER INTEGER NOT NULL, ECONOMY VARCHAR(255) NOT NULL, ECLASS VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
 				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_item_displays (WORLD VARCHAR(255) NOT NULL, X DOUBLE NOT NULL, Y DOUBLE NOT NULL, Z DOUBLE NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");	
@@ -221,6 +225,7 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.28) {
 				//removes id increment field and adds SHOP, HYPEROBJECT primary key to shop objects table to guarantee no duplicates
+				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.28");
 				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects_temp (SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL, PRIMARY KEY(SHOP, HYPEROBJECT))");
 				sw.writeQueue();
 				sw.queue("INSERT INTO hyperconomy_shop_objects_temp (SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS) SELECT SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS FROM hyperconomy_shop_objects");
@@ -233,6 +238,7 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.29) {
 				//removes item data fields and adds single item data text field to hyperobjects table; imports composites.yml to database
+				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.29");
 				sw.convertQueue(hc.getSQLWrite().longText("CREATE TABLE IF NOT EXISTS hyperconomy_composites (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), COMPONENTS VARCHAR(1000), TYPE TINYTEXT, DATA TEXT)"));
 				hc.gYH().registerFileConfiguration("composites");
 				FileConfiguration cps = hc.gYH().gFC("composites");
@@ -304,6 +310,7 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.30) {
 				//removes unnecessary fields from composites table
+				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.30");
 				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_composites_temp (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), COMPONENTS VARCHAR(1000))");
 				sw.writeQueue();
 				sw.queue("INSERT INTO hyperconomy_composites_temp (NAME, DISPLAY_NAME, COMPONENTS) SELECT NAME, DISPLAY_NAME, COMPONENTS FROM hyperconomy_composites");
@@ -316,6 +323,7 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.31) {
 				//removes unnecessary YML files
+				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.31");
 				FileTools ft = hc.getFileTools();
 				String folderPath = hc.getFolderPath();
 				ArrayList<String> removeFiles = new ArrayList<String>();
@@ -334,6 +342,7 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.32) {
 				//adds uuid support
+				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.32");
 				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players_temp (NAME VARCHAR(255) NOT NULL PRIMARY KEY, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 				sw.writeQueue();
 				sw.queue("INSERT INTO hyperconomy_players_temp (NAME, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) SELECT PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT FROM hyperconomy_players");
@@ -346,6 +355,7 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.33) {
 				//remove unique requirement from uuid
+				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.33");
 				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players_temp (NAME VARCHAR(255) NOT NULL PRIMARY KEY, UUID VARCHAR(255), ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 				sw.writeQueue();
 				sw.queue("INSERT INTO hyperconomy_players_temp (NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) SELECT NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT FROM hyperconomy_players");
@@ -363,6 +373,7 @@ public class DatabaseUpdater {
 	}
 
 	public void createTables(boolean copydatabase) {
+		hc.getDebugMode().ayncDebugConsoleMessage("Creating database tables.");
 		SyncSQLWrite sw = HyperConomy.hc.getDataBukkit().getSyncSQLWrite();
 		if (copydatabase) {
 			for (String table:tables) {

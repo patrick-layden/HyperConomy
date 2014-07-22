@@ -31,7 +31,7 @@ public class Hctop {
 			
 			ArrayList<String> players = new ArrayList<String>();
 			ArrayList<Double> balances = new ArrayList<Double>();
-			for (HyperPlayer hp:em.getHyperPlayers()) {
+			for (HyperPlayer hp:em.getHyperPlayerManager().getHyperPlayers()) {
 				players.add(hp.getName());
 				balances.add(hp.getBalance());
 			}
