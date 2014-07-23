@@ -174,6 +174,7 @@ public class FrameShop implements HyperObjectModificationListener {
 	}
 	
 	public void delete() {
+		hc.getHyperEventHandler().unRegisterListener(this);
 		hc.getFrameShopHandler().removeFrameShop(getKey());
 		hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_frame_shops WHERE ID = '" + mapId + "'");
 	}

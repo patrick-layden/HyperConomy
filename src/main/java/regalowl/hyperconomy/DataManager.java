@@ -214,6 +214,7 @@ public class DataManager {
 	
 	
 	public boolean economyExists(String economy) {
+		if (economy == null || economy == "") {return false;}
 		for (Map.Entry<String,HyperEconomy> entry : economies.entrySet()) {
 			HyperEconomy he = entry.getValue();
 			if (he.getName().equalsIgnoreCase(economy)) {
@@ -267,31 +268,39 @@ public class DataManager {
 	
 
 	
-	public void createNewEconomy(String economy) {
-		HyperEconomy defaultEconomy = getEconomy("default");
+	public void createNewEconomy(String name, String templateEconomy, boolean cloneAll) {
+		if (!economyExists(templateEconomy)) {
+			templateEconomy = "default";
+		}
+		HyperEconomy template = getEconomy(templateEconomy);
 		SQLWrite sw = hc.getSQLWrite();
 		HashMap<String,String> values = new HashMap<String,String>();
-		values.put("NAME", economy);
+		values.put("NAME", name);
 		values.put("HYPERACCOUNT", defaultServerShopAccount);
 		sw.performInsert("hyperconomy_economies", values);
-		for (HyperObject ho:defaultEconomy.getHyperObjects()) {
+		for (HyperObject ho:template.getHyperObjects()) {
 			values = new HashMap<String,String>();
 			values.put("NAME", ho.getName());
 			values.put("DISPLAY_NAME", ho.getDisplayName());
 			values.put("ALIASES", ho.getAliasesString());
-			values.put("ECONOMY", economy);
+			values.put("ECONOMY", name);
 			values.put("TYPE", ho.getType().toString());
 			values.put("VALUE", ho.getValue()+"");
 			values.put("STATIC", ho.getIsstatic());
 			values.put("STATICPRICE", ho.getStaticprice()+"");
-			values.put("STOCK", 0+"");
 			values.put("MEDIAN", ho.getMedian()+"");
-			values.put("INITIATION", "true");
 			values.put("STARTPRICE", ho.getStartprice()+"");
 			values.put("CEILING", ho.getCeiling()+"");
 			values.put("FLOOR", ho.getFloor()+"");
 			values.put("MAXSTOCK", ho.getMaxstock()+"");
 			values.put("DATA", ho.getData());
+			if (cloneAll) {
+				values.put("INITIATION", ho.getInitiation());
+				values.put("STOCK", ho.getStock()+"");
+			} else {
+				values.put("INITIATION", "true");
+				values.put("STOCK", 0+"");
+			}
 			sw.performInsert("hyperconomy_objects", values);
 		}
 		hc.restart();

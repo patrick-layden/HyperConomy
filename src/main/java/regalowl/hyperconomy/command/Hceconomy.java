@@ -38,7 +38,15 @@ public class Hceconomy implements CommandExecutor {
 					sender.sendMessage(L.get("ECONOMY_ALREADY_EXISTS"));
 					return true;
 				}
-				hc.getDataManager().createNewEconomy(args[1]);
+				String template = "default";
+				if (args.length >= 3 && em.economyExists(args[2])) {
+					template = args[2];
+				}
+				boolean clone = false;
+				if (args.length >= 4 && args[3].equalsIgnoreCase("clone")) {
+					clone = true;
+				}
+				hc.getDataManager().createNewEconomy(args[1], template, clone);
 				sender.sendMessage(L.get("NEW_ECONOMY_CREATED"));
 			} catch (Exception e) {
 				sender.sendMessage(L.get("HCECONOMY_CREATE_INVALID"));
