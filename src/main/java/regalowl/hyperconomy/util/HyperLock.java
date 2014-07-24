@@ -28,6 +28,7 @@ public class HyperLock {
 	}
 	public void setFullLock(boolean state) {
 		fullLock = state;
+		playerLock = state;
 	}
 	public void setPlayerLock(boolean state) {
 		playerLock = state;
@@ -44,44 +45,33 @@ public class HyperLock {
 	}
 	
 	public boolean isLocked(CommandSender sender) {
-		if (playerLock && !sender.hasPermission("hyperconomy.admin")) {
+		if (fullLock || loadLock) {
 			return true;
 		}
-		if (fullLock || loadLock) {
+		if (playerLock && !sender.hasPermission("hyperconomy.admin")) {
 			return true;
 		}
 		return false;
 	}
 	public boolean isLocked(Player player) {
-		if (playerLock && !player.hasPermission("hyperconomy.admin")) {
-			return true;
-		}
-		if (fullLock || loadLock) {
-			return true;
-		}
-		return false;
+		return isLocked((CommandSender)player);
 	}
 	
 	public void sendLockMessage(CommandSender sender) {
-		if (playerLock && !sender.hasPermission("hyperconomy.admin")) {
-			sender.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-		}
 		if (loadLock) {
 			sender.sendMessage(L.get("HYPERCONOMY_LOADING"));
+			return;
 		}
 		if (fullLock) {
 			sender.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+			return;
+		}
+		if (playerLock && !sender.hasPermission("hyperconomy.admin")) {
+			sender.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+			return;
 		}
 	}
 	public void sendLockMessage(Player player) {
-		if (playerLock && !player.hasPermission("hyperconomy.admin")) {
-			player.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-		}
-		if (loadLock) {
-			player.sendMessage(L.get("HYPERCONOMY_LOADING"));
-		}
-		if (fullLock) {
-			player.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-		}
+		sendLockMessage((CommandSender)player);
 	}
 }

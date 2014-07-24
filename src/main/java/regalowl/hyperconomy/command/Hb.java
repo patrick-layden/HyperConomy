@@ -17,6 +17,10 @@ public class Hb {
 
 	Hb(String args[], Player player, String playerecon) {
 		hc = HyperConomy.hc;
+		if (hc.getHyperLock().isLocked(player)) {
+			hc.getHyperLock().sendLockMessage(player);
+			return;
+		}
 		DataManager em = hc.getDataManager();
 		LanguageFile L = hc.getLanguageFile();
 		double amount;

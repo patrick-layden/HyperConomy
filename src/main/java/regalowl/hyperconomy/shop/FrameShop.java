@@ -161,6 +161,7 @@ public class FrameShop implements HyperObjectModificationListener {
 	}
 	
 	public Location getLocation() {
+		if (world == null) {return null;}
 		return new Location(Bukkit.getWorld(world),x,y,z);
 	}
 	

@@ -32,7 +32,6 @@ public class Hc implements CommandExecutor {
 				} else if (args.length == 1 && args[0].equalsIgnoreCase("disable") && !hl.fullLock()) {
 					sender.sendMessage(L.get("HC_HYPERCONOMY_DISABLED"));
 					sender.sendMessage(L.get("SHOP_LOCKED"));
-					hl.setPlayerLock(true);
 					hl.setFullLock(true);
 					hc.disable(true);
 					return true;

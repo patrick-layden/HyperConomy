@@ -22,7 +22,7 @@ public class Buy implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		if (hc.getHyperLock().isLocked(sender)) {
-			hc.getHyperLock().sendLockMessage(sender);;
+			hc.getHyperLock().sendLockMessage(sender);
 			return true;
 		}
 		Player player = null;

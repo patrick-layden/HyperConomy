@@ -112,6 +112,11 @@ public class FrameShopHandler implements Listener {
 			Player p = (Player) event.getDamager();
 			if (entity instanceof ItemFrame) {
 				if (frameShopExists(entity.getLocation())) {
+					if (hc.getHyperLock().isLocked(p)) {
+						hc.getHyperLock().sendLockMessage(p);
+						event.setCancelled(true);
+						return;
+					}
 					FrameShop fs = getFrameShop(entity.getLocation());
 					HyperPlayer hp = hpm.getHyperPlayer(p);
 					Shop s = fs.getShop();
@@ -148,6 +153,10 @@ public class FrameShopHandler implements Listener {
 				if (frameShopExists(l)) {
 					event.setCancelled(true);
 					Player p = event.getPlayer();
+					if (hc.getHyperLock().isLocked(p)) {
+						hc.getHyperLock().sendLockMessage(p);
+						return;
+					}
 					HyperPlayer hp = hpm.getHyperPlayer(p);
 					FrameShop fs = getFrameShop(l);
 					fs.buy(hp);

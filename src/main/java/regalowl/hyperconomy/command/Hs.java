@@ -15,6 +15,10 @@ import regalowl.hyperconomy.util.LanguageFile;
 public class Hs {
 	Hs(String args[], Player player) {
 		HyperConomy hc = HyperConomy.hc;
+		if (hc.getHyperLock().isLocked(player)) {
+			hc.getHyperLock().sendLockMessage(player);
+			return;
+		}
 		LanguageFile L = hc.getLanguageFile();
 		DataManager em = hc.getDataManager();
 		int amount;

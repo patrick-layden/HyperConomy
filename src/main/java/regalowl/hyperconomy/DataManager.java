@@ -32,7 +32,6 @@ public class DataManager {
 	private HyperConomy hc;
 	private SQLRead sr;
 	private SyncSQLWrite ssw;
-	private boolean dataLoaded;
 	private boolean loadActive;
 	
 	private ConcurrentHashMap<String, HyperEconomy> economies = new ConcurrentHashMap<String, HyperEconomy>();
@@ -54,7 +53,6 @@ public class DataManager {
 	public DataManager() {
 		hc = HyperConomy.hc;
 		hpm = new HyperPlayerManager(this);
-		dataLoaded = false;
 		loadActive = false;
 		config = hc.getConf();
 		useShops = config.getBoolean("enable-feature.shops");
@@ -101,10 +99,9 @@ public class DataManager {
 					loadData();
 					stopShopCheck();
 					startShopCheck();
-					dataLoaded = true;
+					hc.getHyperLock().setLoadLock(false);
 					hc.getHyperEventHandler().fireDataLoadEvent();
 					loadActive = false;
-					hc.getHyperLock().setLoadLock(false);
 				} catch (Exception e) {
 					hc.gDB().writeError(e);
 				}
@@ -195,10 +192,7 @@ public class DataManager {
 		hc.getDebugMode().ayncDebugConsoleMessage("Shops loaded.");
 	}
 	
-
-	public boolean dataLoaded() {
-		return dataLoaded;
-	}
+	
 	public HyperEconomy getEconomy(String name) {
 		for (Map.Entry<String,HyperEconomy> entry : economies.entrySet()) {
 			HyperEconomy he = entry.getValue();

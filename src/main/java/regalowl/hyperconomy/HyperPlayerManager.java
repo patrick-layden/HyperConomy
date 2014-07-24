@@ -1,7 +1,5 @@
 package regalowl.hyperconomy;
 
-
-
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,6 +16,7 @@ import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.util.HyperConfig;
+
 public class HyperPlayerManager implements Listener {
 
 	private HyperConomy hc;
@@ -27,7 +26,6 @@ public class HyperPlayerManager implements Listener {
 	private HyperConfig config;
 	private ConcurrentHashMap<String, HyperPlayer> hyperPlayers = new ConcurrentHashMap<String, HyperPlayer>();
 	
-	
 	public HyperPlayerManager(DataManager dm) {
 		hc = HyperConomy.hc;
 		this.dm = dm;
@@ -36,10 +34,7 @@ public class HyperPlayerManager implements Listener {
 		defaultServerShopAccount = config.getString("shop.default-server-shop-account");
 		hc.getServer().getPluginManager().registerEvents(this, hc);
 	}
-	
-	
-	
-	
+
 	public void loadData() {
 		hyperPlayers.clear();
 		QueryResult playerData = hc.getSQLRead().select("SELECT * FROM hyperconomy_players");
@@ -63,12 +58,21 @@ public class HyperPlayerManager implements Listener {
 		hc.getDebugMode().ayncDebugConsoleMessage("Players loaded.");
 	}
 	
-	
+	private void addOnlinePlayers() {
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			if (p.getName().equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
+				p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+			}
+			if (!hyperPlayerExists(p.getName())) {
+				addPlayer(p.getName());
+			}
+		}
+	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		try {
-			if (!dm.dataLoaded()) {return;}
+			if (hc.getHyperLock().loadLock()) {return;}
 			String name = event.getPlayer().getName();
 			if (name.equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
 				event.getPlayer().kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
@@ -87,7 +91,7 @@ public class HyperPlayerManager implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		try {
-			if (!dm.dataLoaded()) {return;}
+			if (hc.getHyperLock().loadLock()) {return;}
 			Location l = event.getPlayer().getLocation();
 			String name = event.getPlayer().getName();
 			if (!hyperPlayerExists(name)) {
@@ -105,26 +109,25 @@ public class HyperPlayerManager implements Listener {
 			hc.gDB().writeError(e);
 		}
 	}
+
 	
-	private void addOnlinePlayers() {
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			if (p.getName().equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
-				p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
-			}
-			if (!hyperPlayerExists(p.getName())) {
-				addPlayer(p.getName());
-			}
+	
+	
+	public boolean hyperPlayerExists(String name) {
+		if (name == null) {return false;}
+		String playerName = name.toLowerCase();
+		if (hc.useExternalEconomy()) {
+			return hc.getEconomy().hasAccount(name);
+		} else {
+			return hyperPlayers.containsKey(playerName);
 		}
 	}
-	
-	
 	public boolean accountExists(String name) {
 		if (hyperPlayerExists(name) || dm.hasBank(name)) {
 			return true;
 		}
 		return false;
 	}
-	
 	public HyperAccount getAccount(String name) {
 		if (hyperPlayerExists(name)) {
 			return getHyperPlayer(name);
@@ -138,15 +141,10 @@ public class HyperPlayerManager implements Listener {
 	public HyperAccount getDefaultServerShopAccount() {
 		return getAccount(defaultServerShopAccount);
 	}
-	public boolean hyperPlayerExists(String name) {
-		String playerName = name.toLowerCase();
-		if (hc.useExternalEconomy()) {
-			return hc.getEconomy().hasAccount(name);
-		} else {
-			return hyperPlayers.containsKey(playerName);
-		}
-	}
 	
+	
+	
+
 	
 	public HyperPlayer getHyperPlayer(String player) {
 		if (player == null || player.equals("")) {return null;}
@@ -160,11 +158,11 @@ public class HyperPlayerManager implements Listener {
 			return addPlayer(player);
 		}
 	}
-	
 	public HyperPlayer getHyperPlayer(Player player) {
 		if (player == null) {return null;}
 		return getHyperPlayer(player.getName());
 	}
+
 	
 	public ArrayList<HyperPlayer> getHyperPlayers() {
 		ArrayList<HyperPlayer> hps = new ArrayList<HyperPlayer>();
@@ -173,14 +171,29 @@ public class HyperPlayerManager implements Listener {
 		}
 		return hps;
 	}
+	public ArrayList<String> getHyperPlayerNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		for (String player:hyperPlayers.keySet()) {
+			names.add(player);
+		}
+		return names;
+	}
 	
 
+	public String fixpN(String player) {
+		for (String name:hyperPlayers.keySet()) {
+			if (name.equalsIgnoreCase(player)) {
+				return name;
+			}
+		}
+		return player;
+	}
+	
 	public void removeHyperPlayer(HyperPlayer hp) {
 		if (hyperPlayers.contains(hp)) {
 			hyperPlayers.remove(hp.getName().toLowerCase());
 		}
 	}
-	
 	public void addHyperPlayer(HyperPlayer hp) {
 		if (!hyperPlayers.contains(hp)) {
 			hyperPlayers.put(hp.getName().toLowerCase(), hp);
@@ -188,7 +201,6 @@ public class HyperPlayerManager implements Listener {
 	}
 	
 	 
-	
 
 	public HyperPlayer addPlayer(String player) {
 		if (!playersLoaded) {return null;}
@@ -211,23 +223,6 @@ public class HyperPlayerManager implements Listener {
 		}
 	}
 
-	public ArrayList<String> getEconPlayers() {
-		ArrayList<String> econplayers = new ArrayList<String>();
-		for (String player:hyperPlayers.keySet()) {
-			econplayers.add(player);
-		}
-		return econplayers;
-	}
-
-	
-	public String fixpN(String player) {
-		for (String name:hyperPlayers.keySet()) {
-			if (name.equalsIgnoreCase(player)) {
-				return name;
-			}
-		}
-		return player;
-	}
 	
 	public int purgeDeadAccounts() {
 		int purgeCount = 0;
