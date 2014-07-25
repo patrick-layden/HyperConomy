@@ -56,7 +56,7 @@ public class DatabaseUpdater {
 
 
 	
-	@SuppressWarnings("deprecation")
+
 	public void updateTables(QueryResult qr) {
 		hc = HyperConomy.hc;
 		SyncSQLWrite sw = hc.getDataBukkit().getSyncSQLWrite();

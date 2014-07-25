@@ -25,7 +25,7 @@ public class Importbalance {
 					String world = args[0];
 					String playerListPath = ft.getJarPath();
 					if (Bukkit.getWorld(world) != null) {
-						playerListPath += File.separator + args[0] + File.separator + "players";
+						playerListPath += File.separator + world + File.separator + "players";
 						for (String datName:ft.getFolderContents(playerListPath)) {
 							String playerName = datName.substring(0, datName.indexOf("."));
 							if (hc.getEconomy().hasAccount(playerName)) {

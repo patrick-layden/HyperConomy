@@ -17,7 +17,6 @@ import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.util.Backup;

@@ -534,7 +534,7 @@ public class DataManager {
 		return hpm.getAccount(name);
 	}
 	public boolean hyperPlayerExists(String name) {
-		return hpm.hyperPlayerExists(name);
+		return hpm.playerAccountExists(name);
 	}
 	public HyperPlayer getHyperPlayer(String player) {
 		return hpm.getHyperPlayer(player);

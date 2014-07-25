@@ -200,20 +200,20 @@ public class HyperItemStack {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
+
 	public boolean isDamaged() {
 		if (stack.getType().getMaxDurability() > 0) {
-			if (stack.getData().getData() > 0) {
+			if (stack.getDurability() > 0) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	@SuppressWarnings("deprecation")
+
 	public int cleanDamageValue() {
 		if (stack.getType().getMaxDurability() > 0) {return 0;}
-		return stack.getData().getData();
+		return stack.getDurability();
 	}
 	public int getDamageValue() {
 		if (stack == null) {return 0;}

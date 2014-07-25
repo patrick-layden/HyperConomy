@@ -12,6 +12,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -419,8 +420,13 @@ public class ChestShop implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onInventoryClickEvent(InventoryClickEvent icevent) {
 		try {
-			@SuppressWarnings("deprecation")
-			Player p = Bukkit.getPlayer(icevent.getWhoClicked().getName());
+			HumanEntity he = icevent.getWhoClicked();
+			Player p = null;
+			if (he instanceof Player) {
+				p = (Player)he;
+			} else {
+				return;
+			}
 			if (hc.getHyperLock().isLocked(p)) {
 				if (isChestShop(icevent.getInventory().getHolder())) {
 					hc.getHyperLock().sendLockMessage(p);
