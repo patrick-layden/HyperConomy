@@ -240,7 +240,9 @@ public class HyperPlayerManager implements Listener {
 	public void removeHyperPlayer(HyperPlayer hp) {
 		if (hyperPlayers.contains(hp)) {
 			hyperPlayers.remove(hp.getName().toLowerCase());
-			uuidIndex.remove(hp.getUUIDString());
+			if (hp.getUUIDString() != null && uuidIndex.containsKey(hp.getUUIDString())) {
+				uuidIndex.remove(hp.getUUIDString());
+			}
 		}
 	}
 	public void addHyperPlayer(HyperPlayer hp) {
