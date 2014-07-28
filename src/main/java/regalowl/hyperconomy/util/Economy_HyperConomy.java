@@ -23,6 +23,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import regalowl.hyperconomy.DataManager;
+import regalowl.hyperconomy.HyperBankManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperPlayerManager;
 import regalowl.hyperconomy.account.HyperBank;
@@ -207,8 +208,9 @@ public class Economy_HyperConomy implements Economy {
 	public EconomyResponse createBank(String name, String player) {
 		DataManager dm = hc.getDataManager();
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
+		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
-		if (dm.hasBank(name)) {
+		if (hbm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_ALREADY_EXISTS"));
 		}
 		if (!hpm.playerAccountExists(player)) {
@@ -216,7 +218,7 @@ public class Economy_HyperConomy implements Economy {
 		}
 		HyperPlayer hp = hpm.getHyperPlayer(player);
 		HyperBank hb = new HyperBank(name, hp);
-		dm.addHyperBank(hb);
+		hbm.addHyperBank(hb);
 		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 	}
 	@Override
@@ -226,22 +228,24 @@ public class Economy_HyperConomy implements Economy {
 	@Override
 	public EconomyResponse deleteBank(String name) {
 		DataManager dm = hc.getDataManager();
+		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
-		if (!dm.hasBank(name)) {
+		if (!hbm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
-		HyperBank hb = dm.getHyperBank(name);
+		HyperBank hb = hbm.getHyperBank(name);
 		hb.delete();
 		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 	}
 	@Override
 	public EconomyResponse bankHas(String name, double amount) {
 		DataManager dm = hc.getDataManager();
+		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
-		if (!dm.hasBank(name)) {
+		if (!hbm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
-		HyperBank hb = dm.getHyperBank(name);
+		HyperBank hb = hbm.getHyperBank(name);
 		double balance = hb.getBalance();
 		if (balance < amount) {
 			return new EconomyResponse(0, balance, ResponseType.FAILURE, L.get("INSUFFICIENT_FUNDS"));
@@ -252,11 +256,12 @@ public class Economy_HyperConomy implements Economy {
 	@Override
 	public EconomyResponse bankWithdraw(String name, double amount) {
 		DataManager dm = hc.getDataManager();
+		HyperBankManager hbm = dm.getHyperBankManager();
 		EconomyResponse er = bankHas(name, amount);
 		if (!er.transactionSuccess()) {
 			return er;
 		} else {
-			HyperBank hb = dm.getHyperBank(name);
+			HyperBank hb = hbm.getHyperBank(name);
 			hb.setBalance(hb.getBalance() - amount);
 			return new EconomyResponse(amount, hb.getBalance(), ResponseType.SUCCESS, "");
 		}
@@ -264,11 +269,12 @@ public class Economy_HyperConomy implements Economy {
 	@Override
 	public EconomyResponse bankDeposit(String name, double amount) {
 		DataManager dm = hc.getDataManager();
+		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
-		if (!dm.hasBank(name)) {
+		if (!hbm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		} else {
-			HyperBank hb = dm.getHyperBank(name);
+			HyperBank hb = hbm.getHyperBank(name);
 			hb.setBalance(hb.getBalance() + amount);
 			return new EconomyResponse(amount, hb.getBalance(), ResponseType.SUCCESS, "");
 		}
@@ -277,14 +283,15 @@ public class Economy_HyperConomy implements Economy {
 	public EconomyResponse isBankOwner(String name, String playerName) {
 		DataManager dm = hc.getDataManager();
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
+		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
-		if (!dm.hasBank(name)) {
+		if (!hbm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
 		if (!hpm.playerAccountExists(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
-		HyperBank hb = dm.getHyperBank(name);
+		HyperBank hb = hbm.getHyperBank(name);
 		HyperPlayer hp = hpm.getHyperPlayer(playerName);
 		if (hb.isOwner(hp)) {
 			return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
@@ -299,15 +306,16 @@ public class Economy_HyperConomy implements Economy {
 	@Override
 	public EconomyResponse isBankMember(String name, String playerName) {
 		DataManager dm = hc.getDataManager();
+		HyperBankManager hbm = dm.getHyperBankManager();
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
 		LanguageFile L = hc.getLanguageFile();
-		if (!dm.hasBank(name)) {
+		if (!hbm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
 		if (!hpm.playerAccountExists(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
-		HyperBank hb = dm.getHyperBank(name);
+		HyperBank hb = hbm.getHyperBank(name);
 		HyperPlayer hp = hpm.getHyperPlayer(playerName);
 		if (hb.isMember(hp)) {
 			return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
@@ -322,17 +330,19 @@ public class Economy_HyperConomy implements Economy {
 	@Override
 	public EconomyResponse bankBalance(String name) {
 		DataManager dm = hc.getDataManager();
+		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
-		if (!dm.hasBank(name)) {
+		if (!hbm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
-		HyperBank hb = dm.getHyperBank(name);
+		HyperBank hb = hbm.getHyperBank(name);
 		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, null);
 	}
 	@Override
 	public List<String> getBanks() {
 		DataManager dm = hc.getDataManager();
-		return dm.getHyperBankNames();
+		HyperBankManager hbm = dm.getHyperBankManager();
+		return hbm.getHyperBankNames();
 	}
 	@Override
 	public boolean hasBankSupport() {

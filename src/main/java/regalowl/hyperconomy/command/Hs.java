@@ -44,11 +44,11 @@ public class Hs {
 					}
 				}
 			}
-			HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getShop(player));
+			HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getHyperShopManager().getShop(player));
 			if (ho == null) {
 				player.sendMessage(L.get("CANT_BE_TRADED"));
 			} else {
-				Shop s = em.getShop(player);
+				Shop s = em.getHyperShopManager().getShop(player);
 				PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 				pt.setObeyShops(true);
 				pt.setHyperObject(ho);

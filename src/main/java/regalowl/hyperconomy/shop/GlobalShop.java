@@ -224,7 +224,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		conditions.put("NAME", name);
 		hc.getSQLWrite().performDelete("hyperconomy_shops", conditions);
-		hc.getDataManager().removeShop(name);
+		hc.getHyperShopManager().removeShop(name);
 	}
 	@Override
 	public void setOwner(HyperAccount owner) {

@@ -42,8 +42,8 @@ public class Frameshopcommand implements CommandExecutor {
 			Location bl = b.getLocation();
 			HyperObject ho = he.getHyperObject(args[0]);
 			if (ho != null) {
-				if (em.inAnyShop(p)) {
-					Shop s = em.getShop(p);
+				if (em.getHyperShopManager().inAnyShop(p)) {
+					Shop s = em.getHyperShopManager().getShop(p);
 					if (s instanceof PlayerShop) {
 						PlayerShop ps = (PlayerShop) s;
 						if (p.hasPermission("hyperconomy.admin") || ps.isAllowed(em.getHyperPlayer(p))) {

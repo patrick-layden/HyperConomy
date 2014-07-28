@@ -15,6 +15,7 @@ import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
@@ -32,6 +33,7 @@ public class Servershopcommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		HyperConomy hc = HyperConomy.hc;
 		DataManager em = hc.getDataManager();
+		HyperShopManager hsm = hc.getHyperShopManager();
 		LanguageFile L = hc.getLanguageFile();
 		CommonFunctions cf = hc.gCF();
 		if (hc.getHyperLock().isLocked(sender)) {
@@ -46,8 +48,8 @@ public class Servershopcommand implements CommandExecutor {
 			return true;
 		}
 		HyperPlayer hp = em.getHyperPlayer(player);
-		if (em.inAnyShop(player)) {
-			Shop s = em.getShop(player);
+		if (hsm.inAnyShop(player)) {
+			Shop s = hsm.getShop(player);
 			if (s instanceof ServerShop) {
 				ServerShop ss = (ServerShop)s;
 				if (player.hasPermission("hyperconomy.admin")) {
@@ -71,11 +73,11 @@ public class Servershopcommand implements CommandExecutor {
 		}
 		
 		if (args[0].equalsIgnoreCase("select") || args[0].equalsIgnoreCase("s")) {
-			if (!em.shopExists(args[1])) {
+			if (!hsm.shopExists(args[1])) {
 				player.sendMessage(L.get("SHOP_NOT_EXIST"));
 				return true;
 			}
-			Shop s = em.getShop(args[1]);
+			Shop s = hsm.getShop(args[1]);
 			if (!(s instanceof ServerShop || s instanceof GlobalShop)) {
 				player.sendMessage(L.get("ONLY_SERVER_SHOPS"));
 				return true;
@@ -93,12 +95,12 @@ public class Servershopcommand implements CommandExecutor {
 		} else if (args[0].equalsIgnoreCase("p1")) {
 			try {
 				String name = args[1].replace(".", "").replace(":", "");
-				if (em.shopExists(name)) {
-					em.getShop(name).setPoint1(player.getLocation());
+				if (hsm.shopExists(name)) {
+					hsm.getShop(name).setPoint1(player.getLocation());
 				} else {
 					SimpleLocation l = new SimpleLocation(player.getLocation());
 					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
-					em.addShop(shop);
+					hsm.addShop(shop);
 				}
 				player.sendMessage(L.get("P1_SET"));
 			} catch (Exception e) {
@@ -108,12 +110,12 @@ public class Servershopcommand implements CommandExecutor {
 		} else if (args[0].equalsIgnoreCase("p2")) {
 			try {
 				String name = args[1].replace(".", "").replace(":", "");
-				if (em.shopExists(name)) {
-					em.getShop(name).setPoint2(player.getLocation());
+				if (hsm.shopExists(name)) {
+					hsm.getShop(name).setPoint2(player.getLocation());
 				} else {
 					SimpleLocation l = new SimpleLocation(player.getLocation());
 					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
-					em.addShop(shop);
+					hsm.addShop(shop);
 				}
 				player.sendMessage(L.get("P2_SET"));
 			} catch (Exception e) {
@@ -121,7 +123,7 @@ public class Servershopcommand implements CommandExecutor {
 				player.sendMessage(L.get("SERVERSHOP_P2_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("list")) {
-			ArrayList<Shop> shops = em.getShops();
+			ArrayList<Shop> shops = hsm.getShops();
 			String sList = "";
 			for (Shop s:shops) {
 				if (s instanceof ServerShop || s instanceof GlobalShop) {
@@ -139,8 +141,8 @@ public class Servershopcommand implements CommandExecutor {
 				if (em.hyperPlayerExists(args[1])) {
 					owner = em.getHyperPlayer(args[1]);
 				} else {
-					if (em.hasBank(args[1])) {
-						owner = em.getHyperBank(args[1]);
+					if (em.getHyperBankManager().hasBank(args[1])) {
+						owner = em.getHyperBankManager().getHyperBank(args[1]);
 					} else {
 						player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 					}

@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
@@ -45,6 +46,7 @@ public class Manageshop implements CommandExecutor {
 		}
 		int maxVolume = hc.getConf().getInt("shop.max-player-shop-volume");
 		DataManager em = hc.getDataManager();
+		HyperShopManager hsm = hc.getHyperShopManager();
 		Player player = null;
 		if (sender instanceof Player) {
 			player = (Player)sender;
@@ -52,8 +54,8 @@ public class Manageshop implements CommandExecutor {
 		if (player == null) {return true;}
 		HyperPlayer hp = em.getHyperPlayer(player);
 		HyperEconomy he = em.getEconomy(hp.getEconomy());
-		if (em.inAnyShop(player)) {
-			Shop s = em.getShop(player);
+		if (hsm.inAnyShop(player)) {
+			Shop s = hsm.getShop(player);
 			if (s instanceof PlayerShop) {
 				PlayerShop ps = (PlayerShop)s;
 				if (ps.getOwner().equals(hp) || ps.isAllowed(hp) || player.hasPermission("hyperconomy.admin")) {
@@ -85,11 +87,11 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("MANAGESHOP_SELECT_HELP"));
 				return true;
 			}
-			if (!em.shopExists(args[1])) {
+			if (!hsm.shopExists(args[1])) {
 				player.sendMessage(L.get("SHOP_NOT_EXIST"));
 				return true;
 			}
-			Shop s = em.getShop(args[1]);
+			Shop s = hsm.getShop(args[1]);
 			if (!(s instanceof PlayerShop)) {
 				player.sendMessage(L.get("ONLY_PLAYER_SHOPS"));
 				return true;
@@ -312,12 +314,12 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			String name = args[1].replace(".", "").replace(":", "");
-			if (em.shopExists(name)){
+			if (hsm.shopExists(name)){
 				player.sendMessage(L.get("SHOP_ALREADY_EXISTS"));
 				return true;
 			}
 			int maxShops = hc.getConf().getInt("shop.max-player-shops-per-player");
-			if (em.getShops(hp).size() > maxShops && !player.hasPermission("hyperconomy.admin")) {
+			if (hsm.getShops(hp).size() > maxShops && !player.hasPermission("hyperconomy.admin")) {
 				player.sendMessage(L.f(L.get("SHOP_LIMIT_REACHED"), maxShops));
 				return true;
 			}
@@ -338,7 +340,7 @@ public class Manageshop implements CommandExecutor {
 				newShop.deleteShop();
 				return true;
 			}
-			for (Shop s:em.getShops()) {
+			for (Shop s:hsm.getShops()) {
 				if (newShop.intersectsShop(s, 10000)) {
 					player.sendMessage(L.f(L.get("SHOP_INTERSECTS_SHOP"), s.getDisplayName()));
 					newShop.deleteShop();
@@ -350,7 +352,7 @@ public class Manageshop implements CommandExecutor {
 					ho.setStatus(HyperObjectStatus.NONE);
 				}
 			}
-			em.addShop(newShop);
+			hsm.addShop(newShop);
 			player.sendMessage(L.get("SHOP_CREATED"));
 		} else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("d")) {
 			if (cps == null) {
@@ -387,7 +389,7 @@ public class Manageshop implements CommandExecutor {
 				cps.setPoint1(priorLoc);
 				return true;
 			}
-			for (Shop s:em.getShops()) {
+			for (Shop s:hsm.getShops()) {
 				if (cps.intersectsShop(s, 10000)) {
 					if (cps.equals(s)) {continue;}
 					player.sendMessage(L.f(L.get("SHOP_INTERSECTS_SHOP"), s.getDisplayName()));
@@ -408,7 +410,7 @@ public class Manageshop implements CommandExecutor {
 				cps.setPoint2(priorLoc);
 				return true;
 			}
-			for (Shop s:em.getShops()) {
+			for (Shop s:hsm.getShops()) {
 				if (cps.intersectsShop(s, 10000)) {
 					if (cps.equals(s)) {continue;}
 					player.sendMessage(L.f(L.get("SHOP_INTERSECTS_SHOP"), s.getDisplayName()));
@@ -640,7 +642,7 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
 				return true;
 			}
-			ArrayList<Shop> shops = em.getShops();
+			ArrayList<Shop> shops = hsm.getShops();
 			String sList = "";
 			for (Shop s:shops) {
 				if (s instanceof PlayerShop) {

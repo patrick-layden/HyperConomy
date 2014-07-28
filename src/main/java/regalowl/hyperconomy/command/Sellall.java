@@ -37,9 +37,9 @@ public class Sellall implements CommandExecutor {
 			return true;
 		}
 
-		if (em.inAnyShop(player)) {
-			Shop s = em.getShop(player);
-			if (em.getHyperPlayer(player).hasSellPermission(em.getShop(player))) {
+		if (em.getHyperShopManager().inAnyShop(player)) {
+			Shop s = em.getHyperShopManager().getShop(player);
+			if (em.getHyperPlayer(player).hasSellPermission(em.getHyperShopManager().getShop(player))) {
 				if (args.length == 0) {
 					TransactionResponse response = sellAll(em.getHyperPlayer(player), s.getOwner());
 					response.sendMessages();
@@ -83,7 +83,7 @@ public class Sellall implements CommandExecutor {
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
 			if (inventory.getItem(slot) == null) {continue;}
 			ItemStack stack = inventory.getItem(slot);
-			HyperObject ho = he.getHyperObject(stack, em.getShop(trader.getPlayer()));
+			HyperObject ho = he.getHyperObject(stack, em.getHyperShopManager().getShop(trader.getPlayer()));
 			if (ho == null) {continue;}
 			int amount = ho.count(inventory);
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);

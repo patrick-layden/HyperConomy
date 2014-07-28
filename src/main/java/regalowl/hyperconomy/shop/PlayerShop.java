@@ -474,7 +474,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		conditions.put("SHOP", name);
 		hc.getSQLWrite().performDelete("hyperconomy_shop_objects", conditions);
 		shopContents.clear();
-		hc.getDataManager().removeShop(name);
+		hc.getHyperShopManager().removeShop(name);
 	}
 	
 	public void removePlayerShopObject(HyperObject hyperObject) {

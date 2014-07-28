@@ -66,7 +66,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public static API api;
 	public static EconomyAPI economyApi;
 	
-	private DataManager em;
+	private DataManager dm;
 	private DataBukkit db;
 	private YamlHandler yh;
 	private Log l;
@@ -133,7 +133,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	}
 	public void enable() {
 		HandlerList.unregisterAll(this);
-		em = new DataManager();
+		dm = new DataManager();
 		if (hConfig.getBoolean("sql.use-mysql")) {
 			String username = hConfig.getString("sql.mysql-connection.username");
 			String password = hConfig.getString("sql.mysql-connection.password");
@@ -154,7 +154,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 			log.info("[HyperConomy]Using internal economy plugin.");
 		}
 		dMode.syncDebugConsoleMessage("Data loading started.");
-		em.load();
+		dm.load();
 		l = new Log(this);
 		commandhandler = new _Command();
 		new TransactionSign();
@@ -184,8 +184,8 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		if (hist != null) {
 			hist.stopHistoryLog();
 		}
-		if (em != null) {
-			em.shutDown();
+		if (dm != null) {
+			dm.shutDown();
 		}
 		if (db != null) {
 			db.shutDown();
@@ -318,11 +318,19 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	}
 	
 	public DataManager getDataManager() {
-		return em;
+		return dm;
 	}
 	
 	public HyperPlayerManager getHyperPlayerManager() {
-		return em.getHyperPlayerManager();
+		return dm.getHyperPlayerManager();
+	}
+	
+	public HyperBankManager getHyperBankManager() {
+		return dm.getHyperBankManager();
+	}
+	
+	public HyperShopManager getHyperShopManager() {
+		return dm.getHyperShopManager();
 	}
 
 	public Economy getEconomy() {

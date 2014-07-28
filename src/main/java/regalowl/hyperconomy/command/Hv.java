@@ -31,7 +31,7 @@ public class Hv {
 			HyperPlayer hp = em.getHyperPlayer(player);
 			HyperEconomy he = hp.getHyperEconomy();
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
-			if ((requireShop && em.inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if ((requireShop && em.getHyperShopManager().inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				ItemStack iinhand = player.getItemInHand();
 				if (args.length == 0) {
 					amount = 1;
@@ -42,7 +42,7 @@ public class Hv {
 					}
 				}
 				if (!new HyperItemStack(iinhand).hasEnchants()) {
-					HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getShop(player));
+					HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getHyperShopManager().getShop(player));
 					if (ho == null) {
 						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
@@ -81,7 +81,7 @@ public class Hv {
 						String enam = he.getEnchantNameWithoutLevel(enchname);
 						String fnam = enam + lvl;
 						String mater = player.getItemInHand().getType().name();
-						HyperObject ho = he.getHyperObject(fnam, em.getShop(player));
+						HyperObject ho = he.getHyperObject(fnam, em.getHyperShopManager().getShop(player));
 						double value = ho.getSellPrice(EnchantmentClass.fromString(mater), hp);
 						double cost = ho.getBuyPrice(EnchantmentClass.fromString(mater));
 						cost = cost + ho.getPurchaseTax(cost);
@@ -92,7 +92,7 @@ public class Hv {
 						value = cf.twoDecimals(value - salestax);
 						player.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
 						player.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-						player.sendMessage(L.f(L.get("EVALUE_STOCK"), cf.twoDecimals(he.getHyperObject(fnam, em.getShop(player)).getStock()), fnam));
+						player.sendMessage(L.f(L.get("EVALUE_STOCK"), cf.twoDecimals(he.getHyperObject(fnam, em.getHyperShopManager().getShop(player)).getStock()), fnam));
 					}
 					player.sendMessage(L.get("LINE_BREAK"));
 				}

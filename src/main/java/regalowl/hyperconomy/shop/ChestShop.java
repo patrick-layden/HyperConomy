@@ -327,7 +327,7 @@ public class ChestShop implements Listener {
 				return;
 			}
 
-			if (hc.getConf().getBoolean("shop.require-chest-shops-to-be-in-shop") && !em.inAnyShop(scevent.getPlayer())) {
+			if (hc.getConf().getBoolean("shop.require-chest-shops-to-be-in-shop") && !em.getHyperShopManager().inAnyShop(scevent.getPlayer())) {
 				scevent.setLine(0, ChatColor.DARK_RED + "You must");
 				scevent.setLine(1, ChatColor.DARK_RED + "place your");
 				scevent.setLine(2, ChatColor.DARK_RED + "chest shop");

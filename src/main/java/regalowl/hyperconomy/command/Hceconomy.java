@@ -65,7 +65,7 @@ public class Hceconomy implements CommandExecutor {
 				if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {
 					new Backup();
 				}
-				for (Shop shop:em.getShops()) {
+				for (Shop shop:em.getHyperShopManager().getShops()) {
 					if (shop.getEconomy().equalsIgnoreCase(economy)) {
 						shop.setEconomy("default");
 					}

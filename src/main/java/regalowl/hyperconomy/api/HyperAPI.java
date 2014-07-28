@@ -29,7 +29,7 @@ public class HyperAPI implements API {
 
 	public String getPlayerShop(Player player) {
 		HyperConomy hc = HyperConomy.hc;
-		Shop shop = hc.getDataManager().getShop(player);
+		Shop shop = hc.getHyperShopManager().getShop(player);
 		if (null == shop){
 			return "";
 		} else {
@@ -85,12 +85,12 @@ public class HyperAPI implements API {
 
 	public Shop getShop(String name) {
 		HyperConomy hc = HyperConomy.hc;
-		return hc.getDataManager().getShop(name);
+		return hc.getHyperShopManager().getShop(name);
 	}
 
 	public ServerShop getServerShop(String name) {
 		HyperConomy hc = HyperConomy.hc;
-		Shop s = hc.getDataManager().getShop(name);
+		Shop s = hc.getHyperShopManager().getShop(name);
 		if (s instanceof ServerShop) {
 			return (ServerShop)s;
 		}
@@ -99,7 +99,7 @@ public class HyperAPI implements API {
 
 	public PlayerShop getPlayerShop(String name) {
 		HyperConomy hc = HyperConomy.hc;
-		Shop s = hc.getDataManager().getShop(name);
+		Shop s = hc.getHyperShopManager().getShop(name);
 		if (s instanceof PlayerShop) {
 			return (PlayerShop)s;
 		}
@@ -110,7 +110,7 @@ public class HyperAPI implements API {
 	public ArrayList<String> getServerShopList() {
 		HyperConomy hc = HyperConomy.hc;
 		ArrayList<String> serverShops = new ArrayList<String>();
-		for (Shop s:hc.getDataManager().getShops()) {
+		for (Shop s:hc.getHyperShopManager().getShops()) {
 			if (s instanceof ServerShop) {
 				serverShops.add(s.getName());
 			}
@@ -122,7 +122,7 @@ public class HyperAPI implements API {
 	public ArrayList<String> getPlayerShopList() {
 		HyperConomy hc = HyperConomy.hc;
 		ArrayList<String> playerShops = new ArrayList<String>();
-		for (Shop s:hc.getDataManager().getShops()) {
+		for (Shop s:hc.getHyperShopManager().getShops()) {
 			if (s instanceof PlayerShop) {
 				playerShops.add(s.getName());
 			}
@@ -239,7 +239,7 @@ public class HyperAPI implements API {
 
 	public ArrayList<HyperObject> getAvailableObjects(Player p) {
 		HyperConomy hc = HyperConomy.hc;
-		Shop s = hc.getDataManager().getShop(p);
+		Shop s = hc.getHyperShopManager().getShop(p);
 		if (s != null) {
 			return s.getTradeableObjects();
 		}
@@ -259,7 +259,7 @@ public class HyperAPI implements API {
 	
 	public ArrayList<HyperObject> getAvailableObjects(String shopname) {
 		HyperConomy hc = HyperConomy.hc;
-		Shop s = hc.getDataManager().getShop(shopname);
+		Shop s = hc.getHyperShopManager().getShop(shopname);
 		if (s != null) {
 			return s.getTradeableObjects();
 		}
@@ -288,7 +288,7 @@ public class HyperAPI implements API {
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
 			if (inventory.getItem(slot) == null) {continue;}
 			ItemStack stack = inventory.getItem(slot);
-			HyperObject hyperItem = he.getHyperObject(stack, em.getShop(hp.getPlayer()));
+			HyperObject hyperItem = he.getHyperObject(stack, em.getHyperShopManager().getShop(hp.getPlayer()));
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 			pt.setGiveInventory(inventory);
 			pt.setHyperObject(hyperItem);

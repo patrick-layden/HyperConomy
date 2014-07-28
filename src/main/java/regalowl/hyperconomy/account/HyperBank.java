@@ -17,15 +17,21 @@ public class HyperBank implements HyperAccount {
 	
 	
 	public HyperBank(String name, HyperPlayer owner) {
-		if (name == null || owner == null) {return;}
+		if (name == null) {return;}
 		this.hc = HyperConomy.hc;
 		this.name = name;
 		this.balance = 0.0;
-		owners.add(owner.getName().toLowerCase());
+		if (owner != null) {
+			owners.add(owner.getName().toLowerCase());
+		}
 		WriteStatement ws = new WriteStatement("INSERT INTO hyperconomy_banks (NAME, BALANCE, OWNERS, MEMBERS) VALUES (?,?,?,?)",hc.getDataBukkit());
 		ws.addParameter(name);
 		ws.addParameter(0.0);
-		ws.addParameter(owner.getName().toLowerCase() + ",");
+		if (owner != null) {
+			ws.addParameter(owner.getName().toLowerCase() + ",");
+		} else {
+			ws.addParameter("");
+		}
 		ws.addParameter("");
 		hc.getSQLWrite().addToQueue(ws);
 	}
@@ -42,7 +48,7 @@ public class HyperBank implements HyperAccount {
 		WriteStatement ws = new WriteStatement("DELETE FROM hyperconomy_banks WHERE NAME=?",hc.getDataBukkit());
 		ws.addParameter(name);
 		hc.getSQLWrite().addToQueue(ws);
-		hc.getDataManager().removeHyperBank(this);
+		hc.getDataManager().getHyperBankManager().removeHyperBank(this);
 		if (balance > 0) {
 			double share = balance/owners.size();
 			for (HyperPlayer hp:getOwners()) {
@@ -54,7 +60,7 @@ public class HyperBank implements HyperAccount {
 				he.setDefaultAccount(getOwners().get(0));
 			}
 		}
-		for (Shop s:hc.getDataManager().getShops()) {
+		for (Shop s:hc.getDataManager().getHyperShopManager().getShops()) {
 			if (s.getOwner() == this) {
 				s.setOwner(getOwners().get(0));
 			}
@@ -87,14 +93,14 @@ public class HyperBank implements HyperAccount {
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);
 		this.name = newName;
-		hc.getDataManager().removeHyperBank(this);
-		hc.getDataManager().addHyperBank(this);
+		hc.getDataManager().getHyperBankManager().removeHyperBank(this);
+		hc.getDataManager().getHyperBankManager().addHyperBank(this);
 		for (HyperEconomy he:hc.getDataManager().getEconomies()) {
 			if (he.getDefaultAccount() == this) {
 				he.setDefaultAccount(this);
 			}
 		}
-		for (Shop s:hc.getDataManager().getShops()) {
+		for (Shop s:hc.getDataManager().getHyperShopManager().getShops()) {
 			if (s.getOwner() == this) {
 				s.setOwner(this);
 			}

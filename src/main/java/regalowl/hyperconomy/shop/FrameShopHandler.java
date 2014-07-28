@@ -54,7 +54,7 @@ public class FrameShopHandler implements Listener {
 							double z = dbData.getDouble("Z");
 							World w = Bukkit.getWorld(dbData.getString("WORLD"));
 							Location l = new Location(w, x, y, z);
-							Shop s = em.getShop(dbData.getString("SHOP"));
+							Shop s = em.getHyperShopManager().getShop(dbData.getString("SHOP"));
 							String economy = em.getDefaultEconomy().getName();
 							if (s != null) {
 								economy = s.getEconomy();

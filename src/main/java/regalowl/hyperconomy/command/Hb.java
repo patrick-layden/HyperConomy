@@ -29,7 +29,7 @@ public class Hb {
 			HyperPlayer hp = em.getHyperPlayer(player);
 			HyperEconomy he = hp.getHyperEconomy();
 
-			HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getShop(player));
+			HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getHyperShopManager().getShop(player));
 			if (ho == null) {
 				player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
 				return;
@@ -62,7 +62,7 @@ public class Hb {
 			if (amount > shopstock && ma) {
 				amount = shopstock;
 			}
-			Shop s = em.getShop(player);
+			Shop s = em.getHyperShopManager().getShop(player);
 
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 			pt.setObeyShops(true);

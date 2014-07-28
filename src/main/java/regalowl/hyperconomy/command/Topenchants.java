@@ -29,10 +29,10 @@ public class Topenchants {
 			}
 			String nameshop = "";
 			if (player != null) {
-				if (em.inAnyShop(player)) {
-					nameshop = em.getShop(player).getName();
+				if (em.getHyperShopManager().inAnyShop(player)) {
+					nameshop = em.getHyperShopManager().getShop(player).getName();
 				} 				
-				if (requireShop && em.getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
+				if (requireShop && em.getHyperShopManager().getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
 					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
 					return;
 				}
@@ -50,7 +50,7 @@ public class Topenchants {
 				boolean stocked = false;
 				boolean banned = false;
 				if (nameshop != "") {
-					banned = em.getShop(nameshop).isBanned(ho);
+					banned = em.getHyperShopManager().getShop(nameshop).isBanned(ho);
 				}
 				if (ho.getStock() > 0) {stocked = true;}
 				if (ho.isShopObject()) {
@@ -66,7 +66,7 @@ public class Topenchants {
 					}
 				}
 				if (!unavailable) {
-					double samount = he.getHyperObject(ho.getName(), em.getShop(player)).getStock();
+					double samount = he.getHyperObject(ho.getName(), em.getHyperShopManager().getShop(player)).getStock();
 					if (samount > 0) {
 						while (enchantstocks.containsKey(samount * 100)) {
 							samount += .00001;

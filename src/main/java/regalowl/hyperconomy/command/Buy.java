@@ -35,9 +35,9 @@ public class Buy implements CommandExecutor {
 		HyperPlayer hp = em.getHyperPlayer(player);
 		HyperEconomy he = hp.getHyperEconomy();
 		try {
-			Shop s = em.getShop(player);
+			Shop s = em.getHyperShopManager().getShop(player);
 			String name = he.fixName(args[0]);
-			HyperObject ho = he.getHyperObject(name, em.getShop(player));
+			HyperObject ho = he.getHyperObject(name, em.getHyperShopManager().getShop(player));
 			int amount = 1;
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("max")) {

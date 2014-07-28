@@ -11,6 +11,7 @@ import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.hyperobject.BasicObject;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.hyperobject.HyperObject;
@@ -26,6 +27,7 @@ public class Browseshop {
 		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getDataManager().getEconomy(playerecon);
 		DataManager em = hc.getDataManager();
+		HyperShopManager hsm = hc.getHyperShopManager();
 		CommonFunctions cf = hc.gCF();
 		LanguageFile L = hc.getLanguageFile();
 		ArrayList<String> aargs = new ArrayList<String>();
@@ -35,7 +37,7 @@ public class Browseshop {
 		try {
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
     		if (player != null) {
-    			if ((requireShop && !em.inAnyShop(player)) && !player.hasPermission("hyperconomy.admin")) {
+    			if ((requireShop && !hsm.inAnyShop(player)) && !player.hasPermission("hyperconomy.admin")) {
     				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
     				return;
     			}			
@@ -75,10 +77,10 @@ public class Browseshop {
 			}
     		Shop shop = null;
     		if (player != null) {
-    			if (!em.inAnyShop(player)) {
+    			if (!hsm.inAnyShop(player)) {
     				shop = null;
     			} else {
-    				shop = em.getShop(player);
+    				shop = hsm.getShop(player);
     			}		
     		}
 			ArrayList<String> names = he.getNames();
@@ -145,22 +147,22 @@ public class Browseshop {
 						String iname = rnames.get(count);
 			            Double cost = 0.0;
 			            double stock = 0;
-			            HyperObject ho = he.getHyperObject(iname, em.getShop(player));
+			            HyperObject ho = he.getHyperObject(iname, hsm.getShop(player));
 			            if (ho.getType() == HyperObjectType.ITEM) {
 							cost = ho.getBuyPrice(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = cf.twoDecimals(cost + taxpaid);
-							stock = cf.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
+							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(player)).getStock());
 						} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
 							cost = ho.getBuyPrice(EnchantmentClass.DIAMOND);
 							cost = cost + ho.getPurchaseTax(cost);
-							stock = cf.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
+							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(player)).getStock());
 						} else {
 							BasicObject hi = (BasicObject)ho;
 							cost = hi.getBuyPrice(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = cf.twoDecimals(cost + taxpaid);
-							stock = cf.twoDecimals(he.getHyperObject(iname, em.getShop(player)).getStock());
+							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(player)).getStock());
 						}
 			            if (ho.isShopObject()) {
 			            	sender.sendMessage(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "; (&e" + ho.getStatus().toString()+ "&9)]"));

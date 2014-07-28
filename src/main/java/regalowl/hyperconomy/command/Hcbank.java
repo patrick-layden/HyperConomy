@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import regalowl.hyperconomy.DataManager;
+import regalowl.hyperconomy.HyperBankManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperBank;
@@ -31,6 +32,7 @@ public class Hcbank implements CommandExecutor {
 			return true;
 		}
 		DataManager em = hc.getDataManager();
+		HyperBankManager hbm = em.getHyperBankManager();
 		Player player = null;
 		if (sender instanceof Player) {
 			player = (Player)sender;
@@ -46,7 +48,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("HCBANK_CREATE_HELP"));
 				return true;
 			}
-			if (em.hasBank(args[1])) {
+			if (hbm.hasBank(args[1])) {
 				player.sendMessage(L.get("BANK_ALREADY_EXISTS"));
 				return true;
 			}
@@ -54,7 +56,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("ACCOUNT_ALREADY_EXISTS"));
 				return true;
 			}
-			ArrayList<HyperBank> allBanks = em.getHyperBanks();
+			ArrayList<HyperBank> allBanks = hbm.getHyperBanks();
 			int bankOwnerships = 0;
 			for (HyperBank hb:allBanks) {
 				if (hb.isOwner(hp)) {
@@ -66,18 +68,18 @@ public class Hcbank implements CommandExecutor {
 				return true;
 			}
 			HyperBank hb = new HyperBank(args[1], hp);
-			em.addHyperBank(hb);
+			hbm.addHyperBank(hb);
 			player.sendMessage(L.get("BANK_CREATED"));
 		} else if (args[0].equalsIgnoreCase("delete")) {
 			if (args.length != 2) {
 				player.sendMessage(L.get("HCBANK_DELETE_HELP"));
 				return true;
 			}
-			if (!em.hasBank(args[1])) {
+			if (!hbm.hasBank(args[1])) {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
-			HyperBank hb = em.getHyperBank(args[1]);
+			HyperBank hb = hbm.getHyperBank(args[1]);
 			if (!hb.isOwner(hp)) {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
 				return true;
@@ -88,7 +90,7 @@ public class Hcbank implements CommandExecutor {
 					return true;
 				}
 			}
-			for (Shop s:hc.getDataManager().getShops()) {
+			for (Shop s:hc.getHyperShopManager().getShops()) {
 				if (s.getOwner() == hb) {
 					player.sendMessage(L.get("BANK_IN_USE_BY_SHOP"));
 					return true;
@@ -106,11 +108,11 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("HCBANK_RENAME_HELP"));
 				return true;
 			}
-			if (!em.hasBank(args[1])) {
+			if (!hbm.hasBank(args[1])) {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
-			HyperBank hb = em.getHyperBank(args[1]);
+			HyperBank hb = hbm.getHyperBank(args[1]);
 			if (!hb.isOwner(hp)) {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
 				return true;
@@ -122,7 +124,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("HCBANK_ADDMEMBER_HELP"));
 				return true;
 			}
-			if (!em.hasBank(args[1])) {
+			if (!hbm.hasBank(args[1])) {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
@@ -130,7 +132,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 				return true;
 			}
-			HyperBank hb = em.getHyperBank(args[1]);
+			HyperBank hb = hbm.getHyperBank(args[1]);
 			HyperPlayer account = em.getHyperPlayer(args[2]);
 			if (!hb.isOwner(hp)) {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
@@ -147,7 +149,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("HCBANK_REMOVEMEMBER_HELP"));
 				return true;
 			}
-			if (!em.hasBank(args[1])) {
+			if (!hbm.hasBank(args[1])) {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
@@ -155,7 +157,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 				return true;
 			}
-			HyperBank hb = em.getHyperBank(args[1]);
+			HyperBank hb = hbm.getHyperBank(args[1]);
 			HyperPlayer account = em.getHyperPlayer(args[2]);
 			if (!hb.isOwner(hp)) {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
@@ -172,7 +174,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("HCBANK_ADDOWNER_HELP"));
 				return true;
 			}
-			if (!em.hasBank(args[1])) {
+			if (!hbm.hasBank(args[1])) {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
@@ -180,7 +182,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 				return true;
 			}
-			HyperBank hb = em.getHyperBank(args[1]);
+			HyperBank hb = hbm.getHyperBank(args[1]);
 			HyperPlayer account = em.getHyperPlayer(args[2]);
 			if (!hb.isOwner(hp)) {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
@@ -197,7 +199,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("HCBANK_REMOVEOWNER_HELP"));
 				return true;
 			}
-			if (!em.hasBank(args[1])) {
+			if (!hbm.hasBank(args[1])) {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
@@ -205,7 +207,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("ACCOUNT_NOT_EXIST"));
 				return true;
 			}
-			HyperBank hb = em.getHyperBank(args[1]);
+			HyperBank hb = hbm.getHyperBank(args[1]);
 			HyperPlayer account = em.getHyperPlayer(args[2]);
 			if (!hb.isOwner(hp)) {
 				player.sendMessage(L.get("DONT_OWN_THIS_BANK"));
@@ -227,7 +229,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("HCBANK_DEPOSIT_HELP"));
 				return true;
 			}
-			if (!em.hasBank(args[1])) {
+			if (!hbm.hasBank(args[1])) {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
@@ -246,7 +248,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("INSUFFICIENT_FUNDS"));
 				return true;
 			}
-			HyperBank hb = em.getHyperBank(args[1]);
+			HyperBank hb = hbm.getHyperBank(args[1]);
 			hp.withdraw(amount);
 			hb.deposit(amount);
 			player.sendMessage(L.get("DEPOSIT_SUCCESSFUL"));
@@ -255,7 +257,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("HCBANK_WITHDRAW_HELP"));
 				return true;
 			}
-			if (!em.hasBank(args[1])) {
+			if (!hbm.hasBank(args[1])) {
 				player.sendMessage(L.get("BANK_NOT_EXIST"));
 				return true;
 			}
@@ -270,7 +272,7 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("TRANSFER_GREATER_THAN_ZERO"));
 				return true;
 			}
-			HyperBank hb = em.getHyperBank(args[1]);
+			HyperBank hb = hbm.getHyperBank(args[1]);
 			if (!hb.isOwner(hp) && !hb.isMember(hp)) {
 				player.sendMessage(L.get("NOT_MEMBER_OF_BANK"));
 				return true;
@@ -284,7 +286,7 @@ public class Hcbank implements CommandExecutor {
 			player.sendMessage(L.get("WITHDRAWAL_SUCCESSFUL"));
 		} else if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("i")) {
 			if (args.length == 1) {
-				ArrayList<HyperBank> allBanks = em.getHyperBanks();
+				ArrayList<HyperBank> allBanks = hbm.getHyperBanks();
 				String ownerBanks = "";
 				String memberBanks = "";
 				for (HyperBank hb:allBanks) {
@@ -307,11 +309,11 @@ public class Hcbank implements CommandExecutor {
 				player.sendMessage(L.get("LINE_BREAK"));
 			}
 			if (args.length == 2) {
-				if (!em.hasBank(args[1])) {
+				if (!hbm.hasBank(args[1])) {
 					player.sendMessage(L.get("BANK_NOT_EXIST"));
 					return true;
 				}
-				HyperBank hb = em.getHyperBank(args[1]);
+				HyperBank hb = hbm.getHyperBank(args[1]);
 				if (hb.isOwner(hp) || hp.getPlayer().hasPermission("hyperconomy.viewbanks")) {
 					player.sendMessage(L.get("LINE_BREAK"));
 					player.sendMessage(L.applyColor("&b&o" + hb.getName()));
@@ -340,7 +342,7 @@ public class Hcbank implements CommandExecutor {
 			}
 			ArrayList<String> banks = new ArrayList<String>();
 			ArrayList<Double> balances = new ArrayList<Double>();
-			for (HyperBank hb:em.getHyperBanks()) {
+			for (HyperBank hb:hbm.getHyperBanks()) {
 				banks.add(hb.getName());
 				balances.add(hb.getBalance());
 			}

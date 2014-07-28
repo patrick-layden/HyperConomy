@@ -13,6 +13,9 @@
 - Find what causes attempted player duplication in database.
 - Allow /hcset to work with categories
 - Switch to 3 digit fractional balances to prevent rounding issues
+- Improve chest shop gui
+- Add periodic price increase/decrease with balance points.
+- Automatically update language file if it hasn't been edited.  (Use MD5 checksum)
 
 
 **Moderate Priority**

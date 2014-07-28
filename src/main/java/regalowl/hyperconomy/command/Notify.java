@@ -102,9 +102,7 @@ public class Notify implements CommandExecutor, TransactionListener {
 	}
 
 	private void sendNotification(String message) {
-		Player[] players = Bukkit.getOnlinePlayers();
-		for (int i = 0; i < players.length; i++) {
-			Player p = players[i];
+		for (Player p:Bukkit.getOnlinePlayers()) {
 			if (p.hasPermission("hyperconomy.notify")) {
 				p.sendMessage(message);
 			}

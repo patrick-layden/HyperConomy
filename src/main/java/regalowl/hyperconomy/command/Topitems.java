@@ -30,10 +30,10 @@ public class Topitems {
 			}
 			Shop s = null;
 			if (player != null) {
-				if (em.inAnyShop(player)) {
-					s = em.getShop(player);
+				if (em.getHyperShopManager().inAnyShop(player)) {
+					s = em.getHyperShopManager().getShop(player);
 				} 
-				if (requireShop && em.getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
+				if (requireShop && em.getHyperShopManager().getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
 					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
 					return;
 				}

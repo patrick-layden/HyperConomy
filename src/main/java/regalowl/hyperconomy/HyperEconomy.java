@@ -424,7 +424,7 @@ public class HyperEconomy implements DataLoadListener {
 				ho.setName(objectName);
 			}
 		}
-		for (Shop s:hc.getDataManager().getShops()) {
+		for (Shop s:hc.getHyperShopManager().getShops()) {
 			if (s instanceof PlayerShop) {
 				PlayerShop ps = (PlayerShop)s;
 				for (HyperObject ho:ps.getShopObjects()) {

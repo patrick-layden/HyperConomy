@@ -35,12 +35,12 @@ public class Value implements CommandExecutor {
 		}
 		try {
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
-			if (player != null && requireShop && !em.inAnyShop(player) && !player.hasPermission("hyperconomy.admin")) {
+			if (player != null && requireShop && !em.getHyperShopManager().inAnyShop(player) && !player.hasPermission("hyperconomy.admin")) {
 				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
 				return true;
 			}
 			String name = he.fixName(args[0]);
-			HyperObject ho = he.getHyperObject(name, em.getShop(player));
+			HyperObject ho = he.getHyperObject(name, em.getHyperShopManager().getShop(player));
 			if (ho == null) {
 				sender.sendMessage(L.get("INVALID_ITEM_NAME"));
 				return true;

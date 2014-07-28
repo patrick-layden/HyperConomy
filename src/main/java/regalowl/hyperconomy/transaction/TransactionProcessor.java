@@ -169,11 +169,11 @@ public class TransactionProcessor {
 			return;
 		}
 		if (obeyShops) {
-			if (!dm.inAnyShop(hp.getPlayer())) {
+			if (!dm.getHyperShopManager().inAnyShop(hp.getPlayer())) {
 				response.addFailed(L.get("MUST_BE_IN_SHOP"), hyperObject);
 				return;
 			} else {
-				Shop shop = dm.getShop(hp.getPlayer());
+				Shop shop = dm.getHyperShopManager().getShop(hp.getPlayer());
 				if (!hp.hasBuyPermission(shop)) {
 					response.addFailed(L.get("NO_TRADE_PERMISSION"), hyperObject);
 					return;
@@ -326,11 +326,11 @@ public class TransactionProcessor {
 			return;
 		}
 		if (obeyShops) {
-			if (!dm.inAnyShop(hp.getPlayer())) {
+			if (!dm.getHyperShopManager().inAnyShop(hp.getPlayer())) {
 				response.addFailed(L.get("MUST_BE_IN_SHOP"), hyperObject);
 				return;
 			} else {
-				Shop shop = dm.getShop(hp.getPlayer());
+				Shop shop = dm.getHyperShopManager().getShop(hp.getPlayer());
 				if (!hp.hasSellPermission(shop)) {
 					response.addFailed(L.get("NO_TRADE_PERMISSION"), hyperObject);
 					return;

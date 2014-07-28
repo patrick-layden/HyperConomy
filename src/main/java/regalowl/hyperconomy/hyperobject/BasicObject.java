@@ -147,7 +147,7 @@ public class BasicObject implements HyperObject {
 	@Override
 	public double getTotalStock() {
 		double totalStock = 0.0;
-		for (Shop s:hc.getDataManager().getShops()) {
+		for (Shop s:hc.getHyperShopManager().getShops()) {
 			if (!(s instanceof PlayerShop)) {continue;}
 			PlayerShop ps = (PlayerShop)s;
 			if (!ps.hasPlayerShopObject(this)) {continue;}
