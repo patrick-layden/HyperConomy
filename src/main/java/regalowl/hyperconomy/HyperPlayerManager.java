@@ -1,7 +1,6 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -156,6 +155,12 @@ public class HyperPlayerManager implements Listener {
 		}
 		return false;
 	}
+	/**
+	 * 
+	 * @param name of account
+	 * @return the HyperBank or HyperPlayer with the specified name.  This method will not create an account if it does not already exists.  Returns null if the account
+	 * does not exist.
+	 */
 	public HyperAccount getAccount(String name) {
 		if (playerAccountExists(name)) {
 			return getHyperPlayer(name);
@@ -173,23 +178,17 @@ public class HyperPlayerManager implements Listener {
 	
 	
 
-	
+	/**
+	 * 
+	 * @param player
+	 * @return The HyperPlayer with the specified name.  If the HyperPlayer doesn't exist it will be created.  This method should only return null if the given name is null.
+	 */
 	public HyperPlayer getHyperPlayer(String player) {
 		if (player == null || player.equals("")) {return null;}
 		String playerName = player.toLowerCase();
 		if (hyperPlayers.containsKey(playerName) && hyperPlayers.get(playerName) != null) {
 			return hyperPlayers.get(playerName);
 		} else {
-			if (hyperPlayers.get(playerName) == null) {
-				hyperPlayers.remove(playerName);
-				if (uuidIndex.containsValue(playerName)) {
-					for (Map.Entry<String,String> entry : uuidIndex.entrySet()) {
-					    if (entry.getValue().equalsIgnoreCase(playerName)) {
-					    	uuidIndex.remove(entry.getKey());
-					    }
-					}
-				}
-			}
 			return addPlayer(player);
 		}
 	}
@@ -203,7 +202,13 @@ public class HyperPlayerManager implements Listener {
 			String pName = uuidIndex.get(uuid.toString());
 			return hyperPlayers.get(pName);
 		} else {
-			return null;
+			OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+			if (op.getName() == null || op.getName() == "") {
+				return null;
+			}
+			HyperPlayer hp = addPlayer(op.getName());
+			hp.setUUID(uuid.toString());
+			return hp;
 		}
 	}
 	
@@ -274,8 +279,6 @@ public class HyperPlayerManager implements Listener {
 			}
 		}
 	}
-	
-
 	
 	public int purgeDeadAccounts() {
 		int purgeCount = 0;

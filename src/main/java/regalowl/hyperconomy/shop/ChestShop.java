@@ -492,6 +492,9 @@ public class ChestShop implements Listener {
 			}
 
 			HyperAccount chestOwner = em.getHyperPlayerManager().getAccount(chestOwnerName);
+			if (chestOwner == null) {
+				chestOwner = em.getHyperPlayerManager().getHyperPlayer(chestOwnerName);
+			}
 			
 			HyperEconomy chestOwnerEconomy = em.getDefaultEconomy();
 			if (chestOwner instanceof HyperPlayer) {
