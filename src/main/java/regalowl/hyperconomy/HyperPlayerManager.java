@@ -1,6 +1,7 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -69,7 +70,8 @@ public class HyperPlayerManager implements Listener {
 	}
 	
 	private void addOnlinePlayers() {
-		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+		Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
+		for (Player p : onlinePlayers) {
 			if (p.getName().equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
 				p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 				continue;

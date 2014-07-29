@@ -29,6 +29,7 @@ import org.bukkit.metadata.MetadataValue;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class ItemDisplayFactory implements Listener {
 	
@@ -36,7 +37,7 @@ public class ItemDisplayFactory implements Listener {
 	private int refreshthreadid;
 	private final long refreshInterval = 4800L;
 	//private final long refreshInterval = 100L;
-	private ConcurrentHashMap<String, ItemDisplay> displays = new ConcurrentHashMap<String, ItemDisplay>();
+	private ConcurrentHashMap<SimpleLocation, ItemDisplay> displays = new ConcurrentHashMap<SimpleLocation, ItemDisplay>();
 	private QueryResult dbData;
 
 
@@ -71,8 +72,8 @@ public class ItemDisplayFactory implements Listener {
 								String name = dbData.getString("HYPEROBJECT");
 								Location l = new Location(w,x,y,z);
 								ItemDisplay display = new ItemDisplay(l, name, false);
-								String hkey = (int) Math.floor(x) + ":" + (int) Math.floor(y) + ":" + (int) Math.floor(z) + ":" + w;
-								displays.put(hkey, display);
+								SimpleLocation key = new SimpleLocation(w.getName(), x, y, z);
+								displays.put(key, display);
 							}
 							dbData.close();
 							dbData = null;
@@ -115,28 +116,19 @@ public class ItemDisplayFactory implements Listener {
 	}
 	
 
-	public boolean removeDisplay(int x, int y, int z, World w) {
-		String hkey = x + ":" + y + ":" + z + ":" + w.getName();
-		if (displays.containsKey(hkey)) {
-			ItemDisplay display = displays.get(hkey);
+	public boolean removeDisplay(SimpleLocation sl) {
+		if (displays.containsKey(sl)) {
+			ItemDisplay display = displays.get(sl);
 			display.delete();
-			displays.remove(hkey);
+			displays.remove(sl);
 			return true;
 		} 
 		return false;
 	}
 	
-	public boolean removeDisplay(int x, int z, World w) {
-		for (String key:displays.keySet()) {
-			int kx = Integer.parseInt(key.substring(0, key.indexOf(":")));
-			key = key.substring(key.indexOf(":") + 1, key.length());
-			int ky = Integer.parseInt(key.substring(0, key.indexOf(":")));
-			key = key.substring(key.indexOf(":") + 1, key.length());
-			int kz = Integer.parseInt(key.substring(0, key.indexOf(":")));
-			key = key.substring(key.indexOf(":") + 1, key.length());
-			String kw = key;
-			if (kx == x && kz == z && kw.equalsIgnoreCase(w.getName())) {
-				key = kx + ":" + ky + ":" + kz + ":" + kw;
+	public boolean removeDisplay(double x, double z, World w) {
+		for (SimpleLocation key:displays.keySet()) {
+			if (key.getX() == x && key.getZ() == z && key.getWorld().equalsIgnoreCase(w.getName())) {
 				ItemDisplay display = displays.get(key);
 				display.delete();
 				displays.remove(key);
@@ -156,8 +148,8 @@ public class ItemDisplayFactory implements Listener {
 		}
 		Location l = new Location(w, x, y, z);
 		ItemDisplay display = new ItemDisplay(l, name, true);
-		String hkey = (int)Math.floor(x) + ":" + (int)Math.floor(y) + ":" + (int)Math.floor(z) + ":" + w.getName();
-		displays.put(hkey, display);
+		SimpleLocation key = new SimpleLocation(w.getName(), x, y, z);
+		displays.put(key, display);
 		Chunk locChunk = l.getChunk();
 		if (locChunk.isLoaded()) {
 			display.makeDisplay();
