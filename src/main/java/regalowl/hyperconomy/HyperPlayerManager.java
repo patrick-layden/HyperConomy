@@ -69,7 +69,7 @@ public class HyperPlayerManager implements Listener {
 	}
 	
 	private void addOnlinePlayers() {
-		for (Player p : Bukkit.getOnlinePlayers()) {
+		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 			if (p.getName().equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
 				p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 				continue;
