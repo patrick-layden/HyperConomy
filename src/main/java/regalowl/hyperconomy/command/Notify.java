@@ -2,7 +2,6 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -102,7 +101,7 @@ public class Notify implements CommandExecutor, TransactionListener {
 	}
 
 	private void sendNotification(String message) {
-		for (Player p:Bukkit.getOnlinePlayers()) {
+		for (Player p:hc.getHyperPlayerManager().getOnlinePlayers()) {
 			if (p.hasPermission("hyperconomy.notify")) {
 				p.sendMessage(message);
 			}

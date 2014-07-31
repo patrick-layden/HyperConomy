@@ -534,7 +534,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 
 	public void updatePlayerStatus() {
-		for (Player p : Bukkit.getOnlinePlayers()) {
+		for (Player p : hc.getHyperPlayerManager().getOnlinePlayers()) {
 			if (inShop.contains(p.getName())) {
 				if (!inShop(p)) {
 					inShop.remove(p.getName());

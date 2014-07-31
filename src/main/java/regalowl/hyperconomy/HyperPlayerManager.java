@@ -1,13 +1,13 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -70,8 +70,7 @@ public class HyperPlayerManager implements Listener {
 	}
 	
 	private void addOnlinePlayers() {
-		Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
-		for (Player p : onlinePlayers) {
+		for (Player p : getOnlinePlayers()) {
 			if (p.getName().equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
 				p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 				continue;
@@ -80,6 +79,14 @@ public class HyperPlayerManager implements Listener {
 				addPlayer(p.getName());
 			}
 		}
+	}
+	
+	public ArrayList<Player> getOnlinePlayers() {
+		ArrayList<Player> onlinePlayers = new ArrayList<Player>();
+		for (World world : Bukkit.getWorlds()) {
+			onlinePlayers.addAll(world.getPlayers());
+		}
+		return onlinePlayers;
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
