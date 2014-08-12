@@ -142,6 +142,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 			String database = hConfig.getString("sql.mysql-connection.database");
 			db.enableMySQL(host, database, username, password, port);
 		}
+		dMode.syncDebugConsoleMessage("Expected plugin folder path: [" + db.getPluginFolderPath() + "]");
 		db.createDatabase();
 		dMode.syncDebugConsoleMessage("Database created.");
 		sw = db.getSQLWrite();
