@@ -270,6 +270,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	public void sendEntryMessage(Player player) {
 		if (message == "") {setDefaultMessage();}
+		if (message.equalsIgnoreCase("none")) {return;}
 		String[] lines = message.replace("_", " ").split("%n");
 		for (String line:lines) {
 			player.sendMessage(L.applyColor(line));
