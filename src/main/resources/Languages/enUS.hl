@@ -403,6 +403,8 @@ MAXSTOCK_SET: &6Max stock set.
 STOCK_ADDED: &6Stock added to shop.
 STOCK_REMOVED: &6Stock removed from shop.
 ALL_STATUS_SET: &6All statuses set.
+CATEGORY_STATUS_SET: &6All statuses set for the specified category.
+MANAGESHOP_STATUS_NOT_FOUND: &4You must specify 'all', a tradeable object, or a category.
 SHOP_CREATED: &6Shop created.
 INVALID_STATUS: &4That is not a valid status.
 MANAGESHOP_STATUS_HELP: &4Use /manageshop status [object] ['trade', 'sell' or 'buy']

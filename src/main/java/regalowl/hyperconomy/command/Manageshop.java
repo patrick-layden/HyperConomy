@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -550,29 +551,34 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("INVALID_STATUS"));
 				return true;
 			}
-			if (!he.objectTest(args[1]) && !args[1].equalsIgnoreCase("all")) {
-				player.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
-				return true;
-			}
 			if (args[1].equalsIgnoreCase("all")) {
 				for (HyperObject ho:he.getHyperObjects(cps)) {
-					if (ho.isShopObject()) {
-						ho.setStatus(status);
-					}
+					ho.setStatus(status);
 				}
 				player.sendMessage(L.get("ALL_STATUS_SET"));
 				return true;
-			} else {
-				HyperObject ho = he.getHyperObject(args[1], cps);
-				if (ho.isShopObject()) {
-					ho.setStatus(status);
-					player.sendMessage(L.get("STATUS_SET"));
-					return true;
-				} else {
-					hc.getDataBukkit().writeError("Setting PlayerShopObject status failed.");
-					return true;
-				}
 			}
+			if (he.objectTest(args[1])) {
+				HyperObject ho = he.getHyperObject(args[1], cps);
+				ho.setStatus(status);
+				player.sendMessage(L.get("STATUS_SET"));
+				return true;
+			}
+			FileConfiguration category = hc.gYH().gFC("categories");
+			String categoryString = category.getString(args[1]);
+			if (categoryString != null) {
+				for (String name:hc.gCF().explode(categoryString, ",")) {
+					HyperObject ho = he.getHyperObject(name);
+					if (ho != null) {
+						ho.setStatus(status);
+					}
+				}
+				player.sendMessage(L.get("CATEGORY_STATUS_SET"));
+				return true;
+			}
+			player.sendMessage(L.get("MANAGESHOP_STATUS_NOT_FOUND"));
+			return true;
+
 		} else if (args[0].equalsIgnoreCase("allow")) {
 			if (cps == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));
