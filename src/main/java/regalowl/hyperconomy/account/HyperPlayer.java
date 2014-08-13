@@ -82,7 +82,7 @@ public class HyperPlayer implements HyperAccount {
 			sw.performInsert("hyperconomy_players", values);
 		}
 		checkUUID();
-		checkExternalAccount();
+		//checkExternalAccount();
 	}
 	
 	
@@ -103,8 +103,8 @@ public class HyperPlayer implements HyperAccount {
 		hc.getServer().getScheduler().runTask(hc, new Runnable() {
 			public void run() {
 				checkUUID();
-				checkExternalAccount();
-				checkForNameChange();
+				//checkExternalAccount();
+				//checkForNameChange();
 			}
 		});
 	}
@@ -113,11 +113,12 @@ public class HyperPlayer implements HyperAccount {
 	@SuppressWarnings("deprecation")
 	private void checkExternalAccount() {
 		if (!hc.useExternalEconomy()) {return;}
-			if (name == null) {return;}
-			if (!hc.getEconomy().hasAccount(name)) {
-				hc.getEconomy().createPlayerAccount(name);
-				setBalance(balance);
-			}
+		if (name == null) {return;}
+		if (!hc.getEconomy().hasAccount(name)) {
+			hc.getEconomy().createPlayerAccount(name);
+			setBalance(balance);
+		}
+		checkForNameChange();
 	}
 	
 	public void checkUUID() {
@@ -134,7 +135,7 @@ public class HyperPlayer implements HyperAccount {
 		this.validUUID = true;
 	}
 	
-	public void checkForNameChange() {
+	private void checkForNameChange() {
 		if (uuid == null || uuid == "") {return;}
 		Player p = null;
 		try {
@@ -183,6 +184,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	@SuppressWarnings("deprecation")
 	public double getBalance() {
+		checkExternalAccount();
 		if (hc.useExternalEconomy()) {
 			return hc.getEconomy().getBalance(name);
 		} else {
@@ -434,6 +436,7 @@ public class HyperPlayer implements HyperAccount {
 
 	@SuppressWarnings("deprecation")
 	public void setBalance(double balance) {
+		checkExternalAccount();
 		if (hc.useExternalEconomy()) {
 			if (hc.getEconomy().hasAccount(name)) {
 				hc.getEconomy().withdrawPlayer(name, hc.getEconomy().getBalance(name));
@@ -457,6 +460,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	@SuppressWarnings("deprecation")
 	public void deposit(double amount) {
+		checkExternalAccount();
 		if (hc.useExternalEconomy()) {
 			hc.getEconomy().depositPlayer(name, amount);
 			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getEconomy().getName());
@@ -473,6 +477,7 @@ public class HyperPlayer implements HyperAccount {
 	
 	@SuppressWarnings("deprecation")
 	public void withdraw(double amount) {
+		checkExternalAccount();
 		if (hc.useExternalEconomy()) {
 			hc.getEconomy().withdrawPlayer(name, amount);
 			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getEconomy().getName());
