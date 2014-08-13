@@ -590,6 +590,8 @@ public class BasicObject implements HyperObject {
 	@Override
 	public HyperObjectStatus getStatus() {return null;}
 	@Override
+	public boolean useEconomyStock() {return true;}
+	@Override
 	public void setShop(PlayerShop playerShop) {}
 	@Override
 	public void setBuyPrice(double buyPrice) {}
@@ -601,6 +603,8 @@ public class BasicObject implements HyperObject {
 	public void setStatus(HyperObjectStatus status) {}
 	@Override
 	public void setHyperObject(HyperObject ho) {}
+	@Override
+	public void setUseEconomyStock(boolean state) {}
 
 
 

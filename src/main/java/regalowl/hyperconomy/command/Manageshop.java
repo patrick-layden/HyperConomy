@@ -637,6 +637,22 @@ public class Manageshop implements CommandExecutor {
 				return true;
 			}
 			player.teleport(cps.getLocation1());
+		} else if (args[0].equalsIgnoreCase("stockmode")) {
+			if (!player.hasPermission("hyperconomy.admin")) {
+				player.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+				return true;
+			}
+			if (cps == null) {
+				player.sendMessage(L.get("NO_SHOP_SELECTED"));
+				return true;
+			}
+			if (cps.getUseEconomyStock()) {
+				cps.setUseEconomyStock(false);
+				player.sendMessage(L.get("STOCK_MODE_SET_SHOP"));
+			} else {
+				cps.setUseEconomyStock(true);
+				player.sendMessage(L.get("STOCK_MODE_SET_ECONOMY"));
+			}
 		} else if (args[0].equalsIgnoreCase("list")) {
 			if (!player.hasPermission("hyperconomy.admin")) {
 				player.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));

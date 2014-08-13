@@ -43,6 +43,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private int p2z;
 	private ConcurrentHashMap<String,HyperObject> shopContents = new ConcurrentHashMap<String,HyperObject>();
 	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
+	private boolean useEconomyStock;
 	
 
 	
@@ -55,7 +56,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	
 	
-	public PlayerShop(String name, String economy, HyperAccount owner, String message, SimpleLocation p1, SimpleLocation p2, String banned_objects, String allowed_players) {
+	public PlayerShop(String name, String economy, HyperAccount owner, String message, SimpleLocation p1, SimpleLocation p2, String banned_objects, String allowed_players, boolean useEconomyStock) {
 		hc = HyperConomy.hc;
 		cf = hc.getDataBukkit().getCommonFunctions();
 		ps = this;
@@ -73,6 +74,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		this.p2y = p2.getBlockY();
 		this.p2z = p2.getBlockZ();
 		this.allowed = cf.explode(allowed_players, ",");
+		this.useEconomyStock = useEconomyStock;
 		HyperEconomy he = getHyperEconomy();
 		availableObjects.clear();
 		for (HyperObject ho:he.getHyperObjects()) {
@@ -98,6 +100,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		this.owner = owner;
 		this.world = p1.getWorld();
 		this.message = "";
+		this.useEconomyStock = false;
 		p1x = p1.getBlockX();
 		p1y = p1.getBlockY();
 		p1z = p1.getBlockZ();
@@ -109,6 +112,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		values.put("ECONOMY", economy);
 		values.put("OWNER", owner.getName());
 		values.put("WORLD", world);
+		values.put("USE_ECONOMY_STOCK", "0");
 		values.put("P1X", p1x+"");
 		values.put("P1Y", p1y+"");
 		values.put("P1Z", p1z+"");
@@ -142,13 +146,13 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			double stock = result.getDouble("QUANTITY");
 			HyperObjectStatus status = HyperObjectStatus.fromString(result.getString("STATUS"));
 			if (ho.getType() == HyperObjectType.ITEM && ho.isCompositeObject()) {
-				HyperObject pso = new CompositeShopItem(ps, (CompositeItem) ho, stock, buyPrice, sellPrice, maxStock, status);
+				HyperObject pso = new CompositeShopItem(ps, (CompositeItem) ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 				shopContents.put(ho.getName(), pso);
 			} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
-				HyperObject pso = new ShopEnchant(ps, ho, stock, buyPrice, sellPrice, maxStock, status);
+				HyperObject pso = new ShopEnchant(ps, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 				shopContents.put(ho.getName(), pso);
 			} else {
-				BasicShopObject pso = new BasicShopObject(ps, ho, stock, buyPrice, sellPrice, maxStock, status);
+				BasicShopObject pso = new BasicShopObject(ps, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 				shopContents.put(ho.getName(), pso);
 			}
 		}
@@ -243,6 +247,22 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		availableObjects.clear();
 		availableObjects.addAll(newAvailableObjects);
 	}
+	public void setUseEconomyStock(boolean state) {
+		this.useEconomyStock = state;
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		HashMap<String,String> values = new HashMap<String,String>();
+		conditions.put("NAME", name);
+		if (useEconomyStock) {
+			values.put("USE_ECONOMY_STOCK", "1");
+		} else {
+			values.put("USE_ECONOMY_STOCK", "0");
+		}
+		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
+		for (HyperObject ho:shopContents.values()) {
+			ho.setUseEconomyStock(useEconomyStock);
+		}
+	}
+	
 	
 	
 	public boolean inShop(int x, int y, int z, String world) {
@@ -443,6 +463,10 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		return new Location(Bukkit.getWorld(world), p2x, p2y, p2z);
 	}
 	
+	public boolean getUseEconomyStock() {
+		return useEconomyStock;
+	}
+	
 	public HyperAccount getOwner() {
 		return owner;
 	}
@@ -500,17 +524,17 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		ws.addParameter(1000000);
 		ws.addParameter("none");
 		if (hyperObject.getType() == HyperObjectType.ITEM && hyperObject.isCompositeObject()) {
-			CompositeShopItem pso = new CompositeShopItem(this, (CompositeItem)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
+			CompositeShopItem pso = new CompositeShopItem(this, (CompositeItem)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE, useEconomyStock);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;
 		} else if (hyperObject.getType() == HyperObjectType.ENCHANTMENT) {
-			HyperObject pso = new ShopEnchant(ps, hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
+			HyperObject pso = new ShopEnchant(ps, hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE, useEconomyStock);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;
 		} else {
-			HyperObject pso = new BasicShopObject(this, (BasicObject)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE);
+			HyperObject pso = new BasicShopObject(this, (BasicObject)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE, useEconomyStock);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;

@@ -11,8 +11,8 @@ import regalowl.hyperconomy.shop.PlayerShop;
 public class CompositeShopItem extends BasicShopObject implements HyperObject {
 
 
-	public CompositeShopItem(PlayerShop playerShop, CompositeItem ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status) {
-		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status);
+	public CompositeShopItem(PlayerShop playerShop, CompositeItem ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status, boolean useEconomyStock) {
+		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 	}
 
 

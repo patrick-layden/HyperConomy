@@ -12,8 +12,8 @@ public class ShopEnchant extends BasicShopObject implements HyperObject {
 
 
 
-	public ShopEnchant(PlayerShop playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status) {
-		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status);
+	public ShopEnchant(PlayerShop playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status, boolean useEconomyStock) {
+		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 	}
 
 	@Override

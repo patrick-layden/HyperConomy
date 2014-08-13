@@ -433,6 +433,10 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * @return This PlayerShop object's trade status. (Can only be used with PlayerShop objects.)
 	 */
 	public HyperObjectStatus getStatus();
+	/**
+	 * @return Returns true if this playershop object is set to use its economy's stock levels.
+	 */
+	public boolean useEconomyStock();
 	/**Sets this PlayerShop object's Shop.
 	 * @param playerShop
 	 */
@@ -457,4 +461,8 @@ public interface HyperObject extends Comparable<HyperObject> {
 	 * @param ho
 	 */
 	public void setHyperObject(HyperObject ho);
+	/**Sets this PlayerShop object to use or not use its economy's stock levels.
+	 * @param ho
+	 */
+	public void setUseEconomyStock(boolean state);
 }

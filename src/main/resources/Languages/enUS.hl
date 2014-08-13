@@ -371,7 +371,7 @@ SERVER_STARTING: &dThe web server is starting.
 SERVER_STOPPING: &dThe web server is stopping.
 SERVER_FAILED: &4The web server is failed.
 CANT_USE_ACCOUNT: You cannot play on this server using HyperConomy's global shop account.
-MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, buyprice, sellprice, maxstock, status, message, setstock, owner, or goto]
+MANAGESHOP_HELP: &9Use &a/manageshop &b[select, create, delete, add, remove, allow, set1, set2, price, buyprice, sellprice, maxstock, status, message, setstock, owner, stockmode or goto]
 MANAGESHOP_HELP2: &9You currently have the shop &a%n &9selected.
 MANAGESHOP_HELP3: &9The owner of &a%n &9is:
 MANAGESHOP_HELP4: &9The following players are allowed to manage the shop:
@@ -394,6 +394,8 @@ MANAGESHOP_ALLOW_HELP: &4Use /manageshop allow [player]
 MANAGESHOP_REMOVE_HELP: &4Use /manageshop remove [object] [amount]
 MANAGESHOP_SETSHOP_HELP: &4Use /manageshop setshop [object] [amount]
 MANAGESHOP_MESSAGE_INVALID: &4Use /manageshop message [new entry message]
+STOCK_MODE_SET_ECONOMY: &6The shop will now use its economy's object stocks.
+STOCK_MODE_SET_SHOP: &6The shop will now use its own personal set of object stocks.
 OWNER_SET: &6Owner set.
 STATUS_SET: &6Status set.
 PRICE_SET: &6Price set.

@@ -49,7 +49,7 @@ public class HyperShopManager {
 				String name = shopData.getString("NAME");
 				SimpleLocation p1 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
 				SimpleLocation p2 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
-				Shop shop = new PlayerShop(name, shopData.getString("ECONOMY"), hc.getHyperPlayerManager().getAccount(shopData.getString("OWNER")), shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"), shopData.getString("ALLOWED_PLAYERS"));
+				Shop shop = new PlayerShop(name, shopData.getString("ECONOMY"), hc.getHyperPlayerManager().getAccount(shopData.getString("OWNER")), shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"), shopData.getString("ALLOWED_PLAYERS"), (shopData.getString("USE_ECONOMY_STOCK").equalsIgnoreCase("1")) ? true : false);
 				shops.put(name, shop);
 			} else if (type.equalsIgnoreCase("global")) {
 				if (useShops) {continue;}

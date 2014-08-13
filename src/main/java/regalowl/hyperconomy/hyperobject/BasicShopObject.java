@@ -24,8 +24,9 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	protected double sellPrice;
 	protected HyperObjectStatus status;
 	protected int maxStock;
+	protected boolean useEconomyStock;
 	
-	public BasicShopObject(PlayerShop playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status) {
+	public BasicShopObject(PlayerShop playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status, boolean useEconomyStock) {
 		hc = HyperConomy.hc;
 		sw = hc.getSQLWrite();
 		this.playerShop = playerShop;
@@ -35,6 +36,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		this.sellPrice = sellPrice;
 		this.maxStock = maxStock;
 		this.status = status;
+		this.useEconomyStock = useEconomyStock;
 	}
 	
 
@@ -48,7 +50,11 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	}
 	@Override
 	public double getStock() {
-		return stock;
+		if (useEconomyStock) {
+			return ho.getStock();
+		} else {
+			return stock;
+		}
 	}
 	@Override
 	public double getBuyPrice() {
@@ -65,6 +71,10 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	@Override
 	public int getMaxStock() {
 		return maxStock;
+	}
+	@Override
+	public boolean useEconomyStock() {
+		return useEconomyStock;
 	}
 	@Override
 	public void setHyperObject(HyperObject ho) {
@@ -88,14 +98,18 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	}
 	@Override
 	public void setStock(double stock) {
-		if (stock < 0.0) {stock = 0.0;}
-		this.stock = stock;
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET QUANTITY=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
-		ws.addParameter(stock);
-		ws.addParameter(playerShop.getName());
-		ws.addParameter(ho.getName());
-		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.PLAYER_SHOP_STOCK);
+		if (useEconomyStock) {
+			ho.setStock(stock);
+		} else {
+			if (stock < 0.0) {stock = 0.0;}
+			this.stock = stock;
+			WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET QUANTITY=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+			ws.addParameter(stock);
+			ws.addParameter(playerShop.getName());
+			ws.addParameter(ho.getName());
+			sw.addToQueue(ws);
+			hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.PLAYER_SHOP_STOCK);
+		}
 	}
 	@Override
 	public void setBuyPrice(double buyPrice) {
@@ -136,6 +150,10 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		ws.addParameter(ho.getName());
 		sw.addToQueue(ws);
 		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.TRADE_STATUS);
+	}
+	@Override
+	public void setUseEconomyStock(boolean state) {
+		this.useEconomyStock = state;
 	}
 	
 	
