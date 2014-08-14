@@ -558,6 +558,15 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("ALL_STATUS_SET"));
 				return true;
 			}
+			if (args[1].equalsIgnoreCase("instock")) {
+				for (HyperObject ho:he.getHyperObjects(cps)) {
+					if (ho.getStock() > 0) {
+						ho.setStatus(status);
+					}
+				}
+				player.sendMessage(L.get("INSTOCK_STATUS_SET"));
+				return true;
+			}
 			if (he.objectTest(args[1])) {
 				HyperObject ho = he.getHyperObject(args[1], cps);
 				ho.setStatus(status);
@@ -567,8 +576,9 @@ public class Manageshop implements CommandExecutor {
 			FileConfiguration category = hc.gYH().gFC("categories");
 			String categoryString = category.getString(args[1]);
 			if (categoryString != null) {
-				for (String name:hc.gCF().explode(categoryString, ",")) {
-					HyperObject ho = he.getHyperObject(name);
+				ArrayList<String> names = hc.gCF().explode(categoryString, ",");
+				for (String name:names) {
+					HyperObject ho = he.getHyperObject(name, cps);
 					if (ho != null) {
 						ho.setStatus(status);
 					}
