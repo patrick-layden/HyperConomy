@@ -420,8 +420,35 @@ public class DatabaseUpdater {
 				sw.convertQueue("DROP TABLE IF EXISTS hyperconomy_"+table);
 			}
 		}
-		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(100) NOT NULL PRIMARY KEY, VALUE TEXT, TIME DATETIME NOT NULL)");
-		sw.convertQueue(hc.getSQLWrite().longText("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(100) NOT NULL, ECONOMY VARCHAR(100) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', DATA TEXT, PRIMARY KEY (NAME, ECONOMY))"));
+
+		Table t = hc.getDataBukkit().addTable("hyperconomy_settings");
+		Field f = t.addField("SETTING", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
+		f = t.addField("VALUE", FieldType.TEXT);
+		f = t.addField("TIME", FieldType.DATETIME);f.setNotNull();
+		
+		
+		ArrayList<Field> compositeKey = new ArrayList<Field>();
+		t = hc.getDataBukkit().addTable("hyperconomy_objects");
+		f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();
+		compositeKey.add(f);
+		f = t.addField("ECONOMY", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();
+		compositeKey.add(f);
+		f = t.addField("DISPLAY_NAME", FieldType.VARCHAR);f.setFieldSize(255);
+		f = t.addField("ALIASES", FieldType.VARCHAR);f.setFieldSize(1000);
+		f = t.addField("TYPE", FieldType.TINYTEXT);
+		f = t.addField("VALUE", FieldType.DOUBLE);
+		f = t.addField("STATIC", FieldType.TINYTEXT);
+		f = t.addField("STATICPRICE", FieldType.DOUBLE);
+		f = t.addField("STOCK", FieldType.DOUBLE);
+		f = t.addField("MEDIAN", FieldType.DOUBLE);
+		f = t.addField("INITIATION", FieldType.TINYTEXT);
+		f = t.addField("STARTPRICE", FieldType.DOUBLE);
+		f = t.addField("CEILING", FieldType.DOUBLE);
+		f = t.addField("FLOOR", FieldType.DOUBLE);
+		f = t.addField("MAXSTOCK", FieldType.DOUBLE);f.setNotNull();f.setDefault("1000000");
+		f = t.addField("DATA", FieldType.TEXT);
+		t.setCompositeKey(compositeKey);
+		
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_log (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT)");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE)");
@@ -430,8 +457,8 @@ public class DatabaseUpdater {
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_banks (NAME VARCHAR(100) NOT NULL PRIMARY KEY, BALANCE DOUBLE NOT NULL DEFAULT '0', OWNERS VARCHAR(255), MEMBERS VARCHAR(255))");
 
-		Table t = hc.getDataBukkit().addTable("hyperconomy_shops");
-		Field f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
+		t = hc.getDataBukkit().addTable("hyperconomy_shops");
+		f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
 		f = t.addField("TYPE", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
 		f = t.addField("ECONOMY", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
 		f = t.addField("OWNER", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
