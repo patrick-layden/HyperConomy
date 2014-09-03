@@ -12,8 +12,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import regalowl.databukkit.file.FileTools;
+import regalowl.databukkit.sql.Field;
+import regalowl.databukkit.sql.FieldType;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SyncSQLWrite;
+import regalowl.databukkit.sql.Table;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.display.SignType;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
@@ -370,11 +373,11 @@ public class DatabaseUpdater {
 			if (version < 1.34) {
 				//allow player name to be null in hyperplayer table and add new autoincrement primary key
 				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.34");
-				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players_temp (ID INTEGER NOT NULL PRIMARY KEY, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
+				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players_temp (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 				sw.writeQueue();
 				sw.queue("INSERT INTO hyperconomy_players_temp (NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) SELECT NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT FROM hyperconomy_players");
 				sw.queue("DROP TABLE hyperconomy_players");
-				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players (ID INTEGER NOT NULL PRIMARY KEY, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
+				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 				sw.writeQueue();
 				sw.queue("INSERT INTO hyperconomy_players (NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) SELECT NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT FROM hyperconomy_players_temp");
 				sw.queue("DROP TABLE hyperconomy_players_temp");
@@ -382,15 +385,24 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.35) {
 				//adds ability for player shops to behave like server shops
-				hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.35");
-				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shops_temp (NAME VARCHAR(100) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, USE_ECONOMY_STOCK VARCHAR(100) NOT NULL DEFAULT '1', MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
-				sw.writeQueue();
-				sw.queue("INSERT INTO hyperconomy_shops_temp (NAME, TYPE, ECONOMY, OWNER, WORLD, MESSAGE, BANNED_OBJECTS, ALLOWED_PLAYERS, P1X, P1Y, P1Z, P2X, P2Y, P2Z) SELECT NAME, TYPE, ECONOMY, OWNER, WORLD, MESSAGE, BANNED_OBJECTS, ALLOWED_PLAYERS, P1X, P1Y, P1Z, P2X, P2Y, P2Z FROM hyperconomy_shops");
-				sw.queue("DROP TABLE hyperconomy_shops");
-				sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shops (NAME VARCHAR(100) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, USE_ECONOMY_STOCK VARCHAR(100) NOT NULL DEFAULT '1', MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
-				sw.writeQueue();
-				sw.queue("INSERT INTO hyperconomy_shops (NAME, TYPE, ECONOMY, OWNER, WORLD, MESSAGE, BANNED_OBJECTS, ALLOWED_PLAYERS, P1X, P1Y, P1Z, P2X, P2Y, P2Z) SELECT NAME, TYPE, ECONOMY, OWNER, WORLD, MESSAGE, BANNED_OBJECTS, ALLOWED_PLAYERS, P1X, P1Y, P1Z, P2X, P2Y, P2Z FROM hyperconomy_shops_temp");
-				sw.queue("DROP TABLE hyperconomy_shops_temp");
+				Table t = hc.getDataBukkit().addTable("hyperconomy_shops");
+				Field f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
+				f = t.addField("TYPE", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				f = t.addField("ECONOMY", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				f = t.addField("OWNER", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				f = t.addField("WORLD", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				Field afterField = f;
+				f = t.addField("MESSAGE", FieldType.TEXT);f.setNotNull();
+				f = t.addField("BANNED_OBJECTS", FieldType.TEXT);f.setNotNull();
+				f = t.addField("ALLOWED_PLAYERS", FieldType.TEXT);f.setNotNull();
+				f = t.addField("P1X", FieldType.DOUBLE);f.setNotNull();
+				f = t.addField("P1Y", FieldType.DOUBLE);f.setNotNull();
+				f = t.addField("P1Z", FieldType.DOUBLE);f.setNotNull();
+				f = t.addField("P2X", FieldType.DOUBLE);f.setNotNull();
+				f = t.addField("P2Y", FieldType.DOUBLE);f.setNotNull();
+				f = t.addField("P2Z", FieldType.DOUBLE);f.setNotNull();
+				f = t.generateField("USE_ECONOMY_STOCK", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setDefault("1");
+				t.addField(f, afterField);
 				sw.queue("UPDATE hyperconomy_shops SET USE_ECONOMY_STOCK = '0' WHERE TYPE = 'player'");
 				sw.queue("UPDATE hyperconomy_settings SET VALUE = '1.35' WHERE SETTING = 'version'");
 			}
@@ -410,14 +422,31 @@ public class DatabaseUpdater {
 		}
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_settings (SETTING VARCHAR(100) NOT NULL PRIMARY KEY, VALUE TEXT, TIME DATETIME NOT NULL)");
 		sw.convertQueue(hc.getSQLWrite().longText("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(100) NOT NULL, ECONOMY VARCHAR(100) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', DATA TEXT, PRIMARY KEY (NAME, ECONOMY))"));
-		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players (ID INTEGER NOT NULL PRIMARY KEY, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
+		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_log (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, TIME DATETIME, CUSTOMER TINYTEXT, ACTION TINYTEXT, OBJECT TINYTEXT, AMOUNT DOUBLE, MONEY DOUBLE, TAX DOUBLE, STORE TINYTEXT, TYPE TINYTEXT)");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_history (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, OBJECT TINYTEXT, ECONOMY TINYTEXT, TIME DATETIME, PRICE DOUBLE)");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_audit_log (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, TIME DATETIME NOT NULL, ACCOUNT TINYTEXT NOT NULL, ACTION TINYTEXT NOT NULL, AMOUNT DOUBLE NOT NULL, ECONOMY TINYTEXT NOT NULL)");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (SHOP VARCHAR(100) NOT NULL, HYPEROBJECT VARCHAR(100) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL, PRIMARY KEY(SHOP, HYPEROBJECT))");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_banks (NAME VARCHAR(100) NOT NULL PRIMARY KEY, BALANCE DOUBLE NOT NULL DEFAULT '0', OWNERS VARCHAR(255), MEMBERS VARCHAR(255))");
-		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shops (NAME VARCHAR(100) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, USE_ECONOMY_STOCK VARCHAR(100) NOT NULL DEFAULT '1', MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
+
+		Table t = hc.getDataBukkit().addTable("hyperconomy_shops");
+		Field f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
+		f = t.addField("TYPE", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+		f = t.addField("ECONOMY", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+		f = t.addField("OWNER", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+		f = t.addField("WORLD", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+		f = t.addField("USE_ECONOMY_STOCK", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setDefault("1");
+		f = t.addField("MESSAGE", FieldType.TEXT);f.setNotNull();
+		f = t.addField("BANNED_OBJECTS", FieldType.TEXT);f.setNotNull();
+		f = t.addField("ALLOWED_PLAYERS", FieldType.TEXT);f.setNotNull();
+		f = t.addField("P1X", FieldType.DOUBLE);f.setNotNull();
+		f = t.addField("P1Y", FieldType.DOUBLE);f.setNotNull();
+		f = t.addField("P1Z", FieldType.DOUBLE);f.setNotNull();
+		f = t.addField("P2X", FieldType.DOUBLE);f.setNotNull();
+		f = t.addField("P2Y", FieldType.DOUBLE);f.setNotNull();
+		f = t.addField("P2Z", FieldType.DOUBLE);f.setNotNull();
+		
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_info_signs (WORLD VARCHAR(100) NOT NULL, X INTEGER NOT NULL, Y INTEGER NOT NULL, Z INTEGER NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, TYPE VARCHAR(255) NOT NULL, MULTIPLIER INTEGER NOT NULL, ECONOMY VARCHAR(255) NOT NULL, ECLASS VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_item_displays (WORLD VARCHAR(100) NOT NULL, X DOUBLE NOT NULL, Y DOUBLE NOT NULL, Z DOUBLE NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
 		sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_economies (NAME VARCHAR(100) NOT NULL PRIMARY KEY, HYPERACCOUNT VARCHAR(255) NOT NULL)");
@@ -426,6 +455,8 @@ public class DatabaseUpdater {
 			sw.convertQueue("DELETE FROM hyperconomy_settings");
 			sw.convertQueue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getDataManager().getDatabaseUpdater().getVersion()+"', NOW() )");
 		}
+		sw.writeQueue();
+		HyperConomy.hc.getDataBukkit().saveTables();
 	}
 	
 	

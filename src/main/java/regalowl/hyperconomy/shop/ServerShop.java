@@ -294,7 +294,11 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return false;
 	}
 	public ArrayList<HyperObject> getTradeableObjects() {
-		return availableObjects;
+		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
+		for (HyperObject ho:availableObjects) {
+			available.add(ho);
+		}
+		return available;
 	}
 	
 	public void unBanAllObjects() {

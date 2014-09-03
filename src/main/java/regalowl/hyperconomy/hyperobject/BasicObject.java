@@ -81,8 +81,8 @@ public class BasicObject implements HyperObject {
 	
 	@Override
 	public int compareTo(HyperObject ho) {
-		if (name == null || ho == null) {return 0;}
-		return name.compareTo(ho.getName());
+		if (displayName == null || ho == null) {return 0;}
+		return displayName.compareTo(ho.getDisplayName());
 	}
 	@Override
 	public String getName() {
