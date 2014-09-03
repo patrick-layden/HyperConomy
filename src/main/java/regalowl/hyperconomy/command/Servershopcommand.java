@@ -73,17 +73,22 @@ public class Servershopcommand implements CommandExecutor {
 		}
 		
 		if (args[0].equalsIgnoreCase("select") || args[0].equalsIgnoreCase("s")) {
-			if (!hsm.shopExists(args[1])) {
-				player.sendMessage(L.get("SHOP_NOT_EXIST"));
-				return true;
+			try {
+				if (!hsm.shopExists(args[1])) {
+					player.sendMessage(L.get("SHOP_NOT_EXIST"));
+					return true;
+				}
+				Shop s = hsm.getShop(args[1]);
+				if (!(s instanceof ServerShop || s instanceof GlobalShop)) {
+					player.sendMessage(L.get("ONLY_SERVER_SHOPS"));
+					return true;
+				}
+				currentShop.put(hp, s);
+				player.sendMessage(L.get("SHOP_SELECTED"));
+			} catch (Exception e) {
+				hc.getDebugMode().debugWriteError(e);
+				player.sendMessage(L.get("SERVERSHOP_SELECT_INVALID"));
 			}
-			Shop s = hsm.getShop(args[1]);
-			if (!(s instanceof ServerShop || s instanceof GlobalShop)) {
-				player.sendMessage(L.get("ONLY_SERVER_SHOPS"));
-				return true;
-			}
-			currentShop.put(hp, s);
-			player.sendMessage(L.get("SHOP_SELECTED"));
 		} else if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("i")) {
 			if (css == null) {
 				player.sendMessage(L.get("NO_SHOP_SELECTED"));

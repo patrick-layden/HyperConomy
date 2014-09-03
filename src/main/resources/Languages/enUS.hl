@@ -257,8 +257,9 @@ MEDIAN_SET: &6%n median set!
 MESSAGE_SET: &6Message set!
 P1_SET: &6Shop location p1 has been set!
 P2_SET: &6Shop location p2 has been set!
-SERVERSHOP_INVALID: &9Use &a/servershop &b['info','p1','p2','owner','list','removeshop','rename','message','allow','ban','addcategory','removecategory','economy','goto'] [shop name]
+SERVERSHOP_INVALID: &9Use &a/servershop &b['select','info','p1','p2','owner','list','removeshop','rename','message','allow','ban','addcategory','removecategory','economy','goto'] [shop name]
 SERVERSHOP_OWNER_INVALID: &4Invalid Parameters. Use /servershop owner [owner]
+SERVERSHOP_SELECT_INVALID: &4Invalid Parameters. Use /servershop select [name]
 SERVERSHOP_REMOVE_INVALID: &4Invalid Parameters. Use /servershop removeshop
 SERVERSHOP_RENAME_INVALID: &4Invalid Parameters. Use /servershop rename [name]
 SERVERSHOP_MESSAGE_INVALID: &4Invalid Parameters. Use /servershop message [message]
