@@ -21,8 +21,6 @@ public class BasicObject implements HyperObject {
 	
 
 	private static final long serialVersionUID = 3220675400415233555L;
-	//protected HyperConomy hc;
-	//protected CommonFunctions cf;
 	protected String name;
 	protected String displayName;
 	protected ArrayList<String> aliases = new ArrayList<String>();
@@ -565,7 +563,7 @@ public class BasicObject implements HyperObject {
 	
 	//COMPOSITE ITEM METHODS
 	@Override
-	public ConcurrentHashMap<HyperObject, Double> getComponents() {return null;}
+	public ConcurrentHashMap<String, Double> getComponents() {return null;}
 	@Override
 	public void setComponents(String components) {}
 	

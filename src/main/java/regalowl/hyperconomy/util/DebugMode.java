@@ -7,6 +7,12 @@ import regalowl.hyperconomy.HyperConomy;
 
 public class DebugMode {
 
+	public DebugMode() {
+		HyperConomy hc = HyperConomy.hc;
+		if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
+		hc.getDataBukkit().setDebug(true);
+	}
+	
 	public void debugWriteError(Exception e) {
 		HyperConomy hc = HyperConomy.hc;
 		if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}

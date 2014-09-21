@@ -32,7 +32,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private static final long serialVersionUID = -159740615025262195L;
 	private String name;
 	private String world;
-	private HyperAccount owner;
+	private String owner;
 	private ArrayList<String> allowed = new ArrayList<String>();
 	private String economy;
 	private String message;
@@ -43,31 +43,22 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private int p2y;
 	private int p2z;
 	private ConcurrentHashMap<String,HyperObject> shopContents = new ConcurrentHashMap<String,HyperObject>();
-	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
+	private ArrayList<String> availableObjects = new ArrayList<String>();
 	private boolean useEconomyStock;
 	private boolean deleted;
-	
-
-	
-	private HyperConomy hc;
-	private LanguageFile L;
-	private PlayerShop ps;
-	private CommonFunctions cf;
 	private boolean useshopexitmessage;
 	private ArrayList<String> inShop = new ArrayList<String>();
 	
 	
 	
 	public PlayerShop(String name, String economy, HyperAccount owner, String message, SimpleLocation p1, SimpleLocation p2, String banned_objects, String allowed_players, boolean useEconomyStock) {
-		hc = HyperConomy.hc;
-		cf = hc.getDataBukkit().getCommonFunctions();
-		ps = this;
-		L = hc.getLanguageFile();
+		HyperConomy hc = HyperConomy.hc;
+		CommonFunctions cf = hc.getDataBukkit().getCommonFunctions();
 		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");	
 		this.deleted = false;
 		this.name = name;
 		this.economy = economy;
-		this.owner = owner;
+		this.owner = owner.getName();
 		this.message = message;
 		this.world = p1.getWorld();
 		this.p1x = p1.getBlockX();
@@ -81,27 +72,24 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		HyperEconomy he = getHyperEconomy();
 		availableObjects.clear();
 		for (HyperObject ho:he.getHyperObjects()) {
-			availableObjects.add(ho);
+			availableObjects.add(ho.getName());
 		}
 		ArrayList<String> unavailable = hc.gCF().explode(banned_objects,",");
 		for (String objectName : unavailable) {
 			HyperObject ho = hc.getDataManager().getEconomy(economy).getHyperObject(objectName);
-			availableObjects.remove(ho);
+			availableObjects.remove(ho.getName());
 		}
 		loadPlayerShopObjects();
 	}
 	
 	
 	public PlayerShop(String shopName, String economy, HyperAccount owner, SimpleLocation p1, SimpleLocation p2) {
-		hc = HyperConomy.hc;
-		cf = hc.getDataBukkit().getCommonFunctions();
-		ps = this;
-		L = hc.getLanguageFile();
+		HyperConomy hc = HyperConomy.hc;
 		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");
 		this.deleted = false;
 		this.name = shopName;
 		this.economy = economy;
-		this.owner = owner;
+		this.owner = owner.getName();
 		this.world = p1.getWorld();
 		this.message = "";
 		this.useEconomyStock = false;
@@ -130,11 +118,12 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		hc.getSQLWrite().performInsert("hyperconomy_shops", values);
 		HyperEconomy he = getHyperEconomy();
 		for (HyperObject ho:he.getHyperObjects()) {
-			availableObjects.add(ho);
+			availableObjects.add(ho.getName());
 		}
 	}
 
 	private void loadPlayerShopObjects() {
+		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		BasicStatement statement = new BasicStatement("SELECT * FROM hyperconomy_shop_objects WHERE SHOP = ?", hc.getDataBukkit());
 		statement.addParameter(name);
@@ -150,13 +139,13 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			double stock = result.getDouble("QUANTITY");
 			HyperObjectStatus status = HyperObjectStatus.fromString(result.getString("STATUS"));
 			if (ho.getType() == HyperObjectType.ITEM && ho.isCompositeObject()) {
-				HyperObject pso = new CompositeShopItem(ps, (CompositeItem) ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
+				HyperObject pso = new CompositeShopItem(name, (CompositeItem) ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 				shopContents.put(ho.getName(), pso);
 			} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
-				HyperObject pso = new ShopEnchant(ps, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
+				HyperObject pso = new ShopEnchant(name, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 				shopContents.put(ho.getName(), pso);
 			} else {
-				BasicShopObject pso = new BasicShopObject(ps, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
+				BasicShopObject pso = new BasicShopObject(name, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 				shopContents.put(ho.getName(), pso);
 			}
 		}
@@ -169,6 +158,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void setPoint1(String world, int x, int y, int z) {
+		HyperConomy hc = HyperConomy.hc;
 		this.world = world;
 		p1x = x;
 		p1y = y;
@@ -184,6 +174,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	public void setPoint2(String world, int x, int y, int z) {
+		HyperConomy hc = HyperConomy.hc;
 		this.world = world;
 		p2x = x;
 		p2y = y;
@@ -207,6 +198,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	
 	public void setMessage(String message) {
+		HyperConomy hc = HyperConomy.hc;
 		this.message = message;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
@@ -217,10 +209,13 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void setDefaultMessage() {
+		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		setMessage(L.get("SHOP_LINE_BREAK")+"%n&aWelcome to "+name+"%n&9Type &b/hc &9for help.%n"+L.get("SHOP_LINE_BREAK"));
 	}
 	
 	public void setWorld(String world) {
+		HyperConomy hc = HyperConomy.hc;
 		this.world = world;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
@@ -231,6 +226,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void setName(String name) {
+		HyperConomy hc = HyperConomy.hc;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", this.name);
@@ -241,23 +237,17 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void setEconomy(String economy) {
+		HyperConomy hc = HyperConomy.hc;
 		this.economy = economy;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
 		values.put("ECONOMY", economy);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		HyperEconomy he = hc.getDataManager().getEconomy(economy);
-		ArrayList<HyperObject> newAvailableObjects = new ArrayList<HyperObject>();
-		for (HyperObject ho:availableObjects) {
-			HyperObject nObj = he.getHyperObject(ho.getName());
-			newAvailableObjects.add(nObj);
-		}
-		availableObjects.clear();
-		availableObjects.addAll(newAvailableObjects);
 		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	public void setUseEconomyStock(boolean state) {
+		HyperConomy hc = HyperConomy.hc;
 		this.useEconomyStock = state;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
@@ -300,6 +290,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void sendEntryMessage(Player player) {
+		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		if (message == "") {setDefaultMessage();}
 		if (message.equalsIgnoreCase("none")) {return;}
 		String[] lines = message.replace("_", " ").split("%n");
@@ -323,11 +315,12 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 
 	public void saveAvailable() {
+		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = getHyperEconomy();
 		ArrayList<String> unavailable = new ArrayList<String>();
 		ArrayList<HyperObject> allObjects = he.getHyperObjects();
 		for (HyperObject ho:allObjects) {
-			if (!availableObjects.contains(ho)) {
+			if (!availableObjects.contains(ho.getName())) {
 				unavailable.add(ho.getName());
 			}
 		}
@@ -356,7 +349,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		if (ho.isShopObject()) {
 			co = ho.getHyperObject();
 		}
-		if (availableObjects.contains(co)) {
+		if (availableObjects.contains(co.getName())) {
 			return false;
 		}
 		return true;
@@ -404,7 +397,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	public void unBanAllObjects() {
 		availableObjects.clear();
 		for (HyperObject ho:getHyperEconomy().getHyperObjects()) {
-			availableObjects.add(ho);
+			availableObjects.add(ho.getName());
 		}
 		saveAvailable();
 	}
@@ -420,8 +413,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			} else {
 				add = ho;
 			}
-			if (!availableObjects.contains(add)) {
-				availableObjects.add(add);
+			if (!availableObjects.contains(add.getName())) {
+				availableObjects.add(add.getName());
 			}
 		}
 		saveAvailable();
@@ -434,8 +427,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			} else {
 				remove = ho;
 			}
-			if (availableObjects.contains(remove)) {
-				availableObjects.remove(remove);
+			if (availableObjects.contains(remove.getName())) {
+				availableObjects.remove(remove.getName());
 			}
 		}
 		saveAvailable();
@@ -480,11 +473,13 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public HyperAccount getOwner() {
-		return owner;
+		HyperConomy hc = HyperConomy.hc;
+		return hc.getHyperPlayerManager().getAccount(owner);
 	}
 	
 	public void setOwner(HyperAccount owner) {
-		this.owner = owner;
+		HyperConomy hc = HyperConomy.hc;
+		this.owner = owner.getName();
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
@@ -505,6 +500,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void deleteShop() {
+		HyperConomy hc = HyperConomy.hc;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		conditions.put("NAME", name);
 		hc.getSQLWrite().performDelete("hyperconomy_shops", conditions);
@@ -518,6 +514,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public void removePlayerShopObject(HyperObject hyperObject) {
+		HyperConomy hc = HyperConomy.hc;
 		HyperObject pso = getPlayerShopObject(hyperObject);
 		if (pso == null) {
 			return;
@@ -528,6 +525,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		}
 	}
 	public HyperObject getPlayerShopObject(HyperObject hyperObject) {
+		HyperConomy hc = HyperConomy.hc;
 		if (shopContents.containsKey(hyperObject.getName())) {
 			return shopContents.get(hyperObject.getName());
 		}
@@ -540,17 +538,17 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		ws.addParameter(1000000);
 		ws.addParameter("none");
 		if (hyperObject.getType() == HyperObjectType.ITEM && hyperObject.isCompositeObject()) {
-			CompositeShopItem pso = new CompositeShopItem(this, (CompositeItem)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE, useEconomyStock);
+			CompositeShopItem pso = new CompositeShopItem(name, (CompositeItem)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE, useEconomyStock);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;
 		} else if (hyperObject.getType() == HyperObjectType.ENCHANTMENT) {
-			HyperObject pso = new ShopEnchant(ps, hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE, useEconomyStock);
+			HyperObject pso = new ShopEnchant(name, hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE, useEconomyStock);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;
 		} else {
-			HyperObject pso = new BasicShopObject(this, (BasicObject)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE, useEconomyStock);
+			HyperObject pso = new BasicShopObject(name, (BasicObject)hyperObject, 0.0, 0.0, 0.0, 100000, HyperObjectStatus.NONE, useEconomyStock);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;
@@ -564,6 +562,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 
 	public HyperEconomy getHyperEconomy() {
+		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		if (he == null) {
 			hc.getDataBukkit().writeError("Null HyperEconomy for economy: " + economy + ", shop: " + name);
@@ -575,6 +574,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 
 	public void updatePlayerStatus() {
+		HyperConomy hc = HyperConomy.hc;
+		LanguageFile L = hc.getLanguageFile();
 		for (Player p : hc.getHyperPlayerManager().getOnlinePlayers()) {
 			if (inShop.contains(p.getName())) {
 				if (!inShop(p)) {
@@ -618,7 +619,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		if (allowed.contains(ha.getName())) {
 			return true;
 		}
-		if (ha.getName().equalsIgnoreCase(owner.getName())) {
+		if (ha.getName().equalsIgnoreCase(owner)) {
 			return true;
 		}
 		if (ha instanceof HyperPlayer) {
@@ -630,6 +631,8 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		return false;
 	}
 	public void saveAllowed() {
+		HyperConomy hc = HyperConomy.hc;
+		CommonFunctions cf = hc.getDataBukkit().getCommonFunctions();
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
@@ -693,5 +696,12 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	public boolean deleted() {
 		return deleted;
+	}
+	
+	public void updateHyperObject(HyperObject ho) {
+		if (!ho.isShopObject()) return;
+		if (!ho.getShop().equals(this)) return;
+		if (!shopContents.containsKey(ho.getName())) return;
+		shopContents.put(ho.getName(), ho);
 	}
 }

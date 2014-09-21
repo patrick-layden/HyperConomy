@@ -352,7 +352,7 @@ public interface HyperObject extends Comparable<HyperObject>, Serializable {
 	 * @return A Map of this composite item's components with the HyperObject as the key and the recipe ratio as the value.  (Can only be used with
 	 * composite items.)
 	 */
-	public ConcurrentHashMap<HyperObject,Double> getComponents();
+	public ConcurrentHashMap<String,Double> getComponents();
 	/**Sets this object's component list string.  (Can only be used with composite items.)
 	 * @param components
 	 */

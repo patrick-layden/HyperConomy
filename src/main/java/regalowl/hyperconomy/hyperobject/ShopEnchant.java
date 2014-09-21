@@ -4,7 +4,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.shop.PlayerShop;
 
 
 
@@ -13,20 +12,20 @@ public class ShopEnchant extends BasicShopObject implements HyperObject {
 
 	private static final long serialVersionUID = -213806188136759445L;
 
-	public ShopEnchant(PlayerShop playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status, boolean useEconomyStock) {
+	public ShopEnchant(String playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status, boolean useEconomyStock) {
 		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 	}
 
 	@Override
 	public String getEnchantmentName() {
-		return ho.getEnchantmentName();
+		return getHyperObject().getEnchantmentName();
 	}
 	@Override
 	public double getBuyPrice(EnchantmentClass enchantClass) {
 		if (buyPrice != 0.0) {
 			return buyPrice;
 		} else {
-			return ho.getBuyPrice(enchantClass);
+			return getHyperObject().getBuyPrice(enchantClass);
 		}
 	}
 	@Override
@@ -34,7 +33,7 @@ public class ShopEnchant extends BasicShopObject implements HyperObject {
 		if (sellPrice != 0.0) {
 			return sellPrice;
 		} else {
-			return ho.getSellPrice(enchantClass);
+			return getHyperObject().getSellPrice(enchantClass);
 		}
 	}
 	@Override
@@ -42,7 +41,7 @@ public class ShopEnchant extends BasicShopObject implements HyperObject {
 		if (sellPrice != 0.0) {
 			return sellPrice;
 		} else {
-			return ho.getSellPrice(enchantClass, hp);
+			return getHyperObject().getSellPrice(enchantClass, hp);
 		}
 	}
 	
@@ -61,22 +60,22 @@ public class ShopEnchant extends BasicShopObject implements HyperObject {
 
 	@Override
 	public Enchantment getEnchantment() {
-		return ho.getEnchantment();
+		return getHyperObject().getEnchantment();
 	}
 
 	@Override
 	public int getEnchantmentLevel() {
-		return ho.getEnchantmentLevel();
+		return getHyperObject().getEnchantmentLevel();
 	}
 
 	@Override
 	public double addEnchantment(ItemStack stack) {
-		return ho.addEnchantment(stack);
+		return getHyperObject().addEnchantment(stack);
 	}
 
 	@Override
 	public double removeEnchantment(ItemStack stack) {
-		return ho.removeEnchantment(stack);
+		return getHyperObject().removeEnchantment(stack);
 	}
 
 

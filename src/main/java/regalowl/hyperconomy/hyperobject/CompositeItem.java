@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -15,22 +14,19 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 
 	private static final long serialVersionUID = -2104610162054897073L;
 
-	private CommonFunctions cf;
-	
-	private ConcurrentHashMap<HyperObject,Double> components = new ConcurrentHashMap<HyperObject,Double>();
+	private ConcurrentHashMap<String,Double> components = new ConcurrentHashMap<String,Double>();
 	
 	
 	public CompositeItem(HyperEconomy he, String name, String economy, String displayName, String aliases, String type, String composites, String data) {
 		super(name,economy,"","","",0,"",0,0,0,"",0,0,0,0,data);
 		HyperConomy hc = HyperConomy.hc;
-		cf = hc.gCF();
 		this.displayName = displayName;
 		ArrayList<String> tAliases = hc.gCF().explode(aliases, ",");
 		for (String cAlias:tAliases) {
 			this.aliases.add(cAlias);
 		}
 		this.type = HyperObjectType.fromString(type);
-		HashMap<String,String> tempComponents = cf.explodeMap(composites);
+		HashMap<String,String> tempComponents = hc.gCF().explodeMap(composites);
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
 		    String oname = entry.getKey();
 		    String amountString = entry.getValue();
@@ -44,7 +40,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		    	amount = (double)number;
 		    }
 		    HyperObject ho = he.getHyperObject(oname);
-		    this.components.put(ho, amount);
+		    this.components.put(ho.getName(), amount);
 		}
 	}
 
@@ -53,9 +49,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	
 	@Override
 	public double getValue() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double value = 0;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    Double qty = entry.getValue();
 		    value += (ho.getValue() * qty);
 		}
@@ -63,9 +61,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public String getIsstatic() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		String isstatic = "true";
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    if (!Boolean.parseBoolean(ho.getIsstatic())) {
 		    	isstatic = "false";
 		    }
@@ -74,9 +74,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public double getStaticprice() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double staticprice = 0;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    Double qty = entry.getValue();
 		    staticprice += (ho.getStaticprice() * qty);
 		}
@@ -84,9 +86,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public double getStock() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double stock = 999999999.99;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    Double qty = entry.getValue();
 		    double cs = (ho.getStock() / qty);
 		    if (cs < stock) {
@@ -97,9 +101,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public double getTotalStock() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double stock = 999999999.99;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    Double qty = entry.getValue();
 		    double cs = (ho.getTotalStock() / qty);
 		    if (cs < stock) {
@@ -110,9 +116,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public double getMedian() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double median = 999999999;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    if (ho.getMedian() < median) {
 		    	median = ho.getMedian();
 		    }
@@ -121,9 +129,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public String getInitiation() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		String initial = "false";
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    if (Boolean.parseBoolean(ho.getInitiation())) {
 		    	initial = "true";
 		    }
@@ -132,9 +142,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public double getStartprice() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double startprice = 0;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    Double qty = entry.getValue();
 		    startprice += (ho.getStartprice() * qty);
 		}
@@ -142,9 +154,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public double getCeiling() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double ceiling = 9999999999999.99;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    double cc = ho.getCeiling();
 		    if (cc < ceiling) {
 		    	ceiling = cc;
@@ -157,9 +171,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public double getFloor() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double floor = 0;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    double cf = ho.getFloor();
 		    if (cf > floor) {
 		    	floor = cf;
@@ -172,9 +188,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public double getMaxstock() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double maxstock = 999999999;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    double cm = ho.getMaxstock();
 		    if (cm < maxstock) {
 		    	maxstock = cm;
@@ -184,9 +202,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public int getMaxInitial() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		int maxInitial = 999999999;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    Double qty = entry.getValue();
 		    if (Boolean.parseBoolean(ho.getInitiation())) {
 				int ci = (int) Math.floor(ho.getMaxInitial() / qty);
@@ -199,9 +219,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public double getBuyPrice(double amount) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double cost = 0;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-			HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    Double compositeFactor = entry.getValue();
 		    cost += (ho.getBuyPrice(amount * compositeFactor));
 		}
@@ -210,9 +232,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	
 	@Override
 	public double getSellPrice(double amount) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double value = 0;
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-			HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    Double compositeFactor = entry.getValue();
 		    value += (ho.getSellPrice(amount * compositeFactor));
 		}
@@ -232,10 +256,12 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	
 	@Override
 	public void setStock(double stock) {
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		if (stock < 0.0) {stock = 0.0;}
 		double difference = stock - getStock();
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    HyperObject ho = entry.getKey();
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
 		    Double qty = entry.getValue();
 		    double newStock = ho.getStock() + (difference * qty);
 		    ho.setStock(newStock);
@@ -245,8 +271,11 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	
 	@Override
 	public void checkInitiationStatus() {
-		for (Map.Entry<HyperObject,Double> entry : components.entrySet()) {
-		    entry.getKey().checkInitiationStatus();
+		HyperConomy hc = HyperConomy.hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
+		for (Map.Entry<String,Double> entry : components.entrySet()) {
+		    HyperObject ho = he.getHyperObject(entry.getKey());
+		    ho.checkInitiationStatus();
 		}
 	}
 
@@ -254,7 +283,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	public boolean isCompositeObject() {return true;}
 	
 	@Override
-	public ConcurrentHashMap<HyperObject,Double> getComponents() {
+	public ConcurrentHashMap<String,Double> getComponents() {
 		return components;
 	}
 	
@@ -264,7 +293,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		String statement = "UPDATE hyperconomy_composites SET COMPONENTS='" + components + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.components.clear();
-		HashMap<String,String> tempComponents = cf.explodeMap(components);
+		HashMap<String,String> tempComponents = hc.gCF().explodeMap(components);
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
 		    String oname = entry.getKey();
 		    String amountString = entry.getValue();
@@ -278,7 +307,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		    	amount = (double)number;
 		    }
 		    HyperObject ho = hc.getDataManager().getEconomy(economy).getHyperObject(oname);
-		    this.components.put(ho, amount);
+		    this.components.put(ho.getName(), amount);
 		}
 		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}

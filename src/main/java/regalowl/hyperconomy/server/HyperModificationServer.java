@@ -23,6 +23,7 @@ import regalowl.hyperconomy.event.HyperObjectModificationListener;
 import regalowl.hyperconomy.event.HyperPlayerModificationListener;
 import regalowl.hyperconomy.event.ShopModificationListener;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 
 
@@ -85,7 +86,7 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 						serverSocket.close();
 					} catch (Exception e) {
 						try {
-							e.printStackTrace();
+							HyperConomy.hc.getDebugMode().debugWriteError(e);
 							if (sClientSocket != null) sClientSocket.close();
 							if (serverSocket != null) serverSocket.close();
 						} catch (IOException e1) {}
@@ -100,8 +101,13 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 			if (ho != null && ho.getEconomy() != null && !ho.getEconomy().equalsIgnoreCase("")) {
 				HyperEconomy he = hc.getDataManager().getEconomy(ho.getEconomy());
 				if (he != null) {
-					he.removeHyperObject(ho.getName());
-					he.addHyperObject(ho);
+					if (ho.isShopObject()) {
+						PlayerShop ps = ho.getShop();
+						if (ps != null) ps.updateHyperObject(ho);
+					} else {
+						he.removeHyperObject(ho.getName());
+						he.addHyperObject(ho);
+					}
 				}
 			}
 		}
@@ -116,6 +122,7 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 			hpm.addHyperPlayer(hp);
 		}
 	}
+	
 	private void processShops(ArrayList<Shop> objects) {
 		HyperShopManager hsm = hc.getHyperShopManager();
 		for (Shop s:objects) {
@@ -126,6 +133,7 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 			hsm.addShop(s);
 		}
 	}
+	
 	private void processBanks(ArrayList<HyperBank> objects) {
 		HyperBankManager hbm = hc.getHyperBankManager();
 		for (HyperBank hb:objects) {
@@ -178,7 +186,7 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 					clientSocket.close();
 					sendObject.clear();
 				} catch (Exception e) {
-					e.printStackTrace();
+					HyperConomy.hc.getDebugMode().debugWriteError(e);
 					continue;
 				}
 			}
@@ -196,7 +204,7 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 			if (serverSocket != null) serverSocket.close();
 			if (clientSocket != null) clientSocket.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			HyperConomy.hc.getDebugMode().debugWriteError(e);
 		}
 	}
 

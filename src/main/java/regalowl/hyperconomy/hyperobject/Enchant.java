@@ -16,28 +16,33 @@ import regalowl.hyperconomy.serializable.SerializableEnchantment;
 public class Enchant extends BasicObject implements HyperObject {
 
 	private static final long serialVersionUID = -6150719215822283210L;
-	private SerializableEnchantment se;
+	private String base64Enchant;
 
 	
 	public Enchant(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String base64ItemData) {
 		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
-		this.se = new SerializableEnchantment(base64ItemData);
+		this.base64Enchant = base64ItemData;
 	}
+	
+	private SerializableEnchantment getSE() {
+		return new SerializableEnchantment(base64Enchant);
+	}
+	
 	@Override
 	public String getEnchantmentName() {
-		return se.getEnchantmentName();
+		return base64Enchant;
 	}
 
 
 	
 	@Override
 	public String getData() {
-		return se.serialize();
+		return base64Enchant;
 	}
 	@Override
 	public void setData(String data) {
 		HyperConomy hc = HyperConomy.hc;
-		se = new SerializableEnchantment(data);
+		this.base64Enchant = data;
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
@@ -93,11 +98,11 @@ public class Enchant extends BasicObject implements HyperObject {
 	}
 	@Override
 	public Enchantment getEnchantment() {
-		return se.getEnchantment();
+		return getSE().getEnchantment();
 	}
 	@Override
 	public int getEnchantmentLevel() {
-		return se.getLvl();
+		return getSE().getLvl();
 	}
 	@Override
 	public double addEnchantment(ItemStack stack) {

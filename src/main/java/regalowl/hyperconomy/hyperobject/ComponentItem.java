@@ -19,13 +19,17 @@ import regalowl.hyperconomy.serializable.SerializableItemStack;
 public class ComponentItem extends BasicObject implements HyperObject {
 
 	private static final long serialVersionUID = -845888542311735442L;
-	protected SerializableItemStack sis;
+	private String base64Item;
 
 	
 
 	public ComponentItem(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String base64ItemData) {
 		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
-		this.sis = new SerializableItemStack(base64ItemData);
+		this.base64Item = base64ItemData;
+	}
+	
+	private SerializableItemStack getSIS() {
+		return new SerializableItemStack(base64Item);
 	}
 	
 	@Override
@@ -33,6 +37,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		HyperConomy hc = HyperConomy.hc;
 		Image i = null;
 		URL url = null;
+		SerializableItemStack sis = getSIS();
 		if (sis.getMaterialEnum() == Material.POTION) {
 			url = hc.getClass().getClassLoader().getResource("Images/potion.png");
 		} else {
@@ -49,6 +54,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 
 	@Override
 	public boolean isDurable() {
+		SerializableItemStack sis = getSIS();
 		if (sis.getMaterialEnum() != null && sis.getMaterialEnum().getMaxDurability() > 0) {
 			return true;
 		}
@@ -96,28 +102,31 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	
 	@Override
 	public ItemStack getItemStack(int amount) {
+		SerializableItemStack sis = getSIS();
 		ItemStack stack = sis.getItem();
 		stack.setAmount(amount);
 		return stack;
 	}
 	@Override
 	public ItemStack getItemStack() {
+		SerializableItemStack sis = getSIS();
 		return sis.getItem();
 	}
 	@Override
 	public boolean matchesItemStack(ItemStack stack) {
+		SerializableItemStack thisSis = getSIS();
 		if (stack == null) {return false;}
 		SerializableItemStack sis = new SerializableItemStack(stack);
-		return sis.equals(this.sis);
+		return sis.equals(thisSis);
 	}
 	@Override
 	public String getData() {
-		return sis.serialize();
+		return base64Item;
 	}
 	@Override
 	public void setData(String data) {
 		HyperConomy hc = HyperConomy.hc;
-		sis = new SerializableItemStack(data);
+		this.base64Item = data;
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
@@ -219,6 +228,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	@Override
 	public double getDamageMultiplier(int amount, Inventory inventory) {
 		HyperConomy hc = HyperConomy.hc;
+		SerializableItemStack sis = getSIS();
 		try {
 			double damage = 0;
 			if (!isDurable()) {return 1;}
@@ -263,6 +273,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	
 	@Override
 	public double getDurabilityPercent() {
+		SerializableItemStack sis = getSIS();
 		double durabilityMultiplier = 1;
 		if (isDurable()) {
 			double maxDurability = sis.getMaterialEnum().getMaxDurability();
@@ -273,6 +284,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	
 	@Override
 	public boolean isDamaged() {
+		SerializableItemStack sis = getSIS();
 		if (sis.getMaterialEnum().getMaxDurability() > 0) {
 			if (sis.getDurability() > 0) {
 				return true;

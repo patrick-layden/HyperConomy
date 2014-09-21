@@ -3,7 +3,6 @@ package regalowl.hyperconomy.shop;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -18,37 +17,36 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	private static final long serialVersionUID = -4886663609354167778L;
 	private String name;
 	private String economy;
-	private HyperAccount owner;
-	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
-	private HyperConomy hc;
+	private String owner;
+	private ArrayList<String> availableObjects = new ArrayList<String>();
 	private boolean deleted;
 
 	
 	public GlobalShop(String name, String economy, HyperAccount owner, String banned_objects) {
-		hc = HyperConomy.hc;
+		HyperConomy hc = HyperConomy.hc;
 		this.deleted = false;
 		this.name = name;
 		this.economy = economy;
-		this.owner = owner;
+		this.owner = owner.getName();
 		HyperEconomy he = getHyperEconomy();
 		availableObjects.clear();
 		for (HyperObject ho:he.getHyperObjects()) {
-			availableObjects.add(ho);
+			availableObjects.add(ho.getName());
 		}
 		ArrayList<String> unavailable = hc.gCF().explode(banned_objects,",");
 		for (String objectName : unavailable) {
 			HyperObject ho = hc.getDataManager().getEconomy(economy).getHyperObject(objectName);
-			availableObjects.remove(ho);
+			availableObjects.remove(ho.getName());
 		}
 	}
 	
 	
 	public GlobalShop(String shopName, String economy, HyperAccount owner) {
-		hc = HyperConomy.hc;
+		HyperConomy hc = HyperConomy.hc;
 		this.deleted = false;
 		this.name = shopName;
 		this.economy = economy;
-		this.owner = owner;
+		this.owner = owner.getName();
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("NAME", name);
 		values.put("ECONOMY", economy);
@@ -68,7 +66,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		availableObjects.clear();
 		HyperEconomy he = getHyperEconomy();
 		for (HyperObject ho:he.getHyperObjects()) {
-			availableObjects.add(ho);
+			availableObjects.add(ho.getName());
 		}
 	}
 	
@@ -80,6 +78,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 
 	@Override
 	public void setName(String name) {
+		HyperConomy hc = HyperConomy.hc;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", this.name);
@@ -90,20 +89,13 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	}
 	@Override
 	public void setEconomy(String economy) {
+		HyperConomy hc = HyperConomy.hc;
 		this.economy = economy;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
 		values.put("ECONOMY", economy);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		HyperEconomy he = hc.getDataManager().getEconomy(economy);
-		ArrayList<HyperObject> newAvailableObjects = new ArrayList<HyperObject>();
-		for (HyperObject ho:availableObjects) {
-			HyperObject nObj = he.getHyperObject(ho.getName());
-			newAvailableObjects.add(nObj);
-		}
-		availableObjects.clear();
-		availableObjects.addAll(newAvailableObjects);
 		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 
@@ -115,6 +107,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	}
 	@Override
 	public HyperEconomy getHyperEconomy() {
+		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		if (he == null) {
 			hc.getDataBukkit().writeError("Null HyperEconomy for economy: " + economy + ", shop: " + name);
@@ -133,11 +126,12 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	
 	@Override
 	public void saveAvailable() {
+		HyperConomy hc = HyperConomy.hc;
 		HyperEconomy he = getHyperEconomy();
 		ArrayList<String> unavailable = new ArrayList<String>();
 		ArrayList<HyperObject> allObjects = he.getHyperObjects();
 		for (HyperObject ho:allObjects) {
-			if (!availableObjects.contains(ho)) {
+			if (!availableObjects.contains(ho.getName())) {
 				unavailable.add(ho.getName());
 			}
 		}
@@ -157,7 +151,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	}
 	@Override
 	public boolean isBanned(HyperObject ho) {
-		if (availableObjects.contains(ho)) {
+		if (availableObjects.contains(ho.getName())) {
 			return false;
 		}
 		return true;
@@ -186,13 +180,18 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	}
 	@Override
 	public ArrayList<HyperObject> getTradeableObjects() {
-		return availableObjects;
+		HyperEconomy he = getHyperEconomy();
+		ArrayList<HyperObject> available = new ArrayList<HyperObject>();
+		for (String name:availableObjects) {
+			available.add(he.getHyperObject(name));
+		}
+		return available;
 	}
 	@Override
 	public void unBanAllObjects() {
 		availableObjects.clear();
 		for (HyperObject ho:getHyperEconomy().getHyperObjects()) {
-			availableObjects.add(ho);
+			availableObjects.add(ho.getName());
 		}
 		saveAvailable();
 	}
@@ -204,8 +203,8 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	@Override
 	public void unBanObjects(ArrayList<HyperObject> objects) {
 		for (HyperObject ho:objects) {
-			if (!availableObjects.contains(ho)) {
-				availableObjects.add(ho);
+			if (!availableObjects.contains(ho.getName())) {
+				availableObjects.add(ho.getName());
 			}
 		}
 		saveAvailable();
@@ -213,8 +212,8 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	@Override
 	public void banObjects(ArrayList<HyperObject> objects) {
 		for (HyperObject ho:objects) {
-			if (availableObjects.contains(ho)) {
-				availableObjects.remove(ho);
+			if (availableObjects.contains(ho.getName())) {
+				availableObjects.remove(ho.getName());
 			}
 		}
 		saveAvailable();
@@ -223,11 +222,13 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 
 	@Override
 	public HyperAccount getOwner() {
-		return owner;
+		HyperConomy hc = HyperConomy.hc;
+		return hc.getHyperPlayerManager().getAccount(owner);
 	}
 
 	@Override
 	public void deleteShop() {
+		HyperConomy hc = HyperConomy.hc;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		conditions.put("NAME", name);
 		hc.getSQLWrite().performDelete("hyperconomy_shops", conditions);
@@ -237,7 +238,8 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	}
 	@Override
 	public void setOwner(HyperAccount owner) {
-		this.owner = owner;
+		HyperConomy hc = HyperConomy.hc;
+		this.owner = owner.getName();
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);

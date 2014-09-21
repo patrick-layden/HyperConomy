@@ -58,6 +58,7 @@ public class Hs {
 				response.sendMessages();
 			}
 		} catch (Exception e) {
+			HyperConomy.hc.getDebugMode().debugWriteError(e);
 			player.sendMessage(L.get("HS_INVALID"));
 		}
 	}

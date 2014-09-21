@@ -15,10 +15,9 @@ import regalowl.hyperconomy.shop.PlayerShop;
 public class BasicShopObject extends BasicObject implements HyperObject {
 
 	private static final long serialVersionUID = -8506945265990355676L;
-	protected HyperConomy hc;
-	protected SQLWrite sw;
-	protected PlayerShop playerShop;
-	protected HyperObject ho;
+	protected String playerShop;
+	protected String hyperObject;
+	protected String economy;
 	protected double stock;
 	protected double buyPrice;
 	protected double sellPrice;
@@ -26,11 +25,10 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	protected int maxStock;
 	protected boolean useEconomyStock;
 	
-	public BasicShopObject(PlayerShop playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status, boolean useEconomyStock) {
-		hc = HyperConomy.hc;
-		sw = hc.getSQLWrite();
+	public BasicShopObject(String playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status, boolean useEconomyStock) {
 		this.playerShop = playerShop;
-		this.ho = ho;
+		this.hyperObject = ho.getName();
+		this.economy = ho.getEconomy();
 		this.stock = stock;
 		this.buyPrice = buyPrice;
 		this.sellPrice = sellPrice;
@@ -42,16 +40,19 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 
 	@Override
 	public PlayerShop getShop() {
-		return playerShop;
+		HyperConomy hc = HyperConomy.hc;
+		return (PlayerShop)hc.getHyperShopManager().getShop(playerShop);
 	}
 	@Override
 	public HyperObject getHyperObject() {
+		HyperConomy hc = HyperConomy.hc;
+		HyperObject ho = hc.getDataManager().getEconomy(economy).getHyperObject(hyperObject);
 		return ho;
 	}
 	@Override
 	public double getStock() {
 		if (useEconomyStock) {
-			return ho.getStock();
+			return getHyperObject().getStock();
 		} else {
 			return stock;
 		}
@@ -78,76 +79,89 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	}
 	@Override
 	public void setHyperObject(HyperObject ho) {
+		HyperConomy hc = HyperConomy.hc;
+		SQLWrite sw = hc.getSQLWrite();
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET HYPEROBJECT=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
 		ws.addParameter(ho.getName());
-		ws.addParameter(playerShop.getName());
-		ws.addParameter(this.ho.getName());
+		ws.addParameter(playerShop);
+		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		this.ho = ho;
 		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setShop(PlayerShop playerShop) {
-		this.playerShop = playerShop;
+		HyperConomy hc = HyperConomy.hc;
+		SQLWrite sw = hc.getSQLWrite();
+		this.playerShop = playerShop.getName();
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SHOP=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
 		ws.addParameter(playerShop.getName());
 		ws.addParameter(playerShop.getName());
-		ws.addParameter(ho.getName());
+		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
 		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setStock(double stock) {
+		HyperConomy hc = HyperConomy.hc;
+		SQLWrite sw = hc.getSQLWrite();
 		if (useEconomyStock) {
-			ho.setStock(stock);
+			getHyperObject().setStock(stock);
 		} else {
 			if (stock < 0.0) {stock = 0.0;}
 			this.stock = stock;
 			WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET QUANTITY=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
 			ws.addParameter(stock);
-			ws.addParameter(playerShop.getName());
-			ws.addParameter(ho.getName());
+			ws.addParameter(playerShop);
+			ws.addParameter(hyperObject);
 			sw.addToQueue(ws);
 			hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 		}
 	}
 	@Override
 	public void setBuyPrice(double buyPrice) {
+		HyperConomy hc = HyperConomy.hc;
+		SQLWrite sw = hc.getSQLWrite();
 		this.buyPrice = buyPrice;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET BUY_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
 		ws.addParameter(buyPrice);
-		ws.addParameter(playerShop.getName());
-		ws.addParameter(ho.getName());
+		ws.addParameter(playerShop);
+		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
 		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setSellPrice(double sellPrice) {
+		HyperConomy hc = HyperConomy.hc;
+		SQLWrite sw = hc.getSQLWrite();
 		this.sellPrice = sellPrice;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SELL_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
 		ws.addParameter(sellPrice);
-		ws.addParameter(playerShop.getName());
-		ws.addParameter(ho.getName());
+		ws.addParameter(playerShop);
+		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
 		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setMaxStock(int maxStock) {
+		HyperConomy hc = HyperConomy.hc;
+		SQLWrite sw = hc.getSQLWrite();
 		this.maxStock = maxStock;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET MAX_STOCK=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
 		ws.addParameter(maxStock);
-		ws.addParameter(playerShop.getName());
-		ws.addParameter(ho.getName());
+		ws.addParameter(playerShop);
+		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
 		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setStatus(HyperObjectStatus status) {
+		HyperConomy hc = HyperConomy.hc;
+		SQLWrite sw = hc.getSQLWrite();
 		this.status = status;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET STATUS=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
 		ws.addParameter(status.toString());
-		ws.addParameter(playerShop.getName());
-		ws.addParameter(ho.getName());
+		ws.addParameter(playerShop);
+		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
 		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
@@ -178,7 +192,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		if (getBuyPrice() != 0.0) {
 			return getBuyPrice() * amount;
 		} else {
-			return ho.getBuyPrice(amount);
+			return getHyperObject().getBuyPrice(amount);
 		}
 	}
 	@Override
@@ -186,7 +200,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		if (getSellPrice() != 0.0) {
 			return getSellPrice() * amount;
 		} else {
-			return ho.getSellPrice(amount);
+			return getHyperObject().getSellPrice(amount);
 		}
 	}
 	@Override
@@ -194,7 +208,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	
 	@Override
 	public void checkInitiationStatus() {
-		ho.checkInitiationStatus();
+		getHyperObject().checkInitiationStatus();
 	}
 	
 	
@@ -248,137 +262,137 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 	//The following methods don't apply to PlayerShop objects and have been overridden to forward the request to the PlayerShop object's parent object.
 	@Override
 	public String getData() {
-		return ho.getData();
+		return getHyperObject().getData();
 	}
 	@Override
 	public void setData(String data) {
-		ho.setData(data);
+		getHyperObject().setData(data);
 	}
 	@Override
 	public Image getImage(int width, int height) {
-		return ho.getImage(width, height);
+		return getHyperObject().getImage(width, height);
 	}
 	@Override
 	public double getTotalStock() {
-		return ho.getTotalStock();
+		return getHyperObject().getTotalStock();
 	}
 	@Override
 	public String getName() {
-		return ho.getName();
+		return getHyperObject().getName();
 	}
 	@Override
 	public String getDisplayName() {
-		return ho.getDisplayName();
+		return getHyperObject().getDisplayName();
 	}
 	@Override
 	public ArrayList<String> getAliases() {
-		return ho.getAliases();
+		return getHyperObject().getAliases();
 	}
 	@Override
 	public String getAliasesString() {
-		return ho.getAliasesString();
+		return getHyperObject().getAliasesString();
 	}
 	@Override
 	public boolean hasName(String testName) {
-		return ho.hasName(testName);
+		return getHyperObject().hasName(testName);
 	}
 	@Override
 	public String getEconomy() {
-		return ho.getEconomy();
+		return getHyperObject().getEconomy();
 	}
 	@Override
 	public HyperObjectType getType() {
-		return ho.getType();
+		return getHyperObject().getType();
 	}
 	@Override
 	public double getValue() {
-		return ho.getValue();
+		return getHyperObject().getValue();
 	}
 	@Override
 	public String getIsstatic() {
-		return ho.getIsstatic();
+		return getHyperObject().getIsstatic();
 	}
 	@Override
 	public double getStaticprice() {
-		return ho.getStaticprice();
+		return getHyperObject().getStaticprice();
 	}
 	@Override
 	public double getMedian() {
-		return ho.getMedian();
+		return getHyperObject().getMedian();
 	}
 	@Override
 	public String getInitiation() {
-		return ho.getInitiation();
+		return getHyperObject().getInitiation();
 	}
 	@Override
 	public double getStartprice() {
-		return ho.getStartprice();
+		return getHyperObject().getStartprice();
 	}
 	@Override
 	public double getCeiling() {
-		return ho.getCeiling();
+		return getHyperObject().getCeiling();
 	}
 	@Override
 	public double getFloor() {
-		return ho.getFloor();
+		return getHyperObject().getFloor();
 	}
 	@Override
 	public double getMaxstock() {
-		return ho.getMaxstock();
+		return getHyperObject().getMaxstock();
 	}
 	@Override
 	public int getMaxInitial() {
-		return ho.getMaxInitial();
+		return getHyperObject().getMaxInitial();
 	}
 	@Override
 	public boolean nameStartsWith(String part) {
-		return ho.nameStartsWith(part);
+		return getHyperObject().nameStartsWith(part);
 	}
 	@Override
 	public boolean nameContains(String part) {
-		return ho.nameContains(part);
+		return getHyperObject().nameContains(part);
 	}
 	
 	
 	@Override
 	public boolean isDurable() {
-		return ho.isDurable();
+		return getHyperObject().isDurable();
 	}
 	@Override
 	public int count(Inventory inventory) {
-		return ho.count(inventory);
+		return getHyperObject().count(inventory);
 	}
 	@Override
 	public int getAvailableSpace(Inventory inventory) {
-		return ho.getAvailableSpace(inventory);
+		return getHyperObject().getAvailableSpace(inventory);
 	}
 	@Override
 	public void add(int amount, HyperPlayer hp) {
-		ho.add(amount, hp);
+		getHyperObject().add(amount, hp);
 	}
 	@Override
 	public double remove(int amount, HyperPlayer hp) {
-		return ho.remove(amount, hp);
+		return getHyperObject().remove(amount, hp);
 	}
 	@Override
 	public ItemStack getItemStack() {
-		return ho.getItemStack();
+		return getHyperObject().getItemStack();
 	}
 	@Override
 	public ItemStack getItemStack(int amount) {
-		return ho.getItemStack(amount);
+		return getHyperObject().getItemStack(amount);
 	}
 	@Override
 	public void add(int amount, Inventory inventory) {
-		ho.add(amount, inventory);
+		getHyperObject().add(amount, inventory);
 	}
 	@Override
 	public double remove(int amount, Inventory inventory) {
-		return ho.remove(amount, inventory);
+		return getHyperObject().remove(amount, inventory);
 	}
 	@Override
 	public double getDamageMultiplier(int amount, Inventory inventory) {
-		return ho.getDamageMultiplier(amount, inventory);
+		return getHyperObject().getDamageMultiplier(amount, inventory);
 	}
 	
 	
