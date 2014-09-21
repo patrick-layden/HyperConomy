@@ -24,6 +24,7 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperPlayerManager;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.util.LanguageFile;
 
 public class FrameShopHandler implements Listener {
 
@@ -108,6 +109,7 @@ public class FrameShopHandler implements Listener {
 			return;
 		}
 		Entity entity = event.getEntity();
+		LanguageFile L = HyperConomy.hc.getLanguageFile();
 		if (event.getDamager() instanceof Player) {
 			Player p = (Player) event.getDamager();
 			if (entity instanceof ItemFrame) {
@@ -133,7 +135,11 @@ public class FrameShopHandler implements Listener {
 						return;
 					}
 					event.setCancelled(true);
-					fs.sell(hp);
+					if (p.hasPermission("hyperconomy.sell")) {
+						fs.sell(hp);
+					} else {
+						p.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+					}
 				}
 			}
 		}
@@ -146,6 +152,7 @@ public class FrameShopHandler implements Listener {
 			return;
 		}
 		Entity entity = event.getRightClicked();
+		LanguageFile L = HyperConomy.hc.getLanguageFile();
 		if (entity instanceof ItemFrame) {
 			ItemFrame iFrame = (ItemFrame) entity;
 			if (iFrame.getItem().getType().equals(Material.MAP)) {
@@ -159,11 +166,14 @@ public class FrameShopHandler implements Listener {
 					}
 					HyperPlayer hp = hpm.getHyperPlayer(p);
 					FrameShop fs = getFrameShop(l);
-					fs.buy(hp);
+					if (p.hasPermission("hyperconomy.buy")) {
+						fs.buy(hp);
+					} else {
+						p.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+					}
 				}
 			}
 		}
-
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
