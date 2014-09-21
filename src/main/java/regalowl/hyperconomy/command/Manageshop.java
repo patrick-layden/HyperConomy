@@ -354,6 +354,7 @@ public class Manageshop implements CommandExecutor {
 				}
 			}
 			hsm.addShop(newShop);
+			hc.getHyperEventHandler().fireShopCreationEvent(newShop);
 			player.sendMessage(L.get("SHOP_CREATED"));
 		} else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("d")) {
 			if (cps == null) {

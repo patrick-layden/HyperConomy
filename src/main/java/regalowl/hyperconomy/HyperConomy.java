@@ -48,6 +48,7 @@ import regalowl.hyperconomy.display.ItemDisplayFactory;
 import regalowl.hyperconomy.display.TransactionSign;
 import regalowl.hyperconomy.event.DataLoadListener;
 import regalowl.hyperconomy.event.HyperEventHandler;
+import regalowl.hyperconomy.server.HyperModificationServer;
 import regalowl.hyperconomy.shop.ChestShop;
 import regalowl.hyperconomy.shop.FrameShopHandler;
 import regalowl.hyperconomy.util.ConsoleSettings;
@@ -162,6 +163,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		yh.startSaveTask(hConfig.getLong("intervals.save"));
 		cs = new ChestShop();
 		cos = new ConsoleSettings("default");
+		new HyperModificationServer();
 	}
 	
 	public void onDataLoad() {
@@ -176,6 +178,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	
 
 	public void disable(boolean protect) {
+		heh.fireDisableEvent();
 		unHookVault();
 		enabled = false;
 		HandlerList.unregisterAll(this);

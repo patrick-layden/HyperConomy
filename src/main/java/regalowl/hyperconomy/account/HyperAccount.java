@@ -1,6 +1,8 @@
 package regalowl.hyperconomy.account;
 
-public interface HyperAccount {
+import java.io.Serializable;
+
+public interface HyperAccount extends Serializable {
 	
 	public String getName();
 	public double getBalance();

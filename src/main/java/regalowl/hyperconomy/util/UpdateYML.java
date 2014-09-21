@@ -244,6 +244,22 @@ public class UpdateYML {
 		}
 		
 		
+		
+		if (!cfg.isSet("multi-server.enable")) {
+			cfg.set("multi-server.enable", false);
+		}
+		if (!cfg.isSet("multi-server.remote-server-ip-addresses")) {
+			cfg.set("multi-server.remote-server-ip-addresses", "192.168.1.1,192.168.1.2,");
+		}
+		if (!cfg.isSet("multi-server.port")) {
+			cfg.set("multi-server.port", 3313);
+		}
+		if (!cfg.isSet("multi-server.update-interval")) {
+			cfg.set("multi-server.update-interval", 60);
+		}
+		if (!cfg.isSet("multi-server.connection-timeout-ms")) {
+			cfg.set("multi-server.connection-timeout-ms", 2000);
+		}
 
 		
 		

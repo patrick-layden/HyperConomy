@@ -15,15 +15,18 @@ import regalowl.hyperconomy.hyperobject.HyperObject;
 
 public class GlobalShop implements Shop, Comparable<Shop>{
 	
+	private static final long serialVersionUID = -4886663609354167778L;
 	private String name;
 	private String economy;
 	private HyperAccount owner;
 	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
 	private HyperConomy hc;
+	private boolean deleted;
 
 	
 	public GlobalShop(String name, String economy, HyperAccount owner, String banned_objects) {
 		hc = HyperConomy.hc;
+		this.deleted = false;
 		this.name = name;
 		this.economy = economy;
 		this.owner = owner;
@@ -42,6 +45,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	
 	public GlobalShop(String shopName, String economy, HyperAccount owner) {
 		hc = HyperConomy.hc;
+		this.deleted = false;
 		this.name = shopName;
 		this.economy = economy;
 		this.owner = owner;
@@ -82,6 +86,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		values.put("NAME", name);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		this.name = name;
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	@Override
 	public void setEconomy(String economy) {
@@ -99,6 +104,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		}
 		availableObjects.clear();
 		availableObjects.addAll(newAvailableObjects);
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 
 	
@@ -140,6 +146,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		conditions.put("NAME", name);
 		values.put("BANNED_OBJECTS", hc.gCF().implode(unavailable,","));
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	@Override
 	public boolean isStocked(HyperObject ho) {
@@ -225,6 +232,8 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		conditions.put("NAME", name);
 		hc.getSQLWrite().performDelete("hyperconomy_shops", conditions);
 		hc.getHyperShopManager().removeShop(name);
+		deleted = true;
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	@Override
 	public void setOwner(HyperAccount owner) {
@@ -234,6 +243,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		conditions.put("NAME", name);
 		values.put("OWNER", owner.getName());
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	
 	@Override
@@ -297,5 +307,9 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	@Override
 	public Location getLocation2() {
 		return null;
+	}
+	@Override
+	public boolean deleted() {
+		return deleted;
 	}
 }

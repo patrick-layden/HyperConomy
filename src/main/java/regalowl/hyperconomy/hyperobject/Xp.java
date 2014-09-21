@@ -5,10 +5,13 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 
 
 public class Xp extends BasicObject implements HyperObject {
+
+	private static final long serialVersionUID = -5156550871200368032L;
 
 	public Xp(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
 		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
@@ -42,6 +45,7 @@ public class Xp extends BasicObject implements HyperObject {
 	
 	@Override
 	public Image getImage(int width, int height) {
+		HyperConomy hc = HyperConomy.hc;
 		Image i = null;
 		URL url = hc.getClass().getClassLoader().getResource("Images/exp_bottle_0.png");
 		try {

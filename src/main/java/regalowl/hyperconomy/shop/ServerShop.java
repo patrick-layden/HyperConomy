@@ -16,6 +16,8 @@ import regalowl.hyperconomy.util.SimpleLocation;
 
 public class ServerShop implements Shop, Comparable<Shop>{
 	
+
+	private static final long serialVersionUID = 4242407361167946426L;
 	private String name;
 	private String economy;
 	private HyperAccount owner;
@@ -28,6 +30,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	private int p2y;
 	private int p2z;
 	private ArrayList<HyperObject> availableObjects = new ArrayList<HyperObject>();
+	private boolean deleted;
 	
 
 	
@@ -41,6 +44,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
 		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");	
+		this.deleted = false;
 		this.name = name;
 		this.economy = economy;
 		this.owner = owner;
@@ -69,6 +73,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc = HyperConomy.hc;
 		L = hc.getLanguageFile();
 		useshopexitmessage = hc.getConf().getBoolean("shop.display-shop-exit-message");
+		this.deleted = false;
 		this.name = shopName;
 		this.economy = economy;
 		this.owner = owner;
@@ -122,6 +127,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		values.put("P1Y", y+"");
 		values.put("P1Z", z+"");
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	public void setPoint2(String world, int x, int y, int z) {
 		this.world = world;
@@ -136,6 +142,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		values.put("P2Y", y+"");
 		values.put("P2Z", z+"");
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 
 	
@@ -153,6 +160,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		conditions.put("NAME", name);
 		values.put("MESSAGE", message);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	
 	public void setDefaultMessage() {
@@ -166,6 +174,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		conditions.put("NAME", name);
 		values.put("WORLD", world);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	
 	public void setName(String name) {
@@ -175,6 +184,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		values.put("NAME", name);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		this.name = name;
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	public void setEconomy(String economy) {
 		this.economy = economy;
@@ -191,6 +201,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		}
 		availableObjects.clear();
 		availableObjects.addAll(newAvailableObjects);
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 	
 	public boolean inShop(int x, int y, int z, String world) {
@@ -393,6 +404,8 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		conditions.put("NAME", name);
 		hc.getSQLWrite().performDelete("hyperconomy_shops", conditions);
 		hc.getHyperShopManager().removeShop(name);
+		deleted = true;
+		hc.getHyperEventHandler().fireShopModificationEvent(this);
 	}
 
 	public void setOwner(HyperAccount owner) {
@@ -454,6 +467,10 @@ public class ServerShop implements Shop, Comparable<Shop>{
 			}
 		}
 		return false;
+	}
+	
+	public boolean deleted() {
+		return deleted;
 	}
 
 

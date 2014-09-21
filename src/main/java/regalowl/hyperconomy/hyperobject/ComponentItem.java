@@ -11,13 +11,14 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HModType;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 
 public class ComponentItem extends BasicObject implements HyperObject {
 
+	private static final long serialVersionUID = -845888542311735442L;
 	protected SerializableItemStack sis;
 
 	
@@ -29,6 +30,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	
 	@Override
 	public Image getImage(int width, int height) {
+		HyperConomy hc = HyperConomy.hc;
 		Image i = null;
 		URL url = null;
 		if (sis.getMaterialEnum() == Material.POTION) {
@@ -72,6 +74,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	}
 	@Override
 	public int getAvailableSpace(Inventory inventory) {
+		HyperConomy hc = HyperConomy.hc;
 		try {
 			ItemStack stack = getItemStack();
 			int maxstack = stack.getMaxStackSize();
@@ -113,16 +116,18 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	}
 	@Override
 	public void setData(String data) {
+		HyperConomy hc = HyperConomy.hc;
 		sis = new SerializableItemStack(data);
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.DATA);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void add(int amount, Inventory inventory) {
+		HyperConomy hc = HyperConomy.hc;
 		try {
 			ItemStack stack = getItemStack();
 			int maxStack = stack.getMaxStackSize();
@@ -166,6 +171,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	}
 	@Override
 	public double remove(int amount, Inventory inventory) {
+		HyperConomy hc = HyperConomy.hc;
 		try {
 			double amountRemoved = 0;
 			if (inventory.getType() == InventoryType.PLAYER) {
@@ -212,6 +218,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 
 	@Override
 	public double getDamageMultiplier(int amount, Inventory inventory) {
+		HyperConomy hc = HyperConomy.hc;
 		try {
 			double damage = 0;
 			if (!isDurable()) {return 1;}

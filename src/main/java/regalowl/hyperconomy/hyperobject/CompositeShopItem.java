@@ -11,6 +11,9 @@ import regalowl.hyperconomy.shop.PlayerShop;
 public class CompositeShopItem extends BasicShopObject implements HyperObject {
 
 
+	private static final long serialVersionUID = -6802879836491318792L;
+
+
 	public CompositeShopItem(PlayerShop playerShop, CompositeItem ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status, boolean useEconomyStock) {
 		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 	}

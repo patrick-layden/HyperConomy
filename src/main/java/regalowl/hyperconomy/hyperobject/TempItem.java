@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class TempItem extends ComponentItem implements HyperObject {
 
 
+	private static final long serialVersionUID = 4228578172340543286L;
 	public TempItem(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String itemData) {
 		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, itemData);
 	}

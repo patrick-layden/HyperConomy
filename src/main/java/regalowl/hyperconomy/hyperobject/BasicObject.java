@@ -9,10 +9,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HModType;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
@@ -21,8 +19,10 @@ import regalowl.hyperconomy.shop.Shop;
 
 public class BasicObject implements HyperObject {
 	
-	protected HyperConomy hc;
-	protected CommonFunctions cf;
+
+	private static final long serialVersionUID = 3220675400415233555L;
+	//protected HyperConomy hc;
+	//protected CommonFunctions cf;
 	protected String name;
 	protected String displayName;
 	protected ArrayList<String> aliases = new ArrayList<String>();
@@ -39,19 +39,14 @@ public class BasicObject implements HyperObject {
 	protected double floor;
 	protected double maxstock;
 	
-	/**
-	 * Constructor for BasicObjects
-	 */
-	public BasicObject() {
-		hc = HyperConomy.hc;
-		cf = hc.gCF();
-	}
+
+	public BasicObject() {}
+	
 	/**
 	 * Standard Constructor
 	 */
 	public BasicObject(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
-		hc = HyperConomy.hc;
-		cf = hc.gCF();
+		HyperConomy hc = HyperConomy.hc;
 		this.name = name;
 		this.economy = economy;
 		this.displayName = displayName;
@@ -73,10 +68,11 @@ public class BasicObject implements HyperObject {
 	}
 	@Override
 	public void delete() {
+		HyperConomy hc = HyperConomy.hc;
 		hc.getDataManager().getEconomy(economy).removeHyperObject(name);
 		String statement = "DELETE FROM hyperconomy_objects WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.DELETE);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	
 	@Override
@@ -102,6 +98,7 @@ public class BasicObject implements HyperObject {
 	}
 	@Override
 	public String getAliasesString() {
+		HyperConomy hc = HyperConomy.hc;
 		return hc.gCF().implode(aliases, ",");
 	}
 	@Override
@@ -146,6 +143,7 @@ public class BasicObject implements HyperObject {
 	}
 	@Override
 	public double getTotalStock() {
+		HyperConomy hc = HyperConomy.hc;
 		double totalStock = 0.0;
 		for (Shop s:hc.getHyperShopManager().getShops()) {
 			if (!(s instanceof PlayerShop)) {continue;}
@@ -192,20 +190,23 @@ public class BasicObject implements HyperObject {
 	
 	@Override
 	public void setName(String name) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET NAME='" + name + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.name = name;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.NAME);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setDisplayName(String displayName) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.displayName = displayName;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.DISPLAY_NAME);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setAliases(ArrayList<String> newAliases) {
+		HyperConomy hc = HyperConomy.hc;
 		String stringAliases = hc.getCommonFunctions().implode(newAliases, ",");
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
@@ -213,110 +214,124 @@ public class BasicObject implements HyperObject {
 		for (String cAlias:newAliases) {
 			aliases.add(cAlias);
 		}
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.ALIAS);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void addAlias(String addAlias) {
+		HyperConomy hc = HyperConomy.hc;
 		if (aliases.contains(addAlias)) {return;}
 		aliases.add(addAlias);
 		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.ALIAS);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void removeAlias(String removeAlias) {
+		HyperConomy hc = HyperConomy.hc;
 		if (!aliases.contains(removeAlias)) {return;}
 		aliases.remove(removeAlias);
 		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.ALIAS);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setEconomy(String economy) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET ECONOMY='" + economy + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.economy = economy;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.ECONOMY);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setType(HyperObjectType type) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET TYPE='" + type.toString() + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.type = type;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.TYPE);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setValue(double value) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET VALUE='" + value + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.value = value;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.VALUE);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setIsstatic(String isstatic) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET STATIC='" + isstatic + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.isstatic = isstatic;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.STATIC);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setStaticprice(double staticprice) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET STATICPRICE='" + staticprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.staticprice = staticprice;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.STATIC_PRICE);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setStock(double stock) {
+		HyperConomy hc = HyperConomy.hc;
 		if (stock < 0.0) {stock = 0.0;}
 		String statement = "UPDATE hyperconomy_objects SET STOCK='" + stock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.stock = stock;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.STOCK);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setMedian(double median) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET MEDIAN='" + median + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.median = median;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.MEDIAN);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setInitiation(String initiation) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET INITIATION='" + initiation + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.initiation = initiation;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.INITIATION);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setStartprice(double startprice) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET STARTPRICE='" + startprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.startprice = startprice;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.START_PRICE);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setCeiling(double ceiling) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET CEILING='" + ceiling + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.ceiling = ceiling;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.CEILING);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setFloor(double floor) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET FLOOR='" + floor + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.floor = floor;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.FLOOR);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setMaxstock(double maxstock) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_objects SET MAXSTOCK='" + maxstock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.maxstock = maxstock;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.MAX_STOCK);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	
 
@@ -351,6 +366,7 @@ public class BasicObject implements HyperObject {
 
 	@Override
 	public double getPurchaseTax(double cost) {
+		HyperConomy hc = HyperConomy.hc;
 		double tax = 0.0;
 		if (Boolean.parseBoolean(getIsstatic())) {
 			tax = hc.getConf().getDouble("tax.static") / 100.0;
@@ -365,10 +381,11 @@ public class BasicObject implements HyperObject {
 				}
 			}
 		}
-		return cf.twoDecimals(cost * tax);
+		return hc.gCF().twoDecimals(cost * tax);
 	}
 	@Override
 	public double getSalesTaxEstimate(double value) {
+		HyperConomy hc = HyperConomy.hc;
 		double salestax = 0;
 		if (hc.getConf().getBoolean("tax.dynamic.enable")) {
 			return 0.0;
@@ -376,7 +393,7 @@ public class BasicObject implements HyperObject {
 			double salestaxpercent = hc.getConf().getDouble("tax.sales");
 			salestax = (salestaxpercent / 100) * value;
 		}
-		return cf.twoDecimals(salestax);
+		return hc.gCF().twoDecimals(salestax);
 	}
 	
 	@Override
@@ -393,20 +410,23 @@ public class BasicObject implements HyperObject {
 	
 	@Override
 	public double getSellPriceWithTax(double amount, HyperPlayer hp) {
+		HyperConomy hc = HyperConomy.hc;
 		double price = getSellPrice(amount, hp);
 		price -= hp.getSalesTax(price);
-		return cf.twoDecimals(price);
+		return hc.gCF().twoDecimals(price);
 	}
 	
 	@Override
 	public double getBuyPriceWithTax(double amount) {
+		HyperConomy hc = HyperConomy.hc;
 		double price = getBuyPrice(amount);
 		price += getPurchaseTax(price);
-		return cf.twoDecimals(price);
+		return hc.gCF().twoDecimals(price);
 	}
 	
 	@Override
 	public double getSellPrice(double amount) {
+		HyperConomy hc = HyperConomy.hc;
 		try {
 			double totalPrice = 0;
 			if (Boolean.parseBoolean(getIsstatic())) {
@@ -431,6 +451,7 @@ public class BasicObject implements HyperObject {
 
 	@Override
 	public double getBuyPrice(double amount) {
+		HyperConomy hc = HyperConomy.hc;
 		try {
 			double totalPrice = 0;
 			if (Boolean.parseBoolean(getIsstatic())) {

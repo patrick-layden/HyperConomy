@@ -255,6 +255,7 @@ public class DataManager {
 			sw.performInsert("hyperconomy_objects", values);
 		}
 		hc.restart();
+		hc.getHyperEventHandler().fireEconomyCreationEvent();
 	}
 	
 	public void deleteEconomy(String economy) {

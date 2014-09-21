@@ -2,6 +2,7 @@ package regalowl.hyperconomy;
 
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,26 +28,23 @@ import regalowl.hyperconomy.shop.Shop;
 
 
 
-public class HyperEconomy implements DataLoadListener {
+public class HyperEconomy implements Serializable, DataLoadListener {
 
+	private static final long serialVersionUID = 4820082604724045149L;
 	private HyperAccount defaultAccount;
 	private ConcurrentHashMap<String, HyperObject> hyperObjectsName = new ConcurrentHashMap<String, HyperObject>();
 	private ConcurrentHashMap<String, String> hyperObjectsAliases = new ConcurrentHashMap<String, String>();
-	
-
 	private HashMap<String,String> composites = new HashMap<String,String>();
 	private boolean useComposites;
-	private HyperConomy hc;
-	private SQLRead sr;
 	private String economyName;
 	private String xpName = null;
 	
 
 	public HyperEconomy(String economy) {
-		hc = HyperConomy.hc;	
+		HyperConomy hc = HyperConomy.hc;	
+		SQLRead sr = hc.getSQLRead();
 		this.economyName = economy;
 		hc.getHyperEventHandler().registerListener(this);
-		sr = hc.getSQLRead();
 		useComposites = hc.getConf().getBoolean("enable-feature.composite-items");
 
 		composites.clear();
@@ -106,8 +104,11 @@ public class HyperEconomy implements DataLoadListener {
 
 	@Override
 	public void onDataLoad() {
+		HyperConomy hc = HyperConomy.hc;	
 		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
 			public void run() {
+				HyperConomy hc = HyperConomy.hc;	
+				SQLRead sr = hc.getSQLRead();
 				HashMap<String,String> conditions = new HashMap<String,String>();
 				conditions.put("NAME", economyName);
 				String account = sr.getString("hyperconomy_economies", "hyperaccount", conditions);
@@ -121,6 +122,8 @@ public class HyperEconomy implements DataLoadListener {
 
 	
 	private void loadComposites() {
+		HyperConomy hc = HyperConomy.hc;	
+		SQLRead sr = hc.getSQLRead();
 		boolean loaded = false;
 		int counter = 0;
 		while (!loaded) {
@@ -152,6 +155,7 @@ public class HyperEconomy implements DataLoadListener {
 		}
 	}
 	private boolean componentsLoaded(String name) {
+		HyperConomy hc = HyperConomy.hc;	
 		CommonFunctions cf = hc.gCF();
 		HashMap<String,String> tempComponents = cf.explodeMap(composites.get(name.toLowerCase()));
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
@@ -171,6 +175,7 @@ public class HyperEconomy implements DataLoadListener {
 	}
 	
 	public void setDefaultAccount(HyperAccount account) {
+		HyperConomy hc = HyperConomy.hc;	
 		if (account == null) {return;}
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
@@ -231,6 +236,7 @@ public class HyperEconomy implements DataLoadListener {
 
 	public void removeHyperObject(String name) {
 		HyperObject ho = getHyperObject(name);
+		if (ho == null) return;
 		if (hyperObjectsName.containsKey(ho.getName().toLowerCase())) {
 			hyperObjectsName.remove(ho.getName().toLowerCase());
 		}
@@ -377,6 +383,7 @@ public class HyperEconomy implements DataLoadListener {
 	
 	
 	public ArrayList<String> loadNewItems() {
+		HyperConomy hc = HyperConomy.hc;	
 		ArrayList<String> objectsAdded = new ArrayList<String>();
 		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
 		FileTools ft = hc.getFileTools();
@@ -403,6 +410,7 @@ public class HyperEconomy implements DataLoadListener {
 	
 	
 	public void updateNamesFromYml() {
+		HyperConomy hc = HyperConomy.hc;	
 		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
 		FileTools ft = hc.getFileTools();
 		if (!ft.fileExists(defaultObjectsPath)) {
@@ -440,6 +448,7 @@ public class HyperEconomy implements DataLoadListener {
 	}
 	
 	public void addHyperObject(HyperObject hobj) {
+		if (hobj == null) return;
 		hyperObjectsName.put(hobj.getName().toLowerCase(), hobj);
 		for (String alias:hobj.getAliases()) {
 			hyperObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());

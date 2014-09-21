@@ -9,10 +9,11 @@ import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HModType;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 
 public class CompositeItem extends ComponentItem implements HyperObject {
+
+	private static final long serialVersionUID = -2104610162054897073L;
 
 	private CommonFunctions cf;
 	
@@ -21,7 +22,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	
 	public CompositeItem(HyperEconomy he, String name, String economy, String displayName, String aliases, String type, String composites, String data) {
 		super(name,economy,"","","",0,"",0,0,0,"",0,0,0,0,data);
-		hc = HyperConomy.hc;
+		HyperConomy hc = HyperConomy.hc;
 		cf = hc.gCF();
 		this.displayName = displayName;
 		ArrayList<String> tAliases = hc.gCF().explode(aliases, ",");
@@ -259,6 +260,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	
 	@Override
 	public void setComponents(String components) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_composites SET COMPONENTS='" + components + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.components.clear();
@@ -278,27 +280,30 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		    HyperObject ho = hc.getDataManager().getEconomy(economy).getHyperObject(oname);
 		    this.components.put(ho, amount);
 		}
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.COMPONENTS);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	
 	@Override
 	public void setName(String name) {
+		HyperConomy hc = HyperConomy.hc;
 		String statement = "UPDATE hyperconomy_composites SET NAME='" + name + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.name = name;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.NAME);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setEconomy(String economy) {
+		HyperConomy hc = HyperConomy.hc;
 		this.economy = economy;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.ECONOMY);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	@Override
 	public void setDisplayName(String displayName) {
+		HyperConomy hc = HyperConomy.hc;
 		this.displayName = displayName;
 		String statement = "UPDATE hyperconomy_composites SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.DISPLAY_NAME);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 
 

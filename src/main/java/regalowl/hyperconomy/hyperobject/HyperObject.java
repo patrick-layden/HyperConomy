@@ -2,6 +2,7 @@ package regalowl.hyperconomy.hyperobject;
 
 
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,7 +15,7 @@ import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.shop.PlayerShop;
 
 
-public interface HyperObject extends Comparable<HyperObject> {
+public interface HyperObject extends Comparable<HyperObject>, Serializable {
 
 	//GENERAL HYPEROBJECT METHODS
 	

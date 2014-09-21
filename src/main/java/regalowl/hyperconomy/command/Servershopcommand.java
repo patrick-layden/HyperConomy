@@ -106,6 +106,7 @@ public class Servershopcommand implements CommandExecutor {
 					SimpleLocation l = new SimpleLocation(player.getLocation());
 					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					hsm.addShop(shop);
+					hc.getHyperEventHandler().fireShopCreationEvent(shop);
 				}
 				player.sendMessage(L.get("P1_SET"));
 			} catch (Exception e) {
@@ -121,6 +122,7 @@ public class Servershopcommand implements CommandExecutor {
 					SimpleLocation l = new SimpleLocation(player.getLocation());
 					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					hsm.addShop(shop);
+					hc.getHyperEventHandler().fireShopCreationEvent(shop);
 				}
 				player.sendMessage(L.get("P2_SET"));
 			} catch (Exception e) {

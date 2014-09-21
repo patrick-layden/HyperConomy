@@ -21,7 +21,6 @@ import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HModType;
 import regalowl.hyperconomy.event.HyperObjectModificationListener;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.hyperobject.HyperObject;
@@ -137,7 +136,7 @@ public class InfoSignHandler implements Listener, HyperObjectModificationListene
 	}
 	
 	@Override
-	public void onHyperObjectModification(HyperObject ho, HModType type) {
+	public void onHyperObjectModification(HyperObject ho) {
 		updateSigns();
 	}
 

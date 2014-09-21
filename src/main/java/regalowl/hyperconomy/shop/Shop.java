@@ -1,5 +1,6 @@
 package regalowl.hyperconomy.shop;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.bukkit.Location;
@@ -9,7 +10,7 @@ import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 
-public interface Shop extends Comparable<Shop>{
+public interface Shop extends Comparable<Shop>, Serializable{
 	
 	public int compareTo(Shop s);	
 	public void setPoint1(String world, int x, int y, int z);	
@@ -92,4 +93,8 @@ public interface Shop extends Comparable<Shop>{
 	 */
 	public boolean intersectsShop(Shop s, int volumeLimit);
 	public void saveAvailable();
+	/**
+	 *  Returns true if the shop has been deleted.
+	 */
+	public boolean deleted();
 }

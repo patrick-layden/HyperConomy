@@ -6,6 +6,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.account.HyperBank;
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
@@ -100,24 +102,94 @@ public class HyperEventHandler {
     }
     
     
-    public void fireHyperObjectModificationEvent(HyperObject ho, HModType type) {
-    	new HyperObjectModificationTask(ho, type).runTask(hc);
+    public void fireHyperObjectModificationEvent(HyperObject ho) {
+    	new HyperObjectModificationTask(ho).runTask(hc);
     }
     private class HyperObjectModificationTask extends BukkitRunnable {
     	private HyperObject ho;
-    	private HModType type;
-    	public HyperObjectModificationTask(HyperObject ho, HModType type) {
+    	public HyperObjectModificationTask(HyperObject ho) {
     		this.ho = ho;
-    		this.type = type;
     	}
 		public void run() {
 	        for (HyperListener listener : listeners) {
 	        	if (listener instanceof HyperObjectModificationListener) {
 	        		HyperObjectModificationListener l = (HyperObjectModificationListener)listener;
-	        		l.onHyperObjectModification(ho, type);
+	        		l.onHyperObjectModification(ho);
 	        	}
 	        }
 		}
     }
+    
+    public void fireHyperPlayerModificationEvent(HyperPlayer hp) {
+    	new HyperPlayerModificationTask(hp).runTask(hc);
+    }
+    private class HyperPlayerModificationTask extends BukkitRunnable {
+    	private HyperPlayer hp;
+    	public HyperPlayerModificationTask(HyperPlayer hp) {
+    		this.hp = hp;
+    	}
+		public void run() {
+	        for (HyperListener listener : listeners) {
+	        	if (listener instanceof HyperPlayerModificationListener) {
+	        		HyperPlayerModificationListener l = (HyperPlayerModificationListener)listener;
+	        		l.onHyperPlayerModification(hp);
+	        	}
+	        }
+		}
+    }
+    
+    public void fireHyperBankModificationEvent(HyperBank hb) {
+    	new HyperBankModificationTask(hb).runTask(hc);
+    }
+    private class HyperBankModificationTask extends BukkitRunnable {
+    	private HyperBank hb;
+    	public HyperBankModificationTask(HyperBank hb) {
+    		this.hb = hb;
+    	}
+		public void run() {
+	        for (HyperListener listener : listeners) {
+	        	if (listener instanceof HyperBankModificationListener) {
+	        		HyperBankModificationListener l = (HyperBankModificationListener)listener;
+	        		l.onHyperBankModification(hb);
+	        	}
+	        }
+		}
+    }
+    
+    public void fireShopModificationEvent(Shop s) {
+    	new ShopModificationTask(s).runTask(hc);
+    }
+    private class ShopModificationTask extends BukkitRunnable {
+    	private Shop s;
+    	public ShopModificationTask(Shop s) {
+    		this.s = s;
+    	}
+		public void run() {
+	        for (HyperListener listener : listeners) {
+	        	if (listener instanceof ShopModificationListener) {
+	        		ShopModificationListener l = (ShopModificationListener)listener;
+	        		l.onShopModification(s);
+	        	}
+	        }
+		}
+    }
+    
+	public void fireDisableEvent() {
+		for (HyperListener listener : listeners) {
+			if (listener instanceof DisableListener) {
+				DisableListener l = (DisableListener) listener;
+				l.onDisable();
+			}
+		}
+	}
+	
+	public void fireEconomyCreationEvent() {
+		for (HyperListener listener : listeners) {
+			if (listener instanceof HyperEconomyCreationListener) {
+				HyperEconomyCreationListener l = (HyperEconomyCreationListener) listener;
+				l.onEconomyCreation();
+			}
+		}
+	}
 
 }

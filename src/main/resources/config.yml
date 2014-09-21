@@ -73,3 +73,9 @@ enchantment:
     book: 1
 bank:
   max-ownerships-per-player: 3
+multi-server:
+  enable: false
+  remote-server-ip-addresses: 192.168.1.1,192.168.1.2,
+  port: 3313
+  update-interval: 60
+  connection-timeout-ms: 2000

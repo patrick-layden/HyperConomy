@@ -55,6 +55,12 @@ public class HyperBankManager {
 		}
 	}
 	
+	public void removeHyperBank(String name) {
+		if (name == null) return;
+		if (!hasBank(name)) return;
+		hyperBanks.remove(name.toLowerCase());
+	}
+	
 	public boolean hasBank(String name) {
 		if (name == null) {return false;}
 		return hyperBanks.containsKey(name.toLowerCase());

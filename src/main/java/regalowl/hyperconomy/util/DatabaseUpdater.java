@@ -242,7 +242,7 @@ public class DatabaseUpdater {
 		f = t.addField("Z", FieldType.DOUBLE);f.setNotNull();
 		compositeKey.add(f);
 		f = t.addField("HYPEROBJECT", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
-		
+		t.setCompositeKey(compositeKey);
 
 		t = hc.getDataBukkit().addTable("hyperconomy_economies");
 		f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();

@@ -12,7 +12,6 @@ import org.bukkit.map.MapView;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HModType;
 import regalowl.hyperconomy.event.HyperObjectModificationListener;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
@@ -83,7 +82,7 @@ public class FrameShop implements HyperObjectModificationListener {
 	}
 	
 	@Override
-	public void onHyperObjectModification(HyperObject ho, HModType type) {
+	public void onHyperObjectModification(HyperObject ho) {
 		if (this.ho.equals(ho)) {
 			render();
 		}

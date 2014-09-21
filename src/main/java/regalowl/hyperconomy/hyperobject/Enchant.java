@@ -9,12 +9,13 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HModType;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
 
 public class Enchant extends BasicObject implements HyperObject {
 
+	private static final long serialVersionUID = -6150719215822283210L;
 	private SerializableEnchantment se;
 
 	
@@ -35,15 +36,17 @@ public class Enchant extends BasicObject implements HyperObject {
 	}
 	@Override
 	public void setData(String data) {
+		HyperConomy hc = HyperConomy.hc;
 		se = new SerializableEnchantment(data);
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this, HModType.DATA);
+		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
 	}
 	
 	
 	@Override
 	public Image getImage(int width, int height) {
+		HyperConomy hc = HyperConomy.hc;
 		Image i = null;
 		URL url = hc.getClass().getClassLoader().getResource("Images/enchanted_book_0.png");
 		try {
@@ -123,9 +126,10 @@ public class Enchant extends BasicObject implements HyperObject {
 
 	@Override
 	public double getSellPriceWithTax(EnchantmentClass eclass, HyperPlayer hp) {
+		HyperConomy hc = HyperConomy.hc;
 		double price = getSellPrice(eclass, hp);
 		price -= hp.getSalesTax(price);
-		return cf.twoDecimals(price);
+		return hc.gCF().twoDecimals(price);
 	}
 
 	

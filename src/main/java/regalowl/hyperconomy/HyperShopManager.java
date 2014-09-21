@@ -104,7 +104,6 @@ public class HyperShopManager {
 	
 	public void addShop(Shop shop) {
 		shops.put(shop.getName(), shop);
-		hc.getHyperEventHandler().fireShopCreationEvent(shop);
 	}
 	
 	public void removeShop(String name) {

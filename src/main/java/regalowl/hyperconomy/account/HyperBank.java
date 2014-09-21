@@ -9,16 +9,18 @@ import regalowl.hyperconomy.shop.Shop;
 
 public class HyperBank implements HyperAccount {
 
-	private HyperConomy hc;
+	private static final long serialVersionUID = 1935083567272658374L;
 	private String name;
 	private double balance;
 	private ArrayList<String> owners = new ArrayList<String>();
 	private ArrayList<String> members = new ArrayList<String>();
+	private boolean deleted;
 	
 	
 	public HyperBank(String name, HyperPlayer owner) {
 		if (name == null) {return;}
-		this.hc = HyperConomy.hc;
+		HyperConomy hc = HyperConomy.hc;
+		deleted = false;
 		this.name = name;
 		this.balance = 0.0;
 		if (owner != null) {
@@ -37,7 +39,8 @@ public class HyperBank implements HyperAccount {
 	}
 	
 	public HyperBank(String name, double balance, String owners, String members) {
-		this.hc = HyperConomy.hc;
+		HyperConomy hc = HyperConomy.hc;
+		deleted = false;
 		this.name = name;
 		this.balance = balance;
 		this.owners = hc.gCF().explode(owners, ",");
@@ -45,6 +48,7 @@ public class HyperBank implements HyperAccount {
 	}
 	
 	public void delete() {
+		HyperConomy hc = HyperConomy.hc;
 		WriteStatement ws = new WriteStatement("DELETE FROM hyperconomy_banks WHERE NAME=?",hc.getDataBukkit());
 		ws.addParameter(name);
 		hc.getSQLWrite().addToQueue(ws);
@@ -65,6 +69,8 @@ public class HyperBank implements HyperAccount {
 				s.setOwner(getOwners().get(0));
 			}
 		}
+		deleted = true;
+		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
 	}
 	
 	@Override
@@ -88,6 +94,7 @@ public class HyperBank implements HyperAccount {
 
 	@Override
 	public void setName(String newName) {
+		HyperConomy hc = HyperConomy.hc;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET NAME=? WHERE NAME=?",hc.getDataBukkit());
 		ws.addParameter(newName);
 		ws.addParameter(this.name);
@@ -105,15 +112,18 @@ public class HyperBank implements HyperAccount {
 				s.setOwner(this);
 			}
 		}
+		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
 	}
 	
 	@Override
 	public void setBalance(double balance) {
+		HyperConomy hc = HyperConomy.hc;
 		this.balance = balance;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET BALANCE=? WHERE NAME=?",hc.getDataBukkit());
 		ws.addParameter(this.balance);
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);
+		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
 	}
 
 	@Override
@@ -126,33 +136,41 @@ public class HyperBank implements HyperAccount {
 	
 	
 	public void addOwner(HyperPlayer owner) {
+		HyperConomy hc = HyperConomy.hc;
 		String ownerName = owner.getName().toLowerCase();
 		if (!owners.contains(ownerName)) {
 			owners.add(ownerName);
 		}
 		saveOwners();
+		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
 	}
 	public void removeOwner(HyperPlayer owner) {
+		HyperConomy hc = HyperConomy.hc;
 		String ownerName = owner.getName().toLowerCase();
 		if (owners.contains(ownerName)) {
 			owners.remove(ownerName);
 		}
 		saveOwners();
+		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
 	}
 	
 	public void addMember(HyperPlayer member) {
+		HyperConomy hc = HyperConomy.hc;
 		String memberName = member.getName().toLowerCase();
 		if (!members.contains(memberName)) {
 			members.add(memberName);
 		}
 		saveMembers();
+		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
 	}
 	public void removeMember(HyperPlayer owner) {
+		HyperConomy hc = HyperConomy.hc;
 		String memberName = owner.getName().toLowerCase();
 		if (members.contains(memberName)) {
 			members.remove(memberName);
 		}
 		saveMembers();
+		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
 	}
 	
 	public boolean isOwner(HyperPlayer hp) {
@@ -171,6 +189,7 @@ public class HyperBank implements HyperAccount {
 	}
 	
 	public String getOwnersList() {
+		HyperConomy hc = HyperConomy.hc;
 		String list = "";
 		for (String owner:owners) {
 			list += hc.getHyperPlayerManager().getHyperPlayer(owner).getName() + ",";
@@ -182,6 +201,7 @@ public class HyperBank implements HyperAccount {
 	}
 	
 	public String getMembersList() {
+		HyperConomy hc = HyperConomy.hc;
 		String list = "";
 		for (String member:members) {
 			list += hc.getHyperPlayerManager().getHyperPlayer(member).getName() + ",";
@@ -193,6 +213,7 @@ public class HyperBank implements HyperAccount {
 	}
 	
 	public ArrayList<HyperPlayer> getOwners() {
+		HyperConomy hc = HyperConomy.hc;
 		ArrayList<HyperPlayer> ownersList = new ArrayList<HyperPlayer>();
 		for (String owner:owners) {
 			ownersList.add(hc.getHyperPlayerManager().getHyperPlayer(owner));
@@ -201,6 +222,7 @@ public class HyperBank implements HyperAccount {
 	}
 	
 	public ArrayList<HyperPlayer> getMembers() {
+		HyperConomy hc = HyperConomy.hc;
 		ArrayList<HyperPlayer> membersList = new ArrayList<HyperPlayer>();
 		for (String member:members) {
 			membersList.add(hc.getHyperPlayerManager().getHyperPlayer(member));
@@ -209,12 +231,14 @@ public class HyperBank implements HyperAccount {
 	}
 
 	private void saveOwners() {
+		HyperConomy hc = HyperConomy.hc;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET OWNERS=? WHERE NAME=?",hc.getDataBukkit());
 		ws.addParameter(hc.gCF().implode(owners, ","));
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);
 	}
 	private void saveMembers() {
+		HyperConomy hc = HyperConomy.hc;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET MEMBERS=? WHERE NAME=?",hc.getDataBukkit());
 		ws.addParameter(hc.gCF().implode(members, ","));
 		ws.addParameter(this.name);
@@ -228,6 +252,10 @@ public class HyperBank implements HyperAccount {
 		for (HyperPlayer member: getMembers()) {
 			member.sendMessage(message);
 		}
+	}
+	
+	public boolean deleted() {
+		return deleted;
 	}
 
 }

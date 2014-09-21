@@ -11,6 +11,7 @@ import regalowl.hyperconomy.shop.PlayerShop;
 public class ShopEnchant extends BasicShopObject implements HyperObject {
 
 
+	private static final long serialVersionUID = -213806188136759445L;
 
 	public ShopEnchant(PlayerShop playerShop, HyperObject ho, double stock, double buyPrice, double sellPrice, int maxStock, HyperObjectStatus status, boolean useEconomyStock) {
 		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
