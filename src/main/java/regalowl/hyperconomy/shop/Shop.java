@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public interface Shop extends Comparable<Shop>, Serializable{
 	
@@ -26,8 +28,9 @@ public interface Shop extends Comparable<Shop>, Serializable{
 	public void setEconomy(String economy);
 	
 	public boolean inShop(int x, int y, int z, String world);
-	public boolean inShop(Location l);
+	public boolean inShop(SimpleLocation l);
 	public boolean inShop(Player player);
+	public boolean inShop(HyperPlayer hp);
 	public void sendEntryMessage(Player player);
 	public String getEconomy();
 	
@@ -78,13 +81,13 @@ public interface Shop extends Comparable<Shop>, Serializable{
 	public int getP2x();
 	public int getP2y();
 	public int getP2z();
-	public Location getLocation1();
-	public Location getLocation2();
+	public SimpleLocation getLocation1();
+	public SimpleLocation getLocation2();
 	public void updatePlayerStatus();
 	
 	public int getVolume();
 	public void deleteShop();
-	public ArrayList<Location> getShopBlockLocations();
+	public ArrayList<SimpleLocation> getShopBlockLocations();
 	/**
 	 * @param s A shop.
 	 * @param volumeLimit A maximum volume for this test.

@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.command;
 
 import org.bukkit.entity.Player;
+
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
@@ -12,27 +13,23 @@ import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class Hb {
-	HyperConomy hc;
+public class Hb extends BaseCommand implements HyperCommand{
 
-	Hb(String args[], Player player, String playerecon) {
-		hc = HyperConomy.hc;
-		if (hc.getHyperLock().isLocked(player)) {
-			hc.getHyperLock().sendLockMessage(player);
-			return;
-		}
-		DataManager em = hc.getDataManager();
-		LanguageFile L = hc.getLanguageFile();
+	public Hb() {
+		super(true);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		double amount;
 		boolean ma = false;
 		try {
-			HyperPlayer hp = em.getHyperPlayer(player);
 			HyperEconomy he = hp.getHyperEconomy();
-
-			HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getHyperShopManager().getShop(player));
+			HyperObject ho = he.getHyperObject(hp.getItemInHand(), em.getHyperShopManager().getShop(player));
 			if (ho == null) {
-				player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
-				return;
+				data.addResponse(L.get("OBJECT_NOT_AVAILABLE"));
+				return data;
 			}
 			if (args.length == 0) {
 				amount = 1;
@@ -49,8 +46,8 @@ public class Hb {
 						int space = ho.getAvailableSpace(player.getInventory());
 						amount = space;
 					} else {
-						player.sendMessage(L.get("HB_INVALID"));
-						return;
+						data.addResponse(L.get("HB_INVALID"));
+						return data;
 					}
 				}
 			}
@@ -62,7 +59,7 @@ public class Hb {
 			if (amount > shopstock && ma) {
 				amount = shopstock;
 			}
-			Shop s = em.getHyperShopManager().getShop(player);
+			Shop s = hc.getHyperShopManager().getShop(hp);
 
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 			pt.setObeyShops(true);
@@ -74,7 +71,8 @@ public class Hb {
 
 		} catch (Exception e) {
 			HyperConomy.hc.getDebugMode().debugWriteError(e);
-			player.sendMessage(L.get("HB_INVALID"));
+			data.addResponse(L.get("HB_INVALID"));
 		}
+		return data;
 	}
 }

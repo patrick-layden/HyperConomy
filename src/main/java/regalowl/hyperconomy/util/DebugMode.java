@@ -1,8 +1,6 @@
 package regalowl.hyperconomy.util;
 
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import regalowl.hyperconomy.HyperConomy;
 
 public class DebugMode {
@@ -35,11 +33,10 @@ public class DebugMode {
 	}
 	
 	public void ayncDebugConsoleMessage(String message) {
-		HyperConomy hc = HyperConomy.hc;
 		AsyncConsoleDebug cd  = new AsyncConsoleDebug(message);
-		cd.runTask(hc);
+		new Thread(cd).start();
 	}
-	private class AsyncConsoleDebug extends BukkitRunnable {
+	private class AsyncConsoleDebug implements Runnable {
 		private String m;
 		private HyperConomy hc;
 		public AsyncConsoleDebug(String message) {

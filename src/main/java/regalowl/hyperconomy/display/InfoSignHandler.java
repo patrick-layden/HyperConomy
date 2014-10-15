@@ -21,11 +21,15 @@ import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperObjectModificationListener;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperListener;
+import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.util.SimpleLocation;
 
-public class InfoSignHandler implements Listener, HyperObjectModificationListener {
+public class InfoSignHandler implements Listener, HyperListener {
 
 	private HyperConomy hc;
 	private ConcurrentHashMap<Integer, InfoSign> infoSigns = new ConcurrentHashMap<Integer, InfoSign>();
@@ -35,12 +39,13 @@ public class InfoSignHandler implements Listener, HyperObjectModificationListene
 	private AtomicBoolean updateActive = new AtomicBoolean();
 	private AtomicBoolean repeatUpdate = new AtomicBoolean();
 
+
 	public InfoSignHandler() {
 		hc = HyperConomy.hc;
 		updateActive.set(false);
 		repeatUpdate.set(false);
 		if (hc.getConf().getBoolean("enable-feature.info-signs")) {
-			hc.getServer().getPluginManager().registerEvents(this, hc);
+			hc.getMC().getConnector().getServer().getPluginManager().registerEvents(this, hc.getMC().getConnector());
 			loadSigns();
 		}
 		hc.getHyperEventHandler().registerListener(this);
@@ -49,71 +54,27 @@ public class InfoSignHandler implements Listener, HyperObjectModificationListene
 	private void loadSigns() {
 		signCounter.set(0);
 		infoSigns.clear();
-		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+		new Thread(new Runnable() {
 			public void run() {
 				SQLRead sr = hc.getSQLRead();
 				dbData = sr.select("SELECT * FROM hyperconomy_info_signs");
-				hc.getServer().getScheduler().runTask(hc, new Runnable() {
+				hc.getMC().runTask(new Runnable() {
 					public void run() {
 						while (dbData.next()) {
-							Location l = new Location(Bukkit.getWorld(dbData.getString("WORLD")), dbData.getInt("X"),dbData.getInt("Y"),dbData.getInt("Z"));
+							SimpleLocation l = new SimpleLocation(dbData.getString("WORLD"), dbData.getInt("X"),dbData.getInt("Y"),dbData.getInt("Z"));
 							infoSigns.put(signCounter.getAndIncrement(), new InfoSign(l, SignType.fromString(dbData.getString("TYPE")), dbData.getString("HYPEROBJECT"), 
 									dbData.getDouble("MULTIPLIER"), dbData.getString("ECONOMY"), EnchantmentClass.fromString(dbData.getString("ECLASS"))));
 						}
 						dbData.close();
 						dbData = null;
-					}
-				});
-				hc.getServer().getScheduler().runTask(hc, new Runnable() {
-					public void run() {
 						updateSigns();
 					}
 				});
 			}
-		});
+		}).start();
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onSignChangeEvent(SignChangeEvent scevent) {
-		try {
-			DataManager em = hc.getDataManager();
-			Player p = scevent.getPlayer();
-			if (p.hasPermission("hyperconomy.createsign")) {
-				String[] lines = scevent.getLines();
-				String economy = "default";
-				HyperPlayer hp = em.getHyperPlayerManager().getHyperPlayer(p);
-				economy = "default";
-				if (hp != null && hp.getEconomy() != null) {
-					economy = hp.getEconomy();
-				}
-				String objectName = lines[0].trim() + lines[1].trim();
-				objectName = em.getEconomy(hp.getEconomy()).fixName(objectName);
-				int multiplier = 1;
-				try {
-					multiplier = Integer.parseInt(lines[3]);
-				} catch (Exception e) {
-					multiplier = 1;
-				}
-				EnchantmentClass enchantClass = EnchantmentClass.NONE;
-				if (EnchantmentClass.fromString(lines[3]) != null) {
-					enchantClass = EnchantmentClass.fromString(lines[3]);
-				}
-				if (em.getEconomy(hp.getEconomy()).enchantTest(objectName) && enchantClass == EnchantmentClass.NONE) {
-					enchantClass = EnchantmentClass.DIAMOND;
-				}
-				if (em.getEconomy(hp.getEconomy()).objectTest(objectName)) {
-					SignType type = SignType.fromString(lines[2]);
-					if (type != null) {
-						Location l = new Location(scevent.getBlock().getWorld(),scevent.getBlock().getX(),scevent.getBlock().getY(),scevent.getBlock().getZ());
-						infoSigns.put(signCounter.getAndIncrement(), new InfoSign(l, type, objectName, multiplier, economy, enchantClass, lines));
-						updateSigns();
-					}
-				}
-			}
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-		}
-	}
+
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onSignRemoval(BlockBreakEvent bbevent) {
@@ -136,8 +97,48 @@ public class InfoSignHandler implements Listener, HyperObjectModificationListene
 	}
 	
 	@Override
-	public void onHyperObjectModification(HyperObject ho) {
-		updateSigns();
+	public void onHyperEvent(HyperEvent event) {
+		if (event instanceof HyperObjectModificationEvent) {
+			updateSigns();
+		} else if (event instanceof HyperSignChangeEvent) {
+			HyperSignChangeEvent ev = (HyperSignChangeEvent)event;
+			try {
+				DataManager em = hc.getDataManager();
+				HyperPlayer hp = ev.getHyperPlayer();
+				if (hp.getPlayer().hasPermission("hyperconomy.createsign")) {
+					String[] lines = ev.getLines();
+					String economy = "default";
+					economy = "default";
+					if (hp != null && hp.getEconomy() != null) {
+						economy = hp.getEconomy();
+					}
+					String objectName = lines[0].trim() + lines[1].trim();
+					objectName = em.getEconomy(hp.getEconomy()).fixName(objectName);
+					int multiplier = 1;
+					try {
+						multiplier = Integer.parseInt(lines[3]);
+					} catch (Exception e) {
+						multiplier = 1;
+					}
+					EnchantmentClass enchantClass = EnchantmentClass.NONE;
+					if (EnchantmentClass.fromString(lines[3]) != null) {
+						enchantClass = EnchantmentClass.fromString(lines[3]);
+					}
+					if (em.getEconomy(hp.getEconomy()).enchantTest(objectName) && enchantClass == EnchantmentClass.NONE) {
+						enchantClass = EnchantmentClass.DIAMOND;
+					}
+					if (em.getEconomy(hp.getEconomy()).objectTest(objectName)) {
+						SignType type = SignType.fromString(lines[2]);
+						if (type != null) {
+							infoSigns.put(signCounter.getAndIncrement(), new InfoSign(ev.getLocation(), type, objectName, multiplier, economy, enchantClass, lines));
+							updateSigns();
+						}
+					}
+				}
+			} catch (Exception e) {
+				hc.gDB().writeError(e);
+			}
+		}
 	}
 
 	public void updateSigns() {
@@ -152,22 +153,22 @@ public class InfoSignHandler implements Listener, HyperObjectModificationListene
 	
 	private class SignUpdater {
 		private ArrayList<InfoSign> signs;
-		private BukkitTask updateTask;
+		private long updateTaskId;
 		SignUpdater() {
 			this.signs = getInfoSigns();
-			updateTask = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
+			updateTaskId = hc.getMC().runRepeatingTask(new Runnable() {
 				public void run() {
 					if (signs.isEmpty()) {
 						if (repeatUpdate.get()) {
 							signs = getInfoSigns();
 							if (signs.isEmpty()) {
-								updateTask.cancel();
+								hc.getMC().cancelTask(updateTaskId);
 								updateActive.set(false);
 								return;
 							}
 							repeatUpdate.set(false);
 						} else {
-							updateTask.cancel();
+							hc.getMC().cancelTask(updateTaskId);
 							updateActive.set(false);
 							return;
 						}
@@ -208,5 +209,7 @@ public class InfoSignHandler implements Listener, HyperObjectModificationListene
 		}
 		return null;
 	}
+
+
 
 }

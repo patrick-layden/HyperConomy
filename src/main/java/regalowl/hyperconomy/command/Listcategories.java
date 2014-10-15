@@ -14,7 +14,7 @@ public class Listcategories {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		try {
-			Iterator<String> it = hc.gYH().gFC("categories").getKeys(false).iterator();
+			Iterator<String> it = hc.gYH().getFileConfiguration("categories").getTopLevelKeys().iterator();
 			ArrayList<String> categories = new ArrayList<String>();
 			while (it.hasNext()) {
 				categories.add(it.next().toString());

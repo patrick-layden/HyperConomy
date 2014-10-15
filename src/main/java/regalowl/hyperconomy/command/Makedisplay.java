@@ -31,7 +31,7 @@ public class Makedisplay {
 			Location bl = b.getLocation();
 			String name = he.fixName(args[0]);
 			if (he.itemTest(name)) {
-				itdi.addDisplay(bl.getX(), bl.getY() + 1, bl.getZ(), bl.getWorld(), name);
+				itdi.addDisplay(bl.getX(), bl.getY() + 1, bl.getZ(), bl.getWorld().getName(), name);
 			} else {
 				player.sendMessage(L.get("INVALID_ITEM_NAME"));
 			}
@@ -42,7 +42,7 @@ public class Makedisplay {
 				double y = player.getLocation().getY();
 				double z = player.getLocation().getZ();
 				World w = player.getLocation().getWorld();
-				itdi.addDisplay(x, y, z, w, name);
+				itdi.addDisplay(x, y, z, w.getName(), name);
 			} else {
 				player.sendMessage(L.get("INVALID_ITEM_NAME"));
 			}

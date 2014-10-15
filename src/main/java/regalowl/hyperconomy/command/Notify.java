@@ -10,13 +10,14 @@ import org.bukkit.entity.Player;
 import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.event.TransactionListener;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperListener;
+import regalowl.hyperconomy.event.TransactionEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
-import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.LanguageFile;
-public class Notify implements CommandExecutor, TransactionListener {
+public class Notify implements CommandExecutor, HyperListener {
 
 	private HyperConomy hc;
 	private CommonFunctions cf;
@@ -84,21 +85,26 @@ public class Notify implements CommandExecutor, TransactionListener {
 		return true;
 	}
 	
-	
-	public void onTransaction(PlayerTransaction pt, TransactionResponse response) {
-		if (response.successful()) {
-			TransactionType tt = pt.getTransactionType();
-			if (tt == TransactionType.BUY || tt == TransactionType.SELL) {
-				if (pt.getHyperObject() != null) {
-					HyperObject ho = pt.getHyperObject();
-					if (notifyNames.contains(ho.getName())) {
-						String message = L.f(L.get("SQL_NOTIFICATION"), ho.getStock(), ho.getBuyPriceWithTax(1), ho.getDisplayName(), ho.getEconomy());
-						sendNotification(message);
+	@Override
+	public void onHyperEvent(HyperEvent event) {
+		if (event instanceof TransactionEvent) {
+			TransactionEvent te = (TransactionEvent)event;
+			if (te.getTransactionResponse().successful()) {
+				PlayerTransaction pt = te.getTransaction();
+				TransactionType tt = pt.getTransactionType();
+				if (tt == TransactionType.BUY || tt == TransactionType.SELL) {
+					if (pt.getHyperObject() != null) {
+						HyperObject ho = pt.getHyperObject();
+						if (notifyNames.contains(ho.getName())) {
+							String message = L.f(L.get("SQL_NOTIFICATION"), ho.getStock(), ho.getBuyPriceWithTax(1), ho.getDisplayName(), ho.getEconomy());
+							sendNotification(message);
+						}
 					}
 				}
 			}
 		}
 	}
+	
 
 	private void sendNotification(String message) {
 		for (Player p:hc.getHyperPlayerManager().getOnlinePlayers()) {
@@ -107,6 +113,8 @@ public class Notify implements CommandExecutor, TransactionListener {
 			}
 		}
 	}
+
+
 	
 	
 }

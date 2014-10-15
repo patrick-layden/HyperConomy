@@ -8,16 +8,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import regalowl.databukkit.CommonFunctions;
+import regalowl.databukkit.file.FileConfiguration;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.ShopCreationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.GlobalShop;
 import regalowl.hyperconomy.shop.ServerShop;
@@ -106,7 +107,7 @@ public class Servershopcommand implements CommandExecutor {
 					SimpleLocation l = new SimpleLocation(player.getLocation());
 					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					hsm.addShop(shop);
-					hc.getHyperEventHandler().fireShopCreationEvent(shop);
+					hc.getHyperEventHandler().fireEvent(new ShopCreationEvent(shop));
 				}
 				player.sendMessage(L.get("P1_SET"));
 			} catch (Exception e) {
@@ -122,7 +123,7 @@ public class Servershopcommand implements CommandExecutor {
 					SimpleLocation l = new SimpleLocation(player.getLocation());
 					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					hsm.addShop(shop);
-					hc.getHyperEventHandler().fireShopCreationEvent(shop);
+					hc.getHyperEventHandler().fireEvent(new ShopCreationEvent(shop));
 				}
 				player.sendMessage(L.get("P2_SET"));
 			} catch (Exception e) {

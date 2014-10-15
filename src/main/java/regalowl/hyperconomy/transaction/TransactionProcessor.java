@@ -14,6 +14,7 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperEventHandler;
+import regalowl.hyperconomy.event.TransactionEvent;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
@@ -140,7 +141,7 @@ public class TransactionProcessor {
 				buyEnchantFromItem();
 				break;
 		}
-		heh.fireTransactionEvent(pt, response);
+		heh.fireEvent(new TransactionEvent(pt, response));
 		return response;
 	}
 	

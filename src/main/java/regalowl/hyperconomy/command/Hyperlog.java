@@ -53,7 +53,7 @@ public class Hyperlog {
 						sender.sendMessage(L.get("HYPERLOG_INVALID_INCREMENT"));
 						return;
 					}
-					if (hc.gDB().useMySQL()) {
+					if (hc.gDB().getSQLManager().useMySQL()) {
 						statement += " TIME > DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
 					} else {
 						statement += " TIME > date('now','" + formatSQLiteTime(quantity * -1) + " minute')";
@@ -73,7 +73,7 @@ public class Hyperlog {
 						return;
 					}
 
-					if (hc.gDB().useMySQL()) {
+					if (hc.gDB().getSQLManager().useMySQL()) {
 						statement += " TIME < DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
 					} else {
 						statement += " TIME < date('now','" + formatSQLiteTime(quantity * -1) + " minute')";
@@ -110,11 +110,10 @@ public class Hyperlog {
 			}
 
 			statement += " ORDER BY TIME DESC";
-			
-			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			new Thread(new Runnable() {
 	    		public void run() {
 	    			result = getHyperLog(statement);
-	    			hc.getServer().getScheduler().runTask(hc, new Runnable() {
+	    			hc.getMineCraftConnector().runTask(new Runnable() {
 	    	    		public void run() {
 	    	    			int m = result.size();
 	    	    			if (m > 100) {
@@ -130,10 +129,7 @@ public class Hyperlog {
 	    	    		}
 	    	    	});
 	    		}
-	    	});
-			
-
-
+	    	}).start();
 		} catch (Exception e) {
 			sender.sendMessage(L.get("HYPERLOG_INVALID"));
 		}

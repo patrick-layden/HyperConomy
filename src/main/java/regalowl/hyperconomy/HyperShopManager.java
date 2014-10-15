@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -12,7 +11,7 @@ import regalowl.hyperconomy.shop.GlobalShop;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
-import regalowl.hyperconomy.util.HyperConfig;
+import regalowl.databukkit.file.FileConfiguration;
 import regalowl.hyperconomy.util.SimpleLocation;
 
 public class HyperShopManager {
@@ -20,9 +19,9 @@ public class HyperShopManager {
 	private ConcurrentHashMap<String, Shop> shops = new ConcurrentHashMap<String, Shop>();
 	private boolean useShops;
 	private long shopinterval;
-	private HyperConfig config;
+	private FileConfiguration config;
 	private HyperConomy hc;
-	private BukkitTask shopCheckTask;
+	private long shopCheckTaskId;
 	
 	public HyperShopManager() {
 		hc = HyperConomy.hc;
@@ -70,7 +69,17 @@ public class HyperShopManager {
 	
 	
 	
-	
+	public Shop getShop(HyperPlayer hp) {
+		if (hp == null) {
+			return null;
+		}
+		for (Shop shop : shops.values()) {
+			if (shop.inShop(hp)) {
+				return shop;
+			}
+		}
+		return null;
+	}
 	public Shop getShop(Player player) {
 		if (player == null) {
 			return null;
@@ -98,6 +107,14 @@ public class HyperShopManager {
 		}
 		return false;
 	}
+	public boolean inAnyShop(HyperPlayer hp) {
+		for (Shop shop : shops.values()) {
+			if (shop.inShop(hp)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	public boolean shopExists(String name) {
 		return shops.containsKey(fixShopName(name));
 	}
@@ -120,7 +137,7 @@ public class HyperShopManager {
 		shops.remove(name);
 	}
     public void startShopCheck() {
-		shopCheckTask = hc.getServer().getScheduler().runTaskTimer(hc, new Runnable() {
+		shopCheckTaskId = hc.getMC().runRepeatingTask(new Runnable() {
 		    public void run() {
 				for (Shop shop:shops.values()) {
 					shop.updatePlayerStatus();
@@ -129,9 +146,7 @@ public class HyperShopManager {
 		}, shopinterval, shopinterval);
     }
     public void stopShopCheck() {
-    	if (shopCheckTask != null) {
-    		shopCheckTask.cancel();
-    	}
+    	hc.getMC().cancelTask(shopCheckTaskId);
     }
     public long getShopCheckInterval() {
     	return shopinterval;

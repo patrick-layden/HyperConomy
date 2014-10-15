@@ -61,7 +61,7 @@ public class LanguageFile {
 				break;
 			}
 		}
-		String folderpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "Languages";
+		String folderpath = hc.getFolderPath() + File.separator + "Languages";
 		//String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
 		ft.makeFolder(folderpath);
 		String filepath = folderpath + File.separator + lang + ".hl";
@@ -95,7 +95,7 @@ public class LanguageFile {
 	
 	
 	public void updateBackup() {
-		String folderpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "Languages";
+		String folderpath = hc.getFolderPath() + File.separator + "Languages";
 		ft.makeFolder(folderpath);
 		//String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
 		String backuppath = folderpath + File.separator + "enUS_b.hl";

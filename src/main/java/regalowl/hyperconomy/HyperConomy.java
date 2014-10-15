@@ -1,24 +1,20 @@
 package regalowl.hyperconomy;
 
-import java.io.File;
 import java.util.logging.Logger;
-
-import net.milkbowl.vault.Vault;
-import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.DataBukkit;
+import regalowl.databukkit.event.DisableRequestListener;
+import regalowl.databukkit.event.LogLevel;
+import regalowl.databukkit.event.LogListener;
+import regalowl.databukkit.file.FileConfiguration;
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.file.YamlHandler;
+import regalowl.databukkit.sql.SQLManager;
 import regalowl.databukkit.sql.SQLRead;
 import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.api.API;
@@ -26,6 +22,8 @@ import regalowl.hyperconomy.api.EconomyAPI;
 import regalowl.hyperconomy.api.HyperAPI;
 import regalowl.hyperconomy.api.HyperEconAPI;
 import regalowl.hyperconomy.command.Additem;
+import regalowl.hyperconomy.command.Audit;
+import regalowl.hyperconomy.command.Browseshop;
 import regalowl.hyperconomy.command.Buy;
 import regalowl.hyperconomy.command.Frameshopcommand;
 import regalowl.hyperconomy.command.Hc;
@@ -46,27 +44,28 @@ import regalowl.hyperconomy.command._Command;
 import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.display.ItemDisplayFactory;
 import regalowl.hyperconomy.display.TransactionSign;
-import regalowl.hyperconomy.event.DataLoadListener;
+import regalowl.hyperconomy.event.DataLoadEvent;
+import regalowl.hyperconomy.event.DisableEvent;
+import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.HyperEventHandler;
+import regalowl.hyperconomy.event.HyperListener;
 import regalowl.hyperconomy.server.HyperModificationServer;
 import regalowl.hyperconomy.shop.ChestShop;
 import regalowl.hyperconomy.shop.FrameShopHandler;
 import regalowl.hyperconomy.util.ConsoleSettings;
 import regalowl.hyperconomy.util.DebugMode;
 import regalowl.hyperconomy.util.DisabledProtection;
-import regalowl.hyperconomy.util.Economy_HyperConomy;
 import regalowl.hyperconomy.util.History;
-import regalowl.hyperconomy.util.HyperConfig;
 import regalowl.hyperconomy.util.HyperLock;
 import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
 import regalowl.hyperconomy.util.UpdateYML;
 
-public class HyperConomy extends JavaPlugin implements DataLoadListener {
+public class HyperConomy implements HyperListener, LogListener, DisableRequestListener {
 	public static HyperConomy hc;
 	public static API api;
 	public static EconomyAPI economyApi;
-	
+	private MineCraftConnector mc;
 	private DataManager dm;
 	private DataBukkit db;
 	private YamlHandler yh;
@@ -82,30 +81,23 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	private HyperLock hl;
 	private LanguageFile L;
 	private Logger log = Logger.getLogger("Minecraft");
-	private Economy economy;
 	private HyperEventHandler heh;
 	private boolean enabled;
-	private boolean useExternalEconomy;
-	private boolean vaultInstalled;
 	private CommonFunctions cf;
 	private FileTools ft;
 	private ConsoleSettings cos;
-	private HyperConfig hConfig;
+	private FileConfiguration hConfig;
 	private DebugMode dMode;
+	private final int saveInterval = 1200000;
 
-	@Override
-	public void onLoad() {
-		load();
+	public HyperConomy(MineCraftConnector mc) {
+		this.mc = mc;
 	}
-	@Override
-	public void onEnable() {
-		enable();
-	}
+	
 	@Override
 	public void onDisable() {
 		disable(false);
 	}
-	
 
 
 	public void load() {
@@ -113,7 +105,9 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		hc = this;
 		api = new HyperAPI();
 		economyApi = new HyperEconAPI();
-		db = new DataBukkit(this);
+		db = new DataBukkit("HyperConomy");
+		db.initialize();
+		db.registerListener(this);
 		cf = db.getCommonFunctions();
 		ft = db.getFileTools();
 		yh = db.getYamlHandler();
@@ -122,18 +116,18 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		yh.registerFileConfiguration("categories");
 		yh.registerFileConfiguration("config");
 		new UpdateYML();
-		hConfig = new HyperConfig(yh.gFC("config"));
+		hConfig = yh.gFC("config");
 		dMode = new DebugMode();
 		dMode.syncDebugConsoleMessage("HyperConomy loaded with Debug Mode enabled.  Configuration files created and loaded.");
 		L = new LanguageFile();
 		hl = new HyperLock(true, false, false);
 		heh = new HyperEventHandler();
 		heh.registerListener(this);
-		hookVault();
+		mc.hookExternalEconomy();
 		
 	}
 	public void enable() {
-		HandlerList.unregisterAll(this);
+		mc.unregisterAllListeners();
 		dm = new DataManager();
 		if (hConfig.getBoolean("sql.use-mysql")) {
 			String username = hConfig.getString("sql.mysql-connection.username");
@@ -141,17 +135,17 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 			int port = hConfig.getInt("sql.mysql-connection.port");
 			String host = hConfig.getString("sql.mysql-connection.host");
 			String database = hConfig.getString("sql.mysql-connection.database");
-			db.enableMySQL(host, database, username, password, port);
+			db.getSQLManager().enableMySQL(host, database, username, password, port);
 		}
-		dMode.syncDebugConsoleMessage("Expected plugin folder path: [" + db.getPluginFolderPath() + "]");
-		db.createDatabase();
+		dMode.syncDebugConsoleMessage("Expected plugin folder path: [" + db.getStoragePath() + "]");
+		db.getSQLManager().createDatabase();
 		dMode.syncDebugConsoleMessage("Database created.");
-		sw = db.getSQLWrite();
-		sr = db.getSQLRead();
+		sw = db.getSQLManager().getSQLWrite();
+		sr = db.getSQLManager().getSQLRead();
 		sw.setLogSQL(hConfig.getBoolean("sql.log-sql-statements"));
-		setupExternalEconomy();
-		if (useExternalEconomy) {
-			log.info("[HyperConomy]Using external economy plugin ("+economy.getName()+") via Vault.");
+		mc.setupExternalEconomy();
+		if (mc.useExternalEconomy()) {
+			log.info("[HyperConomy]Using external economy plugin ("+mc.getEconomyName()+") via Vault.");
 		} else {
 			log.info("[HyperConomy]Using internal economy plugin.");
 		}
@@ -160,28 +154,37 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		l = new Log(this);
 		commandhandler = new _Command();
 		new TransactionSign();
-		yh.startSaveTask(hConfig.getLong("intervals.save"));
+		yh.startSaveTask(saveInterval);
 		cs = new ChestShop();
 		cos = new ConsoleSettings("default");
 		new HyperModificationServer();
 	}
 	
+	@Override
+	public void onHyperEvent(HyperEvent event) {
+		if (event instanceof DataLoadEvent) {
+			onDataLoad();
+		}
+	}
+
+	
+	
 	public void onDataLoad() {
 		hist = new History();
 		itdi = new ItemDisplayFactory();
-		registerCommands();
 		isign = new InfoSignHandler();
 		fsh = new FrameShopHandler();
+		registerCommands();
 		enabled = true;
 		hl.setLoadLock(false);
 	}
 	
 
 	public void disable(boolean protect) {
-		heh.fireDisableEvent();
-		unHookVault();
+		heh.fireEvent(new DisableEvent());
+		mc.unhookExternalEconomy();
 		enabled = false;
-		HandlerList.unregisterAll(this);
+		mc.unregisterAllListeners();
 		if (itdi != null) {
 			itdi.unloadDisplays();
 		}
@@ -195,7 +198,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 			db.shutDown();
 			db = null;
 		}
-		getServer().getScheduler().cancelTasks(this);
+		mc.cancelAllTasks();
 		if (protect) {
 			new DisabledProtection();
 		}
@@ -211,21 +214,23 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	}
 
 	private void registerCommands() {
+		mc.registerCommand("hctest", new Hctest());
+		mc.registerCommand("hc", new Hc());
+		mc.registerCommand("audit", new Audit());
+		mc.registerCommand("additem", new Additem());
+		mc.registerCommand("browseshop", new Browseshop());
+		mc.registerCommand("buy", new Buy());
 		Bukkit.getServer().getPluginCommand("manageshop").setExecutor(new Manageshop());
-		Bukkit.getServer().getPluginCommand("additem").setExecutor(new Additem());
 		Bukkit.getServer().getPluginCommand("hcset").setExecutor(new Hcset());
 		Bukkit.getServer().getPluginCommand("hcdelete").setExecutor(new Hcdelete());
-		Bukkit.getServer().getPluginCommand("hctest").setExecutor(new Hctest());
 		Bukkit.getServer().getPluginCommand("frameshop").setExecutor(new Frameshopcommand());
 		Bukkit.getServer().getPluginCommand("hcbank").setExecutor(new Hcbank());
 		Bukkit.getServer().getPluginCommand("servershop").setExecutor(new Servershopcommand());
 		Bukkit.getServer().getPluginCommand("hcdata").setExecutor(new Hcdata());
 		Bukkit.getServer().getPluginCommand("sellall").setExecutor(new Sellall());
 		Bukkit.getServer().getPluginCommand("sell").setExecutor(new Sell());
-		Bukkit.getServer().getPluginCommand("buy").setExecutor(new Buy());
 		Bukkit.getServer().getPluginCommand("value").setExecutor(new Value());
 		Bukkit.getServer().getPluginCommand("lockshop").setExecutor(new Lockshop());
-		Bukkit.getServer().getPluginCommand("hc").setExecutor(new Hc());
 		Bukkit.getServer().getPluginCommand("hceconomy").setExecutor(new Hceconomy());
 		Bukkit.getServer().getPluginCommand("notify").setExecutor(new Notify());
 	}
@@ -255,56 +260,15 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	}
 	
 	
-	private void hookVault() {
-		Plugin vault = this.getServer().getPluginManager().getPlugin("Vault");
-		if (vault != null & vault instanceof Vault) {
-			vaultInstalled = true;
-		} else {
-			vaultInstalled = false;
-		}
-		useExternalEconomy = yh.getFileConfiguration("config").getBoolean("economy-plugin.use-external");
-		if (!vaultInstalled) {
-			useExternalEconomy = false;
-		}
-		if (vaultInstalled && yh.gFC("config").getBoolean("economy-plugin.hook-internal-economy-into-vault")) {
-			getServer().getServicesManager().register(Economy.class, new Economy_HyperConomy(), this, ServicePriority.Highest);
-			log.info("[HyperConomy]Internal economy hooked into Vault.");
-		}
-	}
 
-	private void unHookVault() {
-		if (!vaultInstalled) {
-			return;
-		}
-	    RegisteredServiceProvider<Economy> eco = getServer().getServicesManager().getRegistration(Economy.class);
-	    if (eco != null) {
-	    	Economy registeredEconomy = eco.getProvider();
-	    	if (registeredEconomy != null && registeredEconomy.getName().equalsIgnoreCase("HyperConomy")) {
-		        getServer().getServicesManager().unregister(eco.getProvider());
-		        log.info("[HyperConomy]Internal economy unhooked from Vault.");
-	    	}
-	    }
+
+	public MineCraftConnector getMineCraftConnector() {
+		return mc;
+	}
+	public MineCraftConnector getMC() {
+		return mc;
 	}
 	
-
-	public void setupExternalEconomy() {
-		if (!useExternalEconomy || !vaultInstalled) {return;}
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider == null) {
-			useExternalEconomy = false;
-			return;
-		}
-		economy = economyProvider.getProvider();
-		if (economy == null) {
-			useExternalEconomy = false;
-			return;
-		}
-		if (economy.getName().equalsIgnoreCase("HyperConomy")) {
-			useExternalEconomy = false;
-			return;
-		}
-	}
-
 	public HyperLock getHyperLock() {
 		return hl;
 	}
@@ -317,7 +281,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		return yh;
 	}
 	
-	public HyperConfig getConf() {
+	public FileConfiguration getConf() {
 		return hConfig;
 	}
 	
@@ -337,12 +301,7 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 		return dm.getHyperShopManager();
 	}
 
-	public Economy getEconomy() {
-		if (economy == null) {
-			setupExternalEconomy();
-		}
-		return economy;
-	}
+
 
 	public Log getLog() {
 		return l;
@@ -393,6 +352,9 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public DataBukkit gDB() {
 		return db;
 	}
+	public SQLManager getSQLManager() {
+		return db.getSQLManager();
+	}
 	public CommonFunctions getCommonFunctions() {
 		return cf;
 	}
@@ -408,15 +370,22 @@ public class HyperConomy extends JavaPlugin implements DataLoadListener {
 	public HyperEventHandler getHyperEventHandler() {
 		return heh;
 	}
-	public boolean useExternalEconomy() {
-		return useExternalEconomy;
-	}
+	
 	public String getFolderPath() {
-		String folderpath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";
-		return folderpath;
+		return db.getStoragePath();
 	}
+	
 	public DebugMode getDebugMode() {
 		return dMode;
 	}
+	@Override
+	public void onLogMessage(String entry, Exception e, LogLevel level) {
+		if (e != null) e.printStackTrace();
+		if (level == LogLevel.SEVERE) log.severe(entry);
+		if (level == LogLevel.INFO) log.info(entry);
+	}
+
+
+
 
 }

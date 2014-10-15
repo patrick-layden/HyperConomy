@@ -44,7 +44,7 @@ public class Economy_HyperConomy implements Economy {
 		if (hc == null) {
 			return false;
 		} else {
-			return hc.isEnabled();
+			return hc.getMC().isEnabled();
 		}
 	}
 	@Override

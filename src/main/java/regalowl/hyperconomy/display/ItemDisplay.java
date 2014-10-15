@@ -23,6 +23,7 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class ItemDisplay {
 	
@@ -36,14 +37,14 @@ public class ItemDisplay {
 	private int entityId;
 	private boolean active;
 	
-	ItemDisplay(Location location, String name, boolean newDisplay) {
+	ItemDisplay(SimpleLocation location, String name, boolean newDisplay) {
 		this.hc = HyperConomy.hc;
 		this.active = false;
 		HyperEconomy he = hc.getDataManager().getEconomy("default");
 		this.x = location.getX();
 		this.y = location.getY();
 		this.z = location.getZ();
-		this.w = location.getWorld().getName();
+		this.w = location.getWorld();
 		this.name = he.fixName(name);
 		if (newDisplay) {
 			HashMap<String,String> values = new HashMap<String,String>();
@@ -123,7 +124,7 @@ public class ItemDisplay {
 		this.item = getWorld().dropItem(l, dropstack);
 		this.entityId = item.getEntityId();
 		item.setVelocity(new Vector(0, 0, 0));
-		item.setMetadata("HyperConomy", new FixedMetadataValue(hc, "item_display"));
+		item.setMetadata("HyperConomy", new FixedMetadataValue(hc.getMC().getConnector(), "item_display"));
 		active = true;
 	}
 	

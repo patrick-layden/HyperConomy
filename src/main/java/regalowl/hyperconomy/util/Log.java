@@ -27,12 +27,12 @@ public class Log {
 		String statement = "Insert Into hyperconomy_log (TIME, CUSTOMER, ACTION, OBJECT, AMOUNT, MONEY, TAX, STORE, TYPE)"
 		            + " Values (NOW(),'" + playername + "','" + action + "','" + object + "','" + amount + "','" + hc.gCF().twoDecimals(money) + "','" + hc.gCF().twoDecimals(tax) + "','" + store + 
 		        "','" + type + "')";
-		hc.getSQLWrite().convertAddToQueue(statement);
+		hc.getSQLWrite().addToQueue(statement);
 	}
 	
 	public void writeAuditLog(String account, String action, Double amount, String economy) {
 		String statement = "Insert Into hyperconomy_audit_log (TIME, ACCOUNT, ACTION, AMOUNT, ECONOMY) Values (NOW(),'" + account + "','" + action + "','" + amount + "','" + economy + "')";
-		hc.getSQLWrite().convertAddToQueue(statement);
+		hc.getSQLWrite().addToQueue(statement);
 
 	}
 

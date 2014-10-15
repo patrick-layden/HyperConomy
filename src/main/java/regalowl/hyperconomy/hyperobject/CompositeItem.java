@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 
 public class CompositeItem extends ComponentItem implements HyperObject {
@@ -309,7 +310,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		    HyperObject ho = hc.getDataManager().getEconomy(economy).getHyperObject(oname);
 		    this.components.put(ho.getName(), amount);
 		}
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	
 	@Override
@@ -318,13 +319,13 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		String statement = "UPDATE hyperconomy_composites SET NAME='" + name + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.name = name;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setEconomy(String economy) {
 		HyperConomy hc = HyperConomy.hc;
 		this.economy = economy;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setDisplayName(String displayName) {
@@ -332,7 +333,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 		this.displayName = displayName;
 		String statement = "UPDATE hyperconomy_composites SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 
 

@@ -18,23 +18,16 @@ import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class Frameshopcommand implements CommandExecutor {
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
-		DataManager em = hc.getDataManager();
+public class Frameshopcommand extends BaseCommand implements HyperCommand {
+	public Frameshopcommand() {
+		super(true);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		FrameShopHandler fsh = hc.getFrameShopHandler();
-		if (hc.getHyperLock().isLocked(sender)) {
-			hc.getHyperLock().sendLockMessage(sender);;
-			return true;
-		}
-		Player p = null;
-		if (sender instanceof Player) {
-			p = (Player)sender;
-		} else {
-			return true;
-		}
-		HyperEconomy he = em.getHyperPlayer(p).getHyperEconomy();
+		HyperEconomy he = getEconomy();
 		if (args.length == 1) {
 			@SuppressWarnings("deprecation")
 			List<Block> ltb = p.getLastTwoTargetBlocks(null, 500);
@@ -42,35 +35,35 @@ public class Frameshopcommand implements CommandExecutor {
 			Location bl = b.getLocation();
 			HyperObject ho = he.getHyperObject(args[0]);
 			if (ho != null) {
-				if (em.getHyperShopManager().inAnyShop(p)) {
-					Shop s = em.getHyperShopManager().getShop(p);
+				if (hc.getHyperShopManager().inAnyShop(hp)) {
+					Shop s = hc.getHyperShopManager().getShop(hp);
 					if (s instanceof PlayerShop) {
 						PlayerShop ps = (PlayerShop) s;
-						if (p.hasPermission("hyperconomy.admin") || ps.isAllowed(em.getHyperPlayer(p))) {
+						if (hp.hasPermission("hyperconomy.admin") || ps.isAllowed(hp)) {
 							fsh.createFrameShop(bl, ho, ps);
 						} else {
-							p.sendMessage("You don't have permission to create a frameshop here.");
+							data.addResponse("You don't have permission to create a frameshop here.");
 						}
 					} else {
-						if (p.hasPermission("hyperconomy.admin")) {
+						if (hp.hasPermission("hyperconomy.admin")) {
 							fsh.createFrameShop(bl, ho, s);
 						} else {
-							p.sendMessage("You don't have permission to create a frameshop here.");
+							data.addResponse("You don't have permission to create a frameshop here.");
 						}
 					}
 				} else {
-					if (p.hasPermission("hyperconomy.admin")) {
+					if (hp.hasPermission("hyperconomy.admin")) {
 						fsh.createFrameShop(bl, ho, null);
 					} else {
-						p.sendMessage("You don't have permission to create a frameshop here.");
+						data.addResponse("You don't have permission to create a frameshop here.");
 					}
 				}
 			} else {
-				p.sendMessage(L.get("INVALID_ITEM_NAME"));
+				data.addResponse(L.get("INVALID_ITEM_NAME"));
 			}
 		} else {
-			p.sendMessage(L.get("MAKEFRAMESHOP_INVALID"));
+			data.addResponse(L.get("MAKEFRAMESHOP_INVALID"));
 		}
-		return true;
+		return data;
 	}
 }

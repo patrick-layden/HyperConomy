@@ -72,7 +72,7 @@ public class ChestShop implements Listener {
 		allfaces.add(BlockFace.UP);
 
 		if (hc.getConf().getBoolean("enable-feature.chest-shops")) {
-			hc.getServer().getPluginManager().registerEvents(this, hc);
+			hc.getMC().getConnector().getServer().getPluginManager().registerEvents(this, hc.getMC().getConnector());
 		}
 
 	}

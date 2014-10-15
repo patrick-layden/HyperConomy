@@ -112,7 +112,7 @@ public class Repairsigns {
 			}
 			if (signsRepaired > 0) {
 				hc.getInfoSignHandler().reloadSigns();
-				hc.getServer().getScheduler().runTaskLater(hc, new Runnable() {
+				hc.getMC().runTaskLater(new Runnable() {
 					public void run() {
 						HyperConomy.hc.getInfoSignHandler().updateSigns();
 					}

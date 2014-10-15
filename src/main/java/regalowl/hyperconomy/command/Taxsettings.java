@@ -1,8 +1,8 @@
 package regalowl.hyperconomy.command;
 import org.bukkit.command.CommandSender;
 
+import regalowl.databukkit.file.FileConfiguration;
 import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.util.HyperConfig;
 import regalowl.hyperconomy.util.LanguageFile;
 
 
@@ -11,7 +11,7 @@ public class Taxsettings {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		try {
-			HyperConfig conf = hc.getConf();
+			FileConfiguration conf = hc.getConf();
 			Double purchasetaxpercent = conf.getDouble("tax.purchase");
 			Double initialpurchasetaxpercent = conf.getDouble("tax.initial");
 			Double statictaxpercent = conf.getDouble("tax.static");

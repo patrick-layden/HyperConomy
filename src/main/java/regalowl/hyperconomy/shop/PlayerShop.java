@@ -16,6 +16,7 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.ShopModificationEvent;
 import regalowl.hyperconomy.hyperobject.BasicObject;
 import regalowl.hyperconomy.hyperobject.BasicShopObject;
 import regalowl.hyperconomy.hyperobject.CompositeItem;
@@ -171,7 +172,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		values.put("P1Y", y+"");
 		values.put("P1Z", z+"");
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	public void setPoint2(String world, int x, int y, int z) {
 		HyperConomy hc = HyperConomy.hc;
@@ -187,7 +188,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		values.put("P2Y", y+"");
 		values.put("P2Z", z+"");
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	public void setPoint1(Location l) {
 		setPoint1(l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
@@ -205,7 +206,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		conditions.put("NAME", name);
 		values.put("MESSAGE", message);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	
 	public void setDefaultMessage() {
@@ -222,7 +223,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		conditions.put("NAME", name);
 		values.put("WORLD", world);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	
 	public void setName(String name) {
@@ -233,7 +234,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		values.put("NAME", name);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		this.name = name;
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	
 	public void setEconomy(String economy) {
@@ -244,7 +245,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		conditions.put("NAME", name);
 		values.put("ECONOMY", economy);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	public void setUseEconomyStock(boolean state) {
 		HyperConomy hc = HyperConomy.hc;
@@ -261,11 +262,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		for (HyperObject ho:shopContents.values()) {
 			ho.setUseEconomyStock(useEconomyStock);
 		}
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	
 	
-	
+	@Override
 	public boolean inShop(int x, int y, int z, String world) {
 		if (world.equalsIgnoreCase(this.world)) {
 			int rangex = Math.abs(p1x - p2x);
@@ -281,12 +282,18 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		}
 		return false;
 	}	
-	public boolean inShop(Location l) {
-		return inShop(l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getWorld().getName());
-	}
+	@Override
 	public boolean inShop(Player player) {
 		Location l = player.getLocation();
 		return inShop(l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getWorld().getName());
+	}
+	@Override
+	public boolean inShop(SimpleLocation l) {
+		return inShop(l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getWorld());
+	}
+	@Override
+	public boolean inShop(HyperPlayer hp) {
+		return inShop(hp.getLocation());
 	}
 	
 	public void sendEntryMessage(Player player) {
@@ -329,7 +336,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		conditions.put("NAME", name);
 		values.put("BANNED_OBJECTS", hc.gCF().implode(unavailable,","));
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	
 	public boolean isStocked(HyperObject ho) {
@@ -460,12 +467,12 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		return p2z;
 	}
 	
-	public Location getLocation1() {
-		return new Location(Bukkit.getWorld(world), p1x, p1y, p1z);
+	public SimpleLocation getLocation1() {
+		return new SimpleLocation(world, p1x, p1y, p1z);
 	}
 	
-	public Location getLocation2() {
-		return new Location(Bukkit.getWorld(world), p2x, p2y, p2z);
+	public SimpleLocation getLocation2() {
+		return new SimpleLocation(world, p2x, p2y, p2z);
 	}
 	
 	public boolean getUseEconomyStock() {
@@ -485,7 +492,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		conditions.put("NAME", name);
 		values.put("OWNER", owner.getName());
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 
 
@@ -510,7 +517,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		shopContents.clear();
 		hc.getHyperShopManager().removeShop(name);
 		this.deleted = true;
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	
 	public void removePlayerShopObject(HyperObject hyperObject) {
@@ -521,7 +528,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		} else {
 			shopContents.remove(pso);
 			hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"' AND HYPEROBJECT = '"+hyperObject.getName()+"'");
-			hc.getHyperEventHandler().fireShopModificationEvent(this);
+			hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 		}
 	}
 	public HyperObject getPlayerShopObject(HyperObject hyperObject) {
@@ -638,12 +645,12 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		conditions.put("NAME", name);
 		values.put("ALLOWED_PLAYERS", cf.implode(allowed, ","));
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 
 
-	public ArrayList<Location> getShopBlockLocations() {
-		ArrayList<Location> shopBlockLocations = new ArrayList<Location>();
+	public ArrayList<SimpleLocation> getShopBlockLocations() {
+		ArrayList<SimpleLocation> shopBlockLocations = new ArrayList<SimpleLocation>();
 		ArrayList<Integer> xvals = new ArrayList<Integer>();
 		ArrayList<Integer> yvals = new ArrayList<Integer>();
 		ArrayList<Integer> zvals = new ArrayList<Integer>();
@@ -677,7 +684,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		for (int x = 0; x < xvals.size(); x++) {
 			for (int y = 0; y < yvals.size(); y++) {
 				for (int z = 0; z < zvals.size(); z++) {
-					shopBlockLocations.add(new Location(Bukkit.getWorld(world), xvals.get(x), yvals.get(y), zvals.get(z)));
+					shopBlockLocations.add(new SimpleLocation(world, xvals.get(x), yvals.get(y), zvals.get(z)));
 				}
 			}
 		}
@@ -686,7 +693,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	public boolean intersectsShop(Shop s, int volumeLimit) {
 		if (s.getVolume() > volumeLimit) {return false;}
-		for (Location l:s.getShopBlockLocations()) {
+		for (SimpleLocation l:s.getShopBlockLocations()) {
 			if (inShop(l)) {
 				return true;
 			}

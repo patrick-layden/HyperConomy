@@ -34,7 +34,7 @@ import regalowl.hyperconomy.util.SimpleLocation;
 public class ItemDisplayFactory implements Listener {
 	
 	private HyperConomy hc; 
-	private int refreshthreadid;
+	private long refreshthreadid;
 	private final long refreshInterval = 4800L;
 	//private final long refreshInterval = 100L;
 	private ConcurrentHashMap<SimpleLocation, ItemDisplay> displays = new ConcurrentHashMap<SimpleLocation, ItemDisplay>();
@@ -45,7 +45,7 @@ public class ItemDisplayFactory implements Listener {
 		try {
 			hc = HyperConomy.hc;
 			if (hc.getConf().getBoolean("enable-feature.item-displays")) {
-				hc.getServer().getPluginManager().registerEvents(this, hc);
+				hc.getMC().getConnector().getServer().getPluginManager().registerEvents(this, hc.getMC().getConnector());
 				loadDisplays();
 				startRefreshThread();
 			}
@@ -58,21 +58,21 @@ public class ItemDisplayFactory implements Listener {
 	public void loadDisplays() {
 		try {
 			unloadDisplays();
-			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			new Thread(new Runnable() {
 				public void run() {
 					SQLRead sr = hc.getSQLRead();
 					dbData = sr.select("SELECT * FROM hyperconomy_item_displays");
-					hc.getServer().getScheduler().runTask(hc, new Runnable() {
+					hc.getMC().runTask(new Runnable() {
 						public void run() {
 							while (dbData.next()) {
-								World w = Bukkit.getWorld(dbData.getString("WORLD"));
+								String w = dbData.getString("WORLD");
 								double x = dbData.getDouble("X");
 								double y = dbData.getDouble("Y");
 								double z = dbData.getDouble("Z");
 								String name = dbData.getString("HYPEROBJECT");
-								Location l = new Location(w,x,y,z);
+								SimpleLocation l = new SimpleLocation(w,x,y,z);
 								ItemDisplay display = new ItemDisplay(l, name, false);
-								SimpleLocation key = new SimpleLocation(w.getName(), x, y, z);
+								SimpleLocation key = new SimpleLocation(w, x, y, z);
 								displays.put(key, display);
 							}
 							dbData.close();
@@ -84,7 +84,7 @@ public class ItemDisplayFactory implements Listener {
 						}
 					});
 				}
-			});
+			}).start();
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 		}
@@ -102,7 +102,7 @@ public class ItemDisplayFactory implements Listener {
 	
 
 	public void startRefreshThread() {
-		refreshthreadid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
+		refreshthreadid = hc.getMC().runRepeatingTask(new Runnable() {
 			public void run() {
 				for (ItemDisplay display:displays.values()) {
 					display.refresh();
@@ -112,7 +112,7 @@ public class ItemDisplayFactory implements Listener {
 	}
 	
 	public void cancelRefreshThread() {
-		hc.getServer().getScheduler().cancelTask(refreshthreadid);
+		hc.getMC().cancelTask(refreshthreadid);
 	}
 	
 
@@ -138,7 +138,7 @@ public class ItemDisplayFactory implements Listener {
 		return false;
 	}
 
-	public boolean addDisplay(double x, double y, double z, World w, String name) {
+	public boolean addDisplay(double x, double y, double z, String w, String name) {
 		x = Math.floor(x) + .5;
 		z = Math.floor(z) + .5;	
 		for (ItemDisplay display:displays.values()) {
@@ -146,11 +146,11 @@ public class ItemDisplayFactory implements Listener {
 				return false;
 			}
 		}
-		Location l = new Location(w, x, y, z);
+		SimpleLocation l = new SimpleLocation(w, x, y, z);
 		ItemDisplay display = new ItemDisplay(l, name, true);
-		SimpleLocation key = new SimpleLocation(w.getName(), x, y, z);
-		displays.put(key, display);
-		Chunk locChunk = l.getChunk();
+		displays.put(l, display);
+		Location loc = new Location(Bukkit.getWorld(w),x,y,z);
+		Chunk locChunk = loc.getChunk();
 		if (locChunk.isLoaded()) {
 			display.makeDisplay();
 			display.clearNearbyItems(7,false,false);

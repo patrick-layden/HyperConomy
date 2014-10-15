@@ -31,7 +31,7 @@ public class TransactionSign implements Listener {
 		hc = HyperConomy.hc;
 		em = hc.getDataManager();
 		if (hc.getConf().getBoolean("enable-feature.transaction-signs")) {
-			hc.getServer().getPluginManager().registerEvents(this, hc);
+			hc.getMC().getConnector().getServer().getPluginManager().registerEvents(this, hc.getMC().getConnector());
 		}
 	}
 

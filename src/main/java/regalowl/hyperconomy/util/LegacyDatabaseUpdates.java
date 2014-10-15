@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
+import regalowl.databukkit.file.FileConfiguration;
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SyncSQLWrite;
@@ -35,47 +35,47 @@ public class LegacyDatabaseUpdates {
 					+ "Check the troubleshooting page for more information.");
 			hc.log().severe("-----------------------------------------------------");
 			hc.disable(false);
-			hc.getPluginLoader().disablePlugin(hc);
+			hc.getMineCraftConnector().disablePlugin();
 		}
 		if (version < 1.24) {
 			//update fixes frameshop table
 			hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.24");
 			sw.queue("DROP TABLE hyperconomy_frame_shops");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_frame_shops (ID INTEGER NOT NULL PRIMARY KEY, HYPEROBJECT VARCHAR(255) NOT NULL, ECONOMY TINYTEXT, SHOP VARCHAR(255), TRADE_AMOUNT INTEGER NOT NULL, X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL)");
 			sw.queue("UPDATE hyperconomy_settings SET VALUE = '1.24' WHERE SETTING = 'version'");
 		}
 		if (version < 1.25) {
 			//update adds buy/sell prices to player shops and a max stock setting
 			hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.25");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects_temp (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects_temp (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
 			sw.writeQueue();
-			sw.convertQueue("INSERT INTO hyperconomy_shop_objects_temp (SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,STATUS) SELECT SHOP,HYPEROBJECT,QUANTITY,PRICE,PRICE,STATUS FROM hyperconomy_shop_objects");
+			sw.queue("INSERT INTO hyperconomy_shop_objects_temp (SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,STATUS) SELECT SHOP,HYPEROBJECT,QUANTITY,PRICE,PRICE,STATUS FROM hyperconomy_shop_objects");
 			sw.queue("DROP TABLE hyperconomy_shop_objects");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL)");
 			sw.writeQueue();
-			sw.convertQueue("INSERT INTO hyperconomy_shop_objects (SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,MAX_STOCK,STATUS) SELECT SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,MAX_STOCK,STATUS FROM hyperconomy_shop_objects_temp");
+			sw.queue("INSERT INTO hyperconomy_shop_objects (SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,MAX_STOCK,STATUS) SELECT SHOP,HYPEROBJECT,QUANTITY,SELL_PRICE,BUY_PRICE,MAX_STOCK,STATUS FROM hyperconomy_shop_objects_temp");
 			sw.queue("DROP TABLE hyperconomy_shop_objects_temp");
 			sw.queue("UPDATE hyperconomy_settings SET VALUE = '1.25' WHERE SETTING = 'version'");
 		}
 		if (version < 1.26) {
 			//adds banks
 			hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.26");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_banks (NAME VARCHAR(255) NOT NULL PRIMARY KEY, BALANCE DOUBLE NOT NULL DEFAULT '0', OWNERS VARCHAR(255), MEMBERS VARCHAR(255))");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_banks (NAME VARCHAR(255) NOT NULL PRIMARY KEY, BALANCE DOUBLE NOT NULL DEFAULT '0', OWNERS VARCHAR(255), MEMBERS VARCHAR(255))");
 			sw.queue("UPDATE hyperconomy_settings SET VALUE = '1.26' WHERE SETTING = 'version'");
 		}
 		if (version < 1.27) {
 			//moves shops, infosigns, economies, and item displays to the database
 			hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.27");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shops (NAME VARCHAR(255) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_info_signs (WORLD VARCHAR(255) NOT NULL, X INTEGER NOT NULL, Y INTEGER NOT NULL, Z INTEGER NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, TYPE VARCHAR(255) NOT NULL, MULTIPLIER INTEGER NOT NULL, ECONOMY VARCHAR(255) NOT NULL, ECLASS VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_item_displays (WORLD VARCHAR(255) NOT NULL, X DOUBLE NOT NULL, Y DOUBLE NOT NULL, Z DOUBLE NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");	
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_economies (NAME VARCHAR(255) NOT NULL PRIMARY KEY, HYPERACCOUNT VARCHAR(255) NOT NULL)");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_shops (NAME VARCHAR(255) NOT NULL PRIMARY KEY, TYPE VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, OWNER VARCHAR(255) NOT NULL, WORLD VARCHAR(255) NOT NULL, MESSAGE TEXT NOT NULL, BANNED_OBJECTS TEXT NOT NULL, ALLOWED_PLAYERS TEXT NOT NULL, P1X DOUBLE NOT NULL, P1Y DOUBLE NOT NULL, P1Z DOUBLE NOT NULL, P2X DOUBLE NOT NULL, P2Y DOUBLE NOT NULL, P2Z DOUBLE NOT NULL)");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_info_signs (WORLD VARCHAR(255) NOT NULL, X INTEGER NOT NULL, Y INTEGER NOT NULL, Z INTEGER NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, TYPE VARCHAR(255) NOT NULL, MULTIPLIER INTEGER NOT NULL, ECONOMY VARCHAR(255) NOT NULL, ECLASS VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_item_displays (WORLD VARCHAR(255) NOT NULL, X DOUBLE NOT NULL, Y DOUBLE NOT NULL, Z DOUBLE NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, PRIMARY KEY(WORLD, X, Y, Z))");	
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_economies (NAME VARCHAR(255) NOT NULL PRIMARY KEY, HYPERACCOUNT VARCHAR(255) NOT NULL)");
 			
 
 			hc.gYH().registerFileConfiguration("shops");
-			FileConfiguration sh = hc.gYH().gFC("shops");
+			FileConfiguration sh = hc.gYH().getFileConfiguration("shops");
 			//LanguageFile L = hc.getLanguageFile();
-			Iterator<String> it = sh.getKeys(false).iterator();
+			Iterator<String> it = sh.getTopLevelKeys().iterator();
 			String defaultServerShopAccount = hc.getConf().getString("shop.default-server-shop-account");
 			while (it.hasNext()) {
 				HashMap<String,String> values = new HashMap<String,String>();
@@ -135,7 +135,7 @@ public class LegacyDatabaseUpdates {
 			hc.gYH().unRegisterFileConfiguration("shops");
 			hc.gYH().registerFileConfiguration("signs");
 			FileConfiguration sns = hc.gYH().gFC("signs");
-			Iterator<String> iterat = sns.getKeys(false).iterator();
+			Iterator<String> iterat = sns.getTopLevelKeys().iterator();
 			while (iterat.hasNext()) {
 				String signKey = iterat.next().toString();
 				String key = signKey;
@@ -170,7 +170,7 @@ public class LegacyDatabaseUpdates {
 			hc.gYH().unRegisterFileConfiguration("signs");
 			hc.gYH().registerFileConfiguration("displays");
 			FileConfiguration displays = hc.gYH().gFC("displays");
-			iterat = displays.getKeys(false).iterator();
+			iterat = displays.getTopLevelKeys().iterator();
 			while (iterat.hasNext()) {
 				String key = iterat.next().toString();
 				String name = displays.getString(key + ".name");
@@ -201,11 +201,11 @@ public class LegacyDatabaseUpdates {
 		if (version < 1.28) {
 			//removes id increment field and adds SHOP, HYPEROBJECT primary key to shop objects table to guarantee no duplicates
 			hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.28");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects_temp (SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL, PRIMARY KEY(SHOP, HYPEROBJECT))");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects_temp (SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL, PRIMARY KEY(SHOP, HYPEROBJECT))");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_shop_objects_temp (SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS) SELECT SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS FROM hyperconomy_shop_objects");
 			sw.queue("DROP TABLE hyperconomy_shop_objects");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL, PRIMARY KEY(SHOP, HYPEROBJECT))");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_shop_objects (SHOP VARCHAR(255) NOT NULL, HYPEROBJECT VARCHAR(255) NOT NULL, QUANTITY DOUBLE NOT NULL, SELL_PRICE DOUBLE NOT NULL, BUY_PRICE DOUBLE NOT NULL, MAX_STOCK INTEGER NOT NULL DEFAULT '1000000', STATUS VARCHAR(255) NOT NULL, PRIMARY KEY(SHOP, HYPEROBJECT))");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS) SELECT SHOP, HYPEROBJECT, QUANTITY, SELL_PRICE, BUY_PRICE, MAX_STOCK, STATUS FROM hyperconomy_shop_objects_temp");
 			sw.queue("DROP TABLE hyperconomy_shop_objects_temp");
@@ -214,10 +214,10 @@ public class LegacyDatabaseUpdates {
 		if (version < 1.29) {
 			//removes item data fields and adds single item data text field to hyperobjects table; imports composites.yml to database
 			hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.29");
-			sw.convertQueue(hc.getSQLWrite().longText("CREATE TABLE IF NOT EXISTS hyperconomy_composites (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), COMPONENTS VARCHAR(1000), TYPE TINYTEXT, DATA TEXT)"));
+			sw.queue(longText("CREATE TABLE IF NOT EXISTS hyperconomy_composites (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), COMPONENTS VARCHAR(1000), TYPE TINYTEXT, DATA TEXT)"));
 			hc.gYH().registerFileConfiguration("composites");
 			FileConfiguration cps = hc.gYH().gFC("composites");
-			Iterator<String> iterat = cps.getKeys(false).iterator();
+			Iterator<String> iterat = cps.getTopLevelKeys().iterator();
 			while (iterat.hasNext()) {
 				String name = iterat.next().toString();
 				String type = cps.getString(name + ".information.type");
@@ -245,11 +245,11 @@ public class LegacyDatabaseUpdates {
 			}
 			hc.gYH().unRegisterFileConfiguration("composites");
 			
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_objects_temp (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_objects_temp (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, MATERIAL TINYTEXT, DATA INTEGER, DURABILITY INTEGER, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', PRIMARY KEY (NAME, ECONOMY))");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_objects_temp (NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK) SELECT NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, MATERIAL, DATA, DURABILITY, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK FROM hyperconomy_objects");
 			sw.queue("DROP TABLE hyperconomy_objects");
-			sw.convertQueue(hc.getSQLWrite().longText("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', DATA TEXT, PRIMARY KEY (NAME, ECONOMY))"));
+			sw.queue(longText("CREATE TABLE IF NOT EXISTS hyperconomy_objects (NAME VARCHAR(255) NOT NULL, ECONOMY VARCHAR(255) NOT NULL, DISPLAY_NAME VARCHAR(255), ALIASES VARCHAR(1000), TYPE TINYTEXT, VALUE DOUBLE, STATIC TINYTEXT, STATICPRICE DOUBLE, STOCK DOUBLE, MEDIAN DOUBLE, INITIATION TINYTEXT, STARTPRICE DOUBLE, CEILING DOUBLE, FLOOR DOUBLE, MAXSTOCK DOUBLE NOT NULL DEFAULT '1000000', DATA TEXT, PRIMARY KEY (NAME, ECONOMY))"));
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_objects (NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK) SELECT NAME, ECONOMY, DISPLAY_NAME, ALIASES, TYPE, VALUE, STATIC, STATICPRICE, STOCK, MEDIAN, INITIATION, STARTPRICE, CEILING, FLOOR, MAXSTOCK FROM hyperconomy_objects_temp");
 			sw.writeQueue();
@@ -286,11 +286,11 @@ public class LegacyDatabaseUpdates {
 		if (version < 1.30) {
 			//removes unnecessary fields from composites table
 			hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.30");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_composites_temp (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), COMPONENTS VARCHAR(1000))");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_composites_temp (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), COMPONENTS VARCHAR(1000))");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_composites_temp (NAME, DISPLAY_NAME, COMPONENTS) SELECT NAME, DISPLAY_NAME, COMPONENTS FROM hyperconomy_composites");
 			sw.queue("DROP TABLE hyperconomy_composites");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_composites (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), COMPONENTS VARCHAR(1000))");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_composites (NAME VARCHAR(255) NOT NULL PRIMARY KEY, DISPLAY_NAME VARCHAR(255), COMPONENTS VARCHAR(1000))");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_composites (NAME, DISPLAY_NAME, COMPONENTS) SELECT NAME, DISPLAY_NAME, COMPONENTS FROM hyperconomy_composites_temp");
 			sw.queue("DROP TABLE hyperconomy_composites_temp");
@@ -320,11 +320,11 @@ public class LegacyDatabaseUpdates {
 		if (version < 1.32) {
 			//adds uuid support
 			hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.32");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players_temp (NAME VARCHAR(255) NOT NULL PRIMARY KEY, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_players_temp (NAME VARCHAR(255) NOT NULL PRIMARY KEY, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_players_temp (NAME, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) SELECT PLAYER, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT FROM hyperconomy_players");
 			sw.queue("DROP TABLE hyperconomy_players");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players (NAME VARCHAR(255) NOT NULL PRIMARY KEY, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_players (NAME VARCHAR(255) NOT NULL PRIMARY KEY, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_players (NAME, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) SELECT NAME, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT FROM hyperconomy_players_temp");
 			sw.queue("DROP TABLE hyperconomy_players_temp");
@@ -333,11 +333,11 @@ public class LegacyDatabaseUpdates {
 		if (version < 1.33) {
 			//remove unique requirement from uuid
 			hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.33");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players_temp (NAME VARCHAR(255) NOT NULL PRIMARY KEY, UUID VARCHAR(255), ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_players_temp (NAME VARCHAR(255) NOT NULL PRIMARY KEY, UUID VARCHAR(255), ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_players_temp (NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) SELECT NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT FROM hyperconomy_players");
 			sw.queue("DROP TABLE hyperconomy_players");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players (NAME VARCHAR(255) NOT NULL PRIMARY KEY, UUID VARCHAR(255), ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_players (NAME VARCHAR(255) NOT NULL PRIMARY KEY, UUID VARCHAR(255), ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_players (NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) SELECT NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT FROM hyperconomy_players_temp");
 			sw.queue("DROP TABLE hyperconomy_players_temp");
@@ -346,11 +346,11 @@ public class LegacyDatabaseUpdates {
 		if (version < 1.34) {
 			//allow player name to be null in hyperplayer table and add new autoincrement primary key
 			hc.getDebugMode().ayncDebugConsoleMessage("Updating database to version 1.34");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players_temp (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_players_temp (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_players_temp (NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) SELECT NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT FROM hyperconomy_players");
 			sw.queue("DROP TABLE hyperconomy_players");
-			sw.convertQueue("CREATE TABLE IF NOT EXISTS hyperconomy_players (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
+			sw.queue("CREATE TABLE IF NOT EXISTS hyperconomy_players (ID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, UUID VARCHAR(255) UNIQUE, ECONOMY TINYTEXT, BALANCE DOUBLE NOT NULL DEFAULT '0', X DOUBLE NOT NULL DEFAULT '0', Y DOUBLE NOT NULL DEFAULT '0', Z DOUBLE NOT NULL DEFAULT '0', WORLD TINYTEXT NOT NULL, HASH VARCHAR(255) NOT NULL DEFAULT '', SALT VARCHAR(255) NOT NULL DEFAULT '')");
 			sw.writeQueue();
 			sw.queue("INSERT INTO hyperconomy_players (NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT) SELECT NAME, UUID, ECONOMY, BALANCE, X, Y, Z, WORLD, HASH, SALT FROM hyperconomy_players_temp");
 			sw.queue("DROP TABLE hyperconomy_players_temp");
@@ -358,6 +358,16 @@ public class LegacyDatabaseUpdates {
 		}
 		sw.writeQueue();
 		
+	}
+	
+	
+	private String longText(String statement) {
+		if (HyperConomy.hc.getSQLManager().useMySQL()) {
+			statement = statement.replace(" TEXT ", " LONGTEXT ");
+		} else {
+			statement = statement.replace(" LONGTEXT ", " TEXT ");
+		}
+		return statement;
 	}
 	
 }

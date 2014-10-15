@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
 
 public class Enchant extends BasicObject implements HyperObject {
@@ -45,7 +46,7 @@ public class Enchant extends BasicObject implements HyperObject {
 		this.base64Enchant = data;
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	
 	

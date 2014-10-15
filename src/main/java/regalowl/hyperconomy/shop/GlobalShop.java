@@ -9,7 +9,10 @@ import org.bukkit.entity.Player;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
+import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.ShopModificationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 
 public class GlobalShop implements Shop, Comparable<Shop>{
@@ -85,7 +88,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		values.put("NAME", name);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		this.name = name;
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	@Override
 	public void setEconomy(String economy) {
@@ -96,7 +99,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		conditions.put("NAME", name);
 		values.put("ECONOMY", economy);
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 
 	
@@ -140,7 +143,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		conditions.put("NAME", name);
 		values.put("BANNED_OBJECTS", hc.gCF().implode(unavailable,","));
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	@Override
 	public boolean isStocked(HyperObject ho) {
@@ -234,7 +237,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		hc.getSQLWrite().performDelete("hyperconomy_shops", conditions);
 		hc.getHyperShopManager().removeShop(name);
 		deleted = true;
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	@Override
 	public void setOwner(HyperAccount owner) {
@@ -245,11 +248,11 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		conditions.put("NAME", name);
 		values.put("OWNER", owner.getName());
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
-		hc.getHyperEventHandler().fireShopModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	
 	@Override
-	public ArrayList<Location> getShopBlockLocations() {return null;}
+	public ArrayList<SimpleLocation> getShopBlockLocations() {return null;}
 	@Override
 	public boolean intersectsShop(Shop s, int volumeLimit) {return false;}
 	@Override
@@ -271,7 +274,9 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	@Override
 	public boolean inShop(int x, int y, int z, String world) {return true;}	
 	@Override
-	public boolean inShop(Location l) {return true;}
+	public boolean inShop(SimpleLocation l) {return true;}
+	@Override
+	public boolean inShop(HyperPlayer hp) {return true;}
 	@Override
 	public boolean inShop(Player player) {return true;}
 	@Override
@@ -303,11 +308,11 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		return 0;
 	}
 	@Override
-	public Location getLocation1() {
+	public SimpleLocation getLocation1() {
 		return null;
 	}
 	@Override
-	public Location getLocation2() {
+	public SimpleLocation getLocation2() {
 		return null;
 	}
 	@Override

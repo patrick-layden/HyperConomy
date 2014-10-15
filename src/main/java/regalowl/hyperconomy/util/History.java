@@ -29,7 +29,7 @@ public class History {
 	private SQLWrite sw;
 	private SQLRead sr;
 
-	private int historylogtaskid;
+	private long historylogtaskid;
 
 	private int daysToSaveHistory;
 	
@@ -75,7 +75,7 @@ public class History {
 	}
 
 	public void addSetting(String setting, String value) {
-		sw.convertAddToQueue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('" + setting + "', '" + value + "', NOW() )");
+		sw.addToQueue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('" + setting + "', '" + value + "', NOW() )");
 	}
 
 	public void updateSetting(String setting, String value) {
@@ -84,7 +84,7 @@ public class History {
 
 	
 	private void startTimer() {
-		historylogtaskid = hc.getServer().getScheduler().scheduleSyncRepeatingTask(hc, new Runnable() {
+		historylogtaskid = hc.getMC().runRepeatingTask(new Runnable() {
 			public void run() {
 				long currentTime = System.currentTimeMillis();
 				timeCounter += (currentTime - lastTime);
@@ -93,7 +93,7 @@ public class History {
 					// if (timeCounter >= 600) {
 					timeCounter = 0;
 					writeHistoryThread();
-					hc.getServer().getScheduler().scheduleSyncDelayedTask(hc, new Runnable() {
+					hc.getMC().runTaskLater(new Runnable() {
 						public void run() {
 							if (isign != null) {
 								isign.updateSigns();
@@ -103,7 +103,7 @@ public class History {
 				}
 				updateSetting("history_time_counter", timeCounter + "");
 			}
-		}, 600, 600);
+		}, 600L, 600L);
 	}
 	
 
@@ -120,7 +120,7 @@ public class History {
 				statements.add(getWriteStatement(object.getName(), object.getEconomy(), object.getBuyPrice(1)));
 			}
 		}
-		if (hc.getDataBukkit().useMySQL()) {
+		if (hc.getSQLManager().useMySQL()) {
 			statements.add("DELETE FROM hyperconomy_history WHERE TIME < DATE_SUB(NOW(), INTERVAL " + daysToSaveHistory + " DAY)");
 		} else {
 			statements.add("DELETE FROM hyperconomy_history WHERE TIME < date('now','" + formatSQLiteTime(daysToSaveHistory * -1) + " day')");
@@ -128,13 +128,13 @@ public class History {
 		sw.addToQueue(statements);
 	}
 	private String getWriteStatement(String object, String economy, double price) {
-		return sw.convertSQL("INSERT INTO hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE) VALUES ('" + object + "','" + economy + "', NOW() ,'" + price + "')");
+		return "INSERT INTO hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE) VALUES ('" + object + "','" + economy + "', NOW() ,'" + price + "')";
 	}
   	
   	
     
     public void stopHistoryLog() {
-    	hc.getServer().getScheduler().cancelTask(historylogtaskid);
+    	hc.getMC().cancelTask(historylogtaskid);
     }
 
 	public double getHistoricValue(String name, String economy, int count) {

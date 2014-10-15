@@ -13,4 +13,5 @@ public interface HyperAccount extends Serializable {
 	public boolean hasBalance(double balance);
 	public void sendMessage(String message);
 
+
 }

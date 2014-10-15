@@ -16,7 +16,9 @@ import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
 import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
-import regalowl.hyperconomy.event.DataLoadListener;
+import regalowl.hyperconomy.event.DataLoadEvent;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperListener;
 import regalowl.hyperconomy.hyperobject.ComponentItem;
 import regalowl.hyperconomy.hyperobject.CompositeItem;
 import regalowl.hyperconomy.hyperobject.Enchant;
@@ -28,7 +30,7 @@ import regalowl.hyperconomy.shop.Shop;
 
 
 
-public class HyperEconomy implements Serializable, DataLoadListener {
+public class HyperEconomy implements Serializable, HyperListener {
 
 	private static final long serialVersionUID = 4820082604724045149L;
 	private HyperAccount defaultAccount;
@@ -102,22 +104,24 @@ public class HyperEconomy implements Serializable, DataLoadListener {
 		}
 	}
 
+	
 	@Override
-	public void onDataLoad() {
-		HyperConomy hc = HyperConomy.hc;	
-		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
-			public void run() {
-				HyperConomy hc = HyperConomy.hc;	
-				SQLRead sr = hc.getSQLRead();
-				HashMap<String,String> conditions = new HashMap<String,String>();
-				conditions.put("NAME", economyName);
-				String account = sr.getString("hyperconomy_economies", "hyperaccount", conditions);
-				defaultAccount = hc.getDataManager().getAccount(account);
-				if (defaultAccount == null) {
+	public void onHyperEvent(HyperEvent event) {
+		if (event instanceof DataLoadEvent) {	
+			new Thread(new Runnable() {
+				public void run() {
+					HyperConomy hc = HyperConomy.hc;	
+					SQLRead sr = hc.getSQLRead();
+					HashMap<String,String> conditions = new HashMap<String,String>();
+					conditions.put("NAME", economyName);
+					String account = sr.getString("hyperconomy_economies", "hyperaccount", conditions);
 					defaultAccount = hc.getDataManager().getAccount(account);
-				} 
-			}
-		});
+					if (defaultAccount == null) {
+						defaultAccount = hc.getDataManager().getAccount(account);
+					} 
+				}
+			}).start();
+		}
 	}
 
 	
@@ -456,4 +460,6 @@ public class HyperEconomy implements Serializable, DataLoadListener {
 		hyperObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
 		hyperObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 	}
+
+
 }

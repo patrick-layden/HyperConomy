@@ -18,6 +18,7 @@ import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class InfoSign {
 	private SignType type;
@@ -41,7 +42,7 @@ public class InfoSign {
 	private int timeValue;
 	private String increment;
 
-	InfoSign(Location signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass) {
+	InfoSign(SimpleLocation signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass) {
 		this.multiplier = multiplier;
 		if (enchantClass == null) {
 			this.enchantClass = EnchantmentClass.DIAMOND;
@@ -55,7 +56,7 @@ public class InfoSign {
 		if (economy != null) {
 			this.economy = economy;
 		}
-		this.world = signLoc.getWorld().getName();
+		this.world = signLoc.getWorld();
 		this.x = signLoc.getBlockX();
 		this.y = signLoc.getBlockY();
 		this.z = signLoc.getBlockZ();
@@ -85,7 +86,7 @@ public class InfoSign {
 	}
 
 	
-	InfoSign(Location signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass, String[] lines) {
+	InfoSign(SimpleLocation signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass, String[] lines) {
 		this.multiplier = multiplier;
 		if (enchantClass == null) {
 			this.enchantClass = EnchantmentClass.DIAMOND;
@@ -96,7 +97,7 @@ public class InfoSign {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		L = hc.getLanguageFile();
 		this.economy = "default";
-		this.world = signLoc.getWorld().getName();
+		this.world = signLoc.getWorld();
 		this.x = signLoc.getBlockX();
 		this.y = signLoc.getBlockY();
 		this.z = signLoc.getBlockZ();
@@ -345,7 +346,7 @@ public class InfoSign {
 			this.timeValueHours = timevalueHours;
 			this.timeValue = timevalue;
 			this.increment = inc;
-			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			new Thread(new Runnable() {
 				public void run() {
 					String percentchange = hc.getHistory().getPercentChange(ho, timeValueHours);
 					String colorcode = getcolorCode(percentchange);
@@ -354,7 +355,7 @@ public class InfoSign {
 					if (line3.length() > 14) {
 						line3 = line3.substring(0, 13) + ")";
 					}
-					hc.getServer().getScheduler().runTask(hc, new Runnable() {
+					hc.getMC().runTask(new Runnable() {
 						public void run() {
 							Sign s = getSign();
 							if (s != null) {
@@ -367,7 +368,7 @@ public class InfoSign {
 						}
 					});
 				}
-			});
+			}).start();
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 		}

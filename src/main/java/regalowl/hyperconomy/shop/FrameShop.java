@@ -12,13 +12,15 @@ import org.bukkit.map.MapView;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperObjectModificationListener;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperListener;
+import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 
-public class FrameShop implements HyperObjectModificationListener {
+public class FrameShop implements HyperListener {
 
 	private HyperConomy hc;
 	private short mapId;
@@ -47,7 +49,7 @@ public class FrameShop implements HyperObjectModificationListener {
 		this.ho = ho;
 		this.tradeAmount = amount;
 		this.s = s;
-		MapView mapView = hc.getServer().createMap(l.getWorld());
+		MapView mapView = hc.getMC().getConnector().getServer().createMap(l.getWorld());
 		mapId = mapView.getId();
 		String shop = "";
 		if (s != null) {
@@ -82,12 +84,15 @@ public class FrameShop implements HyperObjectModificationListener {
 	}
 	
 	@Override
-	public void onHyperObjectModification(HyperObject ho) {
-		if (this.ho.equals(ho)) {
-			render();
+	public void onHyperEvent(HyperEvent event) {
+		if (event instanceof HyperObjectModificationEvent) {
+			HyperObjectModificationEvent ev = (HyperObjectModificationEvent)event;
+			if (this.ho.equals(ev.getHyperObject())) {
+				render();
+			}
 		}
 	}
-
+	
 	public short getMapId() {
 		return mapId;
 	}
@@ -120,7 +125,7 @@ public class FrameShop implements HyperObjectModificationListener {
 			return;
 		}
 		@SuppressWarnings("deprecation")
-		MapView mapView = hc.getServer().getMap(mapId);
+		MapView mapView = hc.getMC().getConnector().getServer().getMap(mapId);
 		for (MapRenderer mr : mapView.getRenderers()) {
 			mapView.removeRenderer(mr);
 		}
@@ -178,5 +183,7 @@ public class FrameShop implements HyperObjectModificationListener {
 		hc.getFrameShopHandler().removeFrameShop(getKey());
 		hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_frame_shops WHERE ID = '" + mapId + "'");
 	}
+
+
 
 }

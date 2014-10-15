@@ -13,10 +13,13 @@ import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
+import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionProcessor;
 import regalowl.hyperconomy.transaction.TransactionResponse;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 
 
@@ -95,7 +98,7 @@ public class HyperPlayer implements HyperAccount {
 		this.world = world;
 		this.hash = hash;
 		this.salt = salt;
-		hc.getServer().getScheduler().runTask(hc, new Runnable() {
+		hc.getMC().runTask(new Runnable() {
 			public void run() {
 				checkUUID();
 				//checkExternalAccount();
@@ -108,10 +111,10 @@ public class HyperPlayer implements HyperAccount {
 	@SuppressWarnings("deprecation")
 	private void checkExternalAccount() {
 		HyperConomy hc = HyperConomy.hc;
-		if (!hc.useExternalEconomy()) {return;}
+		if (!hc.getMC().useExternalEconomy()) {return;}
 		if (name == null) {return;}
-		if (!hc.getEconomy().hasAccount(name)) {
-			hc.getEconomy().createPlayerAccount(name);
+		if (!hc.getMC().getEconomy().hasAccount(name)) {
+			hc.getMC().getEconomy().createPlayerAccount(name);
 			setBalance(balance);
 		}
 		checkForNameChange();
@@ -143,7 +146,7 @@ public class HyperPlayer implements HyperAccount {
 		}
 		if (p == null) {return;}
 		if (p.getName().equals(name)) {return;}
-		if (hc.useExternalEconomy()) {
+		if (hc.getMC().useExternalEconomy()) {
 			double oldBalance = getBalance();
 			setBalance(0.0);
 			setName(p.getName());
@@ -186,8 +189,8 @@ public class HyperPlayer implements HyperAccount {
 	public double getBalance() {
 		HyperConomy hc = HyperConomy.hc;
 		checkExternalAccount();
-		if (hc.useExternalEconomy()) {
-			return hc.getEconomy().getBalance(name);
+		if (hc.getMC().useExternalEconomy()) {
+			return hc.getMC().getEconomy().getBalance(name);
 		} else {
 			return balance;
 		}
@@ -248,7 +251,7 @@ public class HyperPlayer implements HyperAccount {
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.name = name;
 		hc.getHyperPlayerManager().addHyperPlayer(this);
-		hc.getHyperEventHandler().fireHyperPlayerModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setUUID(String uuid) {
 		HyperConomy hc = HyperConomy.hc;
@@ -258,7 +261,7 @@ public class HyperPlayer implements HyperAccount {
 		values.put("UUID", uuid);
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.uuid = uuid;
-		hc.getHyperEventHandler().fireHyperPlayerModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	
 	public void setEconomy(String economy) {
@@ -269,7 +272,7 @@ public class HyperPlayer implements HyperAccount {
 		values.put("ECONOMY", economy);
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.economy = economy;
-		hc.getHyperEventHandler().fireHyperPlayerModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setX(double x) {
 		HyperConomy hc = HyperConomy.hc;
@@ -279,7 +282,7 @@ public class HyperPlayer implements HyperAccount {
 		values.put("X", x+"");
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.x = x;
-		hc.getHyperEventHandler().fireHyperPlayerModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setY(double y) {
 		HyperConomy hc = HyperConomy.hc;
@@ -289,7 +292,7 @@ public class HyperPlayer implements HyperAccount {
 		values.put("Y", y+"");
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.y = y;
-		hc.getHyperEventHandler().fireHyperPlayerModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setZ(double z) {
 		HyperConomy hc = HyperConomy.hc;
@@ -299,7 +302,7 @@ public class HyperPlayer implements HyperAccount {
 		values.put("Z", z+"");
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.z = z;
-		hc.getHyperEventHandler().fireHyperPlayerModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setWorld(String world) {
 		HyperConomy hc = HyperConomy.hc;
@@ -309,7 +312,7 @@ public class HyperPlayer implements HyperAccount {
 		values.put("WORLD", world);
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.world = world;
-		hc.getHyperEventHandler().fireHyperPlayerModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setHash(String hash) {
 		HyperConomy hc = HyperConomy.hc;
@@ -319,7 +322,7 @@ public class HyperPlayer implements HyperAccount {
 		values.put("HASH", hash);
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.hash = hash;
-		hc.getHyperEventHandler().fireHyperPlayerModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setSalt(String salt) {
 		HyperConomy hc = HyperConomy.hc;
@@ -329,7 +332,7 @@ public class HyperPlayer implements HyperAccount {
 		values.put("SALT", salt);
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.salt = salt;
-		hc.getHyperEventHandler().fireHyperPlayerModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	
 	
@@ -382,6 +385,13 @@ public class HyperPlayer implements HyperAccount {
 			getPlayer().sendMessage(message);
 			return;
 		}
+	}
+	
+	public boolean hasPermission(String permission) {
+		if (getPlayer() != null) {
+			getPlayer().hasPermission(permission);
+		}
+		return false;
 	}
 	
 	public double getSalesTax(Double price) {
@@ -466,14 +476,14 @@ public class HyperPlayer implements HyperAccount {
 	public void setBalance(double balance) {
 		HyperConomy hc = HyperConomy.hc;
 		checkExternalAccount();
-		if (hc.useExternalEconomy()) {
-			if (hc.getEconomy().hasAccount(name)) {
-				hc.getEconomy().withdrawPlayer(name, hc.getEconomy().getBalance(name));
+		if (hc.getMC().useExternalEconomy()) {
+			if (hc.getMC().getEconomy().hasAccount(name)) {
+				hc.getMC().getEconomy().withdrawPlayer(name, hc.getMC().getEconomy().getBalance(name));
 			} else {
-				hc.getEconomy().createPlayerAccount(name);
+				hc.getMC().getEconomy().createPlayerAccount(name);
 			}
-			hc.getEconomy().depositPlayer(name, balance);
-			hc.getLog().writeAuditLog(name, "setbalance", balance, hc.getEconomy().getName());
+			hc.getMC().getEconomy().depositPlayer(name, balance);
+			hc.getLog().writeAuditLog(name, "setbalance", balance, hc.getMC().getEconomy().getName());
 		} else {
 			setInternalBalance(balance);
 		}
@@ -487,15 +497,15 @@ public class HyperPlayer implements HyperAccount {
 		values.put("BALANCE", balance+"");
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		hc.getLog().writeAuditLog(name, "setbalance", balance, "HyperConomy");
-		hc.getHyperEventHandler().fireHyperPlayerModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	@SuppressWarnings("deprecation")
 	public void deposit(double amount) {
 		HyperConomy hc = HyperConomy.hc;
 		checkExternalAccount();
-		if (hc.useExternalEconomy()) {
-			hc.getEconomy().depositPlayer(name, amount);
-			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getEconomy().getName());
+		if (hc.getMC().useExternalEconomy()) {
+			hc.getMC().getEconomy().depositPlayer(name, amount);
+			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getMC().getEconomy().getName());
 		} else {
 			this.balance += amount;
 			HashMap<String,String> conditions = new HashMap<String,String>();
@@ -511,9 +521,9 @@ public class HyperPlayer implements HyperAccount {
 	public void withdraw(double amount) {
 		HyperConomy hc = HyperConomy.hc;
 		checkExternalAccount();
-		if (hc.useExternalEconomy()) {
-			hc.getEconomy().withdrawPlayer(name, amount);
-			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getEconomy().getName());
+		if (hc.getMC().useExternalEconomy()) {
+			hc.getMC().getEconomy().withdrawPlayer(name, amount);
+			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getMC().getEconomy().getName());
 		} else {
 			this.balance -= amount;
 			HashMap<String,String> conditions = new HashMap<String,String>();
@@ -583,6 +593,19 @@ public class HyperPlayer implements HyperAccount {
 		p.setExp(xpbarxp);
 		return true;
 	}
+	
+	public SimpleLocation getLocation() {
+		return HyperConomy.hc.getMC().getLocation(this);
+	}
 
+	public HyperObject getObjectInHand() {
+		return null;
+		//TODO
+	}
+	
+	public HyperObject getObjectInHand(Shop s) {
+		return null;
+		//TODO
+	}
 	
 }

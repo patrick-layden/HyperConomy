@@ -1,68 +1,57 @@
 package regalowl.hyperconomy.command;
 
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.util.LanguageFile;
 
 
 
 
-public class Hcdelete implements CommandExecutor {
+public class Hcdelete extends BaseCommand implements HyperCommand {
 	
-	
-	
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getHyperLock().isLocked(sender)) {
-			hc.getHyperLock().sendLockMessage(sender);;
-			return true;
-		}
-		DataManager em = hc.getDataManager();
-		LanguageFile L = hc.getLanguageFile();
+	public Hcdelete() {
+		super(false);
+	}
 
-		String economy = hc.getConsoleSettings().getEconomy(sender);
-		HyperEconomy he = em.getEconomy(economy);
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
+		HyperEconomy he = getEconomy();
 		if (args.length == 0) {
-			sender.sendMessage(L.get("HCDELETE_INVALID"));
-			return true;
+			data.addResponse(L.get("HCDELETE_INVALID"));
+			return data;
 		}
 		if (args[0].equalsIgnoreCase("object")) {
 			try {
 				String name = args[1];
 				if (he.objectTest(name)) {
 					he.getHyperObject(name).delete();
-					sender.sendMessage(L.get("HCDELETE_SUCCESS"));
+					data.addResponse(L.get("HCDELETE_SUCCESS"));
 				} else {
-					sender.sendMessage(L.get("INVALID_NAME"));
+					data.addResponse(L.get("INVALID_NAME"));
 				}
 			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDELETE_OBJECT_INVALID"));
+				data.addResponse(L.get("HCDELETE_OBJECT_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("account")) {
 			try {
 				String name = args[1];
-				if (em.hyperPlayerExists(name)) {
-					HyperPlayer hp = em.getHyperPlayer(name);
+				if (dm.hyperPlayerExists(name)) {
+					HyperPlayer hp = dm.getHyperPlayer(name);
 					hp.delete();
-					sender.sendMessage(L.get("HCDELETE_SUCCESS"));
+					data.addResponse(L.get("HCDELETE_SUCCESS"));
 				} else {
-					sender.sendMessage(L.get("ACCOUNT_NOT_FOUND"));
+					data.addResponse(L.get("ACCOUNT_NOT_FOUND"));
 				}
 			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDELETE_ACCOUNT_INVALID"));
+				data.addResponse(L.get("HCDELETE_ACCOUNT_INVALID"));
 			}
 		} else {
-			sender.sendMessage(L.get("HCDELETE_INVALID"));
+			data.addResponse(L.get("HCDELETE_INVALID"));
 		}
-
-		return true;
+		return data;
 	}
 	
 

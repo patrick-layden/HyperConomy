@@ -21,8 +21,8 @@ public class Backup {
 		backupFiles.add("HyperConomy.db");
 		backupFiles.add("errors.log");
 		backupFiles.add("SQL.log");
-		String spath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy";
-		destinationPath = ft.getJarPath() + File.separator + "plugins" + File.separator + "HyperConomy" + File.separator + "backups";
+		String spath = hc.getFolderPath();
+		destinationPath = spath + File.separator + "backups";
 		ft.makeFolder(destinationPath);
 		destinationPath = destinationPath + File.separator + ft.getTimeStamp();
 		ft.makeFolder(destinationPath);
@@ -41,8 +41,7 @@ public class Backup {
 		for (int i = 0; i < backupFiles.size(); i++) {
 			ft.copyFile(spath + File.separator + backupFiles.get(i), languagePath + File.separator + backupFiles.get(i));
 		}
-		
-		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+		new Thread(new Runnable() {
 			public void run() {
 				HyperConomy hc = HyperConomy.hc;
 				ArrayList<String> tables = hc.getDataManager().getTablesList();
@@ -56,7 +55,7 @@ public class Backup {
 					hc.getFileTools().writeCSV(data, writePath);
 				}
 			}
-		});
+		}).start();
 		
 	}
 }

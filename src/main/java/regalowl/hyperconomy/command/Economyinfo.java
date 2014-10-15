@@ -1,29 +1,23 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.util.LanguageFile;
+public class Economyinfo extends BaseCommand implements HyperCommand {
+	public Economyinfo() {
+		super(false);
+	}
 
-public class Economyinfo {
-	Economyinfo(_Command command, String args[], CommandSender sender, Player player) {
-		HyperConomy hc = HyperConomy.hc;
-		DataManager em = hc.getDataManager();
-		LanguageFile L = hc.getLanguageFile();
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		try {
 			if (args.length == 0) {
-				if (player != null) {
-					sender.sendMessage(L.f(L.get("PART_OF_ECONOMY"), em.getHyperPlayer(player).getEconomy()));
-				} else {
-					sender.sendMessage(L.f(L.get("PART_OF_ECONOMY"), command.getNonPlayerEconomy()));
-				}
+				data.addResponse(L.f(L.get("PART_OF_ECONOMY"), getEconomyName()));
 			} else {
-				sender.sendMessage(L.get("ECONOMYINFO_INVALID"));
+				data.addResponse(L.get("ECONOMYINFO_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("ECONOMYINFO_INVALID"));
+			data.addResponse(L.get("ECONOMYINFO_INVALID"));
 		}
+		return data;
 	}
 }

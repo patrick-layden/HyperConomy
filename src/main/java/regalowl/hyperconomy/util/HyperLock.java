@@ -4,6 +4,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.command.CommandData;
 
 public class HyperLock {
 
@@ -44,19 +46,41 @@ public class HyperLock {
 		return playerLock;
 	}
 	
-	public boolean isLocked(CommandSender sender) {
-		if (fullLock || loadLock) {
-			return true;
-		}
-		if (playerLock && !sender.hasPermission("hyperconomy.admin")) {
-			return true;
-		}
+	public boolean isLocked(HyperPlayer hp) {
+		if (fullLock || loadLock) return true;
+		if (playerLock && hp != null && !hp.hasPermission("hyperconomy.admin")) return true;
 		return false;
 	}
-	public boolean isLocked(Player player) {
-		return isLocked((CommandSender)player);
+	
+	public boolean isLocked(CommandSender s) {
+		HyperPlayer hp = null;
+		if (s instanceof Player) {
+			hp = hc.getHyperPlayerManager().getHyperPlayer((Player)s);
+		}
+		return isLocked(hp);
 	}
 	
+	public boolean isLocked() {
+		if (fullLock || loadLock) return true;
+		return false;
+	}
+	
+	public CommandData sendLockMessage(CommandData data) {
+		if (loadLock) {
+			data.addResponse(L.get("HYPERCONOMY_LOADING"));
+			return data;
+		}
+		if (fullLock) {
+			data.addResponse(L.get("GLOBAL_SHOP_LOCKED"));
+			return data;
+		}
+		if (playerLock && data.isPlayer() && !data.getHyperPlayer().hasPermission("hyperconomy.admin")) {
+			data.addResponse(L.get("GLOBAL_SHOP_LOCKED"));
+			return data;
+		}
+		return data;
+	}
+
 	public void sendLockMessage(CommandSender sender) {
 		if (loadLock) {
 			sender.sendMessage(L.get("HYPERCONOMY_LOADING"));

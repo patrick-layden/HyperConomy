@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.hyperobject.BasicObject;
@@ -19,32 +14,34 @@ import regalowl.hyperconomy.hyperobject.HyperObjectStatus;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Browseshop {
+public class Browseshop extends BaseCommand implements HyperCommand {
 	
-	Browseshop(String args[], CommandSender sender, Player player, String playerecon) {
-		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy he = hc.getDataManager().getEconomy(playerecon);
-		DataManager em = hc.getDataManager();
+
+	public Browseshop() {
+		super(false);
+	}
+	
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
+		HyperEconomy he = getEconomy();
 		HyperShopManager hsm = hc.getHyperShopManager();
-		CommonFunctions cf = hc.gCF();
-		LanguageFile L = hc.getLanguageFile();
 		ArrayList<String> aargs = new ArrayList<String>();
 		for (int i = 0; i < args.length; i++) {
 			aargs.add(args[i]);
 		}
 		try {
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
-    		if (player != null) {
-    			if ((requireShop && !hsm.inAnyShop(player)) && !player.hasPermission("hyperconomy.admin")) {
-    				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
-    				return;
+    		if (hp != null) {
+    			if ((requireShop && !hsm.inAnyShop(hp)) && !hp.hasPermission("hyperconomy.admin")) {
+    				data.addResponse(L.get("REQUIRE_SHOP_FOR_INFO"));
+    				return data;
     			}			
     		}
 			if (aargs.size() > 3) {
-				sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
-				return;
+				data.addResponse(L.get("BROWSE_SHOP_INVALID"));
+				return data;
 			}
 			boolean alphabetic = false;
 			if (aargs.contains("-a") && aargs.size() >= 2) {
@@ -65,22 +62,22 @@ public class Browseshop {
 					}
 				}
 			} else {
-				sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
-				return;
+				data.addResponse(L.get("BROWSE_SHOP_INVALID"));
+				return data;
 			}
 			String input = "";
 			if (aargs.size() == 1) {
 				input = aargs.get(0);
 			} else {
-				sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
-				return;
+				data.addResponse(L.get("BROWSE_SHOP_INVALID"));
+				return data;
 			}
     		Shop shop = null;
-    		if (player != null) {
-    			if (!hsm.inAnyShop(player)) {
+    		if (hp != null) {
+    			if (!hsm.inAnyShop(hp)) {
     				shop = null;
     			} else {
-    				shop = hsm.getShop(player);
+    				shop = hsm.getShop(hp);
     			}		
     		}
 			ArrayList<String> names = he.getNames();
@@ -98,7 +95,7 @@ public class Browseshop {
 								HyperObject pso = ps.getPlayerShopObject(ho);
 								if (pso != null) {
 									if (pso.getStatus() == HyperObjectStatus.NONE) {
-										if (ps.isAllowed(em.getHyperPlayer(player))) {
+										if (ps.isAllowed(hp)) {
 											rnames.add(displayName);
 										}
 									} else {
@@ -118,7 +115,7 @@ public class Browseshop {
 								HyperObject pso = ps.getPlayerShopObject(ho);
 								if (pso != null) {
 									if (pso.getStatus() == HyperObjectStatus.NONE) {
-										if (ps.isAllowed(em.getHyperPlayer(player))) {
+										if (ps.isAllowed(hp)) {
 											rnames.add(displayName);
 										}
 									} else {
@@ -140,44 +137,48 @@ public class Browseshop {
 			double maxpages = rsize/10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int)maxpages + 1;
-			sender.sendMessage(ChatColor.RED + L.get("PAGE") + " " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
+			data.addResponse(ChatColor.RED + L.get("PAGE") + " " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
 			while (count < numberpage) {
 				if (count > ((page * 10) - 11)) {
 					if (count < rsize) {
 						String iname = rnames.get(count);
 			            Double cost = 0.0;
 			            double stock = 0;
-			            HyperObject ho = he.getHyperObject(iname, hsm.getShop(player));
+			            HyperObject ho = he.getHyperObject(iname, hsm.getShop(hp));
 			            if (ho.getType() == HyperObjectType.ITEM) {
 							cost = ho.getBuyPrice(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = cf.twoDecimals(cost + taxpaid);
-							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(player)).getStock());
+							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
 						} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
 							cost = ho.getBuyPrice(EnchantmentClass.DIAMOND);
 							cost = cost + ho.getPurchaseTax(cost);
-							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(player)).getStock());
+							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
 						} else {
 							BasicObject hi = (BasicObject)ho;
 							cost = hi.getBuyPrice(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = cf.twoDecimals(cost + taxpaid);
-							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(player)).getStock());
+							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
 						}
 			            if (ho.isShopObject()) {
-			            	sender.sendMessage(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "; (&e" + ho.getStatus().toString()+ "&9)]"));
+			            	data.addResponse(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "; (&e" + ho.getStatus().toString()+ "&9)]"));
 			            } else {
-			            	sender.sendMessage(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "]"));
+			            	data.addResponse(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "]"));
 			            }			
 					} else {
-						sender.sendMessage(L.get("REACHED_END"));
-						break;
+						data.addResponse(L.get("REACHED_END"));
+						return data;
 					}			
 				}
 				count++;
 			}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("BROWSE_SHOP_INVALID"));
+			data.addResponse(L.get("BROWSE_SHOP_INVALID"));
 		}
+		return data;
 	}
+
+
+
 }

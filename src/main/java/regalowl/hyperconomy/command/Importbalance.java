@@ -18,7 +18,7 @@ public class Importbalance {
 	Importbalance(String args[], CommandSender sender) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		if (!hc.useExternalEconomy()) {
+		if (!hc.getMC().useExternalEconomy()) {
 			sender.sendMessage(L.get("MUST_USE_EXTERNAL_ECONOMY"));
 			return;
 		}
@@ -33,6 +33,7 @@ public class Importbalance {
 		}
 		FileTools ft = hc.getFileTools();
 		String playerListPath = ft.getJarPath();
+		playerListPath = playerListPath.substring(0, playerListPath.lastIndexOf("plugins"));
 		playerListPath += File.separator + world + File.separator + "playerdata";
 		ArrayList<String> importedPlayers = new ArrayList<String>();
 		for (String uuidName : ft.getFolderContents(playerListPath)) {
@@ -48,9 +49,9 @@ public class Importbalance {
 			if (name == null || name == "") {
 				continue;
 			}
-			if (hc.getEconomy().hasAccount(name)) {
+			if (hc.getMC().getEconomy().hasAccount(name)) {
 				HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(name);
-				hp.setInternalBalance(hc.getEconomy().getBalance(name));
+				hp.setInternalBalance(hc.getMC().getEconomy().getBalance(name));
 				hp.setUUID(puid.toString());
 			}
 			importedPlayers.add(name);

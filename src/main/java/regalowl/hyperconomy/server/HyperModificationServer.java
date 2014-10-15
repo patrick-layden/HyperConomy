@@ -7,8 +7,9 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import org.bukkit.scheduler.BukkitRunnable;
 
 import regalowl.hyperconomy.HyperBankManager;
 import regalowl.hyperconomy.HyperConomy;
@@ -17,18 +18,19 @@ import regalowl.hyperconomy.HyperPlayerManager;
 import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.DisableListener;
-import regalowl.hyperconomy.event.HyperBankModificationListener;
-import regalowl.hyperconomy.event.HyperObjectModificationListener;
-import regalowl.hyperconomy.event.HyperPlayerModificationListener;
-import regalowl.hyperconomy.event.ShopModificationListener;
+import regalowl.hyperconomy.event.DisableEvent;
+import regalowl.hyperconomy.event.HyperBankModificationEvent;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperListener;
+import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
+import regalowl.hyperconomy.event.ShopModificationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 
 
-public class HyperModificationServer implements HyperObjectModificationListener, HyperPlayerModificationListener, 
-ShopModificationListener, HyperBankModificationListener, DisableListener {
+public class HyperModificationServer implements HyperListener {
 
 	private HyperConomy hc;
 	private int port;
@@ -42,6 +44,7 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 	private Socket sClientSocket;
 	private Socket clientSocket;
 	private RemoteUpdater remoteUpdater;
+	private Timer t = new Timer();
 	
 	public HyperModificationServer() {
 		this.hc = HyperConomy.hc;
@@ -55,7 +58,7 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 			hc.getHyperEventHandler().registerListener(this);
 			receiveUpdate();
 			remoteUpdater = new RemoteUpdater();
-			remoteUpdater.runTaskTimerAsynchronously(hc, updateInterval, updateInterval);
+			t.schedule(remoteUpdater, updateInterval, updateInterval);
 		}
 	}
 
@@ -64,7 +67,7 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 	}
 	
 	private void receiveUpdate() {
-		HyperConomy.hc.getServer().getScheduler().runTaskAsynchronously(HyperConomy.hc, new Runnable() {
+		new Thread(new Runnable() {
 			public void run() {
 				while (runServer) {
 					HyperTransferObject transferObject = null;
@@ -93,7 +96,7 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 					}
 				}
 			}
-		});
+		}).start();
 	}
 
 	private void processHyperObjects(ArrayList<HyperObject> objects) {
@@ -144,28 +147,32 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 	}
 	
 	
-	
-	
-	
 	@Override
-	public void onHyperObjectModification(HyperObject ho) {
-		sendObject.addHyperObject(ho);
+	public void onHyperEvent(HyperEvent event) {
+		if (event instanceof HyperObjectModificationEvent) {
+			sendObject.addHyperObject(((HyperObjectModificationEvent)event).getHyperObject());
+		} else if (event instanceof HyperPlayerModificationEvent) {
+			sendObject.addHyperPlayer(((HyperPlayerModificationEvent)event).getHyperPlayer());
+		} else if (event instanceof HyperBankModificationEvent) {
+			sendObject.addBank(((HyperBankModificationEvent) event).getHyperBank());
+		} else if (event instanceof ShopModificationEvent) {
+			sendObject.addShop(((ShopModificationEvent) event).getShop());
+		} else if (event instanceof DisableEvent) {
+			runServer = false;
+			remoteUpdater.cancel();
+			try {
+				if (sClientSocket != null) sClientSocket.close();
+				if (serverSocket != null) serverSocket.close();
+				if (clientSocket != null) clientSocket.close();
+			} catch (Exception e) {
+				HyperConomy.hc.getDebugMode().debugWriteError(e);
+			}
+		}
 	}
-	@Override
-	public void onHyperPlayerModification(HyperPlayer hp) {
-		sendObject.addHyperPlayer(hp);
-	}
-	@Override
-	public void onHyperBankModification(HyperBank hb) {
-		sendObject.addBank(hb);
-	}
-	@Override
-	public void onShopModification(Shop s) {
-		sendObject.addShop(s);
-	}
+
+
 	
-	
-	private class RemoteUpdater extends BukkitRunnable {
+	private class RemoteUpdater extends TimerTask {
 		@Override
 		public void run() {
 			if (sendObject.isEmpty()) return;
@@ -192,22 +199,6 @@ ShopModificationListener, HyperBankModificationListener, DisableListener {
 			}
 		}
 	}
-	
-	
-	
-	@Override
-	public void onDisable() {
-		runServer = false;
-		remoteUpdater.cancel();
-		try {
-			if (sClientSocket != null) sClientSocket.close();
-			if (serverSocket != null) serverSocket.close();
-			if (clientSocket != null) clientSocket.close();
-		} catch (Exception e) {
-			HyperConomy.hc.getDebugMode().debugWriteError(e);
-		}
-	}
-
 
 
 

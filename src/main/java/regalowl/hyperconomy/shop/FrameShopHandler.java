@@ -38,16 +38,16 @@ public class FrameShopHandler implements Listener {
 		hc = HyperConomy.hc;
 		em = hc.getDataManager();
 		hpm = hc.getHyperPlayerManager();
-		hc.getServer().getPluginManager().registerEvents(this, hc);
+		hc.getMC().getConnector().getServer().getPluginManager().registerEvents(this, hc.getMC().getConnector());
 		load();
 	}
 
 	private void load() {
-		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+		new Thread(new Runnable() {
 			public void run() {
 				frameShops.clear();
 				dbData = hc.getSQLRead().select("SELECT * FROM hyperconomy_frame_shops");
-				hc.getServer().getScheduler().runTask(hc, new Runnable() {
+				hc.getMC().runTask(new Runnable() {
 					public void run() {
 						while (dbData.next()) {
 							double x = dbData.getDouble("X");
@@ -70,7 +70,7 @@ public class FrameShopHandler implements Listener {
 					}
 				});
 			}
-		});
+		}).start();
 	}
 
 	public FrameShop getFrameShop(String key) {

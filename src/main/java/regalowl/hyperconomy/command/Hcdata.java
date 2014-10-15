@@ -22,44 +22,34 @@ import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.util.Backup;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class Hcdata implements CommandExecutor {
+public class Hcdata extends BaseCommand implements HyperCommand {
 	
-	private HyperConomy hc;
-	private LanguageFile L;
-	private CommandSender cSender;
 	private ArrayList<String> tables;
 	private String table;
 	private FileTools ft;
 	private String folderPath;
 	
 	public Hcdata() {
-		hc = HyperConomy.hc;
+		super(false);
 		tables = hc.getDataManager().getTablesList();
 	}
 
-	
-	
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		hc = HyperConomy.hc;
-		L = hc.getLanguageFile();
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		ft = hc.getFileTools();
-		cSender = sender;
-		if (hc.getHyperLock().isLocked(sender)) {
-			hc.getHyperLock().sendLockMessage(sender);;
-			return true;
-		}
-		DataManager em = hc.getDataManager();
 		if (args.length == 0) {
-			sender.sendMessage(L.get("HCDATA_INVALID"));
-			return true;
+			data.addResponse(L.get("HCDATA_INVALID"));
+			return data;
 		}
-		folderPath = hc.getDataBukkit().getPluginFolderPath();
+		folderPath = hc.getFolderPath();
 		if (args[0].equalsIgnoreCase("exportcsv")) {
 			try {
 				ft.makeFolder(folderPath + File.separator + "import_export");
 				table = args[1];
 				if (table.equalsIgnoreCase("all")) {
-					hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+					new Thread(new Runnable() {
 						public void run() {
 							for (String table:tables) {
 								QueryResult data = hc.getSQLRead().select("SELECT * FROM hyperconomy_" + table);
@@ -67,25 +57,25 @@ public class Hcdata implements CommandExecutor {
 								hc.getFileTools().writeCSV(data, path);
 							}
 						}
-					});
-					cSender.sendMessage(L.get("CSVS_CREATED"));
-					return true;
+					}).start();
+					data.addResponse(L.get("CSVS_CREATED"));
+					return data;
 				}
 				if (!tables.contains(table)) {
-					sender.sendMessage(L.get("TABLE_NOT_EXIST"));
-					return true;
+					data.addResponse(L.get("TABLE_NOT_EXIST"));
+					return data;
 				}
-				hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+				new Thread(new Runnable() {
 					public void run() {
 						QueryResult data = hc.getSQLRead().select("SELECT * FROM hyperconomy_" + table);
 						ft.makeFolder(folderPath + File.separator + "import_export");
 						String path = folderPath + File.separator + "import_export" + File.separator + table + ".csv";
 						hc.getFileTools().writeCSV(data, path);
 					}
-				});
-				cSender.sendMessage(L.get("CSV_CREATED"));
+				}).start();
+				data.addResponse(L.get("CSV_CREATED"));
 			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDATA_EXPORTCSV_INVALID"));
+				data.addResponse(L.get("HCDATA_EXPORTCSV_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("importcsv")) {
 			try {
@@ -95,45 +85,45 @@ public class Hcdata implements CommandExecutor {
 					for (String table:tables) {
 						String path = folderPath + File.separator + "import_export" + File.separator + table + ".csv";
 						if (!ft.fileExists(path)) {continue;}
-						QueryResult data = hc.getFileTools().readCSV(path);
-						ArrayList<String> columns = data.getColumnNames();
+						QueryResult qr = hc.getFileTools().readCSV(path);
+						ArrayList<String> columns = qr.getColumnNames();
 						hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_" + table);
-						while (data.next()) {
+						while (qr.next()) {
 							HashMap<String, String> values = new HashMap<String, String>();
 							for (String column : columns) {
-								values.put(column, data.getString(column));
+								values.put(column, qr.getString(column));
 							}
 							hc.getSQLWrite().performInsert("hyperconomy_" + table, values);
 						}
 					}
-					cSender.sendMessage(L.get("CSVS_IMPORTED"));
+					data.addResponse(L.get("CSVS_IMPORTED"));
 					hc.restart();
-					return true;
+					return data;
 				}
 				if (!tables.contains(table)) {
-					sender.sendMessage(L.get("TABLE_NOT_EXIST"));
-					return true;
+					data.addResponse(L.get("TABLE_NOT_EXIST"));
+					return data;
 				}
 				
 				String path = folderPath + File.separator + "import_export" + File.separator + table + ".csv";
 				if (!ft.fileExists(path)) {
-					sender.sendMessage(L.get("IMPORT_FILE_NOT_EXIST"));
-					return true;
+					data.addResponse(L.get("IMPORT_FILE_NOT_EXIST"));
+					return data;
 				}
-				QueryResult data = hc.getFileTools().readCSV(path);
-				ArrayList<String> columns = data.getColumnNames();
+				QueryResult qr = hc.getFileTools().readCSV(path);
+				ArrayList<String> columns = qr.getColumnNames();
 				hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_" + table);
-				while (data.next()) {
+				while (qr.next()) {
 					HashMap<String, String> values = new HashMap<String, String>();
 					for (String column : columns) {
-						values.put(column, data.getString(column));
+						values.put(column, qr.getString(column));
 					}
 					hc.getSQLWrite().performInsert("hyperconomy_" + table, values);
 				}
-				cSender.sendMessage(L.get("CSV_IMPORTED"));
+				data.addResponse(L.get("CSV_IMPORTED"));
 				hc.restart();
 			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDATA_IMPORTCSV_INVALID"));
+				data.addResponse(L.get("HCDATA_IMPORTCSV_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("importmissing")) { 
 			try {
@@ -141,15 +131,15 @@ public class Hcdata implements CommandExecutor {
 				if (args.length > 1) {
 					economy = args[1];
 				}
-				if (em.economyExists(economy)) {
+				if (dm.economyExists(economy)) {
 					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
-					ArrayList<String> added = em.getEconomy(economy).loadNewItems();
-					sender.sendMessage(ChatColor.GOLD + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
+					ArrayList<String> added = dm.getEconomy(economy).loadNewItems();
+					data.addResponse(ChatColor.GOLD + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
 				} else {
-					sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
+					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
 				}
 			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDATA_IMPORTMISSING_INVALID"));
+				data.addResponse(L.get("HCDATA_IMPORTMISSING_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("setdefaultprices")) { 
 			try {
@@ -157,33 +147,33 @@ public class Hcdata implements CommandExecutor {
 				if (args.length > 1) {
 					economy = args[1];
 				}
-				if (em.economyExists(economy)) {
+				if (dm.economyExists(economy)) {
 					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 					String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
 					FileTools ft = hc.getFileTools();
 					if (!ft.fileExists(defaultObjectsPath)) {
 						ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
 					}
-					QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
-					while (data.next()) {
-						String objectName = data.getString("NAME");
-						HyperObject ho = em.getEconomy(economy).getHyperObject(objectName);
-						ho.setStartprice(data.getDouble("STARTPRICE"));
-						ho.setStaticprice(data.getDouble("STATICPRICE"));
-						ho.setValue(data.getDouble("VALUE"));
+					QueryResult qr = hc.getFileTools().readCSV(defaultObjectsPath);
+					while (qr.next()) {
+						String objectName = qr.getString("NAME");
+						HyperObject ho = dm.getEconomy(economy).getHyperObject(objectName);
+						ho.setStartprice(qr.getDouble("STARTPRICE"));
+						ho.setStaticprice(qr.getDouble("STATICPRICE"));
+						ho.setValue(qr.getDouble("VALUE"));
 					}
 					ft.deleteFile(defaultObjectsPath);
-					sender.sendMessage(L.get("PRICES_IMPORTED"));
+					data.addResponse(L.get("PRICES_IMPORTED"));
 				} else {
-					sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
+					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
 				}
 			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDATA_SETDEFAULTPRICES_INVALID"));
+				data.addResponse(L.get("HCDATA_SETDEFAULTPRICES_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("clearhistory")) {
 			String statement = "DELETE FROM hyperconomy_history";
 			hc.getSQLWrite().addToQueue(statement);
-			sender.sendMessage(L.get("HCCLEARHISTORY_CLEARED"));
+			data.addResponse(L.get("HCCLEARHISTORY_CLEARED"));
 		} else if (args[0].equalsIgnoreCase("clearlogs")) {
 			if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {
 				new Backup();
@@ -192,18 +182,18 @@ public class Hcdata implements CommandExecutor {
 			hc.getSQLWrite().addToQueue(statement);
 			statement = "DELETE FROM hyperconomy_log";
 			hc.getSQLWrite().addToQueue(statement);
-			sender.sendMessage(L.get("LOGS_CLEARED"));
+			data.addResponse(L.get("LOGS_CLEARED"));
 		} else if (args[0].equalsIgnoreCase("repairnames")) {
 			try {
 				if (hc.getConf().getBoolean("enable-feature.composite-items")) {
-					sender.sendMessage(L.get("MUST_DISABLE_COMPOSITES"));
-					return true;
+					data.addResponse(L.get("MUST_DISABLE_COMPOSITES"));
+					return data;
 				}
 				if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 				for (HyperEconomy he : hc.getDataManager().getEconomies()) {
 					he.updateNamesFromYml();
 				}
-				sender.sendMessage(L.get("NAME_REPAIR_ATTEMPTED"));
+				data.addResponse(L.get("NAME_REPAIR_ATTEMPTED"));
 				hc.restart();
 			} catch (Exception e) {
 				hc.gDB().writeError(e);
@@ -211,49 +201,45 @@ public class Hcdata implements CommandExecutor {
 		} else if (args[0].equalsIgnoreCase("updateitemstack") || args[0].equalsIgnoreCase("uis")) {
 			try {
 				if (args.length != 2) {
-					sender.sendMessage(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
-					return true;
+					data.addResponse(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
+					return data;
 				}
-				Player p = null;
-				if (sender instanceof Player) {
-					p = (Player)sender;
+				if (!data.isPlayer()) {
+					data.addResponse(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
+					return data;
 				}
-				if (p == null) {
-					sender.sendMessage(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
-					return true;
-				}
-				HyperObject ho = em.getHyperPlayer(p).getHyperEconomy().getHyperObject(args[1]);
+				HyperObject ho = hp.getHyperEconomy().getHyperObject(args[1]);
 				if (ho == null) {
-					sender.sendMessage(L.get("OBJECT_NOT_FOUND"));
-					return true;
+					data.addResponse(L.get("OBJECT_NOT_FOUND"));
+					return data;
 				}
-				ItemStack stack = p.getItemInHand();
+				ItemStack stack = hp.getObjectInHand();
 				if (stack.getType() == Material.AIR) {
-					sender.sendMessage(L.get("AIR_CANT_BE_TRADED"));
-					return true;
+					data.addResponse(L.get("AIR_CANT_BE_TRADED"));
+					return data;
 				}
 				SerializableItemStack sis = new SerializableItemStack(stack);
 				ho.setData(sis.serialize());
-				sender.sendMessage(L.get("HCDATA_ITEMSTACK_UPDATED"));
+				data.addResponse(L.get("HCDATA_ITEMSTACK_UPDATED"));
 			} catch (Exception e) {
-				sender.sendMessage(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
+				data.addResponse(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("backup")) {
 			try {
 				new Backup();
-				sender.sendMessage(L.get("ALL_BACKED_UP"));
+				data.addResponse(L.get("ALL_BACKED_UP"));
 			} catch (Exception e) {
 				hc.gDB().writeError(e);
 			}
 		} else if (args[0].equalsIgnoreCase("purgeaccounts")) {
 			try {
-				sender.sendMessage(L.f(L.get("HCDATA_ACCOUNTS_PURGED"), hc.getHyperPlayerManager().purgeDeadAccounts()));
+				data.addResponse(L.f(L.get("HCDATA_ACCOUNTS_PURGED"), hc.getHyperPlayerManager().purgeDeadAccounts()));
 			} catch (Exception e) {
 				hc.gDB().writeError(e);
 			}
 		} else {
-			sender.sendMessage(L.get("HCDATA_INVALID"));
+			data.addResponse(L.get("HCDATA_INVALID"));
 		}
-		return true;
+		return data;
 	}
 }

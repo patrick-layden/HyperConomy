@@ -10,6 +10,7 @@ import regalowl.databukkit.sql.SQLWrite;
 import regalowl.databukkit.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.shop.PlayerShop;
 
 public class BasicShopObject extends BasicObject implements HyperObject {
@@ -86,7 +87,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setShop(PlayerShop playerShop) {
@@ -98,7 +99,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		ws.addParameter(playerShop.getName());
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setStock(double stock) {
@@ -114,7 +115,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 			ws.addParameter(playerShop);
 			ws.addParameter(hyperObject);
 			sw.addToQueue(ws);
-			hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+			hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 		}
 	}
 	@Override
@@ -127,7 +128,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setSellPrice(double sellPrice) {
@@ -139,7 +140,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setMaxStock(int maxStock) {
@@ -151,7 +152,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setStatus(HyperObjectStatus status) {
@@ -163,7 +164,7 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setUseEconomyStock(boolean state) {

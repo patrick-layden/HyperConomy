@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
@@ -70,7 +71,7 @@ public class BasicObject implements HyperObject {
 		hc.getDataManager().getEconomy(economy).removeHyperObject(name);
 		String statement = "DELETE FROM hyperconomy_objects WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	
 	@Override
@@ -192,7 +193,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET NAME='" + name + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.name = name;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setDisplayName(String displayName) {
@@ -200,7 +201,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.displayName = displayName;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setAliases(ArrayList<String> newAliases) {
@@ -212,7 +213,7 @@ public class BasicObject implements HyperObject {
 		for (String cAlias:newAliases) {
 			aliases.add(cAlias);
 		}
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void addAlias(String addAlias) {
@@ -222,7 +223,7 @@ public class BasicObject implements HyperObject {
 		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void removeAlias(String removeAlias) {
@@ -232,7 +233,7 @@ public class BasicObject implements HyperObject {
 		String stringAliases = hc.getCommonFunctions().implode(aliases, ",");
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setEconomy(String economy) {
@@ -240,7 +241,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET ECONOMY='" + economy + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.economy = economy;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setType(HyperObjectType type) {
@@ -248,7 +249,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET TYPE='" + type.toString() + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.type = type;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setValue(double value) {
@@ -256,7 +257,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET VALUE='" + value + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.value = value;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setIsstatic(String isstatic) {
@@ -264,7 +265,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET STATIC='" + isstatic + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.isstatic = isstatic;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setStaticprice(double staticprice) {
@@ -272,7 +273,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET STATICPRICE='" + staticprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.staticprice = staticprice;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setStock(double stock) {
@@ -281,7 +282,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET STOCK='" + stock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.stock = stock;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setMedian(double median) {
@@ -289,7 +290,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET MEDIAN='" + median + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.median = median;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setInitiation(String initiation) {
@@ -297,7 +298,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET INITIATION='" + initiation + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.initiation = initiation;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setStartprice(double startprice) {
@@ -305,7 +306,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET STARTPRICE='" + startprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.startprice = startprice;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setCeiling(double ceiling) {
@@ -313,7 +314,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET CEILING='" + ceiling + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.ceiling = ceiling;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setFloor(double floor) {
@@ -321,7 +322,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET FLOOR='" + floor + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.floor = floor;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
 	public void setMaxstock(double maxstock) {
@@ -329,7 +330,7 @@ public class BasicObject implements HyperObject {
 		String statement = "UPDATE hyperconomy_objects SET MAXSTOCK='" + maxstock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.maxstock = maxstock;
-		hc.getHyperEventHandler().fireHyperObjectModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	
 

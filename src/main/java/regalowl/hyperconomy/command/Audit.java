@@ -1,66 +1,58 @@
 package regalowl.hyperconomy.command;
 
-
-import org.bukkit.command.CommandSender;
-
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
-import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperAccount;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Audit {
+public class Audit extends BaseCommand implements HyperCommand {
 	
 	private String account;
-	private CommandSender sender;
-	private LanguageFile L;
-	private HyperConomy hc;
 	private double cbalance;
 	private double logbalance;
 	private double auditbalance;
-	private DataManager em;
 	
-	Audit(String args[], CommandSender csender) {
-		sender = csender;
-		hc = HyperConomy.hc;
-		L = hc.getLanguageFile();
-		em = hc.getDataManager();
+	public Audit() {
+		super(false);
+
+	}
+	
+
+	@Override
+	public CommandData onCommand(CommandData d) {
+		this.data = d;
+		if (!validate(data)) return data;
+		
 		try {
 			account = args[0];
-			if (!em.accountExists(account)) {
-				sender.sendMessage(L.get("ACCOUNT_NOT_FOUND"));
-				return;
+			if (!dm.accountExists(account)) {
+				data.addResponse(L.get("ACCOUNT_NOT_FOUND"));
+				return data;
 			}
-
-			hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+			new Thread(new Runnable() {
 	    		public void run() {
-	    			HyperAccount ha = em.getAccount(account);
+	    			HyperAccount ha = dm.getAccount(account);
 	    			account = ha.getName();
 	    			cbalance = ha.getBalance();
 	    			logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
 	    			auditbalance = getAuditLogTotal(account);
-	    			hc.getServer().getScheduler().runTask(hc, new Runnable() {
+	    			hc.getMC().runTask(new Runnable() {
 	    	    		public void run() {
 	    	    			CommonFunctions cf = hc.gCF();
-	    	    			sender.sendMessage(L.get("LINE_BREAK"));
-	    	    			sender.sendMessage(L.f(L.get("AUDIT_TRUE"), cbalance));
-	    	    			sender.sendMessage(L.f(L.get("AUDIT_THEORETICAL1"), cf.twoDecimals(logbalance)));
-	    	    			sender.sendMessage(L.f(L.get("AUDIT_THEORETICAL2"), cf.twoDecimals(auditbalance)));
-	    	    			//sender.sendMessage("True balance: " + cbalance);
-	    	    			//sender.sendMessage("Theoretical balance condsidering only sales/purchases: " + calc.twoDecimals(logbalance));
-	    	    			//sender.sendMessage("Theoretical balance condsidering all logged balance changes: " + calc.twoDecimals(auditbalance));
-	    	    			sender.sendMessage(L.get("LINE_BREAK"));
+	    	    			data.addResponse(L.get("LINE_BREAK"));
+	    	    			data.addResponse(L.f(L.get("AUDIT_TRUE"), cbalance));
+	    	    			data.addResponse(L.f(L.get("AUDIT_THEORETICAL1"), cf.twoDecimals(logbalance)));
+	    	    			data.addResponse(L.f(L.get("AUDIT_THEORETICAL2"), cf.twoDecimals(auditbalance)));
+	    	    			data.addResponse(L.get("LINE_BREAK"));
 	    	    		}
 	    	    	});
 	    		}
-	    	});
-
+	    	}).start();
 		} catch (Exception e) {
-			sender.sendMessage(L.get("AUDIT_INVALID"));
+			data.addResponse(L.get("AUDIT_INVALID"));
 		}
-
+		return data;
 	}
 	
 	

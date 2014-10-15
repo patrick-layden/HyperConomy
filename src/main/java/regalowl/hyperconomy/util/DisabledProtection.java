@@ -38,7 +38,7 @@ public class DisabledProtection implements Listener {
 		allfaces.add(BlockFace.SOUTH);
 		allfaces.add(BlockFace.DOWN);
 		allfaces.add(BlockFace.UP);
-		HyperConomy.hc.getServer().getPluginManager().registerEvents(this, HyperConomy.hc);
+		HyperConomy.hc.getMC().getConnector().getServer().getPluginManager().registerEvents(this, HyperConomy.hc.getMC().getConnector());
 		cs = HyperConomy.hc.getChestShop();
 	}
 

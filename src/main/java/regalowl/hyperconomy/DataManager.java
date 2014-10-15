@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
 
+import regalowl.databukkit.file.FileConfiguration;
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
@@ -16,9 +17,11 @@ import regalowl.databukkit.sql.SQLWrite;
 import regalowl.databukkit.sql.SyncSQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.DataLoadEvent;
+import regalowl.hyperconomy.event.EconomyLoadEvent;
+import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.util.DatabaseUpdater;
-import regalowl.hyperconomy.util.HyperConfig;
 
 public class DataManager {
 
@@ -38,7 +41,7 @@ public class DataManager {
 
 
 	private String defaultServerShopAccount;
-	private HyperConfig config;
+	private FileConfiguration config;
 	private HyperPlayerManager hpm;
 	private HyperBankManager hbm;
 	private HyperShopManager hsm;
@@ -80,8 +83,8 @@ public class DataManager {
 		loadActive = true;
 		hc = HyperConomy.hc;
 		sr = hc.getSQLRead();
-		ssw = hc.getDataBukkit().getSyncSQLWrite();
-		hc.getServer().getScheduler().runTaskAsynchronously(hc, new Runnable() {
+		ssw = hc.getDataBukkit().getSQLManager().getSyncSQLWrite();
+		new Thread(new Runnable() {
 			public void run() {
 				try {
 					hc.getSQLRead().setErrorLogging(false);
@@ -96,18 +99,18 @@ public class DataManager {
 						economies.put(e, new HyperEconomy(e));
 					}
 					hc.getDebugMode().ayncDebugConsoleMessage("Economies loaded.");
-					hc.getHyperEventHandler().fireEconomyLoadEvent();
+					hc.getHyperEventHandler().fireEventFromAsyncThread(new EconomyLoadEvent());
 					hpm.loadData();
 					hbm.loadData();
 					hsm.loadData();
 					hc.getHyperLock().setLoadLock(false);
-					hc.getHyperEventHandler().fireDataLoadEvent();
+					hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent());
 					loadActive = false;
 				} catch (Exception e) {
 					hc.gDB().writeError(e);
 				}
 			}
-		});
+		}).start();
 	}
 	private void setupDefaultEconomy() {
 		//set up default hyperconomy_objects and economies if they don't exist
@@ -255,7 +258,7 @@ public class DataManager {
 			sw.performInsert("hyperconomy_objects", values);
 		}
 		hc.restart();
-		hc.getHyperEventHandler().fireEconomyCreationEvent();
+		hc.getHyperEventHandler().fireEvent(new HyperEconomyCreationEvent());
 	}
 	
 	public void deleteEconomy(String economy) {

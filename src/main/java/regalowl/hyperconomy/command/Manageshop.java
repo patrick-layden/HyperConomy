@@ -9,16 +9,17 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import regalowl.databukkit.file.FileConfiguration;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.ShopCreationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectStatus;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
@@ -354,7 +355,7 @@ public class Manageshop implements CommandExecutor {
 				}
 			}
 			hsm.addShop(newShop);
-			hc.getHyperEventHandler().fireShopCreationEvent(newShop);
+			hc.getHyperEventHandler().fireEvent(new ShopCreationEvent(newShop));
 			player.sendMessage(L.get("SHOP_CREATED"));
 		} else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("d")) {
 			if (cps == null) {
@@ -574,7 +575,7 @@ public class Manageshop implements CommandExecutor {
 				player.sendMessage(L.get("STATUS_SET"));
 				return true;
 			}
-			FileConfiguration category = hc.gYH().gFC("categories");
+			FileConfiguration category = hc.gYH().getFileConfiguration("categories");
 			String categoryString = category.getString(args[1]);
 			if (categoryString != null) {
 				ArrayList<String> names = hc.gCF().explode(categoryString, ",");

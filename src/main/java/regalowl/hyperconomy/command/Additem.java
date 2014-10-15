@@ -22,23 +22,18 @@ import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class Additem implements CommandExecutor {
-	
+public class Additem extends BaseCommand implements HyperCommand {
 	
 	private ArrayList<String> usedNames = new ArrayList<String>();
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (sender == null) {return true;}
-		Player player = null;
-		if (sender instanceof Player) {
-			player = (Player)sender;
-		} else {
-			return true;
-		}
-		
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
-		DataManager em = hc.getDataManager();
+	public Additem() {
+		super(true);
+	}
+
+	
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
+		String[] args = data.getArgs();
 		
 		try {
 			String displayName = "";
@@ -62,7 +57,7 @@ public class Additem implements CommandExecutor {
 				player.sendMessage(L.get("AIR_CANT_BE_TRADED"));
 				return true;
 			}
-			HyperEconomy econ = em.getHyperPlayer(player).getHyperEconomy();
+			HyperEconomy econ = dm.getHyperPlayer(player).getHyperEconomy();
 			HyperObject ho =  econ.getHyperObject(player.getItemInHand());
 			if (ho != null) {
 				player.sendMessage(L.get("ALREADY_IN_DATABASE"));

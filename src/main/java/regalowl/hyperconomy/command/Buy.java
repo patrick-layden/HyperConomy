@@ -17,27 +17,20 @@ import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class Buy implements CommandExecutor {
+public class Buy extends BaseCommand implements HyperCommand {
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getHyperLock().isLocked(sender)) {
-			hc.getHyperLock().sendLockMessage(sender);
-			return true;
-		}
-		Player player = null;
-		if (sender instanceof Player) {
-			player = (Player)sender;
-		}
-		if (player == null) {return true;}
-		LanguageFile L = hc.getLanguageFile();
-		DataManager em = hc.getDataManager();
-		HyperPlayer hp = em.getHyperPlayer(player);
+	public Buy() {
+		super(true);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		HyperEconomy he = hp.getHyperEconomy();
 		try {
-			Shop s = em.getHyperShopManager().getShop(player);
+			Shop s = hc.getHyperShopManager().getShop(hp);
 			String name = he.fixName(args[0]);
-			HyperObject ho = he.getHyperObject(name, em.getHyperShopManager().getShop(player));
+			HyperObject ho = he.getHyperObject(name, hc.getHyperShopManager().getShop(hp));
 			int amount = 1;
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("max")) {
@@ -60,9 +53,8 @@ public class Buy implements CommandExecutor {
 			TransactionResponse response = hp.processTransaction(pt);
 			response.sendMessages();
 		} catch (Exception e) {
-			player.sendMessage(L.get("BUY_INVALID"));
-			return true;
+			data.addResponse(L.get("BUY_INVALID"));
 		}
-		return true;
+		return data;
 	}
 }

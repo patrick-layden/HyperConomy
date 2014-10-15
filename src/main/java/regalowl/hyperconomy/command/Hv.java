@@ -16,22 +16,19 @@ import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class Hv {
-	Hv(String args[], Player player, String playerecon) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getHyperLock().isLocked(player)) {
-			hc.getHyperLock().sendLockMessage(player);
-			return;
-		}
-		CommonFunctions cf = hc.gCF();
-		LanguageFile L = hc.getLanguageFile();
-		DataManager em = hc.getDataManager();
+public class Hv extends BaseCommand implements HyperCommand {
+	public Hv() {
+		super(true);
+	}
+	
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		int amount;
 		try {
-			HyperPlayer hp = em.getHyperPlayer(player);
-			HyperEconomy he = hp.getHyperEconomy();
+			HyperEconomy he = getEconomy();
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
-			if ((requireShop && em.getHyperShopManager().inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
+			if ((requireShop && dm.getHyperShopManager().inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
 				ItemStack iinhand = player.getItemInHand();
 				if (args.length == 0) {
 					amount = 1;
@@ -44,7 +41,7 @@ public class Hv {
 				if (!new HyperItemStack(iinhand).hasEnchants()) {
 					HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getHyperShopManager().getShop(player));
 					if (ho == null) {
-						player.sendMessage(L.get("OBJECT_NOT_AVAILABLE"));
+						data.addResponse(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
 						String displayName = ho.getDisplayName();
 						double val = ho.getSellPrice(amount, hp);
@@ -57,21 +54,21 @@ public class Hv {
 						}
 						double salestax = hp.getSalesTax(val);
 						val = cf.twoDecimals(val - salestax);
-						player.sendMessage(L.get("LINE_BREAK"));
-						player.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, displayName));
+						data.addResponse(L.get("LINE_BREAK"));
+						data.addResponse(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, displayName));
 						double cost = ho.getBuyPrice(amount);
 						double taxpaid = ho.getPurchaseTax(cost);
 						cost = cf.twoDecimals(cost + taxpaid);
 						double stock = 0;
 						stock = ho.getStock();
-						player.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, displayName));
-						player.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), cf.twoDecimals(stock), displayName));
-						player.sendMessage(L.get("LINE_BREAK"));
+						data.addResponse(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, displayName));
+						data.addResponse(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), cf.twoDecimals(stock), displayName));
+						data.addResponse(L.get("LINE_BREAK"));
 					}
 				} else {
 					player.getItemInHand().getEnchantments().keySet().toArray();
 					Iterator<Enchantment> ite = player.getItemInHand().getEnchantments().keySet().iterator();
-					player.sendMessage(L.get("LINE_BREAK"));
+					data.addResponse(L.get("LINE_BREAK"));
 					while (ite.hasNext()) {
 						String rawstring = ite.next().toString();
 						String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
@@ -90,17 +87,17 @@ public class Hv {
 						double salestax = 0;
 						salestax = hp.getSalesTax(value);
 						value = cf.twoDecimals(value - salestax);
-						player.sendMessage(L.f(L.get("EVALUE_SALE"), value, fnam));
-						player.sendMessage(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-						player.sendMessage(L.f(L.get("EVALUE_STOCK"), cf.twoDecimals(he.getHyperObject(fnam, em.getHyperShopManager().getShop(player)).getStock()), fnam));
+						data.addResponse(L.f(L.get("EVALUE_SALE"), value, fnam));
+						data.addResponse(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
+						data.addResponse(L.f(L.get("EVALUE_STOCK"), cf.twoDecimals(he.getHyperObject(fnam, em.getHyperShopManager().getShop(player)).getStock()), fnam));
 					}
-					player.sendMessage(L.get("LINE_BREAK"));
+					data.addResponse(L.get("LINE_BREAK"));
 				}
 			} else {
-				player.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
+				data.addResponse(L.get("REQUIRE_SHOP_FOR_INFO"));
 			}
 		} catch (Exception e) {
-			player.sendMessage(L.get("HV_INVALID"));
+			data.addResponse(L.get("HV_INVALID"));
 		}
 	}
 }

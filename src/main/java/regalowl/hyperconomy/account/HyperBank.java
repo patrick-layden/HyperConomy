@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import regalowl.databukkit.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.event.HyperBankModificationEvent;
 import regalowl.hyperconomy.shop.Shop;
 
 public class HyperBank implements HyperAccount {
@@ -70,7 +71,7 @@ public class HyperBank implements HyperAccount {
 			}
 		}
 		deleted = true;
-		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperBankModificationEvent(this));
 	}
 	
 	@Override
@@ -112,7 +113,7 @@ public class HyperBank implements HyperAccount {
 				s.setOwner(this);
 			}
 		}
-		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperBankModificationEvent(this));
 	}
 	
 	@Override
@@ -123,7 +124,7 @@ public class HyperBank implements HyperAccount {
 		ws.addParameter(this.balance);
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);
-		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperBankModificationEvent(this));
 	}
 
 	@Override
@@ -142,7 +143,7 @@ public class HyperBank implements HyperAccount {
 			owners.add(ownerName);
 		}
 		saveOwners();
-		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperBankModificationEvent(this));
 	}
 	public void removeOwner(HyperPlayer owner) {
 		HyperConomy hc = HyperConomy.hc;
@@ -151,7 +152,7 @@ public class HyperBank implements HyperAccount {
 			owners.remove(ownerName);
 		}
 		saveOwners();
-		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperBankModificationEvent(this));
 	}
 	
 	public void addMember(HyperPlayer member) {
@@ -161,7 +162,7 @@ public class HyperBank implements HyperAccount {
 			members.add(memberName);
 		}
 		saveMembers();
-		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperBankModificationEvent(this));
 	}
 	public void removeMember(HyperPlayer owner) {
 		HyperConomy hc = HyperConomy.hc;
@@ -170,7 +171,7 @@ public class HyperBank implements HyperAccount {
 			members.remove(memberName);
 		}
 		saveMembers();
-		hc.getHyperEventHandler().fireHyperBankModificationEvent(this);
+		hc.getHyperEventHandler().fireEvent(new HyperBankModificationEvent(this));
 	}
 	
 	public boolean isOwner(HyperPlayer hp) {

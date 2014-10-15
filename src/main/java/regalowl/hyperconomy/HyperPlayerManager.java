@@ -12,21 +12,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.util.HyperConfig;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperListener;
+import regalowl.hyperconomy.event.minecraft.HyperPlayerJoinEvent;
+import regalowl.databukkit.file.FileConfiguration;
 
-public class HyperPlayerManager implements Listener {
+public class HyperPlayerManager implements Listener, HyperListener {
 
 	private HyperConomy hc;
 	private DataManager dm;
 	private boolean playersLoaded;
 	private String defaultServerShopAccount;
-	private HyperConfig config;
+	private FileConfiguration config;
 	private boolean uuidSupport;
 	private ConcurrentHashMap<String, HyperPlayer> hyperPlayers = new ConcurrentHashMap<String, HyperPlayer>();
 	private ConcurrentHashMap<String, String> uuidIndex = new ConcurrentHashMap<String, String>();
@@ -38,7 +40,7 @@ public class HyperPlayerManager implements Listener {
 		config = hc.getConf();
 		defaultServerShopAccount = config.getString("shop.default-server-shop-account");
 		uuidSupport = config.getBoolean("enable-feature.uuid-support");
-		hc.getServer().getPluginManager().registerEvents(this, hc);
+		hc.getHyperEventHandler().registerListener(this);
 	}
 
 	public void loadData() {
@@ -58,10 +60,10 @@ public class HyperPlayerManager implements Listener {
 		playersLoaded = true;
 		if (!accountExists(defaultServerShopAccount)) {
 			HyperPlayer defaultAccount = addPlayer(defaultServerShopAccount);
-			defaultAccount.setBalance(hc.getConfig().getDouble("shop.default-server-shop-account-initial-balance"));
+			defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
 			defaultAccount.setUUID(UUID.randomUUID().toString());
 		}
-		hc.getServer().getScheduler().runTask(hc, new Runnable() {
+		hc.getMC().runTask(new Runnable() {
 			public void run() {
 				addOnlinePlayers();
 			}
@@ -89,21 +91,25 @@ public class HyperPlayerManager implements Listener {
 		return onlinePlayers;
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		try {
-			if (hc.getHyperLock().loadLock()) {return;}
-			String name = event.getPlayer().getName();
-			if (name.equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
-				event.getPlayer().kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+	
+	@Override
+	public void onHyperEvent(HyperEvent event) {
+		if (event instanceof HyperPlayerJoinEvent) {
+			HyperPlayerJoinEvent ev = (HyperPlayerJoinEvent)event;
+			try {
+				if (hc.getHyperLock().loadLock()) {return;}
+				String name = ev.getHyperPlayer().getName();
+				if (name.equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
+					hc.getMC().kickPlayer(name, hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+				}
+				if (!playerAccountExists(name)) {
+					addPlayer(name);
+				} else {
+					getHyperPlayer(name).checkUUID();
+				}
+			} catch (Exception e) {
+				hc.gDB().writeError(e);
 			}
-			if (!playerAccountExists(name)) {
-				addPlayer(name);
-			} else {
-				getHyperPlayer(name).checkUUID();
-			}
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
 		}
 	}
 
@@ -132,8 +138,8 @@ public class HyperPlayerManager implements Listener {
 	
 	public boolean playerAccountExists(OfflinePlayer player) {
 		if (player == null) {return false;}
-		if (hc.useExternalEconomy()) {
-			return hc.getEconomy().hasAccount(player);
+		if (hc.getMC().useExternalEconomy()) {
+			return hc.getMC().getEconomy().hasAccount(player);
 		} else {
 			return hyperPlayers.containsKey(player.getName());
 		}
@@ -142,8 +148,8 @@ public class HyperPlayerManager implements Listener {
 	@SuppressWarnings("deprecation")
 	public boolean playerAccountExists(String name) {
 		if (name == null || name == "") {return false;}
-		if (hc.useExternalEconomy()) {
-			return hc.getEconomy().hasAccount(name);
+		if (hc.getMC().useExternalEconomy()) {
+			return hc.getMC().getEconomy().hasAccount(name);
 		} else {
 			return hyperPlayers.containsKey(name.toLowerCase());
 		}
@@ -151,8 +157,8 @@ public class HyperPlayerManager implements Listener {
 	
 	public boolean playerAccountExists(UUID uuid) {
 		if (uuid == null) {return false;}
-		if (hc.useExternalEconomy()) {
-			return hc.getEconomy().hasAccount(Bukkit.getOfflinePlayer(uuid));
+		if (hc.getMC().useExternalEconomy()) {
+			return hc.getMC().getEconomy().hasAccount(Bukkit.getOfflinePlayer(uuid));
 		} else {
 			return uuidIndex.containsKey(uuid.toString());
 		}
@@ -301,5 +307,7 @@ public class HyperPlayerManager implements Listener {
 		}
 		return purgeCount;
 	}
+
+
 	
 }
