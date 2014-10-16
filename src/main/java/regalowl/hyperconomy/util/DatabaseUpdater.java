@@ -12,8 +12,8 @@ import regalowl.hyperconomy.HyperConomy;
 public class DatabaseUpdater {
 
 	private HyperConomy hc;
-	private ArrayList<String> tables = new ArrayList<String>();
 	public final double version = 1.35;
+	ArrayList<String> tables = new ArrayList<String>();
 	
 	public DatabaseUpdater() {
 		hc = HyperConomy.hc;
@@ -43,6 +43,12 @@ public class DatabaseUpdater {
 	}
 
 
+	private void loadTables() {
+		for (String table:tables) {
+			hc.getSQLManager().addTable("hyperconomy_"+table);
+		}
+		hc.getSQLManager().loadTables();
+	}
 	
 
 	public void updateTables(QueryResult qr) {
@@ -51,26 +57,29 @@ public class DatabaseUpdater {
 		if (qr.next()) {
 			double version = Double.parseDouble(qr.getString("VALUE"));
 			new LegacyDatabaseUpdates().applyLegacyUpdates(version, sw);
+			loadTables();
 			if (version < 1.35) {
 				//adds ability for player shops to behave like server shops
-				Table t = hc.getSQLManager().generateTable("hyperconomy_shops");
-				Field f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
-				f = t.addField("TYPE", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
-				f = t.addField("ECONOMY", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
-				f = t.addField("OWNER", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
-				f = t.addField("WORLD", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
-				Field afterField = f;
-				f = t.addField("MESSAGE", FieldType.TEXT);f.setNotNull();
-				f = t.addField("BANNED_OBJECTS", FieldType.TEXT);f.setNotNull();
-				f = t.addField("ALLOWED_PLAYERS", FieldType.TEXT);f.setNotNull();
-				f = t.addField("P1X", FieldType.DOUBLE);f.setNotNull();
-				f = t.addField("P1Y", FieldType.DOUBLE);f.setNotNull();
-				f = t.addField("P1Z", FieldType.DOUBLE);f.setNotNull();
-				f = t.addField("P2X", FieldType.DOUBLE);f.setNotNull();
-				f = t.addField("P2Y", FieldType.DOUBLE);f.setNotNull();
-				f = t.addField("P2Z", FieldType.DOUBLE);f.setNotNull();
-				f = t.generateField("USE_ECONOMY_STOCK", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setDefault("1");
-				t.addField(f, afterField);
+
+				//Table t = hc.getSQLManager().generateTable("hyperconomy_shops");
+				//Field f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
+				//f = t.addField("TYPE", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				//f = t.addField("ECONOMY", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				//f = t.addField("OWNER", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				//f = t.addField("WORLD", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				//Field afterField = f;
+				//f = t.addField("MESSAGE", FieldType.TEXT);f.setNotNull();
+				//f = t.addField("BANNED_OBJECTS", FieldType.TEXT);f.setNotNull();
+				//f = t.addField("ALLOWED_PLAYERS", FieldType.TEXT);f.setNotNull();
+				//f = t.addField("P1X", FieldType.DOUBLE);f.setNotNull();
+				//f = t.addField("P1Y", FieldType.DOUBLE);f.setNotNull();
+				//f = t.addField("P1Z", FieldType.DOUBLE);f.setNotNull();
+				//f = t.addField("P2X", FieldType.DOUBLE);f.setNotNull();
+				//f = t.addField("P2Y", FieldType.DOUBLE);f.setNotNull();
+				//f = t.addField("P2Z", FieldType.DOUBLE);f.setNotNull();
+				Table t = hc.getSQLManager().getTable("hyperconomy_shops");
+				Field f = t.generateField("USE_ECONOMY_STOCK", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setDefault("1");
+				t.addFieldToDatabase(f, t.getField("WORLD"));
 				sw.queue("UPDATE hyperconomy_shops SET USE_ECONOMY_STOCK = '0' WHERE TYPE = 'player'");
 				sw.queue("UPDATE hyperconomy_settings SET VALUE = '1.35' WHERE SETTING = 'version'");
 			}
