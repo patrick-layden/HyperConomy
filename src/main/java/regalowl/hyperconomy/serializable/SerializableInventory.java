@@ -17,9 +17,8 @@ public class SerializableInventory extends SerializableObject implements Seriali
 	private String owner;
 	private SimpleLocation location;
 
-	public SerializableInventory(ArrayList<SerializableItemStack> items, int heldSlot, SerializableInventoryType inventoryType) {
+	public SerializableInventory(ArrayList<SerializableItemStack> items, SerializableInventoryType inventoryType) {
 		this.items.addAll(items);
-		this.heldSlot = heldSlot;
 		this.inventoryType = inventoryType;
 	}
 	
@@ -38,6 +37,10 @@ public class SerializableInventory extends SerializableObject implements Seriali
 	
 	public void setItem(int slot, SerializableItemStack item) {
 		items.set(slot, item);
+	}
+	
+	public void clearSlot(int slot) {
+		items.set(slot, null);
 	}
 	
 	
@@ -64,8 +67,24 @@ public class SerializableInventory extends SerializableObject implements Seriali
 		return items.size();
 	}
 	
+	public SimpleLocation getLocation() {
+		return location;
+	}
+	
+	public void setHeldSlot(int heldSlot) {
+		this.heldSlot = heldSlot;
+	}
+	
+	public SerializableItemStack getHeldItem() {
+		return getItem(heldSlot);
+	}
+	
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+	
+	public void setLocation(SimpleLocation location) {
+		this.location = location;
 	}
 	
 	

@@ -21,16 +21,18 @@ public class SerializableItemStack extends SerializableObject implements Seriali
     private SerializableItemMeta itemMeta;
     private int amount;
     private int maxStackSize;
+    private int maxDurability;
   
  
     
-    public SerializableItemStack(SerializableItemMeta itemMeta, String material, short durability, byte data, int amount, int maxStackSize) {
+    public SerializableItemStack(SerializableItemMeta itemMeta, String material, short durability, byte data, int amount, int maxStackSize, int maxDurability) {
     	this.itemMeta = itemMeta;
     	this.material = material;
     	this.durability = durability;
     	this.data = data;
     	this.amount = amount;
     	this.maxStackSize = maxStackSize;
+    	this.maxDurability = maxDurability;
     }
     
 
@@ -86,6 +88,10 @@ public class SerializableItemStack extends SerializableObject implements Seriali
 	
 	public int getMaxStackSize() {
 		return maxStackSize;
+	}
+	
+	public int getMaxDurability() {
+		return maxDurability;
 	}
 	
 	public void setAmount(int amount) {

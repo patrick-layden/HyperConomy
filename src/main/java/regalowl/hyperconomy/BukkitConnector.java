@@ -342,8 +342,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		for (int c = 0; c < size; c++) {
 	        items.add(getSerializableItemStack(i.getItem(c)));
 		}
-		SerializableInventory si = new SerializableInventory(items, heldSlot, SerializableInventoryType.PLAYER);
+		SerializableInventory si = new SerializableInventory(items, SerializableInventoryType.PLAYER);
 		si.setOwner(hp.getName());
+		si.setHeldSlot(heldSlot);
 		return si;
 	}
 
@@ -359,7 +360,12 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 			if (cInventory.size() != nInventory.size()) return;
 			Inventory inv = p.getInventory();
 			for (int i = 0; i < nInventory.size(); i++) {
-				inv.setItem(i, getItemStack(nInventory.get(i)));
+				ItemStack is = getItemStack(nInventory.get(i));
+				if (is != null) {
+					inv.setItem(i, is);
+				} else {
+					inv.clear(i);
+				}
 			}
 			p.updateInventory();
 		} else {
@@ -390,6 +396,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
         byte data = s.getData().getData(); 
         int amount = s.getAmount();
         int maxStackSize = s.getMaxStackSize();
+        int maxDurability = s.getType().getMaxDurability();
         if (s.hasItemMeta()) {
         	ItemMeta im = s.getItemMeta();
             String displayName = im.getDisplayName();
@@ -465,9 +472,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
         	} else {
         		itemMeta = new SerializableItemMeta(displayName, lore, enchantments);
         	}
-        	return new SerializableItemStack(itemMeta, material, durability, data, amount, maxStackSize);
+        	return new SerializableItemStack(itemMeta, material, durability, data, amount, maxStackSize, maxDurability);
         }
-        return new SerializableItemStack(null, material, durability, data, amount, maxStackSize);
+        return new SerializableItemStack(null, material, durability, data, amount, maxStackSize, maxDurability);
 	}
 	
 	@SuppressWarnings("deprecation")
