@@ -4,8 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -19,11 +17,12 @@ public class SerializablePotionEffect extends SerializableObject implements Seri
 	private int duration;
 	private boolean isAmbient;
  
-	public SerializablePotionEffect(PotionEffect pe) {
-		this.potionEffectType = pe.getType().toString();
-		this.amplifier = pe.getAmplifier();
-		this.duration = pe.getDuration();
-		this.isAmbient = pe.isAmbient();
+	
+	public SerializablePotionEffect(String potionEffectType, int amplifier, int duration, boolean isAmbient) {
+		this.potionEffectType = potionEffectType;
+		this.amplifier = amplifier;
+		this.duration = duration;
+		this.isAmbient = isAmbient;
     }
 
 	public SerializablePotionEffect(String base64String) {
@@ -42,10 +41,7 @@ public class SerializablePotionEffect extends SerializableObject implements Seri
     		HyperConomy.hc.getDataBukkit().writeError(e);
     	}
     }
-	
-	public PotionEffect getPotionEffect() {
-		return new PotionEffect(PotionEffectType.getByName(potionEffectType), duration, amplifier, isAmbient);
-	}
+
 	public String getType() {
 		return potionEffectType;
 	}

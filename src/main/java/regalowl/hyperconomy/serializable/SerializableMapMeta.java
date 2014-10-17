@@ -3,11 +3,9 @@ package regalowl.hyperconomy.serializable;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.List;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.MapMeta;
+
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -19,13 +17,10 @@ public class SerializableMapMeta extends SerializableItemMeta implements Seriali
 
 	private boolean isScaling;
 
-	public SerializableMapMeta(ItemMeta im) {
-		super(im);
-		if (im instanceof MapMeta) {
-			MapMeta mm = (MapMeta)im;
-			this.isScaling = mm.isScaling();
-		}
-    }
+	public SerializableMapMeta(String displayName, List<String> lore, List<SerializableEnchantment> enchantments, boolean isScaling) {
+		super(displayName, lore, enchantments);
+		this.isScaling = isScaling;
+	}
 
 	public SerializableMapMeta(String base64String) {
 		super(base64String);
@@ -42,20 +37,7 @@ public class SerializableMapMeta extends SerializableItemMeta implements Seriali
     	}
     }
 	
-	
-	@Override
-	public ItemMeta getItemMeta() {
-		ItemStack s = new ItemStack(Material.MAP);
-		MapMeta mm = (MapMeta)s.getItemMeta();
-		mm.setDisplayName(displayName);
-		mm.setLore(lore);
-		for (SerializableEnchantment se:enchantments) {
-			mm.addEnchant(se.getEnchantment(), se.getLvl(), true);
-		}
-		mm.setScaling(isScaling);
-		return mm;
-	}
-	
+
 	public boolean isScaling() {
 		return isScaling;
 	}

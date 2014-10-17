@@ -5,14 +5,14 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.serializable.SerializableEnchantment;
+import regalowl.hyperconomy.serializable.SerializableInventory;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 
@@ -537,25 +537,25 @@ public class BasicObject implements HyperObject {
 
 	//ITEM METHODS
 	@Override
-	public void add(int amount, Inventory i) {}
+	public void add(int amount, SerializableInventory i) {}
 	@Override
-	public double remove(int amount, Inventory i) {return 0;}
+	public double remove(int amount, SerializableInventory i) {return 0;}
 	@Override
-	public int count(Inventory inventory) {return 0;}
+	public int count(SerializableInventory inventory) {return 0;}
 	@Override
-	public int getAvailableSpace(Inventory inventory) {return 0;}
+	public int getAvailableSpace(SerializableInventory inventory) {return 0;}
 	@Override
-	public ItemStack getItemStack() {return null;}
+	public SerializableItemStack getItemStack() {return null;}
 	@Override
-	public ItemStack getItemStack(int amount) {return null;}
+	public SerializableItemStack getItemStack(int amount) {return null;}
 	@Override
-	public void setItemStack(ItemStack stack) {}
+	public void setItemStack(SerializableItemStack stack) {}
 	@Override
-	public boolean matchesItemStack(ItemStack stack) {return false;}
+	public boolean matchesItemStack(SerializableItemStack stack) {return false;}
 	@Override
 	public boolean isDurable() {return false;}
 	@Override
-	public double getDamageMultiplier(int amount, Inventory inventory) {return 1;}
+	public double getDamageMultiplier(int amount, SerializableInventory inventory) {return 1;}
 	@Override
 	public boolean isDamaged() {return false;}
 	@Override
@@ -582,13 +582,13 @@ public class BasicObject implements HyperObject {
 	@Override
 	public double getSellPriceWithTax(EnchantmentClass enchantClass, HyperPlayer hp) {return 0;}
 	@Override
-	public Enchantment getEnchantment() {return null;}
+	public SerializableEnchantment getEnchantment() {return null;}
 	@Override
 	public int getEnchantmentLevel() {return 0;}
 	@Override
-	public double addEnchantment(ItemStack stack) {return 0;}
+	public double addEnchantment(SerializableItemStack stack) {return 0;}
 	@Override
-	public double removeEnchantment(ItemStack stack) {return 0;}
+	public double removeEnchantment(SerializableItemStack stack) {return 0;}
 	@Override
 	public String getEnchantmentName() {return null;}
 	

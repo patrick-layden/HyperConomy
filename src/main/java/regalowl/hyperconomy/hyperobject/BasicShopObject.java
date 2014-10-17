@@ -3,14 +3,14 @@ package regalowl.hyperconomy.hyperobject;
 import java.awt.Image;
 import java.util.ArrayList;
 
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import regalowl.databukkit.sql.SQLWrite;
 import regalowl.databukkit.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.serializable.SerializableInventory;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
 
 public class BasicShopObject extends BasicObject implements HyperObject {
@@ -360,11 +360,11 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		return getHyperObject().isDurable();
 	}
 	@Override
-	public int count(Inventory inventory) {
+	public int count(SerializableInventory inventory) {
 		return getHyperObject().count(inventory);
 	}
 	@Override
-	public int getAvailableSpace(Inventory inventory) {
+	public int getAvailableSpace(SerializableInventory inventory) {
 		return getHyperObject().getAvailableSpace(inventory);
 	}
 	@Override
@@ -376,23 +376,23 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		return getHyperObject().remove(amount, hp);
 	}
 	@Override
-	public ItemStack getItemStack() {
+	public SerializableItemStack getItemStack() {
 		return getHyperObject().getItemStack();
 	}
 	@Override
-	public ItemStack getItemStack(int amount) {
+	public SerializableItemStack getItemStack(int amount) {
 		return getHyperObject().getItemStack(amount);
 	}
 	@Override
-	public void add(int amount, Inventory inventory) {
+	public void add(int amount, SerializableInventory inventory) {
 		getHyperObject().add(amount, inventory);
 	}
 	@Override
-	public double remove(int amount, Inventory inventory) {
+	public double remove(int amount, SerializableInventory inventory) {
 		return getHyperObject().remove(amount, inventory);
 	}
 	@Override
-	public double getDamageMultiplier(int amount, Inventory inventory) {
+	public double getDamageMultiplier(int amount, SerializableInventory inventory) {
 		return getHyperObject().getDamageMultiplier(amount, inventory);
 	}
 	

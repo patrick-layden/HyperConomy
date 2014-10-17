@@ -7,16 +7,6 @@ import java.io.Serializable;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.FireworkEffectMeta;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.MapMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -31,34 +21,14 @@ public class SerializableItemStack extends SerializableObject implements Seriali
     private SerializableItemMeta itemMeta;
   
  
-    @SuppressWarnings("deprecation")
-	public SerializableItemStack(ItemStack item) {
-        this.material = item.getType().toString();
-        this.durability = item.getDurability();
-        this.data = item.getData().getData(); 
-        if (item.hasItemMeta()) {
-        	ItemMeta im = item.getItemMeta();
-        	if (im instanceof EnchantmentStorageMeta) {
-        		itemMeta = new SerializableEnchantmentStorageMeta(item.getItemMeta());
-        	} else if (im instanceof BookMeta) {
-        		itemMeta = new SerializableBookMeta(item.getItemMeta());
-        	} else if (im instanceof FireworkEffectMeta) {
-        		itemMeta = new SerializableFireworkEffectMeta(item.getItemMeta());
-        	} else if (im instanceof FireworkMeta) {
-        		itemMeta = new SerializableFireworkMeta(item.getItemMeta());
-        	} else if (im instanceof LeatherArmorMeta) {
-        		itemMeta = new SerializableLeatherArmorMeta(item.getItemMeta());
-        	} else if (im instanceof PotionMeta) {
-        		itemMeta = new SerializablePotionMeta(item.getItemMeta());
-        	} else if (im instanceof SkullMeta) {
-        		itemMeta = new SerializableSkullMeta(item.getItemMeta());
-        	} else if (im instanceof MapMeta) {
-        		itemMeta = new SerializableMapMeta(item.getItemMeta());
-        	} else {
-        		itemMeta = new SerializableItemMeta(item.getItemMeta());
-        	}
-        }
+    
+    public SerializableItemStack(SerializableItemMeta itemMeta, String material, short durability, byte data) {
+    	this.itemMeta = itemMeta;
+    	this.material = material;
+    	this.durability = durability;
+    	this.data = data;
     }
+    
 
 	public SerializableItemStack(String base64String) {
     	try {
@@ -76,19 +46,7 @@ public class SerializableItemStack extends SerializableObject implements Seriali
     		HyperConomy.hc.getDataBukkit().writeError(e);
     	}
     }
- 
-    @SuppressWarnings("deprecation")
-	public ItemStack getItem() {
-        ItemStack item = new ItemStack(Material.matchMaterial(material));
-        item.setAmount(1);
-        item.setDurability(durability);
-        if (itemMeta != null) {
-        	item.setItemMeta(itemMeta.getItemMeta());
-        }
-        item.getData().setData(data);
-        return item;
-    }
-    
+
 	public void displayInfo(Player p, ChatColor color1, ChatColor color2) {
 		p.sendMessage(color1 + "Material: " + color2 + material);
 		p.sendMessage(color1 + "Durability: " + color2 + durability);

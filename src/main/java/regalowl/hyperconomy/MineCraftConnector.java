@@ -4,6 +4,7 @@ package regalowl.hyperconomy;
 import net.milkbowl.vault.economy.Economy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.command.HyperCommand;
+import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.util.SimpleLocation;
 
 public interface MineCraftConnector {
@@ -37,5 +38,7 @@ public interface MineCraftConnector {
 	public BukkitConnector getConnector();
 	
 	public SimpleLocation getLocation(HyperPlayer hp);
+	public SerializableInventory getInventory(HyperPlayer hp);
+	public void setInventory(HyperPlayer hp, SerializableInventory inventory);
 
 }

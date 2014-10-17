@@ -56,7 +56,7 @@ public class DatabaseUpdater {
 		SyncSQLWrite sw = hc.getSQLManager().getSyncSQLWrite();
 		if (qr.next()) {
 			double version = Double.parseDouble(qr.getString("VALUE"));
-			new LegacyDatabaseUpdates().applyLegacyUpdates(version, sw);
+			//new LegacyDatabaseUpdates().applyLegacyUpdates(version, sw);
 			loadTables();
 			if (version < 1.35) {
 				//adds ability for player shops to behave like server shops

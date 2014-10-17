@@ -3,11 +3,8 @@ package regalowl.hyperconomy.serializable;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.List;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -19,13 +16,10 @@ public class SerializableSkullMeta extends SerializableItemMeta implements Seria
 
 	private String owner;
 
-	public SerializableSkullMeta(ItemMeta im) {
-		super(im);
-		if (im instanceof SkullMeta) {
-			SkullMeta sm = (SkullMeta)im;
-			this.owner = sm.getOwner();
-		}
-    }
+	public SerializableSkullMeta(String displayName, List<String> lore, List<SerializableEnchantment> enchantments, String owner) {
+		super(displayName, lore, enchantments);
+		this.owner = owner;
+	}
 
 	public SerializableSkullMeta(String base64String) {
 		super(base64String);
@@ -42,20 +36,7 @@ public class SerializableSkullMeta extends SerializableItemMeta implements Seria
     	}
     }
 	
-	
-	@Override
-	public ItemMeta getItemMeta() {
-		ItemStack s = new ItemStack(Material.SKULL_ITEM);
-		SkullMeta sm = (SkullMeta)s.getItemMeta();
-		sm.setDisplayName(displayName);
-		sm.setLore(lore);
-		for (SerializableEnchantment se:enchantments) {
-			sm.addEnchant(se.getEnchantment(), se.getLvl(), true);
-		}
-		sm.setOwner(owner);
-		return sm;
-	}
-	
+
 	public String getOwner() {
 		return owner;
 	}

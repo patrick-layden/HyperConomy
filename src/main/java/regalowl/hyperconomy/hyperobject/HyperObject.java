@@ -6,12 +6,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+
 
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
+import regalowl.hyperconomy.serializable.SerializableEnchantment;
+import regalowl.hyperconomy.serializable.SerializableInventory;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
 
 
@@ -290,40 +291,40 @@ public interface HyperObject extends Comparable<HyperObject>, Serializable {
 	 * @param amount
 	 * @param i
 	 */
-	public void add(int amount, Inventory i);
+	public void add(int amount, SerializableInventory i);
 	/**Removes the given quantity of the HyperObject from the given inventory.  (Can only be used with items.)
 	 * @param amount
 	 * @param i
 	 */
-	public double remove(int amount, Inventory i);
+	public double remove(int amount, SerializableInventory i);
 	/**Counts how many of this HyperObject are in the given inventory.  (Can only be used with items.)
 	 * @param inventory
 	 * @return
 	 */
-	public int count(Inventory inventory);
+	public int count(SerializableInventory inventory);
 	/**Counts how many of this HyperObject can be placed in the given inventory. (Can only be used with items.)
 	 * @param inventory
 	 * @return
 	 */
-	public int getAvailableSpace(Inventory inventory);
+	public int getAvailableSpace(SerializableInventory inventory);
 	/**Returns the ItemStack representation of this HyperObject. (Can only be used with items.)
 	 * @return
 	 */
-	public ItemStack getItemStack();
+	public SerializableItemStack getItemStack();
 	/**Sets this HyperObject's ItemStack representation.  (Can only be used with items.)
 	 * @param stack
 	 */
-	public void setItemStack(ItemStack stack);
+	public void setItemStack(SerializableItemStack stack);
 	/**Returns the ItemStack representation of this HyperObject and applies the given quantity. (Can only be used with items.)
 	 * @param amount
 	 * @return
 	 */
-	public ItemStack getItemStack(int amount);
+	public SerializableItemStack getItemStack(int amount);
 	/**
 	 * @param stack
 	 * @return True if this HyperObject represents the given ItemStack, false if not.
 	 */
-	public boolean matchesItemStack(ItemStack stack);
+	public boolean matchesItemStack(SerializableItemStack stack);
 	/**
 	 * @return True if this HyperObject is damaged, false if not. (Can only be used with items.)
 	 */
@@ -343,7 +344,7 @@ public interface HyperObject extends Comparable<HyperObject>, Serializable {
 	 * @param inventory
 	 * @return
 	 */
-	public double getDamageMultiplier(int amount, Inventory inventory);
+	public double getDamageMultiplier(int amount, SerializableInventory inventory);
 	
 	
 	//COMPOSITE ITEM METHODS
@@ -387,7 +388,7 @@ public interface HyperObject extends Comparable<HyperObject>, Serializable {
 	/**
 	 * @return The HyperObject in Enchantment form. (Can only be used with Enchantments.)
 	 */
-	public Enchantment getEnchantment();
+	public SerializableEnchantment getEnchantment();
 	/**
 	 * @return The HyperObject's enchantment level. (Can only be used with Enchantments.)
 	 */
@@ -396,12 +397,12 @@ public interface HyperObject extends Comparable<HyperObject>, Serializable {
 	 * @param stack
 	 * @return 1 if successful, 0 if not.
 	 */
-	public double addEnchantment(ItemStack stack);
+	public double addEnchantment(SerializableItemStack stack);
 	/** Removes this HyperObject's enchantment from the given ItemStack. (Can only be used with Enchantments.)
 	 * @param stack
 	 * @return 1 if successful, 0 if not.
 	 */
-	public double removeEnchantment(ItemStack stack);
+	public double removeEnchantment(SerializableItemStack stack);
 	/**
 	 * @return The HyperObject's Enchantment name. (Can only be used with Enchantments.)
 	 */

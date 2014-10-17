@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
-import org.bukkit.enchantments.Enchantment;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -15,8 +14,8 @@ public class SerializableEnchantment extends SerializableObject implements Seria
 	private String enchantment;
     private int lvl;
  
-	public SerializableEnchantment(Enchantment e, int lvl) {
-        this.enchantment = e.getName();
+	public SerializableEnchantment(String enchantment, int lvl) {
+        this.enchantment = enchantment;
         this.lvl = lvl;
     }
 
@@ -35,9 +34,6 @@ public class SerializableEnchantment extends SerializableObject implements Seria
     	}
     }
 
-	public Enchantment getEnchantment() {
-		return Enchantment.getByName(enchantment);
-    }
 
 	public String getEnchantmentName() {
 		return enchantment;

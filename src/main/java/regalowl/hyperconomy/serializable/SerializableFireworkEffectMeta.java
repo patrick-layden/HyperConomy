@@ -3,11 +3,8 @@ package regalowl.hyperconomy.serializable;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.List;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkEffectMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -18,13 +15,12 @@ public class SerializableFireworkEffectMeta extends SerializableItemMeta impleme
 	private static final long serialVersionUID = -6227758269858375863L;
 	private SerializableFireworkEffect effect;
 
-	public SerializableFireworkEffectMeta(ItemMeta im) {
-		super(im);
-		if (im instanceof FireworkEffectMeta) {
-			FireworkEffectMeta fem = (FireworkEffectMeta)im;
-			this.effect = new SerializableFireworkEffect(fem.getEffect());
-		}
-    }
+	
+	public SerializableFireworkEffectMeta(String displayName, List<String> lore, List<SerializableEnchantment> enchantments, SerializableFireworkEffect effect) {
+		super(displayName, lore, enchantments);
+		this.effect = effect;
+	}
+	
 
 	public SerializableFireworkEffectMeta(String base64String) {
 		super(base64String);
@@ -40,21 +36,7 @@ public class SerializableFireworkEffectMeta extends SerializableItemMeta impleme
     		HyperConomy.hc.getDataBukkit().writeError(e);
     	}
     }
-	
-	
-	@Override
-	public ItemMeta getItemMeta() {
-		ItemStack s = new ItemStack(Material.FIREWORK_CHARGE);
-		FireworkEffectMeta fem = (FireworkEffectMeta)s.getItemMeta();
-		fem.setDisplayName(displayName);
-		fem.setLore(lore);
-		for (SerializableEnchantment se:enchantments) {
-			fem.addEnchant(se.getEnchantment(), se.getLvl(), true);
-		}
-		fem.setEffect(effect.getFireworkEffect());
-		return fem;
-	}
-	
+
 	public SerializableFireworkEffect getEffect() {
 		return effect;
 	}

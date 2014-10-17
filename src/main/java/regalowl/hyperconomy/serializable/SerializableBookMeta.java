@@ -5,10 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.List;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.ItemMeta;
+
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -21,15 +18,13 @@ public class SerializableBookMeta extends SerializableItemMeta implements Serial
 	private List<String> pages;
 	private String title;
 
-	public SerializableBookMeta(ItemMeta im) {
-		super(im);
-		if (im instanceof BookMeta) {
-			BookMeta bm = (BookMeta)im;
-			this.author = bm.getAuthor();
-			this.pages = bm.getPages();
-			this.title = bm.getTitle();
-		}
-    }
+	public SerializableBookMeta(String displayName, List<String> lore, List<SerializableEnchantment> enchantments, String author, List<String> pages, String title) {
+		super(displayName, lore, enchantments);
+		this.author = author;
+		this.pages = pages;
+		this.title = title;
+	}
+	
 
 	public SerializableBookMeta(String base64String) {
 		super(base64String);
@@ -48,22 +43,7 @@ public class SerializableBookMeta extends SerializableItemMeta implements Serial
     	}
     }
 	
-	
-	@Override
-	public ItemMeta getItemMeta() {
-		ItemStack s = new ItemStack(Material.WRITTEN_BOOK);
-		BookMeta bm = (BookMeta)s.getItemMeta();
-		bm.setDisplayName(displayName);
-		bm.setLore(lore);
-		for (SerializableEnchantment se:enchantments) {
-			bm.addEnchant(se.getEnchantment(), se.getLvl(), true);
-		}
-		bm.setPages(pages);
-		bm.setAuthor(author);
-		bm.setTitle(title);
-		return bm;
-	}
-	
+
 	public List<String> getPages() {
 		return pages;
 	}

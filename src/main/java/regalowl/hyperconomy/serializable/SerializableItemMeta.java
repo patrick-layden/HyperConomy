@@ -4,16 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -27,16 +21,11 @@ public class SerializableItemMeta extends SerializableObject implements Serializ
 	protected List<String> lore;
 	protected List<SerializableEnchantment> enchantments = new ArrayList<SerializableEnchantment>();
  
-	public SerializableItemMeta(ItemMeta im) {
-        this.displayName = im.getDisplayName();
-        this.lore = im.getLore();
-        Map<Enchantment, Integer> enchants = im.getEnchants();
-		Iterator<Enchantment> it = enchants.keySet().iterator();
-		while (it.hasNext()) {
-			Enchantment e = it.next();
-			int lvl = enchants.get(e);
-			this.enchantments.add(new SerializableEnchantment(e, lvl));
-		}
+	
+	public SerializableItemMeta(String displayName, List<String> lore, List<SerializableEnchantment> enchantments) {
+        this.displayName = displayName;
+        this.lore = lore;
+        this.enchantments = enchantments;
     }
 
 	public SerializableItemMeta(String base64String) {
@@ -75,17 +64,7 @@ public class SerializableItemMeta extends SerializableObject implements Serializ
 		p.sendMessage(color1 + "Enchantments: " + color2 + enchantString);
 	}
 	
-	public ItemMeta getItemMeta() {
-		ItemStack s = new ItemStack(Material.STONE);
-		ItemMeta im = s.getItemMeta();
-		im.setDisplayName(displayName);
-		im.setLore(lore);
-		for (SerializableEnchantment se:enchantments) {
-			im.addEnchant(se.getEnchantment(), se.getLvl(), true);
-		}
-		return im;
-	}
-	
+
 	public String getDisplayName() {
 		return displayName;
 	}

@@ -6,11 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
+
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -21,15 +17,10 @@ public class SerializablePotionMeta extends SerializableItemMeta implements Seri
 	private static final long serialVersionUID = 7131977924010280498L;
 	private List<SerializablePotionEffect> potionEffects = new ArrayList<SerializablePotionEffect>();
 
-	public SerializablePotionMeta(ItemMeta im) {
-		super(im);
-		if (im instanceof PotionMeta) {
-			PotionMeta pm = (PotionMeta)im;
-			for (PotionEffect pe:pm.getCustomEffects()) {
-				potionEffects.add(new SerializablePotionEffect(pe));
-			}
-		}
-    }
+	public SerializablePotionMeta(String displayName, List<String> lore, List<SerializableEnchantment> enchantments, List<SerializablePotionEffect> potionEffects) {
+		super(displayName, lore, enchantments);
+		this.potionEffects = potionEffects;
+	}
 
 	public SerializablePotionMeta(String base64String) {
 		super(base64String);
@@ -46,22 +37,7 @@ public class SerializablePotionMeta extends SerializableItemMeta implements Seri
     	}
     }
 	
-	
-	@Override
-	public ItemMeta getItemMeta() {
-		ItemStack s = new ItemStack(Material.POTION);
-		PotionMeta pm = (PotionMeta)s.getItemMeta();
-		pm.setDisplayName(displayName);
-		pm.setLore(lore);
-		for (SerializableEnchantment se:enchantments) {
-			pm.addEnchant(se.getEnchantment(), se.getLvl(), true);
-		}
-		for (SerializablePotionEffect spe:potionEffects) {
-			pm.addCustomEffect(spe.getPotionEffect(), true);
-		}
-		return pm;
-	}
-	
+
 	
 	public List<SerializablePotionEffect> getPotionEffects() {
 		return potionEffects;

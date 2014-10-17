@@ -6,9 +6,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.FireworkEffect.Builder;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -22,17 +19,14 @@ public class SerializableFireworkEffect extends SerializableObject implements Se
 	private boolean hasFlicker;
 	private boolean hasTrail;
  
-	public SerializableFireworkEffect(FireworkEffect fe) {
-        for (Color c:fe.getColors()) {
-        	colors.add(new SerializableColor(c));
-        }
-        for (Color c:fe.getFadeColors()) {
-        	fadeColors.add(new SerializableColor(c));
-        }
-        this.type = fe.getType().toString();
-        this.hasFlicker = fe.hasFlicker();
-        this.hasTrail = fe.hasTrail();
+	public SerializableFireworkEffect(ArrayList<SerializableColor> colors, ArrayList<SerializableColor> fadeColors, String type, boolean hasFlicker, boolean hasTrail) {
+		this.colors = colors;
+		this.fadeColors = fadeColors;
+        this.type = type;
+        this.hasFlicker = hasFlicker;
+        this.hasTrail = hasTrail;
     }
+
 	public SerializableFireworkEffect(String base64String) {
     	try {
 			byte[] data = Base64Coder.decode(base64String);
@@ -51,20 +45,7 @@ public class SerializableFireworkEffect extends SerializableObject implements Se
     	}
     }
 	
-	public FireworkEffect getFireworkEffect() {
-		Builder fb = FireworkEffect.builder();
-		for (SerializableColor c:colors) {
-			fb.withColor(c.getColor());
-		}
-		for (SerializableColor c:fadeColors) {
-			fb.withFade(c.getColor());
-		}
-		fb.with(FireworkEffect.Type.valueOf(type));
-		fb.flicker(hasFlicker);
-		fb.trail(hasTrail);
-		return fb.build();
-	}
-	
+
 	public List<SerializableColor> getColors() {
 		return colors;
 	}

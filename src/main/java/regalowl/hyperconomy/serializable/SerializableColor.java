@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
-import org.bukkit.Color;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -17,11 +16,11 @@ public class SerializableColor extends SerializableObject implements Serializabl
 	private int green;
 	private int blue;
  
-	public SerializableColor(Color c) {
-        this.red = c.getRed();
-        this.green = c.getGreen();
-        this.blue = c.getBlue();
-    }
+	public SerializableColor(int red, int green, int blue) {
+		this.red = red;
+		this.green = green;
+		this.blue = blue;
+	}
 
 	public SerializableColor(String base64String) {
     	try {
@@ -39,9 +38,7 @@ public class SerializableColor extends SerializableObject implements Serializabl
     	}
     }
 	
-	public Color getColor() {
-		return Color.fromRGB(red, green, blue);
-	}
+
 	public int getRed() {
 		return red;
 	}

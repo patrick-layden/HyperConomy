@@ -25,7 +25,7 @@ public class LegacyDatabaseUpdates {
 
 	
 	
-	
+	/*
 	public void applyLegacyUpdates(double version, SyncSQLWrite sw) {
 		HyperConomy hc = HyperConomy.hc;
 		if (version < 1.23) {
@@ -369,5 +369,5 @@ public class LegacyDatabaseUpdates {
 		}
 		return statement;
 	}
-	
+	*/
 }

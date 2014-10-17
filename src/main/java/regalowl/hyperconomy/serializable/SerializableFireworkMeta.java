@@ -6,11 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.FireworkEffect;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
+
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -22,16 +18,12 @@ public class SerializableFireworkMeta extends SerializableItemMeta implements Se
 	private List<SerializableFireworkEffect> effects = new ArrayList<SerializableFireworkEffect>();
 	private int power;
 
-	public SerializableFireworkMeta(ItemMeta im) {
-		super(im);
-		if (im instanceof FireworkMeta) {
-			FireworkMeta fm = (FireworkMeta)im;
-			for (FireworkEffect fe:fm.getEffects()) {
-				effects.add(new SerializableFireworkEffect(fe));
-			}
-			this.power = fm.getPower();
-		}
-    }
+	
+	public SerializableFireworkMeta(String displayName, List<String> lore, List<SerializableEnchantment> enchantments, List<SerializableFireworkEffect> effects, int power) {
+		super(displayName, lore, enchantments);
+		this.effects = effects;
+		this.power = power;
+	}
 
 	public SerializableFireworkMeta(String base64String) {
 		super(base64String);
@@ -49,23 +41,7 @@ public class SerializableFireworkMeta extends SerializableItemMeta implements Se
     	}
     }
 	
-	
-	@Override
-	public ItemMeta getItemMeta() {
-		ItemStack s = new ItemStack(Material.FIREWORK);
-		FireworkMeta fm = (FireworkMeta)s.getItemMeta();
-		fm.setDisplayName(displayName);
-		fm.setLore(lore);
-		for (SerializableEnchantment se:enchantments) {
-			fm.addEnchant(se.getEnchantment(), se.getLvl(), true);
-		}
-		for (SerializableFireworkEffect sfe:effects) {
-			fm.addEffect(sfe.getFireworkEffect());
-		}
-		fm.setPower(power);
-		return fm;
-	}
-	
+
 	public List<SerializableFireworkEffect> getEffects() {
 		return effects;
 	}

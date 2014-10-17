@@ -3,11 +3,9 @@ package regalowl.hyperconomy.serializable;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.List;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
+
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -18,13 +16,11 @@ public class SerializableLeatherArmorMeta extends SerializableItemMeta implement
 	private static final long serialVersionUID = -7716626610545205516L;
 	private SerializableColor color;
 
-	public SerializableLeatherArmorMeta(ItemMeta im) {
-		super(im);
-		if (im instanceof LeatherArmorMeta) {
-			LeatherArmorMeta lam = (LeatherArmorMeta)im;
-			this.color = new SerializableColor(lam.getColor());
-		}
-    }
+	
+	public SerializableLeatherArmorMeta(String displayName, List<String> lore, List<SerializableEnchantment> enchantments, SerializableColor color) {
+		super(displayName, lore, enchantments);
+		this.color = color;
+	}
 
 	public SerializableLeatherArmorMeta(String base64String) {
 		super(base64String);
@@ -40,20 +36,7 @@ public class SerializableLeatherArmorMeta extends SerializableItemMeta implement
     		HyperConomy.hc.getDataBukkit().writeError(e);
     	}
     }
-	
-	@Override
-	public ItemMeta getItemMeta() {
-		ItemStack s = new ItemStack(Material.LEATHER_CHESTPLATE);
-		LeatherArmorMeta lam = (LeatherArmorMeta)s.getItemMeta();
-		lam.setDisplayName(displayName);
-		lam.setLore(lore);
-		for (SerializableEnchantment se:enchantments) {
-			lam.addEnchant(se.getEnchantment(), se.getLvl(), true);
-		}
-		lam.setColor(color.getColor());
-		return lam;
-	}
-	
+
 	public SerializableColor getColor() {
 		return color;
 	}
