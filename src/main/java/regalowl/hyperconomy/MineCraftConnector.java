@@ -40,7 +40,7 @@ public interface MineCraftConnector {
 	
 	public SimpleLocation getLocation(HyperPlayer hp);
 	public SerializableInventory getInventory(HyperPlayer hp);
-	public void setInventory(HyperPlayer hp, SerializableInventory inventory);
+	public void setInventory(SerializableInventory inventory);
 	public SerializableItemStack getItem(HyperPlayer hp, int slot);
 	public void setItem(HyperPlayer hp, SerializableItemStack item, int slot);
 	

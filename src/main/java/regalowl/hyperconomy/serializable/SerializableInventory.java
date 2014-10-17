@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class SerializableInventory extends SerializableObject implements Serializable {
 
@@ -12,10 +13,14 @@ public class SerializableInventory extends SerializableObject implements Seriali
 	private static final long serialVersionUID = 4247823594626362499L;
 	private ArrayList<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
 	private int heldSlot;
+	private SerializableInventoryType inventoryType;
+	private String owner;
+	private SimpleLocation location;
 
-	public SerializableInventory(ArrayList<SerializableItemStack> items, int heldSlot) {
+	public SerializableInventory(ArrayList<SerializableItemStack> items, int heldSlot, SerializableInventoryType inventoryType) {
 		this.items.addAll(items);
 		this.heldSlot = heldSlot;
+		this.inventoryType = inventoryType;
 	}
 	
 	public ArrayList<SerializableItemStack> getItems() {
@@ -35,12 +40,32 @@ public class SerializableInventory extends SerializableObject implements Seriali
 		items.set(slot, item);
 	}
 	
-	public void updateInventory(HyperPlayer hp) {
-		HyperConomy.hc.getMC().setInventory(hp, this);
+	
+	public SerializableInventoryType getInventoryType() {
+		return inventoryType;
+	}
+	
+	
+	public HyperPlayer getHyperPlayer() {
+		if (isPlayerInventory()) return HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(owner);
+		return null;
+	}
+	
+	public boolean isPlayerInventory() {
+		if (inventoryType.equals(SerializableInventoryType.PLAYER)) return true;
+		return false;
+	}
+	
+	public void updateInventory() {
+		HyperConomy.hc.getMC().setInventory(this);
 	}
 	
 	public int getSize() {
 		return items.size();
+	}
+	
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 	
 	

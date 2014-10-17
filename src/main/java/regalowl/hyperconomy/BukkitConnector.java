@@ -61,6 +61,7 @@ import regalowl.hyperconomy.serializable.SerializableFireworkEffect;
 import regalowl.hyperconomy.serializable.SerializableFireworkEffectMeta;
 import regalowl.hyperconomy.serializable.SerializableFireworkMeta;
 import regalowl.hyperconomy.serializable.SerializableInventory;
+import regalowl.hyperconomy.serializable.SerializableInventoryType;
 import regalowl.hyperconomy.serializable.SerializableItemMeta;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.serializable.SerializableLeatherArmorMeta;
@@ -341,23 +342,29 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		for (int c = 0; c < size; c++) {
 	        items.add(getSerializableItemStack(i.getItem(c)));
 		}
-		SerializableInventory si = new SerializableInventory(items, heldSlot);
+		SerializableInventory si = new SerializableInventory(items, heldSlot, SerializableInventoryType.PLAYER);
+		si.setOwner(hp.getName());
 		return si;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void setInventory(HyperPlayer hp, SerializableInventory inventory) {
-		Player p = Bukkit.getPlayer(hp.getName());
-		p.getInventory().setHeldItemSlot(inventory.getHeldSlot());
-		ArrayList<SerializableItemStack> cInventory = getInventory(hp).getItems();
-		ArrayList<SerializableItemStack> nInventory = inventory.getItems();
-		if (cInventory.size() != nInventory.size()) return;
-		Inventory inv = p.getInventory();
-		for (int i = 0; i < nInventory.size(); i++) {
-			inv.setItem(i, getItemStack(nInventory.get(i)));
+	public void setInventory(SerializableInventory inventory) {
+		if (inventory.getInventoryType() == SerializableInventoryType.PLAYER) {
+			HyperPlayer hp = inventory.getHyperPlayer();
+			Player p = Bukkit.getPlayer(hp.getName());
+			p.getInventory().setHeldItemSlot(inventory.getHeldSlot());
+			ArrayList<SerializableItemStack> cInventory = getInventory(hp).getItems();
+			ArrayList<SerializableItemStack> nInventory = inventory.getItems();
+			if (cInventory.size() != nInventory.size()) return;
+			Inventory inv = p.getInventory();
+			for (int i = 0; i < nInventory.size(); i++) {
+				inv.setItem(i, getItemStack(nInventory.get(i)));
+			}
+			p.updateInventory();
+		} else {
+			//TODO
 		}
-		p.updateInventory();
 	}
 	
 	@SuppressWarnings("deprecation")

@@ -169,7 +169,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				String info = "ComponentItem add() failure; " + amount + " remaining.";
 				hc.gDB().writeError(info);
 			}
-			hc.getMC().setInventory(hp, inventory);
+			hc.getMC().setInventory(inventory);
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 		}
