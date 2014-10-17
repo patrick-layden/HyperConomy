@@ -310,7 +310,7 @@ public interface HyperObject extends Comparable<HyperObject>, Serializable {
 	/**Returns the ItemStack representation of this HyperObject. (Can only be used with items.)
 	 * @return
 	 */
-	public SerializableItemStack getItemStack();
+	public SerializableItemStack getItem();
 	/**Sets this HyperObject's ItemStack representation.  (Can only be used with items.)
 	 * @param stack
 	 */

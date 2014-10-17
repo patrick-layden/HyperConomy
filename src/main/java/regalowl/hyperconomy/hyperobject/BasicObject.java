@@ -545,7 +545,7 @@ public class BasicObject implements HyperObject {
 	@Override
 	public int getAvailableSpace(SerializableInventory inventory) {return 0;}
 	@Override
-	public SerializableItemStack getItemStack() {return null;}
+	public SerializableItemStack getItem() {return null;}
 	@Override
 	public SerializableItemStack getItemStack(int amount) {return null;}
 	@Override

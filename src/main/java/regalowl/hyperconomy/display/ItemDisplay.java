@@ -119,8 +119,8 @@ public class ItemDisplay {
 		if (!getLocation().getChunk().isLoaded()) {return;}
 		HyperEconomy he = hc.getDataManager().getEconomy("default");
 		Location l = new Location(getWorld(), x, y + 1, z);
-		ItemStack dropstack = he.getHyperObject(name).getItemStack();
-		dropstack.setDurability((short) he.getHyperObject(name).getItemStack().getDurability());
+		ItemStack dropstack = he.getHyperObject(name).getItem();
+		dropstack.setDurability((short) he.getHyperObject(name).getItem().getDurability());
 		this.item = getWorld().dropItem(l, dropstack);
 		this.entityId = item.getEntityId();
 		item.setVelocity(new Vector(0, 0, 0));
@@ -224,7 +224,7 @@ public class ItemDisplay {
 	public void clearNearbyItems(double radius, boolean removeDisplays, boolean removeSelf) {
 		HyperObject hi = getHyperObject();
 		if (hi == null) {return;}
-		Item tempItem = getWorld().dropItem(getLocation(), hi.getItemStack());
+		Item tempItem = getWorld().dropItem(getLocation(), hi.getItem());
 		List<Entity> nearbyEntities = tempItem.getNearbyEntities(radius, radius, radius);
 		for (Entity entity : nearbyEntities) {
 			if (!(entity instanceof Item)) {continue;}

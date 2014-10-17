@@ -26,6 +26,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
@@ -344,8 +345,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return si;
 	}
 
-
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public void setInventory(HyperPlayer hp, SerializableInventory inventory) {
@@ -358,6 +357,22 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		for (int i = 0; i < nInventory.size(); i++) {
 			inv.setItem(i, getItemStack(nInventory.get(i)));
 		}
+		p.updateInventory();
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public SerializableItemStack getItem(HyperPlayer hp, int slot) {
+		Player p = Bukkit.getPlayer(hp.getName());
+		return getSerializableItemStack(p.getInventory().getItem(slot));
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void setItem(HyperPlayer hp, SerializableItemStack item, int slot) {
+		Player p = Bukkit.getPlayer(hp.getName());
+		p.getInventory().setItem(slot, getItemStack(item));
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -366,6 +381,8 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
         String material = s.getType().toString();
         short durability = s.getDurability();
         byte data = s.getData().getData(); 
+        int amount = s.getAmount();
+        int maxStackSize = s.getMaxStackSize();
         if (s.hasItemMeta()) {
         	ItemMeta im = s.getItemMeta();
             String displayName = im.getDisplayName();
@@ -441,9 +458,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
         	} else {
         		itemMeta = new SerializableItemMeta(displayName, lore, enchantments);
         	}
-        	return new SerializableItemStack(itemMeta, material, durability, data);
+        	return new SerializableItemStack(itemMeta, material, durability, data, amount, maxStackSize);
         }
-        return new SerializableItemStack(null, material, durability, data);
+        return new SerializableItemStack(null, material, durability, data, amount, maxStackSize);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -530,6 +547,10 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
         }
         return item;
 	}
+
+
+
+
 
 
 

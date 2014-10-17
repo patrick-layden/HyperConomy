@@ -11,21 +11,25 @@ import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class Hyperlog {
+public class Hyperlog extends BaseCommand implements HyperCommand {
 
-	private CommandSender sender;
 	private String statement;
 	private ArrayList<String> result;
 	private HyperConomy hc;
 	
-	Hyperlog(String args[], CommandSender csender) {
-		sender = csender;
+	public Hyperlog() {
+		super(false);
+	}
+	
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length % 2 != 0 || args.length == 0) {
-				sender.sendMessage(L.get("HYPERLOG_INVALID"));
-				return;
+				data.addResponse(L.get("HYPERLOG_INVALID"));
+				return data;
 			}
 
 			statement = "SELECT * FROM hyperconomy_log WHERE";
@@ -50,8 +54,8 @@ public class Hyperlog {
 					} else if (increment.equalsIgnoreCase("d")) {
 						quantity = quantity * 60 * 24;
 					} else {
-						sender.sendMessage(L.get("HYPERLOG_INVALID_INCREMENT"));
-						return;
+						data.addResponse(L.get("HYPERLOG_INVALID_INCREMENT"));
+						return data;
 					}
 					if (hc.gDB().getSQLManager().useMySQL()) {
 						statement += " TIME > DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
@@ -69,8 +73,8 @@ public class Hyperlog {
 					} else if (increment.equalsIgnoreCase("d")) {
 						quantity = quantity * 60 * 24;
 					} else {
-						sender.sendMessage(L.get("HYPERLOG_INVALID_INCREMENT"));
-						return;
+						data.addResponse(L.get("HYPERLOG_INVALID_INCREMENT"));
+						return data;
 					}
 
 					if (hc.gDB().getSQLManager().useMySQL()) {
@@ -103,8 +107,8 @@ public class Hyperlog {
 				} else if (type.equalsIgnoreCase("<id")) {
 					statement += " ID < '" + value + "'";
 				} else {
-					sender.sendMessage(L.get("HYPERLOG_INVALID"));
-					return;
+					data.addResponse(L.get("HYPERLOG_INVALID"));
+					return data;
 				}
 
 			}
@@ -119,21 +123,23 @@ public class Hyperlog {
 	    	    			if (m > 100) {
 	    	    				m = 100;
 	    	    			}
-	    	    			sender.sendMessage(hc.getLanguageFile().get("LINE_BREAK"));
+	    	    			data.addResponse(hc.getLanguageFile().get("LINE_BREAK"));
 	    	    			for (String message:result) {
-	    	    				sender.sendMessage(message);
+	    	    				data.addResponse(message);
 	    	    			}
 	    	    			if (result.size() == 0) {
-	    	    				sender.sendMessage(hc.getLanguageFile().get("HYPERLOG_NORESULT"));
+	    	    				data.addResponse(hc.getLanguageFile().get("HYPERLOG_NORESULT"));
 	    	    			}
 	    	    		}
 	    	    	});
 	    		}
 	    	}).start();
 		} catch (Exception e) {
-			sender.sendMessage(L.get("HYPERLOG_INVALID"));
+			data.addResponse(L.get("HYPERLOG_INVALID"));
 		}
+		return data;
 	}
+	
 
 	/**
 	 * This function must be called from an asynchronous thread!
@@ -179,5 +185,7 @@ public class Hyperlog {
 			return "0";
 		}
 	}
+
+
 
 }

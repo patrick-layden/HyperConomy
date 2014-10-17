@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.sql.SQLWrite;
@@ -15,6 +14,7 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionProcessor;
@@ -371,13 +371,9 @@ public class HyperPlayer implements HyperAccount {
 		return op;
 	}
 	
-	public Inventory getInventory() {
-		Player p = getPlayer();
-		if (p != null) {
-			return p.getInventory();
-		} else {
-			return null;
-		}
+	public SerializableInventory getInventory() {
+		HyperConomy hc = HyperConomy.hc;
+		return hc.getMC().getInventory(this);
 	}
 
 	public void sendMessage(String message) {

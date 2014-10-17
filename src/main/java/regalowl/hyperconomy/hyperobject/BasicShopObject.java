@@ -376,8 +376,8 @@ public class BasicShopObject extends BasicObject implements HyperObject {
 		return getHyperObject().remove(amount, hp);
 	}
 	@Override
-	public SerializableItemStack getItemStack() {
-		return getHyperObject().getItemStack();
+	public SerializableItemStack getItem() {
+		return getHyperObject().getItem();
 	}
 	@Override
 	public SerializableItemStack getItemStack(int amount) {

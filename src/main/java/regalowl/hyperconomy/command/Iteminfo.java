@@ -29,7 +29,7 @@ public class Iteminfo {
 				player.sendMessage(ChatColor.BLUE + "Object not found.");
 				return;
 			}
-			ItemStack s = ho.getItemStack();
+			ItemStack s = ho.getItem();
 			sis = new SerializableItemStack(s);
 		}
 		player.sendMessage(L.get("LINE_BREAK"));

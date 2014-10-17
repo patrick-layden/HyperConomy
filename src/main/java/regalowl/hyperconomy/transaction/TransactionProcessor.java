@@ -371,7 +371,7 @@ public class TransactionProcessor {
 	public void sell() {
 		try {
 			String name = hyperObject.getDisplayName();
-			if (hyperObject.getItemStack().getType() == null) {
+			if (hyperObject.getItem().getType() == null) {
 				response.addFailed(L.f(L.get("CANNOT_BE_SOLD_WITH"), name), hyperObject);
 				return;
 			}

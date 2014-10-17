@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 
@@ -65,14 +66,14 @@ public class ComponentItem extends BasicObject implements HyperObject {
 
 	@Override
 	public double getSellPrice(double amount, HyperPlayer hp) {
-		return super.getSellPrice(amount) * getDamageMultiplier((int)Math.ceil(amount), hp.getPlayer().getInventory());
+		return super.getSellPrice(amount) * getDamageMultiplier((int)Math.ceil(amount), hp.getInventory());
 	}
 
 	@Override
-	public int count(Inventory inventory) {
+	public int count(SerializableInventory inventory) {
 		int totalitems = 0;
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
-			ItemStack currentItem = inventory.getItem(slot);
+			SerializableItemStack currentItem = inventory.getItem(slot);
 			if (matchesItemStack(currentItem)) {
 				totalitems += currentItem.getAmount();
 			}
@@ -80,14 +81,14 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		return totalitems;
 	}
 	@Override
-	public int getAvailableSpace(Inventory inventory) {
+	public int getAvailableSpace(SerializableInventory inventory) {
 		HyperConomy hc = HyperConomy.hc;
 		try {
-			ItemStack stack = getItemStack();
+			SerializableItemStack stack = getItem();
 			int maxstack = stack.getMaxStackSize();
 			int availablespace = 0;
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
-				ItemStack currentItem = inventory.getItem(slot);
+				SerializableItemStack currentItem = inventory.getItem(slot);
 				if (currentItem == null) {
 					availablespace += maxstack;
 				} else if (matchesItemStack(currentItem)) {
@@ -102,23 +103,20 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	}
 	
 	@Override
-	public ItemStack getItemStack(int amount) {
+	public SerializableItemStack getItemStack(int amount) {
 		SerializableItemStack sis = getSIS();
-		ItemStack stack = sis.getItem();
-		stack.setAmount(amount);
-		return stack;
+		sis.setAmount(amount);
+		return sis;
 	}
 	@Override
-	public ItemStack getItemStack() {
-		SerializableItemStack sis = getSIS();
-		return sis.getItem();
+	public SerializableItemStack getItem() {
+		return getSIS();
 	}
 	@Override
-	public boolean matchesItemStack(ItemStack stack) {
+	public boolean matchesItemStack(SerializableItemStack stack) {
 		SerializableItemStack thisSis = getSIS();
 		if (stack == null) {return false;}
-		SerializableItemStack sis = new SerializableItemStack(stack);
-		return sis.equals(thisSis);
+		return stack.equals(thisSis);
 	}
 	@Override
 	public String getData() {
@@ -136,13 +134,13 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public void add(int amount, Inventory inventory) {
+	public void add(int amount, SerializableInventory inventory) {
 		HyperConomy hc = HyperConomy.hc;
 		try {
-			ItemStack stack = getItemStack();
+			SerializableItemStack stack = getItem();
 			int maxStack = stack.getMaxStackSize();
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
-				ItemStack currentItem = inventory.getItem(slot);
+				SerializableItemStack currentItem = inventory.getItem(slot);
 				if (matchesItemStack(currentItem)) {
 					int stackSize = currentItem.getAmount();
 					int availableSpace = maxStack - stackSize;
@@ -171,16 +169,13 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				String info = "ComponentItem add() failure; " + amount + " remaining.";
 				hc.gDB().writeError(info);
 			}
-			if (inventory.getType() == InventoryType.PLAYER) {
-				Player p = (Player) inventory.getHolder();
-				p.updateInventory();
-			}
+			hc.getMC().setInventory(hp, inventory);
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 		}
 	}
 	@Override
-	public double remove(int amount, Inventory inventory) {
+	public double remove(int amount, SerializableInventory inventory) {
 		HyperConomy hc = HyperConomy.hc;
 		try {
 			double amountRemoved = 0;
@@ -227,7 +222,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	
 
 	@Override
-	public double getDamageMultiplier(int amount, Inventory inventory) {
+	public double getDamageMultiplier(int amount, SerializableInventory inventory) {
 		HyperConomy hc = HyperConomy.hc;
 		SerializableItemStack sis = getSIS();
 		try {
