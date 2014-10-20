@@ -5,14 +5,13 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
+import regalowl.hyperconomy.serializable.SerializableInventory;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 public class Enchant extends BasicObject implements HyperObject {
 
@@ -78,11 +77,8 @@ public class Enchant extends BasicObject implements HyperObject {
 	
 	@Override
 	public double getSellPrice(EnchantmentClass eclass, HyperPlayer hp) {
-		double durabilityMultiplier = new HyperItemStack(hp.getPlayer().getItemInHand()).getDurabilityMultiplier();
-		if (hp.getPlayer().getItemInHand().getType().equals(Material.ENCHANTED_BOOK)) {
-			durabilityMultiplier = 1;
-		}
-		return durabilityMultiplier * getSellPrice(eclass);
+		SerializableInventory inv = HyperConomy.hc.getMC().getInventory(hp);
+		return inv.getHeldItem().getDurabilityPercent() * getSellPrice(eclass);
 	}
 
 	@Override
@@ -98,33 +94,30 @@ public class Enchant extends BasicObject implements HyperObject {
 		return getSellPrice(EnchantmentClass.DIAMOND, hp) * amount;
 	}
 	@Override
-	public Enchantment getEnchantment() {
-		return getSE().getEnchantment();
+	public SerializableEnchantment getEnchantment() {
+		return getSE();
 	}
 	@Override
 	public int getEnchantmentLevel() {
 		return getSE().getLvl();
 	}
 	@Override
-	public double addEnchantment(ItemStack stack) {
+	public double addEnchantment(SerializableItemStack stack) {
 		if (stack == null) {return 0;}
-		HyperItemStack his = new HyperItemStack(stack);
-		Enchantment e = getEnchantment();
-		if (his.canAcceptEnchantment(e) && !his.containsEnchantment(e)) {
-			his.addEnchantment(e, getEnchantmentLevel());
+		SerializableEnchantment e = getEnchantment();
+		if (stack.canAcceptEnchantment(e) && !stack.containsEnchantment(e)) {
+			stack.addEnchantment(e);
 			return 1;
 		}
 		return 0;
 	}
 	@Override
-	public double removeEnchantment(ItemStack stack) {
+	public double removeEnchantment(SerializableItemStack stack) {
 		if (stack == null) {return 0;}
-		HyperItemStack his = new HyperItemStack(stack);
-		Enchantment e = getEnchantment();
-		int lvl = his.getEnchantmentLevel(e);
-		if (getEnchantmentLevel() == lvl && his.containsEnchantment(e)) {
-			his.removeEnchant(e);
-			double duramult = his.getDurabilityMultiplier();
+		SerializableEnchantment e = getEnchantment();
+		if (getEnchantmentLevel() == e.getLvl() && stack.containsEnchantment(e)) {
+			stack.removeEnchantment(e);
+			double duramult = stack.getDurabilityPercent();
 			return duramult;
 		}
 		return 0;

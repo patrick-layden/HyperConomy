@@ -5,22 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+
 
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.sql.QueryResult;
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.util.Backup;
-import regalowl.hyperconomy.util.LanguageFile;
+
 
 public class Hcdata extends BaseCommand implements HyperCommand {
 	
@@ -213,13 +206,12 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("OBJECT_NOT_FOUND"));
 					return data;
 				}
-				ItemStack stack = hp.getObjectInHand();
-				if (stack.getType() == Material.AIR) {
+				SerializableItemStack stack = hp.getItemInHand();
+				if (stack.isBlank()) {
 					data.addResponse(L.get("AIR_CANT_BE_TRADED"));
 					return data;
 				}
-				SerializableItemStack sis = new SerializableItemStack(stack);
-				ho.setData(sis.serialize());
+				ho.setData(stack.serialize());
 				data.addResponse(L.get("HCDATA_ITEMSTACK_UPDATED"));
 			} catch (Exception e) {
 				data.addResponse(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));

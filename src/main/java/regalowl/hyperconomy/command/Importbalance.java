@@ -6,30 +6,31 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 
 import regalowl.databukkit.file.FileTools;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Importbalance {
-	@SuppressWarnings("deprecation")
-	Importbalance(String args[], CommandSender sender) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
+public class Importbalance extends BaseCommand implements HyperCommand {
+
+	public Importbalance() {
+		super(false);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		if (!hc.getMC().useExternalEconomy()) {
-			sender.sendMessage(L.get("MUST_USE_EXTERNAL_ECONOMY"));
-			return;
+			data.addResponse(L.get("MUST_USE_EXTERNAL_ECONOMY"));
+			return data;
 		}
 		if (args.length == 0) {
-			sender.sendMessage(L.get("IMPORTBALANCES_INVALID"));
-			return;
+			data.addResponse(L.get("IMPORTBALANCES_INVALID"));
+			return data;
 		}
 		String world = args[0];
 		if (Bukkit.getWorld(world) == null) {
-			sender.sendMessage(L.get("WORLD_NOT_FOUND"));
-			return;
+			data.addResponse(L.get("WORLD_NOT_FOUND"));
+			return data;
 		}
 		FileTools ft = hc.getFileTools();
 		String playerListPath = ft.getJarPath();
@@ -56,8 +57,9 @@ public class Importbalance {
 			}
 			importedPlayers.add(name);
 		}
-		//sender.sendMessage("[" + hc.getCommonFunctions().implode(importedPlayers, ",") + "]");
-		sender.sendMessage(L.get("PLAYERS_IMPORTED"));
+		//data.addResponse("[" + hc.getCommonFunctions().implode(importedPlayers, ",") + "]");
+		data.addResponse(L.get("PLAYERS_IMPORTED"));
 		hc.getHyperPlayerManager().purgeDeadAccounts();
+		return data;
 	}
 }

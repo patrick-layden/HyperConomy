@@ -31,16 +31,42 @@ public class SerializableEnchantmentStorageMeta extends SerializableItemMeta imp
 			ois.close();
 			if (!(o instanceof SerializableEnchantmentStorageMeta)) {return;}
 			SerializableEnchantmentStorageMeta se = (SerializableEnchantmentStorageMeta)o;
-			this.storedEnchantments = se.getStoredEnchantments();
+			this.storedEnchantments = se.getEnchantments();
     	} catch (Exception e) {
     		HyperConomy.hc.getDataBukkit().writeError(e);
     	}
     }
 	
-
-	public List<SerializableEnchantment> getStoredEnchantments() {
+	@Override
+	public List<SerializableEnchantment> getEnchantments() {
 		return storedEnchantments;
 	}
+	
+	@Override
+	public boolean containsEnchantment(SerializableEnchantment e) {
+		for (SerializableEnchantment se:storedEnchantments) {
+			if (se.equals(e)) return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void addEnchantment(SerializableEnchantment e) {
+		storedEnchantments.add(e);
+	}
+	
+	@Override
+	public void removeEnchantment(SerializableEnchantment e) {
+		if (containsEnchantment(e)) storedEnchantments.remove(e);
+	}
+	
+	@Override
+	public boolean hasEnchantments() {
+		if (enchantments.size() > 0) return true;
+		if (storedEnchantments.size() > 0) return true;
+		return false;
+	}
+	
 	
 	@Override
 	public int hashCode() {

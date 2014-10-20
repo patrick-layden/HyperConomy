@@ -1,22 +1,13 @@
 package regalowl.hyperconomy.command;
 
-import java.util.List;
 
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.FrameShopHandler;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
-import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class Frameshopcommand extends BaseCommand implements HyperCommand {
 	public Frameshopcommand() {
@@ -29,10 +20,7 @@ public class Frameshopcommand extends BaseCommand implements HyperCommand {
 		FrameShopHandler fsh = hc.getFrameShopHandler();
 		HyperEconomy he = getEconomy();
 		if (args.length == 1) {
-			@SuppressWarnings("deprecation")
-			List<Block> ltb = p.getLastTwoTargetBlocks(null, 500);
-			Block b = ltb.get(0);
-			Location bl = b.getLocation();
+			SimpleLocation bl = hp.getLocationBeforeTargetLocation();
 			HyperObject ho = he.getHyperObject(args[0]);
 			if (ho != null) {
 				if (hc.getHyperShopManager().inAnyShop(hp)) {

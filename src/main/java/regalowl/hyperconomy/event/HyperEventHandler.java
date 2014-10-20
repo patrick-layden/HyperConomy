@@ -19,7 +19,9 @@ public class HyperEventHandler {
     }
     
     public synchronized void registerListener(HyperListener listener) {
-    	listeners.add(listener);
+    	if (!listeners.contains(listener)) {
+    		listeners.add(listener);
+    	}
     }
     public synchronized void unRegisterListener(HyperListener listener) {
     	if (listeners.contains(listener)) {

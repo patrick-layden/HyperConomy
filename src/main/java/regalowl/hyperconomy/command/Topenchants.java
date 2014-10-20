@@ -4,37 +4,37 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectStatus;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Topenchants {
-	Topenchants(String args[], Player player, CommandSender sender, String playerecon) {
-		HyperConomy hc = HyperConomy.hc;
-		HyperEconomy he = hc.getDataManager().getEconomy(playerecon);
-		DataManager em = hc.getDataManager();
-		LanguageFile L = hc.getLanguageFile();
+
+public class Topenchants extends BaseCommand implements HyperCommand {
+
+	public Topenchants() {
+		super(false);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
+		HyperEconomy he = super.getEconomy();
 		try {
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
 			if (args.length > 1) {
-				sender.sendMessage(L.get("TOPENCHANTS_INVALID"));
-				return;
+				data.addResponse(L.get("TOPENCHANTS_INVALID"));
+				return data;
 			}
 			String nameshop = "";
-			if (player != null) {
-				if (em.getHyperShopManager().inAnyShop(player)) {
-					nameshop = em.getHyperShopManager().getShop(player).getName();
+			if (hp != null) {
+				if (dm.getHyperShopManager().inAnyShop(hp)) {
+					nameshop = dm.getHyperShopManager().getShop(hp).getName();
 				} 				
-				if (requireShop && em.getHyperShopManager().getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
-					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
-					return;
+				if (requireShop && dm.getHyperShopManager().getShop(hp) == null && !hp.hasPermission("hyperconomy.admin")) {
+					data.addResponse(L.get("REQUIRE_SHOP_FOR_INFO"));
+					return data;
 				}
 			}
 			int page;
@@ -50,11 +50,11 @@ public class Topenchants {
 				boolean stocked = false;
 				boolean banned = false;
 				if (nameshop != "") {
-					banned = em.getHyperShopManager().getShop(nameshop).isBanned(ho);
+					banned = dm.getHyperShopManager().getShop(nameshop).isBanned(ho);
 				}
 				if (ho.getStock() > 0) {stocked = true;}
 				if (ho.isShopObject()) {
-					allowed = ho.getShop().isAllowed(em.getHyperPlayer(player));
+					allowed = ho.getShop().isAllowed(hp);
 					if (ho.getStatus() == HyperObjectStatus.NONE && !allowed) {
 						continue;
 					}
@@ -66,7 +66,7 @@ public class Topenchants {
 					}
 				}
 				if (!unavailable) {
-					double samount = he.getHyperObject(ho.getName(), em.getHyperShopManager().getShop(player)).getStock();
+					double samount = he.getHyperObject(ho.getName(), dm.getHyperShopManager().getShop(hp)).getStock();
 					if (samount > 0) {
 						while (enchantstocks.containsKey(samount * 100)) {
 							samount += .00001;
@@ -81,21 +81,22 @@ public class Topenchants {
 			double maxpages = le / 10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int) maxpages + 1;
-			sender.sendMessage(L.f(L.get("PAGE_NUMBER"), page, maxpi));
+			data.addResponse(L.f(L.get("PAGE_NUMBER"), page, maxpi));
 			try {
 				while (count < numberpage) {
 					double lk = enchantstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
-						sender.sendMessage(ChatColor.WHITE + enchantstocks.get(lk) + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + Math.floor(lk)/100);
+						data.addResponse(ChatColor.WHITE + enchantstocks.get(lk) + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + Math.floor(lk)/100);
 					}
 					enchantstocks.remove(lk);
 					count++;
 				}
 			} catch (Exception e) {
-				sender.sendMessage(L.get("YOU_HAVE_REACHED_THE_END"));
+				data.addResponse(L.get("YOU_HAVE_REACHED_THE_END"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("TOPENCHANTS_INVALID"));
+			data.addResponse(L.get("TOPENCHANTS_INVALID"));
 		}
+		return data;
 	}
 }

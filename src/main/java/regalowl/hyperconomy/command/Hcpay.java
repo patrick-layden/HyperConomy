@@ -9,6 +9,7 @@ public class Hcpay extends BaseCommand implements HyperCommand{
 
 	@Override
 	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		try {
 			if (args.length == 2) {
 				String recipient = args[0];

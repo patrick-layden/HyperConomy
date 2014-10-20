@@ -4,26 +4,28 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.util.LanguageFile;
+public class Listcategories extends BaseCommand implements HyperCommand {
 
-public class Listcategories {
-	Listcategories(CommandSender sender) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
+
+	public Listcategories() {
+		super(false);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		try {
 			Iterator<String> it = hc.gYH().getFileConfiguration("categories").getTopLevelKeys().iterator();
 			ArrayList<String> categories = new ArrayList<String>();
 			while (it.hasNext()) {
 				categories.add(it.next().toString());
 			}
-			sender.sendMessage(ChatColor.AQUA + "" + categories.toString());
-			return;
+			data.addResponse(ChatColor.AQUA + "" + categories.toString());
+			return data;
 		} catch (Exception e) {
-			sender.sendMessage(L.get("LISTCATEGORIES_INVALID"));
-			return;
+			data.addResponse(L.get("LISTCATEGORIES_INVALID"));
+			return data;
 		}
 	}
 }

@@ -1,49 +1,34 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.account.HyperPlayer;
+
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Value implements CommandExecutor {
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		HyperConomy hc = HyperConomy.hc;
-		if (hc.getHyperLock().isLocked(sender)) {
-			hc.getHyperLock().sendLockMessage(sender);;
-			return true;
-		}
-		HyperEconomy he = hc.getDataManager().getEconomy("default");
-		CommonFunctions cf = hc.gCF();
-		LanguageFile L = hc.getLanguageFile();
-		Player player = null;
-		DataManager em = hc.getDataManager();
-		if (sender instanceof Player) {
-			player = (Player) sender;
-			HyperPlayer hp = em.getHyperPlayer(player);
-			he = hp.getHyperEconomy();
-		}
+public class Value extends BaseCommand implements HyperCommand {
+
+	public Value() {
+		super(false);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
+		HyperEconomy he = super.getEconomy();
 		try {
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
-			if (player != null && requireShop && !em.getHyperShopManager().inAnyShop(player) && !player.hasPermission("hyperconomy.admin")) {
-				sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
-				return true;
+			if (hp != null && requireShop && !dm.getHyperShopManager().inAnyShop(hp) && !hp.hasPermission("hyperconomy.admin")) {
+				data.addResponse(L.get("REQUIRE_SHOP_FOR_INFO"));
+				return data;
 			}
 			String name = he.fixName(args[0]);
-			HyperObject ho = he.getHyperObject(name, em.getHyperShopManager().getShop(player));
+			HyperObject ho = he.getHyperObject(name, dm.getHyperShopManager().getShop(hp));
 			if (ho == null) {
-				sender.sendMessage(L.get("INVALID_ITEM_NAME"));
-				return true;
+				data.addResponse(L.get("INVALID_ITEM_NAME"));
+				return data;
 			}
 			int amount = 1;
 			if (ho.getType() != HyperObjectType.ENCHANTMENT && args.length > 1) {
@@ -61,8 +46,7 @@ public class Value implements CommandExecutor {
 			}
 			double val = 0;
 			double cost = 0;
-			if (player != null) {
-				HyperPlayer hp = em.getHyperPlayer(player);
+			if (hp != null) {
 				if (ho.getType() == HyperObjectType.ITEM) {
 					val = ho.getSellPriceWithTax(amount, hp);
 					cost = ho.getBuyPriceWithTax(amount);
@@ -94,16 +78,15 @@ public class Value implements CommandExecutor {
 			}
 
 
-			sender.sendMessage(L.get("LINE_BREAK"));
-			sender.sendMessage(L.f(L.get("CAN_BE_SOLD_FOR"), amount, cf.twoDecimals(val), ho.getDisplayName()));
-			sender.sendMessage(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cf.twoDecimals(cost), ho.getDisplayName()));
-			sender.sendMessage(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), cf.twoDecimals(ho.getStock()), ho.getDisplayName()));
-			sender.sendMessage(L.get("LINE_BREAK"));
+			data.addResponse(L.get("LINE_BREAK"));
+			data.addResponse(L.f(L.get("CAN_BE_SOLD_FOR"), amount, cf.twoDecimals(val), ho.getDisplayName()));
+			data.addResponse(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cf.twoDecimals(cost), ho.getDisplayName()));
+			data.addResponse(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), cf.twoDecimals(ho.getStock()), ho.getDisplayName()));
+			data.addResponse(L.get("LINE_BREAK"));
 
 		} catch (Exception e) {
-			sender.sendMessage(L.get("VALUE_INVALID"));
-			return true;
+			data.addResponse(L.get("VALUE_INVALID"));
 		}
-		return true;
+		return data;
 	}
 }

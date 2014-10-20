@@ -1,17 +1,12 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.entity.Player;
-
-import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
-import regalowl.hyperconomy.util.LanguageFile;
 
 public class Hs extends BaseCommand implements HyperCommand {
 	
@@ -36,19 +31,19 @@ public class Hs extends BaseCommand implements HyperCommand {
 				} catch (Exception e) {
 					String max = args[0];
 					if (max.equalsIgnoreCase("max")) {
-						HyperObject hi = hp.getObjectInHand();
-						amount = hi.count(player.getInventory());
+						HyperObject hi = he.getHyperObject(hp.getItemInHand());
+						amount = hi.count(hp.getInventory());
 					} else {
 						data.addResponse(L.get("HS_INVALID"));
-						return;
+						return data;
 					}
 				}
 			}
-			HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getHyperShopManager().getShop(player));
+			HyperObject ho = he.getHyperObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
 			if (ho == null) {
 				data.addResponse(L.get("CANT_BE_TRADED"));
 			} else {
-				Shop s = dm.getHyperShopManager().getShop(player);
+				Shop s = dm.getHyperShopManager().getShop(hp);
 				PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 				pt.setObeyShops(true);
 				pt.setHyperObject(ho);
@@ -61,5 +56,6 @@ public class Hs extends BaseCommand implements HyperCommand {
 			HyperConomy.hc.getDebugMode().debugWriteError(e);
 			data.addResponse(L.get("HS_INVALID"));
 		}
+		return data;
 	}
 }

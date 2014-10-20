@@ -25,6 +25,7 @@ import regalowl.hyperconomy.hyperobject.Enchant;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.hyperobject.Xp;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 
@@ -195,10 +196,10 @@ public class HyperEconomy implements Serializable, HyperListener {
 	
 
 
-	public HyperObject getHyperObject(ItemStack stack) {
+	public HyperObject getHyperObject(SerializableItemStack stack) {
 		return getHyperObject(stack, null);
 	}
-	public HyperObject getHyperObject(ItemStack stack, Shop s) {
+	public HyperObject getHyperObject(SerializableItemStack stack, Shop s) {
 		if (stack == null) {return null;}
 		if (s != null && s instanceof PlayerShop) {
 			for (HyperObject ho:hyperObjectsName.values()) {

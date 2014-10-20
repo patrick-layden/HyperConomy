@@ -2,9 +2,6 @@ package regalowl.hyperconomy;
 
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.DataBukkit;
@@ -25,22 +22,49 @@ import regalowl.hyperconomy.command.Additem;
 import regalowl.hyperconomy.command.Audit;
 import regalowl.hyperconomy.command.Browseshop;
 import regalowl.hyperconomy.command.Buy;
+import regalowl.hyperconomy.command.Economyinfo;
 import regalowl.hyperconomy.command.Frameshopcommand;
+import regalowl.hyperconomy.command.Hb;
 import regalowl.hyperconomy.command.Hc;
+import regalowl.hyperconomy.command.Hcbalance;
 import regalowl.hyperconomy.command.Hcbank;
 import regalowl.hyperconomy.command.Hcdata;
 import regalowl.hyperconomy.command.Hcdelete;
 import regalowl.hyperconomy.command.Hceconomy;
+import regalowl.hyperconomy.command.Hcpay;
 import regalowl.hyperconomy.command.Hcset;
 import regalowl.hyperconomy.command.Hctest;
+import regalowl.hyperconomy.command.Hctop;
+import regalowl.hyperconomy.command.Hs;
+import regalowl.hyperconomy.command.Hv;
+import regalowl.hyperconomy.command.Hyperlog;
+import regalowl.hyperconomy.command.Importbalance;
+import regalowl.hyperconomy.command.Intervals;
+import regalowl.hyperconomy.command.Iteminfo;
+import regalowl.hyperconomy.command.Listcategories;
 import regalowl.hyperconomy.command.Lockshop;
+import regalowl.hyperconomy.command.Makeaccount;
+import regalowl.hyperconomy.command.Makedisplay;
 import regalowl.hyperconomy.command.Manageshop;
 import regalowl.hyperconomy.command.Notify;
+import regalowl.hyperconomy.command.Objectsettings;
+import regalowl.hyperconomy.command.Removedisplay;
+import regalowl.hyperconomy.command.Repairsigns;
+import regalowl.hyperconomy.command.Scalebypercent;
 import regalowl.hyperconomy.command.Sell;
 import regalowl.hyperconomy.command.Sellall;
 import regalowl.hyperconomy.command.Servershopcommand;
+import regalowl.hyperconomy.command.Setchestowner;
+import regalowl.hyperconomy.command.Seteconomy;
+import regalowl.hyperconomy.command.Setlanguage;
+import regalowl.hyperconomy.command.Setpassword;
+import regalowl.hyperconomy.command.Settax;
+import regalowl.hyperconomy.command.Taxsettings;
+import regalowl.hyperconomy.command.Toggleeconomy;
+import regalowl.hyperconomy.command.Topenchants;
+import regalowl.hyperconomy.command.Topitems;
 import regalowl.hyperconomy.command.Value;
-import regalowl.hyperconomy.command._Command;
+import regalowl.hyperconomy.command.Xpinfo;
 import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.display.ItemDisplayFactory;
 import regalowl.hyperconomy.display.TransactionSign;
@@ -71,7 +95,6 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 	private YamlHandler yh;
 	private Log l;
 	private InfoSignHandler isign;
-	private _Command commandhandler;
 	private History hist;
 	private ItemDisplayFactory itdi;
 	private SQLWrite sw;
@@ -152,7 +175,6 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 		dMode.syncDebugConsoleMessage("Data loading started.");
 		dm.load();
 		l = new Log(this);
-		commandhandler = new _Command();
 		new TransactionSign();
 		yh.startSaveTask(saveInterval);
 		cs = new ChestShop();
@@ -177,6 +199,7 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 		registerCommands();
 		enabled = true;
 		hl.setLoadLock(false);
+		dMode.syncDebugConsoleMessage("Data loading completed.");
 	}
 	
 
@@ -214,27 +237,56 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 	}
 
 	private void registerCommands() {
-		mc.registerCommand("hctest", new Hctest());
-		mc.registerCommand("hc", new Hc());
-		mc.registerCommand("audit", new Audit());
 		mc.registerCommand("additem", new Additem());
+		mc.registerCommand("audit", new Audit());
 		mc.registerCommand("browseshop", new Browseshop());
 		mc.registerCommand("buy", new Buy());
-		Bukkit.getServer().getPluginCommand("manageshop").setExecutor(new Manageshop());
-		Bukkit.getServer().getPluginCommand("hcset").setExecutor(new Hcset());
-		Bukkit.getServer().getPluginCommand("hcdelete").setExecutor(new Hcdelete());
-		Bukkit.getServer().getPluginCommand("frameshop").setExecutor(new Frameshopcommand());
-		Bukkit.getServer().getPluginCommand("hcbank").setExecutor(new Hcbank());
-		Bukkit.getServer().getPluginCommand("servershop").setExecutor(new Servershopcommand());
-		Bukkit.getServer().getPluginCommand("hcdata").setExecutor(new Hcdata());
-		Bukkit.getServer().getPluginCommand("sellall").setExecutor(new Sellall());
-		Bukkit.getServer().getPluginCommand("sell").setExecutor(new Sell());
-		Bukkit.getServer().getPluginCommand("value").setExecutor(new Value());
-		Bukkit.getServer().getPluginCommand("lockshop").setExecutor(new Lockshop());
-		Bukkit.getServer().getPluginCommand("hceconomy").setExecutor(new Hceconomy());
-		Bukkit.getServer().getPluginCommand("notify").setExecutor(new Notify());
+		mc.registerCommand("economyinfo", new Economyinfo());
+		mc.registerCommand("frameshop", new Frameshopcommand());
+		mc.registerCommand("heldbuy", new Hb());
+		mc.registerCommand("hc", new Hc());
+		mc.registerCommand("hcbalance", new Hcbalance());
+		mc.registerCommand("hcbank", new Hcbank());
+		mc.registerCommand("hcdata", new Hcdata());
+		mc.registerCommand("hcdelete", new Hcdelete());
+		mc.registerCommand("hceconomy", new Hceconomy());
+		mc.registerCommand("hcpay", new Hcpay());
+		mc.registerCommand("hcset", new Hcset());
+		mc.registerCommand("hctest", new Hctest());
+		mc.registerCommand("hctop", new Hctop());
+		mc.registerCommand("heldsell", new Hs());
+		mc.registerCommand("heldvalue", new Hv());
+		mc.registerCommand("hyperlog", new Hyperlog());
+		mc.registerCommand("importbalance", new Importbalance());
+		mc.registerCommand("intervals", new Intervals());
+		mc.registerCommand("iteminfo", new Iteminfo());
+		mc.registerCommand("listcategories", new Listcategories());
+		mc.registerCommand("lockshop", new Lockshop());
+		mc.registerCommand("makeaccount", new Makeaccount());
+		mc.registerCommand("makedisplay", new Makedisplay());
+		mc.registerCommand("manageshop", new Manageshop());
+		mc.registerCommand("notify", new Notify());
+		mc.registerCommand("objectsettings", new Objectsettings());
+		mc.registerCommand("removedisplay", new Removedisplay());
+		mc.registerCommand("repairsigns", new Repairsigns());
+		mc.registerCommand("scalebypercent", new Scalebypercent());
+		mc.registerCommand("sell", new Sell());
+		mc.registerCommand("sellall", new Sellall());
+		mc.registerCommand("servershop", new Servershopcommand());
+		mc.registerCommand("setchestowner", new Setchestowner());
+		mc.registerCommand("seteconomy", new Seteconomy());
+		mc.registerCommand("setlanguage", new Setlanguage());
+		mc.registerCommand("setpassword", new Setpassword());
+		mc.registerCommand("settax", new Settax());
+		mc.registerCommand("taxsettings", new Taxsettings());
+		mc.registerCommand("toggleeconomy", new Toggleeconomy());
+		mc.registerCommand("topenchants", new Topenchants());
+		mc.registerCommand("topitems", new Topitems());
+		mc.registerCommand("value", new Value());
+		mc.registerCommand("xpinfo", new Xpinfo());
 	}
 
+	/*
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (hl.loadLock()) {
 			hl.sendLockMessage(sender);
@@ -258,7 +310,7 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 			}
 		}
 	}
-	
+	*/
 	
 
 

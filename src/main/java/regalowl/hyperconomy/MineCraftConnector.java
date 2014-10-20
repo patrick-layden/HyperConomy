@@ -4,6 +4,7 @@ package regalowl.hyperconomy;
 import net.milkbowl.vault.economy.Economy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.command.HyperCommand;
+import regalowl.hyperconomy.serializable.SerializableEnchantment;
 import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.util.SimpleLocation;
@@ -39,11 +40,20 @@ public interface MineCraftConnector {
 	public BukkitConnector getConnector();
 	
 	public SimpleLocation getLocation(HyperPlayer hp);
+	public SimpleLocation getTargetLocation(HyperPlayer hp);
+	public SimpleLocation getLocationBeforeTargetLocation(HyperPlayer hp);
+	public void teleport(HyperPlayer hp, SimpleLocation sl);
+	public void sendMessage(HyperPlayer hp, String message);
+	public String applyColor(String text);
+	
 	public SerializableInventory getInventory(HyperPlayer hp);
+	public SerializableInventory getChestInventory(SimpleLocation l);
 	public void setInventory(SerializableInventory inventory);
 	public SerializableItemStack getItem(HyperPlayer hp, int slot);
+	public int getHeldItemSlot(HyperPlayer hp);
 	public void setItem(HyperPlayer hp, SerializableItemStack item, int slot);
 	
-
+	public boolean conflictsWith(SerializableEnchantment e1, SerializableEnchantment e2);
+	public boolean canEnchantItem(SerializableItemStack item);
 
 }

@@ -3,13 +3,12 @@ package regalowl.hyperconomy.serializable;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.account.HyperPlayer;
  
 
 public class SerializableItemStack extends SerializableObject implements Serializable {
@@ -22,8 +21,13 @@ public class SerializableItemStack extends SerializableObject implements Seriali
     private int amount;
     private int maxStackSize;
     private int maxDurability;
+    private boolean isBlank;
   
  
+    public SerializableItemStack() {
+    	this.isBlank = true;
+    	this.material = "AIR";
+    }
     
     public SerializableItemStack(SerializableItemMeta itemMeta, String material, short durability, byte data, int amount, int maxStackSize, int maxDurability) {
     	this.itemMeta = itemMeta;
@@ -33,6 +37,7 @@ public class SerializableItemStack extends SerializableObject implements Seriali
     	this.amount = amount;
     	this.maxStackSize = maxStackSize;
     	this.maxDurability = maxDurability;
+    	this.isBlank = false;
     }
     
 
@@ -53,7 +58,7 @@ public class SerializableItemStack extends SerializableObject implements Seriali
     	}
     }
 
-	public void displayInfo(Player p, ChatColor color1, ChatColor color2) {
+	public void displayInfo(HyperPlayer p, String color1, String color2) {
 		p.sendMessage(color1 + "Material: " + color2 + material);
 		p.sendMessage(color1 + "Durability: " + color2 + durability);
 		p.sendMessage(color1 + "Data: " + color2 + data);
@@ -66,10 +71,6 @@ public class SerializableItemStack extends SerializableObject implements Seriali
 		return material;
 	}
 	
-	public Material getMaterialEnum() {
-		return Material.matchMaterial(material);
-	}
-
 	public short getDurability() {
 		return durability;
 	}
@@ -97,16 +98,76 @@ public class SerializableItemStack extends SerializableObject implements Seriali
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-
 	
+	
+	public boolean considerDamage() {
+		boolean ignoreDamage = HyperConomy.hc.getConf().getBoolean("enable-feature.treat-damaged-items-as-equals-to-undamaged-ones");
+		if (!ignoreDamage) return true;
+		if (maxDurability > 0) return false;
+		return true;
+	}
+	
+	public double getDurabilityPercent() {return (isDurable()) ? (1 - (durability / maxDurability)) : 1.0;}
+	public boolean isDurable() {return (maxDurability > 0) ? true : false;}
+	public boolean isDamaged() {return (isDurable() && durability > 0) ? true : false;}
+	
+	public void setBlank() {
+		this.isBlank = true;
+	}
+	public boolean isBlank() {
+		return isBlank;
+	}
+	
+	public boolean canEnchantItem() {
+		if (material.equalsIgnoreCase("AIR")) return false;
+		if (material.equalsIgnoreCase("BOOK")) return true;
+		return HyperConomy.hc.getMC().canEnchantItem(this);
+	}
+	
+	public boolean canAcceptEnchantment(SerializableEnchantment e) {
+		if (material.equalsIgnoreCase("AIR")) return false;
+		if (material.equalsIgnoreCase("BOOK")) return true;
+		if (material.equalsIgnoreCase("ENCHANTED_BOOK")) return false;
+		if (amount > 1) return false;
+		if (itemMeta != null) {
+			for (SerializableEnchantment en:itemMeta.getEnchantments()) {
+				if (HyperConomy.hc.getMC().conflictsWith(e, en)) return false;
+			}
+		}
+		return canEnchantItem();
+	}
+	
+	public boolean containsEnchantment(SerializableEnchantment e) {
+		if (itemMeta == null) return false;
+		return itemMeta.containsEnchantment(e);
+	}
+	
+	public void addEnchantment(SerializableEnchantment e) {
+		if (itemMeta == null) itemMeta = new SerializableItemMeta("", new ArrayList<String>(), new ArrayList<SerializableEnchantment>());
+		itemMeta.addEnchantment(e);
+	}
+	
+	public void removeEnchantment(SerializableEnchantment e) {
+		if (itemMeta == null) return;
+		itemMeta.removeEnchantment(e);
+	}
+	
+	public boolean hasEnchantments() {
+		if (itemMeta == null) return false;
+		return itemMeta.hasEnchantments();
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + data;
 		result = prime * result + durability;
+		result = prime * result + (isBlank ? 1231 : 1237);
 		result = prime * result + ((itemMeta == null) ? 0 : itemMeta.hashCode());
 		result = prime * result + ((material == null) ? 0 : material.hashCode());
+		result = prime * result + maxDurability;
+		result = prime * result + maxStackSize;
 		return result;
 	}
 
@@ -119,12 +180,12 @@ public class SerializableItemStack extends SerializableObject implements Seriali
 		if (getClass() != obj.getClass())
 			return false;
 		SerializableItemStack other = (SerializableItemStack) obj;
-		if (considerDamage()) {
-			if (data != other.data)
-				return false;
-			if (durability != other.durability)
-				return false;
-		}
+		if (data != other.data)
+			return false;
+		if (durability != other.durability)
+			return false;
+		if (isBlank != other.isBlank)
+			return false;
 		if (itemMeta == null) {
 			if (other.itemMeta != null)
 				return false;
@@ -135,19 +196,15 @@ public class SerializableItemStack extends SerializableObject implements Seriali
 				return false;
 		} else if (!material.equals(other.material))
 			return false;
-		return true;
-	}
-	
-	public boolean considerDamage() {
-		Material m = Material.matchMaterial(material);
-		boolean ignoreDamage = HyperConomy.hc.getConf().getBoolean("enable-feature.treat-damaged-items-as-equals-to-undamaged-ones");
-		if (!ignoreDamage) {
-			return true;
-		}
-		if (m != null && m.getMaxDurability() > 0) {
+		if (maxDurability != other.maxDurability)
 			return false;
-		}
+		if (maxStackSize != other.maxStackSize)
+			return false;
 		return true;
 	}
+
+	
+
+
 
 }

@@ -1,27 +1,25 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Objectsettings {
-	Objectsettings(String args[], CommandSender sender, Player player, String playerecon) {
-		HyperConomy hc = HyperConomy.hc;
-		DataManager em = hc.getDataManager();
-		LanguageFile L = hc.getLanguageFile();
+import regalowl.hyperconomy.hyperobject.HyperObject;
+
+public class Objectsettings extends BaseCommand implements HyperCommand {
+
+	public Objectsettings() {
+		super(false);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		try {
-			if (args.length == 0 && player != null) {
-				HyperPlayer hp = em.getHyperPlayer(player);
+			if (args.length == 0) {
 				HyperEconomy he = hp.getHyperEconomy();
-				HyperObject hob = he.getHyperObject(player.getItemInHand());
+				HyperObject hob = he.getHyperObject(hp.getItemInHand());
 				if (hob == null) {
-					sender.sendMessage(L.get("OBJECT_NOT_IN_DATABASE"));
+					data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 				} else {
 					String nam = hob.getName();
 					double val = 0;
@@ -47,24 +45,24 @@ public class Objectsettings {
 					double ceiling = ho.getCeiling();
 					double floor = ho.getFloor();
 					String objectType = ho.getClass().getSimpleName();
-					sender.sendMessage(L.get("LINE_BREAK"));
-					sender.sendMessage(L.f(L.get("SETTINGS_NAME"), nam));
-					sender.sendMessage(L.f(L.get("SETTINGS_DISPLAY"), ho.getDisplayName()));
-					sender.sendMessage(L.f(L.get("SETTINGS_ALIAS"), ho.getAliasesString()));
-					sender.sendMessage(L.f(L.get("SETTINGS_VALUE"), val));
-					sender.sendMessage(L.f(L.get("SETTINGS_STARTPRICE"), starprice, init));
-					sender.sendMessage(L.f(L.get("SETTINGS_STATICPRICE"), statprice, stat));
-					sender.sendMessage(L.f(L.get("SETTINGS_STOCK"), sto));
-					sender.sendMessage(L.f(L.get("SETTINGS_TOTAL_STOCK"), tsto));
-					sender.sendMessage(L.f(L.get("SETTINGS_MEDIAN"), med));
-					sender.sendMessage(L.f(L.get("SETTINGS_CEILING"), ceiling));
-					sender.sendMessage(L.f(L.get("SETTINGS_FLOOR"), floor));
-					sender.sendMessage(L.f(L.get("SETTINGS_REACH_HYPERBOLIC"), maxinitialitems));
-					sender.sendMessage(L.f(L.get("SETTINGS_TYPE"), objectType));
-    				sender.sendMessage(L.get("LINE_BREAK"));
+					data.addResponse(L.get("LINE_BREAK"));
+					data.addResponse(L.f(L.get("SETTINGS_NAME"), nam));
+					data.addResponse(L.f(L.get("SETTINGS_DISPLAY"), ho.getDisplayName()));
+					data.addResponse(L.f(L.get("SETTINGS_ALIAS"), ho.getAliasesString()));
+					data.addResponse(L.f(L.get("SETTINGS_VALUE"), val));
+					data.addResponse(L.f(L.get("SETTINGS_STARTPRICE"), starprice, init));
+					data.addResponse(L.f(L.get("SETTINGS_STATICPRICE"), statprice, stat));
+					data.addResponse(L.f(L.get("SETTINGS_STOCK"), sto));
+					data.addResponse(L.f(L.get("SETTINGS_TOTAL_STOCK"), tsto));
+					data.addResponse(L.f(L.get("SETTINGS_MEDIAN"), med));
+					data.addResponse(L.f(L.get("SETTINGS_CEILING"), ceiling));
+					data.addResponse(L.f(L.get("SETTINGS_FLOOR"), floor));
+					data.addResponse(L.f(L.get("SETTINGS_REACH_HYPERBOLIC"), maxinitialitems));
+					data.addResponse(L.f(L.get("SETTINGS_TYPE"), objectType));
+    				data.addResponse(L.get("LINE_BREAK"));
 				}
 			} else if (args.length == 1) {
-				HyperEconomy he = em.getEconomy(playerecon);
+				HyperEconomy he = super.getEconomy();
 				String nam = he.fixName(args[0]);
 				if (he.objectTest(nam)) {
 					double val = 0;
@@ -90,29 +88,30 @@ public class Objectsettings {
 					double ceiling = ho.getCeiling();
 					double floor = ho.getFloor();
 					String objectType = ho.getClass().getSimpleName();
-					sender.sendMessage(L.get("LINE_BREAK"));
-					sender.sendMessage(L.f(L.get("SETTINGS_NAME"), nam));
-					sender.sendMessage(L.f(L.get("SETTINGS_DISPLAY"), ho.getDisplayName()));
-					sender.sendMessage(L.f(L.get("SETTINGS_ALIAS"), ho.getAliasesString()));
-					sender.sendMessage(L.f(L.get("SETTINGS_VALUE"), val));
-					sender.sendMessage(L.f(L.get("SETTINGS_STARTPRICE"), starprice, init));
-					sender.sendMessage(L.f(L.get("SETTINGS_STATICPRICE"), statprice, stat));
-					sender.sendMessage(L.f(L.get("SETTINGS_STOCK"), sto));
-					sender.sendMessage(L.f(L.get("SETTINGS_TOTAL_STOCK"), tsto));
-					sender.sendMessage(L.f(L.get("SETTINGS_MEDIAN"), med));
-					sender.sendMessage(L.f(L.get("SETTINGS_CEILING"), ceiling));
-					sender.sendMessage(L.f(L.get("SETTINGS_FLOOR"), floor));
-					sender.sendMessage(L.f(L.get("SETTINGS_REACH_HYPERBOLIC"), maxinitialitems));
-					sender.sendMessage(L.f(L.get("SETTINGS_TYPE"), objectType));
-    				sender.sendMessage(L.get("LINE_BREAK"));
+					data.addResponse(L.get("LINE_BREAK"));
+					data.addResponse(L.f(L.get("SETTINGS_NAME"), nam));
+					data.addResponse(L.f(L.get("SETTINGS_DISPLAY"), ho.getDisplayName()));
+					data.addResponse(L.f(L.get("SETTINGS_ALIAS"), ho.getAliasesString()));
+					data.addResponse(L.f(L.get("SETTINGS_VALUE"), val));
+					data.addResponse(L.f(L.get("SETTINGS_STARTPRICE"), starprice, init));
+					data.addResponse(L.f(L.get("SETTINGS_STATICPRICE"), statprice, stat));
+					data.addResponse(L.f(L.get("SETTINGS_STOCK"), sto));
+					data.addResponse(L.f(L.get("SETTINGS_TOTAL_STOCK"), tsto));
+					data.addResponse(L.f(L.get("SETTINGS_MEDIAN"), med));
+					data.addResponse(L.f(L.get("SETTINGS_CEILING"), ceiling));
+					data.addResponse(L.f(L.get("SETTINGS_FLOOR"), floor));
+					data.addResponse(L.f(L.get("SETTINGS_REACH_HYPERBOLIC"), maxinitialitems));
+					data.addResponse(L.f(L.get("SETTINGS_TYPE"), objectType));
+    				data.addResponse(L.get("LINE_BREAK"));
 				} else {
-	    			sender.sendMessage(L.get("INVALID_ITEM_NAME"));
+	    			data.addResponse(L.get("INVALID_ITEM_NAME"));
 	    		}  
 			} else {
-				sender.sendMessage(L.get("ITEMSETTINGS_INVALID"));
+				data.addResponse(L.get("ITEMSETTINGS_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("ITEMSETTINGS_INVALID"));
+			data.addResponse(L.get("ITEMSETTINGS_INVALID"));
 		}
+		return data;
 	}
 }

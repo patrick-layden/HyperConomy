@@ -16,6 +16,7 @@ import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 public class HyperItemStack {
 
+	/*
 	private HyperConomy hc;
 	private ItemStack stack;
 	
@@ -287,6 +288,6 @@ public class HyperItemStack {
 	}
 	
 
-
+*/
 	
 }

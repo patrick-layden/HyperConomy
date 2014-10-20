@@ -290,7 +290,7 @@ public class HyperAPI implements API {
 			ItemStack stack = inventory.getItem(slot);
 			HyperObject hyperItem = he.getHyperObject(stack, em.getHyperShopManager().getShop(hp.getPlayer()));
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-			pt.setGiveInventory(inventory);
+			pt.setGiveInventory(hp.getInventory());
 			pt.setHyperObject(hyperItem);
 			pt.setAmount(stack.getAmount());
 			TransactionResponse response = hp.processTransaction(pt);

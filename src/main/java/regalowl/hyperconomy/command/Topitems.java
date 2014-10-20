@@ -5,37 +5,38 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Topitems {
-	Topitems(String args[], Player player, CommandSender sender, String playerecon) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
-		HyperEconomy he = hc.getDataManager().getEconomy(playerecon);
-		DataManager em = hc.getDataManager();
+
+public class Topitems extends BaseCommand implements HyperCommand {
+
+
+	public Topitems() {
+		super(false);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
+		HyperEconomy he = super.getEconomy();
 		try {
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
 			if (args.length > 1) {
-				sender.sendMessage(L.get("TOPITEMS_INVALID"));
-				return;
+				data.addResponse(L.get("TOPITEMS_INVALID"));
+				return data;
 			}
 			Shop s = null;
-			if (player != null) {
-				if (em.getHyperShopManager().inAnyShop(player)) {
-					s = em.getHyperShopManager().getShop(player);
+			if (hp != null) {
+				if (dm.getHyperShopManager().inAnyShop(hp)) {
+					s = dm.getHyperShopManager().getShop(hp);
 				} 
-				if (requireShop && em.getHyperShopManager().getShop(player) == null && !player.hasPermission("hyperconomy.admin")) {
-					sender.sendMessage(L.get("REQUIRE_SHOP_FOR_INFO"));
-					return;
+				if (requireShop && dm.getHyperShopManager().getShop(hp) == null && !hp.hasPermission("hyperconomy.admin")) {
+					data.addResponse(L.get("REQUIRE_SHOP_FOR_INFO"));
+					return data;
 				}
 			}
 			int page;
@@ -61,7 +62,7 @@ public class Topitems {
 					if (ho.isShopObject()) {
 						if (s instanceof PlayerShop) {
 							PlayerShop ps = (PlayerShop)s;
-							allowed = ps.isAllowed(em.getHyperPlayer(player));
+							allowed = ps.isAllowed(hp);
 						}
 					}
 					if ((!banned && stocked) || (allowed && stocked)) {
@@ -87,26 +88,27 @@ public class Topitems {
 			double maxpages = le / 10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int) maxpages + 1;
-			sender.sendMessage(L.f(L.get("PAGE_NUMBER"), page, maxpi));
+			data.addResponse(L.f(L.get("PAGE_NUMBER"), page, maxpi));
 			try {
 				while (count < numberpage) {
 					double lk = itemstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
 						HyperObject ho = itemstocks.get(lk);
 						if (ho.isShopObject()) {
-							sender.sendMessage(L.applyColor("&f"+ho.getDisplayName() + ": &a" + hc.gCF().twoDecimals(ho.getStock()) + " &f(&e" + ho.getStatus().toString() + "&f)" ));
+							data.addResponse(L.applyColor("&f"+ho.getDisplayName() + ": &a" + hc.gCF().twoDecimals(ho.getStock()) + " &f(&e" + ho.getStatus().toString() + "&f)" ));
 						} else {
-							sender.sendMessage(ChatColor.WHITE + ho.getDisplayName() + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + hc.gCF().twoDecimals(ho.getStock()));
+							data.addResponse(ChatColor.WHITE + ho.getDisplayName() + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + hc.gCF().twoDecimals(ho.getStock()));
 						}
 					}
 					itemstocks.remove(lk);
 					count++;
 				}
 			} catch (Exception e) {
-				sender.sendMessage(L.get("YOU_HAVE_REACHED_THE_END"));
+				data.addResponse(L.get("YOU_HAVE_REACHED_THE_END"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("TOPITEMS_INVALID"));
+			data.addResponse(L.get("TOPITEMS_INVALID"));
 		}
+		return data;
 	}
 }

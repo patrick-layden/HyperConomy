@@ -15,7 +15,7 @@ import regalowl.hyperconomy.shop.Shop;
 
 public class Hcbank extends BaseCommand implements HyperCommand {
 	
-	public Hcbank(boolean requirePlayer) {
+	public Hcbank() {
 		super(true);
 	}
 

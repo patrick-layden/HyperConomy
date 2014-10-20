@@ -6,11 +6,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.account.HyperPlayer;
  
 
 public class SerializableItemMeta extends SerializableObject implements Serializable {
@@ -18,7 +17,7 @@ public class SerializableItemMeta extends SerializableObject implements Serializ
 	private static final long serialVersionUID = 4510326523024526205L;
 	
 	protected String displayName;
-	protected List<String> lore;
+	protected List<String> lore = new ArrayList<String>();
 	protected List<SerializableEnchantment> enchantments = new ArrayList<SerializableEnchantment>();
  
 	
@@ -44,7 +43,7 @@ public class SerializableItemMeta extends SerializableObject implements Serializ
     	}
     }
 	
-	public void displayInfo(Player p, ChatColor color1, ChatColor color2) {
+	public void displayInfo(HyperPlayer p, String color1, String color2) {
 		p.sendMessage(color1 + "Display Name: " + color2 + displayName);
 		String loreString = "";
 		if (lore != null && lore.size() > 0) {
@@ -75,6 +74,27 @@ public class SerializableItemMeta extends SerializableObject implements Serializ
 	
 	public List<SerializableEnchantment> getEnchantments() {
 		return enchantments;
+	}
+	
+	public boolean hasEnchantments() {
+		if (enchantments.size() > 0) return true;
+		return false;
+	}
+	
+	public void addEnchantment(SerializableEnchantment e) {
+		enchantments.add(e);
+	}
+	
+	public void removeEnchantment(SerializableEnchantment e) {
+		if (containsEnchantment(e)) enchantments.remove(e);
+	}
+
+	
+	public boolean containsEnchantment(SerializableEnchantment e) {
+		for (SerializableEnchantment se:enchantments) {
+			if (se.equals(e)) return true;
+		}
+		return false;
 	}
 	
 	

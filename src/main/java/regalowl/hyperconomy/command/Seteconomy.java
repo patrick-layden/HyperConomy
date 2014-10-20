@@ -1,38 +1,38 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Seteconomy {
-	Seteconomy(_Command command, String args[], CommandSender sender, Player player) {
-		HyperConomy hc = HyperConomy.hc;
-		DataManager em = hc.getDataManager();
-		LanguageFile L = hc.getLanguageFile();
+public class Seteconomy extends BaseCommand implements HyperCommand {
+
+	public Seteconomy() {
+		super(false);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		try {
 			if (args.length == 1) {
 				String economy = args[0];
-				if (em.economyExists(economy)) {
-					if (player != null) {
-						em.getHyperPlayer(player).setEconomy(economy);
-						sender.sendMessage(L.get("ECONOMY_SET"));
+				if (dm.economyExists(economy)) {
+					if (hp != null) {
+						hp.setEconomy(economy);
+						data.addResponse(L.get("ECONOMY_SET"));
 					} else {
-						command.setNonPlayerEconomy(economy);
+						cs.setConsoleEconomy(economy);
 						hc.getConsoleSettings().setConsoleEconomy(economy);
-						sender.sendMessage(L.get("ECONOMY_SET"));
+						data.addResponse(L.get("ECONOMY_SET"));
 					}
 				} else {
-					sender.sendMessage(L.get("ECONOMY_NOT_EXIST"));
+					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
 				}
 
 			} else {
-				sender.sendMessage(L.get("SETECONOMY_INVALID"));
+				data.addResponse(L.get("SETECONOMY_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("SETECONOMY_INVALID"));
+			data.addResponse(L.get("SETECONOMY_INVALID"));
 		}
+		return data;
 	}
 }

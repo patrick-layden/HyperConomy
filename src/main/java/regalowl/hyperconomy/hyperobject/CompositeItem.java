@@ -245,7 +245,7 @@ public class CompositeItem extends ComponentItem implements HyperObject {
 	}
 	@Override
 	public double getSellPrice(double amount, HyperPlayer hp) {
-		return getSellPrice(amount) * getDamageMultiplier((int)Math.ceil(amount), hp.getPlayer().getInventory());
+		return getSellPrice(amount) * getDamageMultiplier((int)Math.ceil(amount), hp.getInventory());
 	}
 	
 

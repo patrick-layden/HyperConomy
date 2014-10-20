@@ -260,9 +260,9 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	@Override
 	public void setPoint2(String world, int x, int y, int z) {}
 	@Override
-	public void setPoint1(Location l) {}
+	public void setPoint1(SimpleLocation l) {}
 	@Override
-	public void setPoint2(Location l) {}
+	public void setPoint2(SimpleLocation l) {}
 	@Override
 	public void setMessage(String message) {}
 	@Override

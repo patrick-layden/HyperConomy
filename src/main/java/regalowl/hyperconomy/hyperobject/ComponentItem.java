@@ -5,11 +5,6 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -41,7 +36,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		Image i = null;
 		URL url = null;
 		SerializableItemStack sis = getSIS();
-		if (sis.getMaterialEnum() == Material.POTION) {
+		if (sis.getMaterial().equalsIgnoreCase("POTION")) {
 			url = hc.getClass().getClassLoader().getResource("Images/potion.png");
 		} else {
 			url = hc.getClass().getClassLoader().getResource("Images/" + sis.getMaterial().toLowerCase() + "_" + sis.getData() + ".png");
@@ -55,15 +50,6 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		return null;
 	}
 
-	@Override
-	public boolean isDurable() {
-		SerializableItemStack sis = getSIS();
-		if (sis.getMaterialEnum() != null && sis.getMaterialEnum().getMaxDurability() > 0) {
-			return true;
-		}
-		return false;
-	}
-	
 
 	@Override
 	public double getSellPrice(double amount, HyperPlayer hp) {
@@ -90,7 +76,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 			int availablespace = 0;
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				SerializableItemStack currentItem = inventory.getItem(slot);
-				if (currentItem == null) {
+				if (currentItem == null || currentItem.isBlank()) {
 					availablespace += maxstack;
 				} else if (matchesItemStack(currentItem)) {
 					availablespace += (maxstack - currentItem.getAmount());
@@ -123,6 +109,11 @@ public class ComponentItem extends BasicObject implements HyperObject {
 	public String getData() {
 		return base64Item;
 	}
+	
+	@Override
+	public void setItemStack(SerializableItemStack stack) {
+		setData(stack.serialize());
+	}
 	@Override
 	public void setData(String data) {
 		HyperConomy hc = HyperConomy.hc;
@@ -132,8 +123,7 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 
-	
-	@SuppressWarnings("deprecation")
+
 	@Override
 	public void add(int amount, SerializableInventory inventory) {
 		HyperConomy hc = HyperConomy.hc;
@@ -185,10 +175,10 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				if (matchesItemStack(heldStack)) {
 					if (amount >= heldStack.getAmount()) {
 						amount -= heldStack.getAmount();
-						amountRemoved += heldStack.getAmount() * getDurabilityPercent(heldStack);
+						amountRemoved += heldStack.getAmount() * heldStack.getDurabilityPercent();
 						inventory.clearSlot(inventory.getHeldSlot());
 					} else {
-						amountRemoved += amount * getDurabilityPercent(heldStack);
+						amountRemoved += amount * heldStack.getDurabilityPercent();
 						heldStack.setAmount(heldStack.getAmount() - amount);
 						inventory.updateInventory();
 						return amountRemoved;
@@ -200,10 +190,10 @@ public class ComponentItem extends BasicObject implements HyperObject {
 				if (matchesItemStack(currentItem)) {
 					if (amount >= currentItem.getAmount()) {
 						amount -= currentItem.getAmount();
-						amountRemoved += currentItem.getAmount() * getDurabilityPercent(currentItem);
+						amountRemoved += currentItem.getAmount() * currentItem.getDurabilityPercent();
 						inventory.clearSlot(slot);
 					} else {
-						amountRemoved += amount * getDurabilityPercent(currentItem);
+						amountRemoved += amount * currentItem.getDurabilityPercent();
 						currentItem.setAmount(currentItem.getAmount() - amount);
 						inventory.updateInventory();
 						return amountRemoved;
@@ -236,8 +226,8 @@ public class ComponentItem extends BasicObject implements HyperObject {
 			int heldslot = -1;
 			if (inventory.getInventoryType() == SerializableInventoryType.PLAYER) {
 				SerializableItemStack ci = inventory.getHeldItem();
-				if (ci.getMaterial().equals(sis.getMaterial()) && !new HyperItemStack(ci).hasEnchants()) {
-					damage += getDurabilityPercent(ci);
+				if (ci.equals(sis)) {
+					damage += ci.getDurabilityPercent();
 					totalitems++;
 					heldslot = inventory.getHeldSlot();
 					if (totalitems >= amount) {return damage;}
@@ -246,10 +236,8 @@ public class ComponentItem extends BasicObject implements HyperObject {
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				if (slot == heldslot) {continue;}
 				SerializableItemStack ci = inventory.getItem(slot);
-				if (ci == null) {continue;}
-				if (!(ci.getMaterial().equals(sis.getMaterial()))) {continue;}
-				if (new HyperItemStack(ci).hasEnchants()) {continue;}
-				damage += getDurabilityPercent(ci);
+				if (!ci.equals(sis)) {continue;}
+				damage += ci.getDurabilityPercent();
 				totalitems++;
 				if (totalitems >= amount) {break;}
 			}
@@ -263,33 +251,5 @@ public class ComponentItem extends BasicObject implements HyperObject {
 		}
 	}
 
-	private double getDurabilityPercent(SerializableItemStack stack) {
-		double currentDurability = stack.getDurability();
-		double maxDurability = stack.getMaxDurability();
-		if (maxDurability == 0) {return 1;}
-		return Math.abs(1 - (currentDurability / maxDurability));
-	}
-	
-	@Override
-	public double getDurabilityPercent() {
-		SerializableItemStack sis = getSIS();
-		double durabilityMultiplier = 1;
-		if (isDurable()) {
-			double maxDurability = sis.getMaterialEnum().getMaxDurability();
-			durabilityMultiplier = (1 - sis.getDurability() / maxDurability);
-		}
-		return durabilityMultiplier;
-	}
-	
-	@Override
-	public boolean isDamaged() {
-		SerializableItemStack sis = getSIS();
-		if (sis.getMaterialEnum().getMaxDurability() > 0) {
-			if (sis.getDurability() > 0) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 }

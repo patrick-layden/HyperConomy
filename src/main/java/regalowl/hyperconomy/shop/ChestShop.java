@@ -463,7 +463,7 @@ public class ChestShop implements Listener {
 				icevent.setCancelled(true);
 				return;
 			}
-			HyperItemStack his = new HyperItemStack(clickedItem);
+			//HyperItemStack his = new HyperItemStack(clickedItem);
 			if (his.isDamaged()) {
 				icevent.setCancelled(true);
 				p.sendMessage(L.get("CHESTSHOP_CANT_TRADE_DAMAGED"));

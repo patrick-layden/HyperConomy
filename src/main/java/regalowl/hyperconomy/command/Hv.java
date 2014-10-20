@@ -2,19 +2,12 @@ package regalowl.hyperconomy.command;
 
 import java.util.Iterator;
 
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.serializable.SerializableEnchantment;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 public class Hv extends BaseCommand implements HyperCommand {
 	public Hv() {
@@ -28,8 +21,8 @@ public class Hv extends BaseCommand implements HyperCommand {
 		try {
 			HyperEconomy he = getEconomy();
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
-			if ((requireShop && dm.getHyperShopManager().inAnyShop(player)) || !requireShop || player.hasPermission("hyperconomy.admin")) {
-				ItemStack iinhand = player.getItemInHand();
+			if ((requireShop && dm.getHyperShopManager().inAnyShop(hp)) || !requireShop || hp.hasPermission("hyperconomy.admin")) {
+				SerializableItemStack iinhand = hp.getItemInHand();
 				if (args.length == 0) {
 					amount = 1;
 				} else {
@@ -38,15 +31,15 @@ public class Hv extends BaseCommand implements HyperCommand {
 						amount = 10000;
 					}
 				}
-				if (!new HyperItemStack(iinhand).hasEnchants()) {
-					HyperObject ho = he.getHyperObject(player.getItemInHand(), em.getHyperShopManager().getShop(player));
+				if (!iinhand.hasEnchantments()) {
+					HyperObject ho = he.getHyperObject(iinhand, dm.getHyperShopManager().getShop(hp));
 					if (ho == null) {
 						data.addResponse(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
 						String displayName = ho.getDisplayName();
 						double val = ho.getSellPrice(amount, hp);
 						if (ho.isDurable() && amount > 1) {
-							int numberofitem = ho.count(player.getInventory());
+							int numberofitem = ho.count(hp.getInventory());
 							if (amount - numberofitem > 0) {
 								int addamount = amount - numberofitem;
 								val = val + ho.getSellPrice(addamount);
@@ -66,19 +59,15 @@ public class Hv extends BaseCommand implements HyperCommand {
 						data.addResponse(L.get("LINE_BREAK"));
 					}
 				} else {
-					player.getItemInHand().getEnchantments().keySet().toArray();
-					Iterator<Enchantment> ite = player.getItemInHand().getEnchantments().keySet().iterator();
+					Iterator<SerializableEnchantment> ite = iinhand.getItemMeta().getEnchantments().iterator();
 					data.addResponse(L.get("LINE_BREAK"));
 					while (ite.hasNext()) {
-						String rawstring = ite.next().toString();
-						String enchname = rawstring.substring(rawstring.indexOf(",") + 2, rawstring.length() - 1);
-						Enchantment en = null;
-						en = Enchantment.getByName(enchname);
-						int lvl = player.getItemInHand().getEnchantmentLevel(en);
-						String enam = he.getEnchantNameWithoutLevel(enchname);
+						SerializableEnchantment ench = ite.next();
+						int lvl = ench.getLvl();
+						String enam = ench.getEnchantmentName();
 						String fnam = enam + lvl;
-						String mater = player.getItemInHand().getType().name();
-						HyperObject ho = he.getHyperObject(fnam, em.getHyperShopManager().getShop(player));
+						String mater = hp.getItemInHand().getMaterial();
+						HyperObject ho = he.getHyperObject(fnam, dm.getHyperShopManager().getShop(hp));
 						double value = ho.getSellPrice(EnchantmentClass.fromString(mater), hp);
 						double cost = ho.getBuyPrice(EnchantmentClass.fromString(mater));
 						cost = cost + ho.getPurchaseTax(cost);
@@ -89,7 +78,7 @@ public class Hv extends BaseCommand implements HyperCommand {
 						value = cf.twoDecimals(value - salestax);
 						data.addResponse(L.f(L.get("EVALUE_SALE"), value, fnam));
 						data.addResponse(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-						data.addResponse(L.f(L.get("EVALUE_STOCK"), cf.twoDecimals(he.getHyperObject(fnam, em.getHyperShopManager().getShop(player)).getStock()), fnam));
+						data.addResponse(L.f(L.get("EVALUE_STOCK"), cf.twoDecimals(he.getHyperObject(fnam, dm.getHyperShopManager().getShop(hp)).getStock()), fnam));
 					}
 					data.addResponse(L.get("LINE_BREAK"));
 				}
@@ -99,5 +88,6 @@ public class Hv extends BaseCommand implements HyperCommand {
 		} catch (Exception e) {
 			data.addResponse(L.get("HV_INVALID"));
 		}
+		return data;
 	}
 }

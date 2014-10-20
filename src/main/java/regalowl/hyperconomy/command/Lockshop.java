@@ -1,44 +1,44 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 
-import regalowl.hyperconomy.HyperConomy;
 
 import regalowl.hyperconomy.util.HyperLock;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Lockshop implements CommandExecutor {
+public class Lockshop extends BaseCommand implements HyperCommand {
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		HyperConomy hc = HyperConomy.hc;
+	public Lockshop() {
+		super(false);
+	}
+
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		HyperLock hl = hc.getHyperLock();
-		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (hl.fullLock()) {
-				return true;
+				return data;
 			}
 			if (args.length == 0) {
 				if (hl.playerLock()) {
 					hl.setPlayerLock(false);
-					sender.sendMessage(L.get("SHOP_UNLOCKED"));
-					return true;
+					data.addResponse(L.get("SHOP_UNLOCKED"));
+					return data;
 				} else if (!hl.playerLock()) {
 					hl.setPlayerLock(true);
-					sender.sendMessage(L.get("SHOP_LOCKED"));
-					return true;
+					data.addResponse(L.get("SHOP_LOCKED"));
+					return data;
 				} else {
-					sender.sendMessage(L.get("FIX_YML_FILE"));
-					return true;
+					data.addResponse(L.get("FIX_YML_FILE"));
+					return data;
 				}
 			} else {
-				sender.sendMessage(L.get("LOCKSHOP_INVALID"));
-				return true;
+				data.addResponse(L.get("LOCKSHOP_INVALID"));
+				return data;
 			}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("LOCKSHOP_INVALID"));
-			return true;
+			data.addResponse(L.get("LOCKSHOP_INVALID"));
+			return data;
 		}
 	}
 }

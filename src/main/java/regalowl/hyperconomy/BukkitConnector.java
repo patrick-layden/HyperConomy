@@ -12,11 +12,14 @@ import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Builder;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -26,7 +29,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
@@ -94,9 +96,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	//JavaPlugin Bukkit methods
 	@Override
 	public void onLoad() {
-		if (hc == null) {
-			hc = new HyperConomy(this);
-		}
+		if (hc == null) hc = new HyperConomy(this);
 		hc.load();
 	}
 	@Override
@@ -119,6 +119,8 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 			for (String response: data.getResponse()) {
 				sender.sendMessage(response);
 			}
+		} else {
+			hc.getDebugMode().syncDebugConsoleMessage("Command not found: " + cmd.getName());
 		}
 		return true;
 	}
@@ -247,6 +249,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public void runTask(Runnable r) {
+		hc.log().severe("BukkitConnector runTask(): " + r.getClass().getSimpleName());
 		getServer().getScheduler().runTask(this, r);
 	}
 	@Override
@@ -312,6 +315,36 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		}
 		return false;
 	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public SimpleLocation getTargetLocation(HyperPlayer hp) {
+		try {
+			Player p = Bukkit.getPlayer(hp.getName());
+			if (p == null) return null;
+			Location l = p.getTargetBlock(null, 500).getLocation();
+			SimpleLocation sl = new SimpleLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
+			return sl;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	@SuppressWarnings("deprecation")
+	@Override
+	public SimpleLocation getLocationBeforeTargetLocation(HyperPlayer hp) {
+		try {
+			Player p = Bukkit.getPlayer(hp.getName());
+			if (p == null) return null;
+			List<Block> ltb = p.getLastTwoTargetBlocks(null, 500);
+			Block b = ltb.get(0);
+			Location l = b.getLocation();
+			SimpleLocation sl = new SimpleLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
+			return sl;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+		
 
 
 
@@ -327,6 +360,24 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		@SuppressWarnings("deprecation")
 		Location l = Bukkit.getPlayer(hp.getName()).getLocation();
 		return new SimpleLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
+	}
+	
+	
+	
+	@Override
+	public boolean conflictsWith(SerializableEnchantment e1, SerializableEnchantment e2) {
+		Enchantment ench1 = Enchantment.getByName(e1.getEnchantmentName());
+		Enchantment ench2 = Enchantment.getByName(e2.getEnchantmentName());
+		return ench1.conflictsWith(ench2);
+	}
+	
+	@Override
+	public boolean canEnchantItem(SerializableItemStack item) {
+		ItemStack s = getItemStack(item);
+		for (Enchantment enchant:Enchantment.values()) {
+			if (enchant.canEnchantItem(s)) return true;
+		}
+		return false;
 	}
 
 
@@ -347,6 +398,24 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		si.setHeldSlot(heldSlot);
 		return si;
 	}
+	
+	@Override
+	public SerializableInventory getChestInventory(SimpleLocation l) {
+		Location loc = new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
+		if (loc.getBlock() instanceof Chest) {
+			Chest chest = (Chest)loc.getBlock();
+			Inventory i = chest.getInventory();
+			ArrayList<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
+			int size = i.getSize();
+			for (int c = 0; c < size; c++) {
+		        items.add(getSerializableItemStack(i.getItem(c)));
+			}
+			SerializableInventory si = new SerializableInventory(items, SerializableInventoryType.CHEST);
+			si.setLocation(l);
+			return si;
+		}
+		return null;
+	}
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -355,23 +424,51 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 			HyperPlayer hp = inventory.getHyperPlayer();
 			Player p = Bukkit.getPlayer(hp.getName());
 			p.getInventory().setHeldItemSlot(inventory.getHeldSlot());
-			ArrayList<SerializableItemStack> cInventory = getInventory(hp).getItems();
-			ArrayList<SerializableItemStack> nInventory = inventory.getItems();
-			if (cInventory.size() != nInventory.size()) return;
+			ArrayList<SerializableItemStack> currentInventory = getInventory(hp).getItems();
+			ArrayList<SerializableItemStack> newInventory = inventory.getItems();
+			if (currentInventory.size() != newInventory.size()) return;
 			Inventory inv = p.getInventory();
-			for (int i = 0; i < nInventory.size(); i++) {
-				ItemStack is = getItemStack(nInventory.get(i));
-				if (is != null) {
-					inv.setItem(i, is);
-				} else {
+			for (int i = 0; i < newInventory.size(); i++) {
+				if (newInventory.get(i).equals(currentInventory.get(i))) continue;
+				ItemStack is = getItemStack(newInventory.get(i));
+				if (is == null) {
 					inv.clear(i);
+				} else {
+					inv.setItem(i, is);
 				}
 			}
 			p.updateInventory();
-		} else {
-			//TODO
+		} else if (inventory.getInventoryType() == SerializableInventoryType.CHEST) {
+			SimpleLocation l = inventory.getLocation();
+			Location loc = new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
+			if (loc.getBlock() instanceof Chest) {
+				Chest chest = (Chest)loc.getBlock();
+				ArrayList<SerializableItemStack> currentInventory = getChestInventory(l).getItems();
+				ArrayList<SerializableItemStack> newInventory = inventory.getItems();
+				Inventory chestInv = chest.getInventory();
+				for (int i = 0; i < newInventory.size(); i++) {
+					if (newInventory.get(i).equals(currentInventory.get(i))) continue;
+					ItemStack is = getItemStack(newInventory.get(i));
+					if (is == null) {
+						chestInv.clear(i);
+					} else {
+						chestInv.setItem(i, is);
+					}
+				}
+			}
 		}
 	}
+	
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public int getHeldItemSlot(HyperPlayer hp) {
+		Player p = Bukkit.getPlayer(hp.getName());
+		return p.getInventory().getHeldItemSlot();
+	}
+
+
+
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -390,13 +487,15 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	@SuppressWarnings("deprecation")
 	private SerializableItemStack getSerializableItemStack(ItemStack s) {
-		if (s == null) return null;
+		if (s == null) return new SerializableItemStack();
+		boolean isBlank = (s.getType() == Material.AIR) ? true:false;
         String material = s.getType().toString();
         short durability = s.getDurability();
         byte data = s.getData().getData(); 
         int amount = s.getAmount();
-        int maxStackSize = s.getMaxStackSize();
+        int maxStackSize = s.getType().getMaxStackSize();
         int maxDurability = s.getType().getMaxDurability();
+        SerializableItemStack sis = null;
         if (s.hasItemMeta()) {
         	ItemMeta im = s.getItemMeta();
             String displayName = im.getDisplayName();
@@ -472,14 +571,16 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
         	} else {
         		itemMeta = new SerializableItemMeta(displayName, lore, enchantments);
         	}
-        	return new SerializableItemStack(itemMeta, material, durability, data, amount, maxStackSize, maxDurability);
+        	sis = new SerializableItemStack(itemMeta, material, durability, data, amount, maxStackSize, maxDurability);
         }
-        return new SerializableItemStack(null, material, durability, data, amount, maxStackSize, maxDurability);
+        sis = new SerializableItemStack(null, material, durability, data, amount, maxStackSize, maxDurability);
+        if (isBlank) sis.setBlank();
+        return sis;
 	}
 	
 	@SuppressWarnings("deprecation")
 	private ItemStack getItemStack(SerializableItemStack sis) {
-		if (sis == null) return null;
+		if (sis == null || sis.isBlank()) return null;
         ItemStack item = new ItemStack(Material.matchMaterial(sis.getMaterial()));
         item.setAmount(1);
         item.setDurability(sis.getDurability());
@@ -495,7 +596,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
         	if (sim instanceof SerializableEnchantmentStorageMeta) {
         		SerializableEnchantmentStorageMeta sItemMeta = (SerializableEnchantmentStorageMeta)sim;
         		EnchantmentStorageMeta esm = (EnchantmentStorageMeta)itemMeta;
-        		for (SerializableEnchantment se:sItemMeta.getStoredEnchantments()) {
+        		for (SerializableEnchantment se:sItemMeta.getEnchantments()) {
         			esm.addStoredEnchant(Enchantment.getByName(se.getEnchantmentName()), se.getLvl(), true);
         		}
         	} else if (sim instanceof SerializableBookMeta) {
@@ -561,6 +662,75 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
         }
         return item;
 	}
+
+
+
+	@Override
+	public void teleport(HyperPlayer hp, SimpleLocation sl) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void sendMessage(HyperPlayer hp, String message) {
+		Player p = Bukkit.getPlayer(hp.getName());
+		runTask(new Messager(p,message));
+	}
+	
+	private class Messager implements Runnable {
+		private Player p;
+		private String m;
+		public Messager(Player p, String message) {
+			this.p = p;
+			this.m = message;
+		}
+		@Override
+		public void run() {
+			p.sendMessage(m);
+		}
+	}
+
+	@Override
+	public String applyColor(String message) {
+		message = message.replace("&0", ChatColor.BLACK + "");
+		message = message.replace("&1", ChatColor.DARK_BLUE + "");
+		message = message.replace("&2", ChatColor.DARK_GREEN + "");
+		message = message.replace("&3", ChatColor.DARK_AQUA + "");
+		message = message.replace("&4", ChatColor.DARK_RED + "");
+		message = message.replace("&5", ChatColor.DARK_PURPLE + "");
+		message = message.replace("&6", ChatColor.GOLD + "");
+		message = message.replace("&7", ChatColor.GRAY + "");
+		message = message.replace("&8", ChatColor.DARK_GRAY + "");
+		message = message.replace("&9", ChatColor.BLUE + "");
+		message = message.replace("&a", ChatColor.GREEN + "");
+		message = message.replace("&b", ChatColor.AQUA + "");
+		message = message.replace("&c", ChatColor.RED + "");
+		message = message.replace("&d", ChatColor.LIGHT_PURPLE + "");
+		message = message.replace("&e", ChatColor.YELLOW + "");
+		message = message.replace("&f", ChatColor.WHITE + "");
+		message = message.replace("&k", ChatColor.MAGIC + "");
+		message = message.replace("&l", ChatColor.BOLD + "");
+		message = message.replace("&m", ChatColor.STRIKETHROUGH + "");
+		message = message.replace("&n", ChatColor.UNDERLINE + "");
+		message = message.replace("&o", ChatColor.ITALIC + "");
+		message = message.replace("&r", ChatColor.RESET + "");
+		return message;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

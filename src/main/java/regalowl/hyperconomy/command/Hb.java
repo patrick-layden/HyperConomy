@@ -1,17 +1,13 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
-import regalowl.hyperconomy.util.LanguageFile;
 
 public class Hb extends BaseCommand implements HyperCommand{
 
@@ -26,7 +22,7 @@ public class Hb extends BaseCommand implements HyperCommand{
 		boolean ma = false;
 		try {
 			HyperEconomy he = hp.getHyperEconomy();
-			HyperObject ho = he.getHyperObject(hp.getItemInHand(), em.getHyperShopManager().getShop(player));
+			HyperObject ho = he.getHyperObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
 			if (ho == null) {
 				data.addResponse(L.get("OBJECT_NOT_AVAILABLE"));
 				return data;
@@ -43,7 +39,7 @@ public class Hb extends BaseCommand implements HyperCommand{
 					String max = args[0];
 					if (max.equalsIgnoreCase("max")) {
 						ma = true;
-						int space = ho.getAvailableSpace(player.getInventory());
+						int space = ho.getAvailableSpace(hp.getInventory());
 						amount = space;
 					} else {
 						data.addResponse(L.get("HB_INVALID"));

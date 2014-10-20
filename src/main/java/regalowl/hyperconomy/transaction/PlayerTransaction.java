@@ -1,10 +1,9 @@
 package regalowl.hyperconomy.transaction;
 
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.serializable.SerializableInventory;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 public class PlayerTransaction {
 	
@@ -12,12 +11,12 @@ public class PlayerTransaction {
 	private HyperAccount tradePartner;
 	private HyperObject hyperObject;
 	private int amount;
-	private Inventory giveInventory;
-	private Inventory receiveInventory;
+	private SerializableInventory giveInventory;
+	private SerializableInventory receiveInventory;
 	private double money;
 	private boolean setPrice;
 	private boolean chargeTax;
-	private ItemStack giveItem;
+	private SerializableItemStack giveItem;
 	private boolean obeyShops;
 	
 	
@@ -38,10 +37,10 @@ public class PlayerTransaction {
 	public int getAmount() {
 		return amount;
 	}
-	public Inventory getGiveInventory() {
+	public SerializableInventory getGiveInventory() {
 		return giveInventory;
 	}
-	public Inventory getReceiveInventory() {
+	public SerializableInventory getReceiveInventory() {
 		return receiveInventory;
 	}
 	public double getMoney() {
@@ -53,7 +52,7 @@ public class PlayerTransaction {
 	public boolean isChargeTax() {
 		return chargeTax;
 	}
-	public ItemStack getGiveItem() {
+	public SerializableItemStack getGiveItem() {
 		return giveItem;
 	}
 	public boolean obeyShops() {
@@ -73,10 +72,10 @@ public class PlayerTransaction {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-	public void setGiveInventory(Inventory giveInventory) {
+	public void setGiveInventory(SerializableInventory giveInventory) {
 		this.giveInventory = giveInventory;
 	}
-	public void setReceiveInventory(Inventory receiveInventory) {
+	public void setReceiveInventory(SerializableInventory receiveInventory) {
 		this.receiveInventory = receiveInventory;
 	}
 	public void setMoney(double money) {
@@ -88,7 +87,7 @@ public class PlayerTransaction {
 	public void setChargeTax(boolean chargeTax) {
 		this.chargeTax = chargeTax;
 	}
-	public void setGiveItem(ItemStack giveItem) {
+	public void setGiveItem(SerializableItemStack giveItem) {
 		this.giveItem = giveItem;
 	}
 	public void setObeyShops(boolean obeyShops) {

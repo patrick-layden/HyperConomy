@@ -19,6 +19,7 @@ import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class FrameShop implements HyperListener {
 
@@ -35,7 +36,7 @@ public class FrameShop implements HyperListener {
 	private Shop s;
 
 	@SuppressWarnings("deprecation")
-	public FrameShop(Location l, HyperObject ho, Shop s, int amount) {
+	public FrameShop(SimpleLocation l, HyperObject ho, Shop s, int amount) {
 		hc = HyperConomy.hc;
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
@@ -45,7 +46,7 @@ public class FrameShop implements HyperListener {
 		x = l.getBlockX();
 		y = l.getBlockY();
 		z = l.getBlockZ();
-		world = l.getWorld().getName();
+		world = l.getWorld();
 		this.ho = ho;
 		this.tradeAmount = amount;
 		this.s = s;

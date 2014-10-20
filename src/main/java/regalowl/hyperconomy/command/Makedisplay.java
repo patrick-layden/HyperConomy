@@ -1,53 +1,49 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.display.ItemDisplayFactory;
-import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
-public class Makedisplay {
-	Makedisplay(String[] args, Player player) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
+public class Makedisplay extends BaseCommand implements HyperCommand {
+
+
+	public Makedisplay() {
+		super(true);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		if (!hc.getConf().getBoolean("enable-feature.item-displays")) {
-			player.sendMessage(L.get("ENABLE_ITEM_DISPLAYS"));
-			return;
+			data.addResponse(L.get("ENABLE_ITEM_DISPLAYS"));
+			return data;
 		}
-		DataManager em = hc.getDataManager();
 		ItemDisplayFactory itdi = hc.getItemDisplay();
-		HyperPlayer hp = em.getHyperPlayer(player);
 		HyperEconomy he = hp.getHyperEconomy();
 		
 		if (args.length == 1) {
-			@SuppressWarnings("deprecation")
-			Block b = player.getTargetBlock(null, 500);
-			Location bl = b.getLocation();
+			SimpleLocation sl = hp.getTargetLocation();
 			String name = he.fixName(args[0]);
 			if (he.itemTest(name)) {
-				itdi.addDisplay(bl.getX(), bl.getY() + 1, bl.getZ(), bl.getWorld().getName(), name);
+				itdi.addDisplay(sl.getX(), sl.getY() + 1, sl.getZ(), sl.getWorld(), name);
 			} else {
-				player.sendMessage(L.get("INVALID_ITEM_NAME"));
+				data.addResponse(L.get("INVALID_ITEM_NAME"));
 			}
 		} else if (args.length == 2 && args[1].equalsIgnoreCase("u")) {
 			String name = he.fixName(args[0]);
 			if (he.itemTest(name)) {
-				double x = player.getLocation().getX();
-				double y = player.getLocation().getY();
-				double z = player.getLocation().getZ();
-				World w = player.getLocation().getWorld();
-				itdi.addDisplay(x, y, z, w.getName(), name);
+				double x = hp.getLocation().getX();
+				double y = hp.getLocation().getY();
+				double z = hp.getLocation().getZ();
+				String w = hp.getLocation().getWorld();
+				itdi.addDisplay(x, y, z, w, name);
 			} else {
-				player.sendMessage(L.get("INVALID_ITEM_NAME"));
+				data.addResponse(L.get("INVALID_ITEM_NAME"));
 			}
 		} else {
-			player.sendMessage(L.get("MAKEDISPLAY_INVALID"));
+			data.addResponse(L.get("MAKEDISPLAY_INVALID"));
 		}
+		return data;
 	}
 }

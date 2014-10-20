@@ -20,6 +20,9 @@ import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectStatus;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
+import regalowl.hyperconomy.serializable.SerializableEnchantment;
+import regalowl.hyperconomy.serializable.SerializableInventory;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
@@ -40,12 +43,12 @@ public class TransactionProcessor {
 	private HyperAccount tradePartner;
 	private HyperObject hyperObject;
 	private int amount;
-	private Inventory giveInventory;
-	private Inventory receiveInventory;
+	private SerializableInventory giveInventory;
+	private SerializableInventory receiveInventory;
 	private double money;
 	//private boolean chargeTax;
 	private boolean setPrice;
-	private ItemStack giveItem;
+	private SerializableItemStack giveItem;
 	private HyperObjectStatus status;
 	private boolean overMaxStock;
 	private boolean obeyShops;
@@ -88,11 +91,11 @@ public class TransactionProcessor {
 		}
 		giveInventory = pt.getGiveInventory();
 		if (giveInventory == null) {
-			giveInventory = hp.getPlayer().getInventory();
+			giveInventory = hp.getInventory();
 		}
 		receiveInventory = pt.getReceiveInventory();
 		if (receiveInventory == null) {
-			receiveInventory = hp.getPlayer().getInventory();
+			receiveInventory = hp.getInventory();
 		}
 		money = pt.getMoney();
 		//chargeTax = pt.isChargeTax();
@@ -271,16 +274,17 @@ public class TransactionProcessor {
 	 */
 	public void buyEnchant() {
 		try {
-			Player p = hp.getPlayer();
-			Enchantment ench = hyperObject.getEnchantment();
-			double price = hyperObject.getBuyPrice(EnchantmentClass.fromString(p.getItemInHand().getType().toString()));
+			SerializableInventory inv = hp.getInventory();
+			SerializableItemStack heldItem = inv.getHeldItem();
+			SerializableEnchantment ench = hyperObject.getEnchantment();
+			double price = hyperObject.getBuyPrice(EnchantmentClass.fromString(heldItem.getMaterial()));
 			double taxpaid = hyperObject.getPurchaseTax(price);
 			price = cf.twoDecimals(taxpaid + price);
-			if (new HyperItemStack(p.getItemInHand()).containsEnchantment(ench)) {
+			if (heldItem.containsEnchantment(ench)) {
 				response.addFailed(L.get("ITEM_ALREADY_HAS_ENCHANTMENT"), hyperObject);
 				return;
 			}
-			if (!new HyperItemStack(p.getItemInHand()).canAcceptEnchantment(ench)) {
+			if (!heldItem.canAcceptEnchantment(ench)) {
 				response.addFailed(L.get("ITEM_CANT_ACCEPT_ENCHANTMENT"), hyperObject);
 				return;
 			}
@@ -292,12 +296,11 @@ public class TransactionProcessor {
 			hp.withdraw(price);
 			tradePartner.deposit(price);
 			resetBalanceIfUnlimited();
-			String levelString = hyperObject.getName().substring(hyperObject.getName().length() - 1, hyperObject.getName().length());
-			new HyperItemStack(p.getItemInHand()).addEnchantment(ench, Integer.parseInt(levelString));
+			heldItem.addEnchantment(ench);
 			hyperObject.checkInitiationStatus();
 			response.addSuccess(L.f(L.get("ENCHANTMENT_PURCHASE_MESSAGE"), 1, price, hyperObject.getDisplayName(), cf.twoDecimals(taxpaid)), cf.twoDecimals(price), hyperObject);
 			response.setSuccessful();
-			log.writeSQLLog(p.getName(), "purchase", hyperObject.getDisplayName(), 1.0, cf.twoDecimals(price), cf.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
+			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), 1.0, cf.twoDecimals(price), cf.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "ETransaction buyEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "'";
 			hc.gDB().writeError(e, info);
@@ -371,7 +374,7 @@ public class TransactionProcessor {
 	public void sell() {
 		try {
 			String name = hyperObject.getDisplayName();
-			if (hyperObject.getItem().getType() == null) {
+			if (hyperObject.getItem() == null) {
 				response.addFailed(L.f(L.get("CANNOT_BE_SOLD_WITH"), name), hyperObject);
 				return;
 			}
@@ -459,24 +462,20 @@ public class TransactionProcessor {
 	 */
 	public void sellEnchant() {
 		try {
-			Player p = hp.getPlayer();
-			HyperItemStack his = new HyperItemStack(p.getItemInHand());
-			if (!(his.containsEnchantment(hyperObject.getEnchantment()))) {
+			SerializableInventory inv = hp.getInventory();
+			SerializableItemStack heldItem = inv.getHeldItem();
+			if (!(heldItem.containsEnchantment(hyperObject.getEnchantment()))) {
 				response.addFailed(L.f(L.get("ITEM_DOESNT_HAVE_ENCHANTMENT"), hyperObject.getDisplayName()), hyperObject);
 				return;
 			}
-			if (his.getEnchantmentLevel(hyperObject.getEnchantment()) != hyperObject.getEnchantmentLevel()) {
-				response.addFailed(L.f(L.get("ITEM_DOESNT_HAVE_ENCHANTMENT"), hyperObject.getDisplayName()), hyperObject);
-				return;
-			}
-			String mater = p.getItemInHand().getType().toString();
+			String mater = heldItem.getMaterial().toString();
 			double price = cf.twoDecimals(hyperObject.getSellPrice(EnchantmentClass.fromString(mater), hp));
 			if (!hasBalance(price)) {
 				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
 				return;
 			}
 			double shopstock = hyperObject.getStock();
-			double amountRemoved = hyperObject.removeEnchantment(p.getItemInHand());
+			double amountRemoved = hyperObject.removeEnchantment(heldItem);
 			hyperObject.setStock(shopstock + amountRemoved);
 			double salestax = cf.twoDecimals(hp.getSalesTax(price));
 			hp.deposit(price - salestax);
@@ -485,7 +484,7 @@ public class TransactionProcessor {
 			hyperObject.checkInitiationStatus();
 			response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, price, hyperObject.getDisplayName(), salestax), price - salestax, hyperObject);
 			response.setSuccessful();
-			log.writeSQLLog(p.getName(), "sale", hyperObject.getDisplayName(), 1.0, price - salestax, salestax, tradePartner.getName(), hyperObject.getStatusString());
+			log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), 1.0, price - salestax, salestax, tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "ETransaction sellEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "'";
 			hc.gDB().writeError(e, info);
@@ -527,12 +526,12 @@ public class TransactionProcessor {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
 				return;
 			}
-			int space = hyperObject.getAvailableSpace(hp.getPlayer().getInventory());
+			int space = hyperObject.getAvailableSpace(hp.getInventory());
 			if (space < amount) {
 				response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, hyperObject.getDisplayName()), hyperObject);
 				return;
 			}
-			hyperObject.add(amount, hp.getPlayer().getInventory());
+			hyperObject.add(amount, hp.getInventory());
 			hyperObject.remove(amount, giveInventory);
 			hp.withdraw(price);
 			tradePartner.deposit(price);
@@ -566,7 +565,7 @@ public class TransactionProcessor {
 			} else {
 				price = cf.twoDecimals(hyperObject.getSellPrice(amount, hp));
 			}
-			hyperObject.remove(amount, hp.getPlayer().getInventory());
+			hyperObject.remove(amount, hp.getInventory());
 			hyperObject.add(amount, receiveInventory);
 			hp.deposit(price);
 			tradePartner.withdraw(price);
@@ -596,19 +595,18 @@ public class TransactionProcessor {
 		}
 		try {
 			Player p = hp.getPlayer();
-			Enchantment ench = Enchantment.getByName(hyperObject.getEnchantmentName());
 			double price;
 			if (setPrice) {
 				price = money;
 			} else {
 				price = cf.twoDecimals(hyperObject.getSellPrice(EnchantmentClass.fromString(p.getItemInHand().getType().toString()), hp));
 			}
-			HyperItemStack his = new HyperItemStack(p.getItemInHand());
-			if (his.containsEnchantment(ench)) {
+			SerializableItemStack heldItem = hp.getItemInHand();
+			if (heldItem.containsEnchantment(hyperObject.getEnchantment())) {
 				response.addFailed(L.get("ITEM_ALREADY_HAS_ENCHANTMENT"), hyperObject);
 				return;
 			}
-			if (!his.canAcceptEnchantment(ench) || p.getItemInHand().getAmount() != 1) {
+			if (!heldItem.canAcceptEnchantment(hyperObject.getEnchantment()) || p.getItemInHand().getAmount() != 1) {
 				response.addFailed(L.get("ITEM_CANT_ACCEPT_ENCHANTMENT"), hyperObject);
 				return;
 			}
@@ -618,7 +616,7 @@ public class TransactionProcessor {
 			}
 			hp.withdraw(price);
 			tradePartner.deposit(price);
-			hyperObject.addEnchantment(p.getItemInHand());
+			hyperObject.addEnchantment(heldItem);
 			hyperObject.removeEnchantment(giveItem);
 			price = cf.twoDecimals(price);
 			response.addSuccess(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, price, hyperObject.getDisplayName(), tradePartner.getName()), cf.twoDecimals(price), hyperObject);

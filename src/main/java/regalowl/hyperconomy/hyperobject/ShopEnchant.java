@@ -1,9 +1,9 @@
 package regalowl.hyperconomy.hyperobject;
 
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.serializable.SerializableEnchantment;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 
 
@@ -59,7 +59,7 @@ public class ShopEnchant extends BasicShopObject implements HyperObject {
 	}
 
 	@Override
-	public Enchantment getEnchantment() {
+	public SerializableEnchantment getEnchantment() {
 		return getHyperObject().getEnchantment();
 	}
 
@@ -69,12 +69,12 @@ public class ShopEnchant extends BasicShopObject implements HyperObject {
 	}
 
 	@Override
-	public double addEnchantment(ItemStack stack) {
+	public double addEnchantment(SerializableItemStack stack) {
 		return getHyperObject().addEnchantment(stack);
 	}
 
 	@Override
-	public double removeEnchantment(ItemStack stack) {
+	public double removeEnchantment(SerializableItemStack stack) {
 		return getHyperObject().removeEnchantment(stack);
 	}
 

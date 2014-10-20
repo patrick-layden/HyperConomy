@@ -4,6 +4,8 @@ package regalowl.hyperconomy.command;
 import java.util.HashMap;
 
 
+
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,17 +19,19 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.display.SignType;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
-public class Repairsigns {
+public class Repairsigns extends BaseCommand implements HyperCommand {
 	
 	
 
-	
-	Repairsigns(String[] args, Player player) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
-		DataManager em = hc.getDataManager();
-		
+	public Repairsigns() {
+		super(true);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		if (args.length == 3 || args.length == 1) {
 			int xrad = Math.abs(Integer.parseInt(args[0]));
 			int yrad = xrad;
@@ -42,12 +46,12 @@ public class Repairsigns {
 			int maxVolume = 1000000;
 			int volume = xrad * yrad * zrad * 8;
 			if (volume > maxVolume) {
-				player.sendMessage(L.f(L.get("VOLUME_TOO_LARGE"), maxVolume));
-				return;
+				data.addResponse(L.f(L.get("VOLUME_TOO_LARGE"), maxVolume));
+				return data;
 			}
 			
-			Location pl = player.getLocation();
-			World w = player.getWorld();
+			SimpleLocation pl = hp.getLocation();
+			String w = pl.getWorld();
 			
 			int px = pl.getBlockX();
 			int py = pl.getBlockY();
@@ -64,8 +68,8 @@ public class Repairsigns {
 							if (cb != null && cb.getType().equals(Material.SIGN_POST) || cb != null && cb.getType().equals(Material.WALL_SIGN)) {
 								Sign s = (Sign) cb.getState();
 								String objectName = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
-								objectName = em.getEconomy("default").fixName(objectName);
-								if (em.getEconomy("default").objectTest(objectName)) {
+								objectName = dm.getEconomy("default").fixName(objectName);
+								if (dm.getEconomy("default").objectTest(objectName)) {
 									String ttype = ChatColor.stripColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
 									if (ttype.contains("[")) {
 										continue;
@@ -93,9 +97,9 @@ public class Repairsigns {
 										values.put("HYPEROBJECT", objectName);
 										values.put("TYPE", type.toString());
 										values.put("MULTIPLIER", "1");
-										values.put("ECONOMY", em.getHyperPlayer(player).getEconomy());
+										values.put("ECONOMY", hp.getEconomy());
 										String eclass = "";
-										if (em.getEconomy("default").enchantTest(objectName)) {
+										if (dm.getEconomy("default").enchantTest(objectName)) {
 											eclass = EnchantmentClass.DIAMOND.toString();
 										} else {
 											eclass = EnchantmentClass.NONE.toString();
@@ -117,13 +121,13 @@ public class Repairsigns {
 						HyperConomy.hc.getInfoSignHandler().updateSigns();
 					}
 				}, 60L);
-				player.sendMessage(L.f(L.get("X_SIGNS_REPAIRED"), signsRepaired));
+				data.addResponse(L.f(L.get("X_SIGNS_REPAIRED"), signsRepaired));
 			} else {
-				player.sendMessage(L.get("NO_SIGNS_FOUND"));
+				data.addResponse(L.get("NO_SIGNS_FOUND"));
 			}
 			
 		} else {
-			player.sendMessage(L.get("REPAIRSIGNS_INVALID"));
+			data.addResponse(L.get("REPAIRSIGNS_INVALID"));
 		}
 	}
 	

@@ -190,11 +190,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
-	public void setPoint1(Location l) {
-		setPoint1(l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
+	public void setPoint1(SimpleLocation l) {
+		setPoint1(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
-	public void setPoint2(Location l) {
-		setPoint2(l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
+	public void setPoint2(SimpleLocation l) {
+		setPoint2(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
 	
 	

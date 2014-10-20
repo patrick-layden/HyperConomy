@@ -3,17 +3,20 @@ package regalowl.hyperconomy.command;
 import java.io.File;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 
 import regalowl.databukkit.file.FileTools;
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Setlanguage {
+public class Setlanguage extends BaseCommand implements HyperCommand {
 
-	Setlanguage(String args[], CommandSender sender) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
+
+
+	public Setlanguage() {
+		super(false);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		FileTools ft = hc.getFileTools();
 		String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
 		ft.makeFolder(folderpath);
@@ -25,9 +28,9 @@ public class Setlanguage {
 					language = L.fixLanguage(language);
 					hc.getConf().set("language", language);
 					language = L.buildLanguageFile(false);
-					sender.sendMessage(L.f(L.get("LANGUAGE_LOADED"), language));
+					data.addResponse(L.f(L.get("LANGUAGE_LOADED"), language));
 				} else {
-					sender.sendMessage(L.get("LANGUAGE_NOT_FOUND"));
+					data.addResponse(L.get("LANGUAGE_NOT_FOUND"));
 				}
 			} else if (args.length == 2 && args[1].equalsIgnoreCase("o")) {
 				String language = args[0].toLowerCase();
@@ -35,16 +38,17 @@ public class Setlanguage {
 					language = L.fixLanguage(language);
 					hc.getConf().set("language", language);
 					language = L.buildLanguageFile(true);
-					sender.sendMessage(L.f(L.get("LANGUAGE_LOADED"), language));
+					data.addResponse(L.f(L.get("LANGUAGE_LOADED"), language));
 				} else {
-					sender.sendMessage(L.get("LANGUAGE_NOT_FOUND"));
+					data.addResponse(L.get("LANGUAGE_NOT_FOUND"));
 				}
 			} else {
-				sender.sendMessage(L.get("SETLANGUAGE_INVALID"));
+				data.addResponse(L.get("SETLANGUAGE_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("SETLANGUAGE_INVALID"));
+			data.addResponse(L.get("SETLANGUAGE_INVALID"));
 		}
+		return data;
 	}
 	
 	

@@ -25,6 +25,7 @@ import regalowl.hyperconomy.HyperPlayerManager;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class FrameShopHandler implements Listener {
 
@@ -97,7 +98,7 @@ public class FrameShopHandler implements Listener {
 		}
 	}
 
-	public void createFrameShop(Location l, HyperObject ho, Shop s) {
+	public void createFrameShop(SimpleLocation l, HyperObject ho, Shop s) {
 		FrameShop fs = new FrameShop(l, ho, s, 1);
 		frameShops.put(fs.getKey(), fs);
 	}

@@ -1,21 +1,14 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
-import regalowl.hyperconomy.util.LanguageFile;
+
 
 public class Buy extends BaseCommand implements HyperCommand {
 
@@ -35,7 +28,7 @@ public class Buy extends BaseCommand implements HyperCommand {
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("max")) {
 					if (ho.getType() == HyperObjectType.ITEM) {
-						amount = ho.getAvailableSpace(player.getInventory());
+						amount = ho.getAvailableSpace(hp.getInventory());
 					} else if (ho.getType() == HyperObjectType.EXPERIENCE) {
 						amount = (int) ho.getStock();
 					} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {

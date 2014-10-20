@@ -12,9 +12,10 @@ import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.MineCraftConnector;
 import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
-import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.serializable.SerializableInventory;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionProcessor;
@@ -336,7 +337,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	
-
+	
 	@SuppressWarnings("deprecation")
 	public Player getPlayer() {
 		HyperConomy hc = HyperConomy.hc;
@@ -377,10 +378,8 @@ public class HyperPlayer implements HyperAccount {
 	}
 
 	public void sendMessage(String message) {
-		if (getPlayer() != null) {
-			getPlayer().sendMessage(message);
-			return;
-		}
+		MineCraftConnector mc = HyperConomy.hc.getMC();
+		mc.sendMessage(this, mc.applyColor(message));
 	}
 	
 	public boolean hasPermission(String permission) {
@@ -590,18 +589,30 @@ public class HyperPlayer implements HyperAccount {
 		return true;
 	}
 	
+	public SimpleLocation getTargetLocation() {
+		return HyperConomy.hc.getMC().getTargetLocation(this);
+	}
+	
+	public SimpleLocation getLocationBeforeTargetLocation() {
+		return HyperConomy.hc.getMC().getLocationBeforeTargetLocation(this);
+	}
+	
 	public SimpleLocation getLocation() {
 		return HyperConomy.hc.getMC().getLocation(this);
 	}
 
-	public HyperObject getObjectInHand() {
-		return null;
-		//TODO
+	public int getHeldItemSlot() {
+		return HyperConomy.hc.getMC().getHeldItemSlot(this);
 	}
 	
-	public HyperObject getObjectInHand(Shop s) {
-		return null;
-		//TODO
+	public SerializableItemStack getItemInHand() {
+		return HyperConomy.hc.getMC().getItem(this, getHeldItemSlot());
 	}
+	
+	public void teleport(SimpleLocation newLocation) {
+		HyperConomy.hc.getMC().teleport(this, newLocation);
+	}
+
+	
 	
 }

@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Item;
@@ -126,9 +125,9 @@ public class ItemDisplayFactory implements Listener {
 		return false;
 	}
 	
-	public boolean removeDisplay(double x, double z, World w) {
+	public boolean removeDisplay(double x, double z, String w) {
 		for (SimpleLocation key:displays.keySet()) {
-			if (key.getX() == x && key.getZ() == z && key.getWorld().equalsIgnoreCase(w.getName())) {
+			if (key.getX() == x && key.getZ() == z && key.getWorld().equalsIgnoreCase(w)) {
 				ItemDisplay display = displays.get(key);
 				display.delete();
 				displays.remove(key);

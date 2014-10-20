@@ -2,23 +2,24 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
-import org.bukkit.command.CommandSender;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.util.Backup;
-import regalowl.hyperconomy.util.LanguageFile;
 
-public class Scalebypercent {
-	Scalebypercent(CommandSender sender, String[] args, String playerecon) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
+public class Scalebypercent extends BaseCommand implements HyperCommand {
+
+
+	public Scalebypercent() {
+		super(false);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		try {
-			HyperEconomy he = hc.getDataManager().getEconomy(playerecon);
-			CommonFunctions cf = hc.gCF();
+			HyperEconomy he = super.getEconomy();
 			ArrayList<String> names = he.getNames();
 			boolean onlyItems = false;
 			boolean onlyEnchants = false;
@@ -59,18 +60,19 @@ public class Scalebypercent {
 								}
 							}
 						}
-						sender.sendMessage(L.get("ADJUSTMENT_SUCCESSFUL"));
+						data.addResponse(L.get("ADJUSTMENT_SUCCESSFUL"));
 					} else {
-						sender.sendMessage(L.get("SCALEBYPERCENT_TYPES"));
+						data.addResponse(L.get("SCALEBYPERCENT_TYPES"));
 					}
 				} else {
-					sender.sendMessage(L.get("PERCENT_GREATER_THAN_0"));
+					data.addResponse(L.get("PERCENT_GREATER_THAN_0"));
 				}
 			} else {
-				sender.sendMessage(L.get("SCALEBYPERCENT_INVALID"));
+				data.addResponse(L.get("SCALEBYPERCENT_INVALID"));
 			}
 		} catch (Exception e) {
-			sender.sendMessage(L.get("SCALEBYPERCENT_INVALID"));
+			data.addResponse(L.get("SCALEBYPERCENT_INVALID"));
 		}
+		return data;
 	}
 }

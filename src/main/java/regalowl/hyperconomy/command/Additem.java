@@ -5,13 +5,7 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+
 
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
@@ -19,8 +13,8 @@ import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.ComponentItem;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
-import regalowl.hyperconomy.util.LanguageFile;
 
 public class Additem extends BaseCommand implements HyperCommand {
 	
@@ -33,45 +27,43 @@ public class Additem extends BaseCommand implements HyperCommand {
 	
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
-		String[] args = data.getArgs();
-		
 		try {
 			String displayName = "";
 			if (args.length >= 1) {
 				displayName = args[0];
 				if (displayName.equalsIgnoreCase("all")) {
-					addAll(player);
-					player.sendMessage(L.get("INVENTORY_ADDED"));
-					return true;
+					addAll(hp);
+					data.addResponse(L.get("INVENTORY_ADDED"));
+					return data;
 				}
 				if (displayName.equalsIgnoreCase("help")) {
-					player.sendMessage(L.get("ADDITEM_INVALID"));
-					return true;
+					data.addResponse(L.get("ADDITEM_INVALID"));
+					return data;
 				}
 			}
 			double value = 0;
 			if (args.length >= 2) {
 				value = Double.parseDouble(args[1]);
 			}
-			if (player.getItemInHand().getType() == Material.AIR) {
-				player.sendMessage(L.get("AIR_CANT_BE_TRADED"));
-				return true;
+			if (hp.getItemInHand().getMaterial().equalsIgnoreCase("AIR")) {
+				data.addResponse(L.get("AIR_CANT_BE_TRADED"));
+				return data;
 			}
-			HyperEconomy econ = dm.getHyperPlayer(player).getHyperEconomy();
-			HyperObject ho =  econ.getHyperObject(player.getItemInHand());
+			HyperEconomy econ = super.getEconomy();
+			HyperObject ho =  econ.getHyperObject(hp.getItemInHand());
 			if (ho != null) {
-				player.sendMessage(L.get("ALREADY_IN_DATABASE"));
-				return true;
+				data.addResponse(L.get("ALREADY_IN_DATABASE"));
+				return data;
 			}
-			ItemStack stack = player.getItemInHand();
+			SerializableItemStack stack = hp.getItemInHand();
 			HyperObject hobj = generateNewHyperObject(stack, econ.getName(), displayName, value);
 			addItem(hobj, econ.getName());
-			player.sendMessage(L.get("ITEM_ADDED"));
-			return true;
+			data.addResponse(L.get("ITEM_ADDED"));
+			return data;
 		} catch (Exception e) {
 			e.printStackTrace();
-			player.sendMessage(L.get("ADDITEM_INVALID"));
-			return true;
+			data.addResponse(L.get("ADDITEM_INVALID"));
+			return data;
 		}
 	}
 
@@ -110,26 +102,25 @@ public class Additem extends BaseCommand implements HyperCommand {
 		return true;
 	}
 	
-	public HyperObject generateNewHyperObject(ItemStack stack, String economy) {
+	public HyperObject generateNewHyperObject(SerializableItemStack stack, String economy) {
 		return generateNewHyperObject(stack, economy, "", 0);
 	}
 	
-	public HyperObject generateNewHyperObject(ItemStack stack, String economy, String displayName, double value) {
-		if (stack == null || economy == null || displayName == null) {return null;}
+	public HyperObject generateNewHyperObject(SerializableItemStack sis, String economy, String displayName, double value) {
+		if (sis == null || economy == null || displayName == null) {return null;}
 		HyperConomy hc = HyperConomy.hc;
 		DataManager em = hc.getDataManager();
-		if (stack.getType() == Material.AIR) {return null;}
+		if (sis.isBlank()) {return null;}
 		HyperEconomy econ = em.getEconomy(economy);
 		if (econ == null) {return null;}
-		HyperObject ho =  econ.getHyperObject(stack);
+		HyperObject ho =  econ.getHyperObject(sis);
 		if (ho != null) {return null;}
-		SerializableItemStack sis = new SerializableItemStack(stack);
-		String name = stack.getType() + "_" + stack.getDurability();
+		String name = sis.getMaterial() + "_" + sis.getDurability();
 		if (econ.objectTest(name) || name.equalsIgnoreCase("")) {
-			name = generateName(stack);
+			name = generateName(sis);
 		}
 		if (econ.objectTest(displayName) || displayName.equalsIgnoreCase("")) {
-			displayName = generateName(stack);
+			displayName = generateName(sis);
 		}
 		String aliases = displayName.replace("_", "");
 		if (econ.objectTest(aliases)) {
@@ -163,16 +154,8 @@ public class Additem extends BaseCommand implements HyperCommand {
 	
 	
 	
-	private String generateName(ItemStack stack) {
-		String name = stack.getData().toString().toLowerCase();
-		if (name.contains("(")) {
-			name = name.substring(0, name.lastIndexOf("(")).replace("_", "").replace(" ", "");
-		} else {
-			name = name.replace("_", "").replace(" ", "");
-		}
-		if (nameInUse(name)) {
-			return generateGenericName();
-		}
+	private String generateName(SerializableItemStack stack) {
+		String name = generateGenericName();
 		usedNames.add(name);
 		return name;
 	}
@@ -200,12 +183,11 @@ public class Additem extends BaseCommand implements HyperCommand {
 		
 	}
 	
-	private void addAll(Player p) {
-		Inventory inventory = p.getInventory();
-		HyperPlayer hp = HyperConomy.hc.getDataManager().getHyperPlayer(p);
+	private void addAll(HyperPlayer p) {
+		SerializableInventory inventory = p.getInventory();
 		String economy = hp.getEconomy();
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
-			ItemStack stack = inventory.getItem(slot);
+			SerializableItemStack stack = inventory.getItem(slot);
 			HyperObject hobj = generateNewHyperObject(stack, economy);
 			addItem(hobj, economy);
 		}

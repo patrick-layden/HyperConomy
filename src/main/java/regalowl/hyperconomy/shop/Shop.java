@@ -3,7 +3,6 @@ package regalowl.hyperconomy.shop;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import regalowl.hyperconomy.HyperEconomy;
@@ -18,8 +17,8 @@ public interface Shop extends Comparable<Shop>, Serializable{
 	public void setPoint1(String world, int x, int y, int z);	
 	public void setPoint2(String world, int x, int y, int z);	
 	
-	public void setPoint1(Location l);
-	public void setPoint2(Location l);
+	public void setPoint1(SimpleLocation l);
+	public void setPoint2(SimpleLocation l);
 	
 	public void setMessage(String message);	
 	public void setDefaultMessage();	

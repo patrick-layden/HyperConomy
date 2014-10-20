@@ -4,7 +4,6 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
@@ -123,12 +122,12 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 	    	    			if (m > 100) {
 	    	    				m = 100;
 	    	    			}
-	    	    			data.addResponse(hc.getLanguageFile().get("LINE_BREAK"));
+	    	    			hp.sendMessage(hc.getLanguageFile().get("LINE_BREAK"));
 	    	    			for (String message:result) {
-	    	    				data.addResponse(message);
+	    	    				hp.sendMessage(message);
 	    	    			}
 	    	    			if (result.size() == 0) {
-	    	    				data.addResponse(hc.getLanguageFile().get("HYPERLOG_NORESULT"));
+	    	    				hp.sendMessage(hc.getLanguageFile().get("HYPERLOG_NORESULT"));
 	    	    			}
 	    	    		}
 	    	    	});

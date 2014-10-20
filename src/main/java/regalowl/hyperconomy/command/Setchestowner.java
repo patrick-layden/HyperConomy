@@ -12,10 +12,16 @@ import org.bukkit.entity.Player;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class Setchestowner {
-	Setchestowner(String args[], Player player) {
-		HyperConomy hc = HyperConomy.hc;
-		LanguageFile L = hc.getLanguageFile();
+public class Setchestowner extends BaseCommand implements HyperCommand {
+
+
+	public Setchestowner() {
+		super(true);
+	}
+
+	@Override
+	public CommandData onCommand(CommandData data) {
+		if (!validate(data)) return data;
 		try {
 			if (args.length == 1) {
 				String name = args[0];
@@ -40,7 +46,7 @@ public class Setchestowner {
 			    			s.setLine(2, "\u00A7f" + line3);
 			    			s.setLine(3, "\u00A7f" + line4);
 				    		s.update();
-				    		player.sendMessage(L.get("CHEST_OWNER_UPDATED"));
+				    		data.addResponse(L.get("CHEST_OWNER_UPDATED"));
 				    	}
 			    	}
 		    	} else if (b != null && b.getType().equals(Material.WALL_SIGN)) {
@@ -52,17 +58,17 @@ public class Setchestowner {
 			    			s.setLine(2, "\u00A7f" + line3);
 			    			s.setLine(3, "\u00A7f" + line4);
 				    		s.update();
-				    		player.sendMessage(L.get("CHEST_OWNER_UPDATED"));
+				    		data.addResponse(L.get("CHEST_OWNER_UPDATED"));
 				    	}
 			    	}
 		    	} else {
-		    		player.sendMessage(L.get("LOOK_AT_VALID_CHESTSHOP"));
+		    		data.addResponse(L.get("LOOK_AT_VALID_CHESTSHOP"));
 		    	}
 			} else {
-				player.sendMessage(L.get("SETCHESTOWNER_INVALID"));
+				data.addResponse(L.get("SETCHESTOWNER_INVALID"));
 			}
 		} catch (Exception e) {
-			player.sendMessage(L.get("SETCHESTOWNER_INVALID"));
+			data.addResponse(L.get("SETCHESTOWNER_INVALID"));
 		}
 	}
 }
