@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import net.milkbowl.vault.economy.Economy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.bukkit.BukkitConnector;
 import regalowl.hyperconomy.command.HyperCommand;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
 import regalowl.hyperconomy.serializable.SerializableInventory;
