@@ -613,6 +613,13 @@ public class HyperPlayer implements HyperAccount {
 		HyperConomy.hc.getMC().teleport(this, newLocation);
 	}
 
+	public boolean isInCreativeMode() {
+		return HyperConomy.hc.getMC().isInCreativeMode(this);
+	}
+	
+	public void kickPlayer(String message) {
+		HyperConomy.hc.getMC().kickPlayer(this, message);
+	}
 	
 	
 }

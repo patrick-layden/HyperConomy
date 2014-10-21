@@ -1,7 +1,6 @@
 package regalowl.hyperconomy.util;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+
 
 public class SimpleLocation {
 
@@ -9,13 +8,7 @@ public class SimpleLocation {
 	private double y;
 	private double z;
 	private String world;
-	
-	public SimpleLocation(Location l) {
-		this.world = l.getWorld().getName();
-		this.x = l.getX();
-		this.y = l.getY();
-		this.z = l.getZ();
-	}
+
 	
 	public SimpleLocation(String world, double x, double y, double z) {
 		this.world = world;
@@ -61,10 +54,6 @@ public class SimpleLocation {
 		this.world = world;
 	}
 	
-	
-	public Location getLocation() {
-		return new Location(Bukkit.getWorld(world),x,y,z);
-	}
 
 	@Override
 	public int hashCode() {

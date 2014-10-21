@@ -2,10 +2,9 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
-import org.bukkit.entity.Player;
-
 
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.HyperListener;
 import regalowl.hyperconomy.event.TransactionEvent;
@@ -58,7 +57,7 @@ public class Notify extends BaseCommand implements HyperCommand, HyperListener {
 	
 
 	private void sendNotification(String message) {
-		for (Player p:hc.getHyperPlayerManager().getOnlinePlayers()) {
+		for (HyperPlayer p:hc.getHyperPlayerManager().getOnlinePlayers()) {
 			if (p.hasPermission("hyperconomy.notify")) {
 				p.sendMessage(message);
 			}

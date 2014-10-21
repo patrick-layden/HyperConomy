@@ -1,6 +1,9 @@
 package regalowl.hyperconomy;
 
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 import net.milkbowl.vault.economy.Economy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.command.HyperCommand;
@@ -17,7 +20,7 @@ public interface MineCraftConnector {
 	public void registerCommand(String command, HyperCommand hCommand);
 	
 	public void unregisterAllListeners();
-
+	public void registerListeners();
 	
 	
 	public void runTask(Runnable r);
@@ -26,8 +29,7 @@ public interface MineCraftConnector {
 	public void cancelTask(long id);
 	public void cancelAllTasks();
 	
-	public void kickPlayer(String name, String message);
-	public boolean hasPermission(String name, String permission);
+
 	
 	public boolean useExternalEconomy();
 	public String getEconomyName();
@@ -35,15 +37,26 @@ public interface MineCraftConnector {
 	public void unhookExternalEconomy();
 	public void setupExternalEconomy();
 	
-	//remove later
-	public Economy getEconomy();  
+
+	public Economy getEconomy();  	//remove later
 	public BukkitConnector getConnector();
 	
+	public boolean isInCreativeMode(HyperPlayer hp);
 	public SimpleLocation getLocation(HyperPlayer hp);
 	public SimpleLocation getTargetLocation(HyperPlayer hp);
 	public SimpleLocation getLocationBeforeTargetLocation(HyperPlayer hp);
+	public ArrayList<HyperPlayer> getOnlinePlayers();
 	public void teleport(HyperPlayer hp, SimpleLocation sl);
 	public void sendMessage(HyperPlayer hp, String message);
+	public void kickPlayer(HyperPlayer hp, String message);
+	public boolean hasPermission(HyperPlayer hp, String permission);
+	public HyperPlayer getPlayer(UUID uuid);
+	public boolean playerExists(UUID uuid);
+	
+	
+	
+	public void logInfo(String message);
+	public void logSevere(String message);
 	public String applyColor(String text);
 	
 	public SerializableInventory getInventory(HyperPlayer hp);

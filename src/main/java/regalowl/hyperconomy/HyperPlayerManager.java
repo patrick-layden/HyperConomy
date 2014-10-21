@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/*
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+*/
 
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -22,7 +23,7 @@ import regalowl.hyperconomy.event.HyperListener;
 import regalowl.hyperconomy.event.minecraft.HyperPlayerJoinEvent;
 import regalowl.databukkit.file.FileConfiguration;
 
-public class HyperPlayerManager implements Listener, HyperListener {
+public class HyperPlayerManager implements HyperListener {
 
 	private HyperConomy hc;
 	private DataManager dm;
@@ -72,7 +73,7 @@ public class HyperPlayerManager implements Listener, HyperListener {
 	}
 	
 	private void addOnlinePlayers() {
-		for (Player p : getOnlinePlayers()) {
+		for (HyperPlayer p : getOnlinePlayers()) {
 			if (p.getName().equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
 				p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 				continue;
@@ -83,12 +84,8 @@ public class HyperPlayerManager implements Listener, HyperListener {
 		}
 	}
 	
-	public ArrayList<Player> getOnlinePlayers() {
-		ArrayList<Player> onlinePlayers = new ArrayList<Player>();
-		for (World world : Bukkit.getWorlds()) {
-			onlinePlayers.addAll(world.getPlayers());
-		}
-		return onlinePlayers;
+	public ArrayList<HyperPlayer> getOnlinePlayers() {
+		return hc.getMC().getOnlinePlayers();
 	}
 	
 	
@@ -100,7 +97,7 @@ public class HyperPlayerManager implements Listener, HyperListener {
 				if (hc.getHyperLock().loadLock()) {return;}
 				String name = ev.getHyperPlayer().getName();
 				if (name.equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
-					hc.getMC().kickPlayer(name, hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+					hc.getMC().kickPlayer(ev.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 				}
 				if (!playerAccountExists(name)) {
 					addPlayer(name);
@@ -207,23 +204,16 @@ public class HyperPlayerManager implements Listener, HyperListener {
 			return addPlayer(player);
 		}
 	}
-	public HyperPlayer getHyperPlayer(Player player) {
-		if (player == null) {return null;}
-		return getHyperPlayer(player.getName());
-	}
+
 	public HyperPlayer getHyperPlayer(UUID uuid) {
 		if (uuid == null) {return null;}
 		if (uuidIndex.containsKey(uuid.toString())) {
 			String pName = uuidIndex.get(uuid.toString());
 			return hyperPlayers.get(pName);
 		} else {
-			OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-			if (op.getName() == null || op.getName() == "") {
-				return null;
-			}
-			HyperPlayer hp = addPlayer(op.getName());
-			hp.setUUID(uuid.toString());
-			return hp;
+			MineCraftConnector mc = hc.getMC();
+			if (!mc.playerExists(uuid)) return null;
+			return mc.getPlayer(uuid);
 		}
 	}
 	

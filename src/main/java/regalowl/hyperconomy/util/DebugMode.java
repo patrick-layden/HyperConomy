@@ -29,7 +29,7 @@ public class DebugMode {
 	public void syncDebugConsoleMessage(String message) {
 		HyperConomy hc = HyperConomy.hc;
 		if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
-		hc.log().info("[HyperConomy Debug]" + message);
+		hc.getMC().logInfo("[HyperConomy Debug]" + message);
 	}
 	
 	public void ayncDebugConsoleMessage(String message) {
@@ -46,7 +46,7 @@ public class DebugMode {
 		@Override
 		public void run() {
 			if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
-			hc.log().info("[HyperConomy Debug]" + m);
+			hc.getMC().logInfo("[HyperConomy Debug]" + m);
 		}
 	}
 	

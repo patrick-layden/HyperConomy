@@ -1,18 +1,6 @@
 package regalowl.hyperconomy.hyperobject;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 public class HyperItemStack {
 

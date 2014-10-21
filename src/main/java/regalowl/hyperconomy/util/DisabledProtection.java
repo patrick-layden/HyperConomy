@@ -19,13 +19,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.shop.ChestShop;
+import regalowl.hyperconomy.shop.ChestShopHandler;
 
 public class DisabledProtection implements Listener {
 
 	private ArrayList<BlockFace> faces = new ArrayList<BlockFace>();
 	private ArrayList<BlockFace> allfaces = new ArrayList<BlockFace>();
-	private ChestShop cs;
+	private ChestShopHandler cs;
 
 	public DisabledProtection() {
 		faces.add(BlockFace.EAST);

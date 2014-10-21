@@ -1,25 +1,5 @@
 package regalowl.hyperconomy.util;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
-
-import regalowl.databukkit.file.FileConfiguration;
-import regalowl.databukkit.file.FileTools;
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.SyncSQLWrite;
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.display.SignType;
-import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.hyperobject.HyperObjectType;
-import regalowl.hyperconomy.serializable.SerializableEnchantment;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 public class LegacyDatabaseUpdates {
 

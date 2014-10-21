@@ -3,7 +3,6 @@ package regalowl.hyperconomy.shop;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.bukkit.entity.Player;
 
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -28,9 +27,8 @@ public interface Shop extends Comparable<Shop>, Serializable{
 	
 	public boolean inShop(int x, int y, int z, String world);
 	public boolean inShop(SimpleLocation l);
-	public boolean inShop(Player player);
 	public boolean inShop(HyperPlayer hp);
-	public void sendEntryMessage(Player player);
+	public void sendEntryMessage(HyperPlayer player);
 	public String getEconomy();
 	
 	public HyperEconomy getHyperEconomy();

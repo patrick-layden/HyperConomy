@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
 
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
@@ -15,6 +17,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.FireworkEffect.Builder;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -237,6 +241,10 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public void unregisterAllListeners() {
 		HandlerList.unregisterAll(plugin);
 	}
+	@Override
+	public void registerListeners() {
+		hc.getMC().getConnector().getServer().getPluginManager().registerEvents(this, this);
+	}
 
 	@Override
 	public void registerCommand(String command, HyperCommand hCommand) {
@@ -249,7 +257,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public void runTask(Runnable r) {
-		hc.log().severe("BukkitConnector runTask(): " + r.getClass().getSimpleName());
 		getServer().getScheduler().runTask(this, r);
 	}
 	@Override
@@ -273,32 +280,13 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public void cancelAllTasks() {
 		getServer().getScheduler().cancelTasks(this);
 	}
-	
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onSignChangeEvent(SignChangeEvent event) {
-		HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer());
-		Location l = event.getBlock().getLocation();
-		SimpleLocation sl = new SimpleLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
-		HyperConomy.hc.getHyperEventHandler().fireEvent(new HyperSignChangeEvent(event.getLines(), sl, hp));
-	}
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerItemHeldEvent(PlayerItemHeldEvent event) {
-	}
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer());
-		HyperConomy.hc.getHyperEventHandler().fireEvent(new HyperPlayerJoinEvent(hp));
-	}
 
 
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void kickPlayer(String name, String message) {
-		Player p = Bukkit.getPlayer(name);
+	public void kickPlayer(HyperPlayer hp, String message) {
+		Player p = Bukkit.getPlayer(hp.getName());
 		if (p != null) {
 			p.kickPlayer(message);
 		}
@@ -308,8 +296,8 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean hasPermission(String name, String permission) {
-		Player p = Bukkit.getPlayer(name);
+	public boolean hasPermission(HyperPlayer hp, String permission) {
+		Player p = Bukkit.getPlayer(hp.getName());
 		if (p != null) {
 			return p.hasPermission(permission);
 		}
@@ -679,7 +667,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		Player p = Bukkit.getPlayer(hp.getName());
 		runTask(new Messager(p,message));
 	}
-	
 	private class Messager implements Runnable {
 		private Player p;
 		private String m;
@@ -722,6 +709,18 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 
+	@Override
+	public void logInfo(String message) {
+		Logger log = Logger.getLogger("Minecraft");
+		log.info(message);
+	}
+
+
+	@Override
+	public void logSevere(String message) {
+		Logger log = Logger.getLogger("Minecraft");
+		log.severe(message);
+	}
 
 
 
@@ -729,6 +728,75 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onSignChangeEvent(SignChangeEvent event) {
+		HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
+		Location l = event.getBlock().getLocation();
+		SimpleLocation sl = new SimpleLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
+		HyperConomy.hc.getHyperEventHandler().fireEvent(new HyperSignChangeEvent(event.getLines(), sl, hp));
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerItemHeldEvent(PlayerItemHeldEvent event) {
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
+		HyperConomy.hc.getHyperEventHandler().fireEvent(new HyperPlayerJoinEvent(hp));
+	}
+
+
+
+	@Override
+	public boolean isInCreativeMode(HyperPlayer hp) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public ArrayList<HyperPlayer> getOnlinePlayers() {
+		ArrayList<HyperPlayer> onlinePlayers = new ArrayList<HyperPlayer>();
+		for (World world : Bukkit.getWorlds()) {
+			for (Player p:world.getPlayers()) {
+				onlinePlayers.add(HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(p.getName()));
+			}
+		}
+		return onlinePlayers;
+	}
+
+
+
+	@Override
+	public HyperPlayer getPlayer(UUID uuid) {
+		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+		if (!playerExists(uuid)) return null;
+		HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(op.getName());
+		hp.setUUID(uuid.toString());
+		return hp;
+	}
+
+
+
+	@Override
+	public boolean playerExists(UUID uuid) {
+		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+		if (op.getName() == null || op.getName() == "") return false;
+		return true;
+	}
 
 
 

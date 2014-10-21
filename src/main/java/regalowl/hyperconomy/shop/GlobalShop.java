@@ -3,8 +3,6 @@ package regalowl.hyperconomy.shop;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
@@ -266,7 +264,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	@Override
 	public void setMessage(String message) {}
 	@Override
-	public void sendEntryMessage(Player player) {}
+	public void sendEntryMessage(HyperPlayer player) {}
 	@Override
 	public void setDefaultMessage() {}
 	@Override
@@ -277,8 +275,6 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	public boolean inShop(SimpleLocation l) {return true;}
 	@Override
 	public boolean inShop(HyperPlayer hp) {return true;}
-	@Override
-	public boolean inShop(Player player) {return true;}
 	@Override
 	public void updatePlayerStatus() {}
 	@Override

@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
 import regalowl.databukkit.file.FileTools;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.account.HyperPlayer;
 
 public class LanguageFile {
 	
@@ -116,7 +114,7 @@ public class LanguageFile {
 				if (text.startsWith(" ")) {
 					text = text.substring(1, text.length());
 				}
-				text = applyColor(text);
+				text = hc.getMC().applyColor(text);
 				language.put(name, text);
 			}
 			language.put("CC", "\u00A7");
@@ -135,7 +133,7 @@ public class LanguageFile {
 			if (text.startsWith(" ")) {
 				text = text.substring(1, text.length());
 			}
-			text = applyColor(text);
+			text = hc.getMC().applyColor(text);
 			languageBackup.put(name, text);
 		}
 		languageBackup.put("CC", "\u00A7");
@@ -225,32 +223,10 @@ public class LanguageFile {
 		return formatted;
 	}
 	
-	public String applyColor(String message) {
-		message = message.replace("&0", ChatColor.BLACK+"");
-		message = message.replace("&1", ChatColor.DARK_BLUE+"");
-		message = message.replace("&2", ChatColor.DARK_GREEN+"");
-		message = message.replace("&3", ChatColor.DARK_AQUA+"");
-		message = message.replace("&4", ChatColor.DARK_RED+"");
-		message = message.replace("&5", ChatColor.DARK_PURPLE+"");
-		message = message.replace("&6", ChatColor.GOLD+"");
-		message = message.replace("&7", ChatColor.GRAY+"");
-		message = message.replace("&8", ChatColor.DARK_GRAY+"");
-		message = message.replace("&9", ChatColor.BLUE+"");
-		message = message.replace("&a", ChatColor.GREEN+"");
-		message = message.replace("&b", ChatColor.AQUA+"");
-		message = message.replace("&c", ChatColor.RED+"");
-		message = message.replace("&d", ChatColor.LIGHT_PURPLE+"");
-		message = message.replace("&e", ChatColor.YELLOW+"");
-		message = message.replace("&f", ChatColor.WHITE+"");
-		message = message.replace("&k", ChatColor.MAGIC+"");
-		message = message.replace("&l", ChatColor.BOLD+"");
-		message = message.replace("&m", ChatColor.STRIKETHROUGH+"");
-		message = message.replace("&n", ChatColor.UNDERLINE+"");
-		message = message.replace("&o", ChatColor.ITALIC+"");
-		message = message.replace("&r", ChatColor.RESET+"");
-		return message;
+
+	public String applyColor(String string) {
+		return HyperConomy.hc.getMC().applyColor(string);
 	}
-	
 	
 	
 	
@@ -346,7 +322,7 @@ public class LanguageFile {
 		return inputstring;
 	}
 
-	public String f(String inputstring, int amount, double price, String name, Player player) {
+	public String f(String inputstring, int amount, double price, String name, HyperPlayer player) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%y",player.getName());
 		inputstring = inputstring.replace("%n",name);
@@ -355,7 +331,7 @@ public class LanguageFile {
 		return inputstring;
 	}
 	
-	public String f(String inputstring, int amount, double price, String name, String isstatic, String isinitial, Player player) {
+	public String f(String inputstring, int amount, double price, String name, String isstatic, String isinitial, HyperPlayer player) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%y",player.getName());
 		inputstring = inputstring.replace("%n",name);
@@ -366,7 +342,7 @@ public class LanguageFile {
 		return inputstring;
 	}
 	
-	public String f(String inputstring, int amount, double price, String name, String isstatic, String isinitial, Player player, String owner) {
+	public String f(String inputstring, int amount, double price, String name, String isstatic, String isinitial, HyperPlayer player, String owner) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%y",player.getName());
 		inputstring = inputstring.replace("%n",name);

@@ -1,7 +1,5 @@
 package regalowl.hyperconomy;
 
-import java.util.logging.Logger;
-
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.DataBukkit;
@@ -74,7 +72,7 @@ import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.HyperEventHandler;
 import regalowl.hyperconomy.event.HyperListener;
 import regalowl.hyperconomy.server.HyperModificationServer;
-import regalowl.hyperconomy.shop.ChestShop;
+import regalowl.hyperconomy.shop.ChestShopHandler;
 import regalowl.hyperconomy.shop.FrameShopHandler;
 import regalowl.hyperconomy.util.ConsoleSettings;
 import regalowl.hyperconomy.util.DebugMode;
@@ -99,11 +97,10 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 	private ItemDisplayFactory itdi;
 	private SQLWrite sw;
 	private SQLRead sr;
-	private ChestShop cs;
+	private ChestShopHandler cs;
 	private FrameShopHandler fsh;
 	private HyperLock hl;
 	private LanguageFile L;
-	private Logger log = Logger.getLogger("Minecraft");
 	private HyperEventHandler heh;
 	private boolean enabled;
 	private CommonFunctions cf;
@@ -151,6 +148,7 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 	}
 	public void enable() {
 		mc.unregisterAllListeners();
+		mc.registerListeners();
 		dm = new DataManager();
 		if (hConfig.getBoolean("sql.use-mysql")) {
 			String username = hConfig.getString("sql.mysql-connection.username");
@@ -168,16 +166,16 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 		sw.setLogSQL(hConfig.getBoolean("sql.log-sql-statements"));
 		mc.setupExternalEconomy();
 		if (mc.useExternalEconomy()) {
-			log.info("[HyperConomy]Using external economy plugin ("+mc.getEconomyName()+") via Vault.");
+			mc.logInfo("[HyperConomy]Using external economy plugin ("+mc.getEconomyName()+") via Vault.");
 		} else {
-			log.info("[HyperConomy]Using internal economy plugin.");
+			mc.logInfo("[HyperConomy]Using internal economy plugin.");
 		}
 		dMode.syncDebugConsoleMessage("Data loading started.");
 		dm.load();
-		l = new Log(this);
+		l = new Log();
 		new TransactionSign();
 		yh.startSaveTask(saveInterval);
-		cs = new ChestShop();
+		cs = new ChestShopHandler();
 		cos = new ConsoleSettings("default");
 		new HyperModificationServer();
 	}
@@ -286,31 +284,6 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 		mc.registerCommand("xpinfo", new Xpinfo());
 	}
 
-	/*
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (hl.loadLock()) {
-			hl.sendLockMessage(sender);
-			return true;
-		}
-		try {
-			if ((!hl.isLocked(sender))) {
-				boolean result = commandhandler.handleCommand(sender, cmd, label, args);
-				return result;
-			} else {
-				sender.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-				return true;
-			}
-		} catch (Exception e) {
-			if (db != null) {
-				db.writeError(e);
-				return true;
-			} else {
-				e.printStackTrace();
-				return true;
-			}
-		}
-	}
-	*/
 	
 
 
@@ -382,16 +355,12 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 	public LanguageFile getLanguageFile() {
 		return L;
 	}
-
-	public Logger log() {
-		return log;
-	}
 	
 	public boolean enabled() {
 		return enabled;
 	}
 	
-	public ChestShop getChestShop() {
+	public ChestShopHandler getChestShop() {
 		return cs;
 	}
 	
@@ -433,8 +402,8 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 	@Override
 	public void onLogMessage(String entry, Exception e, LogLevel level) {
 		if (e != null) e.printStackTrace();
-		if (level == LogLevel.SEVERE) log.severe(entry);
-		if (level == LogLevel.INFO) log.info(entry);
+		if (level == LogLevel.SEVERE) mc.logSevere(entry);
+		if (level == LogLevel.INFO) mc.logInfo(entry);
 	}
 
 

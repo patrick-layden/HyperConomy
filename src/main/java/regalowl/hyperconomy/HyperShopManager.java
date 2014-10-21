@@ -3,7 +3,6 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.entity.Player;
 
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -80,17 +79,7 @@ public class HyperShopManager {
 		}
 		return null;
 	}
-	public Shop getShop(Player player) {
-		if (player == null) {
-			return null;
-		}
-		for (Shop shop : shops.values()) {
-			if (shop.inShop(player)) {
-				return shop;
-			}
-		}
-		return null;
-	}
+
 	public Shop getShop(String shop) {
 		shop = fixShopName(shop);
 		if (shops.containsKey(shop)) {
@@ -99,14 +88,7 @@ public class HyperShopManager {
 			return null;
 		}
 	}
-	public boolean inAnyShop(Player player) {
-		for (Shop shop : shops.values()) {
-			if (shop.inShop(player)) {
-				return true;
-			}
-		}
-		return false;
-	}
+
 	public boolean inAnyShop(HyperPlayer hp) {
 		for (Shop shop : shops.values()) {
 			if (shop.inShop(hp)) {

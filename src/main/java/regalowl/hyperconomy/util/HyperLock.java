@@ -1,7 +1,5 @@
 package regalowl.hyperconomy.util;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -51,15 +49,7 @@ public class HyperLock {
 		if (playerLock && hp != null && !hp.hasPermission("hyperconomy.admin")) return true;
 		return false;
 	}
-	
-	public boolean isLocked(CommandSender s) {
-		HyperPlayer hp = null;
-		if (s instanceof Player) {
-			hp = hc.getHyperPlayerManager().getHyperPlayer((Player)s);
-		}
-		return isLocked(hp);
-	}
-	
+
 	public boolean isLocked() {
 		if (fullLock || loadLock) return true;
 		return false;
@@ -81,21 +71,4 @@ public class HyperLock {
 		return data;
 	}
 
-	public void sendLockMessage(CommandSender sender) {
-		if (loadLock) {
-			sender.sendMessage(L.get("HYPERCONOMY_LOADING"));
-			return;
-		}
-		if (fullLock) {
-			sender.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-			return;
-		}
-		if (playerLock && !sender.hasPermission("hyperconomy.admin")) {
-			sender.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-			return;
-		}
-	}
-	public void sendLockMessage(Player player) {
-		sendLockMessage((CommandSender)player);
-	}
 }

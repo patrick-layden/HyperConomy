@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.sql.BasicStatement;
@@ -282,11 +279,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		}
 		return false;
 	}	
-	@Override
-	public boolean inShop(Player player) {
-		Location l = player.getLocation();
-		return inShop(l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getWorld().getName());
-	}
+
 	@Override
 	public boolean inShop(SimpleLocation l) {
 		return inShop(l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getWorld());
@@ -296,7 +289,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		return inShop(hp.getLocation());
 	}
 	
-	public void sendEntryMessage(Player player) {
+	public void sendEntryMessage(HyperPlayer player) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		if (message == "") {setDefaultMessage();}
@@ -583,7 +576,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	public void updatePlayerStatus() {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		for (Player p : hc.getHyperPlayerManager().getOnlinePlayers()) {
+		for (HyperPlayer p : hc.getHyperPlayerManager().getOnlinePlayers()) {
 			if (inShop.contains(p.getName())) {
 				if (!inShop(p)) {
 					inShop.remove(p.getName());
@@ -595,7 +588,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 				if (inShop(p)) {
 					inShop.add(p.getName());
 					sendEntryMessage(p);
-					hc.getHyperPlayerManager().getHyperPlayer(p).setEconomy(economy);
+					p.setEconomy(economy);
 				}
 			}
 		}

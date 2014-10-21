@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.inventory.ItemStack;
-
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.sql.QueryResult;

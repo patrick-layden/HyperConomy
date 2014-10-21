@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.entity.Player;
 
 import regalowl.databukkit.file.FileConfiguration;
 import regalowl.databukkit.file.FileTools;
@@ -320,9 +319,6 @@ public class DataManager {
 		return hpm.playerAccountExists(name);
 	}
 	public HyperPlayer getHyperPlayer(String player) {
-		return hpm.getHyperPlayer(player);
-	}
-	public HyperPlayer getHyperPlayer(Player player) {
 		return hpm.getHyperPlayer(player);
 	}
 	

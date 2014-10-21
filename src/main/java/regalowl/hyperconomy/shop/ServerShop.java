@@ -3,10 +3,6 @@ package regalowl.hyperconomy.shop;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -214,12 +210,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		}
 		return false;
 	}	
-	public boolean inShop(Location l) {
-		return inShop(l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getWorld().getName());
-	}
-	public boolean inShop(Player player) {
-		return inShop(player.getLocation());
-	}
+
 	@Override
 	public boolean inShop(SimpleLocation l) {
 		return inShop(l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getWorld());
@@ -230,7 +221,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 
 	
-	public void sendEntryMessage(Player player) {
+	public void sendEntryMessage(HyperPlayer player) {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
 		if (message == "") {setDefaultMessage();}
@@ -388,7 +379,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	public void updatePlayerStatus() {
 		HyperConomy hc = HyperConomy.hc;
 		LanguageFile L = hc.getLanguageFile();
-		for (Player p : hc.getHyperPlayerManager().getOnlinePlayers()) {
+		for (HyperPlayer p : hc.getHyperPlayerManager().getOnlinePlayers()) {
 			if (inShop.contains(p.getName())) {
 				if (!inShop(p)) {
 					inShop.remove(p.getName());
@@ -400,7 +391,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 				if (inShop(p)) {
 					inShop.add(p.getName());
 					sendEntryMessage(p);
-					hc.getHyperPlayerManager().getHyperPlayer(p).setEconomy(economy);
+					p.setEconomy(economy);
 				}
 			}
 		}
