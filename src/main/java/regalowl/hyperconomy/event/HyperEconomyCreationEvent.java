@@ -1,4 +1,5 @@
 package regalowl.hyperconomy.event;
 
+import regalowl.databukkit.event.Event;
 
-public class HyperEconomyCreationEvent extends HyperEvent {}
+public class HyperEconomyCreationEvent extends Event {}

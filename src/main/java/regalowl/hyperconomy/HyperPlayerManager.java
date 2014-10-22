@@ -4,26 +4,16 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-/*
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
-*/
-
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperEvent;
-import regalowl.hyperconomy.event.HyperListener;
 import regalowl.hyperconomy.event.minecraft.HyperPlayerJoinEvent;
+import regalowl.hyperconomy.event.minecraft.HyperPlayerQuitEvent;
+import regalowl.hyperconomy.util.SimpleLocation;
+import regalowl.databukkit.event.EventHandler;
 import regalowl.databukkit.file.FileConfiguration;
 
-public class HyperPlayerManager implements HyperListener {
+public class HyperPlayerManager {
 
 	private HyperConomy hc;
 	private DataManager dm;
@@ -89,40 +79,40 @@ public class HyperPlayerManager implements HyperListener {
 	}
 	
 	
-	@Override
-	public void onHyperEvent(HyperEvent event) {
-		if (event instanceof HyperPlayerJoinEvent) {
-			HyperPlayerJoinEvent ev = (HyperPlayerJoinEvent)event;
-			try {
-				if (hc.getHyperLock().loadLock()) {return;}
-				String name = ev.getHyperPlayer().getName();
-				if (name.equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
-					hc.getMC().kickPlayer(ev.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
-				}
-				if (!playerAccountExists(name)) {
-					addPlayer(name);
-				} else {
-					getHyperPlayer(name).checkUUID();
-				}
-			} catch (Exception e) {
-				hc.gDB().writeError(e);
+	@EventHandler
+	public void onHyperPlayerJoinEvent(HyperPlayerJoinEvent event) {
+		HyperPlayerJoinEvent ev = (HyperPlayerJoinEvent) event;
+		try {
+			if (hc.getHyperLock().loadLock()) {
+				return;
 			}
+			String name = ev.getHyperPlayer().getName();
+			if (name.equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
+				hc.getMC().kickPlayer(ev.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+			}
+			if (!playerAccountExists(name)) {
+				addPlayer(name);
+			} else {
+				getHyperPlayer(name).checkUUID();
+			}
+		} catch (Exception e) {
+			hc.gDB().writeError(e);
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerQuit(PlayerQuitEvent event) {
+	@EventHandler
+	public void onPlayerQuit(HyperPlayerQuitEvent event) {
 		try {
 			if (hc.getHyperLock().loadLock()) {return;}
-			Location l = event.getPlayer().getLocation();
-			String name = event.getPlayer().getName();
+			SimpleLocation l = event.getHyperPlayer().getLocation();
+			String name = event.getHyperPlayer().getName();
 			if (hyperPlayers.containsKey(name.toLowerCase())) {
 				HyperPlayer hp = hyperPlayers.get(name.toLowerCase());
 				if (hp == null) {return;}
 				hp.setX(l.getX());
 				hp.setY(l.getY());
 				hp.setZ(l.getZ());
-				hp.setWorld(l.getWorld().getName());
+				hp.setWorld(l.getWorld());
 			}
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
@@ -132,7 +122,7 @@ public class HyperPlayerManager implements HyperListener {
 	public boolean uuidSupport() {
 		return uuidSupport;
 	}
-	
+	/*
 	public boolean playerAccountExists(OfflinePlayer player) {
 		if (player == null) {return false;}
 		if (hc.getMC().useExternalEconomy()) {
@@ -141,7 +131,7 @@ public class HyperPlayerManager implements HyperListener {
 			return hyperPlayers.containsKey(player.getName());
 		}
 	}
-
+	*/
 	@SuppressWarnings("deprecation")
 	public boolean playerAccountExists(String name) {
 		if (name == null || name == "") {return false;}
@@ -152,10 +142,11 @@ public class HyperPlayerManager implements HyperListener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean playerAccountExists(UUID uuid) {
 		if (uuid == null) {return false;}
 		if (hc.getMC().useExternalEconomy()) {
-			return hc.getMC().getEconomy().hasAccount(Bukkit.getOfflinePlayer(uuid));
+			return hc.getMC().getEconomy().hasAccount(getHyperPlayer(uuid).getName());
 		} else {
 			return uuidIndex.containsKey(uuid.toString());
 		}

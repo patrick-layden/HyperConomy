@@ -3,9 +3,10 @@ package regalowl.hyperconomy;
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.DataBukkit;
-import regalowl.databukkit.event.DisableRequestListener;
-import regalowl.databukkit.event.LogLevel;
-import regalowl.databukkit.event.LogListener;
+import regalowl.databukkit.event.EventHandler;
+import regalowl.databukkit.events.LogEvent;
+import regalowl.databukkit.events.LogLevel;
+import regalowl.databukkit.events.ShutdownEvent;
 import regalowl.databukkit.file.FileConfiguration;
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.file.YamlHandler;
@@ -68,9 +69,7 @@ import regalowl.hyperconomy.display.ItemDisplayFactory;
 import regalowl.hyperconomy.display.TransactionSign;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DisableEvent;
-import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.HyperEventHandler;
-import regalowl.hyperconomy.event.HyperListener;
 import regalowl.hyperconomy.server.HyperModificationServer;
 import regalowl.hyperconomy.shop.ChestShopHandler;
 import regalowl.hyperconomy.shop.FrameShopHandler;
@@ -83,7 +82,7 @@ import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
 import regalowl.hyperconomy.util.UpdateYML;
 
-public class HyperConomy implements HyperListener, LogListener, DisableRequestListener {
+public class HyperConomy {
 	public static HyperConomy hc;
 	public static API api;
 	public static EconomyAPI economyApi;
@@ -114,8 +113,13 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 		this.mc = mc;
 	}
 	
-	@Override
-	public void onDisable() {
+	@EventHandler
+	public void onDisable(DisableEvent event) {
+		disable(false);
+	}
+	
+	@EventHandler
+	public void onDisableRequest(ShutdownEvent event) {
 		disable(false);
 	}
 
@@ -180,16 +184,10 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 		new HyperModificationServer();
 	}
 	
-	@Override
-	public void onHyperEvent(HyperEvent event) {
-		if (event instanceof DataLoadEvent) {
-			onDataLoad();
-		}
-	}
 
 	
-	
-	public void onDataLoad() {
+	@EventHandler
+	public void onDataLoad(DataLoadEvent event) {
 		hist = new History();
 		itdi = new ItemDisplayFactory();
 		isign = new InfoSignHandler();
@@ -399,11 +397,11 @@ public class HyperConomy implements HyperListener, LogListener, DisableRequestLi
 	public DebugMode getDebugMode() {
 		return dMode;
 	}
-	@Override
-	public void onLogMessage(String entry, Exception e, LogLevel level) {
-		if (e != null) e.printStackTrace();
-		if (level == LogLevel.SEVERE) mc.logSevere(entry);
-		if (level == LogLevel.INFO) mc.logInfo(entry);
+	@EventHandler
+	public void onLogMessage(LogEvent event) {
+		if (event.getException() != null) event.getException().printStackTrace();
+		if (event.getLevel() == LogLevel.SEVERE) mc.logSevere(event.getMessage());
+		if (event.getLevel() == LogLevel.INFO) mc.logInfo(event.getMessage());
 	}
 
 

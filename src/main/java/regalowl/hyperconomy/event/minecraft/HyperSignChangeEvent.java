@@ -2,10 +2,10 @@ package regalowl.hyperconomy.event.minecraft;
 
 
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.util.SimpleLocation;
+import regalowl.databukkit.event.Event;
 
-public class HyperSignChangeEvent extends HyperEvent {
+public class HyperSignChangeEvent extends Event {
 
 		private String[] lines;
 		private SimpleLocation l;

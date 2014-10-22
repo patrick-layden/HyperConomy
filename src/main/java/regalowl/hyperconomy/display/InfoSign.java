@@ -27,10 +27,7 @@ public class InfoSign {
 	private String economy;
 	private EnchantmentClass enchantClass;
 	private HyperObject ho;
-	private int x;
-	private int y;
-	private int z;
-	private String world;
+	private SimpleLocation loc;
 	private HyperConomy hc;
 	private LanguageFile L;
 	private String line1;
@@ -56,10 +53,7 @@ public class InfoSign {
 		if (economy != null) {
 			this.economy = economy;
 		}
-		this.world = signLoc.getWorld();
-		this.x = signLoc.getBlockX();
-		this.y = signLoc.getBlockY();
-		this.z = signLoc.getBlockZ();
+		this.loc = signLoc;
 		this.type = type;
 		this.objectName = he.fixName(objectName);
 		ho = he.getHyperObject(this.objectName);
@@ -97,10 +91,7 @@ public class InfoSign {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		L = hc.getLanguageFile();
 		this.economy = "default";
-		this.world = signLoc.getWorld();
-		this.x = signLoc.getBlockX();
-		this.y = signLoc.getBlockY();
-		this.z = signLoc.getBlockZ();
+		this.loc = signLoc;
 		this.type = type;
 		this.objectName = he.fixName(objectName);
 		if (economy != null) {
@@ -123,10 +114,10 @@ public class InfoSign {
 		line3 = lines[2];
 		line4 = lines[3];
 		HashMap<String,String> values = new HashMap<String,String>();
-		values.put("WORLD", world);
-		values.put("X", x+"");
-		values.put("Y", y+"");
-		values.put("Z", z+"");
+		values.put("WORLD", loc.getWorld());
+		values.put("X", loc.getBlockX()+"");
+		values.put("Y", loc.getBlockY()+"");
+		values.put("Z", loc.getBlockZ()+"");
 		values.put("HYPEROBJECT", objectName);
 		values.put("TYPE", type.toString());
 		values.put("MULTIPLIER", multiplier+"");
@@ -143,23 +134,23 @@ public class InfoSign {
 
 
 	public int getX() {
-		return x;
+		return loc.getBlockX();
 	}
 
 	public int getY() {
-		return y;
+		return loc.getBlockY();
 	}
 
 	public int getZ() {
-		return z;
+		return loc.getBlockZ();
 	}
 
 	public String getWorld() {
-		return world;
+		return loc.getWorld();
 	}
 
-	public Location getLocation() {
-		return new Location(Bukkit.getWorld(world), x, y, z);
+	public SimpleLocation getLocation() {
+		return loc;
 	}
 
 	public SignType getType() {
@@ -394,10 +385,10 @@ public class InfoSign {
 	public void deleteSign() {
 		hc.getInfoSignHandler().removeSign(this);
 		HashMap<String,String> conditions = new HashMap<String,String>();
-		conditions.put("WORLD", world);
-		conditions.put("X", x+"");
-		conditions.put("Y", y+"");
-		conditions.put("Z", z+"");
+		conditions.put("WORLD", loc.getWorld());
+		conditions.put("X", loc.getBlockX()+"");
+		conditions.put("Y", loc.getBlockY()+"");
+		conditions.put("Z", loc.getBlockZ()+"");
 		hc.getSQLWrite().performDelete("hyperconomy_info_signs", conditions);
 	}
 	
@@ -412,10 +403,10 @@ public class InfoSign {
 	*/
 	
 	public Sign getSign() {
-		if (world == null) {
+		if (loc.getWorld() == null) {
 			return null;
 		}
-		Location l = new Location(Bukkit.getWorld(world), x, y, z);
+		Location l = new Location(Bukkit.getWorld(loc.getWorld()), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		Chunk c = l.getChunk();
 		if (!c.isLoaded()) {
 			c.load();

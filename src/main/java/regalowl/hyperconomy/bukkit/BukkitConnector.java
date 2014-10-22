@@ -2,9 +2,7 @@ package regalowl.hyperconomy.bukkit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -15,43 +13,20 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
-import org.bukkit.FireworkEffect.Builder;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.FireworkEffectMeta;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.MapMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -59,24 +34,9 @@ import regalowl.hyperconomy.MineCraftConnector;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.command.CommandData;
 import regalowl.hyperconomy.command.HyperCommand;
-import regalowl.hyperconomy.event.minecraft.HyperPlayerJoinEvent;
-import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
-import regalowl.hyperconomy.serializable.SerializableBookMeta;
-import regalowl.hyperconomy.serializable.SerializableColor;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
-import regalowl.hyperconomy.serializable.SerializableEnchantmentStorageMeta;
-import regalowl.hyperconomy.serializable.SerializableFireworkEffect;
-import regalowl.hyperconomy.serializable.SerializableFireworkEffectMeta;
-import regalowl.hyperconomy.serializable.SerializableFireworkMeta;
 import regalowl.hyperconomy.serializable.SerializableInventory;
-import regalowl.hyperconomy.serializable.SerializableInventoryType;
-import regalowl.hyperconomy.serializable.SerializableItemMeta;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
-import regalowl.hyperconomy.serializable.SerializableLeatherArmorMeta;
-import regalowl.hyperconomy.serializable.SerializableMapMeta;
-import regalowl.hyperconomy.serializable.SerializablePotionEffect;
-import regalowl.hyperconomy.serializable.SerializablePotionMeta;
-import regalowl.hyperconomy.serializable.SerializableSkullMeta;
 import regalowl.hyperconomy.util.Economy_HyperConomy;
 import regalowl.hyperconomy.util.SimpleLocation;
 
@@ -85,9 +45,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	private HashMap<String, HyperCommand> commands = new HashMap<String, HyperCommand>();
 	private ConcurrentHashMap<Long, BukkitTask> tasks = new ConcurrentHashMap<Long, BukkitTask>();
 	private AtomicLong taskCounter = new AtomicLong();
-	private Plugin plugin;
 	private HyperConomy hc;
 	private BukkitInventory bi;
+	private BukkitListener bl;
 	
 	private boolean vaultInstalled;
 	private boolean useExternalEconomy;
@@ -95,8 +55,8 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	public BukkitConnector() {
 		new HyperConomy(this);
-		this.plugin = this;
 		this.bi = new BukkitInventory();
+		this.bl = new BukkitListener(this);
 	}
 	
 	
@@ -243,11 +203,11 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	//MineCraftConnector overrides
 	@Override
 	public void unregisterAllListeners() {
-		HandlerList.unregisterAll(plugin);
+		bl.unregisterAllListeners();
 	}
 	@Override
 	public void registerListeners() {
-		hc.getMC().getConnector().getServer().getPluginManager().registerEvents(this, this);
+		bl.registerListeners();
 	}
 
 	@Override
@@ -336,6 +296,12 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 			return null;
 		}
 	}
+	
+	@Override
+	public boolean isLoaded(SimpleLocation l) {
+		Location loc = getLocation(l);
+		return loc.getChunk().isLoaded();
+	}
 		
 
 
@@ -373,85 +339,23 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	}
 
 
+	
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public SerializableInventory getInventory(HyperPlayer hp) {
-		ArrayList<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
-		Player p = Bukkit.getPlayer(hp.getName());
-		Inventory i = p.getInventory();
-		int size = i.getSize();
-		int heldSlot = p.getInventory().getHeldItemSlot();
-		for (int c = 0; c < size; c++) {
-	        items.add(bi.getSerializableItemStack(i.getItem(c)));
-		}
-		SerializableInventory si = new SerializableInventory(items, SerializableInventoryType.PLAYER);
-		si.setOwner(hp.getName());
-		si.setHeldSlot(heldSlot);
-		return si;
+		return bi.getInventory(hp);
 	}
-	
+
 	@Override
 	public SerializableInventory getChestInventory(SimpleLocation l) {
-		Location loc = new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
-		if (loc.getBlock().getState() instanceof Chest) {
-			Chest chest = (Chest)loc.getBlock().getState();
-			Inventory i = chest.getInventory();
-			ArrayList<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
-			int size = i.getSize();
-			for (int c = 0; c < size; c++) {
-		        items.add(bi.getSerializableItemStack(i.getItem(c)));
-			}
-			SerializableInventory si = new SerializableInventory(items, SerializableInventoryType.CHEST);
-			si.setLocation(l);
-			return si;
-		}
-		return null;
+		return bi.getChestInventory(l);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void setInventory(SerializableInventory inventory) {
-		if (inventory.getInventoryType() == SerializableInventoryType.PLAYER) {
-			HyperPlayer hp = inventory.getHyperPlayer();
-			Player p = Bukkit.getPlayer(hp.getName());
-			p.getInventory().setHeldItemSlot(inventory.getHeldSlot());
-			ArrayList<SerializableItemStack> currentInventory = getInventory(hp).getItems();
-			ArrayList<SerializableItemStack> newInventory = inventory.getItems();
-			if (currentInventory.size() != newInventory.size()) return;
-			Inventory inv = p.getInventory();
-			for (int i = 0; i < newInventory.size(); i++) {
-				if (newInventory.get(i).equals(currentInventory.get(i))) continue;
-				ItemStack is = bi.getItemStack(newInventory.get(i));
-				if (is == null) {
-					inv.clear(i);
-				} else {
-					inv.setItem(i, is);
-				}
-			}
-			p.updateInventory();
-		} else if (inventory.getInventoryType() == SerializableInventoryType.CHEST) {
-			SimpleLocation l = inventory.getLocation();
-			Location loc = new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
-			if (loc.getBlock() instanceof Chest) {
-				Chest chest = (Chest)loc.getBlock();
-				ArrayList<SerializableItemStack> currentInventory = getChestInventory(l).getItems();
-				ArrayList<SerializableItemStack> newInventory = inventory.getItems();
-				Inventory chestInv = chest.getInventory();
-				for (int i = 0; i < newInventory.size(); i++) {
-					if (newInventory.get(i).equals(currentInventory.get(i))) continue;
-					ItemStack is = bi.getItemStack(newInventory.get(i));
-					if (is == null) {
-						chestInv.clear(i);
-					} else {
-						chestInv.setItem(i, is);
-					}
-				}
-			}
-		}
+		bi.setInventory(inventory);
 	}
 	
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public int getHeldItemSlot(HyperPlayer hp) {
@@ -459,16 +363,12 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return p.getInventory().getHeldItemSlot();
 	}
 
-
-
-	
 	@SuppressWarnings("deprecation")
 	@Override
 	public SerializableItemStack getItem(HyperPlayer hp, int slot) {
 		Player p = Bukkit.getPlayer(hp.getName());
 		return bi.getSerializableItemStack(p.getInventory().getItem(slot));
 	}
-
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -481,32 +381,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 
-	@Override
-	public void teleport(HyperPlayer hp, SimpleLocation sl) {
-		// TODO Auto-generated method stub
-		
-	}
 
-
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void sendMessage(HyperPlayer hp, String message) {
-		Player p = Bukkit.getPlayer(hp.getName());
-		runTask(new Messager(p,message));
-	}
-	private class Messager implements Runnable {
-		private Player p;
-		private String m;
-		public Messager(Player p, String message) {
-			this.p = p;
-			this.m = message;
-		}
-		@Override
-		public void run() {
-			p.sendMessage(m);
-		}
-	}
 
 	@Override
 	public String applyColor(String message) {
@@ -565,25 +440,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	
 	
-	
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onSignChangeEvent(SignChangeEvent event) {
-		HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
-		Location l = event.getBlock().getLocation();
-		SimpleLocation sl = new SimpleLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
-		HyperConomy.hc.getHyperEventHandler().fireEvent(new HyperSignChangeEvent(event.getLines(), sl, hp));
-	}
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerItemHeldEvent(PlayerItemHeldEvent event) {
-	}
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
-		HyperConomy.hc.getHyperEventHandler().fireEvent(new HyperPlayerJoinEvent(hp));
-	}
 
 
 
@@ -626,10 +482,38 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return true;
 	}
 
+	@Override
+	public void teleport(HyperPlayer hp, SimpleLocation sl) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public void sendMessage(HyperPlayer hp, String message) {
+		Player p = Bukkit.getPlayer(hp.getName());
+		runTask(new Messager(p,message));
+	}
+	private class Messager implements Runnable {
+		private Player p;
+		private String m;
+		public Messager(Player p, String message) {
+			this.p = p;
+			this.m = message;
+		}
+		@Override
+		public void run() {
+			p.sendMessage(m);
+		}
+	}
 
+
+
+	private Location getLocation(SimpleLocation l) {
+		return new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
+	}
 
 
 

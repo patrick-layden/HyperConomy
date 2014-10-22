@@ -1,9 +1,11 @@
 package regalowl.hyperconomy.event;
 
 import regalowl.hyperconomy.transaction.PlayerTransaction;
-import regalowl.hyperconomy.transaction.TransactionResponse;
 
-public class TransactionEvent extends HyperEvent {
+import regalowl.hyperconomy.transaction.TransactionResponse;
+import regalowl.databukkit.event.Event;
+
+public class TransactionEvent extends Event {
 	private PlayerTransaction transaction;
 	private TransactionResponse response;
 	

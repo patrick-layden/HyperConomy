@@ -62,7 +62,7 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 			for (int i = (px - xrad); i <= (px + xrad); i++) {
 				for (int j = (pz - zrad); j <= (pz + zrad); j++) {
 					for (int k = (py - yrad); k <= (py + yrad); k++) {
-						if (w.getChunkAt(new Location(w, i, k, j)).isLoaded()) {
+						if (new SimpleLocation(w, i, k, j).isLoaded()) {
 							Block cb = w.getBlockAt(i, k, j);
 							
 							if (cb != null && cb.getType().equals(Material.SIGN_POST) || cb != null && cb.getType().equals(Material.WALL_SIGN)) {

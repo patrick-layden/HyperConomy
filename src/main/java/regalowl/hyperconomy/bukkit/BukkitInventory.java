@@ -5,11 +5,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.FireworkEffect.Builder;
+import org.bukkit.block.Chest;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -23,6 +28,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.serializable.SerializableBookMeta;
 import regalowl.hyperconomy.serializable.SerializableColor;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
@@ -30,6 +36,8 @@ import regalowl.hyperconomy.serializable.SerializableEnchantmentStorageMeta;
 import regalowl.hyperconomy.serializable.SerializableFireworkEffect;
 import regalowl.hyperconomy.serializable.SerializableFireworkEffectMeta;
 import regalowl.hyperconomy.serializable.SerializableFireworkMeta;
+import regalowl.hyperconomy.serializable.SerializableInventory;
+import regalowl.hyperconomy.serializable.SerializableInventoryType;
 import regalowl.hyperconomy.serializable.SerializableItemMeta;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.serializable.SerializableLeatherArmorMeta;
@@ -37,8 +45,89 @@ import regalowl.hyperconomy.serializable.SerializableMapMeta;
 import regalowl.hyperconomy.serializable.SerializablePotionEffect;
 import regalowl.hyperconomy.serializable.SerializablePotionMeta;
 import regalowl.hyperconomy.serializable.SerializableSkullMeta;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class BukkitInventory {
+	
+	
+
+	@SuppressWarnings("deprecation")
+	public SerializableInventory getInventory(HyperPlayer hp) {
+		ArrayList<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
+		Player p = Bukkit.getPlayer(hp.getName());
+		Inventory i = p.getInventory();
+		int size = i.getSize();
+		int heldSlot = p.getInventory().getHeldItemSlot();
+		for (int c = 0; c < size; c++) {
+	        items.add(getSerializableItemStack(i.getItem(c)));
+		}
+		SerializableInventory si = new SerializableInventory(items, SerializableInventoryType.PLAYER);
+		si.setOwner(hp.getName());
+		si.setHeldSlot(heldSlot);
+		return si;
+	}
+	
+
+	public SerializableInventory getChestInventory(SimpleLocation l) {
+		Location loc = new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
+		if (loc.getBlock().getState() instanceof Chest) {
+			Chest chest = (Chest)loc.getBlock().getState();
+			Inventory i = chest.getInventory();
+			ArrayList<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
+			int size = i.getSize();
+			for (int c = 0; c < size; c++) {
+		        items.add(getSerializableItemStack(i.getItem(c)));
+			}
+			SerializableInventory si = new SerializableInventory(items, SerializableInventoryType.CHEST);
+			si.setLocation(l);
+			return si;
+		}
+		return null;
+	}
+	
+	
+	@SuppressWarnings("deprecation")
+	public void setInventory(SerializableInventory inventory) {
+		if (inventory.getInventoryType() == SerializableInventoryType.PLAYER) {
+			HyperPlayer hp = inventory.getHyperPlayer();
+			Player p = Bukkit.getPlayer(hp.getName());
+			p.getInventory().setHeldItemSlot(inventory.getHeldSlot());
+			ArrayList<SerializableItemStack> currentInventory = getInventory(hp).getItems();
+			ArrayList<SerializableItemStack> newInventory = inventory.getItems();
+			if (currentInventory.size() != newInventory.size()) return;
+			Inventory inv = p.getInventory();
+			for (int i = 0; i < newInventory.size(); i++) {
+				if (newInventory.get(i).equals(currentInventory.get(i))) continue;
+				ItemStack is = getItemStack(newInventory.get(i));
+				if (is == null) {
+					inv.clear(i);
+				} else {
+					inv.setItem(i, is);
+				}
+			}
+			p.updateInventory();
+		} else if (inventory.getInventoryType() == SerializableInventoryType.CHEST) {
+			SimpleLocation l = inventory.getLocation();
+			Location loc = new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
+			if (loc.getBlock() instanceof Chest) {
+				Chest chest = (Chest)loc.getBlock();
+				ArrayList<SerializableItemStack> currentInventory = getChestInventory(l).getItems();
+				ArrayList<SerializableItemStack> newInventory = inventory.getItems();
+				Inventory chestInv = chest.getInventory();
+				for (int i = 0; i < newInventory.size(); i++) {
+					if (newInventory.get(i).equals(currentInventory.get(i))) continue;
+					ItemStack is = getItemStack(newInventory.get(i));
+					if (is == null) {
+						chestInv.clear(i);
+					} else {
+						chestInv.setItem(i, is);
+					}
+				}
+			}
+		}
+	}
+	
+	
 	@SuppressWarnings("deprecation")
 	public SerializableItemStack getSerializableItemStack(ItemStack s) {
 		if (s == null) return new SerializableItemStack();

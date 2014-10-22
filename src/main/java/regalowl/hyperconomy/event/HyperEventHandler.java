@@ -1,56 +1,42 @@
 package regalowl.hyperconomy.event;
 
-
-import java.util.concurrent.CopyOnWriteArrayList;
-
+import regalowl.databukkit.event.Event;
 import regalowl.hyperconomy.HyperConomy;
 
 public class HyperEventHandler {
 	
 	private HyperConomy hc;
-	private CopyOnWriteArrayList<HyperListener> listeners = new CopyOnWriteArrayList<HyperListener>();
 	
     public HyperEventHandler() {
     	hc = HyperConomy.hc;
     }
+
+    public void registerListener(Object listener) {
+    	hc.getDataBukkit().getEventPublisher().registerListener(listener);
+    }
+    public void unRegisterListener(Object listener) {
+    	hc.getDataBukkit().getEventPublisher().unRegisterListener(listener);
+    }
     
     public void clearListeners() {
-    	listeners.clear();
+    	hc.getDataBukkit().getEventPublisher().unRegisterAllListeners();
     }
-    
-    public synchronized void registerListener(HyperListener listener) {
-    	if (!listeners.contains(listener)) {
-    		listeners.add(listener);
-    	}
-    }
-    public synchronized void unRegisterListener(HyperListener listener) {
-    	if (listeners.contains(listener)) {
-    		listeners.remove(listener);
-    	}
-    }
-
 	
-	public void fireEventFromAsyncThread(HyperEvent event) {
+	public void fireEventFromAsyncThread(Event event) {
 		hc.getMC().runTask(new EventFire(event));
 	}
     private class EventFire implements Runnable {
-    	private HyperEvent event;
-    	public EventFire(HyperEvent event) {
+    	private Event event;
+    	public EventFire(Event event) {
     		this.event = event;
     	}
 		public void run() {
-			for (HyperListener listener : listeners) {
-				listener.onHyperEvent(event);
-			}
+			hc.getDataBukkit().getEventPublisher().fireEvent(event);
 		}
     }
 	
-    
-	public HyperEvent fireEvent(HyperEvent event) {
-		for (HyperListener listener : listeners) {
-			listener.onHyperEvent(event);
-		}
-		return event;
+	public Event fireEvent(Event event) {
+		return hc.getDataBukkit().getEventPublisher().fireEvent(event);
 	}
 	
 }

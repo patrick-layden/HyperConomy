@@ -3,16 +3,16 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 
 
+
+import regalowl.databukkit.event.EventHandler;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperEvent;
-import regalowl.hyperconomy.event.HyperListener;
 import regalowl.hyperconomy.event.TransactionEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionType;
 
-public class Notify extends BaseCommand implements HyperCommand, HyperListener {
+public class Notify extends BaseCommand implements HyperCommand {
 
 	public Notify() {
 		super(false);
@@ -35,20 +35,18 @@ public class Notify extends BaseCommand implements HyperCommand, HyperListener {
 	}
 
 	
-	@Override
-	public void onHyperEvent(HyperEvent event) {
-		if (event instanceof TransactionEvent) {
-			TransactionEvent te = (TransactionEvent)event;
-			if (te.getTransactionResponse().successful()) {
-				PlayerTransaction pt = te.getTransaction();
-				TransactionType tt = pt.getTransactionType();
-				if (tt == TransactionType.BUY || tt == TransactionType.SELL) {
-					if (pt.getHyperObject() != null) {
-						HyperObject ho = pt.getHyperObject();
-						if (notifyNames.contains(ho.getName())) {
-							String message = L.f(L.get("SQL_NOTIFICATION"), ho.getStock(), ho.getBuyPriceWithTax(1), ho.getDisplayName(), ho.getEconomy());
-							sendNotification(message);
-						}
+	@EventHandler
+	public void onTransactionEvent(TransactionEvent event) {
+		TransactionEvent te = (TransactionEvent) event;
+		if (te.getTransactionResponse().successful()) {
+			PlayerTransaction pt = te.getTransaction();
+			TransactionType tt = pt.getTransactionType();
+			if (tt == TransactionType.BUY || tt == TransactionType.SELL) {
+				if (pt.getHyperObject() != null) {
+					HyperObject ho = pt.getHyperObject();
+					if (notifyNames.contains(ho.getName())) {
+						String message = L.f(L.get("SQL_NOTIFICATION"), ho.getStock(), ho.getBuyPriceWithTax(1), ho.getDisplayName(), ho.getEconomy());
+						sendNotification(message);
 					}
 				}
 			}

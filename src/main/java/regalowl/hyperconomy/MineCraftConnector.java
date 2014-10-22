@@ -46,6 +46,7 @@ public interface MineCraftConnector {
 	public SimpleLocation getLocation(HyperPlayer hp);
 	public SimpleLocation getTargetLocation(HyperPlayer hp);
 	public SimpleLocation getLocationBeforeTargetLocation(HyperPlayer hp);
+	public boolean isLoaded(SimpleLocation l);
 	public ArrayList<HyperPlayer> getOnlinePlayers();
 	public void teleport(HyperPlayer hp, SimpleLocation sl);
 	public void sendMessage(HyperPlayer hp, String message);

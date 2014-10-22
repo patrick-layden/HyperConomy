@@ -2,9 +2,9 @@ package regalowl.hyperconomy.event.minecraft;
 
 
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.databukkit.event.Event;
 
-public class HyperPlayerItemHeldEvent extends HyperEvent {
+public class HyperPlayerItemHeldEvent extends Event {
 
 		private HyperPlayer hp;
 		

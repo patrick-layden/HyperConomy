@@ -1,6 +1,9 @@
 package regalowl.hyperconomy.util;
 
 
+import regalowl.hyperconomy.HyperConomy;
+
+
 
 public class SimpleLocation {
 
@@ -52,6 +55,10 @@ public class SimpleLocation {
 	}
 	public void setWorld(String world) {
 		this.world = world;
+	}
+	
+	public boolean isLoaded() {
+		return HyperConomy.hc.getMC().isLoaded(this);
 	}
 	
 
