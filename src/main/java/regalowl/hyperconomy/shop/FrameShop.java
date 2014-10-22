@@ -60,7 +60,7 @@ public class FrameShop implements HyperListener {
 		render();
 	}
 
-	public FrameShop(short mapId, Location l, HyperObject ho, Shop s, int amount) {
+	public FrameShop(short mapId, SimpleLocation l, HyperObject ho, Shop s, int amount) {
 		hc = HyperConomy.hc;
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
@@ -75,7 +75,7 @@ public class FrameShop implements HyperListener {
 		x = l.getBlockX();
 		y = l.getBlockY();
 		z = l.getBlockZ();
-		world = l.getWorld().getName();
+		world = l.getWorld();
 		this.ho = ho;
 		this.tradeAmount = amount;
 		this.s = s;

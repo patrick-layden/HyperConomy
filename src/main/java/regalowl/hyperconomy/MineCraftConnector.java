@@ -51,6 +51,7 @@ public interface MineCraftConnector {
 	public void teleport(HyperPlayer hp, SimpleLocation sl);
 	public void sendMessage(HyperPlayer hp, String message);
 	public void kickPlayer(HyperPlayer hp, String message);
+	public boolean isSneaking(HyperPlayer hp);
 	public boolean hasPermission(HyperPlayer hp, String permission);
 	public HyperPlayer getPlayer(UUID uuid);
 	public boolean playerExists(UUID uuid);

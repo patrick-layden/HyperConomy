@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
+import regalowl.databukkit.event.EventHandler;
 import regalowl.hyperconomy.HyperBankManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
@@ -20,8 +20,6 @@ import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.HyperBankModificationEvent;
-import regalowl.hyperconomy.event.HyperEvent;
-import regalowl.hyperconomy.event.HyperListener;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
 import regalowl.hyperconomy.event.ShopModificationEvent;
@@ -30,7 +28,7 @@ import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 
 
-public class HyperModificationServer implements HyperListener {
+public class HyperModificationServer {
 
 	private HyperConomy hc;
 	private int port;
@@ -147,31 +145,40 @@ public class HyperModificationServer implements HyperListener {
 	}
 	
 	
-	@Override
-	public void onHyperEvent(HyperEvent event) {
-		if (event instanceof HyperObjectModificationEvent) {
-			sendObject.addHyperObject(((HyperObjectModificationEvent)event).getHyperObject());
-		} else if (event instanceof HyperPlayerModificationEvent) {
-			sendObject.addHyperPlayer(((HyperPlayerModificationEvent)event).getHyperPlayer());
-		} else if (event instanceof HyperBankModificationEvent) {
-			sendObject.addBank(((HyperBankModificationEvent) event).getHyperBank());
-		} else if (event instanceof ShopModificationEvent) {
-			sendObject.addShop(((ShopModificationEvent) event).getShop());
-		} else if (event instanceof DisableEvent) {
-			runServer = false;
-			remoteUpdater.cancel();
-			try {
-				if (sClientSocket != null) sClientSocket.close();
-				if (serverSocket != null) serverSocket.close();
-				if (clientSocket != null) clientSocket.close();
-			} catch (Exception e) {
-				HyperConomy.hc.getDebugMode().debugWriteError(e);
-			}
+	@EventHandler
+	public void onHyperObjectModification(HyperObjectModificationEvent event) {
+		sendObject.addHyperObject(event.getHyperObject());
+	}
+	
+	@EventHandler
+	public void onHyperPlayerModification(HyperPlayerModificationEvent event) {
+		sendObject.addHyperPlayer(event.getHyperPlayer());
+	}
+	
+	@EventHandler
+	public void onHyperBankModification(HyperBankModificationEvent event) {
+		sendObject.addBank(event.getHyperBank());
+	}
+	
+	@EventHandler
+	public void onShopModification(ShopModificationEvent event) {
+		sendObject.addShop(event.getShop());
+	}
+	
+	@EventHandler
+	public void onDisableEvent(DisableEvent event) {
+		runServer = false;
+		remoteUpdater.cancel();
+		try {
+			if (sClientSocket != null) sClientSocket.close();
+			if (serverSocket != null) serverSocket.close();
+			if (clientSocket != null) clientSocket.close();
+		} catch (Exception e) {
+			HyperConomy.hc.getDebugMode().debugWriteError(e);
 		}
 	}
-
-
 	
+
 	private class RemoteUpdater extends TimerTask {
 		@Override
 		public void run() {

@@ -511,11 +511,21 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 
-	private Location getLocation(SimpleLocation l) {
+	protected Location getLocation(SimpleLocation l) {
 		return new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
 	}
 
+	protected SimpleLocation getLocation(Location l) {
+		return new SimpleLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
+	}
 
+
+
+	@Override
+	public boolean isSneaking(HyperPlayer hp) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 
 	

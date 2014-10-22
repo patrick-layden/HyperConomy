@@ -70,5 +70,17 @@ public class HyperLock {
 		}
 		return data;
 	}
+	
+	public void sendLockMessage(HyperPlayer hp) {
+		if (loadLock) {
+			hp.sendMessage(L.get("HYPERCONOMY_LOADING"));
+		}
+		if (fullLock) {
+			hp.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+		}
+		if (playerLock && !hp.hasPermission("hyperconomy.admin")) {
+			hp.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+		}
+	}
 
 }

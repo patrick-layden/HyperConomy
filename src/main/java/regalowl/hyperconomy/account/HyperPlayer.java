@@ -621,5 +621,8 @@ public class HyperPlayer implements HyperAccount {
 		HyperConomy.hc.getMC().kickPlayer(this, message);
 	}
 	
+	public boolean isSneaking() {
+		return HyperConomy.hc.getMC().isSneaking(this);
+	}
 	
 }
