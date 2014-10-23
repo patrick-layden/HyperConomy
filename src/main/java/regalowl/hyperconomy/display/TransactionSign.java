@@ -44,7 +44,7 @@ public class TransactionSign implements Listener {
 				if (hc.getHyperLock().loadLock()) {
 					return;
 				}
-				HyperEconomy he = em.getHyperPlayerManager().getHyperPlayer(p).getHyperEconomy();
+				HyperEconomy he = em.getHyperPlayerManager().getHyperPlayer(p.getName()).getHyperEconomy();
 				Block b = null;
 				try {
 					b = p.getTargetBlock(null, 500);
@@ -161,9 +161,10 @@ public class TransactionSign implements Listener {
 			if (!hc.getConf().getBoolean("enable-feature.transaction-signs")) {return;}
 			Player p = ievent.getPlayer();
 			if (p == null) {return;}
+			HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
 			HyperEconomy he = null;
 			if (!hc.getHyperLock().loadLock()) {
-				he = em.getHyperPlayerManager().getHyperPlayer(p).getHyperEconomy();
+				he = em.getHyperPlayerManager().getHyperPlayer(p.getName()).getHyperEconomy();
 			}
 			if (p.isSneaking() && p.hasPermission("hyperconomy.admin")) {return;}
 			LanguageFile L = hc.getLanguageFile();
@@ -210,15 +211,14 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.buysign")) {
-									if ((em.getHyperShopManager().inAnyShop(p) && requireShop) || !requireShop) {
-										HyperPlayer hp = em.getHyperPlayerManager().getHyperPlayer(p);
+									if ((em.getHyperShopManager().inAnyShop(hp) && requireShop) || !requireShop) {
 										if (hp == null) {
 											ievent.setCancelled(true);
 											return;
 										}
-										if (!requireShop || hp.hasBuyPermission(em.getHyperShopManager().getShop(p))) {
+										if (!requireShop || hp.hasBuyPermission(em.getHyperShopManager().getShop(hp))) {
 											HyperObject ho = he.getHyperObject(line12);
-											if (!hc.getHyperLock().isLocked(p)) {
+											if (!hc.getHyperLock().isLocked(hp)) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 												pt.setAmount(amount);
 												pt.setHyperObject(ho);
@@ -250,20 +250,19 @@ public class TransactionSign implements Listener {
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
 								if (p.hasPermission("hyperconomy.sellsign")) {
-									if ((em.getHyperShopManager().inAnyShop(p) && requireShop) || !requireShop) {
-										HyperPlayer hp = em.getHyperPlayerManager().getHyperPlayer(p);
+									if ((em.getHyperShopManager().inAnyShop(hp) && requireShop) || !requireShop) {
 										if (hp == null) {
 											ievent.setCancelled(true);
 											return;
 										}
-										if (!requireShop || hp.hasSellPermission(em.getHyperShopManager().getShop(p))) {
+										if (!requireShop || hp.hasSellPermission(em.getHyperShopManager().getShop(hp))) {
 											if (p.getGameMode() == GameMode.CREATIVE && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
 												p.sendMessage(L.get("CANT_SELL_CREATIVE"));
 												ievent.setCancelled(true);
 												return;
 											}
 											HyperObject ho = he.getHyperObject(line12);
-											if (!hc.getHyperLock().isLocked(p)) {
+											if (!hc.getHyperLock().isLocked(hp)) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 												pt.setAmount(amount);
 												pt.setHyperObject(ho);

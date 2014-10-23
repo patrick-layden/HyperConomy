@@ -302,6 +302,7 @@ public class ChestShopHandler implements Listener {
 				scevent.setLine(1, "");
 				return;
 			}
+			HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(scevent.getPlayer().getName());
 
 			Block signblock = scevent.getBlock();
 			org.bukkit.material.Sign msign = (org.bukkit.material.Sign) signblock.getState().getData();
@@ -327,7 +328,7 @@ public class ChestShopHandler implements Listener {
 				return;
 			}
 
-			if (hc.getConf().getBoolean("shop.require-chest-shops-to-be-in-shop") && !em.getHyperShopManager().inAnyShop(scevent.getPlayer())) {
+			if (hc.getConf().getBoolean("shop.require-chest-shops-to-be-in-shop") && !em.getHyperShopManager().inAnyShop(hp)) {
 				scevent.setLine(0, ChatColor.DARK_RED + "You must");
 				scevent.setLine(1, ChatColor.DARK_RED + "place your");
 				scevent.setLine(2, ChatColor.DARK_RED + "chest shop");
@@ -427,9 +428,10 @@ public class ChestShopHandler implements Listener {
 			} else {
 				return;
 			}
-			if (hc.getHyperLock().isLocked(p)) {
+			HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
+			if (hc.getHyperLock().isLocked(hp)) {
 				if (isChestShop(icevent.getInventory().getHolder())) {
-					hc.getHyperLock().sendLockMessage(p);
+					hc.getHyperLock().sendLockMessage(hp);
 					icevent.setCancelled(true);
 				}
 				return;
@@ -463,6 +465,7 @@ public class ChestShopHandler implements Listener {
 				icevent.setCancelled(true);
 				return;
 			}
+			
 			//HyperItemStack his = new HyperItemStack(clickedItem);
 			if (his.isDamaged()) {
 				icevent.setCancelled(true);
