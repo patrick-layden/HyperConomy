@@ -346,7 +346,7 @@ public class InfoSign {
 					if (line3.length() > 14) {
 						line3 = line3.substring(0, 13) + ")";
 					}
-					hc.getMC().runTask(new Runnable() {
+					HyperConomy.mc.runTask(new Runnable() {
 						public void run() {
 							Sign s = getSign();
 							if (s != null) {

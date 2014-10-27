@@ -99,7 +99,7 @@ public class HyperPlayer implements HyperAccount {
 		this.world = world;
 		this.hash = hash;
 		this.salt = salt;
-		hc.getMC().runTask(new Runnable() {
+		HyperConomy.mc.runTask(new Runnable() {
 			public void run() {
 				checkUUID();
 				//checkExternalAccount();
@@ -112,10 +112,10 @@ public class HyperPlayer implements HyperAccount {
 	@SuppressWarnings("deprecation")
 	private void checkExternalAccount() {
 		HyperConomy hc = HyperConomy.hc;
-		if (!hc.getMC().useExternalEconomy()) {return;}
+		if (!HyperConomy.mc.useExternalEconomy()) {return;}
 		if (name == null) {return;}
-		if (!hc.getMC().getEconomy().hasAccount(name)) {
-			hc.getMC().getEconomy().createPlayerAccount(name);
+		if (!HyperConomy.mc.getEconomy().hasAccount(name)) {
+			HyperConomy.mc.getEconomy().createPlayerAccount(name);
 			setBalance(balance);
 		}
 		checkForNameChange();
@@ -147,7 +147,7 @@ public class HyperPlayer implements HyperAccount {
 		}
 		if (p == null) {return;}
 		if (p.getName().equals(name)) {return;}
-		if (hc.getMC().useExternalEconomy()) {
+		if (HyperConomy.mc.useExternalEconomy()) {
 			double oldBalance = getBalance();
 			setBalance(0.0);
 			setName(p.getName());
@@ -190,8 +190,8 @@ public class HyperPlayer implements HyperAccount {
 	public double getBalance() {
 		HyperConomy hc = HyperConomy.hc;
 		checkExternalAccount();
-		if (hc.getMC().useExternalEconomy()) {
-			return hc.getMC().getEconomy().getBalance(name);
+		if (HyperConomy.mc.useExternalEconomy()) {
+			return HyperConomy.mc.getEconomy().getBalance(name);
 		} else {
 			return balance;
 		}
@@ -373,13 +373,11 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public SerializableInventory getInventory() {
-		HyperConomy hc = HyperConomy.hc;
-		return hc.getMC().getInventory(this);
+		return HyperConomy.mc.getInventory(this);
 	}
 
 	public void sendMessage(String message) {
-		MineCraftConnector mc = HyperConomy.hc.getMC();
-		mc.sendMessage(this, mc.applyColor(message));
+		HyperConomy.mc.sendMessage(this, HyperConomy.mc.applyColor(message));
 	}
 	
 	public boolean hasPermission(String permission) {
@@ -471,14 +469,14 @@ public class HyperPlayer implements HyperAccount {
 	public void setBalance(double balance) {
 		HyperConomy hc = HyperConomy.hc;
 		checkExternalAccount();
-		if (hc.getMC().useExternalEconomy()) {
-			if (hc.getMC().getEconomy().hasAccount(name)) {
-				hc.getMC().getEconomy().withdrawPlayer(name, hc.getMC().getEconomy().getBalance(name));
+		if (HyperConomy.mc.useExternalEconomy()) {
+			if (HyperConomy.mc.getEconomy().hasAccount(name)) {
+				HyperConomy.mc.getEconomy().withdrawPlayer(name, HyperConomy.mc.getEconomy().getBalance(name));
 			} else {
-				hc.getMC().getEconomy().createPlayerAccount(name);
+				HyperConomy.mc.getEconomy().createPlayerAccount(name);
 			}
-			hc.getMC().getEconomy().depositPlayer(name, balance);
-			hc.getLog().writeAuditLog(name, "setbalance", balance, hc.getMC().getEconomy().getName());
+			HyperConomy.mc.getEconomy().depositPlayer(name, balance);
+			hc.getLog().writeAuditLog(name, "setbalance", balance, HyperConomy.mc.getEconomy().getName());
 		} else {
 			setInternalBalance(balance);
 		}
@@ -498,9 +496,9 @@ public class HyperPlayer implements HyperAccount {
 	public void deposit(double amount) {
 		HyperConomy hc = HyperConomy.hc;
 		checkExternalAccount();
-		if (hc.getMC().useExternalEconomy()) {
-			hc.getMC().getEconomy().depositPlayer(name, amount);
-			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getMC().getEconomy().getName());
+		if (HyperConomy.mc.useExternalEconomy()) {
+			HyperConomy.mc.getEconomy().depositPlayer(name, amount);
+			hc.getLog().writeAuditLog(name, "deposit", amount, HyperConomy.mc.getEconomy().getName());
 		} else {
 			this.balance += amount;
 			HashMap<String,String> conditions = new HashMap<String,String>();
@@ -516,9 +514,9 @@ public class HyperPlayer implements HyperAccount {
 	public void withdraw(double amount) {
 		HyperConomy hc = HyperConomy.hc;
 		checkExternalAccount();
-		if (hc.getMC().useExternalEconomy()) {
-			hc.getMC().getEconomy().withdrawPlayer(name, amount);
-			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getMC().getEconomy().getName());
+		if (HyperConomy.mc.useExternalEconomy()) {
+			HyperConomy.mc.getEconomy().withdrawPlayer(name, amount);
+			hc.getLog().writeAuditLog(name, "withdrawal", amount, HyperConomy.mc.getEconomy().getName());
 		} else {
 			this.balance -= amount;
 			HashMap<String,String> conditions = new HashMap<String,String>();
@@ -590,39 +588,39 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public SimpleLocation getTargetLocation() {
-		return HyperConomy.hc.getMC().getTargetLocation(this);
+		return HyperConomy.mc.getTargetLocation(this);
 	}
 	
 	public SimpleLocation getLocationBeforeTargetLocation() {
-		return HyperConomy.hc.getMC().getLocationBeforeTargetLocation(this);
+		return HyperConomy.mc.getLocationBeforeTargetLocation(this);
 	}
 	
 	public SimpleLocation getLocation() {
-		return HyperConomy.hc.getMC().getLocation(this);
+		return HyperConomy.mc.getLocation(this);
 	}
 
 	public int getHeldItemSlot() {
-		return HyperConomy.hc.getMC().getHeldItemSlot(this);
+		return HyperConomy.mc.getHeldItemSlot(this);
 	}
 	
 	public SerializableItemStack getItemInHand() {
-		return HyperConomy.hc.getMC().getItem(this, getHeldItemSlot());
+		return HyperConomy.mc.getItem(this, getHeldItemSlot());
 	}
 	
 	public void teleport(SimpleLocation newLocation) {
-		HyperConomy.hc.getMC().teleport(this, newLocation);
+		HyperConomy.mc.teleport(this, newLocation);
 	}
 
 	public boolean isInCreativeMode() {
-		return HyperConomy.hc.getMC().isInCreativeMode(this);
+		return HyperConomy.mc.isInCreativeMode(this);
 	}
 	
 	public void kickPlayer(String message) {
-		HyperConomy.hc.getMC().kickPlayer(this, message);
+		HyperConomy.mc.kickPlayer(this, message);
 	}
 	
 	public boolean isSneaking() {
-		return HyperConomy.hc.getMC().isSneaking(this);
+		return HyperConomy.mc.isSneaking(this);
 	}
 	
 }

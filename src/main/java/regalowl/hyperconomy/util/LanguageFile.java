@@ -114,7 +114,7 @@ public class LanguageFile {
 				if (text.startsWith(" ")) {
 					text = text.substring(1, text.length());
 				}
-				text = hc.getMC().applyColor(text);
+				text = HyperConomy.mc.applyColor(text);
 				language.put(name, text);
 			}
 			language.put("CC", "\u00A7");
@@ -133,7 +133,7 @@ public class LanguageFile {
 			if (text.startsWith(" ")) {
 				text = text.substring(1, text.length());
 			}
-			text = hc.getMC().applyColor(text);
+			text = HyperConomy.mc.applyColor(text);
 			languageBackup.put(name, text);
 		}
 		languageBackup.put("CC", "\u00A7");
@@ -225,7 +225,7 @@ public class LanguageFile {
 	
 
 	public String applyColor(String string) {
-		return HyperConomy.hc.getMC().applyColor(string);
+		return HyperConomy.mc.applyColor(string);
 	}
 	
 	

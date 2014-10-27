@@ -38,4 +38,11 @@ public enum SignType {
 			return SignType.NONE;
 		}
 	}
+	
+	public static boolean isSignType(String type) {
+		SignType t = fromString(type);
+		if (t == SignType.NONE) return false;
+		if (type.toUpperCase().equalsIgnoreCase(t.toString())) return true;
+		return false;
+	}
 }

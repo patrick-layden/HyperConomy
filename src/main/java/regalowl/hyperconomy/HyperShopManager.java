@@ -3,7 +3,6 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.shop.GlobalShop;
@@ -119,7 +118,7 @@ public class HyperShopManager {
 		shops.remove(name);
 	}
     public void startShopCheck() {
-		shopCheckTaskId = hc.getMC().runRepeatingTask(new Runnable() {
+		shopCheckTaskId = HyperConomy.mc.runRepeatingTask(new Runnable() {
 		    public void run() {
 				for (Shop shop:shops.values()) {
 					shop.updatePlayerStatus();
@@ -128,7 +127,7 @@ public class HyperShopManager {
 		}, shopinterval, shopinterval);
     }
     public void stopShopCheck() {
-    	hc.getMC().cancelTask(shopCheckTaskId);
+    	HyperConomy.mc.cancelTask(shopCheckTaskId);
     }
     public long getShopCheckInterval() {
     	return shopinterval;

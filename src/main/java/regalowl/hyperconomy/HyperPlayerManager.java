@@ -54,7 +54,7 @@ public class HyperPlayerManager {
 			defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
 			defaultAccount.setUUID(UUID.randomUUID().toString());
 		}
-		hc.getMC().runTask(new Runnable() {
+		HyperConomy.mc.runTask(new Runnable() {
 			public void run() {
 				addOnlinePlayers();
 			}
@@ -75,7 +75,7 @@ public class HyperPlayerManager {
 	}
 	
 	public ArrayList<HyperPlayer> getOnlinePlayers() {
-		return hc.getMC().getOnlinePlayers();
+		return HyperConomy.mc.getOnlinePlayers();
 	}
 	
 	
@@ -88,7 +88,7 @@ public class HyperPlayerManager {
 			}
 			String name = ev.getHyperPlayer().getName();
 			if (name.equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
-				hc.getMC().kickPlayer(ev.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+				HyperConomy.mc.kickPlayer(ev.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 			}
 			if (!playerAccountExists(name)) {
 				addPlayer(name);
@@ -135,8 +135,8 @@ public class HyperPlayerManager {
 	@SuppressWarnings("deprecation")
 	public boolean playerAccountExists(String name) {
 		if (name == null || name == "") {return false;}
-		if (hc.getMC().useExternalEconomy()) {
-			return hc.getMC().getEconomy().hasAccount(name);
+		if (HyperConomy.mc.useExternalEconomy()) {
+			return HyperConomy.mc.getEconomy().hasAccount(name);
 		} else {
 			return hyperPlayers.containsKey(name.toLowerCase());
 		}
@@ -145,8 +145,8 @@ public class HyperPlayerManager {
 	@SuppressWarnings("deprecation")
 	public boolean playerAccountExists(UUID uuid) {
 		if (uuid == null) {return false;}
-		if (hc.getMC().useExternalEconomy()) {
-			return hc.getMC().getEconomy().hasAccount(getHyperPlayer(uuid).getName());
+		if (HyperConomy.mc.useExternalEconomy()) {
+			return HyperConomy.mc.getEconomy().hasAccount(getHyperPlayer(uuid).getName());
 		} else {
 			return uuidIndex.containsKey(uuid.toString());
 		}
@@ -202,7 +202,7 @@ public class HyperPlayerManager {
 			String pName = uuidIndex.get(uuid.toString());
 			return hyperPlayers.get(pName);
 		} else {
-			MineCraftConnector mc = hc.getMC();
+			MineCraftConnector mc = HyperConomy.mc;
 			if (!mc.playerExists(uuid)) return null;
 			return mc.getPlayer(uuid);
 		}

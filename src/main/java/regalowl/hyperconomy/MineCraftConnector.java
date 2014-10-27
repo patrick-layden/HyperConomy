@@ -11,6 +11,9 @@ import regalowl.hyperconomy.command.HyperCommand;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
 import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.shop.ChestShop;
+import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.util.HSign;
 import regalowl.hyperconomy.util.SimpleLocation;
 
 public interface MineCraftConnector {
@@ -47,6 +50,7 @@ public interface MineCraftConnector {
 	public SimpleLocation getTargetLocation(HyperPlayer hp);
 	public SimpleLocation getLocationBeforeTargetLocation(HyperPlayer hp);
 	public boolean isLoaded(SimpleLocation l);
+	public void load(SimpleLocation l);
 	public ArrayList<HyperPlayer> getOnlinePlayers();
 	public void teleport(HyperPlayer hp, SimpleLocation sl);
 	public void sendMessage(HyperPlayer hp, String message);
@@ -61,6 +65,7 @@ public interface MineCraftConnector {
 	public void logInfo(String message);
 	public void logSevere(String message);
 	public String applyColor(String text);
+	public String removeColor(String text);
 	
 	public SerializableInventory getInventory(HyperPlayer hp);
 	public SerializableInventory getChestInventory(SimpleLocation l);
@@ -71,5 +76,12 @@ public interface MineCraftConnector {
 	
 	public boolean conflictsWith(SerializableEnchantment e1, SerializableEnchantment e2);
 	public boolean canEnchantItem(SerializableItemStack item);
-
+	
+	
+	public ChestShop getChestShop(SimpleLocation location);
+	public HSign getSign(SimpleLocation location);
+	public void setSign(HSign sign);
+	public HBlock getAttachedBlock(HSign sign);
+	public boolean isChest(SimpleLocation l);
+	public boolean canHoldChestShopSign(SimpleLocation l);
 }

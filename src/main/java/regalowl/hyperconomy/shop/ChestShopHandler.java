@@ -2,252 +2,67 @@ package regalowl.hyperconomy.shop;
 
 import java.util.ArrayList;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
+
+
+
+
+
+
+
+
+
+
 
 import regalowl.databukkit.CommonFunctions;
+import regalowl.databukkit.event.EventHandler;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.MineCraftConnector;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.minecraft.ChestShopClickEvent;
+import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
+import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.hyperobject.TempItem;
+import regalowl.hyperconomy.serializable.SerializableEnchantment;
+import regalowl.hyperconomy.serializable.SerializableInventory;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
+import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.util.HSign;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class ChestShopHandler implements Listener {
+public class ChestShopHandler {
 
 	private HyperConomy hc;
 	private CommonFunctions cf;
 	private LanguageFile L;
 	private DataManager em;
 
-	private ArrayList<BlockFace> faces = new ArrayList<BlockFace>();
-	private ArrayList<BlockFace> allfaces = new ArrayList<BlockFace>();
 
 	public ChestShopHandler() {
-
 		hc = HyperConomy.hc;
 		em = hc.getDataManager();
 		cf = hc.gCF();
 		L = hc.getLanguageFile();
-
-		faces.add(BlockFace.EAST);
-		faces.add(BlockFace.WEST);
-		faces.add(BlockFace.NORTH);
-		faces.add(BlockFace.SOUTH);
-
-		allfaces.add(BlockFace.EAST);
-		allfaces.add(BlockFace.WEST);
-		allfaces.add(BlockFace.NORTH);
-		allfaces.add(BlockFace.SOUTH);
-		allfaces.add(BlockFace.DOWN);
-		allfaces.add(BlockFace.UP);
-
-		if (hc.getConf().getBoolean("enable-feature.chest-shops")) {
-			hc.getMC().getConnector().getServer().getPluginManager().registerEvents(this, hc.getMC().getConnector());
-		}
-
+		if (hc.getConf().getBoolean("enable-feature.chest-shops")) hc.getHyperEventHandler().registerListener(this);
 	}
 
-	public boolean isChestShopSign(Block b) {
-		try {
-			if (b == null) {
-				return false;
-			}
-			if (b.getType().equals(Material.WALL_SIGN)) {
-				Sign s = (Sign) b.getState();
-				String line2 = s.getLine(1).trim();
-				if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
-					BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
-					if (chestblock instanceof Chest) {
-						s.update();
-						return true;
-					}
-				}
-			} else {
-				for (BlockFace cface : faces) {
-					Block relative = b.getRelative(cface);
-					if (relative.getType().equals(Material.WALL_SIGN)) {
-						Sign s = (Sign) relative.getState();
-						String line2 = s.getLine(1).trim();
-						if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
-							org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
-							BlockFace attachedface = sign.getFacing();
-							if (relative.getRelative(attachedface.getOppositeFace()).equals(b)) {
-								return true;
-							}
-						}
-					}
-				}
-			}
-			return false;
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-			return false;
-		}
-	}
 
-	public Sign getChestShopSign(Block b) {
-		try {
-			if (b == null) {
-				return null;
-			}
-			if (b.getState() instanceof Chest) {
-				Chest chest = (Chest) b.getState();
-				String world = chest.getBlock().getWorld().getName();
-				BlockState signblock = Bukkit.getWorld(world).getBlockAt(chest.getX(), chest.getY() + 1, chest.getZ()).getState();
-				if (signblock instanceof Sign) {
-					Sign s = (Sign) signblock;
-					String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-					if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
-						return s;
-					}
-				}
-			} else if (b.getType().equals(Material.WALL_SIGN)) {
-				Sign s = (Sign) b.getState();
-				String line2 = s.getLine(1).trim();
-				if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
-					BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
-					if (chestblock instanceof Chest) {
-						s.update();
-						return s;
-					}
-				}
-			} else {
-				for (BlockFace cface : faces) {
-					Block relative = b.getRelative(cface);
-					if (relative.getType().equals(Material.WALL_SIGN)) {
-						Sign s = (Sign) relative.getState();
-						String line2 = s.getLine(1).trim();
-						if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
-							org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
-							BlockFace attachedface = sign.getFacing();
-							if (relative.getRelative(attachedface.getOppositeFace()).equals(b)) {
-								return s;
-							}
-						}
-					}
-				}
-			}
-			return null;
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-			return null;
-		}
-	}
-
-	public boolean isChestShop(Block b, boolean includeSign) {
-		try {
-			if (b == null) {
-				return false;
-			}
-			if (b.getState() instanceof Chest) {
-				Chest chest = (Chest) b.getState();
-				String world = chest.getBlock().getWorld().getName();
-				BlockState signblock = Bukkit.getWorld(world).getBlockAt(chest.getX(), chest.getY() + 1, chest.getZ()).getState();
-				if (signblock instanceof Sign) {
-					Sign s = (Sign) signblock;
-					String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-					if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
-						return true;
-					}
-				}
-			} else {
-				if (includeSign && isChestShopSign(b)) {
-					return true;
-				}
-			}
-			return false;
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-			return false;
-		}
-	}
-
-	public boolean isChestShop(InventoryHolder ih) {
-		try {
-			if (ih instanceof Chest) {
-				Chest chest = (Chest) ih;
-				int x = chest.getX();
-				int y = chest.getY() + 1;
-				int z = chest.getZ();
-				String world = chest.getBlock().getWorld().getName();
-				BlockState signblock = Bukkit.getWorld(world).getBlockAt(x, y, z).getState();
-				if (signblock instanceof Sign) {
-					Sign s = (Sign) signblock;
-					String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-					if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
-						return true;
-					}
-				}
-			}
-			return false;
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-			return false;
-		}
-	}
-
-	public Sign getChestShopSign(InventoryHolder ih) {
-		try {
-			if (ih instanceof Chest) {
-				Chest chest = (Chest) ih;
-				int x = chest.getX();
-				int y = chest.getY() + 1;
-				int z = chest.getZ();
-				String world = chest.getBlock().getWorld().getName();
-				BlockState signblock = Bukkit.getWorld(world).getBlockAt(x, y, z).getState();
-				if (signblock instanceof Sign) {
-					Sign s = (Sign) signblock;
-					String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-					if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
-						return s;
-					}
-				}
-			}
-			return null;
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-			return null;
-		}
-	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockBreakEvent(BlockBreakEvent bbevent) {
+	@EventHandler
+	public void onBlockBreakEvent(HBlockBreakEvent bbevent) {
 		if (isChestShop(bbevent.getBlock(), true)) {
 			if (isChestShopSign(bbevent.getBlock()) && bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) {
 				return;
 			}
 			Sign s = getChestShopSign(bbevent.getBlock());
-			String line34 = ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim();
+			String line34 = HyperConomy.mc.removeColor(s.getLine(2)).trim() + HyperConomy.mc.removeColor(s.getLine(3)).trim();
 			if (bbevent.getPlayer().getName().equalsIgnoreCase(line34) && bbevent.getPlayer().isSneaking()) {
 				return;
 			}
@@ -290,21 +105,23 @@ public class ChestShopHandler implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onSignChangeEvent(SignChangeEvent scevent) {
+	@EventHandler
+	public void onSignChangeEvent(HyperSignChangeEvent event) {
 		try {
-			String line2 = ChatColor.stripColor(scevent.getLine(1)).trim();
+			HSign sign = event.getSign();
+			HyperPlayer hp = event.getHyperPlayer();
+			String line2 = HyperConomy.mc.removeColor(sign.getLine(1)).trim();
 			if (!line2.equalsIgnoreCase("[Trade]") && !line2.equalsIgnoreCase("[Buy]") && !line2.equalsIgnoreCase("[Sell]")) {
 				return;
 			}
 
-			if (!scevent.getPlayer().hasPermission("hyperconomy.chestshop")) {
-				scevent.setLine(1, "");
+			if (!hp.hasPermission("hyperconomy.chestshop")) {
+				sign.setLine(1, "");
 				return;
 			}
-			HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(scevent.getPlayer().getName());
 
-			Block signblock = scevent.getBlock();
+			HBlock attachedblock = sign.getAttachedBlock();
+			signblock.
 			org.bukkit.material.Sign msign = (org.bukkit.material.Sign) signblock.getState().getData();
 			BlockFace attachedface = msign.getAttachedFace();
 			Block attachedblock = signblock.getRelative(attachedface);
@@ -321,18 +138,18 @@ public class ChestShopHandler implements Listener {
 			BlockState pchest3 = cblock.getRelative(BlockFace.NORTH).getState();
 			BlockState pchest4 = cblock.getRelative(BlockFace.SOUTH).getState();
 			if ((pchest1 instanceof Chest) || (pchest2 instanceof Chest) || (pchest3 instanceof Chest) || (pchest4 instanceof Chest)) {
-				scevent.setLine(0, ChatColor.DARK_RED + "You can't");
-				scevent.setLine(1, ChatColor.DARK_RED + "use a");
-				scevent.setLine(2, ChatColor.DARK_RED + "double");
-				scevent.setLine(3, ChatColor.DARK_RED + "chest.");
+				sign.setLine(0, "&4You can't");
+				sign.setLine(1, "&4use a");
+				sign.setLine(2, "&4double");
+				sign.setLine(3, "&4chest.");
 				return;
 			}
 
 			if (hc.getConf().getBoolean("shop.require-chest-shops-to-be-in-shop") && !em.getHyperShopManager().inAnyShop(hp)) {
-				scevent.setLine(0, ChatColor.DARK_RED + "You must");
-				scevent.setLine(1, ChatColor.DARK_RED + "place your");
-				scevent.setLine(2, ChatColor.DARK_RED + "chest shop");
-				scevent.setLine(3, ChatColor.DARK_RED + "in a shop.");
+				sign.setLine(0, "&4You must");
+				sign.setLine(1, "&4place your");
+				sign.setLine(2, "&4chest shop");
+				sign.setLine(3, "&4in a shop.");
 				return;
 			}
 
@@ -346,18 +163,18 @@ public class ChestShopHandler implements Listener {
 				count++;
 			}
 			if (emptyslots != 27) {
-				scevent.setLine(0, ChatColor.DARK_RED + "You must");
-				scevent.setLine(1, ChatColor.DARK_RED + "use an");
-				scevent.setLine(2, ChatColor.DARK_RED + "empty");
-				scevent.setLine(3, ChatColor.DARK_RED + "chest.");
+				sign.setLine(0, "&4You must");
+				sign.setLine(1, "&4use an");
+				sign.setLine(2, "&4empty");
+				sign.setLine(3, "&4chest.");
 				return;
 			}
 
 			if (am == Material.ICE || am == Material.LEAVES || am == Material.SAND || am == Material.GRAVEL || am == Material.SIGN || am == Material.SIGN_POST || am == Material.TNT) {
-				scevent.setLine(0, ChatColor.DARK_RED + "You can't");
-				scevent.setLine(1, ChatColor.DARK_RED + "attach your");
-				scevent.setLine(2, ChatColor.DARK_RED + "sign to that");
-				scevent.setLine(3, ChatColor.DARK_RED + "block!");
+				sign.setLine(0, "&4You can't");
+				sign.setLine(1, "&4attach your");
+				sign.setLine(2, "&4sign to that");
+				sign.setLine(3, "&4block!");
 				return;
 			}
 
@@ -366,22 +183,22 @@ public class ChestShopHandler implements Listener {
 				try {
 					String price = line1.substring(1, line1.length());
 					Double.parseDouble(price);
-					scevent.setLine(0, ChatColor.GREEN + L.fCS(price));
+					sign.setLine(0, "&a" + L.fCS(price));
 				} catch (Exception e) {
-					scevent.setLine(0, "");
+					sign.setLine(0, "");
 				}
 			} else {
 				try {
 					String price = line1.substring(0, line1.length());
 					Double.parseDouble(price);
-					scevent.setLine(0, ChatColor.GREEN + L.fCS(price));
+					sign.setLine(0, "&a" + L.fCS(price));
 				} catch (Exception e) {
 					try {
 						String price = line1.substring(0, line1.length() - 1);
 						Double.parseDouble(price);
-						scevent.setLine(0, ChatColor.GREEN + L.fCS(price));
+						sign.setLine(0, "&a" + L.fCS(price));
 					} catch (Exception e2) {
-						scevent.setLine(0, "");
+						sign.setLine(0, "");
 					}
 				}
 			}
@@ -404,9 +221,9 @@ public class ChestShopHandler implements Listener {
 				line3 = pname;
 			}
 
-			scevent.setLine(1, ChatColor.AQUA + fline);
-			scevent.setLine(2, ChatColor.WHITE + line3);
-			scevent.setLine(3, ChatColor.WHITE + line4);
+			sign.setLine(1, "&3" + fline);
+			sign.setLine(2, "&f" + line3);
+			sign.setLine(3, "&f" + line4);
 
 			if (scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.SIGN_POST) || scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.WALL_SIGN)) {
 				Sign s = (Sign) scevent.getBlock().getState();
@@ -418,274 +235,210 @@ public class ChestShopHandler implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
-	public void onInventoryClickEvent(InventoryClickEvent icevent) {
+	@EventHandler
+	public void onInventoryClickEvent(ChestShopClickEvent event) {
 		try {
-			HumanEntity he = icevent.getWhoClicked();
-			Player p = null;
-			if (he instanceof Player) {
-				p = (Player)he;
-			} else {
+			HyperPlayer clicker = event.getClicker();
+			ChestShop cs = event.getChestShop();
+			ChestShopType type = cs.getType();
+			HyperAccount owner = cs.getOwner();
+			HSign sign = cs.getSign();
+			boolean hasStaticPrice = cs.hasStaticPrice();
+			double staticPrice = 0.0;
+			if (hasStaticPrice) staticPrice = cs.getStaticPrice();
+			SerializableInventory shopInventory = cs.getInventory();
+			int slot = event.getClickedSlot();
+			if (sign == null) return;
+			if (hc.getHyperLock().isLocked(clicker)) {
+				hc.getHyperLock().sendLockMessage(clicker);
+				event.cancel();
 				return;
 			}
-			HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
-			if (hc.getHyperLock().isLocked(hp)) {
-				if (isChestShop(icevent.getInventory().getHolder())) {
-					hc.getHyperLock().sendLockMessage(hp);
-					icevent.setCancelled(true);
-				}
-				return;
-			}
+			if (clicker.getName().equals(owner.getName())) return; // if clicker is owner of chest return
 
-			Sign s = getChestShopSign(icevent.getInventory().getHolder());
-			if (s == null) {
-				return;
-			}
-			String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-			int slot = icevent.getRawSlot();
-			boolean buy = false;
-			boolean sell = false;
-			if (line2.equalsIgnoreCase("[Trade]")) {
-				buy = true;
-				sell = true;
-			} else if (line2.equalsIgnoreCase("[Buy]")) {
-				buy = true;
-			} else if (line2.equalsIgnoreCase("[Sell]")) {
-				sell = true;
-			}
-
-			String chestOwnerName = ChatColor.stripColor(s.getLine(2)).trim() + ChatColor.stripColor(s.getLine(3)).trim();
-			String clicker = icevent.getWhoClicked().getName();
-			// if clicker is owner of chest return
-			if (clicker.equalsIgnoreCase(chestOwnerName)) {
-				return;
-			}
-			ItemStack clickedItem = icevent.getCurrentItem();
+			SerializableItemStack clickedItem = event.getClickedItem();
 			if (clickedItem == null) {
-				icevent.setCancelled(true);
+				event.cancel();
 				return;
 			}
-			
-			//HyperItemStack his = new HyperItemStack(clickedItem);
-			if (his.isDamaged()) {
-				icevent.setCancelled(true);
-				p.sendMessage(L.get("CHESTSHOP_CANT_TRADE_DAMAGED"));
+			if (clickedItem.isDamaged()) {
+				event.cancel();
+				clicker.sendMessage(L.get("CHESTSHOP_CANT_TRADE_DAMAGED"));
 				return;
 			}
-
-			boolean setprice = false;
-			double staticprice = 0.0;
-			String line1 = ChatColor.stripColor(s.getLine(0)).trim();
-			if (line1.startsWith(L.gC(false))) {
-				try {
-					String price = line1.substring(1, line1.length());
-					staticprice = cf.twoDecimals(Double.parseDouble(price));
-					setprice = true;
-				} catch (Exception e) {
-					setprice = false;
-				}
-			} else if (line1.endsWith(L.gC(false))) {
-				try {
-					String price = line1.substring(0, line1.length() - 1);
-					staticprice = cf.twoDecimals(Double.parseDouble(price));
-					setprice = true;
-				} catch (Exception e) {
-					setprice = false;
-				}
-			}
-
-			HyperAccount chestOwner = em.getHyperPlayerManager().getAccount(chestOwnerName);
-			if (chestOwner == null) {
-				chestOwner = em.getHyperPlayerManager().getHyperPlayer(chestOwnerName);
-			}
-			
 			HyperEconomy chestOwnerEconomy = em.getDefaultEconomy();
-			if (chestOwner instanceof HyperPlayer) {
-				HyperPlayer hPlayer = (HyperPlayer)chestOwner;
+			if (owner instanceof HyperPlayer) {
+				HyperPlayer hPlayer = (HyperPlayer)owner;
 				chestOwnerEconomy = hPlayer.getHyperEconomy();
 			}
-			HyperPlayer clickPlayer = em.getHyperPlayerManager().getHyperPlayer(p);
 			HyperObject hyperObject = null;
-			if (!his.hasEnchants()) {
+			if (!clickedItem.hasEnchantments()) {
 				hyperObject = chestOwnerEconomy.getHyperObject(clickedItem);
 				if (hyperObject == null) {
-					if (setprice) {
-						hyperObject = his.generateTempItem();
+					if (hasStaticPrice) {
+						hyperObject = TempItem.generate(clickedItem);
 					} else {
-						icevent.setCancelled(true);
+						event.cancel();
 						return;
 					}
 				}
 			}
-
-			Inventory shopInventory = icevent.getView().getTopInventory();
-			if (icevent.isShiftClick()) {
-				if (his.hasEnchants()) {
-					icevent.setCancelled(true);
+			if (event.isShiftClick()) {
+				if (clickedItem.hasEnchantments()) {
+					event.cancel();
 					return;
 				}
 				int camount = clickedItem.getAmount();
 				if (slot < 27) {
-					if (buy) {
+					if (type == ChestShopType.BUY) {
 						PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
 						pt.setHyperObject(hyperObject);
-						pt.setTradePartner(chestOwner);
+						pt.setTradePartner(owner);
 						pt.setAmount(camount);
 						pt.setGiveInventory(shopInventory);
-						if (setprice) {
-							pt.setMoney(cf.twoDecimals((camount * staticprice)));
+						if (hasStaticPrice) {
+							pt.setMoney(cf.twoDecimals((camount * staticPrice)));
 							pt.setSetPrice(true);
 						}
-						TransactionResponse response = clickPlayer.processTransaction(pt);
+						TransactionResponse response = clicker.processTransaction(pt);
 						response.sendMessages();
 					} else {
-						p.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
+						clicker.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
 					}
 				} else if (slot >= 27) {
-					if (sell) {
-						if (p.getGameMode() == GameMode.CREATIVE && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
-							p.sendMessage(L.get("CANT_SELL_CREATIVE"));
-							icevent.setCancelled(true);
+					if (type == ChestShopType.SELL) {
+						if (clicker.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
+							clicker.sendMessage(L.get("CANT_SELL_CREATIVE"));
+							event.cancel();
 							return;
 						}
 						int itemamount = hyperObject.count(shopInventory);
 						if (itemamount > 0) {
 							int space = hyperObject.getAvailableSpace(shopInventory);
 							if (space >= camount) {
-								double bal = chestOwner.getBalance();
+								double bal = owner.getBalance();
 								double cost = hyperObject.getSellPrice(camount);
-								if (setprice) {
-									cost = staticprice * camount;
+								if (hasStaticPrice) {
+									cost = staticPrice * camount;
 								}
 								if (bal >= cost) {
 									PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
 									pt.setHyperObject(hyperObject);
-									pt.setTradePartner(chestOwner);
+									pt.setTradePartner(owner);
 									pt.setAmount(camount);
 									pt.setReceiveInventory(shopInventory);
-									if (setprice) {
+									if (hasStaticPrice) {
 										pt.setMoney(cf.twoDecimals(cost));
 										pt.setSetPrice(true);
 									}
-									TransactionResponse response = clickPlayer.processTransaction(pt);
+									TransactionResponse response = clicker.processTransaction(pt);
 									response.sendMessages();
 								} else {
-									L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), chestOwner.getName());
+									L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), owner.getName());
 								}
 
 							} else {
-								p.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
+								clicker.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
 							}
 						} else {
-							p.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
+							clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
 						}
 
 					} else {
-						p.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
+						clicker.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
 					}
 
 				}
-
-				icevent.setCancelled(true);
+				event.cancel();
 				return;
-
-			} else if (icevent.isLeftClick()) {
-				if (!his.hasEnchants()) {
+			} else if (event.isLeftClick()) {
+				if (!clickedItem.hasEnchantments()) {
 					if (slot < 27 && hyperObject != null) {
 						String name = hyperObject.getDisplayName();
-						if (buy) {
+						if (type == ChestShopType.BUY) {
 							double price = hyperObject.getSellPrice(1);
-							if (setprice) {
-								price = staticprice;
+							if (hasStaticPrice) {
+								price = staticPrice;
 							}
-							p.sendMessage(L.get("LINE_BREAK"));
-							p.sendMessage(L.f(L.get("CHEST_SHOP_BUY_VALUE"), 1, price, name, chestOwner.getName()));
-							p.sendMessage(L.get("LINE_BREAK"));
+							clicker.sendMessage(L.get("LINE_BREAK"));
+							clicker.sendMessage(L.f(L.get("CHEST_SHOP_BUY_VALUE"), 1, price, name, owner.getName()));
+							clicker.sendMessage(L.get("LINE_BREAK"));
 						} else {
-							p.sendMessage(L.get("CANNOT_PURCHASE_ITEMS_FROM_CHEST"));
+							clicker.sendMessage(L.get("CANNOT_PURCHASE_ITEMS_FROM_CHEST"));
 						}
-
 					} else if (slot >= 27 && hyperObject != null) {
 						String name = hyperObject.getDisplayName();
-						if (sell) {
+						if (type == ChestShopType.SELL) {
 							int itemamount = hyperObject.count(shopInventory);
-
 							if (itemamount > 0) {
-								double price = hyperObject.getSellPrice(1, clickPlayer);
-								if (setprice) {
-									price = staticprice;
+								double price = hyperObject.getSellPrice(1, clicker);
+								if (hasStaticPrice) {
+									price = staticPrice;
 								}
-								p.sendMessage(L.get("LINE_BREAK"));
-								p.sendMessage(L.f(L.get("CHEST_SHOP_SELL_VALUE"), 1, price, name, chestOwner.getName()));
-								p.sendMessage(L.get("LINE_BREAK"));
+								clicker.sendMessage(L.get("LINE_BREAK"));
+								clicker.sendMessage(L.f(L.get("CHEST_SHOP_SELL_VALUE"), 1, price, name, owner.getName()));
+								clicker.sendMessage(L.get("LINE_BREAK"));
 							} else {
-								p.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
+								clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
 							}
 						} else {
-							p.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
+							clicker.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
 						}
-
 					}
 				} else {
 					if (slot < 27) {
-						if (buy) {
+						if (type == ChestShopType.BUY) {
 							double price = 0;
-							for (Enchantment enchantment : his.listEnchantments()) {
-								int lvl = his.getEnchantmentLevel(enchantment);
-								String nam = chestOwnerEconomy.getEnchantNameWithoutLevel(enchantment.getName());
-								if (nam == null) {
-									icevent.setCancelled(true);
-									return;
-								}
-								String fnam = nam + lvl;
+							for (SerializableEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
+								String fnam = enchantment.getEnchantmentName() + enchantment.getLvl();
 								HyperObject ho = chestOwnerEconomy.getHyperObject(fnam);
-								price += ho.getSellPrice(EnchantmentClass.fromString(p.getItemInHand().getType().name()), clickPlayer);
-								if (setprice) {
-									price = staticprice;
+								price += ho.getSellPrice(EnchantmentClass.fromString(clicker.getItemInHand().getMaterial()), clicker);
+								if (hasStaticPrice) {
+									price = staticPrice;
 								}
 							}
 							price = cf.twoDecimals(price);
-							if (new HyperItemStack(p.getItemInHand()).canEnchantItem()) {
-								p.sendMessage(L.get("LINE_BREAK"));
-								p.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, chestOwner.getName()));
-								p.sendMessage(L.get("LINE_BREAK"));
+							if (clicker.getItemInHand().canEnchantItem()) {
+								clicker.sendMessage(L.get("LINE_BREAK"));
+								clicker.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, owner.getName()));
+								clicker.sendMessage(L.get("LINE_BREAK"));
 							} else {
-								p.sendMessage(L.get("ITEM_CANNOT_ACCEPT_ENCHANTMENTS"));
+								clicker.sendMessage(L.get("ITEM_CANNOT_ACCEPT_ENCHANTMENTS"));
 							}
 						} else {
-							p.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
+							clicker.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
 						}
 					} else {
-						p.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
+						clicker.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
 					}
 				}
-				icevent.setCancelled(true);
+				event.cancel();
 				return;
-			} else if (icevent.isRightClick()) {
-				if (!his.hasEnchants()) {
+			} else if (event.isRightClick()) {
+				if (!clickedItem.hasEnchantments()) {
 					if (slot < 27 && hyperObject != null) {
-						if (buy) {
+						if (type == ChestShopType.BUY) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
 							pt.setHyperObject(hyperObject);
-							pt.setTradePartner(chestOwner);
+							pt.setTradePartner(owner);
 							pt.setAmount(1);
 							pt.setGiveInventory(shopInventory);
-							if (setprice) {
-								pt.setMoney(staticprice);
+							if (hasStaticPrice) {
+								pt.setMoney(staticPrice);
 								pt.setSetPrice(true);
 							}
-							TransactionResponse response = clickPlayer.processTransaction(pt);
+							TransactionResponse response = clicker.processTransaction(pt);
 							response.sendMessages();
 
 						} else {
-							p.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
+							clicker.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
 						}
 
 					} else if (slot >= 27 && hyperObject != null) {
-						if (sell) {
-							if (p.getGameMode() == GameMode.CREATIVE && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
-								p.sendMessage(L.get("CANT_SELL_CREATIVE"));
-								icevent.setCancelled(true);
+						if (type == ChestShopType.SELL) {
+							if (clicker.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
+								clicker.sendMessage(L.get("CANT_SELL_CREATIVE"));
+								event.cancel();
 								return;
 							}
 							int itemamount = hyperObject.count(shopInventory);
@@ -693,67 +446,65 @@ public class ChestShopHandler implements Listener {
 							if (itemamount > 0) {
 								int space = hyperObject.getAvailableSpace(shopInventory);
 								if (space >= 1) {
-									double bal = chestOwner.getBalance();
+									double bal = owner.getBalance();
 									double cost = hyperObject.getSellPrice(1);
-									if (setprice) {
-										cost = staticprice;
+									if (hasStaticPrice) {
+										cost = staticPrice;
 									}
 									if (bal >= cost) {
 										PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
 										pt.setHyperObject(hyperObject);
-										pt.setTradePartner(chestOwner);
+										pt.setTradePartner(owner);
 										pt.setAmount(1);
 										pt.setReceiveInventory(shopInventory);
-										if (setprice) {
+										if (hasStaticPrice) {
 											pt.setMoney(cost);
 											pt.setSetPrice(true);
 										}
-										TransactionResponse response = clickPlayer.processTransaction(pt);
+										TransactionResponse response = clicker.processTransaction(pt);
 										response.sendMessages();
 									} else {
-										p.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), chestOwner.getName()));
+										clicker.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), owner.getName()));
 									}
 
 								} else {
-									p.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
+									clicker.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
 								}
 							} else {
-								p.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
+								clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
 							}
 						} else {
-							p.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
+							clicker.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
 						}
 					}
 				} else {
 					if (slot < 27) {
-						if (buy) {
-							for (Enchantment enchantment : his.listEnchantments()) {
-								int lvl = his.getEnchantmentLevel(enchantment);
-								String nam = chestOwnerEconomy.getEnchantNameWithoutLevel(enchantment.getName());
-								String fnam = nam + lvl;
+						if (type == ChestShopType.BUY) {
+							for (SerializableEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
+								String fnam = enchantment.getEnchantmentName() + enchantment.getLvl();
 								HyperObject ho = chestOwnerEconomy.getHyperObject(fnam);
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_ITEM);
 								pt.setHyperObject(ho);
-								pt.setTradePartner(chestOwner);
+								pt.setTradePartner(owner);
 								pt.setGiveItem(clickedItem);
-								if (setprice) {
-									pt.setMoney(staticprice);
+								if (hasStaticPrice) {
+									pt.setMoney(staticPrice);
 									pt.setSetPrice(true);
 								}
-								TransactionResponse response = clickPlayer.processTransaction(pt);
+								TransactionResponse response = clicker.processTransaction(pt);
 								response.sendMessages();
 							}
 						} else {
-							p.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
+							clicker.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
 						}
 					} else if (slot >= 27) {
-						p.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
+						clicker.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
 					}
 				}
-				icevent.setCancelled(true);
+				event.cancel();
 				return;
 			} else {
-				icevent.setCancelled(true);
+				event.cancel();
 				return;
 			}
 		} catch (Exception e) {

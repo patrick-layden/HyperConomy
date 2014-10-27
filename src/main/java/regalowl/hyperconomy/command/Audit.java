@@ -37,7 +37,7 @@ public class Audit extends BaseCommand implements HyperCommand {
 	    			cbalance = ha.getBalance();
 	    			logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
 	    			auditbalance = getAuditLogTotal(account);
-	    			hc.getMC().runTask(new Runnable() {
+	    			HyperConomy.mc.runTask(new Runnable() {
 	    	    		public void run() {
 	    	    			CommonFunctions cf = hc.gCF();
 	    	    			data.addResponse(L.get("LINE_BREAK"));

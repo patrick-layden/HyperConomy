@@ -2,8 +2,11 @@ package regalowl.hyperconomy.bukkit;
 
 import java.util.ArrayList;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -14,15 +17,39 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.util.SimpleLocation;
 
 public class BukkitProtection {
 
 	private ArrayList<SimpleLocation> protectedLocations = new ArrayList<SimpleLocation>();
+
+	
 	
 	public BukkitProtection() {
-		
+
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

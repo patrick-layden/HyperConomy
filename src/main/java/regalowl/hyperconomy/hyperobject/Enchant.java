@@ -77,7 +77,7 @@ public class Enchant extends BasicObject implements HyperObject {
 	
 	@Override
 	public double getSellPrice(EnchantmentClass eclass, HyperPlayer hp) {
-		SerializableInventory inv = HyperConomy.hc.getMC().getInventory(hp);
+		SerializableInventory inv = HyperConomy.mc.getInventory(hp);
 		return inv.getHeldItem().getDurabilityPercent() * getSellPrice(eclass);
 	}
 

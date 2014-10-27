@@ -19,7 +19,7 @@ public class Importbalance extends BaseCommand implements HyperCommand {
 	@Override
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
-		if (!hc.getMC().useExternalEconomy()) {
+		if (!hc.mc.useExternalEconomy()) {
 			data.addResponse(L.get("MUST_USE_EXTERNAL_ECONOMY"));
 			return data;
 		}
@@ -50,9 +50,9 @@ public class Importbalance extends BaseCommand implements HyperCommand {
 			if (name == null || name == "") {
 				continue;
 			}
-			if (hc.getMC().getEconomy().hasAccount(name)) {
+			if (hc.mc.getEconomy().hasAccount(name)) {
 				HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(name);
-				hp.setInternalBalance(hc.getMC().getEconomy().getBalance(name));
+				hp.setInternalBalance(hc.mc.getEconomy().getBalance(name));
 				hp.setUUID(puid.toString());
 			}
 			importedPlayers.add(name);

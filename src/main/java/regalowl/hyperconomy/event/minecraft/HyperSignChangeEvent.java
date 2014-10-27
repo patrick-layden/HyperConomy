@@ -2,27 +2,21 @@ package regalowl.hyperconomy.event.minecraft;
 
 
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.util.SimpleLocation;
+import regalowl.hyperconomy.util.HSign;
 import regalowl.databukkit.event.Event;
 
 public class HyperSignChangeEvent extends Event {
 
-		private String[] lines;
-		private SimpleLocation l;
+		private HSign sign;
 		private HyperPlayer hp;
 		
-		public HyperSignChangeEvent(String[] lines, SimpleLocation l, HyperPlayer hp) {
-			this.l = l;
-			this.lines = lines;
+		public HyperSignChangeEvent(HSign sign, HyperPlayer hp) {
+			this.sign = sign;
 			this.hp = hp;
 		}
 
-		public String[] getLines() {
-			return lines;
-		}
-		
-		public SimpleLocation getLocation() {
-			return l;
+		public HSign getSign() {
+			return sign;
 		}
 		
 		public HyperPlayer getHyperPlayer() {

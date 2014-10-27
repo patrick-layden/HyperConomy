@@ -13,6 +13,13 @@ public class SimpleLocation {
 	private String world;
 
 	
+	public SimpleLocation(SimpleLocation l) {
+		this.world = l.getWorld();
+		this.x = l.getX();
+		this.y = l.getY();
+		this.z = l.getZ();
+	}
+	
 	public SimpleLocation(String world, double x, double y, double z) {
 		this.world = world;
 		this.x = x;
@@ -58,7 +65,10 @@ public class SimpleLocation {
 	}
 	
 	public boolean isLoaded() {
-		return HyperConomy.hc.getMC().isLoaded(this);
+		return HyperConomy.mc.isLoaded(this);
+	}
+	public void load() {
+		HyperConomy.mc.load(this);
 	}
 	
 

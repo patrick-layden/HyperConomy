@@ -84,7 +84,7 @@ public class History {
 
 	
 	private void startTimer() {
-		historylogtaskid = hc.getMC().runRepeatingTask(new Runnable() {
+		historylogtaskid = HyperConomy.mc.runRepeatingTask(new Runnable() {
 			public void run() {
 				long currentTime = System.currentTimeMillis();
 				timeCounter += (currentTime - lastTime);
@@ -93,7 +93,7 @@ public class History {
 					// if (timeCounter >= 600) {
 					timeCounter = 0;
 					writeHistoryThread();
-					hc.getMC().runTaskLater(new Runnable() {
+					HyperConomy.mc.runTaskLater(new Runnable() {
 						public void run() {
 							if (isign != null) {
 								isign.updateSigns();
@@ -134,7 +134,7 @@ public class History {
   	
     
     public void stopHistoryLog() {
-    	hc.getMC().cancelTask(historylogtaskid);
+    	HyperConomy.mc.cancelTask(historylogtaskid);
     }
 
 	public double getHistoricValue(String name, String economy, int count) {

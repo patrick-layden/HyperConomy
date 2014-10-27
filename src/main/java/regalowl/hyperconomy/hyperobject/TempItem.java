@@ -3,6 +3,10 @@ package regalowl.hyperconomy.hyperobject;
 
 import java.util.ArrayList;
 
+import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
+
 
 public class TempItem extends ComponentItem implements HyperObject {
 
@@ -90,8 +94,28 @@ public class TempItem extends ComponentItem implements HyperObject {
 	@Override
 	public void checkInitiationStatus() {}
 	
+	public static HyperObject generate(SerializableItemStack stack){
+		if (stack.isBlank()) {return null;}
+		String name = generateName(stack);
+		double value = 10.0;
+		double median = 10000;
+		double startprice = 20.0;
+		return new TempItem(name, "default", name, "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, stack.serialize());
+	}
 	
-
+	public static String generateName(SerializableItemStack stack) {
+		HyperEconomy econ = HyperConomy.hc.getDataManager().getDefaultEconomy();
+		String name = stack.getMaterial() + "_" + stack.getDurability();
+		if (econ.objectTest(name)) {
+			name = "object1";
+			int counter = 1;
+			while (econ.objectTest(name)) {
+				name = "object" + counter;
+				counter++;
+			}
+		}
+		return name;
+	}
 
 
 }

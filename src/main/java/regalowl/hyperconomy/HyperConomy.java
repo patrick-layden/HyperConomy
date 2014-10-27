@@ -86,7 +86,7 @@ public class HyperConomy {
 	public static HyperConomy hc;
 	public static API api;
 	public static EconomyAPI economyApi;
-	private MineCraftConnector mc;
+	public static MineCraftConnector mc;
 	private DataManager dm;
 	private DataBukkit db;
 	private YamlHandler yh;
@@ -110,7 +110,14 @@ public class HyperConomy {
 	private final int saveInterval = 1200000;
 
 	public HyperConomy(MineCraftConnector mc) {
-		this.mc = mc;
+		HyperConomy.mc = mc;
+	}
+	
+	@EventHandler
+	public void onLogMessage(LogEvent event) {
+		if (event.getException() != null) event.getException().printStackTrace();
+		if (event.getLevel() == LogLevel.SEVERE) mc.logSevere(event.getMessage());
+		if (event.getLevel() == LogLevel.INFO) mc.logInfo(event.getMessage());
 	}
 	
 	@EventHandler
@@ -121,6 +128,18 @@ public class HyperConomy {
 	@EventHandler
 	public void onDisableRequest(ShutdownEvent event) {
 		disable(false);
+	}
+	
+	@EventHandler
+	public void onDataLoad(DataLoadEvent event) {
+		hist = new History();
+		itdi = new ItemDisplayFactory();
+		isign = new InfoSignHandler();
+		fsh = new FrameShopHandler();
+		registerCommands();
+		enabled = true;
+		hl.setLoadLock(false);
+		dMode.syncDebugConsoleMessage("Data loading completed.");
 	}
 
 
@@ -150,6 +169,7 @@ public class HyperConomy {
 		mc.hookExternalEconomy();
 		
 	}
+	
 	public void enable() {
 		mc.unregisterAllListeners();
 		mc.registerListeners();
@@ -183,21 +203,6 @@ public class HyperConomy {
 		cos = new ConsoleSettings("default");
 		new HyperModificationServer();
 	}
-	
-
-	
-	@EventHandler
-	public void onDataLoad(DataLoadEvent event) {
-		hist = new History();
-		itdi = new ItemDisplayFactory();
-		isign = new InfoSignHandler();
-		fsh = new FrameShopHandler();
-		registerCommands();
-		enabled = true;
-		hl.setLoadLock(false);
-		dMode.syncDebugConsoleMessage("Data loading completed.");
-	}
-	
 
 	public void disable(boolean protect) {
 		heh.fireEvent(new DisableEvent());
@@ -283,14 +288,6 @@ public class HyperConomy {
 	}
 
 	
-
-
-	public MineCraftConnector getMineCraftConnector() {
-		return mc;
-	}
-	public MineCraftConnector getMC() {
-		return mc;
-	}
 	
 	public HyperLock getHyperLock() {
 		return hl;
@@ -397,12 +394,7 @@ public class HyperConomy {
 	public DebugMode getDebugMode() {
 		return dMode;
 	}
-	@EventHandler
-	public void onLogMessage(LogEvent event) {
-		if (event.getException() != null) event.getException().printStackTrace();
-		if (event.getLevel() == LogLevel.SEVERE) mc.logSevere(event.getMessage());
-		if (event.getLevel() == LogLevel.INFO) mc.logInfo(event.getMessage());
-	}
+
 
 
 

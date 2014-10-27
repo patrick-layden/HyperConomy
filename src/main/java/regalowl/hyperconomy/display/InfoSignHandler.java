@@ -14,6 +14,7 @@ import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.util.SimpleLocation;
@@ -46,7 +47,7 @@ public class InfoSignHandler {
 			public void run() {
 				SQLRead sr = hc.getSQLRead();
 				dbData = sr.select("SELECT * FROM hyperconomy_info_signs");
-				hc.getMC().runTask(new Runnable() {
+				HyperConomy.mc.runTask(new Runnable() {
 					public void run() {
 						while (dbData.next()) {
 							SimpleLocation l = new SimpleLocation(dbData.getString("WORLD"), dbData.getInt("X"),dbData.getInt("Y"),dbData.getInt("Z"));
@@ -64,12 +65,12 @@ public class InfoSignHandler {
 
 
 
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onSignRemoval(BlockBreakEvent bbevent) {
+	@EventHandler
+	public void onSignRemoval(HBlockBreakEvent bbevent) {
 		if (bbevent.isCancelled()) {return;}
+		if (!bbevent.isInfoSign()) {return;}
 		try {
-			Block b = bbevent.getBlock();
-			InfoSign is = getInfoSign(b.getLocation());
+			InfoSign is = getInfoSign(bbevent.getLocation());
 			if (is != null) {
 				is.deleteSign();
 			}
@@ -145,19 +146,19 @@ public class InfoSignHandler {
 		private long updateTaskId;
 		SignUpdater() {
 			this.signs = getInfoSigns();
-			updateTaskId = hc.getMC().runRepeatingTask(new Runnable() {
+			updateTaskId = HyperConomy.mc.runRepeatingTask(new Runnable() {
 				public void run() {
 					if (signs.isEmpty()) {
 						if (repeatUpdate.get()) {
 							signs = getInfoSigns();
 							if (signs.isEmpty()) {
-								hc.getMC().cancelTask(updateTaskId);
+								HyperConomy.mc.cancelTask(updateTaskId);
 								updateActive.set(false);
 								return;
 							}
 							repeatUpdate.set(false);
 						} else {
-							hc.getMC().cancelTask(updateTaskId);
+							HyperConomy.mc.cancelTask(updateTaskId);
 							updateActive.set(false);
 							return;
 						}

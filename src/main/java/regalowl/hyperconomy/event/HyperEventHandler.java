@@ -23,7 +23,7 @@ public class HyperEventHandler {
     }
 	
 	public void fireEventFromAsyncThread(Event event) {
-		hc.getMC().runTask(new EventFire(event));
+		hc.mc.runTask(new EventFire(event));
 	}
     private class EventFire implements Runnable {
     	private Event event;

@@ -116,7 +116,7 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 			new Thread(new Runnable() {
 	    		public void run() {
 	    			result = getHyperLog(statement);
-	    			hc.getMineCraftConnector().runTask(new Runnable() {
+	    			HyperConomy.mc.runTask(new Runnable() {
 	    	    		public void run() {
 	    	    			int m = result.size();
 	    	    			if (m > 100) {
