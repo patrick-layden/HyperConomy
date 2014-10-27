@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 
 
+
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.event.EventHandler;
 import regalowl.hyperconomy.DataManager;
@@ -37,6 +38,7 @@ import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.HBlock;
 import regalowl.hyperconomy.util.HSign;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class ChestShopHandler {
 
@@ -114,37 +116,24 @@ public class ChestShopHandler {
 			if (!line2.equalsIgnoreCase("[Trade]") && !line2.equalsIgnoreCase("[Buy]") && !line2.equalsIgnoreCase("[Sell]")) {
 				return;
 			}
-
+			SimpleLocation cLoc = new SimpleLocation(sign.getLocation());
+			cLoc.setY(cLoc.getY() - 1);
+			if (!HyperConomy.mc.isChest(cLoc)) {
+				sign.setLine(1, "");
+				return;
+			}
 			if (!hp.hasPermission("hyperconomy.chestshop")) {
 				sign.setLine(1, "");
 				return;
 			}
-
-			HBlock attachedblock = sign.getAttachedBlock();
-			signblock.
-			org.bukkit.material.Sign msign = (org.bukkit.material.Sign) signblock.getState().getData();
-			BlockFace attachedface = msign.getAttachedFace();
-			Block attachedblock = signblock.getRelative(attachedface);
-			Material am = attachedblock.getType();
-			BlockState chestblock = signblock.getRelative(BlockFace.DOWN).getState();
-			if (!(chestblock instanceof Chest)) {
-				scevent.setLine(1, "");
-				return;
-			}
-
-			Block cblock = chestblock.getBlock();
-			BlockState pchest1 = cblock.getRelative(BlockFace.EAST).getState();
-			BlockState pchest2 = cblock.getRelative(BlockFace.WEST).getState();
-			BlockState pchest3 = cblock.getRelative(BlockFace.NORTH).getState();
-			BlockState pchest4 = cblock.getRelative(BlockFace.SOUTH).getState();
-			if ((pchest1 instanceof Chest) || (pchest2 instanceof Chest) || (pchest3 instanceof Chest) || (pchest4 instanceof Chest)) {
+			ChestShop cShop = HyperConomy.mc.getChestShop(cLoc);
+			if (cShop.isDoubleChest()) {
 				sign.setLine(0, "&4You can't");
 				sign.setLine(1, "&4use a");
 				sign.setLine(2, "&4double");
 				sign.setLine(3, "&4chest.");
 				return;
 			}
-
 			if (hc.getConf().getBoolean("shop.require-chest-shops-to-be-in-shop") && !em.getHyperShopManager().inAnyShop(hp)) {
 				sign.setLine(0, "&4You must");
 				sign.setLine(1, "&4place your");
@@ -152,17 +141,14 @@ public class ChestShopHandler {
 				sign.setLine(3, "&4in a shop.");
 				return;
 			}
-
-			Chest c = (Chest) chestblock;
 			int count = 0;
 			int emptyslots = 0;
-			while (count < 27) {
-				if (c.getInventory().getItem(count) == null) {
-					emptyslots++;
-				}
-				count++;
+			SerializableInventory inv = cShop.getInventory();
+			boolean empty = true;
+			while (count < inv.getSize()) {
+				if (!cShop.getInventory().getItem(count).isBlank()) empty = false;
 			}
-			if (emptyslots != 27) {
+			if (!empty) {
 				sign.setLine(0, "&4You must");
 				sign.setLine(1, "&4use an");
 				sign.setLine(2, "&4empty");
@@ -170,7 +156,7 @@ public class ChestShopHandler {
 				return;
 			}
 
-			if (am == Material.ICE || am == Material.LEAVES || am == Material.SAND || am == Material.GRAVEL || am == Material.SIGN || am == Material.SIGN_POST || am == Material.TNT) {
+			if (!cShop.isSignAttachedToValidBlock()) {
 				sign.setLine(0, "&4You can't");
 				sign.setLine(1, "&4attach your");
 				sign.setLine(2, "&4sign to that");
@@ -178,7 +164,7 @@ public class ChestShopHandler {
 				return;
 			}
 
-			String line1 = scevent.getLine(0);
+			String line1 = sign.getLine(0);
 			if (line1.startsWith(L.gC(false))) {
 				try {
 					String price = line1.substring(1, line1.length());
@@ -211,7 +197,7 @@ public class ChestShopHandler {
 			} else if (line2.equalsIgnoreCase("[Sell]")) {
 				fline = "[Sell]";
 			}
-			String pname = scevent.getPlayer().getName();
+			String pname = event.getHyperPlayer().getName();
 			String line3 = "";
 			String line4 = "";
 			if (pname.length() > 12) {
