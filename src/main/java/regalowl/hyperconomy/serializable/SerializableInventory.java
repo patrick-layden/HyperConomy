@@ -60,7 +60,7 @@ public class SerializableInventory extends SerializableObject implements Seriali
 	}
 	
 	public void updateInventory() {
-		HyperConomy.hc.getMC().setInventory(this);
+		HyperConomy.mc.setInventory(this);
 	}
 	
 	public int getSize() {

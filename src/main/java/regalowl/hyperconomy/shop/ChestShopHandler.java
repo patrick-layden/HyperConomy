@@ -1,16 +1,5 @@
 package regalowl.hyperconomy.shop;
 
-import java.util.ArrayList;
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -19,14 +8,16 @@ import regalowl.databukkit.event.EventHandler;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.MineCraftConnector;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.minecraft.ChestShopClickEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
+import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
+import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
+import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
+import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
 import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.TempItem;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
@@ -59,50 +50,53 @@ public class ChestShopHandler {
 
 	@EventHandler
 	public void onBlockBreakEvent(HBlockBreakEvent bbevent) {
-		if (isChestShop(bbevent.getBlock(), true)) {
-			if (isChestShopSign(bbevent.getBlock()) && bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) {
+		if (HyperConomy.mc.isChestShop(bbevent.getBlock().getLocation(), false)) {
+			bbevent.cancel();
+			return;
+		}
+		if (HyperConomy.mc.isChestShopSign(bbevent.getBlock().getLocation())) {
+			if (bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) {
 				return;
 			}
-			Sign s = getChestShopSign(bbevent.getBlock());
-			String line34 = HyperConomy.mc.removeColor(s.getLine(2)).trim() + HyperConomy.mc.removeColor(s.getLine(3)).trim();
-			if (bbevent.getPlayer().getName().equalsIgnoreCase(line34) && bbevent.getPlayer().isSneaking()) {
-				return;
-			}
-			bbevent.setCancelled(true);
+		} else {
+			bbevent.cancel();
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onEntityExplodeEvent(EntityExplodeEvent eeevent) {
-		for (Block b : eeevent.blockList()) {
-			if (isChestShop(b, true)) {
-				eeevent.setCancelled(true);
-			}
-		}
-	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockPistonExtendEvent(BlockPistonExtendEvent bpeevent) {
-		for (Block b : bpeevent.getBlocks()) {
-			if (isChestShop(b, true)) {
-				bpeevent.setCancelled(true);
+
+	
+	@EventHandler
+	public void onEntityExplodeEvent(HEntityExplodeEvent eeevent) {
+		for (HBlock b : eeevent.getBrokenBlocks()) {
+			if (new ChestShop(b.getLocation()).isValid()) {
+				eeevent.cancel();
 			}
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockPistonRetractEvent(BlockPistonRetractEvent bprevent) {
-		if (isChestShop(bprevent.getRetractLocation().getBlock(), true)) {
-			bprevent.setCancelled(true);
+	@EventHandler
+	public void onBlockPistonExtendEvent(HBlockPistonExtendEvent bpeevent) {
+		for (HBlock b : bpeevent.getRetractedBlocks()) {
+			if (new ChestShop(b.getLocation()).isValid()) {
+				bpeevent.cancel();
+			}
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockPlaceEvent(BlockPlaceEvent bpevent) {
-		Block block = bpevent.getBlock();
-		for (BlockFace bf : allfaces) {
-			if (isChestShop(block.getRelative(bf), false)) {
-				bpevent.setCancelled(true);
+	@EventHandler
+	public void onBlockPistonRetractEvent(HBlockPistonRetractEvent bprevent) {
+		if (new ChestShop(bprevent.getRetractedBlock().getLocation()).isValid()) {
+			bprevent.cancel();
+		}
+	}
+
+	@EventHandler
+	public void onBlockPlaceEvent(HBlockPlaceEvent bpevent) {
+		HBlock block = bpevent.getBlock();
+		for (HBlock b : block.getSurroundingBlocks()) {
+			if (new ChestShop(b.getLocation()).isValid()) {
+				bpevent.cancel();
 			}
 		}
 	}
@@ -142,7 +136,6 @@ public class ChestShopHandler {
 				return;
 			}
 			int count = 0;
-			int emptyslots = 0;
 			SerializableInventory inv = cShop.getInventory();
 			boolean empty = true;
 			while (count < inv.getSize()) {
@@ -210,11 +203,8 @@ public class ChestShopHandler {
 			sign.setLine(1, "&3" + fline);
 			sign.setLine(2, "&f" + line3);
 			sign.setLine(3, "&f" + line4);
-
-			if (scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.SIGN_POST) || scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.WALL_SIGN)) {
-				Sign s = (Sign) scevent.getBlock().getState();
-				s.update();
-			}
+			
+			sign.update();
 
 		} catch (Exception e) {
 			hc.gDB().writeError(e);

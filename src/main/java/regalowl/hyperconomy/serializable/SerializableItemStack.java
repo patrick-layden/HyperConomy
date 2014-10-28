@@ -121,7 +121,7 @@ public class SerializableItemStack extends SerializableObject implements Seriali
 	public boolean canEnchantItem() {
 		if (material.equalsIgnoreCase("AIR")) return false;
 		if (material.equalsIgnoreCase("BOOK")) return true;
-		return HyperConomy.hc.getMC().canEnchantItem(this);
+		return HyperConomy.mc.canEnchantItem(this);
 	}
 	
 	public boolean canAcceptEnchantment(SerializableEnchantment e) {
@@ -131,7 +131,7 @@ public class SerializableItemStack extends SerializableObject implements Seriali
 		if (amount > 1) return false;
 		if (itemMeta != null) {
 			for (SerializableEnchantment en:itemMeta.getEnchantments()) {
-				if (HyperConomy.hc.getMC().conflictsWith(e, en)) return false;
+				if (HyperConomy.mc.conflictsWith(e, en)) return false;
 			}
 		}
 		return canEnchantItem();

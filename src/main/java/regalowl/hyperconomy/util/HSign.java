@@ -53,4 +53,8 @@ public class HSign {
 			HyperConomy.mc.setSign(this);
 		}
 	}
+	
+	public void update() {
+		HyperConomy.mc.updateSign(this);
+	}
 }

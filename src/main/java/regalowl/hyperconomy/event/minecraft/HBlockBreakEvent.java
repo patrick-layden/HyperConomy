@@ -1,51 +1,27 @@
 package regalowl.hyperconomy.event.minecraft;
 
 import regalowl.databukkit.event.Event;
-import regalowl.hyperconomy.util.SimpleLocation;
+import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.util.HBlock;
 
 public class HBlockBreakEvent extends Event {
 
-	private SimpleLocation location;
-	private boolean isChestShopChest;
-	private boolean isChestShopBlock;
-	private boolean isTransactionSign;
-	private boolean isInfoSign;
+	private HBlock block;
+	private HyperPlayer hp;
 	
 	
-	public HBlockBreakEvent(SimpleLocation location) {
-		this.location = location;
+	public HBlockBreakEvent(HBlock block, HyperPlayer hp) {
+		this.block = block;
+		this.hp = hp;
 	}
 
 
-	public SimpleLocation getLocation() {
-		return location;
+	public HBlock getBlock() {
+		return block;
 	}
-	public boolean isChestShopChest() {
-		return isChestShopChest;
-	}
-	public boolean isChestShopBlock() {
-		return isChestShopBlock;
-	}
-	public boolean isTransactionSign() {
-		return isTransactionSign;
-	}
-	public boolean isInfoSign() {
-		return isInfoSign;
-	}
-
-
-
-	public void setChestShopChest() {
-		this.isChestShopChest = true;
-	}
-	public void setChestShopBlock() {
-		this.isChestShopBlock = true;
-	}
-	public void setTransactionSign() {
-		this.isTransactionSign = true;
-	}
-	public void setInfoSign() {
-		this.isInfoSign = true;
+	
+	public HyperPlayer getPlayer() {
+		return hp;
 	}
 	
 	

@@ -582,6 +582,36 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 
+	@Override
+	public void updateSign(HSign sign) {
+		Sign s = BukkitCommon.getSign(sign.getLocation());
+		if (s != null) s.update();
+	}
+
+
+
+	@Override
+	public boolean isTransactionSign(SimpleLocation l) {
+		return BukkitCommon.isTransactionSign(l);
+	}
+
+	@Override
+	public boolean isInfoSign(SimpleLocation l) {
+		return BukkitCommon.isInfoSign(l);
+	}
+
+	@Override
+	public boolean isChestShopSign(SimpleLocation l) {
+		return BukkitCommon.isChestShopSign(l);
+	}
+	
+	@Override
+	public boolean isChestShop(SimpleLocation l, boolean includeSign) {
+		return BukkitCommon.isChestShop(l, includeSign);
+	}
+
+
+
 
 
 

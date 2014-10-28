@@ -23,10 +23,22 @@ public class ChestShop {
 	private boolean isValidChestShop;
 
 	
+	public ChestShop(HBlock b) {
+		this.location = b.getLocation();
+		initialize();
+	}
+	
 	public ChestShop(SimpleLocation location) {
-		isValidChestShop = false;
 		this.location = location;
+		initialize();
+	}
+	
+	private void initialize() {
+		isValidChestShop = false;
 		if (location == null) return;
+		if (HyperConomy.mc.isChestShopSign(location)) {
+			//TODO make it work for any chest shop block
+		} else if (HyperConomy.mc.isChestShopSign(location))
 		signLocation = new SimpleLocation(location);
 		signLocation.setY(location.getY() + 1);
 		this.sign = HyperConomy.mc.getSign(signLocation);
@@ -35,7 +47,11 @@ public class ChestShop {
 		if (attachedBlock == null) return;
 		String chestOwnerName = HyperConomy.mc.removeColor(sign.getLine(2)).trim() + HyperConomy.mc.removeColor(sign.getLine(3)).trim();
 		this.owner = HyperConomy.hc.getHyperPlayerManager().getAccount(chestOwnerName);
-		if (owner == null) return;
+		if (owner == null && !chestOwnerName.equals("")) {
+			this.owner = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(chestOwnerName);
+		} else {
+			return;
+		}
 		type = ChestShopType.fromString(HyperConomy.mc.removeColor(sign.getLine(1)).trim());
 		if (type == null) return;
 		inventory = HyperConomy.mc.getChestInventory(location);
@@ -96,18 +112,11 @@ public class ChestShop {
 	}
 	public boolean isDoubleChest() {
 		if (!HyperConomy.mc.isChest(location)) return false;
-		SimpleLocation l1 = new SimpleLocation(location);
-		l1.setX(l1.getX() + 1);
-		if (HyperConomy.mc.isChest(l1)) return true;
-		SimpleLocation l2 = new SimpleLocation(location);
-		l2.setX(l2.getX() - 1);
-		if (HyperConomy.mc.isChest(l2)) return true;
-		SimpleLocation l3 = new SimpleLocation(location);
-		l3.setZ(l3.getZ() + 1);
-		if (HyperConomy.mc.isChest(l3)) return true;
-		SimpleLocation l4 = new SimpleLocation(location);
-		l4.setZ(l4.getZ() - 1);
-		if (HyperConomy.mc.isChest(l4)) return true;
+		HBlock cBlock = new HBlock(location);
+		HBlock[] surrounding = cBlock.getNorthSouthEastWestBlocks();
+		for (HBlock b:surrounding) {
+			if (HyperConomy.mc.isChest(b.getLocation())) return true;
+		}
 		return false;
 	}
 	

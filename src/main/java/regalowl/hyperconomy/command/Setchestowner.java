@@ -1,16 +1,11 @@
 package regalowl.hyperconomy.command;
 
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.SimpleLocation;
 
 public class Setchestowner extends BaseCommand implements HyperCommand {
 
@@ -34,8 +29,9 @@ public class Setchestowner extends BaseCommand implements HyperCommand {
 					line3 = name;
 					line4 = "";
 				}
-				@SuppressWarnings("deprecation")
-				Block b = player.getTargetBlock(null, 500);
+				HyperPlayer hp = data.getHyperPlayer();
+				SimpleLocation target = hp.getTargetLocation();
+				if (HyperConomy.mc.isChestShop(l, false))
 				if (b.getState() instanceof Chest) {
 		    		Chest c = (Chest) b.getState();
 					Block signblock = Bukkit.getWorld(c.getBlock().getWorld().getName()).getBlockAt(c.getX(), c.getY() + 1, c.getZ());

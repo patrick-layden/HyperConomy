@@ -50,7 +50,7 @@ public class FrameShop implements HyperListener {
 		this.ho = ho;
 		this.tradeAmount = amount;
 		this.s = s;
-		MapView mapView = hc.getMC().getConnector().getServer().createMap(l.getWorld());
+		MapView mapView = hc.mc.getConnector().getServer().createMap(l.getWorld());
 		mapId = mapView.getId();
 		String shop = "";
 		if (s != null) {
@@ -126,7 +126,7 @@ public class FrameShop implements HyperListener {
 			return;
 		}
 		@SuppressWarnings("deprecation")
-		MapView mapView = hc.getMC().getConnector().getServer().getMap(mapId);
+		MapView mapView = hc.mc.getConnector().getServer().getMap(mapId);
 		for (MapRenderer mr : mapView.getRenderers()) {
 			mapView.removeRenderer(mr);
 		}

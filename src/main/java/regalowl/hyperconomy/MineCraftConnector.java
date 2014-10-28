@@ -77,10 +77,15 @@ public interface MineCraftConnector {
 	public boolean conflictsWith(SerializableEnchantment e1, SerializableEnchantment e2);
 	public boolean canEnchantItem(SerializableItemStack item);
 	
+	public boolean isTransactionSign(SimpleLocation l);
+	public boolean isInfoSign(SimpleLocation l);
+	public boolean isChestShopSign(SimpleLocation l);
+	public boolean isChestShop(SimpleLocation l, boolean includeSign);
 	
 	public ChestShop getChestShop(SimpleLocation location);
 	public HSign getSign(SimpleLocation location);
 	public void setSign(HSign sign);
+	public void updateSign(HSign sign);
 	public HBlock getAttachedBlock(HSign sign);
 	public boolean isChest(SimpleLocation l);
 	public boolean canHoldChestShopSign(SimpleLocation l);

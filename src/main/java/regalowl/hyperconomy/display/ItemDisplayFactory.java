@@ -44,7 +44,7 @@ public class ItemDisplayFactory implements Listener {
 		try {
 			hc = HyperConomy.hc;
 			if (hc.getConf().getBoolean("enable-feature.item-displays")) {
-				hc.getMC().getConnector().getServer().getPluginManager().registerEvents(this, hc.getMC().getConnector());
+				hc.mc.getConnector().getServer().getPluginManager().registerEvents(this, hc.mc.getConnector());
 				loadDisplays();
 				startRefreshThread();
 			}
@@ -61,7 +61,7 @@ public class ItemDisplayFactory implements Listener {
 				public void run() {
 					SQLRead sr = hc.getSQLRead();
 					dbData = sr.select("SELECT * FROM hyperconomy_item_displays");
-					hc.getMC().runTask(new Runnable() {
+					hc.mc.runTask(new Runnable() {
 						public void run() {
 							while (dbData.next()) {
 								String w = dbData.getString("WORLD");
@@ -101,7 +101,7 @@ public class ItemDisplayFactory implements Listener {
 	
 
 	public void startRefreshThread() {
-		refreshthreadid = hc.getMC().runRepeatingTask(new Runnable() {
+		refreshthreadid = hc.mc.runRepeatingTask(new Runnable() {
 			public void run() {
 				for (ItemDisplay display:displays.values()) {
 					display.refresh();
@@ -111,7 +111,7 @@ public class ItemDisplayFactory implements Listener {
 	}
 	
 	public void cancelRefreshThread() {
-		hc.getMC().cancelTask(refreshthreadid);
+		hc.mc.cancelTask(refreshthreadid);
 	}
 	
 
