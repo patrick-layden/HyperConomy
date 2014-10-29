@@ -12,7 +12,6 @@ import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.MineCraftConnector;
 import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
 import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
@@ -88,7 +87,6 @@ public class HyperPlayer implements HyperAccount {
 	
 	
 	public HyperPlayer(String name, String uuid, String economy, double balance, double x, double y, double z, String world, String hash, String salt) {
-		HyperConomy hc = HyperConomy.hc;
 		this.name = name;
 		this.uuid = uuid;
 		this.economy = economy;
@@ -111,7 +109,6 @@ public class HyperPlayer implements HyperAccount {
 	
 	@SuppressWarnings("deprecation")
 	private void checkExternalAccount() {
-		HyperConomy hc = HyperConomy.hc;
 		if (!HyperConomy.mc.useExternalEconomy()) {return;}
 		if (name == null) {return;}
 		if (!HyperConomy.mc.getEconomy().hasAccount(name)) {
@@ -137,7 +134,6 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	private void checkForNameChange() {
-		HyperConomy hc = HyperConomy.hc;
 		if (uuid == null || uuid == "") {return;}
 		Player p = null;
 		try {
@@ -188,7 +184,6 @@ public class HyperPlayer implements HyperAccount {
 	}
 	@SuppressWarnings("deprecation")
 	public double getBalance() {
-		HyperConomy hc = HyperConomy.hc;
 		checkExternalAccount();
 		if (HyperConomy.mc.useExternalEconomy()) {
 			return HyperConomy.mc.getEconomy().getBalance(name);
@@ -621,6 +616,10 @@ public class HyperPlayer implements HyperAccount {
 	
 	public boolean isSneaking() {
 		return HyperConomy.mc.isSneaking(this);
+	}
+	
+	public int getLevel() {
+		return HyperConomy.mc.getLevel(this);
 	}
 	
 }

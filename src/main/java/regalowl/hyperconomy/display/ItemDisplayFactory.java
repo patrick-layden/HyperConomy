@@ -1,36 +1,28 @@
 package regalowl.hyperconomy.display;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Item;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.metadata.MetadataValue;
 
+
+
+
+
+import regalowl.databukkit.event.EventHandler;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
+import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
+import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
+import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
+import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerDropItemEvent;
+import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.util.HItem;
 import regalowl.hyperconomy.util.SimpleLocation;
 
-public class ItemDisplayFactory implements Listener {
+public class ItemDisplayFactory {
 	
 	private HyperConomy hc; 
 	private long refreshthreadid;
@@ -44,7 +36,7 @@ public class ItemDisplayFactory implements Listener {
 		try {
 			hc = HyperConomy.hc;
 			if (hc.getConf().getBoolean("enable-feature.item-displays")) {
-				hc.mc.getConnector().getServer().getPluginManager().registerEvents(this, hc.mc.getConnector());
+				hc.getHyperEventHandler().registerListener(this);
 				loadDisplays();
 				startRefreshThread();
 			}
@@ -61,7 +53,7 @@ public class ItemDisplayFactory implements Listener {
 				public void run() {
 					SQLRead sr = hc.getSQLRead();
 					dbData = sr.select("SELECT * FROM hyperconomy_item_displays");
-					hc.mc.runTask(new Runnable() {
+					HyperConomy.mc.runTask(new Runnable() {
 						public void run() {
 							while (dbData.next()) {
 								String w = dbData.getString("WORLD");
@@ -89,6 +81,9 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 	
+	public Collection<ItemDisplay> getDisplays() {
+		return displays.values();
+	}
 
 	public void unloadDisplays() {
 		for (ItemDisplay display:displays.values()) {
@@ -101,7 +96,7 @@ public class ItemDisplayFactory implements Listener {
 	
 
 	public void startRefreshThread() {
-		refreshthreadid = hc.mc.runRepeatingTask(new Runnable() {
+		refreshthreadid = HyperConomy.mc.runRepeatingTask(new Runnable() {
 			public void run() {
 				for (ItemDisplay display:displays.values()) {
 					display.refresh();
@@ -111,7 +106,7 @@ public class ItemDisplayFactory implements Listener {
 	}
 	
 	public void cancelRefreshThread() {
-		hc.mc.cancelTask(refreshthreadid);
+		HyperConomy.mc.cancelTask(refreshthreadid);
 	}
 	
 
@@ -148,9 +143,7 @@ public class ItemDisplayFactory implements Listener {
 		SimpleLocation l = new SimpleLocation(w, x, y, z);
 		ItemDisplay display = new ItemDisplay(l, name, true);
 		displays.put(l, display);
-		Location loc = new Location(Bukkit.getWorld(w),x,y,z);
-		Chunk locChunk = loc.getChunk();
-		if (locChunk.isLoaded()) {
+		if (l.isLoaded()) {
 			display.makeDisplay();
 			display.clearNearbyItems(7,false,false);
 		}
@@ -159,91 +152,27 @@ public class ItemDisplayFactory implements Listener {
 
 	
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
-		try {
-			Item droppedItem = event.getItemDrop();
-			for (ItemDisplay display:displays.values()) {
-				if (!display.isActive()) {continue;}
-				if (display.blockItemDrop(droppedItem)) {
-					event.setCancelled(true);
-					return;
-				}
+	@EventHandler
+	public void onPlayerDropItemEvent(HPlayerDropItemEvent event) {
+		HItem i = event.getItem();
+		for (ItemDisplay display : HyperConomy.hc.getItemDisplay().getDisplays()) {
+			if (!display.isActive()) continue;
+			if (display.blockItemDrop(i)) {
+				event.cancel();
+				return;
 			}
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
 		}
 	}
 	
 	
-	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onChunkLoad(ChunkLoadEvent event) {
+	@EventHandler
+	public void onBlockBreakEvent(HBlockBreakEvent event) {
 		try {
-			Chunk chunk = event.getChunk();
-			if (chunk == null) {return;}
-			for (ItemDisplay display:displays.values()) {
-				if (display == null) {continue;}
-				if (chunk.equals(display.getChunk())) {
-					display.refresh();
-					return;
-				}
-			}
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onChunkUnload(ChunkUnloadEvent event) {
-		try {
-			Chunk chunk = event.getChunk();
-			if (chunk == null) {return;}
-			for (ItemDisplay display:displays.values()) {
-				if (display == null) {continue;}
-				if (chunk.equals(display.getChunk())) {
-					display.removeItem();
-					return;
-				}
-			}
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
-		try {
-			Item item = event.getItem();
-			if (!event.isCancelled()) {
-				List<MetadataValue> meta = item.getMetadata("HyperConomy");
-				for (MetadataValue cmeta : meta) {
-					if (cmeta.asString().equalsIgnoreCase("item_display")) {
-						event.setCancelled(true);
-						break;
-					}
-				}
-			}
-			for (ItemDisplay display : displays.values()) {
-				if (display.getEntityId() == item.getEntityId() || item.equals(display.getItem())) {
-					event.setCancelled(true);
-					break;
-				}
-			}
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-		}
-	}
-	
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockBreakEvent(BlockBreakEvent event) {
-		try {
-		Block bb = event.getBlock();
+		HBlock b = event.getBlock();
 		for (ItemDisplay display:displays.values()) {
 			if (!display.isActive()) {continue;}
-			if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
-				event.setCancelled(true);
+			if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
+				event.cancel();
 				display.removeItem();
 				display.makeDisplay();
 			}
@@ -253,26 +182,23 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockPlaceEvent(BlockPlaceEvent event) {
+	@EventHandler
+	public void onBlockPlaceEvent(HBlockPlaceEvent event) {
 		try {
-			Block bb = event.getBlock();
+			HBlock b = event.getBlock();
 			for (ItemDisplay display : displays.values()) {
 				if (!display.isActive()) {continue;}
-				if (display.getBaseBlock().equals(bb) || display.getItemBlock().equals(bb)) {
-					event.setCancelled(true);
+				if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
+					event.cancel();
 					display.refresh();
 				}
 			}
-			if (bb.getType().equals(Material.GRAVEL) || bb.getType().equals(Material.SAND)) {
-				Block below = bb.getRelative(BlockFace.DOWN);
-				while (below.getType().equals(Material.AIR)) {
-					below = below.getRelative(BlockFace.DOWN);
-				}
+			if (b.canFall()) {
+				HBlock below = b.getFirstNonAirBlockBelow();
 				for (ItemDisplay display : displays.values()) {
 					if (!display.isActive()) {continue;}
 					if (display.getBaseBlock().equals(below) || display.getItemBlock().equals(below)) {
-						event.setCancelled(true);
+						event.cancel();
 						display.refresh();
 					}
 				}
@@ -282,17 +208,16 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockPistonRetractEvent(BlockPistonRetractEvent event) {
+	@EventHandler
+	public void onBlockPistonRetractEvent(HBlockPistonRetractEvent event) {
 		try {
-			Location l = event.getRetractLocation();
-			Block b = l.getBlock();
+			HBlock b = event.getRetractedBlock();
 			for (ItemDisplay display : displays.values()) {
 				if (!display.isActive()) {
 					continue;
 				}
 				if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
-					event.setCancelled(true);
+					event.cancel();
 					display.refresh();
 				}
 			}
@@ -301,15 +226,14 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockPistonExtendEvent(BlockPistonExtendEvent event) {
+	@EventHandler
+	public void onBlockPistonExtendEvent(HBlockPistonExtendEvent event) {
 		try {
-			List<Block> blocks = event.getBlocks();
-			for (Block cblock : blocks) {
+			for (HBlock cblock : event.getBlocks()) {
 				for (ItemDisplay display : displays.values()) {
 					if (!display.isActive()) {continue;}
 					if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
-						event.setCancelled(true);
+						event.cancel();
 						display.refresh();
 					}
 				}
@@ -319,17 +243,16 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onEntityExplodeEvent(EntityExplodeEvent event) {
+	@EventHandler
+	public void onEntityExplodeEvent(HEntityExplodeEvent event) {
 		try {
-			List<Block> blocks = event.blockList();
-			for (Block cblock : blocks) {
+			for (HBlock cblock : event.getBrokenBlocks()) {
 				for (ItemDisplay display : displays.values()) {
 					if (!display.isActive()) {
 						continue;
 					}
 					if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
-						event.setCancelled(true);
+						event.cancel();
 						display.refresh();
 					}
 				}
@@ -339,21 +262,9 @@ public class ItemDisplayFactory implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onCreatureSpawnEvent(CreatureSpawnEvent event) {
-		try {
-			for (ItemDisplay display : displays.values()) {
-				if (!display.isActive()) {continue;}
-				if (display.blockEntityPickup(event.getEntity())) {
-					event.getEntity().setCanPickupItems(false);
-				}
-			}
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-		}
-	}
 
-	public boolean isDisplay(Item item) {
+
+	public boolean isDisplay(HItem item) {
 		try {
 			for (ItemDisplay display : displays.values()) {
 				if (item.equals(display.getItem())) {

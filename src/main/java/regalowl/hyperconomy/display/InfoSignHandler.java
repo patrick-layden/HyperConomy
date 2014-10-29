@@ -7,6 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 
+
+
 import regalowl.databukkit.event.EventHandler;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
@@ -17,6 +19,8 @@ import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
+import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.util.HSign;
 import regalowl.hyperconomy.util.SimpleLocation;
 
 public class InfoSignHandler {
@@ -67,10 +71,10 @@ public class InfoSignHandler {
 
 	@EventHandler
 	public void onSignRemoval(HBlockBreakEvent bbevent) {
-		if (bbevent.isCancelled()) {return;}
-		if (!bbevent.isInfoSign()) {return;}
+		HBlock b = bbevent.getBlock();
+		if (!b.isInfoSign()) {return;}
 		try {
-			InfoSign is = getInfoSign(bbevent.getLocation());
+			InfoSign is = getInfoSign(b.getLocation());
 			if (is != null) {
 				is.deleteSign();
 			}
@@ -94,10 +98,11 @@ public class InfoSignHandler {
 	@EventHandler
 	public void onHyperSignChangeEvent(HyperSignChangeEvent ev) {
 		try {
+			HSign s = ev.getSign();
 			DataManager em = hc.getDataManager();
 			HyperPlayer hp = ev.getHyperPlayer();
 			if (hp.getPlayer().hasPermission("hyperconomy.createsign")) {
-				String[] lines = ev.getLines();
+				String[] lines = s.getLines();
 				String economy = "default";
 				economy = "default";
 				if (hp != null && hp.getEconomy() != null) {
@@ -121,7 +126,7 @@ public class InfoSignHandler {
 				if (em.getEconomy(hp.getEconomy()).objectTest(objectName)) {
 					SignType type = SignType.fromString(lines[2]);
 					if (type != null) {
-						infoSigns.put(signCounter.getAndIncrement(), new InfoSign(ev.getLocation(), type, objectName, multiplier, economy, enchantClass, lines));
+						infoSigns.put(signCounter.getAndIncrement(), new InfoSign(s.getLocation(), type, objectName, multiplier, economy, enchantClass, lines));
 						updateSigns();
 					}
 				}

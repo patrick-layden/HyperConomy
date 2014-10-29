@@ -1,14 +1,15 @@
 package regalowl.hyperconomy.api;
 
-import org.bukkit.entity.Player;
+import regalowl.hyperconomy.account.HyperPlayer;
+
 
 
 public interface EconomyAPI {
-	boolean checkFunds(double money, Player player);
+	boolean checkFunds(double money, HyperPlayer player);
 	boolean checkFunds(double money, String name);
-	void withdraw(double money, Player player);
+	void withdraw(double money, HyperPlayer player);
 	void withdrawAccount(double money, String name);
-	void deposit(double money, Player player);
+	void deposit(double money, HyperPlayer player);
 	void depositAccount(double money, String name);
 	void setBalance(double balance, String name);
 	boolean checkAccount(String name);

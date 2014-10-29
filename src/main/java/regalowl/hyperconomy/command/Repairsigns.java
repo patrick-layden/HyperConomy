@@ -6,19 +6,12 @@ import java.util.HashMap;
 
 
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.display.SignType;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.util.HSign;
 import regalowl.hyperconomy.util.SimpleLocation;
 
 public class Repairsigns extends BaseCommand implements HyperCommand {
@@ -62,15 +55,15 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 			for (int i = (px - xrad); i <= (px + xrad); i++) {
 				for (int j = (pz - zrad); j <= (pz + zrad); j++) {
 					for (int k = (py - yrad); k <= (py + yrad); k++) {
-						if (new SimpleLocation(w, i, k, j).isLoaded()) {
-							Block cb = w.getBlockAt(i, k, j);
-							
-							if (cb != null && cb.getType().equals(Material.SIGN_POST) || cb != null && cb.getType().equals(Material.WALL_SIGN)) {
-								Sign s = (Sign) cb.getState();
-								String objectName = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
+						SimpleLocation loc = new SimpleLocation(w, i, k, j);
+						if (loc.isLoaded()) {
+							HBlock cb = loc.getBlock();
+							if (cb != null && cb.isInfoSign()) {
+								HSign s = HyperConomy.mc.getSign(loc);
+								String objectName = HyperConomy.mc.removeColor(s.getLine(0)).trim() + HyperConomy.mc.removeColor(s.getLine(1)).trim();
 								objectName = dm.getEconomy("default").fixName(objectName);
 								if (dm.getEconomy("default").objectTest(objectName)) {
-									String ttype = ChatColor.stripColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
+									String ttype = HyperConomy.mc.removeColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
 									if (ttype.contains("[")) {
 										continue;
 									}
@@ -84,16 +77,16 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 									}
 									if (type != null) {
 										HashMap<String,String> conditions = new HashMap<String,String>();
-										conditions.put("WORLD", s.getBlock().getWorld().getName());
-										conditions.put("X", s.getBlock().getX()+"");
-										conditions.put("Y", s.getBlock().getY()+"");
-										conditions.put("Z", s.getBlock().getZ()+"");
+										conditions.put("WORLD", loc.getWorld());
+										conditions.put("X", loc.getX()+"");
+										conditions.put("Y", loc.getY()+"");
+										conditions.put("Z", loc.getZ()+"");
 										hc.getSQLWrite().performDelete("hyperconomy_info_signs", conditions);
 										HashMap<String,String> values = new HashMap<String,String>();
-										values.put("WORLD", s.getBlock().getWorld().getName());
-										values.put("X", s.getBlock().getX()+"");
-										values.put("Y", s.getBlock().getY()+"");
-										values.put("Z", s.getBlock().getZ()+"");
+										values.put("WORLD", loc.getWorld());
+										values.put("X", loc.getX()+"");
+										values.put("Y", loc.getY()+"");
+										values.put("Z", loc.getZ()+"");
 										values.put("HYPEROBJECT", objectName);
 										values.put("TYPE", type.toString());
 										values.put("MULTIPLIER", "1");
@@ -116,7 +109,7 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 			}
 			if (signsRepaired > 0) {
 				hc.getInfoSignHandler().reloadSigns();
-				hc.mc.runTaskLater(new Runnable() {
+				HyperConomy.mc.runTaskLater(new Runnable() {
 					public void run() {
 						HyperConomy.hc.getInfoSignHandler().updateSigns();
 					}
@@ -129,6 +122,7 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 		} else {
 			data.addResponse(L.get("REPAIRSIGNS_INVALID"));
 		}
+		return data;
 	}
 	
 	

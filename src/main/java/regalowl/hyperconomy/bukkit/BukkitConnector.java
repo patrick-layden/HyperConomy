@@ -26,27 +26,32 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.MineCraftConnector;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.command.CommandData;
 import regalowl.hyperconomy.command.HyperCommand;
-import regalowl.hyperconomy.display.SignType;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
 import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.shop.ChestShop;
 import regalowl.hyperconomy.util.Economy_HyperConomy;
 import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.util.HItem;
 import regalowl.hyperconomy.util.HSign;
 import regalowl.hyperconomy.util.SimpleLocation;
 
@@ -476,6 +481,8 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return true;
 	}
 
+
+
 	@Override
 	public void teleport(HyperPlayer hp, SimpleLocation sl) {
 		Player p = BukkitCommon.getPlayer(hp);
@@ -608,6 +615,99 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public boolean isChestShop(SimpleLocation l, boolean includeSign) {
 		return BukkitCommon.isChestShop(l, includeSign);
+	}
+
+
+
+	@Override
+	public HItem dropItemDisplay(SimpleLocation location, SerializableItemStack item) {
+		World w = Bukkit.getWorld(location.getWorld());
+		if (w == null) return null;
+		Item i = w.dropItem(BukkitCommon.getLocation(location), BukkitCommon.getItemStack(item));
+		i.setVelocity(new org.bukkit.util.Vector(0, 0, 0));
+		i.setMetadata("HyperConomy", new FixedMetadataValue(this, "item_display"));
+		return new HItem(location, i.getEntityId(), item);
+	}
+
+
+
+	@Override
+	public void removeItem(HItem item) {
+		SimpleLocation l = item.getLocation();
+		Location loc = BukkitCommon.getLocation(l);
+		for (Entity ent:loc.getChunk().getEntities()) {
+			if (ent instanceof Item) {
+				Item i = (Item)ent;
+				if (i.getEntityId() == item.getId()) {
+					i.remove();
+				}
+			}
+		}
+	}
+
+
+
+	@Override
+	public void zeroVelocity(HItem item) {
+		Item i = BukkitCommon.getItem(item);
+		if (i != null) {
+			i.setVelocity(new Vector(0,0,0));
+		}
+	}
+
+
+
+	@Override
+	public HBlock getFirstNonAirBlockInColumn(SimpleLocation location) {
+		Location loc = BukkitCommon.getLocation(location);
+		Block dblock = loc.getBlock();
+		while (dblock.getType().equals(Material.AIR)) {
+			dblock = dblock.getRelative(BlockFace.DOWN);
+		}
+		return BukkitCommon.getBlock(dblock);
+	}
+
+
+
+	@Override
+	public void clearNearbyNonDisplayItems(HItem item, double radius) {
+		Item i = BukkitCommon.getItem(item);
+		ItemStack tStack = new ItemStack(Material.ROTTEN_FLESH);
+		Location l = BukkitCommon.getLocation(item.getLocation());
+		Item tempItem = l.getWorld().dropItem(l, tStack);
+		entityLoop : for (Entity entity : tempItem.getNearbyEntities(radius, radius, radius)) {
+			if (!(entity instanceof Item)) {continue;}
+			Item nearbyItem = (Item) entity;
+			for (MetadataValue cmeta: nearbyItem.getMetadata("HyperConomy")) {
+				if (cmeta.asString().equalsIgnoreCase("item_display")) {
+					continue entityLoop;
+				}
+			}
+			if (nearbyItem.equals(tempItem)) continue;
+			if (nearbyItem.equals(i)) continue;
+			if (!BukkitCommon.getSerializableItemStack(tStack).equals(BukkitCommon.getSerializableItemStack(nearbyItem.getItemStack()))) continue;
+			if (nearbyItem.getItemStack().getType() != tempItem.getItemStack().getType()) continue;
+			entity.remove();
+		}
+		tempItem.remove();
+	}
+
+
+
+	@Override
+	public boolean canFall(HBlock block) {
+		Block b = BukkitCommon.getBlock(block.getLocation());
+		if (b.getType().equals(Material.GRAVEL) || b.getType().equals(Material.SAND)) return true;
+		return false;
+	}
+
+
+
+	@Override
+	public int getLevel(HyperPlayer hp) {
+		Player p = BukkitCommon.getPlayer(hp);
+		if (p == null) return 0;
+		return p.getLevel();
 	}
 
 

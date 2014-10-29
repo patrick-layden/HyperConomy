@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 
 
+
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.hyperobject.EnchantmentClass;
 import regalowl.hyperconomy.hyperobject.HyperObject;
@@ -14,6 +15,7 @@ import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.TransactionResponse;
+import regalowl.hyperconomy.util.HItem;
 
 
 
@@ -48,7 +50,7 @@ public interface API {
 	 * @param Item entity
 	 * @return Returns true if the given Item is being used as an ItemDisplay and false if it is not.
 	 */
-	public boolean isItemDisplay(Item item);
+	public boolean isItemDisplay(HItem item);
 	
 	public EnchantmentClass getEnchantmentClass(SerializableItemStack stack);
 

@@ -15,7 +15,6 @@ public class Hc extends BaseCommand implements HyperCommand {
 	}
 	
 	public CommandData onCommand(CommandData data) {
-		if (!validate(data)) return data;
 		String args[] = data.getArgs();
 		HyperConomy hc = HyperConomy.hc;
 		HyperLock hl = hc.getHyperLock();

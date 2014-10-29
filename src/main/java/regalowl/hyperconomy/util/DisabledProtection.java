@@ -50,7 +50,7 @@ public class DisabledProtection {
 
 	@EventHandler
 	public void onBlockPistonExtendEvent(HBlockPistonExtendEvent bpeevent) {
-		for (HBlock b : bpeevent.getRetractedBlocks()) {
+		for (HBlock b : bpeevent.getBlocks()) {
 			if (new ChestShop(b.getLocation()).isValid()) {
 				bpeevent.cancel();
 			}

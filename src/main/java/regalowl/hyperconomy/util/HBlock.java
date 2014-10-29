@@ -21,8 +21,24 @@ public class HBlock {
 		return HyperConomy.mc.isChest(location);
 	}
 	
+	public boolean isInfoSign() {
+		return HyperConomy.mc.isInfoSign(location);
+	}
+	
+	public boolean isTransactionSign() {
+		return HyperConomy.mc.isTransactionSign(location);
+	}
+	
 	public boolean canHoldChestShopSign() {
 		return HyperConomy.mc.canHoldChestShopSign(location);
+	}
+	
+	public HBlock getFirstNonAirBlockBelow() {
+		return HyperConomy.mc.getFirstNonAirBlockInColumn(location);
+	}
+	
+	public boolean canFall() {
+		return HyperConomy.mc.canFall(this);
 	}
 	
 	public HBlock[] getSurroundingBlocks() {
@@ -56,6 +72,31 @@ public class HBlock {
 		l4.setZ(l4.getZ() - 1);
 		blocks[3] = new HBlock(l4);
 		return blocks;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HBlock other = (HBlock) obj;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		return true;
 	}
 	
 }

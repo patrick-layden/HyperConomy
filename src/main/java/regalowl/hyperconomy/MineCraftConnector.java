@@ -8,11 +8,13 @@ import net.milkbowl.vault.economy.Economy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.bukkit.BukkitConnector;
 import regalowl.hyperconomy.command.HyperCommand;
+import regalowl.hyperconomy.display.ItemDisplay;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
 import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.shop.ChestShop;
 import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.util.HItem;
 import regalowl.hyperconomy.util.HSign;
 import regalowl.hyperconomy.util.SimpleLocation;
 
@@ -59,6 +61,7 @@ public interface MineCraftConnector {
 	public boolean hasPermission(HyperPlayer hp, String permission);
 	public HyperPlayer getPlayer(UUID uuid);
 	public boolean playerExists(UUID uuid);
+	public int getLevel(HyperPlayer hp);
 	
 	
 	
@@ -89,4 +92,11 @@ public interface MineCraftConnector {
 	public HBlock getAttachedBlock(HSign sign);
 	public boolean isChest(SimpleLocation l);
 	public boolean canHoldChestShopSign(SimpleLocation l);
+	
+	public HItem dropItemDisplay(SimpleLocation location, SerializableItemStack item);
+	public void removeItem(HItem item);
+	public void clearNearbyNonDisplayItems(HItem item, double radius);
+	public void zeroVelocity(HItem item);
+	public HBlock getFirstNonAirBlockInColumn(SimpleLocation location);
+	public boolean canFall(HBlock block);
 }

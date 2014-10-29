@@ -49,6 +49,10 @@ public class SimpleLocation {
 	public int getBlockZ() {
 		return (int)z;
 	}
+	
+	public HBlock getBlock() {
+		return new HBlock(this);
+	}
 
 	
 	public void setX(double x) {

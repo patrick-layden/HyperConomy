@@ -2,56 +2,38 @@ package regalowl.hyperconomy.display;
 
 
 import java.util.HashMap;
-import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.util.Vector;
+
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.HyperItemStack;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.util.HItem;
+import regalowl.hyperconomy.util.HMob;
 import regalowl.hyperconomy.util.SimpleLocation;
 
 public class ItemDisplay {
 	
 	private HyperConomy hc;
-	private Item item;
 	private String name;
-	private double x;
-	private double y;
-	private double z;
-	private String w;
-	private int entityId;
+	private SimpleLocation l;
+	private HItem item;
 	private boolean active;
 	
 	ItemDisplay(SimpleLocation location, String name, boolean newDisplay) {
 		this.hc = HyperConomy.hc;
 		this.active = false;
 		HyperEconomy he = hc.getDataManager().getEconomy("default");
-		this.x = location.getX();
-		this.y = location.getY();
-		this.z = location.getZ();
-		this.w = location.getWorld();
+		this.l = location;
 		this.name = he.fixName(name);
 		if (newDisplay) {
 			HashMap<String,String> values = new HashMap<String,String>();
-			values.put("WORLD", w);
-			values.put("X", x+"");
-			values.put("Y", y+"");
-			values.put("Z", z+"");
+			values.put("WORLD", location.getWorld());
+			values.put("X", location.getX()+"");
+			values.put("Y", location.getY()+"");
+			values.put("Z", location.getZ()+"");
 			values.put("HYPEROBJECT", name);
 			hc.getSQLWrite().performInsert("hyperconomy_item_displays", values);
 		}
@@ -61,54 +43,56 @@ public class ItemDisplay {
 		return active;
 	}
 	
-	public Item getItem() {
+	public HItem getItem() {
 		return item;	
 	}
 	
-	public Block getBaseBlock() {
-		int x = (int) Math.floor(this.x);
-		int y = (int) Math.floor(this.y - 1);
-		int z = (int) Math.floor(this.z);
-		return getWorld().getBlockAt(x, y, z);
+	public HBlock getBaseBlock() {
+		int x = (int) Math.floor(l.getX());
+		int y = (int) Math.floor(l.getY() - 1);
+		int z = (int) Math.floor(l.getZ());
+		return new HBlock(new SimpleLocation(l.getWorld(), x, y, z));
 	}
 	
-	public Block getItemBlock() {
-		int x = (int) Math.floor(this.x);
-		int y = (int) Math.floor(this.y - 1);
-		int z = (int) Math.floor(this.z);
-		return getWorld().getBlockAt(x, y+1, z);
+	public HBlock getItemBlock() {
+		int x = (int) Math.floor(l.getX());
+		int y = (int) Math.floor(l.getY());
+		int z = (int) Math.floor(l.getZ());
+		return new HBlock(new SimpleLocation(l.getWorld(), x, y, z));
 	}
 	
-	public Location getLocation() {
-		return new Location(Bukkit.getWorld(w),x,y,z);
+	public SimpleLocation getLocation() {
+		return l;
 	}
 	
+	/*
 	public Chunk getChunk() {
 		return getLocation().getChunk();
 	}
-	
+	*/
 	public String getName() {
 		return name;
 	}
 	
 	public double getX() {
-		return x;
+		return l.getX();
 	}
 	
 	public double getY() {
-		return y;
+		return l.getY();
 	}
 	
 	public double getZ() {
-		return z;
+		return l.getZ();
 	}
 	
-	public World getWorld() {
-		return Bukkit.getWorld(w);
+	public String getWorld() {
+		return l.getWorld();
 	}
 	
 	public int getEntityId() {
-		return entityId;
+		if (item == null) return -1;
+		return item.getId();
 	}
 	
 	public HyperObject getHyperObject() {
@@ -116,15 +100,10 @@ public class ItemDisplay {
 	}
 	
 	public void makeDisplay() {
-		if (!getLocation().getChunk().isLoaded()) {return;}
+		if (!getLocation().isLoaded()) {return;}
 		HyperEconomy he = hc.getDataManager().getEconomy("default");
-		Location l = new Location(getWorld(), x, y + 1, z);
-		ItemStack dropstack = he.getHyperObject(name).getItem();
-		dropstack.setDurability((short) he.getHyperObject(name).getItem().getDurability());
-		this.item = getWorld().dropItem(l, dropstack);
-		this.entityId = item.getEntityId();
-		item.setVelocity(new Vector(0, 0, 0));
-		item.setMetadata("HyperConomy", new FixedMetadataValue(hc.getMC().getConnector(), "item_display"));
+		SerializableItemStack dropstack = he.getHyperObject(name).getItem();
+		this.item = HyperConomy.mc.dropItemDisplay(l, dropstack);
 		active = true;
 	}
 	
@@ -135,7 +114,7 @@ public class ItemDisplay {
 	
 
 	public void removeItem() {
-		getChunk().load();
+		l.load();
 		if (item != null) {
 			item.remove();
 		}
@@ -145,10 +124,10 @@ public class ItemDisplay {
 	
 	public void delete() {
 		HashMap<String,String> conditions = new HashMap<String,String>();
-		conditions.put("WORLD", w);
-		conditions.put("X", x+"");
-		conditions.put("Y", y+"");
-		conditions.put("Z", z+"");
+		conditions.put("WORLD", l.getWorld());
+		conditions.put("X", l.getX()+"");
+		conditions.put("Y", l.getY()+"");
+		conditions.put("Z", l.getZ()+"");
 		hc.getSQLWrite().performDelete("hyperconomy_item_displays", conditions);
 		clear();
 	}
@@ -156,9 +135,8 @@ public class ItemDisplay {
 	public void clear() {
 		removeItem();
 		hc = null;
-		w = null;
+		l = null;
 		name = null;
-		item = null;
 	}
 	
 	
@@ -167,51 +145,27 @@ public class ItemDisplay {
 	 * @param droppedItem
 	 * @return true if the item drop event shop be blocked to prevent item stacking, false if not
 	 */
-	public boolean blockItemDrop(Item droppedItem) {
-		if (item == null) {return false;}
-		HyperItemStack dropped = new HyperItemStack(droppedItem.getItemStack());
-		HyperItemStack displayItem = new HyperItemStack(item.getItemStack());
-		Location l = droppedItem.getLocation();
-		Material dropType = droppedItem.getItemStack().getType();
-		int dropda = dropped.getDamageValue();
-		double dropx = l.getX();
-		double dropy = l.getY();
-		double dropz = l.getZ();
-		World dropworld = l.getWorld();
-		Material type = item.getItemStack().getType();
-		int da = displayItem.getDamageValue();
-		if (type == dropType) {
-			if (da == dropda) {
-				if (dropworld.equals(getWorld())) {
-					if (Math.abs(dropx - x) < 10) {
-						if (Math.abs(dropz - z) < 10) {
-							if (Math.abs(dropy - y) < 30) {
-								return true;
-							} else {
-								droppedItem.setVelocity(new Vector(0,0,0));
-								Block dblock = droppedItem.getLocation().getBlock();
-								while (dblock.getType().equals(Material.AIR)) {
-									dblock = dblock.getRelative(BlockFace.DOWN);
-								}
-								if (dblock.getLocation().getY() <= (y + 10)) {
-									return true;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return false;
+	public boolean blockItemDrop(HItem droppedItem) {
+		if (droppedItem == null) {return false;}
+		SerializableItemStack displayStack = item.getItem();
+		SimpleLocation dl = droppedItem.getLocation();
+		if (!displayStack.equals(droppedItem.getItem())) return false;
+		if (!l.getWorld().equals(getWorld())) return false;
+		if (Math.abs(dl.getX() - l.getX()) > 10) return false;
+		if (Math.abs(dl.getZ() - l.getZ()) > 10) return false;
+		if (Math.abs(dl.getY() - l.getY()) > 30) return false;
+		HyperConomy.mc.zeroVelocity(droppedItem);
+		if (HyperConomy.mc.getFirstNonAirBlockInColumn(dl).getLocation().getY() > (l.getY() + 10)) return false;
+		return true;
 	}
 	
 	
-	public boolean blockEntityPickup(Entity entity) {
-		if (entity.getType() == EntityType.SKELETON || entity.getType() == EntityType.ZOMBIE || entity.getType() == EntityType.PIG_ZOMBIE) {
-			Location entityLocation = entity.getLocation();	
-			if (Bukkit.getWorld(w).equals(entityLocation.getWorld())) {
-				if (Math.abs(entityLocation.getX() - x) < 1000) {
-					if (Math.abs(entityLocation.getZ() - z) < 1000) {
+	public boolean blockEntityPickup(HMob mob) {
+		if (mob.canPickupItems()) {
+			SimpleLocation el = mob.getLocation();	
+			if (el.getWorld().equals(l.getWorld())) {
+				if (Math.abs(el.getX() - l.getX()) < 500) {
+					if (Math.abs(el.getZ() - l.getZ()) < 500) {
 						return true;
 					}
 				}
@@ -222,31 +176,7 @@ public class ItemDisplay {
 	
 
 	public void clearNearbyItems(double radius, boolean removeDisplays, boolean removeSelf) {
-		HyperObject hi = getHyperObject();
-		if (hi == null) {return;}
-		Item tempItem = getWorld().dropItem(getLocation(), hi.getItem());
-		List<Entity> nearbyEntities = tempItem.getNearbyEntities(radius, radius, radius);
-		for (Entity entity : nearbyEntities) {
-			if (!(entity instanceof Item)) {continue;}
-			Item nearbyItem = (Item) entity;
-			boolean display = false;
-			for (MetadataValue cmeta: nearbyItem.getMetadata("HyperConomy")) {
-				if (cmeta.asString().equalsIgnoreCase("item_display")) {
-					display = true;
-					break;
-				}
-			}
-			if (nearbyItem.equals(tempItem)) {continue;}
-			if (nearbyItem.equals(item) && !removeSelf) {continue;}
-			if (nearbyItem.getItemStack().getType() != tempItem.getItemStack().getType()) {continue;}
-			if (!removeDisplays && display) {continue;}
-			HyperItemStack near = new HyperItemStack(nearbyItem.getItemStack());
-			HyperItemStack displayItem = new HyperItemStack(tempItem.getItemStack());
-			if (near.getDamageValue() == displayItem.getDamageValue()) {
-				entity.remove();
-			}
-		}
-		tempItem.remove();
+		HyperConomy.mc.clearNearbyNonDisplayItems(item, radius);
 	}
 
 }

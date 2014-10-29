@@ -121,12 +121,7 @@ public class HyperConomy {
 	}
 	
 	@EventHandler
-	public void onDisable(DisableEvent event) {
-		disable(false);
-	}
-	
-	@EventHandler
-	public void onDisableRequest(ShutdownEvent event) {
+	public void onDataBukkitShutdownRequest(ShutdownEvent event) {
 		disable(false);
 	}
 	
@@ -139,6 +134,7 @@ public class HyperConomy {
 		registerCommands();
 		enabled = true;
 		hl.setLoadLock(false);
+		mc.registerListeners();
 		dMode.syncDebugConsoleMessage("Data loading completed.");
 	}
 
@@ -172,7 +168,6 @@ public class HyperConomy {
 	
 	public void enable() {
 		mc.unregisterAllListeners();
-		mc.registerListeners();
 		dm = new DataManager();
 		if (hConfig.getBoolean("sql.use-mysql")) {
 			String username = hConfig.getString("sql.mysql-connection.username");

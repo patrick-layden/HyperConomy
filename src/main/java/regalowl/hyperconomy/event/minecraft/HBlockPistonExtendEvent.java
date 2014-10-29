@@ -13,7 +13,7 @@ public class HBlockPistonExtendEvent extends Event {
 		this.blocks = blocks;
 	}
 	
-	public ArrayList<HBlock> getRetractedBlocks() {
+	public ArrayList<HBlock> getBlocks() {
 		return blocks;
 	}
 	

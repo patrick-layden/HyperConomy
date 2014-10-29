@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -18,6 +19,8 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -54,6 +57,7 @@ import regalowl.hyperconomy.serializable.SerializablePotionEffect;
 import regalowl.hyperconomy.serializable.SerializablePotionMeta;
 import regalowl.hyperconomy.serializable.SerializableSkullMeta;
 import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.util.HItem;
 import regalowl.hyperconomy.util.SimpleLocation;
 
 public class BukkitCommon {
@@ -556,6 +560,30 @@ public class BukkitCommon {
 	
 	
 	
+	protected static Item getItem(HItem i) {
+		Location l = getLocation(i.getLocation());
+		for (Entity e:l.getWorld().getEntities()) {
+			if (e instanceof Item) {
+				Item item = (Item)e;
+				if (item.getEntityId() == i.getId()) {
+					return item;
+				}
+			}
+		}
+		return null;
+	}
+	
+	protected static HItem getItem(Item i) {
+		SimpleLocation l = getLocation(i.getLocation());
+		SerializableItemStack stack = getSerializableItemStack(i.getItemStack());
+		return new HItem(l, i.getEntityId(), stack);
+	}
+	
+	protected static boolean chunkContainsLocation(SimpleLocation l, Chunk c) {
+		Location loc = getLocation(l);
+		if (loc.getChunk().equals(c)) return true;
+		return false;
+	}
 	
 	
 }

@@ -1,19 +1,9 @@
 package regalowl.hyperconomy.shop;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.map.MapRenderer;
-import org.bukkit.map.MapView;
 
+import regalowl.databukkit.event.EventHandler;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperEvent;
-import regalowl.hyperconomy.event.HyperListener;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
@@ -21,7 +11,7 @@ import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.SimpleLocation;
 
-public class FrameShop implements HyperListener {
+public class FrameShop {
 
 	private HyperConomy hc;
 	private short mapId;
@@ -84,13 +74,10 @@ public class FrameShop implements HyperListener {
 		}
 	}
 	
-	@Override
-	public void onHyperEvent(HyperEvent event) {
-		if (event instanceof HyperObjectModificationEvent) {
-			HyperObjectModificationEvent ev = (HyperObjectModificationEvent)event;
-			if (this.ho.equals(ev.getHyperObject())) {
-				render();
-			}
+	@EventHandler
+	public void onHyperObjectModificationEvent(HyperObjectModificationEvent event) {
+		if (this.ho.equals(event.getHyperObject())) {
+			render();
 		}
 	}
 	

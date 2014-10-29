@@ -1,6 +1,5 @@
 package regalowl.hyperconomy.api;
 
-import org.bukkit.entity.Player;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -8,7 +7,7 @@ import regalowl.hyperconomy.util.LanguageFile;
 
 public class HyperEconAPI implements EconomyAPI {
 
-	public boolean checkFunds(double money, Player player) {
+	public boolean checkFunds(double money, HyperPlayer player) {
 		HyperConomy hc = HyperConomy.hc;
 		if (!hc.getDataManager().accountExists(player.getName())) {
 			return false;
@@ -24,12 +23,12 @@ public class HyperEconAPI implements EconomyAPI {
 		return hc.getDataManager().getAccount(name).hasBalance(money);
 	}
 
-	public void withdraw(double money, Player player) {
+	public void withdraw(double money, HyperPlayer player) {
 		HyperConomy hc = HyperConomy.hc;
 		if (!hc.getDataManager().hyperPlayerExists(player.getName())) {
 			return;
 		}
-		hc.getDataManager().getHyperPlayer(player).withdraw(money);
+		player.withdraw(money);
 	}
 
 	public void withdrawAccount(double money, String name) {
@@ -40,12 +39,12 @@ public class HyperEconAPI implements EconomyAPI {
 		hc.getDataManager().getAccount(name).withdraw(money);
 	}
 
-	public void deposit(double money, Player player) {
+	public void deposit(double money, HyperPlayer player) {
 		HyperConomy hc = HyperConomy.hc;
 		if (!hc.getDataManager().hyperPlayerExists(player.getName())) {
 			return;
 		}
-		hc.getDataManager().getHyperPlayer(player).deposit(money);
+		player.deposit(money);
 	}
 
 	public void depositAccount(double money, String name) {

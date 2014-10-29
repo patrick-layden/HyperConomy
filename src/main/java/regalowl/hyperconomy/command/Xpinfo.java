@@ -1,11 +1,6 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.entity.Player;
 
-import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.util.LanguageFile;
 
 public class Xpinfo extends BaseCommand implements HyperCommand {
 
