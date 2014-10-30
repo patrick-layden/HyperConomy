@@ -57,7 +57,6 @@ import regalowl.hyperconomy.event.minecraft.HyperPlayerQuitEvent;
 import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.shop.ChestShop;
-import regalowl.hyperconomy.shop.FrameShop;
 import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.HBlock;
 import regalowl.hyperconomy.util.HMob;
@@ -116,44 +115,6 @@ public class BukkitListener implements Listener {
 		HyperConomy.hc.getHyperEventHandler().fireEvent(new HyperPlayerQuitEvent(hp));
 	}
 	
-	
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onFrameShopSell(EntityDamageByEntityEvent event) {
-		if (event.isCancelled()) return;
-		Entity entity = event.getEntity();
-		if (event.getDamager() instanceof Player) {
-			Player p = (Player) event.getDamager();
-			if (entity instanceof ItemFrame) {
-				SimpleLocation l = BukkitCommon.getLocation(entity.getLocation());
-				if (HyperConomy.hc.getFrameShopHandler().frameShopExists(l)) {
-					event.setCancelled(true);
-					FrameShop fs = HyperConomy.hc.getFrameShopHandler().getFrameShop(l);
-					HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(p.getName());
-					HyperConomy.hc.getHyperEventHandler().fireEvent(new FrameShopEvent(fs, hp, TransactionType.SELL));
-				}
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onFrameShopBuy(PlayerInteractEntityEvent event) {
-		if (event.isCancelled()) return;
-		Entity entity = event.getRightClicked();
-		if (entity instanceof ItemFrame) {
-			ItemFrame iFrame = (ItemFrame) entity;
-			if (iFrame.getItem().getType().equals(Material.MAP)) {
-				SimpleLocation l = BukkitCommon.getLocation(entity.getLocation());
-				if (HyperConomy.hc.getFrameShopHandler().frameShopExists(l)) {
-					event.setCancelled(true);
-					Player p = event.getPlayer();
-					HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(p.getName());
-					FrameShop fs = HyperConomy.hc.getFrameShopHandler().getFrameShop(l);
-					HyperConomy.hc.getHyperEventHandler().fireEvent(new FrameShopEvent(fs, hp, TransactionType.BUY));
-				}
-			}
-		}
-	}
 
 	
 	@EventHandler(priority = EventPriority.NORMAL)

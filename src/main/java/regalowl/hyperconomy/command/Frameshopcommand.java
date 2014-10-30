@@ -3,8 +3,8 @@ package regalowl.hyperconomy.command;
 
 
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.bukkit.FrameShopHandler;
 import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.shop.FrameShopHandler;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.util.SimpleLocation;

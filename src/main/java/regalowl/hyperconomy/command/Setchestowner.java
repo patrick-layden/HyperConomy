@@ -4,6 +4,7 @@ package regalowl.hyperconomy.command;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.util.HBlock;
 import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.SimpleLocation;
 
@@ -30,8 +31,8 @@ public class Setchestowner extends BaseCommand implements HyperCommand {
 					line4 = "";
 				}
 				HyperPlayer hp = data.getHyperPlayer();
-				SimpleLocation target = hp.getTargetLocation();
-				if (HyperConomy.mc.isChestShop(l, false))
+				HBlock b = hp.getTargetLocation().getBlock();
+				if (HyperConomy.mc.isChestShop(b.getLocation(), false))
 				if (b.getState() instanceof Chest) {
 		    		Chest c = (Chest) b.getState();
 					Block signblock = Bukkit.getWorld(c.getBlock().getWorld().getName()).getBlockAt(c.getX(), c.getY() + 1, c.getZ());
@@ -45,7 +46,7 @@ public class Setchestowner extends BaseCommand implements HyperCommand {
 				    		data.addResponse(L.get("CHEST_OWNER_UPDATED"));
 				    	}
 			    	}
-		    	} else if (b != null && b.getType().equals(Material.WALL_SIGN)) {
+		    	} else if (b.i) {
 		    	    Sign s = (Sign) b.getState();
 					String line2 = s.getLine(1).trim();
 			    	if (line2.equalsIgnoreCase("\u00A7b[Trade]") || line2.equalsIgnoreCase("\u00A7b[Buy]") || line2.equalsIgnoreCase("\u00A7b[Sell]")) {

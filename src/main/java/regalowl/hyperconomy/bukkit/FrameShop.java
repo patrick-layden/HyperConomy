@@ -1,15 +1,24 @@
-package regalowl.hyperconomy.shop;
+package regalowl.hyperconomy.bukkit;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
 
 import regalowl.databukkit.event.EventHandler;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
-import regalowl.hyperconomy.util.SimpleLocation;
 
 public class FrameShop {
 
@@ -26,7 +35,7 @@ public class FrameShop {
 	private Shop s;
 
 	@SuppressWarnings("deprecation")
-	public FrameShop(SimpleLocation l, HyperObject ho, Shop s, int amount) {
+	public FrameShop(Location l, HyperObject ho, Shop s, int amount) {
 		hc = HyperConomy.hc;
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
@@ -36,11 +45,11 @@ public class FrameShop {
 		x = l.getBlockX();
 		y = l.getBlockY();
 		z = l.getBlockZ();
-		world = l.getWorld();
+		world = l.getWorld().getName();
 		this.ho = ho;
 		this.tradeAmount = amount;
 		this.s = s;
-		MapView mapView = hc.mc.getConnector().getServer().createMap(l.getWorld());
+		MapView mapView = Bukkit.getServer().createMap(l.getWorld());
 		mapId = mapView.getId();
 		String shop = "";
 		if (s != null) {
@@ -50,7 +59,7 @@ public class FrameShop {
 		render();
 	}
 
-	public FrameShop(short mapId, SimpleLocation l, HyperObject ho, Shop s, int amount) {
+	public FrameShop(short mapId, Location l, HyperObject ho, Shop s, int amount) {
 		hc = HyperConomy.hc;
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
@@ -65,7 +74,7 @@ public class FrameShop {
 		x = l.getBlockX();
 		y = l.getBlockY();
 		z = l.getBlockZ();
-		world = l.getWorld();
+		world = l.getWorld().getName();
 		this.ho = ho;
 		this.tradeAmount = amount;
 		this.s = s;
@@ -75,12 +84,12 @@ public class FrameShop {
 	}
 	
 	@EventHandler
-	public void onHyperObjectModificationEvent(HyperObjectModificationEvent event) {
-		if (this.ho.equals(event.getHyperObject())) {
+	public void onHyperObjectModification(HyperObjectModificationEvent event) {
+		if (event.getHyperObject().equals(ho)) {
 			render();
 		}
 	}
-	
+
 	public short getMapId() {
 		return mapId;
 	}
@@ -113,7 +122,7 @@ public class FrameShop {
 			return;
 		}
 		@SuppressWarnings("deprecation")
-		MapView mapView = hc.mc.getConnector().getServer().getMap(mapId);
+		MapView mapView = Bukkit.getServer().getMap(mapId);
 		for (MapRenderer mr : mapView.getRenderers()) {
 			mapView.removeRenderer(mr);
 		}
@@ -171,7 +180,5 @@ public class FrameShop {
 		hc.getFrameShopHandler().removeFrameShop(getKey());
 		hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_frame_shops WHERE ID = '" + mapId + "'");
 	}
-
-
 
 }

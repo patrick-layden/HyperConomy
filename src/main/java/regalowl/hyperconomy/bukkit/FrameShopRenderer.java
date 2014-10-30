@@ -1,4 +1,4 @@
-package regalowl.hyperconomy.shop;
+package regalowl.hyperconomy.bukkit;
 
 
 

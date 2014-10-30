@@ -2,7 +2,7 @@ package regalowl.hyperconomy.event.minecraft;
 
 import regalowl.databukkit.event.Event;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.shop.FrameShop;
+import regalowl.hyperconomy.bukkit.FrameShop;
 import regalowl.hyperconomy.transaction.TransactionType;
 
 public class FrameShopEvent extends Event {
