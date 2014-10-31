@@ -1,7 +1,6 @@
 package regalowl.hyperconomy.command;
 
-import org.bukkit.ChatColor;
-
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
@@ -24,18 +23,18 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 		} else {
 			ho = he.getHyperObject(args[0]);
 			if (ho == null) {
-				data.addResponse(ChatColor.BLUE + "Object not found.");
+				data.addResponse(HyperConomy.mc.applyColor("&9" + "Object not found."));
 				return data;
 			}
 			sis = ho.getItem();
 		}
 		data.addResponse(L.get("LINE_BREAK"));
 		if (ho == null) {
-			data.addResponse(ChatColor.RED + "Item not in database.");
+			data.addResponse(HyperConomy.mc.applyColor("&cItem not in database."));
 		} else {
-			data.addResponse(ChatColor.BLUE + "Identifier: " + ChatColor.AQUA + "" + ho.getName());
-			data.addResponse(ChatColor.BLUE + "HyperConomy Name: " + ChatColor.AQUA + "" + ho.getDisplayName());
-			data.addResponse(ChatColor.BLUE + "Aliases: " + ChatColor.AQUA + "" + ho.getAliasesString());
+			data.addResponse(HyperConomy.mc.applyColor("&9Identifier: " + "&b" + ho.getName()));
+			data.addResponse(HyperConomy.mc.applyColor("&9HyperConomy Name: " + "&b" + ho.getDisplayName()));
+			data.addResponse(HyperConomy.mc.applyColor("&9Aliases: " + "&b" + ho.getAliasesString()));
 		}
 		sis.displayInfo(hp, "&9", "&b");
 		data.addResponse(L.get("LINE_BREAK"));

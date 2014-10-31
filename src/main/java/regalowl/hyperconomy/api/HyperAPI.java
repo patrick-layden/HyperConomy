@@ -138,7 +138,7 @@ public class HyperAPI implements API {
 	
 
 	public EnchantmentClass getEnchantmentClass(SerializableItemStack stack) {
-		return new HyperItemStack(stack).getEnchantmentClass();
+		return EnchantmentClass.fromString(stack.getMaterial());
 	}
 	
 	

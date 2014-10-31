@@ -3,7 +3,7 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
-import org.bukkit.ChatColor;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.util.Backup;
@@ -91,7 +91,7 @@ public class Hceconomy extends BaseCommand implements HyperCommand {
 			}
 		} else if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("l")) {
 			ArrayList<String> economies = dm.getEconomyList();
-			data.addResponse(ChatColor.AQUA + economies.toString());
+			data.addResponse(HyperConomy.mc.applyColor("&b" + economies.toString()));
 		} else {
 			data.addResponse(L.get("HCECONOMY_INVALID"));
 			return data;

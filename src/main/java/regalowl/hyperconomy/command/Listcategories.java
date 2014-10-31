@@ -3,7 +3,8 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.bukkit.ChatColor;
+import regalowl.hyperconomy.HyperConomy;
+
 
 public class Listcategories extends BaseCommand implements HyperCommand {
 
@@ -21,7 +22,7 @@ public class Listcategories extends BaseCommand implements HyperCommand {
 			while (it.hasNext()) {
 				categories.add(it.next().toString());
 			}
-			data.addResponse(ChatColor.AQUA + "" + categories.toString());
+			data.addResponse(HyperConomy.mc.applyColor("&b" + categories.toString()));
 			return data;
 		} catch (Exception e) {
 			data.addResponse(L.get("LISTCATEGORIES_INVALID"));

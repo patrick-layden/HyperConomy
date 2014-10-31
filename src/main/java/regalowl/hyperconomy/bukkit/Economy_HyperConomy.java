@@ -13,7 +13,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Vault.  If not, see <http://www.gnu.org/licenses/>.
  */
-package regalowl.hyperconomy.util;
+package regalowl.hyperconomy.bukkit;
 
 import java.util.List;
 
@@ -29,6 +29,7 @@ import regalowl.hyperconomy.HyperPlayerManager;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.EconomyAPI;
+import regalowl.hyperconomy.util.LanguageFile;
 
 public class Economy_HyperConomy implements Economy {
 	private final String name = "HyperConomy";

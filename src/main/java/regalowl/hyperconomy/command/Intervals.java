@@ -1,9 +1,7 @@
 package regalowl.hyperconomy.command;
 
-
-import org.bukkit.ChatColor;
-
 import regalowl.databukkit.sql.SQLWrite;
+import regalowl.hyperconomy.HyperConomy;
 
 
 public class Intervals extends BaseCommand implements HyperCommand {
@@ -19,15 +17,15 @@ public class Intervals extends BaseCommand implements HyperCommand {
 			if (args.length == 0) {
 				SQLWrite sw = hc.getSQLWrite();
 				data.addResponse(L.get("LINE_BREAK"));
-				data.addResponse(ChatColor.GREEN + "" + dm.getHyperShopManager().getShopCheckInterval() + ChatColor.BLUE + " tick (" + ChatColor.GREEN + "" + dm.getHyperShopManager().getShopCheckInterval() / 20 + ChatColor.BLUE + " second) shop update interval.");
-				data.addResponse(ChatColor.GREEN + "" + hc.gYH().getSaveInterval()/1000 + ChatColor.BLUE + " second save interval.");
-				data.addResponse(ChatColor.GREEN + "" + sw.getBufferSize() + ChatColor.BLUE + " statements in the SQL write buffer.");
+				data.addResponse(HyperConomy.mc.applyColor("&a" + dm.getHyperShopManager().getShopCheckInterval() + " &9tick (" + "&a" + dm.getHyperShopManager().getShopCheckInterval() / 20 + " &9second) shop update interval."));
+				data.addResponse(HyperConomy.mc.applyColor("&a" + hc.gYH().getSaveInterval()/1000  + " &9second save interval."));
+				data.addResponse(HyperConomy.mc.applyColor("&a" + sw.getBufferSize() + " &9statements in the SQL write buffer."));
 				data.addResponse(L.get("LINE_BREAK"));
 			} else {
-				data.addResponse(ChatColor.DARK_RED + "Invalid Parameters.  Use /intervals");
+				data.addResponse(HyperConomy.mc.applyColor("&cInvalid Parameters.  Use /intervals"));
 			}
 		} catch (Exception e) {
-			data.addResponse(ChatColor.DARK_RED + "Invalid Parameters.  Use /intervals");
+			data.addResponse(HyperConomy.mc.applyColor("&cInvalid Parameters.  Use /intervals"));
 		}
 		return data;
 	}

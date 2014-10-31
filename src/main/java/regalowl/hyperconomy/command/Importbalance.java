@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 import regalowl.databukkit.file.FileTools;
 import regalowl.hyperconomy.account.HyperPlayer;

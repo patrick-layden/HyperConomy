@@ -49,7 +49,6 @@ import regalowl.hyperconomy.serializable.SerializableEnchantment;
 import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.hyperconomy.shop.ChestShop;
-import regalowl.hyperconomy.util.Economy_HyperConomy;
 import regalowl.hyperconomy.util.HBlock;
 import regalowl.hyperconomy.util.HItem;
 import regalowl.hyperconomy.util.HSign;
@@ -516,15 +515,62 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 
+	@Override
+	public boolean isInfoSign(SimpleLocation l) {
+		return BukkitCommon.isInfoSign(l);
+	}
+
+
+
+	@Override
+	public boolean isChestShopBlock(SimpleLocation l) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean isChestShopChest(SimpleLocation l) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 
 
 
 
 
 	@Override
+	public boolean isChestShopSign(SimpleLocation l) {
+		return BukkitCommon.isChestShopSign(l);
+	}
+
+
+
+	@Override
+	public boolean isPartOfChestShop(SimpleLocation l) {
+		return BukkitCommon.isPartOfChestShop(l);
+	}
+
+
+
+	@Override
+	public boolean canHoldChestShopSign(SimpleLocation l) {
+		Block b = BukkitCommon.getBlock(l);
+		Material m = b.getType();
+		if (m == Material.ICE || m == Material.LEAVES || m == Material.SAND || m == Material.GRAVEL || m == Material.SIGN || m == Material.SIGN_POST || m == Material.TNT) {
+			return false;
+		}
+		return true;
+	}
+
+
+
+	@Override
 	public ChestShop getChestShop(SimpleLocation location) {
-		if (!BukkitCommon.isChestShop(location, true)) return null;
-		return new ChestShop(location);
+		return BukkitCommon.getChestShop(location);
 	}
 
 
@@ -578,18 +624,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 	@Override
-	public boolean canHoldChestShopSign(SimpleLocation l) {
-		Block b = BukkitCommon.getBlock(l);
-		Material m = b.getType();
-		if (m == Material.ICE || m == Material.LEAVES || m == Material.SAND || m == Material.GRAVEL || m == Material.SIGN || m == Material.SIGN_POST || m == Material.TNT) {
-			return false;
-		}
-		return true;
-	}
-
-
-
-	@Override
 	public void updateSign(HSign sign) {
 		Sign s = BukkitCommon.getSign(sign.getLocation());
 		if (s != null) s.update();
@@ -601,23 +635,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public boolean isTransactionSign(SimpleLocation l) {
 		return BukkitCommon.isTransactionSign(l);
 	}
-
-	@Override
-	public boolean isInfoSign(SimpleLocation l) {
-		return BukkitCommon.isInfoSign(l);
-	}
-
-	@Override
-	public boolean isChestShopSign(SimpleLocation l) {
-		return BukkitCommon.isChestShopSign(l);
-	}
-	
-	@Override
-	public boolean isChestShop(SimpleLocation l, boolean includeSign) {
-		return BukkitCommon.isChestShop(l, includeSign);
-	}
-
-
 
 	@Override
 	public HItem dropItemDisplay(SimpleLocation location, SerializableItemStack item) {
@@ -709,6 +726,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		if (p == null) return 0;
 		return p.getLevel();
 	}
+
 
 
 

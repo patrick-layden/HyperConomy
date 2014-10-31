@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.bukkit.ChatColor;
-
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.PlayerShop;
@@ -97,7 +96,7 @@ public class Topitems extends BaseCommand implements HyperCommand {
 						if (ho.isShopObject()) {
 							data.addResponse(L.applyColor("&f"+ho.getDisplayName() + ": &a" + hc.gCF().twoDecimals(ho.getStock()) + " &f(&e" + ho.getStatus().toString() + "&f)" ));
 						} else {
-							data.addResponse(ChatColor.WHITE + ho.getDisplayName() + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + hc.gCF().twoDecimals(ho.getStock()));
+							data.addResponse(HyperConomy.mc.applyColor("&f" + ho.getDisplayName() + "&f: " + "&b" + hc.gCF().twoDecimals(ho.getStock())));
 						}
 					}
 					itemstocks.remove(lk);

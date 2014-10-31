@@ -2,13 +2,6 @@ package regalowl.hyperconomy.display;
 
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 
 import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;

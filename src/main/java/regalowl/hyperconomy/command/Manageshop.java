@@ -4,11 +4,12 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
+
 
 
 import regalowl.databukkit.file.FileConfiguration;
 import regalowl.hyperconomy.DataManager;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -67,8 +68,8 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			data.addResponse(L.get("MANAGESHOP_HELP"));
 			if (cps != null) {
 				data.addResponse(L.f(L.get("MANAGESHOP_HELP2"), cps.getName()));
-				data.addResponse(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " " + ChatColor.AQUA + cps.getOwner().getName());
-				data.addResponse(L.get("MANAGESHOP_HELP4") + " " + ChatColor.AQUA +  hc.getDataBukkit().getCommonFunctions().implode(cps.getAllowed(), ","));
+				data.addResponse(HyperConomy.mc.applyColor(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " &b" + cps.getOwner().getName()));
+				data.addResponse(HyperConomy.mc.applyColor(L.get("MANAGESHOP_HELP4") + " &b" +  hc.getDataBukkit().getCommonFunctions().implode(cps.getAllowed(), ",")));
 			} else {
 				data.addResponse(L.get("NO_SHOP_SELECTED"));
 			}
@@ -677,13 +678,13 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				sList = sList.substring(0, sList.length() - 1);
 			}
 			String shoplist = sList.replace("_", " ");
-			data.addResponse(ChatColor.AQUA + shoplist);
+			data.addResponse(HyperConomy.mc.applyColor("&b" + shoplist));
 		} else {
 			data.addResponse(L.get("MANAGESHOP_HELP"));
 			if (cps != null) {
 				data.addResponse(L.f(L.get("MANAGESHOP_HELP2"), cps.getName()));
-				data.addResponse(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " " + ChatColor.AQUA + cps.getOwner().getName());
-				data.addResponse(L.get("MANAGESHOP_HELP4") + " " + ChatColor.AQUA +  hc.getDataBukkit().getCommonFunctions().implode(cps.getAllowed(), ","));
+				data.addResponse(HyperConomy.mc.applyColor(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " &b" + cps.getOwner().getName()));
+				data.addResponse(HyperConomy.mc.applyColor(L.get("MANAGESHOP_HELP4") + " &b" + hc.getDataBukkit().getCommonFunctions().implode(cps.getAllowed(), ",")));
 			} else {
 				data.addResponse(L.get("NO_SHOP_SELECTED"));
 			}

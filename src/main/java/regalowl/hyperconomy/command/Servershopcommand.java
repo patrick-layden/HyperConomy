@@ -4,11 +4,10 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
-
 
 
 import regalowl.databukkit.file.FileConfiguration;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -80,7 +79,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			data.addResponse(L.f(L.get("MANAGESHOP_HELP2"), css.getDisplayName()));
-			data.addResponse(L.f(L.get("MANAGESHOP_HELP3"), css.getName()) + " " + ChatColor.AQUA + css.getOwner().getName());
+			data.addResponse(HyperConomy.mc.applyColor(L.f(L.get("MANAGESHOP_HELP3"), css.getName()) + " &b" + css.getOwner().getName()));
 			data.addResponse(L.f(L.get("SERVERSHOP_ECONOMY_INFO"), css.getEconomy()));
 		} else if (args[0].equalsIgnoreCase("p1")) {
 			try {
@@ -126,7 +125,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				sList = sList.substring(0, sList.length() - 1);
 			}
 			String shoplist = sList.replace("_", " ");
-			data.addResponse(ChatColor.AQUA + shoplist);
+			data.addResponse(HyperConomy.mc.applyColor("&b" + shoplist));
 		} else if (args[0].equalsIgnoreCase("owner") || args[0].equalsIgnoreCase("o")) {
 			try {
 				HyperAccount owner = null;
@@ -194,7 +193,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				}
 				if (args[1].equalsIgnoreCase("all")) {
 					css.unBanAllObjects();
-					data.addResponse(ChatColor.GOLD + L.get("ALL_ITEMS_ADDED") + " " + css.getDisplayName());
+					data.addResponse(HyperConomy.mc.applyColor("&6" + L.get("ALL_ITEMS_ADDED") + " " + css.getDisplayName()));
 					return data;
 				}
 				HyperObject ho = dm.getEconomy(css.getEconomy()).getHyperObject(args[1]);
@@ -209,7 +208,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				ArrayList<HyperObject> add = new ArrayList<HyperObject>();
 				add.add(ho);
 				css.unBanObjects(add);
-				data.addResponse(ChatColor.GOLD + ho.getDisplayName() + " " + L.get("ADDED_TO") + " " + css.getDisplayName());
+				data.addResponse(HyperConomy.mc.applyColor("&6" + ho.getDisplayName() + " " + L.get("ADDED_TO") + " " + css.getDisplayName()));
 			} catch (Exception e) {
 				hc.getDebugMode().debugWriteError(e);
 				data.addResponse(L.get("SERVERSHOP_ALLOW_INVALID"));
@@ -264,7 +263,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					}
 				}
 				css.unBanObjects(add);
-				data.addResponse(ChatColor.GOLD + args[1] + " " + L.get("ADDED_TO") + " " + css.getDisplayName());
+				data.addResponse(HyperConomy.mc.applyColor("&6" + args[1] + " " + L.get("ADDED_TO") + " " + css.getDisplayName()));
 			} catch (Exception e) {
 				hc.getDebugMode().debugWriteError(e);
 				data.addResponse(L.get("SERVERSHOP_ADDCATEGORY_INVALID"));

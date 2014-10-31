@@ -199,7 +199,7 @@ public class BukkitListener implements Listener {
 		InventoryHolder ih = icevent.getView().getTopInventory().getHolder();
 		if (!(ih instanceof Chest)) return;
 		Chest c = (Chest)ih;
-		if (!BukkitCommon.isChestShop(BukkitCommon.getLocation(c.getLocation()), false)) return;
+		if (!BukkitCommon.isChestShopChest(BukkitCommon.getLocation(c.getLocation()))) return;
 		ChestShop cs = new ChestShop(BukkitCommon.getLocation(c.getBlock().getLocation()));
 		HyperPlayer clicker = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(p.getName());
 		int slot = icevent.getRawSlot();

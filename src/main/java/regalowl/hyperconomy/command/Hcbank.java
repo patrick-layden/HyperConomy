@@ -298,7 +298,7 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 					return data;
 				}
 				HyperBank hb = hbm.getHyperBank(args[1]);
-				if (hb.isOwner(hp) || hp.getPlayer().hasPermission("hyperconomy.viewbanks")) {
+				if (hb.isOwner(hp) || hp.hasPermission("hyperconomy.viewbanks")) {
 					data.addResponse(L.get("LINE_BREAK"));
 					data.addResponse(L.applyColor("&b&o" + hb.getName()));
 					data.addResponse(L.f(L.get("BANK_BALANCE"), hb.getBalance()));
@@ -312,7 +312,7 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				}
 			}
 		} else if (args[0].equalsIgnoreCase("top")) {
-			if (!hp.getPlayer().hasPermission("hyperconomy.viewbanks")) {
+			if (!hp.hasPermission("hyperconomy.viewbanks")) {
 				data.addResponse(L.get("YOU_DONT_HAVE_PERMISSION"));
 				return data;
 			}

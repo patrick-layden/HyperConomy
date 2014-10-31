@@ -3,8 +3,9 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.bukkit.ChatColor;
 
+
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.hyperobject.BasicObject;
@@ -137,7 +138,7 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 			double maxpages = rsize/10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int)maxpages + 1;
-			data.addResponse(ChatColor.RED + L.get("PAGE") + " " + ChatColor.WHITE + "(" + ChatColor.RED + "" + page + ChatColor.WHITE + "/" + ChatColor.RED + "" + maxpi + ChatColor.WHITE + ")");
+			data.addResponse(HyperConomy.mc.applyColor("&c" + L.get("PAGE") + " &f" + "(" + "&c" + page + "&f/" + "&c" + maxpi + "&f)"));
 			while (count < numberpage) {
 				if (count > ((page * 10) - 11)) {
 					if (count < rsize) {

@@ -3,10 +3,6 @@ package regalowl.hyperconomy.account;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;

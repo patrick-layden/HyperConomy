@@ -56,13 +56,15 @@ import regalowl.hyperconomy.serializable.SerializableMapMeta;
 import regalowl.hyperconomy.serializable.SerializablePotionEffect;
 import regalowl.hyperconomy.serializable.SerializablePotionMeta;
 import regalowl.hyperconomy.serializable.SerializableSkullMeta;
+import regalowl.hyperconomy.shop.ChestShop;
 import regalowl.hyperconomy.util.HBlock;
 import regalowl.hyperconomy.util.HItem;
+import regalowl.hyperconomy.util.HSign;
 import regalowl.hyperconomy.util.SimpleLocation;
 
 public class BukkitCommon {
 
-	protected static final BlockFace[] faces = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
+	protected static final BlockFace[] planeFaces = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
 	protected static final BlockFace[] allFaces = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.DOWN, BlockFace.UP};
 	
 	private BukkitCommon() {}
@@ -117,107 +119,85 @@ public class BukkitCommon {
 		}
 		return false;
 	}
-
+	
+	protected static boolean isChestShopChest(SimpleLocation l) {
+		Block b = getBlock(l);
+		if (b == null) return false;
+		if (!(b.getState() instanceof Chest)) return false;
+		Chest chest = (Chest) b.getState();
+		SimpleLocation sl = getLocation(chest.getLocation());
+		sl.setY(sl.getY() + 1);
+		if (isChestShopSign(sl)) return true;
+		return false;
+	}
+	
 	protected static boolean isChestShopSign(SimpleLocation l) {
 		Block b = getBlock(l);
 		if (b == null) return false;
-		if (b.getType().equals(Material.WALL_SIGN)) {
-			Sign s = (Sign) b.getState();
-			String line2 = s.getLine(1).trim();
-			if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
-				BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
-				if (chestblock instanceof Chest) {
-					s.update();
-					return true;
-				}
-			}
-		} else {
-			for (BlockFace cface : faces) {
-				Block relative = b.getRelative(cface);
-				if (relative.getType().equals(Material.WALL_SIGN)) {
-					Sign s = (Sign) relative.getState();
-					String line2 = s.getLine(1).trim();
-					if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
-						org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
-						BlockFace attachedface = sign.getFacing();
-						if (relative.getRelative(attachedface.getOppositeFace()).equals(b)) {
-							return true;
-						}
-					}
-				}
-			}
-		}
-		return false;
+		if (!(b instanceof Sign)) return false;
+		Sign s = (Sign) b;
+		String line2 = ChatColor.stripColor(s.getLine(1)).trim();
+		if (!(line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]"))) return false;
+		SimpleLocation sl = new SimpleLocation(l);
+		sl.setY(sl.getY() - 1);
+		Block cb = getBlock(sl);
+		if (cb == null) return false;
+		if (!(cb.getState() instanceof Chest)) return false;
+		return true;
 	}
-
-	protected static Sign getChestShopSign(SimpleLocation l) {
+	
+	protected static boolean isChestShopSignBlock(SimpleLocation l) {
+		HSign sign = getAttachedSign(l);
+		if (sign == null) return false;
+		if (!isChestShopSign(sign.getLocation())) return false;
+		return true;
+	}
+	
+	protected static HSign getAttachedSign(SimpleLocation l) {
 		Block b = getBlock(l);
-		if (b == null) {
-			return null;
-		}
-		if (b.getState() instanceof Chest) {
-			Chest chest = (Chest) b.getState();
-			String world = chest.getBlock().getWorld().getName();
-			BlockState signblock = Bukkit.getWorld(world).getBlockAt(chest.getX(), chest.getY() + 1, chest.getZ()).getState();
-			if (signblock instanceof Sign) {
-				Sign s = (Sign) signblock;
-				String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-				if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
-					return s;
-				}
-			}
-		} else if (b.getType().equals(Material.WALL_SIGN)) {
-			Sign s = (Sign) b.getState();
-			String line2 = s.getLine(1).trim();
-			if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
-				BlockState chestblock = Bukkit.getWorld(s.getBlock().getWorld().getName()).getBlockAt(s.getX(), s.getY() - 1, s.getZ()).getState();
-				if (chestblock instanceof Chest) {
-					s.update();
-					return s;
-				}
-			}
-		} else {
-			for (BlockFace cface : faces) {
-				Block relative = b.getRelative(cface);
-				if (relative.getType().equals(Material.WALL_SIGN)) {
-					Sign s = (Sign) relative.getState();
-					String line2 = s.getLine(1).trim();
-					if (line2.equalsIgnoreCase(ChatColor.AQUA + "[Trade]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Buy]") || line2.equalsIgnoreCase(ChatColor.AQUA + "[Sell]")) {
-						org.bukkit.material.Sign sign = (org.bukkit.material.Sign) relative.getState().getData();
-						BlockFace attachedface = sign.getFacing();
-						if (relative.getRelative(attachedface.getOppositeFace()).equals(b)) {
-							return s;
-						}
-					}
+		if (b == null) return null;
+		for (BlockFace cface : planeFaces) {
+			Block block = b.getRelative(cface);
+			if (block.getType().equals(Material.WALL_SIGN)) {
+				org.bukkit.material.Sign sign = (org.bukkit.material.Sign) block.getState().getData();
+				BlockFace attachedface = sign.getFacing();
+				if (block.getRelative(attachedface.getOppositeFace()).equals(b)) {
+					Sign s = (Sign) block.getState();
+					return new HSign(l, s.getLines(), true);
 				}
 			}
 		}
 		return null;
 	}
-
-	protected static boolean isChestShop(SimpleLocation l, boolean includeSign) {
-		Block b = getBlock(l);
-		if (b == null) {
-			return false;
-		}
-		if (b.getState() instanceof Chest) {
-			Chest chest = (Chest) b.getState();
-			String world = chest.getBlock().getWorld().getName();
-			BlockState signblock = Bukkit.getWorld(world).getBlockAt(chest.getX(), chest.getY() + 1, chest.getZ()).getState();
-			if (signblock instanceof Sign) {
-				Sign s = (Sign) signblock;
-				String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-				if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
-					return true;
-				}
-			}
-		} else {
-			if (includeSign && isChestShopSign(l)) {
-				return true;
-			}
-		}
+	
+	protected static boolean isPartOfChestShop(SimpleLocation l) {
+		if (isChestShopChest(l)) return true;
+		if (isChestShopSign(l)) return true;
+		if (isChestShopSignBlock(l)) return true;
 		return false;
 	}
+
+	protected static ChestShop getChestShop(SimpleLocation l) {
+		Block b = getBlock(l);
+		if (b == null) {
+			return null;
+		}
+		if (isChestShopChest(l)) {
+			return new ChestShop(l);
+		} else if (isChestShopSign(l)) {
+			SimpleLocation cl = new SimpleLocation(l);
+			cl.setY(cl.getY() - 1);
+			return new ChestShop(cl);
+		} else if (isChestShopSignBlock(l)) {
+			HSign s = getAttachedSign(l);
+			SimpleLocation cl = s.getLocation();
+			cl.setY(cl.getY() - 1);
+			return new ChestShop(cl);
+		}
+		return null;
+	}
+
+
 	
 	
 	

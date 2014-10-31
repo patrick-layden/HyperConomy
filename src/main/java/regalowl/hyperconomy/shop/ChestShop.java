@@ -36,9 +36,7 @@ public class ChestShop {
 	private void initialize() {
 		isValidChestShop = false;
 		if (location == null) return;
-		if (HyperConomy.mc.isChestShopSign(location)) {
-			//TODO make it work for any chest shop block
-		} else if (HyperConomy.mc.isChestShopSign(location))
+		if (!HyperConomy.mc.isChestShopChest(location)) return;
 		signLocation = new SimpleLocation(location);
 		signLocation.setY(location.getY() + 1);
 		this.sign = HyperConomy.mc.getSign(signLocation);

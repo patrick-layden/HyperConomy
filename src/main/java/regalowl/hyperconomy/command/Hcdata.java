@@ -4,11 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
+
 
 
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.sql.QueryResult;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
@@ -127,7 +128,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				if (dm.economyExists(economy)) {
 					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 					ArrayList<String> added = dm.getEconomy(economy).loadNewItems();
-					data.addResponse(ChatColor.GOLD + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
+					data.addResponse(HyperConomy.mc.applyColor("&6" + added.toString() + " " + L.get("LOADED_INTO_ECONOMY")));
 				} else {
 					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
 				}

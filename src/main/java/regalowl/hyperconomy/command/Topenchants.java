@@ -3,8 +3,9 @@ package regalowl.hyperconomy.command;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.bukkit.ChatColor;
 
+
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.hyperobject.HyperObjectStatus;
@@ -86,7 +87,7 @@ public class Topenchants extends BaseCommand implements HyperCommand {
 				while (count < numberpage) {
 					double lk = enchantstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
-						data.addResponse(ChatColor.WHITE + enchantstocks.get(lk) + ChatColor.WHITE + ": " + ChatColor.AQUA + "" + Math.floor(lk)/100);
+						data.addResponse(HyperConomy.mc.applyColor("&f" + enchantstocks.get(lk) + "&f: " + "&b" + Math.floor(lk)/100));
 					}
 					enchantstocks.remove(lk);
 					count++;

@@ -8,7 +8,6 @@ import net.milkbowl.vault.economy.Economy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.bukkit.BukkitConnector;
 import regalowl.hyperconomy.command.HyperCommand;
-import regalowl.hyperconomy.display.ItemDisplay;
 import regalowl.hyperconomy.serializable.SerializableEnchantment;
 import regalowl.hyperconomy.serializable.SerializableInventory;
 import regalowl.hyperconomy.serializable.SerializableItemStack;
@@ -83,7 +82,9 @@ public interface MineCraftConnector {
 	public boolean isTransactionSign(SimpleLocation l);
 	public boolean isInfoSign(SimpleLocation l);
 	public boolean isChestShopSign(SimpleLocation l);
-	public boolean isChestShop(SimpleLocation l, boolean includeSign);
+	public boolean isChestShopBlock(SimpleLocation l);
+	public boolean isChestShopChest(SimpleLocation l);
+	public boolean isPartOfChestShop(SimpleLocation l);
 	
 	public ChestShop getChestShop(SimpleLocation location);
 	public HSign getSign(SimpleLocation location);

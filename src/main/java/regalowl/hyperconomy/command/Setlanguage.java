@@ -2,7 +2,6 @@ package regalowl.hyperconomy.command;
 
 import java.io.File;
 
-import org.bukkit.Bukkit;
 
 import regalowl.databukkit.file.FileTools;
 
