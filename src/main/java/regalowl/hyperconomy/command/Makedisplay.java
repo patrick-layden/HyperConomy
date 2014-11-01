@@ -3,7 +3,7 @@ package regalowl.hyperconomy.command;
 
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.display.ItemDisplayFactory;
-import regalowl.hyperconomy.util.SimpleLocation;
+import regalowl.hyperconomy.minecraft.HLocation;
 
 public class Makedisplay extends BaseCommand implements HyperCommand {
 
@@ -23,7 +23,7 @@ public class Makedisplay extends BaseCommand implements HyperCommand {
 		HyperEconomy he = hp.getHyperEconomy();
 		
 		if (args.length == 1) {
-			SimpleLocation sl = hp.getTargetLocation();
+			HLocation sl = hp.getTargetLocation();
 			String name = he.fixName(args[0]);
 			if (he.itemTest(name)) {
 				itdi.addDisplay(sl.getX(), sl.getY() + 1, sl.getZ(), sl.getWorld(), name);

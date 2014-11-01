@@ -6,18 +6,22 @@ import java.util.HashMap;
 
 
 
+
+
+
+import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.file.FileConfiguration;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.ShopCreationEvent;
-import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.GlobalShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
-import regalowl.hyperconomy.util.SimpleLocation;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class Servershopcommand extends BaseCommand implements HyperCommand {
 	
@@ -79,7 +83,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			data.addResponse(L.f(L.get("MANAGESHOP_HELP2"), css.getDisplayName()));
-			data.addResponse(HyperConomy.mc.applyColor(L.f(L.get("MANAGESHOP_HELP3"), css.getName()) + " &b" + css.getOwner().getName()));
+			data.addResponse(HC.mc.applyColor(L.f(L.get("MANAGESHOP_HELP3"), css.getName()) + " &b" + css.getOwner().getName()));
 			data.addResponse(L.f(L.get("SERVERSHOP_ECONOMY_INFO"), css.getEconomy()));
 		} else if (args[0].equalsIgnoreCase("p1")) {
 			try {
@@ -87,7 +91,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				if (hsm.shopExists(name)) {
 					hsm.getShop(name).setPoint1(hp.getLocation());
 				} else {
-					SimpleLocation l = hp.getLocation();
+					HLocation l = hp.getLocation();
 					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					hsm.addShop(shop);
 					hc.getHyperEventHandler().fireEvent(new ShopCreationEvent(shop));
@@ -103,7 +107,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				if (hsm.shopExists(name)) {
 					hsm.getShop(name).setPoint2(hp.getLocation());
 				} else {
-					SimpleLocation l = hp.getLocation();
+					HLocation l = hp.getLocation();
 					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					hsm.addShop(shop);
 					hc.getHyperEventHandler().fireEvent(new ShopCreationEvent(shop));
@@ -125,7 +129,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				sList = sList.substring(0, sList.length() - 1);
 			}
 			String shoplist = sList.replace("_", " ");
-			data.addResponse(HyperConomy.mc.applyColor("&b" + shoplist));
+			data.addResponse(HC.mc.applyColor("&b" + shoplist));
 		} else if (args[0].equalsIgnoreCase("owner") || args[0].equalsIgnoreCase("o")) {
 			try {
 				HyperAccount owner = null;
@@ -193,10 +197,10 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				}
 				if (args[1].equalsIgnoreCase("all")) {
 					css.unBanAllObjects();
-					data.addResponse(HyperConomy.mc.applyColor("&6" + L.get("ALL_ITEMS_ADDED") + " " + css.getDisplayName()));
+					data.addResponse(HC.mc.applyColor("&6" + L.get("ALL_ITEMS_ADDED") + " " + css.getDisplayName()));
 					return data;
 				}
-				HyperObject ho = dm.getEconomy(css.getEconomy()).getHyperObject(args[1]);
+				TradeObject ho = dm.getEconomy(css.getEconomy()).getHyperObject(args[1]);
 				if (ho == null) {
 					data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 					return data;
@@ -205,10 +209,10 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("SHOP_ALREADY_HAS"));
 					return data;
 				}
-				ArrayList<HyperObject> add = new ArrayList<HyperObject>();
+				ArrayList<TradeObject> add = new ArrayList<TradeObject>();
 				add.add(ho);
 				css.unBanObjects(add);
-				data.addResponse(HyperConomy.mc.applyColor("&6" + ho.getDisplayName() + " " + L.get("ADDED_TO") + " " + css.getDisplayName()));
+				data.addResponse(HC.mc.applyColor("&6" + ho.getDisplayName() + " " + L.get("ADDED_TO") + " " + css.getDisplayName()));
 			} catch (Exception e) {
 				hc.getDebugMode().debugWriteError(e);
 				data.addResponse(L.get("SERVERSHOP_ALLOW_INVALID"));
@@ -224,7 +228,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse(L.f(L.get("ALL_REMOVED_FROM"), css.getDisplayName()));
 					return data;
 				}
-				HyperObject ho = dm.getEconomy(css.getEconomy()).getHyperObject(args[1]);
+				TradeObject ho = dm.getEconomy(css.getEconomy()).getHyperObject(args[1]);
 				if (ho == null) {
 					data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 					return data;
@@ -233,7 +237,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("ALREADY_BEEN_REMOVED"));
 					return data;
 				}
-				ArrayList<HyperObject> remove = new ArrayList<HyperObject>();
+				ArrayList<TradeObject> remove = new ArrayList<TradeObject>();
 				remove.add(ho);
 				css.banObjects(remove);
 				data.addResponse(L.f(L.get("REMOVED_FROM"), ho.getDisplayName(), css.getDisplayName()));
@@ -253,17 +257,17 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("NO_SHOP_SELECTED"));
 					return data;
 				}
-				ArrayList<String> categoryNames = cf.explode(categoryString, ",");
+				ArrayList<String> categoryNames = CommonFunctions.explode(categoryString, ",");
 				HyperEconomy he = css.getHyperEconomy();
-				ArrayList<HyperObject> add = new ArrayList<HyperObject>();
+				ArrayList<TradeObject> add = new ArrayList<TradeObject>();
 				for (String name:categoryNames) {
-					HyperObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getHyperObject(name);
 					if (ho != null) {
 						add.add(ho);
 					}
 				}
 				css.unBanObjects(add);
-				data.addResponse(HyperConomy.mc.applyColor("&6" + args[1] + " " + L.get("ADDED_TO") + " " + css.getDisplayName()));
+				data.addResponse(HC.mc.applyColor("&6" + args[1] + " " + L.get("ADDED_TO") + " " + css.getDisplayName()));
 			} catch (Exception e) {
 				hc.getDebugMode().debugWriteError(e);
 				data.addResponse(L.get("SERVERSHOP_ADDCATEGORY_INVALID"));
@@ -280,11 +284,11 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("NO_SHOP_SELECTED"));
 					return data;
 				}
-				ArrayList<String> categoryNames = cf.explode(categoryString, ",");
+				ArrayList<String> categoryNames = CommonFunctions.explode(categoryString, ",");
 				HyperEconomy he = css.getHyperEconomy();
-				ArrayList<HyperObject> remove = new ArrayList<HyperObject>();
+				ArrayList<TradeObject> remove = new ArrayList<TradeObject>();
 				for (String name:categoryNames) {
-					HyperObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getHyperObject(name);
 					if (ho != null) {
 						remove.add(ho);
 					}
@@ -302,7 +306,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					return data;
 				}
 				String economy = args[1];
-				if (hc.getDataManager().economyExists(economy)) {
+				if (HC.hc.getDataManager().economyExists(economy)) {
 					css.setEconomy(economy);
 					data.addResponse(L.get("SHOP_ECONOMY_SET"));
 				} else {

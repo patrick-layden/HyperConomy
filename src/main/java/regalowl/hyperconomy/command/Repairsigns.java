@@ -7,12 +7,16 @@ import java.util.HashMap;
 
 
 
-import regalowl.hyperconomy.HyperConomy;
+
+
+
+
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.display.SignType;
-import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.util.HBlock;
-import regalowl.hyperconomy.util.HSign;
-import regalowl.hyperconomy.util.SimpleLocation;
+import regalowl.hyperconomy.minecraft.HBlock;
+import regalowl.hyperconomy.minecraft.HLocation;
+import regalowl.hyperconomy.minecraft.HSign;
+import regalowl.hyperconomy.tradeobject.EnchantmentClass;
 
 public class Repairsigns extends BaseCommand implements HyperCommand {
 	
@@ -43,7 +47,7 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			
-			SimpleLocation pl = hp.getLocation();
+			HLocation pl = hp.getLocation();
 			String w = pl.getWorld();
 			
 			int px = pl.getBlockX();
@@ -55,15 +59,15 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 			for (int i = (px - xrad); i <= (px + xrad); i++) {
 				for (int j = (pz - zrad); j <= (pz + zrad); j++) {
 					for (int k = (py - yrad); k <= (py + yrad); k++) {
-						SimpleLocation loc = new SimpleLocation(w, i, k, j);
+						HLocation loc = new HLocation(w, i, k, j);
 						if (loc.isLoaded()) {
 							HBlock cb = loc.getBlock();
 							if (cb != null && cb.isInfoSign()) {
-								HSign s = HyperConomy.mc.getSign(loc);
-								String objectName = HyperConomy.mc.removeColor(s.getLine(0)).trim() + HyperConomy.mc.removeColor(s.getLine(1)).trim();
+								HSign s = HC.mc.getSign(loc);
+								String objectName = HC.mc.removeColor(s.getLine(0)).trim() + HC.mc.removeColor(s.getLine(1)).trim();
 								objectName = dm.getEconomy("default").fixName(objectName);
 								if (dm.getEconomy("default").objectTest(objectName)) {
-									String ttype = HyperConomy.mc.removeColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
+									String ttype = HC.mc.removeColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
 									if (ttype.contains("[")) {
 										continue;
 									}
@@ -109,9 +113,9 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 			}
 			if (signsRepaired > 0) {
 				hc.getInfoSignHandler().reloadSigns();
-				HyperConomy.mc.runTaskLater(new Runnable() {
+				HC.mc.runTaskLater(new Runnable() {
 					public void run() {
-						HyperConomy.hc.getInfoSignHandler().updateSigns();
+						HC.hc.getInfoSignHandler().updateSigns();
 					}
 				}, 60L);
 				data.addResponse(L.f(L.get("X_SIGNS_REPAIRED"), signsRepaired));

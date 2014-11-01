@@ -2,7 +2,7 @@ package regalowl.hyperconomy.event.minecraft;
 
 
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.util.HSign;
+import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.databukkit.event.Event;
 
 public class HyperSignChangeEvent extends Event {

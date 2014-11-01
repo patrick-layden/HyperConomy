@@ -5,6 +5,8 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 
 
+
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperBankManager;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperBank;
@@ -68,7 +70,7 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("DONT_OWN_THIS_BANK"));
 				return data;
 			}
-			for (HyperEconomy he:hc.getDataManager().getEconomies()) {
+			for (HyperEconomy he:HC.hc.getDataManager().getEconomies()) {
 				if (he.getDefaultAccount() == hb) {
 					data.addResponse(L.get("BANK_IN_USE_BY_ECONOMY"));
 					return data;

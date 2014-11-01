@@ -1,14 +1,14 @@
 package regalowl.hyperconomy.event;
 
 import regalowl.databukkit.event.Event;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 
 public class HyperEventHandler {
 	
-	private HyperConomy hc;
+	private HC hc;
 	
     public HyperEventHandler() {
-    	hc = HyperConomy.hc;
+    	hc = HC.hc;
     }
 
     public void registerListener(Object listener) {
@@ -23,7 +23,7 @@ public class HyperEventHandler {
     }
 	
 	public void fireEventFromAsyncThread(Event event) {
-		hc.mc.runTask(new EventFire(event));
+		HC.mc.runTask(new EventFire(event));
 	}
     private class EventFire implements Runnable {
     	private Event event;

@@ -8,13 +8,13 @@ import regalowl.hyperconomy.account.HyperBank;
 
 public class HyperBankManager {
 	
-	private HyperConomy hc;
+	private HC hc;
 	//private DataManager dm;
 	private ConcurrentHashMap<String, HyperBank> hyperBanks = new ConcurrentHashMap<String, HyperBank>();
 	
 	
 	public HyperBankManager(DataManager dm) {
-		hc = HyperConomy.hc;
+		hc = HC.hc;
 		//this.dm = dm;
 	}
 	

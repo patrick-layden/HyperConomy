@@ -2,7 +2,7 @@ package regalowl.hyperconomy.event.minecraft;
 
 import regalowl.databukkit.event.Event;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.minecraft.HBlock;
 
 public class HBlockBreakEvent extends Event {
 

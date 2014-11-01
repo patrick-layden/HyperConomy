@@ -4,11 +4,16 @@ import java.util.ArrayList;
 
 
 
+
+
+
+import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.event.EventHandler;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TransactionEvent;
-import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionType;
 
@@ -17,7 +22,7 @@ public class Notify extends BaseCommand implements HyperCommand {
 	public Notify() {
 		super(false);
 		enabled = hc.getConf().getBoolean("enable-feature.price-change-notifications");
-		notifyNames = cf.explode(hc.getConf().getString("shop.send-price-change-notifications-for"), ",");
+		notifyNames = CommonFunctions.explode(hc.getConf().getString("shop.send-price-change-notifications-for"), ",");
 		hc.getHyperEventHandler().registerListener(this);
 	}
 
@@ -27,7 +32,7 @@ public class Notify extends BaseCommand implements HyperCommand {
 
 	
 	public String getNotifyString() {
-		return cf.implode(notifyNames, ",");
+		return CommonFunctions.implode(notifyNames, ",");
 	}
 	
 	public void saveNotifyNames() {
@@ -43,7 +48,7 @@ public class Notify extends BaseCommand implements HyperCommand {
 			TransactionType tt = pt.getTransactionType();
 			if (tt == TransactionType.BUY || tt == TransactionType.SELL) {
 				if (pt.getHyperObject() != null) {
-					HyperObject ho = pt.getHyperObject();
+					TradeObject ho = pt.getHyperObject();
 					if (notifyNames.contains(ho.getName())) {
 						String message = L.f(L.get("SQL_NOTIFICATION"), ho.getStock(), ho.getBuyPriceWithTax(1), ho.getDisplayName(), ho.getEconomy());
 						sendNotification(message);
@@ -66,8 +71,8 @@ public class Notify extends BaseCommand implements HyperCommand {
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		try {
-			HyperEconomy he = hc.getDataManager().getEconomy("default");
-			HyperObject ho = he.getHyperObject(args[0]);
+			HyperEconomy he = HC.hc.getDataManager().getEconomy("default");
+			TradeObject ho = he.getHyperObject(args[0]);
 			if (!enabled) {
 				data.addResponse(L.get("NOTIFICATIONS_DISABLED"));
 				return data;

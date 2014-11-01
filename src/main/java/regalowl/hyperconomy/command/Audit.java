@@ -3,7 +3,7 @@ package regalowl.hyperconomy.command;
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperAccount;
 
 public class Audit extends BaseCommand implements HyperCommand {
@@ -37,13 +37,12 @@ public class Audit extends BaseCommand implements HyperCommand {
 	    			cbalance = ha.getBalance();
 	    			logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
 	    			auditbalance = getAuditLogTotal(account);
-	    			HyperConomy.mc.runTask(new Runnable() {
+	    			HC.mc.runTask(new Runnable() {
 	    	    		public void run() {
-	    	    			CommonFunctions cf = hc.gCF();
 	    	    			data.addResponse(L.get("LINE_BREAK"));
 	    	    			data.addResponse(L.f(L.get("AUDIT_TRUE"), cbalance));
-	    	    			data.addResponse(L.f(L.get("AUDIT_THEORETICAL1"), cf.twoDecimals(logbalance)));
-	    	    			data.addResponse(L.f(L.get("AUDIT_THEORETICAL2"), cf.twoDecimals(auditbalance)));
+	    	    			data.addResponse(L.f(L.get("AUDIT_THEORETICAL1"), CommonFunctions.twoDecimals(logbalance)));
+	    	    			data.addResponse(L.f(L.get("AUDIT_THEORETICAL2"), CommonFunctions.twoDecimals(auditbalance)));
 	    	    			data.addResponse(L.get("LINE_BREAK"));
 	    	    		}
 	    	    	});
@@ -64,7 +63,7 @@ public class Audit extends BaseCommand implements HyperCommand {
 	 * @return returns the theoretical amount of money an account should have after all logged (buy or sell individually) transactions in the hyperconomy_log
 	 */
 	private Double getHyperLogTotal(String account, String type) {
-		HyperConomy hc = HyperConomy.hc;
+		HC hc = HC.hc;
 		SQLRead sr = hc.getSQLRead();
 		String query = "";
 		if (type.equalsIgnoreCase("sale")) {
@@ -88,7 +87,7 @@ public class Audit extends BaseCommand implements HyperCommand {
 	 * @return returns the theoretical amount of money an account should have after all logged transactions in the hyperconomy_audit_log
 	 */
 	private Double getAuditLogTotal(String account) {
-		HyperConomy hc = HyperConomy.hc;
+		HC hc = HC.hc;
 		SQLRead sr = hc.getSQLRead();
 		QueryResult result = sr.select("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
 		double tBalance = 0.0;

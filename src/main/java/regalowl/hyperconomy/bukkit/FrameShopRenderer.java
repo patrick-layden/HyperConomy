@@ -10,13 +10,14 @@ import org.bukkit.map.MinecraftFont;
 
 import java.awt.Image;
 import java.util.ArrayList;
+
 import org.bukkit.map.MapRenderer;
 
 import regalowl.databukkit.CommonFunctions;
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.hyperobject.HyperObjectType;
+import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.tradeobject.EnchantmentClass;
+import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.hyperconomy.tradeobject.TradeObjectType;
 import regalowl.hyperconomy.util.LanguageFile;
 
 
@@ -25,19 +26,17 @@ import regalowl.hyperconomy.util.LanguageFile;
 
 public class FrameShopRenderer extends MapRenderer {
 
-	private HyperConomy hc;
-	private HyperObject ho;
+	private HC hc;
+	private TradeObject ho;
     private Image image;
-    private CommonFunctions cf;
     private LanguageFile L;
     private ArrayList<String> renderedFor = new ArrayList<String>();
     @SuppressWarnings("deprecation")
 	private final byte borderColor = MapPalette.DARK_BROWN;
     
-    public FrameShopRenderer(HyperObject ho) {
+    public FrameShopRenderer(TradeObject ho) {
         super();
-        hc = HyperConomy.hc;
-        cf = hc.getCommonFunctions();
+        hc = HC.hc;
         L = hc.getLanguageFile();
         this.ho = ho;
         this.image = ho.getImage(60,60);
@@ -68,32 +67,32 @@ public class FrameShopRenderer extends MapRenderer {
 			
 			//adds sell price
 			double value = 0.0;
-			if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+			if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 				value = ho.getSellPrice(EnchantmentClass.DIAMOND);
-			} else if (ho.getType() == HyperObjectType.ITEM) {
+			} else if (ho.getType() == TradeObjectType.ITEM) {
 				value = ho.getSellPrice(1);
 			} else {
 				value = ho.getSellPrice(1);
 			}
-			String sell = color("Sell: ", MapPalette.DARK_GRAY) + color(L.fCS(cf.twoDecimals((value - ho.getSalesTaxEstimate(value)))), MapPalette.DARK_GREEN);
+			String sell = color("Sell: ", MapPalette.DARK_GRAY) + color(L.fCS(CommonFunctions.twoDecimals((value - ho.getSalesTaxEstimate(value)))), MapPalette.DARK_GREEN);
 			canvas.drawText(8, fHeight + 10, MinecraftFont.Font, sell);
 			
 			
 			//adds buy price
 			double cost = 0.0;
-			if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+			if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 				cost = ho.getBuyPrice(EnchantmentClass.DIAMOND);
-			} else if (ho.getType() == HyperObjectType.ITEM) {
+			} else if (ho.getType() == TradeObjectType.ITEM) {
 				cost = ho.getBuyPrice(1);
 			} else {
 				cost = ho.getBuyPrice(1);
 			}
-			String buy = color("Buy: ", MapPalette.DARK_GRAY) + color(L.fCS(cf.twoDecimals((cost + ho.getPurchaseTax(cost)))), MapPalette.DARK_GREEN);
+			String buy = color("Buy: ", MapPalette.DARK_GRAY) + color(L.fCS(CommonFunctions.twoDecimals((cost + ho.getPurchaseTax(cost)))), MapPalette.DARK_GREEN);
 			canvas.drawText(8, fHeight + 20, MinecraftFont.Font, buy);
 			
 			
 			//adds stock info
-			String stock = color("Stock: ", MapPalette.DARK_GRAY) + color(cf.twoDecimals(ho.getStock())+"", MapPalette.DARK_GREEN);
+			String stock = color("Stock: ", MapPalette.DARK_GRAY) + color(CommonFunctions.twoDecimals(ho.getStock())+"", MapPalette.DARK_GREEN);
 			canvas.drawText(8, fHeight + 30, MinecraftFont.Font, stock);
 			
 			

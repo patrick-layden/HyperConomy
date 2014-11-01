@@ -1,9 +1,9 @@
 package regalowl.hyperconomy.command;
 
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.Shop;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
@@ -31,7 +31,7 @@ public class Hs extends BaseCommand implements HyperCommand {
 				} catch (Exception e) {
 					String max = args[0];
 					if (max.equalsIgnoreCase("max")) {
-						HyperObject hi = he.getHyperObject(hp.getItemInHand());
+						TradeObject hi = he.getHyperObject(hp.getItemInHand());
 						amount = hi.count(hp.getInventory());
 					} else {
 						data.addResponse(L.get("HS_INVALID"));
@@ -39,7 +39,7 @@ public class Hs extends BaseCommand implements HyperCommand {
 					}
 				}
 			}
-			HyperObject ho = he.getHyperObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
+			TradeObject ho = he.getHyperObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
 			if (ho == null) {
 				data.addResponse(L.get("CANT_BE_TRADED"));
 			} else {
@@ -53,7 +53,7 @@ public class Hs extends BaseCommand implements HyperCommand {
 				response.sendMessages();
 			}
 		} catch (Exception e) {
-			HyperConomy.hc.getDebugMode().debugWriteError(e);
+			HC.hc.getDebugMode().debugWriteError(e);
 			data.addResponse(L.get("HS_INVALID"));
 		}
 		return data;

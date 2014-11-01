@@ -5,12 +5,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.GlobalShop;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.databukkit.file.FileConfiguration;
-import regalowl.hyperconomy.util.SimpleLocation;
 
 public class HyperShopManager {
 	
@@ -18,11 +18,11 @@ public class HyperShopManager {
 	private boolean useShops;
 	private long shopinterval;
 	private FileConfiguration config;
-	private HyperConomy hc;
+	private HC hc;
 	private long shopCheckTaskId;
 	
 	public HyperShopManager() {
-		hc = HyperConomy.hc;
+		hc = HC.hc;
 		config = hc.getConf();
 		useShops = config.getBoolean("enable-feature.shops");
 		shopinterval = config.getLong("intervals.shop-check");
@@ -36,16 +36,16 @@ public class HyperShopManager {
 			if (type.equalsIgnoreCase("server")) {
 				if (!useShops) {continue;}
 				String name = shopData.getString("NAME");
-				SimpleLocation p1 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
-				SimpleLocation p2 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
+				HLocation p1 = new HLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
+				HLocation p2 = new HLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
 				Shop shop = new ServerShop(name, shopData.getString("ECONOMY"), hc.getHyperPlayerManager().getAccount(shopData.getString("OWNER")), shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"));
 				shops.put(name, shop);
 			} else if (type.equalsIgnoreCase("player")) {
 				if (!useShops) {continue;}
 				if (!config.getBoolean("enable-feature.player-shops")) {continue;}
 				String name = shopData.getString("NAME");
-				SimpleLocation p1 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
-				SimpleLocation p2 = new SimpleLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
+				HLocation p1 = new HLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
+				HLocation p2 = new HLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
 				Shop shop = new PlayerShop(name, shopData.getString("ECONOMY"), hc.getHyperPlayerManager().getAccount(shopData.getString("OWNER")), shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"), shopData.getString("ALLOWED_PLAYERS"), (shopData.getString("USE_ECONOMY_STOCK").equalsIgnoreCase("1")) ? true : false);
 				shops.put(name, shop);
 			} else if (type.equalsIgnoreCase("global")) {
@@ -118,7 +118,7 @@ public class HyperShopManager {
 		shops.remove(name);
 	}
     public void startShopCheck() {
-		shopCheckTaskId = HyperConomy.mc.runRepeatingTask(new Runnable() {
+		shopCheckTaskId = HC.mc.runRepeatingTask(new Runnable() {
 		    public void run() {
 				for (Shop shop:shops.values()) {
 					shop.updatePlayerStatus();
@@ -127,7 +127,7 @@ public class HyperShopManager {
 		}, shopinterval, shopinterval);
     }
     public void stopShopCheck() {
-    	HyperConomy.mc.cancelTask(shopCheckTaskId);
+    	HC.mc.cancelTask(shopCheckTaskId);
     }
     public long getShopCheckInterval() {
     	return shopinterval;

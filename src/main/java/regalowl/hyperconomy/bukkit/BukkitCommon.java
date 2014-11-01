@@ -37,30 +37,30 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.display.SignType;
-import regalowl.hyperconomy.serializable.SerializableBookMeta;
-import regalowl.hyperconomy.serializable.SerializableColor;
-import regalowl.hyperconomy.serializable.SerializableEnchantment;
-import regalowl.hyperconomy.serializable.SerializableEnchantmentStorageMeta;
-import regalowl.hyperconomy.serializable.SerializableFireworkEffect;
-import regalowl.hyperconomy.serializable.SerializableFireworkEffectMeta;
-import regalowl.hyperconomy.serializable.SerializableFireworkMeta;
-import regalowl.hyperconomy.serializable.SerializableInventory;
-import regalowl.hyperconomy.serializable.SerializableInventoryType;
-import regalowl.hyperconomy.serializable.SerializableItemMeta;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
-import regalowl.hyperconomy.serializable.SerializableLeatherArmorMeta;
-import regalowl.hyperconomy.serializable.SerializableMapMeta;
-import regalowl.hyperconomy.serializable.SerializablePotionEffect;
-import regalowl.hyperconomy.serializable.SerializablePotionMeta;
-import regalowl.hyperconomy.serializable.SerializableSkullMeta;
+import regalowl.hyperconomy.inventory.HBookMeta;
+import regalowl.hyperconomy.inventory.HColor;
+import regalowl.hyperconomy.inventory.HEnchantment;
+import regalowl.hyperconomy.inventory.HEnchantmentStorageMeta;
+import regalowl.hyperconomy.inventory.HFireworkEffect;
+import regalowl.hyperconomy.inventory.HFireworkEffectMeta;
+import regalowl.hyperconomy.inventory.HFireworkMeta;
+import regalowl.hyperconomy.inventory.HInventory;
+import regalowl.hyperconomy.inventory.HInventoryType;
+import regalowl.hyperconomy.inventory.HItemMeta;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.inventory.HLeatherArmorMeta;
+import regalowl.hyperconomy.inventory.HMapMeta;
+import regalowl.hyperconomy.inventory.HPotionEffect;
+import regalowl.hyperconomy.inventory.HPotionMeta;
+import regalowl.hyperconomy.inventory.HSkullMeta;
+import regalowl.hyperconomy.minecraft.HBlock;
+import regalowl.hyperconomy.minecraft.HItem;
+import regalowl.hyperconomy.minecraft.HLocation;
+import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.shop.ChestShop;
-import regalowl.hyperconomy.util.HBlock;
-import regalowl.hyperconomy.util.HItem;
-import regalowl.hyperconomy.util.HSign;
-import regalowl.hyperconomy.util.SimpleLocation;
 
 public class BukkitCommon {
 
@@ -71,25 +71,25 @@ public class BukkitCommon {
 	
 	
 	
-	protected static Location getLocation(SimpleLocation l) {
+	protected static Location getLocation(HLocation l) {
 		return new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
 	}
 
-	protected static SimpleLocation getLocation(Location l) {
-		return new SimpleLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
+	protected static HLocation getLocation(Location l) {
+		return new HLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
 	}
 	
-	protected static Block getBlock(SimpleLocation location) {
+	protected static Block getBlock(HLocation location) {
 		Location l = getLocation(location);
 		return l.getBlock();
 	}
 	
 	protected static HBlock getBlock(Block b) {
-		SimpleLocation l = getLocation(b.getLocation());
+		HLocation l = getLocation(b.getLocation());
 		return new HBlock(l);
 	}
 	
-	protected static Sign getSign(SimpleLocation l) {
+	protected static Sign getSign(HLocation l) {
 		BlockState bs = getBlock(l).getState();
 		if (bs instanceof Sign) {
 			return (Sign)bs;
@@ -98,7 +98,7 @@ public class BukkitCommon {
 	}
 	
 
-	protected static boolean isTransactionSign(SimpleLocation l) {
+	protected static boolean isTransactionSign(HLocation l) {
 		Block b = getBlock(l);
 		if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
 			Sign s = (Sign) b.getState();
@@ -110,7 +110,7 @@ public class BukkitCommon {
 		return false;
 	}
 
-	protected static boolean isInfoSign(SimpleLocation l) {
+	protected static boolean isInfoSign(HLocation l) {
 		Block b = getBlock(l);
 		if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
 			Sign s = (Sign) b.getState();
@@ -120,25 +120,25 @@ public class BukkitCommon {
 		return false;
 	}
 	
-	protected static boolean isChestShopChest(SimpleLocation l) {
+	protected static boolean isChestShopChest(HLocation l) {
 		Block b = getBlock(l);
 		if (b == null) return false;
 		if (!(b.getState() instanceof Chest)) return false;
 		Chest chest = (Chest) b.getState();
-		SimpleLocation sl = getLocation(chest.getLocation());
+		HLocation sl = getLocation(chest.getLocation());
 		sl.setY(sl.getY() + 1);
 		if (isChestShopSign(sl)) return true;
 		return false;
 	}
 	
-	protected static boolean isChestShopSign(SimpleLocation l) {
+	protected static boolean isChestShopSign(HLocation l) {
 		Block b = getBlock(l);
 		if (b == null) return false;
 		if (!(b instanceof Sign)) return false;
 		Sign s = (Sign) b;
 		String line2 = ChatColor.stripColor(s.getLine(1)).trim();
 		if (!(line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]"))) return false;
-		SimpleLocation sl = new SimpleLocation(l);
+		HLocation sl = new HLocation(l);
 		sl.setY(sl.getY() - 1);
 		Block cb = getBlock(sl);
 		if (cb == null) return false;
@@ -146,14 +146,14 @@ public class BukkitCommon {
 		return true;
 	}
 	
-	protected static boolean isChestShopSignBlock(SimpleLocation l) {
+	protected static boolean isChestShopSignBlock(HLocation l) {
 		HSign sign = getAttachedSign(l);
 		if (sign == null) return false;
 		if (!isChestShopSign(sign.getLocation())) return false;
 		return true;
 	}
 	
-	protected static HSign getAttachedSign(SimpleLocation l) {
+	protected static HSign getAttachedSign(HLocation l) {
 		Block b = getBlock(l);
 		if (b == null) return null;
 		for (BlockFace cface : planeFaces) {
@@ -170,14 +170,14 @@ public class BukkitCommon {
 		return null;
 	}
 	
-	protected static boolean isPartOfChestShop(SimpleLocation l) {
+	protected static boolean isPartOfChestShop(HLocation l) {
 		if (isChestShopChest(l)) return true;
 		if (isChestShopSign(l)) return true;
 		if (isChestShopSignBlock(l)) return true;
 		return false;
 	}
 
-	protected static ChestShop getChestShop(SimpleLocation l) {
+	protected static ChestShop getChestShop(HLocation l) {
 		Block b = getBlock(l);
 		if (b == null) {
 			return null;
@@ -185,12 +185,12 @@ public class BukkitCommon {
 		if (isChestShopChest(l)) {
 			return new ChestShop(l);
 		} else if (isChestShopSign(l)) {
-			SimpleLocation cl = new SimpleLocation(l);
+			HLocation cl = new HLocation(l);
 			cl.setY(cl.getY() - 1);
 			return new ChestShop(cl);
 		} else if (isChestShopSignBlock(l)) {
 			HSign s = getAttachedSign(l);
-			SimpleLocation cl = s.getLocation();
+			HLocation cl = s.getLocation();
 			cl.setY(cl.getY() - 1);
 			return new ChestShop(cl);
 		}
@@ -214,11 +214,13 @@ public class BukkitCommon {
 	
 	
 	protected static HyperPlayer getPlayer(Player p) {
-		return HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(p.getName());
+		if (p == null) return null;
+		return HC.hc.getHyperPlayerManager().getHyperPlayer(p.getName());
 	}
 	
 	@SuppressWarnings("deprecation")
 	protected static Player getPlayer(HyperPlayer hp) {
+		if (hp.getName() == null) return null;
 		return Bukkit.getPlayer(hp.getName());
 	}
 	
@@ -228,8 +230,8 @@ public class BukkitCommon {
 	
 	
 	@SuppressWarnings("deprecation")
-	protected static SerializableInventory getInventory(HyperPlayer hp) {
-		ArrayList<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
+	protected static HInventory getInventory(HyperPlayer hp) {
+		ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 		Player p = Bukkit.getPlayer(hp.getName());
 		Inventory i = p.getInventory();
 		int size = i.getSize();
@@ -237,25 +239,25 @@ public class BukkitCommon {
 		for (int c = 0; c < size; c++) {
 	        items.add(getSerializableItemStack(i.getItem(c)));
 		}
-		SerializableInventory si = new SerializableInventory(items, SerializableInventoryType.PLAYER);
+		HInventory si = new HInventory(items, HInventoryType.PLAYER);
 		si.setOwner(hp.getName());
 		si.setHeldSlot(heldSlot);
 		return si;
 	}
 
-	protected static SerializableInventory getInventory(Inventory i) {
-		ArrayList<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
-		SerializableInventoryType type = null;
+	protected static HInventory getInventory(Inventory i) {
+		ArrayList<HItemStack> items = new ArrayList<HItemStack>();
+		HInventoryType type = null;
 		if (i.getType() == InventoryType.PLAYER) {
-			type = SerializableInventoryType.PLAYER;
+			type = HInventoryType.PLAYER;
 		} else if (i.getType() == InventoryType.CHEST) {
-			type = SerializableInventoryType.CHEST;
+			type = HInventoryType.CHEST;
 		}
 		int size = i.getSize();
 		for (int c = 0; c < size; c++) {
 	        items.add(getSerializableItemStack(i.getItem(c)));
 		}
-		SerializableInventory si = new SerializableInventory(items, type);
+		HInventory si = new HInventory(items, type);
 		if (i.getType() == InventoryType.PLAYER) {
 			if (i.getHolder() instanceof Player) {
 				Player p = (Player)i.getHolder();
@@ -272,17 +274,17 @@ public class BukkitCommon {
 	}
 	
 
-	protected static SerializableInventory getChestInventory(SimpleLocation l) {
+	protected static HInventory getChestInventory(HLocation l) {
 		Location loc = new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
 		if (loc.getBlock().getState() instanceof Chest) {
 			Chest chest = (Chest)loc.getBlock().getState();
 			Inventory i = chest.getInventory();
-			ArrayList<SerializableItemStack> items = new ArrayList<SerializableItemStack>();
+			ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 			int size = i.getSize();
 			for (int c = 0; c < size; c++) {
 		        items.add(getSerializableItemStack(i.getItem(c)));
 			}
-			SerializableInventory si = new SerializableInventory(items, SerializableInventoryType.CHEST);
+			HInventory si = new HInventory(items, HInventoryType.CHEST);
 			si.setLocation(l);
 			return si;
 		}
@@ -291,13 +293,13 @@ public class BukkitCommon {
 	
 	
 	@SuppressWarnings("deprecation")
-	protected static void setInventory(SerializableInventory inventory) {
-		if (inventory.getInventoryType() == SerializableInventoryType.PLAYER) {
+	protected static void setInventory(HInventory inventory) {
+		if (inventory.getInventoryType() == HInventoryType.PLAYER) {
 			HyperPlayer hp = inventory.getHyperPlayer();
 			Player p = Bukkit.getPlayer(hp.getName());
 			p.getInventory().setHeldItemSlot(inventory.getHeldSlot());
-			ArrayList<SerializableItemStack> currentInventory = getInventory(hp).getItems();
-			ArrayList<SerializableItemStack> newInventory = inventory.getItems();
+			ArrayList<HItemStack> currentInventory = getInventory(hp).getItems();
+			ArrayList<HItemStack> newInventory = inventory.getItems();
 			if (currentInventory.size() != newInventory.size()) return;
 			Inventory inv = p.getInventory();
 			for (int i = 0; i < newInventory.size(); i++) {
@@ -310,13 +312,13 @@ public class BukkitCommon {
 				}
 			}
 			p.updateInventory();
-		} else if (inventory.getInventoryType() == SerializableInventoryType.CHEST) {
-			SimpleLocation l = inventory.getLocation();
+		} else if (inventory.getInventoryType() == HInventoryType.CHEST) {
+			HLocation l = inventory.getLocation();
 			Location loc = new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
 			if (loc.getBlock() instanceof Chest) {
 				Chest chest = (Chest)loc.getBlock();
-				ArrayList<SerializableItemStack> currentInventory = getChestInventory(l).getItems();
-				ArrayList<SerializableItemStack> newInventory = inventory.getItems();
+				ArrayList<HItemStack> currentInventory = getChestInventory(l).getItems();
+				ArrayList<HItemStack> newInventory = inventory.getItems();
 				Inventory chestInv = chest.getInventory();
 				for (int i = 0; i < newInventory.size(); i++) {
 					if (newInventory.get(i).equals(currentInventory.get(i))) continue;
@@ -331,10 +333,10 @@ public class BukkitCommon {
 		}
 	}
 	
-	
+	//TODO make protected
 	@SuppressWarnings("deprecation")
-	protected static SerializableItemStack getSerializableItemStack(ItemStack s) {
-		if (s == null) return new SerializableItemStack();
+	public static HItemStack getSerializableItemStack(ItemStack s) {
+		if (s == null) return new HItemStack();
 		boolean isBlank = (s.getType() == Material.AIR) ? true:false;
         String material = s.getType().toString();
         short durability = s.getDurability();
@@ -342,140 +344,140 @@ public class BukkitCommon {
         int amount = s.getAmount();
         int maxStackSize = s.getType().getMaxStackSize();
         int maxDurability = s.getType().getMaxDurability();
-        SerializableItemStack sis = null;
+        HItemStack sis = null;
         if (s.hasItemMeta()) {
         	ItemMeta im = s.getItemMeta();
             String displayName = im.getDisplayName();
             List<String> lore = im.getLore();
-            List<SerializableEnchantment> enchantments = new ArrayList<SerializableEnchantment>();
+            List<HEnchantment> enchantments = new ArrayList<HEnchantment>();
             Map<Enchantment, Integer> enchants = im.getEnchants();
     		Iterator<Enchantment> it = enchants.keySet().iterator();
     		while (it.hasNext()) {
     			Enchantment e = it.next();
     			int lvl = enchants.get(e);
-    			enchantments.add(new SerializableEnchantment(e.getName(), lvl));
+    			enchantments.add(new HEnchantment(e.getName(), lvl));
     		}
-    		SerializableItemMeta itemMeta = null;
+    		HItemMeta itemMeta = null;
         	if (im instanceof EnchantmentStorageMeta) {
         		EnchantmentStorageMeta sItemMeta = (EnchantmentStorageMeta)im;
-        		List<SerializableEnchantment> storedEnchantments = new ArrayList<SerializableEnchantment>();
+        		List<HEnchantment> storedEnchantments = new ArrayList<HEnchantment>();
     			Map<Enchantment, Integer> stored = sItemMeta.getStoredEnchants();
     			Iterator<Enchantment> iter = stored.keySet().iterator();
     			while (iter.hasNext()) {
     				Enchantment e = iter.next();
-    				int lvl = enchants.get(e);
-    				storedEnchantments.add(new SerializableEnchantment(e.getName(), lvl));
+    				int lvl = stored.get(e);
+    				storedEnchantments.add(new HEnchantment(e.getName(), lvl));
     			}
-        		itemMeta = new SerializableEnchantmentStorageMeta(displayName, lore, enchantments, storedEnchantments);
+        		itemMeta = new HEnchantmentStorageMeta(displayName, lore, enchantments, storedEnchantments);
         	} else if (im instanceof BookMeta) {
         		BookMeta sItemMeta = (BookMeta)im;
-        		itemMeta = new SerializableBookMeta(displayName, lore, enchantments, sItemMeta.getAuthor(), sItemMeta.getPages(), sItemMeta.getTitle());
+        		itemMeta = new HBookMeta(displayName, lore, enchantments, sItemMeta.getAuthor(), sItemMeta.getPages(), sItemMeta.getTitle());
         	} else if (im instanceof FireworkEffectMeta) {
         		FireworkEffectMeta sItemMeta = (FireworkEffectMeta)im;
         		FireworkEffect fe = sItemMeta.getEffect();
-        		ArrayList<SerializableColor> colors = new ArrayList<SerializableColor>();
+        		ArrayList<HColor> colors = new ArrayList<HColor>();
         		for (Color color:fe.getColors()) {
-        			colors.add(new SerializableColor(color.getRed(), color.getGreen(), color.getBlue()));
+        			colors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
         		}
-        		ArrayList<SerializableColor> fadeColors = new ArrayList<SerializableColor>();
+        		ArrayList<HColor> fadeColors = new ArrayList<HColor>();
         		for (Color color:fe.getFadeColors()) {
-        			fadeColors.add(new SerializableColor(color.getRed(), color.getGreen(), color.getBlue()));
+        			fadeColors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
         		}
-        		SerializableFireworkEffect sfe = new SerializableFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail());
-        		itemMeta = new SerializableFireworkEffectMeta(displayName, lore, enchantments, sfe);
+        		HFireworkEffect sfe = new HFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail());
+        		itemMeta = new HFireworkEffectMeta(displayName, lore, enchantments, sfe);
         	} else if (im instanceof FireworkMeta) {
         		FireworkMeta sItemMeta = (FireworkMeta)im;
-        		ArrayList<SerializableFireworkEffect> fireworkEffects = new ArrayList<SerializableFireworkEffect>();
+        		ArrayList<HFireworkEffect> fireworkEffects = new ArrayList<HFireworkEffect>();
     			for (FireworkEffect fe:sItemMeta.getEffects()) {
-	        		ArrayList<SerializableColor> colors = new ArrayList<SerializableColor>();
+	        		ArrayList<HColor> colors = new ArrayList<HColor>();
 	        		for (Color color:fe.getColors()) {
-	        			colors.add(new SerializableColor(color.getRed(), color.getGreen(), color.getBlue()));
+	        			colors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
 	        		}
-	        		ArrayList<SerializableColor> fadeColors = new ArrayList<SerializableColor>();
+	        		ArrayList<HColor> fadeColors = new ArrayList<HColor>();
 	        		for (Color color:fe.getFadeColors()) {
-	        			fadeColors.add(new SerializableColor(color.getRed(), color.getGreen(), color.getBlue()));
+	        			fadeColors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
 	        		}
-	        		fireworkEffects.add(new SerializableFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail()));
+	        		fireworkEffects.add(new HFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail()));
     			}
-        		itemMeta = new SerializableFireworkMeta(displayName, lore, enchantments, fireworkEffects, sItemMeta.getPower());
+        		itemMeta = new HFireworkMeta(displayName, lore, enchantments, fireworkEffects, sItemMeta.getPower());
         	} else if (im instanceof LeatherArmorMeta) {
         		LeatherArmorMeta sItemMeta = (LeatherArmorMeta)im;
         		Color color = sItemMeta.getColor();
-        		itemMeta = new SerializableLeatherArmorMeta(displayName, lore, enchantments, new SerializableColor(color.getRed(), color.getGreen(), color.getBlue()));
+        		itemMeta = new HLeatherArmorMeta(displayName, lore, enchantments, new HColor(color.getRed(), color.getGreen(), color.getBlue()));
         	} else if (im instanceof PotionMeta) {
         		PotionMeta sItemMeta = (PotionMeta)im;
-        		ArrayList<SerializablePotionEffect> potionEffects = new ArrayList<SerializablePotionEffect>();
+        		ArrayList<HPotionEffect> potionEffects = new ArrayList<HPotionEffect>();
         		for (PotionEffect pe:sItemMeta.getCustomEffects()) {
-        			potionEffects.add(new SerializablePotionEffect(pe.getType().toString(), pe.getAmplifier(), pe.getDuration(), pe.isAmbient()));
+        			potionEffects.add(new HPotionEffect(pe.getType().toString(), pe.getAmplifier(), pe.getDuration(), pe.isAmbient()));
         		}
-        		itemMeta = new SerializablePotionMeta(displayName, lore, enchantments, potionEffects);
+        		itemMeta = new HPotionMeta(displayName, lore, enchantments, potionEffects);
         	} else if (im instanceof SkullMeta) {
         		SkullMeta sItemMeta = (SkullMeta)im;
-        		itemMeta = new SerializableSkullMeta(displayName, lore, enchantments, sItemMeta.getOwner());
+        		itemMeta = new HSkullMeta(displayName, lore, enchantments, sItemMeta.getOwner());
         	} else if (im instanceof MapMeta) {
         		MapMeta sItemMeta = (MapMeta)im;
-        		itemMeta = new SerializableMapMeta(displayName, lore, enchantments, sItemMeta.isScaling());
+        		itemMeta = new HMapMeta(displayName, lore, enchantments, sItemMeta.isScaling());
         	} else {
-        		itemMeta = new SerializableItemMeta(displayName, lore, enchantments);
+        		itemMeta = new HItemMeta(displayName, lore, enchantments);
         	}
-        	sis = new SerializableItemStack(itemMeta, material, durability, data, amount, maxStackSize, maxDurability);
+        	sis = new HItemStack(itemMeta, material, durability, data, amount, maxStackSize, maxDurability);
         }
-        sis = new SerializableItemStack(null, material, durability, data, amount, maxStackSize, maxDurability);
+        sis = new HItemStack(null, material, durability, data, amount, maxStackSize, maxDurability);
         if (isBlank) sis.setBlank();
         return sis;
 	}
-	
+	//TODO make protected
 	@SuppressWarnings("deprecation")
-	protected static ItemStack getItemStack(SerializableItemStack sis) {
+	public static ItemStack getItemStack(HItemStack sis) {
 		if (sis == null || sis.isBlank()) return null;
         ItemStack item = new ItemStack(Material.matchMaterial(sis.getMaterial()));
-        item.setAmount(1);
+        item.setAmount(sis.getAmount());
         item.setDurability(sis.getDurability());
         item.getData().setData(sis.getData());
         if (sis.getItemMeta() != null) {
-        	SerializableItemMeta sim = sis.getItemMeta();
+        	HItemMeta sim = sis.getItemMeta();
         	ItemMeta itemMeta = item.getItemMeta();
         	itemMeta.setDisplayName(sim.getDisplayName());
         	itemMeta.setLore(sim.getLore());
-    		for (SerializableEnchantment se:sim.getEnchantments()) {
+    		for (HEnchantment se:sim.getEnchantments()) {
     			itemMeta.addEnchant(Enchantment.getByName(se.getEnchantmentName()), se.getLvl(), true);
     		}
-        	if (sim instanceof SerializableEnchantmentStorageMeta) {
-        		SerializableEnchantmentStorageMeta sItemMeta = (SerializableEnchantmentStorageMeta)sim;
+        	if (sim instanceof HEnchantmentStorageMeta) {
+        		HEnchantmentStorageMeta sItemMeta = (HEnchantmentStorageMeta)sim;
         		EnchantmentStorageMeta esm = (EnchantmentStorageMeta)itemMeta;
-        		for (SerializableEnchantment se:sItemMeta.getEnchantments()) {
+        		for (HEnchantment se:sItemMeta.getEnchantments()) {
         			esm.addStoredEnchant(Enchantment.getByName(se.getEnchantmentName()), se.getLvl(), true);
         		}
-        	} else if (sim instanceof SerializableBookMeta) {
-        		SerializableBookMeta sItemMeta = (SerializableBookMeta)sim;
+        	} else if (sim instanceof HBookMeta) {
+        		HBookMeta sItemMeta = (HBookMeta)sim;
         		BookMeta bm = (BookMeta)itemMeta;
         		bm.setPages(sItemMeta.getPages());
         		bm.setAuthor(sItemMeta.getAuthor());
         		bm.setTitle(sItemMeta.getTitle());
-        	} else if (sim instanceof SerializableFireworkEffectMeta) {
-        		SerializableFireworkEffectMeta sItemMeta = (SerializableFireworkEffectMeta)sim;
+        	} else if (sim instanceof HFireworkEffectMeta) {
+        		HFireworkEffectMeta sItemMeta = (HFireworkEffectMeta)sim;
         		FireworkEffectMeta fem = (FireworkEffectMeta)itemMeta;
-        		SerializableFireworkEffect sfe = sItemMeta.getEffect();
+        		HFireworkEffect sfe = sItemMeta.getEffect();
     			Builder fb = FireworkEffect.builder();
-    			for (SerializableColor c:sfe.getColors()) {
+    			for (HColor c:sfe.getColors()) {
     				fb.withColor(Color.fromRGB(c.getRed(), c.getGreen(), c.getBlue()));
     			}
-    			for (SerializableColor c:sfe.getFadeColors()) {
+    			for (HColor c:sfe.getFadeColors()) {
     				fb.withFade(Color.fromRGB(c.getRed(), c.getGreen(), c.getBlue()));
     			}
     			fb.with(FireworkEffect.Type.valueOf(sfe.getType()));
     			fb.flicker(sfe.hasFlicker());
     			fb.trail(sfe.hasTrail());
     			fem.setEffect(fb.build());
-        	} else if (sim instanceof SerializableFireworkMeta) {
-        		SerializableFireworkMeta sItemMeta = (SerializableFireworkMeta)sim;
+        	} else if (sim instanceof HFireworkMeta) {
+        		HFireworkMeta sItemMeta = (HFireworkMeta)sim;
         		FireworkMeta fm = (FireworkMeta)itemMeta;
-        		for (SerializableFireworkEffect sfe:sItemMeta.getEffects()) {
+        		for (HFireworkEffect sfe:sItemMeta.getEffects()) {
         			Builder fb = FireworkEffect.builder();
-        			for (SerializableColor c:sfe.getColors()) {
+        			for (HColor c:sfe.getColors()) {
         				fb.withColor(Color.fromRGB(c.getRed(), c.getGreen(), c.getBlue()));
         			}
-        			for (SerializableColor c:sfe.getFadeColors()) {
+        			for (HColor c:sfe.getFadeColors()) {
         				fb.withFade(Color.fromRGB(c.getRed(), c.getGreen(), c.getBlue()));
         			}
         			fb.with(FireworkEffect.Type.valueOf(sfe.getType()));
@@ -484,24 +486,24 @@ public class BukkitCommon {
         			fm.addEffect(fb.build());
         		}
         		fm.setPower(sItemMeta.getPower());
-        	} else if (sim instanceof SerializableLeatherArmorMeta) {
-        		SerializableLeatherArmorMeta sItemMeta = (SerializableLeatherArmorMeta)sim;
+        	} else if (sim instanceof HLeatherArmorMeta) {
+        		HLeatherArmorMeta sItemMeta = (HLeatherArmorMeta)sim;
         		LeatherArmorMeta lam = (LeatherArmorMeta)itemMeta;
-        		SerializableColor sc = sItemMeta.getColor();
+        		HColor sc = sItemMeta.getColor();
         		lam.setColor(Color.fromRGB(sc.getRed(), sc.getGreen(), sc.getBlue()));
-        	} else if (sim instanceof SerializablePotionMeta) {
-        		SerializablePotionMeta sItemMeta = (SerializablePotionMeta)sim;
+        	} else if (sim instanceof HPotionMeta) {
+        		HPotionMeta sItemMeta = (HPotionMeta)sim;
         		PotionMeta pm = (PotionMeta)itemMeta;
-        		for (SerializablePotionEffect spe:sItemMeta.getPotionEffects()) {
+        		for (HPotionEffect spe:sItemMeta.getPotionEffects()) {
         			PotionEffect pe = new PotionEffect(PotionEffectType.getByName(spe.getType()), spe.getDuration(), spe.getAmplifier(), spe.isAmbient());
         			pm.addCustomEffect(pe, true);
         		}
-        	} else if (sim instanceof SerializableSkullMeta) {
-        		SerializableSkullMeta sItemMeta = (SerializableSkullMeta)sim;
+        	} else if (sim instanceof HSkullMeta) {
+        		HSkullMeta sItemMeta = (HSkullMeta)sim;
         		SkullMeta sm = (SkullMeta)itemMeta;
         		sm.setOwner(sItemMeta.getOwner());
-        	} else if (sim instanceof SerializableMapMeta) {
-        		SerializableMapMeta sItemMeta = (SerializableMapMeta)sim;
+        	} else if (sim instanceof HMapMeta) {
+        		HMapMeta sItemMeta = (HMapMeta)sim;
         		MapMeta mm = (MapMeta)itemMeta;
         		mm.setScaling(sItemMeta.isScaling());
         	}
@@ -554,12 +556,12 @@ public class BukkitCommon {
 	}
 	
 	protected static HItem getItem(Item i) {
-		SimpleLocation l = getLocation(i.getLocation());
-		SerializableItemStack stack = getSerializableItemStack(i.getItemStack());
+		HLocation l = getLocation(i.getLocation());
+		HItemStack stack = getSerializableItemStack(i.getItemStack());
 		return new HItem(l, i.getEntityId(), stack);
 	}
 	
-	protected static boolean chunkContainsLocation(SimpleLocation l, Chunk c) {
+	protected static boolean chunkContainsLocation(HLocation l, Chunk c) {
 		Location loc = getLocation(l);
 		if (loc.getChunk().equals(c)) return true;
 		return false;

@@ -5,14 +5,14 @@ import java.util.ArrayList;
 
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.util.LanguageFile;
 
 public class Hyperlog extends BaseCommand implements HyperCommand {
 
 	private String statement;
 	private ArrayList<String> result;
-	private HyperConomy hc;
+	private HC hc;
 	
 	public Hyperlog() {
 		super(false);
@@ -21,7 +21,7 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 	@Override
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
-		hc = HyperConomy.hc;
+		hc = HC.hc;
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length % 2 != 0 || args.length == 0) {
@@ -114,7 +114,7 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 			new Thread(new Runnable() {
 	    		public void run() {
 	    			result = getHyperLog(statement);
-	    			HyperConomy.mc.runTask(new Runnable() {
+	    			HC.mc.runTask(new Runnable() {
 	    	    		public void run() {
 	    	    			int m = result.size();
 	    	    			if (m > 100) {
@@ -144,7 +144,7 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 	 * @return a display of the selected HyperLog entry
 	 */
 	private ArrayList<String> getHyperLog(String statement) {
-		SQLRead sr = HyperConomy.hc.getSQLRead();
+		SQLRead sr = HC.hc.getSQLRead();
 		ArrayList<String> entries = new ArrayList<String>();
 		LanguageFile L = hc.getLanguageFile();
 		QueryResult result = sr.select(statement);
@@ -163,9 +163,9 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 			time = time.substring(0, time.indexOf(" "));
 			time = time.substring(time.indexOf("-") + 1, time.length());
 			if (action.equalsIgnoreCase("purchase")) {
-				entry = HyperConomy.mc.applyColor("[" + "&c" + time + "&f" + "]" + "&e" + store + "&f" + "->" + "&b" + customer + "&f" + "[" + "&9" + amount + " " + "&9" + object + "&f" + "]" + "[" + "&a" + L.fC(money) + "&f" + "]");
+				entry = HC.mc.applyColor("[" + "&c" + time + "&f" + "]" + "&e" + store + "&f" + "->" + "&b" + customer + "&f" + "[" + "&9" + amount + " " + "&9" + object + "&f" + "]" + "[" + "&a" + L.fC(money) + "&f" + "]");
 			} else if (action.equalsIgnoreCase("sale")) {
-				entry = HyperConomy.mc.applyColor("[" + "&c" + time + "&f" + "]" + "&b" + customer + "&f" + "->" + "&e" + store + "&f" + "[" + "&9" + amount + " " + "&9" + object + "&f" + "]" + "[" + "&a" + L.fC(money) + "&f" + "]");
+				entry = HC.mc.applyColor("[" + "&c" + time + "&f" + "]" + "&b" + customer + "&f" + "->" + "&e" + store + "&f" + "[" + "&9" + amount + " " + "&9" + object + "&f" + "]" + "[" + "&a" + L.fC(money) + "&f" + "]");
 			}
 			entries.add(entry);
 		}

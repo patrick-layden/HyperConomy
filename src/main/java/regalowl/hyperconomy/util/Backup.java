@@ -5,14 +5,14 @@ import java.util.ArrayList;
 
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.sql.QueryResult;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 
 public class Backup {
 
 	private String destinationPath;
 	
 	public Backup() {
-		HyperConomy hc = HyperConomy.hc;
+		HC hc = HC.hc;
 		FileTools ft = hc.getFileTools();
 
 		ArrayList<String> backupFiles = new ArrayList<String>();
@@ -43,8 +43,8 @@ public class Backup {
 		}
 		new Thread(new Runnable() {
 			public void run() {
-				HyperConomy hc = HyperConomy.hc;
-				ArrayList<String> tables = hc.getDataManager().getTablesList();
+				HC hc = HC.hc;
+				ArrayList<String> tables = HC.hc.getDataManager().getTablesList();
 				FileTools ft = hc.getFileTools();
 				String folderPath = destinationPath + File.separator + "SQL_Tables";
 				ft.makeFolder(folderPath);

@@ -2,9 +2,8 @@ package regalowl.hyperconomy.command;
 
 
 
-import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.util.ConsoleSettings;
@@ -14,10 +13,9 @@ public class BaseCommand {
 
 	protected boolean requirePlayer;
 
-	protected HyperConomy hc;
+	protected HC hc;
 	protected LanguageFile L;
 	protected DataManager dm;
-	protected CommonFunctions cf;
 	protected ConsoleSettings cs;
 	
 	protected HyperPlayer hp;
@@ -26,17 +24,16 @@ public class BaseCommand {
 	protected CommandData data;
 	
 	public BaseCommand(boolean requirePlayer) {
-		this.hc = HyperConomy.hc;
+		this.hc = HC.hc;
 		this.L = hc.getLanguageFile();
-		this.dm = hc.getDataManager();
-		this.cf = hc.gCF();
+		this.dm = HC.hc.getDataManager();
 		this.cs = hc.getConsoleSettings();
 		this.requirePlayer = requirePlayer;
 	}
 	
 	
 	protected HyperEconomy getEconomy() {
-		return hc.getDataManager().getEconomy(getEconomyName());
+		return HC.hc.getDataManager().getEconomy(getEconomyName());
 	}
 	
 	protected String getEconomyName() {

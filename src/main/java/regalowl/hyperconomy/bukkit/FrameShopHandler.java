@@ -20,27 +20,25 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.HyperPlayerManager;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.util.LanguageFile;
 
 public class FrameShopHandler implements Listener {
 
-	private HyperConomy hc;
+	private HC hc;
 	private DataManager em;
-	private HyperPlayerManager hpm;
 	private HashMap<String, FrameShop> frameShops = new HashMap<String, FrameShop>();
 	private QueryResult dbData;
 
 	public FrameShopHandler() {
-		hc = HyperConomy.hc;
-		em = hc.getDataManager();
-		hpm = hc.getHyperPlayerManager();
-		Bukkit.getPluginManager().registerEvents(this, (BukkitConnector)HyperConomy.mc);
+		hc = HC.hc;
+		em = HC.hc.getDataManager();
+		Bukkit.getPluginManager().registerEvents(this, (BukkitConnector)HC.mc);
 		load();
 	}
 
@@ -49,7 +47,7 @@ public class FrameShopHandler implements Listener {
 			public void run() {
 				frameShops.clear();
 				dbData = hc.getSQLRead().select("SELECT * FROM hyperconomy_frame_shops");
-				HyperConomy.mc.runTask(new Runnable() {
+				HC.mc.runTask(new Runnable() {
 					public void run() {
 						while (dbData.next()) {
 							double x = dbData.getDouble("X");
@@ -62,7 +60,7 @@ public class FrameShopHandler implements Listener {
 							if (s != null) {
 								economy = s.getEconomy();
 							}
-							HyperObject ho = em.getEconomy(economy).getHyperObject(dbData.getString("HYPEROBJECT"), s);
+							TradeObject ho = em.getEconomy(economy).getHyperObject(dbData.getString("HYPEROBJECT"), s);
 							FrameShop fs = new FrameShop((short) (int) dbData.getInt("ID"), l, ho, s, dbData.getInt("TRADE_AMOUNT"));
 							frameShops.put(fs.getKey(), fs);
 
@@ -99,7 +97,7 @@ public class FrameShopHandler implements Listener {
 		}
 	}
 
-	public void createFrameShop(Location l, HyperObject ho, Shop s) {
+	public void createFrameShop(HLocation l, TradeObject ho, Shop s) {
 		FrameShop fs = new FrameShop(l, ho, s, 1);
 		frameShops.put(fs.getKey(), fs);
 	}
@@ -111,7 +109,7 @@ public class FrameShopHandler implements Listener {
 			return;
 		}
 		Entity entity = event.getEntity();
-		LanguageFile L = HyperConomy.hc.getLanguageFile();
+		LanguageFile L = HC.hc.getLanguageFile();
 		if (event.getDamager() instanceof Player) {
 			Player p = (Player) event.getDamager();
 			if (entity instanceof ItemFrame) {
@@ -154,7 +152,7 @@ public class FrameShopHandler implements Listener {
 			return;
 		}
 		Entity entity = event.getRightClicked();
-		LanguageFile L = HyperConomy.hc.getLanguageFile();
+		LanguageFile L = HC.hc.getLanguageFile();
 		if (entity instanceof ItemFrame) {
 			ItemFrame iFrame = (ItemFrame) entity;
 			if (iFrame.getItem().getType().equals(Material.MAP)) {

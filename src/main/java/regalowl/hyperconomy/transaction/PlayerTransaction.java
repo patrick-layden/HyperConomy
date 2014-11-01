@@ -1,22 +1,22 @@
 package regalowl.hyperconomy.transaction;
 
 import regalowl.hyperconomy.account.HyperAccount;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.serializable.SerializableInventory;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.inventory.HInventory;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class PlayerTransaction {
 	
 	private TransactionType transactionType;
 	private HyperAccount tradePartner;
-	private HyperObject hyperObject;
+	private TradeObject hyperObject;
 	private int amount;
-	private SerializableInventory giveInventory;
-	private SerializableInventory receiveInventory;
+	private HInventory giveInventory;
+	private HInventory receiveInventory;
 	private double money;
 	private boolean setPrice;
 	private boolean chargeTax;
-	private SerializableItemStack giveItem;
+	private HItemStack giveItem;
 	private boolean obeyShops;
 	
 	
@@ -31,16 +31,16 @@ public class PlayerTransaction {
 	public HyperAccount getTradePartner() {
 		return tradePartner;
 	}
-	public HyperObject getHyperObject() {
+	public TradeObject getHyperObject() {
 		return hyperObject;
 	}
 	public int getAmount() {
 		return amount;
 	}
-	public SerializableInventory getGiveInventory() {
+	public HInventory getGiveInventory() {
 		return giveInventory;
 	}
-	public SerializableInventory getReceiveInventory() {
+	public HInventory getReceiveInventory() {
 		return receiveInventory;
 	}
 	public double getMoney() {
@@ -52,7 +52,7 @@ public class PlayerTransaction {
 	public boolean isChargeTax() {
 		return chargeTax;
 	}
-	public SerializableItemStack getGiveItem() {
+	public HItemStack getGiveItem() {
 		return giveItem;
 	}
 	public boolean obeyShops() {
@@ -66,16 +66,16 @@ public class PlayerTransaction {
 	public void setTradePartner(HyperAccount tradePartner) {
 		this.tradePartner = tradePartner;
 	}
-	public void setHyperObject(HyperObject hyperObject) {
+	public void setHyperObject(TradeObject hyperObject) {
 		this.hyperObject = hyperObject;
 	}
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-	public void setGiveInventory(SerializableInventory giveInventory) {
+	public void setGiveInventory(HInventory giveInventory) {
 		this.giveInventory = giveInventory;
 	}
-	public void setReceiveInventory(SerializableInventory receiveInventory) {
+	public void setReceiveInventory(HInventory receiveInventory) {
 		this.receiveInventory = receiveInventory;
 	}
 	public void setMoney(double money) {
@@ -87,7 +87,7 @@ public class PlayerTransaction {
 	public void setChargeTax(boolean chargeTax) {
 		this.chargeTax = chargeTax;
 	}
-	public void setGiveItem(SerializableItemStack giveItem) {
+	public void setGiveItem(HItemStack giveItem) {
 		this.giveItem = giveItem;
 	}
 	public void setObeyShops(boolean obeyShops) {

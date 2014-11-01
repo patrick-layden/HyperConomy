@@ -5,13 +5,10 @@ import java.util.List;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,11 +21,9 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -40,11 +35,10 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.display.ItemDisplay;
 import regalowl.hyperconomy.event.minecraft.ChestShopClickEvent;
-import regalowl.hyperconomy.event.minecraft.FrameShopEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
@@ -52,16 +46,16 @@ import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
 import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerDropItemEvent;
 import regalowl.hyperconomy.event.minecraft.HyperPlayerInteractEvent;
+import regalowl.hyperconomy.event.minecraft.HyperPlayerItemHeldEvent;
 import regalowl.hyperconomy.event.minecraft.HyperPlayerJoinEvent;
 import regalowl.hyperconomy.event.minecraft.HyperPlayerQuitEvent;
 import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.minecraft.HBlock;
+import regalowl.hyperconomy.minecraft.HLocation;
+import regalowl.hyperconomy.minecraft.HMob;
+import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.shop.ChestShop;
-import regalowl.hyperconomy.transaction.TransactionType;
-import regalowl.hyperconomy.util.HBlock;
-import regalowl.hyperconomy.util.HMob;
-import regalowl.hyperconomy.util.HSign;
-import regalowl.hyperconomy.util.SimpleLocation;
 
 public class BukkitListener implements Listener {
 
@@ -87,32 +81,35 @@ public class BukkitListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChangeEvent(SignChangeEvent event) {
 		if (event.isCancelled()) return;
-		HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
+		HyperPlayer hp = HC.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
 		Location l = event.getBlock().getLocation();
-		SimpleLocation sl = new SimpleLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
-		HSign sign = HyperConomy.mc.getSign(sl);
+		HLocation sl = new HLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
+		HSign sign = HC.mc.getSign(sl);
 		HyperSignChangeEvent se = new HyperSignChangeEvent(sign, hp);
-		HyperConomy.hc.getHyperEventHandler().fireEvent(se);
+		HC.hc.getHyperEventHandler().fireEvent(se);
 		if (se.isCancelled()) event.setCancelled(true);
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerItemHeldEvent(PlayerItemHeldEvent event) {
-		if (event.isCancelled()) return;
-		//TODO
+	public void onPlayerItemHeldEvent(PlayerItemHeldEvent pihevent) {
+		if (pihevent.isCancelled()) return;
+		HyperPlayer hp = BukkitCommon.getPlayer(pihevent.getPlayer());
+		HyperPlayerItemHeldEvent hpih = new HyperPlayerItemHeldEvent(hp, pihevent.getPreviousSlot(), pihevent.getNewSlot());
+		HC.hc.getHyperEventHandler().fireEvent(hpih);
+		if (hpih.isCancelled()) pihevent.setCancelled(true);
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
-		HyperConomy.hc.getHyperEventHandler().fireEvent(new HyperPlayerJoinEvent(hp));
+		HyperPlayer hp = HC.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
+		HC.hc.getHyperEventHandler().fireEvent(new HyperPlayerJoinEvent(hp));
 	}
 	
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		HyperPlayer hp = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
-		HyperConomy.hc.getHyperEventHandler().fireEvent(new HyperPlayerQuitEvent(hp));
+		HyperPlayer hp = HC.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
+		HC.hc.getHyperEventHandler().fireEvent(new HyperPlayerQuitEvent(hp));
 	}
 	
 
@@ -122,7 +119,7 @@ public class BukkitListener implements Listener {
 		if (bbevent.isCancelled()) {return;}
 		HyperPlayer hp = BukkitCommon.getPlayer(bbevent.getPlayer());
 		HBlockBreakEvent event = new HBlockBreakEvent(BukkitCommon.getBlock(bbevent.getBlock()), hp);
-		HyperConomy.hc.getHyperEventHandler().fireEvent(event);
+		HC.hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) bbevent.setCancelled(true);
 	}
 
@@ -135,7 +132,7 @@ public class BukkitListener implements Listener {
 			blocks.add(BukkitCommon.getBlock(b));
 		}
 		HEntityExplodeEvent event = new HEntityExplodeEvent(blocks);
-		HyperConomy.hc.getHyperEventHandler().fireEvent(event);
+		HC.hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) eeevent.setCancelled(true);
 	}
 
@@ -147,7 +144,7 @@ public class BukkitListener implements Listener {
 			blocks.add(BukkitCommon.getBlock(b));
 		}
 		HBlockPistonExtendEvent event = new HBlockPistonExtendEvent(blocks);
-		HyperConomy.hc.getHyperEventHandler().fireEvent(event);
+		HC.hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) bpeevent.setCancelled(true);
 	}
 
@@ -155,7 +152,7 @@ public class BukkitListener implements Listener {
 	public void onBlockPistonRetractEvent(BlockPistonRetractEvent bprevent) {
 		if (bprevent.isCancelled()) {return;}
 		HBlockPistonRetractEvent event = new HBlockPistonRetractEvent(BukkitCommon.getBlock(bprevent.getBlock()));
-		HyperConomy.hc.getHyperEventHandler().fireEvent(event);
+		HC.hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) bprevent.setCancelled(true);
 	}
 
@@ -163,7 +160,7 @@ public class BukkitListener implements Listener {
 	public void onBlockPlaceEvent(BlockPlaceEvent bpevent) {
 		if (bpevent.isCancelled()) {return;}
 		HBlockPlaceEvent event = new HBlockPlaceEvent(BukkitCommon.getBlock(bpevent.getBlock()));
-		HyperConomy.hc.getHyperEventHandler().fireEvent(event);
+		HC.hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) bpevent.setCancelled(true);
 	}
 	
@@ -179,7 +176,7 @@ public class BukkitListener implements Listener {
 		} else {
 			hpie = new HyperPlayerInteractEvent(hp, block, false);
 		}
-		HyperConomy.hc.getHyperEventHandler().fireEvent(hpie);
+		HC.hc.getHyperEventHandler().fireEvent(hpie);
 		if (hpie.isCancelled()) event.setCancelled(true);
 	}
 	
@@ -201,9 +198,9 @@ public class BukkitListener implements Listener {
 		Chest c = (Chest)ih;
 		if (!BukkitCommon.isChestShopChest(BukkitCommon.getLocation(c.getLocation()))) return;
 		ChestShop cs = new ChestShop(BukkitCommon.getLocation(c.getBlock().getLocation()));
-		HyperPlayer clicker = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(p.getName());
+		HyperPlayer clicker = HC.hc.getHyperPlayerManager().getHyperPlayer(p.getName());
 		int slot = icevent.getRawSlot();
-		SerializableItemStack clickedStack = BukkitCommon.getSerializableItemStack(icevent.getCurrentItem());
+		HItemStack clickedStack = BukkitCommon.getSerializableItemStack(icevent.getCurrentItem());
 		ChestShopClickEvent event = new ChestShopClickEvent(clicker, cs, slot, clickedStack);
 		if (icevent.isLeftClick()) {
 			event.setLeftClick();
@@ -212,7 +209,7 @@ public class BukkitListener implements Listener {
 		} else if (icevent.isShiftClick()) {
 			event.setShiftClick();
 		}
-		HyperConomy.hc.getHyperEventHandler().fireEvent(event);
+		HC.hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) icevent.setCancelled(true);
 	}
 	
@@ -221,7 +218,7 @@ public class BukkitListener implements Listener {
 	public void onItemDisplayLoad(ChunkLoadEvent event) {
 		Chunk chunk = event.getChunk();
 		if (chunk == null) return;
-		for (ItemDisplay display : HyperConomy.hc.getItemDisplay().getDisplays()) {
+		for (ItemDisplay display : HC.hc.getItemDisplay().getDisplays()) {
 			if (display == null) continue;
 			if (BukkitCommon.chunkContainsLocation(display.getLocation(), chunk)) {
 				display.refresh();
@@ -234,7 +231,7 @@ public class BukkitListener implements Listener {
 	public void onItemDisplayUnload(ChunkUnloadEvent event) {
 		Chunk chunk = event.getChunk();
 		if (chunk == null) {return;}
-		for (ItemDisplay display:HyperConomy.hc.getItemDisplay().getDisplays()) {
+		for (ItemDisplay display:HC.hc.getItemDisplay().getDisplays()) {
 			if (display == null) {continue;}
 			if (BukkitCommon.chunkContainsLocation(display.getLocation(), chunk)) {
 				display.removeItem();
@@ -245,9 +242,9 @@ public class BukkitListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPickupDisplayCreatureSpawn(CreatureSpawnEvent event) {
-		SimpleLocation l = BukkitCommon.getLocation(event.getLocation());
+		HLocation l = BukkitCommon.getLocation(event.getLocation());
 		HMob mob = new HMob(l, event.getEntity().getCanPickupItems());
-		for (ItemDisplay display : HyperConomy.hc.getItemDisplay().getDisplays()) {
+		for (ItemDisplay display : HC.hc.getItemDisplay().getDisplays()) {
 			if (!display.isActive()) {continue;}
 			if (display.blockEntityPickup(mob)) {
 				event.getEntity().setCanPickupItems(false);
@@ -267,7 +264,7 @@ public class BukkitListener implements Listener {
 				}
 			}
 		}
-		for (ItemDisplay display : HyperConomy.hc.getItemDisplay().getDisplays()) {
+		for (ItemDisplay display : HC.hc.getItemDisplay().getDisplays()) {
 			if (display.getEntityId() == item.getEntityId() || item.equals(display.getItem())) {
 				event.setCancelled(true);
 				return;
@@ -279,7 +276,7 @@ public class BukkitListener implements Listener {
 	public void onPlayerDropItemEvent(PlayerDropItemEvent devent) {
 		if (devent.isCancelled()) return;
 		HPlayerDropItemEvent event = new HPlayerDropItemEvent(BukkitCommon.getItem(devent.getItemDrop()), BukkitCommon.getPlayer(devent.getPlayer()));
-		HyperConomy.hc.getHyperEventHandler().fireEvent(event);
+		HC.hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) devent.setCancelled(true);
 	}
 	

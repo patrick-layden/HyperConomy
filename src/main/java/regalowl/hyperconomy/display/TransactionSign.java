@@ -2,53 +2,51 @@ package regalowl.hyperconomy.display;
 
 
 
+import regalowl.databukkit.event.EventHandler;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.event.minecraft.HyperPlayerInteractEvent;
+import regalowl.hyperconomy.event.minecraft.HyperPlayerItemHeldEvent;
+import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
+import regalowl.hyperconomy.minecraft.HBlock;
+import regalowl.hyperconomy.minecraft.HLocation;
+import regalowl.hyperconomy.minecraft.HSign;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class TransactionSign implements Listener {
-	private HyperConomy hc;
+public class TransactionSign {
+	private HC hc;
 	private DataManager em;
 	public TransactionSign() {
-		hc = HyperConomy.hc;
-		em = hc.getDataManager();
+		hc = HC.hc;
+		em = HC.hc.getDataManager();
 		if (hc.getConf().getBoolean("enable-feature.transaction-signs")) {
-			hc.mc.getConnector().getServer().getPluginManager().registerEvents(this, hc.mc.getConnector());
+			hc.getHyperEventHandler().registerListener(this);
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerItemHeldEvent(PlayerItemHeldEvent event) {
+
+	@EventHandler
+	public void onPlayerItemHeldEvent(HyperPlayerItemHeldEvent event) {
 		try {
 			if (hc.getConf().getBoolean("enable-feature.scrolling-transaction-signs")) {
-				Player p = event.getPlayer();
-				if (hc.getHyperLock().loadLock()) {
-					return;
-				}
-				HyperEconomy he = em.getHyperPlayerManager().getHyperPlayer(p.getName()).getHyperEconomy();
-				Block b = null;
-				try {
-					b = p.getTargetBlock(null, 500);
-				} catch (Exception e) {
-					// do nothing, this method seems to be bugged in bukkit
-					return;
-				}
-
-				if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
-					Sign s = (Sign) b.getState();
-					String line3 = ChatColor.stripColor(s.getLine(2)).trim();
+				HyperPlayer hp = event.getHyperPlayer();
+				if (hc.getHyperLock().loadLock()) return;
+				HyperEconomy he = hp.getHyperEconomy();
+				HLocation target = hp.getTargetLocation();
+				HSign sign = HC.mc.getSign(target);
+				if (sign != null) {
+					String line3 = HC.mc.removeColor(sign.getLine(2)).trim();
 					if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
-						String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
+						String line12 = HC.mc.removeColor(sign.getLine(0)).trim() + HC.mc.removeColor(sign.getLine(1)).trim();
 						line12 = he.fixName(line12);
 						if (he.objectTest(line12)) {
-							String line4 = ChatColor.stripColor(s.getLine(3)).trim();
+							String line4 = HC.mc.removeColor(sign.getLine(3)).trim();
 							int amount = 0;
 							try {
 								amount = Integer.parseInt(line4);
@@ -56,7 +54,7 @@ public class TransactionSign implements Listener {
 								amount = 0;
 							}
 							int change = 1;
-							if (p.isSneaking()) {
+							if (hp.isSneaking()) {
 								change = 10;
 							}
 							int ps = event.getPreviousSlot();
@@ -71,13 +69,13 @@ public class TransactionSign implements Listener {
 							} else if (ns < ps) {
 								amount += change;
 							}
-							if (amount < 0) {
-								amount = 0;
+							if (amount < 1) {
+								amount = 1;
 							} else if (amount > 512) {
 								amount = 512;
 							}
-							s.setLine(3, "\u00A7a" + amount);
-							s.update();
+							sign.setLine(3, "\u00A7a" + amount);
+							sign.update();
 						}
 					}
 				}
@@ -87,52 +85,50 @@ public class TransactionSign implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onSignChangeEvent(SignChangeEvent scevent) {
+	@EventHandler
+	public void onSignChangeEvent(HyperSignChangeEvent scevent) {
 		try {
 			if (hc.getConf().getBoolean("enable-feature.transaction-signs")) {
-				String line3 = ChatColor.stripColor(scevent.getLine(2)).trim();
+				HSign sign = scevent.getSign();
+				String line3 = HC.mc.removeColor(sign.getLine(2)).trim();
 				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
-					String line4 = ChatColor.stripColor(scevent.getLine(3)).trim();
+					String line4 = HC.mc.removeColor(sign.getLine(3)).trim();
 					int amount = 0;
 					try {
 						amount = Integer.parseInt(line4);
 					} catch (Exception e) {
 						amount = 0;
 					}
-					String line12 = ChatColor.stripColor(scevent.getLine(0)).trim() + ChatColor.stripColor(scevent.getLine(1)).trim();
+					String line12 = HC.mc.removeColor(sign.getLine(0)).trim() + HC.mc.removeColor(sign.getLine(1)).trim();
 					line12 = em.getEconomy("default").fixName(line12);
 					if (em.getEconomy("default").objectTest(line12)) {
-						if (scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
-							String line1 = ChatColor.stripColor(scevent.getLine(0).trim());
-							String line2 = ChatColor.stripColor(scevent.getLine(1).trim());
+						if (scevent.getHyperPlayer().hasPermission("hyperconomy.createsign")) {
+							String line1 = HC.mc.removeColor(sign.getLine(0).trim());
+							String line2 = HC.mc.removeColor(sign.getLine(1).trim());
 							if (line1.length() > 13) {
-								line2 = ChatColor.DARK_BLUE + line1.substring(13, line1.length()) + line2;
-								line1 = ChatColor.DARK_BLUE + line1.substring(0, 13);
+								line2 = HC.mc.applyColor("&1" + line1.substring(13, line1.length()) + line2);
+								line1 = HC.mc.applyColor("&1" + line1.substring(0, 13));
 							} else {
-								line1 = ChatColor.DARK_BLUE + line1;
-								line2 = ChatColor.DARK_BLUE + line2;
+								line1 = HC.mc.applyColor("&1" + line1);
+								line2 = HC.mc.applyColor("&1" + line2);
 							}
-							scevent.setLine(0, line1);
-							scevent.setLine(1, line2);
+							sign.setLine(0, line1);
+							sign.setLine(1, line2);
 							if (line3.equalsIgnoreCase("[sell:buy]")) {
-								scevent.setLine(2, "\u00A7f[Sell:Buy]");
+								sign.setLine(2, "\u00A7f[Sell:Buy]");
 							} else if (line3.equalsIgnoreCase("[sell]")) {
-								scevent.setLine(2, "\u00A7f[Sell]");
+								sign.setLine(2, "\u00A7f[Sell]");
 							} else if (line3.equalsIgnoreCase("[buy]")) {
-								scevent.setLine(2, "\u00A7f[Buy]");
+								sign.setLine(2, "\u00A7f[Buy]");
 							}
-							scevent.setLine(3, "\u00A7a" + amount);
-						} else if (!scevent.getPlayer().hasPermission("hyperconomy.createsign")) {
-							scevent.setLine(0, "");
-							scevent.setLine(1, "");
-							scevent.setLine(2, "");
-							scevent.setLine(3, "");
+							sign.setLine(3, "\u00A7a" + amount);
+						} else if (!scevent.getHyperPlayer().hasPermission("hyperconomy.createsign")) {
+							sign.setLine(0, "");
+							sign.setLine(1, "");
+							sign.setLine(2, "");
+							sign.setLine(3, "");
 						}
-						if (scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.SIGN_POST) || scevent.getBlock() != null && scevent.getBlock().getType().equals(Material.WALL_SIGN)) {
-							Sign s = (Sign) scevent.getBlock().getState();
-							s.update();
-						}
+						sign.update();
 					}
 				}
 			}
@@ -141,47 +137,35 @@ public class TransactionSign implements Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerInteractEvent(PlayerInteractEvent ievent) {
+	@EventHandler
+	public void onPlayerInteractEvent(HyperPlayerInteractEvent ievent) {
 		if (ievent == null) {return;}
 		try {
 			if (!hc.getConf().getBoolean("enable-feature.transaction-signs")) {return;}
-			Player p = ievent.getPlayer();
-			if (p == null) {return;}
-			HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
+			HyperPlayer hp = ievent.getHyperPlayer();
+			if (hp == null) {return;}
 			HyperEconomy he = null;
 			if (!hc.getHyperLock().loadLock()) {
-				he = em.getHyperPlayerManager().getHyperPlayer(p.getName()).getHyperEconomy();
+				he = hp.getHyperEconomy();
 			}
-			if (p.isSneaking() && p.hasPermission("hyperconomy.admin")) {return;}
+			if (hp.isSneaking() && hp.hasPermission("hyperconomy.admin")) {return;}
 			LanguageFile L = hc.getLanguageFile();
 			boolean requireShop = hc.getConf().getBoolean("shop.require-transaction-signs-to-be-in-shop");
 
-			Block b = null;
-			if (!ievent.hasBlock()) {
-				try {
-					b = ievent.getPlayer().getTargetBlock(null, 5);
-				} catch (Exception e) {
-					//silence bukkit IllegalStateException: start block missed in iterator
-					return;
-				}
-			} else {
-				b = ievent.getClickedBlock();
-			}
+			HBlock b = ievent.getBlock();
 			if (b == null) {return;}
-			if (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
-				Sign s = (Sign) b.getState();
-				String line3 = ChatColor.stripColor(s.getLine(2)).trim();
+			if (b.isTransactionSign()) {
+				HSign s = HC.mc.getSign(b.getLocation());
+				String line3 = HC.mc.removeColor(s.getLine(2)).trim();
 				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
-					String line4 = ChatColor.stripColor(s.getLine(3)).trim();
+					String line4 = HC.mc.removeColor(s.getLine(3)).trim();
 					int amount = 0;
 					try {
 						amount = Integer.parseInt(line4);
 					} catch (Exception e) {
 						return;
 					}
-					String line12 = ChatColor.stripColor(s.getLine(0)).trim() + ChatColor.stripColor(s.getLine(1)).trim();
+					String line12 = HC.mc.removeColor(s.getLine(0)).trim() + HC.mc.removeColor(s.getLine(1)).trim();
 					line12 = he.fixName(line12);
 					if (he.objectTest(line12)) {
 						if (!s.getLine(0).startsWith("\u00A7")) {
@@ -191,21 +175,16 @@ public class TransactionSign implements Listener {
 							s.setLine(3, "\u00A7a" + s.getLine(3));
 							s.update();
 						}
-						Action action = ievent.getAction();
-						if (action == Action.RIGHT_CLICK_BLOCK) {
+						if (!ievent.isLeftClick()) {
 							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[buy]")) {
 								String l1 = s.getLine(0);
 								String l2 = s.getLine(1);
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
-								if (p.hasPermission("hyperconomy.buysign")) {
+								if (hp.hasPermission("hyperconomy.buysign")) {
 									if ((em.getHyperShopManager().inAnyShop(hp) && requireShop) || !requireShop) {
-										if (hp == null) {
-											ievent.setCancelled(true);
-											return;
-										}
 										if (!requireShop || hp.hasBuyPermission(em.getHyperShopManager().getShop(hp))) {
-											HyperObject ho = he.getHyperObject(line12);
+											TradeObject ho = he.getHyperObject(line12);
 											if (!hc.getHyperLock().isLocked(hp)) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 												pt.setAmount(amount);
@@ -213,43 +192,39 @@ public class TransactionSign implements Listener {
 												TransactionResponse response = hp.processTransaction(pt);
 												response.sendMessages();
 											} else {
-												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+												hp.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 											}
 										} else {
-											p.sendMessage(L.get("NO_TRADE_PERMISSION"));
+											hp.sendMessage(L.get("NO_TRADE_PERMISSION"));
 										}
 									} else {
-										p.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
+										hp.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
 									}
 								} else {
-									p.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+									hp.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
 								}
-								ievent.setCancelled(true);
+								ievent.cancel();;
 								s.setLine(0, l1);
 								s.setLine(1, l2);
 								s.setLine(2, l3);
 								s.setLine(3, l4);
 								s.update();
 							}
-						} else if (action == Action.LEFT_CLICK_BLOCK) {
+						} else if (ievent.isLeftClick()) {
 							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]")) {
 								String l1 = s.getLine(0);
 								String l2 = s.getLine(1);
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
-								if (p.hasPermission("hyperconomy.sellsign")) {
+								if (hp.hasPermission("hyperconomy.sellsign")) {
 									if ((em.getHyperShopManager().inAnyShop(hp) && requireShop) || !requireShop) {
-										if (hp == null) {
-											ievent.setCancelled(true);
-											return;
-										}
 										if (!requireShop || hp.hasSellPermission(em.getHyperShopManager().getShop(hp))) {
-											if (p.getGameMode() == GameMode.CREATIVE && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
-												p.sendMessage(L.get("CANT_SELL_CREATIVE"));
-												ievent.setCancelled(true);
+											if (hp.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
+												hp.sendMessage(L.get("CANT_SELL_CREATIVE"));
+												ievent.cancel();
 												return;
 											}
-											HyperObject ho = he.getHyperObject(line12);
+											TradeObject ho = he.getHyperObject(line12);
 											if (!hc.getHyperLock().isLocked(hp)) {
 												PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 												pt.setAmount(amount);
@@ -257,18 +232,18 @@ public class TransactionSign implements Listener {
 												TransactionResponse response = hp.processTransaction(pt);
 												response.sendMessages();
 											} else {
-												p.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+												hp.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 											}
 										} else {
-											p.sendMessage(L.get("NO_TRADE_PERMISSION"));
+											hp.sendMessage(L.get("NO_TRADE_PERMISSION"));
 										}
 									} else {
-										p.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
+										hp.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
 									}
 								} else {
-									p.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+									hp.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
 								}
-								ievent.setCancelled(true);
+								ievent.cancel();
 								s.setLine(0, l1);
 								s.setLine(1, l2);
 								s.setLine(2, l3);
@@ -279,7 +254,7 @@ public class TransactionSign implements Listener {
 								String l2 = s.getLine(1);
 								String l3 = s.getLine(2);
 								String l4 = s.getLine(3);
-								ievent.setCancelled(true);
+								ievent.cancel();
 								s.setLine(0, l1);
 								s.setLine(1, l2);
 								s.setLine(2, l3);

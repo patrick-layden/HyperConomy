@@ -5,16 +5,19 @@ import java.util.Collections;
 
 
 
-import regalowl.hyperconomy.HyperConomy;
+
+
+import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;
-import regalowl.hyperconomy.hyperobject.BasicObject;
-import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.hyperobject.HyperObjectStatus;
-import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
+import regalowl.hyperconomy.tradeobject.BasicTradeObject;
+import regalowl.hyperconomy.tradeobject.EnchantmentClass;
+import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.hyperconomy.tradeobject.TradeObjectStatus;
+import regalowl.hyperconomy.tradeobject.TradeObjectType;
 
 public class Browseshop extends BaseCommand implements HyperCommand {
 	
@@ -86,16 +89,16 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 			int i = 0;
 			while(i < names.size()) {
 				String cname = names.get(i);
-				HyperObject ho = he.getHyperObject(cname);
+				TradeObject ho = he.getHyperObject(cname);
 				String displayName = ho.getDisplayName();
 				if (alphabetic) {
 					if (ho.nameStartsWith(input)) {
 						if (shop == null || !shop.isBanned(cname)) {
 							if (shop instanceof PlayerShop) {
 								PlayerShop ps = (PlayerShop)shop;
-								HyperObject pso = ps.getPlayerShopObject(ho);
+								TradeObject pso = ps.getPlayerShopObject(ho);
 								if (pso != null) {
-									if (pso.getStatus() == HyperObjectStatus.NONE) {
+									if (pso.getStatus() == TradeObjectStatus.NONE) {
 										if (ps.isAllowed(hp)) {
 											rnames.add(displayName);
 										}
@@ -113,9 +116,9 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 						if (shop == null || !shop.isBanned(cname)) {
 							if (shop instanceof PlayerShop) {
 								PlayerShop ps = (PlayerShop)shop;
-								HyperObject pso = ps.getPlayerShopObject(ho);
+								TradeObject pso = ps.getPlayerShopObject(ho);
 								if (pso != null) {
-									if (pso.getStatus() == HyperObjectStatus.NONE) {
+									if (pso.getStatus() == TradeObjectStatus.NONE) {
 										if (ps.isAllowed(hp)) {
 											rnames.add(displayName);
 										}
@@ -138,29 +141,29 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 			double maxpages = rsize/10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int)maxpages + 1;
-			data.addResponse(HyperConomy.mc.applyColor("&c" + L.get("PAGE") + " &f" + "(" + "&c" + page + "&f/" + "&c" + maxpi + "&f)"));
+			data.addResponse(HC.mc.applyColor("&c" + L.get("PAGE") + " &f" + "(" + "&c" + page + "&f/" + "&c" + maxpi + "&f)"));
 			while (count < numberpage) {
 				if (count > ((page * 10) - 11)) {
 					if (count < rsize) {
 						String iname = rnames.get(count);
 			            Double cost = 0.0;
 			            double stock = 0;
-			            HyperObject ho = he.getHyperObject(iname, hsm.getShop(hp));
-			            if (ho.getType() == HyperObjectType.ITEM) {
+			            TradeObject ho = he.getHyperObject(iname, hsm.getShop(hp));
+			            if (ho.getType() == TradeObjectType.ITEM) {
 							cost = ho.getBuyPrice(1);
 							double taxpaid = ho.getPurchaseTax(cost);
-							cost = cf.twoDecimals(cost + taxpaid);
-							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
-						} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+							cost = CommonFunctions.twoDecimals(cost + taxpaid);
+							stock = CommonFunctions.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
+						} else if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 							cost = ho.getBuyPrice(EnchantmentClass.DIAMOND);
 							cost = cost + ho.getPurchaseTax(cost);
-							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
+							stock = CommonFunctions.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
 						} else {
-							BasicObject hi = (BasicObject)ho;
+							BasicTradeObject hi = (BasicTradeObject)ho;
 							cost = hi.getBuyPrice(1);
 							double taxpaid = ho.getPurchaseTax(cost);
-							cost = cf.twoDecimals(cost + taxpaid);
-							stock = cf.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
+							cost = CommonFunctions.twoDecimals(cost + taxpaid);
+							stock = CommonFunctions.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
 						}
 			            if (ho.isShopObject()) {
 			            	data.addResponse(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "; (&e" + ho.getStatus().toString()+ "&9)]"));

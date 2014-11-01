@@ -5,27 +5,33 @@ import java.util.HashMap;
 
 
 
-import regalowl.hyperconomy.HyperConomy;
+
+
+
+
+
+
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
-import regalowl.hyperconomy.util.HBlock;
-import regalowl.hyperconomy.util.HItem;
-import regalowl.hyperconomy.util.HMob;
-import regalowl.hyperconomy.util.SimpleLocation;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.minecraft.HBlock;
+import regalowl.hyperconomy.minecraft.HItem;
+import regalowl.hyperconomy.minecraft.HLocation;
+import regalowl.hyperconomy.minecraft.HMob;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class ItemDisplay {
 	
-	private HyperConomy hc;
+	private HC hc;
 	private String name;
-	private SimpleLocation l;
+	private HLocation l;
 	private HItem item;
 	private boolean active;
 	
-	ItemDisplay(SimpleLocation location, String name, boolean newDisplay) {
-		this.hc = HyperConomy.hc;
+	ItemDisplay(HLocation location, String name, boolean newDisplay) {
+		this.hc = HC.hc;
 		this.active = false;
-		HyperEconomy he = hc.getDataManager().getEconomy("default");
+		HyperEconomy he = HC.hc.getDataManager().getEconomy("default");
 		this.l = location;
 		this.name = he.fixName(name);
 		if (newDisplay) {
@@ -51,17 +57,17 @@ public class ItemDisplay {
 		int x = (int) Math.floor(l.getX());
 		int y = (int) Math.floor(l.getY() - 1);
 		int z = (int) Math.floor(l.getZ());
-		return new HBlock(new SimpleLocation(l.getWorld(), x, y, z));
+		return new HBlock(new HLocation(l.getWorld(), x, y, z));
 	}
 	
 	public HBlock getItemBlock() {
 		int x = (int) Math.floor(l.getX());
 		int y = (int) Math.floor(l.getY());
 		int z = (int) Math.floor(l.getZ());
-		return new HBlock(new SimpleLocation(l.getWorld(), x, y, z));
+		return new HBlock(new HLocation(l.getWorld(), x, y, z));
 	}
 	
-	public SimpleLocation getLocation() {
+	public HLocation getLocation() {
 		return l;
 	}
 	
@@ -95,15 +101,15 @@ public class ItemDisplay {
 		return item.getId();
 	}
 	
-	public HyperObject getHyperObject() {
-		return hc.getDataManager().getDefaultEconomy().getHyperObject(name);
+	public TradeObject getHyperObject() {
+		return HC.hc.getDataManager().getDefaultEconomy().getHyperObject(name);
 	}
 	
 	public void makeDisplay() {
 		if (!getLocation().isLoaded()) {return;}
-		HyperEconomy he = hc.getDataManager().getEconomy("default");
-		SerializableItemStack dropstack = he.getHyperObject(name).getItem();
-		this.item = HyperConomy.mc.dropItemDisplay(l, dropstack);
+		HyperEconomy he = HC.hc.getDataManager().getEconomy("default");
+		HItemStack dropstack = he.getHyperObject(name).getItem();
+		this.item = HC.mc.dropItemDisplay(l, dropstack);
 		active = true;
 	}
 	
@@ -147,22 +153,22 @@ public class ItemDisplay {
 	 */
 	public boolean blockItemDrop(HItem droppedItem) {
 		if (droppedItem == null) {return false;}
-		SerializableItemStack displayStack = item.getItem();
-		SimpleLocation dl = droppedItem.getLocation();
-		if (!displayStack.equals(droppedItem.getItem())) return false;
+		HItemStack displayStack = item.getItem();
+		HLocation dl = droppedItem.getLocation();
+		if (!displayStack.isSimilarTo(droppedItem.getItem())) return false;
 		if (!l.getWorld().equals(getWorld())) return false;
 		if (Math.abs(dl.getX() - l.getX()) > 10) return false;
 		if (Math.abs(dl.getZ() - l.getZ()) > 10) return false;
 		if (Math.abs(dl.getY() - l.getY()) > 30) return false;
-		HyperConomy.mc.zeroVelocity(droppedItem);
-		if (HyperConomy.mc.getFirstNonAirBlockInColumn(dl).getLocation().getY() > (l.getY() + 10)) return false;
+		HC.mc.zeroVelocity(droppedItem);
+		if (HC.mc.getFirstNonAirBlockInColumn(dl).getLocation().getY() > (l.getY() + 10)) return false;
 		return true;
 	}
 	
 	
 	public boolean blockEntityPickup(HMob mob) {
 		if (mob.canPickupItems()) {
-			SimpleLocation el = mob.getLocation();	
+			HLocation el = mob.getLocation();	
 			if (el.getWorld().equals(l.getWorld())) {
 				if (Math.abs(el.getX() - l.getX()) < 500) {
 					if (Math.abs(el.getZ() - l.getZ()) < 500) {
@@ -176,7 +182,7 @@ public class ItemDisplay {
 	
 
 	public void clearNearbyItems(double radius, boolean removeDisplays, boolean removeSelf) {
-		HyperConomy.mc.clearNearbyNonDisplayItems(item, radius);
+		HC.mc.clearNearbyNonDisplayItems(item, radius);
 	}
 
 }

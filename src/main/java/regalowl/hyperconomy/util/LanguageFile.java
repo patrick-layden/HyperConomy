@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import regalowl.databukkit.file.FileTools;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 
 public class LanguageFile {
 	
-	private HyperConomy hc;
+	private HC hc;
 	private FileTools ft;
 	private HashMap<String, String> language = new HashMap<String, String>();
 	private HashMap<String, String> languageBackup = new HashMap<String, String>();
@@ -43,10 +43,10 @@ public class LanguageFile {
 	
 	
 	public String buildLanguageFile(boolean overwrite) {
-		hc = HyperConomy.hc;
+		hc = HC.hc;
 		ft = hc.getFileTools();
 		updateBackup();
-		String lang = HyperConomy.hc.getConf().getString("language");
+		String lang = HC.hc.getConf().getString("language");
 		if (lang == null) {
 			lang = "enUS";
 		}
@@ -67,7 +67,7 @@ public class LanguageFile {
 		try {
 		ft.copyFileFromJar("Languages/enUS.hl", backuppath);
 		} catch (Exception e) {
-			HyperConomy.hc.gDB().writeError(e);
+			HC.hc.gDB().writeError(e);
 		}
 		buildBackupHashMap(backuppath);
 		
@@ -114,7 +114,7 @@ public class LanguageFile {
 				if (text.startsWith(" ")) {
 					text = text.substring(1, text.length());
 				}
-				text = HyperConomy.mc.applyColor(text);
+				text = HC.mc.applyColor(text);
 				language.put(name, text);
 			}
 			language.put("CC", "\u00A7");
@@ -133,7 +133,7 @@ public class LanguageFile {
 			if (text.startsWith(" ")) {
 				text = text.substring(1, text.length());
 			}
-			text = HyperConomy.mc.applyColor(text);
+			text = HC.mc.applyColor(text);
 			languageBackup.put(name, text);
 		}
 		languageBackup.put("CC", "\u00A7");
@@ -196,28 +196,28 @@ public class LanguageFile {
 	
 	public String fC(String amount) {
 		String formatted = gC(true) + amount;
-		if (HyperConomy.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
+		if (HC.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
 			formatted = amount + gC(true);
 		}
 		return formatted;
 	}
 	public String fC(double amount) {
 		String formatted = gC(true) + amount;
-		if (HyperConomy.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
+		if (HC.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
 			formatted = amount + gC(true);
 		}
 		return formatted;
 	}
 	public String fCS(double amount) {
 		String formatted = gC(false) + amount;
-		if (HyperConomy.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
+		if (HC.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
 			formatted = amount + gC(false);
 		}
 		return formatted;
 	}
 	public String fCS(String amount) {
 		String formatted = gC(false) + amount;
-		if (HyperConomy.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
+		if (HC.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
 			formatted = amount + gC(false);
 		}
 		return formatted;
@@ -225,7 +225,7 @@ public class LanguageFile {
 	
 
 	public String applyColor(String string) {
-		return HyperConomy.mc.applyColor(string);
+		return HC.mc.applyColor(string);
 	}
 	
 	

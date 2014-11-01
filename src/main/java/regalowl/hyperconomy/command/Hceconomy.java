@@ -3,7 +3,7 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.util.Backup;
@@ -38,7 +38,7 @@ public class Hceconomy extends BaseCommand implements HyperCommand {
 				if (args.length >= 4 && args[3].equalsIgnoreCase("clone")) {
 					clone = true;
 				}
-				hc.getDataManager().createNewEconomy(args[1], template, clone);
+				HC.hc.getDataManager().createNewEconomy(args[1], template, clone);
 				data.addResponse(L.get("NEW_ECONOMY_CREATED"));
 			} catch (Exception e) {
 				data.addResponse(L.get("HCECONOMY_CREATE_INVALID"));
@@ -91,7 +91,7 @@ public class Hceconomy extends BaseCommand implements HyperCommand {
 			}
 		} else if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("l")) {
 			ArrayList<String> economies = dm.getEconomyList();
-			data.addResponse(HyperConomy.mc.applyColor("&b" + economies.toString()));
+			data.addResponse(HC.mc.applyColor("&b" + economies.toString()));
 		} else {
 			data.addResponse(L.get("HCECONOMY_INVALID"));
 			return data;

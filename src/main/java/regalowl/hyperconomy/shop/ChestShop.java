@@ -1,23 +1,23 @@
 package regalowl.hyperconomy.shop;
 
 import regalowl.databukkit.CommonFunctions;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperAccount;
-import regalowl.hyperconomy.serializable.SerializableInventory;
-import regalowl.hyperconomy.util.HBlock;
-import regalowl.hyperconomy.util.HSign;
+import regalowl.hyperconomy.inventory.HInventory;
+import regalowl.hyperconomy.minecraft.HBlock;
+import regalowl.hyperconomy.minecraft.HLocation;
+import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.util.LanguageFile;
-import regalowl.hyperconomy.util.SimpleLocation;
 
 public class ChestShop {
 
-	private SimpleLocation location;
+	private HLocation location;
 	private HSign sign;
 	private HyperAccount owner;
-	private SimpleLocation signLocation;
+	private HLocation signLocation;
 	private HBlock attachedBlock;
 	private ChestShopType type;
-	private SerializableInventory inventory;
+	private HInventory inventory;
 	private boolean hasStaticPrice;
 	private double staticPrice;
 	private boolean isValidChestShop;
@@ -28,7 +28,7 @@ public class ChestShop {
 		initialize();
 	}
 	
-	public ChestShop(SimpleLocation location) {
+	public ChestShop(HLocation location) {
 		this.location = location;
 		initialize();
 	}
@@ -36,45 +36,44 @@ public class ChestShop {
 	private void initialize() {
 		isValidChestShop = false;
 		if (location == null) return;
-		if (!HyperConomy.mc.isChestShopChest(location)) return;
-		signLocation = new SimpleLocation(location);
+		if (!HC.mc.isChestShopChest(location)) return;
+		signLocation = new HLocation(location);
 		signLocation.setY(location.getY() + 1);
-		this.sign = HyperConomy.mc.getSign(signLocation);
+		this.sign = HC.mc.getSign(signLocation);
 		if (sign == null) return;
 		attachedBlock = sign.getAttachedBlock();
 		if (attachedBlock == null) return;
-		String chestOwnerName = HyperConomy.mc.removeColor(sign.getLine(2)).trim() + HyperConomy.mc.removeColor(sign.getLine(3)).trim();
-		this.owner = HyperConomy.hc.getHyperPlayerManager().getAccount(chestOwnerName);
+		String chestOwnerName = HC.mc.removeColor(sign.getLine(2)).trim() + HC.mc.removeColor(sign.getLine(3)).trim();
+		this.owner = HC.hc.getHyperPlayerManager().getAccount(chestOwnerName);
 		if (owner == null && !chestOwnerName.equals("")) {
-			this.owner = HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(chestOwnerName);
+			this.owner = HC.hc.getHyperPlayerManager().getHyperPlayer(chestOwnerName);
 		} else {
 			return;
 		}
-		type = ChestShopType.fromString(HyperConomy.mc.removeColor(sign.getLine(1)).trim());
+		type = ChestShopType.fromString(HC.mc.removeColor(sign.getLine(1)).trim());
 		if (type == null) return;
-		inventory = HyperConomy.mc.getChestInventory(location);
+		inventory = HC.mc.getChestInventory(location);
 		if (inventory == null) return;
-		LanguageFile L = HyperConomy.hc.getLanguageFile();
-		CommonFunctions cf = HyperConomy.hc.getCommonFunctions();
-		String line1 = HyperConomy.mc.removeColor(sign.getLine(0)).trim();
+		LanguageFile L = HC.hc.getLanguageFile();
+		String line1 = HC.mc.removeColor(sign.getLine(0)).trim();
 		hasStaticPrice = false;
 		if (line1.startsWith(L.gC(false))) {
 			try {
 				String price = line1.substring(1, line1.length());
-				staticPrice = cf.twoDecimals(Double.parseDouble(price));
+				staticPrice = CommonFunctions.twoDecimals(Double.parseDouble(price));
 				hasStaticPrice = true;
 			} catch (Exception e) {}
 		} else if (line1.endsWith(L.gC(false))) {
 			try {
 				String price = line1.substring(0, line1.length() - 1);
-				staticPrice = cf.twoDecimals(Double.parseDouble(price));
+				staticPrice = CommonFunctions.twoDecimals(Double.parseDouble(price));
 				hasStaticPrice = true;
 			} catch (Exception e) {}
 		}
 		isValidChestShop = true;
 	}
 	
-	public SimpleLocation getChestLocation() {
+	public HLocation getChestLocation() {
 		return location;
 	}
 	public HSign getSign() {
@@ -83,16 +82,16 @@ public class ChestShop {
 	public HyperAccount getOwner() {
 		return owner;
 	}
-	public SimpleLocation getSignLocation() {
+	public HLocation getSignLocation() {
 		return signLocation;
 	}
-	public SerializableInventory getInventory() {
+	public HInventory getInventory() {
 		return inventory;
 	}
 	public ChestShopType getType() {
 		return type;
 	}
-	public SimpleLocation[] getProtectedLocations() {
+	public HLocation[] getProtectedLocations() {
 		//TODO
 		return null;
 	}
@@ -106,14 +105,14 @@ public class ChestShop {
 		return isValidChestShop;
 	}
 	public boolean isSignAttachedToValidBlock() {
-		return HyperConomy.mc.canHoldChestShopSign(attachedBlock.getLocation());
+		return HC.mc.canHoldChestShopSign(attachedBlock.getLocation());
 	}
 	public boolean isDoubleChest() {
-		if (!HyperConomy.mc.isChest(location)) return false;
+		if (!HC.mc.isChest(location)) return false;
 		HBlock cBlock = new HBlock(location);
 		HBlock[] surrounding = cBlock.getNorthSouthEastWestBlocks();
 		for (HBlock b:surrounding) {
-			if (HyperConomy.mc.isChest(b.getLocation())) return true;
+			if (HC.mc.isChest(b.getLocation())) return true;
 		}
 		return false;
 	}

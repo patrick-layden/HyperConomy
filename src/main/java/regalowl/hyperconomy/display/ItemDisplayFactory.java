@@ -8,33 +8,36 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 
+
+
+
 import regalowl.databukkit.event.EventHandler;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
 import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerDropItemEvent;
-import regalowl.hyperconomy.util.HBlock;
-import regalowl.hyperconomy.util.HItem;
-import regalowl.hyperconomy.util.SimpleLocation;
+import regalowl.hyperconomy.minecraft.HBlock;
+import regalowl.hyperconomy.minecraft.HItem;
+import regalowl.hyperconomy.minecraft.HLocation;
 
 public class ItemDisplayFactory {
 	
-	private HyperConomy hc; 
+	private HC hc; 
 	private long refreshthreadid;
 	private final long refreshInterval = 4800L;
 	//private final long refreshInterval = 100L;
-	private ConcurrentHashMap<SimpleLocation, ItemDisplay> displays = new ConcurrentHashMap<SimpleLocation, ItemDisplay>();
+	private ConcurrentHashMap<HLocation, ItemDisplay> displays = new ConcurrentHashMap<HLocation, ItemDisplay>();
 	private QueryResult dbData;
 
 
 	public ItemDisplayFactory() {
 		try {
-			hc = HyperConomy.hc;
+			hc = HC.hc;
 			if (hc.getConf().getBoolean("enable-feature.item-displays")) {
 				hc.getHyperEventHandler().registerListener(this);
 				loadDisplays();
@@ -53,7 +56,7 @@ public class ItemDisplayFactory {
 				public void run() {
 					SQLRead sr = hc.getSQLRead();
 					dbData = sr.select("SELECT * FROM hyperconomy_item_displays");
-					HyperConomy.mc.runTask(new Runnable() {
+					HC.mc.runTask(new Runnable() {
 						public void run() {
 							while (dbData.next()) {
 								String w = dbData.getString("WORLD");
@@ -61,9 +64,9 @@ public class ItemDisplayFactory {
 								double y = dbData.getDouble("Y");
 								double z = dbData.getDouble("Z");
 								String name = dbData.getString("HYPEROBJECT");
-								SimpleLocation l = new SimpleLocation(w,x,y,z);
+								HLocation l = new HLocation(w,x,y,z);
 								ItemDisplay display = new ItemDisplay(l, name, false);
-								SimpleLocation key = new SimpleLocation(w, x, y, z);
+								HLocation key = new HLocation(w, x, y, z);
 								displays.put(key, display);
 							}
 							dbData.close();
@@ -96,7 +99,7 @@ public class ItemDisplayFactory {
 	
 
 	public void startRefreshThread() {
-		refreshthreadid = HyperConomy.mc.runRepeatingTask(new Runnable() {
+		refreshthreadid = HC.mc.runRepeatingTask(new Runnable() {
 			public void run() {
 				for (ItemDisplay display:displays.values()) {
 					display.refresh();
@@ -106,11 +109,11 @@ public class ItemDisplayFactory {
 	}
 	
 	public void cancelRefreshThread() {
-		HyperConomy.mc.cancelTask(refreshthreadid);
+		HC.mc.cancelTask(refreshthreadid);
 	}
 	
 
-	public boolean removeDisplay(SimpleLocation sl) {
+	public boolean removeDisplay(HLocation sl) {
 		if (displays.containsKey(sl)) {
 			ItemDisplay display = displays.get(sl);
 			display.delete();
@@ -121,7 +124,7 @@ public class ItemDisplayFactory {
 	}
 	
 	public boolean removeDisplay(double x, double z, String w) {
-		for (SimpleLocation key:displays.keySet()) {
+		for (HLocation key:displays.keySet()) {
 			if (key.getX() == x && key.getZ() == z && key.getWorld().equalsIgnoreCase(w)) {
 				ItemDisplay display = displays.get(key);
 				display.delete();
@@ -140,7 +143,7 @@ public class ItemDisplayFactory {
 				return false;
 			}
 		}
-		SimpleLocation l = new SimpleLocation(w, x, y, z);
+		HLocation l = new HLocation(w, x, y, z);
 		ItemDisplay display = new ItemDisplay(l, name, true);
 		displays.put(l, display);
 		if (l.isLoaded()) {
@@ -155,7 +158,7 @@ public class ItemDisplayFactory {
 	@EventHandler
 	public void onPlayerDropItemEvent(HPlayerDropItemEvent event) {
 		HItem i = event.getItem();
-		for (ItemDisplay display : HyperConomy.hc.getItemDisplay().getDisplays()) {
+		for (ItemDisplay display : HC.hc.getItemDisplay().getDisplays()) {
 			if (!display.isActive()) continue;
 			if (display.blockItemDrop(i)) {
 				event.cancel();

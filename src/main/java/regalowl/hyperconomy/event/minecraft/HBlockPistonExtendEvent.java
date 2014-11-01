@@ -3,7 +3,7 @@ package regalowl.hyperconomy.event.minecraft;
 import java.util.ArrayList;
 
 import regalowl.databukkit.event.Event;
-import regalowl.hyperconomy.util.HBlock;
+import regalowl.hyperconomy.minecraft.HBlock;
 
 public class HBlockPistonExtendEvent extends Event {
 

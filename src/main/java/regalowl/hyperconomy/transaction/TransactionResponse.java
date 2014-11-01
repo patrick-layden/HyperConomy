@@ -2,9 +2,10 @@ package regalowl.hyperconomy.transaction;
 
 import java.util.ArrayList;
 
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.util.LanguageFile;
 
 public class TransactionResponse {
@@ -14,9 +15,9 @@ public class TransactionResponse {
 	
 	private ArrayList<String> messages = new ArrayList<String>();
 	private ArrayList<Double> prices = new ArrayList<Double>();
-	private ArrayList<HyperObject> failedObjects = new ArrayList<HyperObject>();
+	private ArrayList<TradeObject> failedObjects = new ArrayList<TradeObject>();
 	//private ArrayList<ItemStack> failedItemStacks = new ArrayList<ItemStack>();
-	private ArrayList<HyperObject> successfulObjects = new ArrayList<HyperObject>();
+	private ArrayList<TradeObject> successfulObjects = new ArrayList<TradeObject>();
 	
 	public TransactionResponse(HyperPlayer hp) {
 		this.success = false;
@@ -30,12 +31,12 @@ public class TransactionResponse {
 		failedItemStacks.add(stack);
 	}
 	*/
-	public void addFailed(String message, HyperObject ho) {
+	public void addFailed(String message, TradeObject ho) {
 		messages.add(message);
 		failedObjects.add(ho);
 	}
 	
-	public void addSuccess(String message, Double money, HyperObject ho) {
+	public void addSuccess(String message, Double money, TradeObject ho) {
 		messages.add(message);
 		this.prices.add(money);
 		successfulObjects.add(ho);
@@ -47,7 +48,7 @@ public class TransactionResponse {
 	
 	
 	public void sendMessages() {
-		LanguageFile L = HyperConomy.hc.getLanguageFile();
+		LanguageFile L = HC.hc.getLanguageFile();
 		if (success) {
 			hp.sendMessage(L.get("LINE_BREAK"));
 		}
@@ -80,10 +81,10 @@ public class TransactionResponse {
 		for (double p:prices) {
 			total += p;
 		}
-		return HyperConomy.hc.gCF().twoDecimals(total);
+		return CommonFunctions.twoDecimals(total);
 	}
 	
-	public ArrayList<HyperObject> getFailedObjects() {
+	public ArrayList<TradeObject> getFailedObjects() {
 		return failedObjects;
 	}
 	
@@ -91,7 +92,7 @@ public class TransactionResponse {
 	//	return failedItemStacks;
 	//}
 	
-	public ArrayList<HyperObject> getSuccessfulObjects() {
+	public ArrayList<TradeObject> getSuccessfulObjects() {
 		return successfulObjects;
 	}
 	

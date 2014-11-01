@@ -3,9 +3,12 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 
 
+
+
+import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.hyperobject.HyperObjectType;
+import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.hyperconomy.tradeobject.TradeObjectType;
 import regalowl.hyperconomy.util.Backup;
 
 public class Scalebypercent extends BaseCommand implements HyperCommand {
@@ -43,20 +46,20 @@ public class Scalebypercent extends BaseCommand implements HyperCommand {
 						}
 						for (int c = 0; c < names.size(); c++) {
 							String cname = names.get(c);
-							HyperObject ho = he.getHyperObject(cname);
-							if (!(ho.getType() == HyperObjectType.ITEM) && onlyItems) {continue;}
-							if (!(ho.getType() == HyperObjectType.ENCHANTMENT) && onlyEnchants) {continue;}
+							TradeObject ho = he.getHyperObject(cname);
+							if (!(ho.getType() == TradeObjectType.ITEM) && onlyItems) {continue;}
+							if (!(ho.getType() == TradeObjectType.ENCHANTMENT) && onlyEnchants) {continue;}
 							if (!ho.isCompositeObject()) {
 								if (type.equalsIgnoreCase("value")) {
-									ho.setValue(cf.twoDecimals(ho.getValue() * percent));
+									ho.setValue(CommonFunctions.twoDecimals(ho.getValue() * percent));
 								} else if (type.equalsIgnoreCase("staticprice")) {
-									ho.setStaticprice(cf.twoDecimals(ho.getStaticprice() * percent));
+									ho.setStaticprice(CommonFunctions.twoDecimals(ho.getStaticprice() * percent));
 								} else if (type.equalsIgnoreCase("stock")) {
 									ho.setStock(Math.floor(ho.getStock() * percent + .5));
 								} else if (type.equalsIgnoreCase("median")) {
-									ho.setMedian(cf.twoDecimals(ho.getMedian() * percent));
+									ho.setMedian(CommonFunctions.twoDecimals(ho.getMedian() * percent));
 								} else if (type.equalsIgnoreCase("startprice")) {
-									ho.setStartprice(cf.twoDecimals(ho.getStartprice() * percent));
+									ho.setStartprice(CommonFunctions.twoDecimals(ho.getStartprice() * percent));
 								}
 							}
 						}

@@ -2,9 +2,9 @@ package regalowl.hyperconomy.command;
 
 
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.hyperobject.HyperObjectType;
 import regalowl.hyperconomy.shop.Shop;
+import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.hyperconomy.tradeobject.TradeObjectType;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
@@ -23,15 +23,15 @@ public class Buy extends BaseCommand implements HyperCommand {
 		try {
 			Shop s = hc.getHyperShopManager().getShop(hp);
 			String name = he.fixName(args[0]);
-			HyperObject ho = he.getHyperObject(name, hc.getHyperShopManager().getShop(hp));
+			TradeObject ho = he.getHyperObject(name, hc.getHyperShopManager().getShop(hp));
 			int amount = 1;
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("max")) {
-					if (ho.getType() == HyperObjectType.ITEM) {
+					if (ho.getType() == TradeObjectType.ITEM) {
 						amount = ho.getAvailableSpace(hp.getInventory());
-					} else if (ho.getType() == HyperObjectType.EXPERIENCE) {
+					} else if (ho.getType() == TradeObjectType.EXPERIENCE) {
 						amount = (int) ho.getStock();
-					} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+					} else if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 						amount = 1;
 					}
 				} else {

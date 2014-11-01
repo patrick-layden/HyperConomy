@@ -7,12 +7,14 @@ import java.util.HashMap;
 
 
 
+
+
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.sql.QueryResult;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.util.Backup;
 
 
@@ -25,7 +27,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 	
 	public Hcdata() {
 		super(false);
-		tables = hc.getDataManager().getTablesList();
+		tables = HC.hc.getDataManager().getTablesList();
 	}
 
 
@@ -128,7 +130,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				if (dm.economyExists(economy)) {
 					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 					ArrayList<String> added = dm.getEconomy(economy).loadNewItems();
-					data.addResponse(HyperConomy.mc.applyColor("&6" + added.toString() + " " + L.get("LOADED_INTO_ECONOMY")));
+					data.addResponse(HC.mc.applyColor("&6" + added.toString() + " " + L.get("LOADED_INTO_ECONOMY")));
 				} else {
 					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
 				}
@@ -151,7 +153,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					QueryResult qr = hc.getFileTools().readCSV(defaultObjectsPath);
 					while (qr.next()) {
 						String objectName = qr.getString("NAME");
-						HyperObject ho = dm.getEconomy(economy).getHyperObject(objectName);
+						TradeObject ho = dm.getEconomy(economy).getHyperObject(objectName);
 						ho.setStartprice(qr.getDouble("STARTPRICE"));
 						ho.setStaticprice(qr.getDouble("STATICPRICE"));
 						ho.setValue(qr.getDouble("VALUE"));
@@ -184,7 +186,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					return data;
 				}
 				if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
-				for (HyperEconomy he : hc.getDataManager().getEconomies()) {
+				for (HyperEconomy he : HC.hc.getDataManager().getEconomies()) {
 					he.updateNamesFromYml();
 				}
 				data.addResponse(L.get("NAME_REPAIR_ATTEMPTED"));
@@ -202,12 +204,12 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
 					return data;
 				}
-				HyperObject ho = hp.getHyperEconomy().getHyperObject(args[1]);
+				TradeObject ho = hp.getHyperEconomy().getHyperObject(args[1]);
 				if (ho == null) {
 					data.addResponse(L.get("OBJECT_NOT_FOUND"));
 					return data;
 				}
-				SerializableItemStack stack = hp.getItemInHand();
+				HItemStack stack = hp.getItemInHand();
 				if (stack.isBlank()) {
 					data.addResponse(L.get("AIR_CANT_BE_TRADED"));
 					return data;

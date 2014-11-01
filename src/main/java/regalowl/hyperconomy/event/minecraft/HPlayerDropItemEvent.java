@@ -2,7 +2,7 @@ package regalowl.hyperconomy.event.minecraft;
 
 import regalowl.databukkit.event.Event;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.util.HItem;
+import regalowl.hyperconomy.minecraft.HItem;
 
 public class HPlayerDropItemEvent extends Event {
 

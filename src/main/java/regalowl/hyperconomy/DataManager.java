@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 import regalowl.databukkit.file.FileConfiguration;
 import regalowl.databukkit.file.FileTools;
 import regalowl.databukkit.sql.QueryResult;
@@ -19,12 +18,12 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.EconomyLoadEvent;
 import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
-import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.util.DatabaseUpdater;
 
 public class DataManager {
 
-	private HyperConomy hc;
+	private HC hc;
 	private SQLRead sr;
 	private SyncSQLWrite ssw;
 	private boolean loadActive;
@@ -48,7 +47,7 @@ public class DataManager {
 	
 	
 	public DataManager() {
-		hc = HyperConomy.hc;
+		hc = HC.hc;
 		hpm = new HyperPlayerManager(this);
 		hbm = new HyperBankManager(this);
 		hsm = new HyperShopManager();
@@ -80,7 +79,7 @@ public class DataManager {
 	public void load() {
 		if (loadActive) {return;}
 		loadActive = true;
-		hc = HyperConomy.hc;
+		hc = HC.hc;
 		sr = hc.getSQLRead();
 		ssw = hc.getDataBukkit().getSQLManager().getSyncSQLWrite();
 		new Thread(new Runnable() {
@@ -205,11 +204,11 @@ public class DataManager {
 
 
 	
-	public ArrayList<HyperObject> getHyperObjects() {
-		ArrayList<HyperObject> hyperObjects = new ArrayList<HyperObject>();
+	public ArrayList<TradeObject> getHyperObjects() {
+		ArrayList<TradeObject> hyperObjects = new ArrayList<TradeObject>();
 		for (Map.Entry<String,HyperEconomy> entry : economies.entrySet()) {
 			HyperEconomy he = entry.getValue();
-			for (HyperObject ho:he.getHyperObjects()) {
+			for (TradeObject ho:he.getHyperObjects()) {
 				hyperObjects.add(ho);
 			}
 		}
@@ -231,7 +230,7 @@ public class DataManager {
 		values.put("NAME", name);
 		values.put("HYPERACCOUNT", defaultServerShopAccount);
 		sw.performInsert("hyperconomy_economies", values);
-		for (HyperObject ho:template.getHyperObjects()) {
+		for (TradeObject ho:template.getHyperObjects()) {
 			values = new HashMap<String,String>();
 			values.put("NAME", ho.getName());
 			values.put("DISPLAY_NAME", ho.getDisplayName());

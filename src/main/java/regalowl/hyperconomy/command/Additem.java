@@ -7,14 +7,16 @@ import java.util.HashMap;
 
 
 
+
+
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.hyperobject.ComponentItem;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.serializable.SerializableInventory;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.inventory.HInventory;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.tradeobject.ComponentTradeItem;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class Additem extends BaseCommand implements HyperCommand {
 	
@@ -50,13 +52,13 @@ public class Additem extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			HyperEconomy econ = super.getEconomy();
-			HyperObject ho =  econ.getHyperObject(hp.getItemInHand());
+			TradeObject ho =  econ.getHyperObject(hp.getItemInHand());
 			if (ho != null) {
 				data.addResponse(L.get("ALREADY_IN_DATABASE"));
 				return data;
 			}
-			SerializableItemStack stack = hp.getItemInHand();
-			HyperObject hobj = generateNewHyperObject(stack, econ.getName(), displayName, value);
+			HItemStack stack = hp.getItemInHand();
+			TradeObject hobj = generateNewHyperObject(stack, econ.getName(), displayName, value);
 			addItem(hobj, econ.getName());
 			data.addResponse(L.get("ITEM_ADDED"));
 			return data;
@@ -69,9 +71,9 @@ public class Additem extends BaseCommand implements HyperCommand {
 
 	
 	
-	public boolean addItem(HyperObject hobj, String economy) {
-		HyperConomy hc = HyperConomy.hc;
-		DataManager em = hc.getDataManager();
+	public boolean addItem(TradeObject hobj, String economy) {
+		HC hc = HC.hc;
+		DataManager em = HC.hc.getDataManager();
 		if (hobj == null || economy == null) {return false;}
 		HyperEconomy he = em.getEconomy(economy);
 		if (he == null) {return false;}
@@ -102,18 +104,17 @@ public class Additem extends BaseCommand implements HyperCommand {
 		return true;
 	}
 	
-	public HyperObject generateNewHyperObject(SerializableItemStack stack, String economy) {
+	public TradeObject generateNewHyperObject(HItemStack stack, String economy) {
 		return generateNewHyperObject(stack, economy, "", 0);
 	}
 	
-	public HyperObject generateNewHyperObject(SerializableItemStack sis, String economy, String displayName, double value) {
+	public TradeObject generateNewHyperObject(HItemStack sis, String economy, String displayName, double value) {
 		if (sis == null || economy == null || displayName == null) {return null;}
-		HyperConomy hc = HyperConomy.hc;
-		DataManager em = hc.getDataManager();
+		DataManager em = HC.hc.getDataManager();
 		if (sis.isBlank()) {return null;}
 		HyperEconomy econ = em.getEconomy(economy);
 		if (econ == null) {return null;}
-		HyperObject ho =  econ.getHyperObject(sis);
+		TradeObject ho =  econ.getHyperObject(sis);
 		if (ho != null) {return null;}
 		String name = sis.getMaterial() + "_" + sis.getDurability();
 		if (econ.objectTest(name) || name.equalsIgnoreCase("")) {
@@ -147,14 +148,14 @@ public class Additem extends BaseCommand implements HyperCommand {
 		} else {
 			median = 25000;
 		}
-		HyperObject hobj = new ComponentItem(name, economy, displayName, aliases, "item", value, "false", value*2,
+		TradeObject hobj = new ComponentTradeItem(name, economy, displayName, aliases, "item", value, "false", value*2,
 				0, median, "true", value*2, 1000000000,0, 1000000000, sis.serialize());
 		return hobj;
 	}
 	
 	
 	
-	private String generateName(SerializableItemStack stack) {
+	private String generateName(HItemStack stack) {
 		String name = generateGenericName();
 		usedNames.add(name);
 		return name;
@@ -171,7 +172,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 	}
 	
 	private boolean nameInUse(String name) {
-		if (HyperConomy.hc.getDataManager().getDefaultEconomy().objectTest(name)) {
+		if (HC.hc.getDataManager().getDefaultEconomy().objectTest(name)) {
 			return true;
 		}
 		for (String cName:usedNames) {
@@ -184,11 +185,11 @@ public class Additem extends BaseCommand implements HyperCommand {
 	}
 	
 	private void addAll(HyperPlayer p) {
-		SerializableInventory inventory = p.getInventory();
+		HInventory inventory = p.getInventory();
 		String economy = hp.getEconomy();
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
-			SerializableItemStack stack = inventory.getItem(slot);
-			HyperObject hobj = generateNewHyperObject(stack, economy);
+			HItemStack stack = inventory.getItem(slot);
+			TradeObject hobj = generateNewHyperObject(stack, economy);
 			addItem(hobj, economy);
 		}
 	}

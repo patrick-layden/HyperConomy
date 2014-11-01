@@ -3,14 +3,14 @@ package regalowl.hyperconomy.util;
 
 import regalowl.databukkit.file.FileConfiguration;
 import regalowl.databukkit.file.YamlHandler;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 
 
 public class UpdateYML {
 	
 	
 	public UpdateYML() {
-		HyperConomy hc = HyperConomy.hc;
+		HC hc = HC.hc;
 		YamlHandler yh = hc.getYamlHandler();
 		FileConfiguration cfg = yh.gFC("config");
 		

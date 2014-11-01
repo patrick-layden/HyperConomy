@@ -1,11 +1,11 @@
 package regalowl.hyperconomy.command;
 
 
+import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperEconomy;
-
-import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.hyperobject.HyperObjectType;
+import regalowl.hyperconomy.tradeobject.EnchantmentClass;
+import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.hyperconomy.tradeobject.TradeObjectType;
 
 
 public class Value extends BaseCommand implements HyperCommand {
@@ -25,20 +25,20 @@ public class Value extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			String name = he.fixName(args[0]);
-			HyperObject ho = he.getHyperObject(name, dm.getHyperShopManager().getShop(hp));
+			TradeObject ho = he.getHyperObject(name, dm.getHyperShopManager().getShop(hp));
 			if (ho == null) {
 				data.addResponse(L.get("INVALID_ITEM_NAME"));
 				return data;
 			}
 			int amount = 1;
-			if (ho.getType() != HyperObjectType.ENCHANTMENT && args.length > 1) {
+			if (ho.getType() != TradeObjectType.ENCHANTMENT && args.length > 1) {
 				amount = Integer.parseInt(args[1]);
 				if (amount > 10000) {
 					amount = 10000;
 				}
 			}
 			EnchantmentClass eClass = EnchantmentClass.DIAMOND;
-			if (ho.getType() == HyperObjectType.ENCHANTMENT && args.length > 1) {
+			if (ho.getType() == TradeObjectType.ENCHANTMENT && args.length > 1) {
 				eClass = EnchantmentClass.fromString(args[1]);
 				if (eClass == EnchantmentClass.NONE) {
 					eClass = EnchantmentClass.DIAMOND;
@@ -47,30 +47,30 @@ public class Value extends BaseCommand implements HyperCommand {
 			double val = 0;
 			double cost = 0;
 			if (hp != null) {
-				if (ho.getType() == HyperObjectType.ITEM) {
+				if (ho.getType() == TradeObjectType.ITEM) {
 					val = ho.getSellPriceWithTax(amount, hp);
 					cost = ho.getBuyPriceWithTax(amount);
-				} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+				} else if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 					val = ho.getSellPrice(eClass, hp);
 					val -= hp.getSalesTax(val);
 					cost = ho.getBuyPrice(eClass);
 					cost += ho.getPurchaseTax(cost);
-				} else if (ho.getType() == HyperObjectType.EXPERIENCE) {
+				} else if (ho.getType() == TradeObjectType.EXPERIENCE) {
 					val = ho.getSellPrice(amount);
 					val -= hp.getSalesTax(val);
 					cost = ho.getBuyPriceWithTax(amount);
 				}
 			} else {
-				if (ho.getType() == HyperObjectType.ITEM) {
+				if (ho.getType() == TradeObjectType.ITEM) {
 					val = ho.getSellPrice(amount);
 					val -= ho.getSalesTaxEstimate(val);
 					cost = ho.getBuyPriceWithTax(amount);
-				} else if (ho.getType() == HyperObjectType.ENCHANTMENT) {
+				} else if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 					val = ho.getSellPrice(eClass);
 					val -= ho.getSalesTaxEstimate(val);
 					cost = ho.getBuyPrice(eClass);
 					cost += ho.getPurchaseTax(cost);
-				} else if (ho.getType() == HyperObjectType.EXPERIENCE) {
+				} else if (ho.getType() == TradeObjectType.EXPERIENCE) {
 					val = ho.getSellPrice(amount);
 					val -= ho.getSalesTaxEstimate(val);
 					cost = ho.getBuyPriceWithTax(amount);
@@ -79,9 +79,9 @@ public class Value extends BaseCommand implements HyperCommand {
 
 
 			data.addResponse(L.get("LINE_BREAK"));
-			data.addResponse(L.f(L.get("CAN_BE_SOLD_FOR"), amount, cf.twoDecimals(val), ho.getDisplayName()));
-			data.addResponse(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cf.twoDecimals(cost), ho.getDisplayName()));
-			data.addResponse(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), cf.twoDecimals(ho.getStock()), ho.getDisplayName()));
+			data.addResponse(L.f(L.get("CAN_BE_SOLD_FOR"), amount, CommonFunctions.twoDecimals(val), ho.getDisplayName()));
+			data.addResponse(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, CommonFunctions.twoDecimals(cost), ho.getDisplayName()));
+			data.addResponse(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), CommonFunctions.twoDecimals(ho.getStock()), ho.getDisplayName()));
 			data.addResponse(L.get("LINE_BREAK"));
 
 		} catch (Exception e) {

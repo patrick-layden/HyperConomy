@@ -7,15 +7,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.event.minecraft.HyperPlayerJoinEvent;
 import regalowl.hyperconomy.event.minecraft.HyperPlayerQuitEvent;
-import regalowl.hyperconomy.util.SimpleLocation;
+import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.databukkit.event.EventHandler;
 import regalowl.databukkit.file.FileConfiguration;
 
 public class HyperPlayerManager {
 
-	private HyperConomy hc;
+	private HC hc;
 	private DataManager dm;
 	private boolean playersLoaded;
 	private String defaultServerShopAccount;
@@ -25,7 +26,7 @@ public class HyperPlayerManager {
 	private ConcurrentHashMap<String, String> uuidIndex = new ConcurrentHashMap<String, String>();
 	
 	public HyperPlayerManager(DataManager dm) {
-		hc = HyperConomy.hc;
+		hc = HC.hc;
 		this.dm = dm;
 		playersLoaded = false;
 		config = hc.getConf();
@@ -39,9 +40,9 @@ public class HyperPlayerManager {
 		uuidIndex.clear();
 		QueryResult playerData = hc.getSQLRead().select("SELECT * FROM hyperconomy_players");
 		while (playerData.next()) {
+			HLocation sl = new HLocation(playerData.getString("WORLD"), playerData.getDouble("X"), playerData.getDouble("Y"), playerData.getDouble("Z"));
 			HyperPlayer hplayer = new HyperPlayer(playerData.getString("NAME"), playerData.getString("UUID"), playerData.getString("ECONOMY"), 
-					playerData.getDouble("BALANCE"), playerData.getDouble("X"), playerData.getDouble("Y"), playerData.getDouble("Z"), 
-					playerData.getString("WORLD"), playerData.getString("HASH"), playerData.getString("SALT"));
+					playerData.getDouble("BALANCE"), sl, playerData.getString("HASH"), playerData.getString("SALT"));
 			hyperPlayers.put(hplayer.getName().toLowerCase(), hplayer);
 			if (hplayer.getUUIDString() != null && hplayer.getName() != null) {
 				uuidIndex.put(hplayer.getUUIDString(), hplayer.getName().toLowerCase());
@@ -54,7 +55,7 @@ public class HyperPlayerManager {
 			defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
 			defaultAccount.setUUID(UUID.randomUUID().toString());
 		}
-		HyperConomy.mc.runTask(new Runnable() {
+		HC.mc.runTask(new Runnable() {
 			public void run() {
 				addOnlinePlayers();
 			}
@@ -75,7 +76,7 @@ public class HyperPlayerManager {
 	}
 	
 	public ArrayList<HyperPlayer> getOnlinePlayers() {
-		return HyperConomy.mc.getOnlinePlayers();
+		return HC.mc.getOnlinePlayers();
 	}
 	
 	
@@ -88,7 +89,7 @@ public class HyperPlayerManager {
 			}
 			String name = ev.getHyperPlayer().getName();
 			if (name.equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
-				HyperConomy.mc.kickPlayer(ev.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+				HC.mc.kickPlayer(ev.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 			}
 			if (!playerAccountExists(name)) {
 				addPlayer(name);
@@ -104,15 +105,12 @@ public class HyperPlayerManager {
 	public void onPlayerQuit(HyperPlayerQuitEvent event) {
 		try {
 			if (hc.getHyperLock().loadLock()) {return;}
-			SimpleLocation l = event.getHyperPlayer().getLocation();
+			HLocation l = event.getHyperPlayer().getLocation();
 			String name = event.getHyperPlayer().getName();
 			if (hyperPlayers.containsKey(name.toLowerCase())) {
 				HyperPlayer hp = hyperPlayers.get(name.toLowerCase());
 				if (hp == null) {return;}
-				hp.setX(l.getX());
-				hp.setY(l.getY());
-				hp.setZ(l.getZ());
-				hp.setWorld(l.getWorld());
+				hp.setLocation(l);
 			}
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
@@ -135,8 +133,8 @@ public class HyperPlayerManager {
 	@SuppressWarnings("deprecation")
 	public boolean playerAccountExists(String name) {
 		if (name == null || name == "") {return false;}
-		if (HyperConomy.mc.useExternalEconomy()) {
-			return HyperConomy.mc.getEconomy().hasAccount(name);
+		if (HC.mc.useExternalEconomy()) {
+			return HC.mc.getEconomy().hasAccount(name);
 		} else {
 			return hyperPlayers.containsKey(name.toLowerCase());
 		}
@@ -145,8 +143,8 @@ public class HyperPlayerManager {
 	@SuppressWarnings("deprecation")
 	public boolean playerAccountExists(UUID uuid) {
 		if (uuid == null) {return false;}
-		if (HyperConomy.mc.useExternalEconomy()) {
-			return HyperConomy.mc.getEconomy().hasAccount(getHyperPlayer(uuid).getName());
+		if (HC.mc.useExternalEconomy()) {
+			return HC.mc.getEconomy().hasAccount(getHyperPlayer(uuid).getName());
 		} else {
 			return uuidIndex.containsKey(uuid.toString());
 		}
@@ -202,7 +200,7 @@ public class HyperPlayerManager {
 			String pName = uuidIndex.get(uuid.toString());
 			return hyperPlayers.get(pName);
 		} else {
-			MineCraftConnector mc = HyperConomy.mc;
+			MineCraftConnector mc = HC.mc;
 			if (!mc.playerExists(uuid)) return null;
 			return mc.getPlayer(uuid);
 		}

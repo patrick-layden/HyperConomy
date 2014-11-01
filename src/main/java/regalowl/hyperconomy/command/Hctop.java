@@ -2,7 +2,7 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 
 public class Hctop extends BaseCommand implements HyperCommand {
@@ -15,7 +15,7 @@ public class Hctop extends BaseCommand implements HyperCommand {
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		try {
-			if (HyperConomy.mc.useExternalEconomy()) {
+			if (HC.mc.useExternalEconomy()) {
 				data.addResponse(L.get("ONLY_AVAILABLE_INTERNAL"));
 				return data;
 			}

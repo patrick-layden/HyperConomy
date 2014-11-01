@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>regalowl.databukkit</groupId>
 			<artifactId>databukkit</artifactId>
-			<version>0.1.021-SNAPSHOT</version>
+			<version>0.1.022-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>

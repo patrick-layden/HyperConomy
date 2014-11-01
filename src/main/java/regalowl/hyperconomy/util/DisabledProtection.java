@@ -2,7 +2,7 @@ package regalowl.hyperconomy.util;
 
 
 import regalowl.databukkit.event.EventHandler;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.event.minecraft.ChestShopClickEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
@@ -10,19 +10,20 @@ import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
 import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
 import regalowl.hyperconomy.event.minecraft.HyperPlayerInteractEvent;
+import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.shop.ChestShop;
 
 public class DisabledProtection {
 
 
 	public DisabledProtection() {
-		HyperConomy.hc.getHyperEventHandler().registerListener(this);
+		HC.hc.getHyperEventHandler().registerListener(this);
 	}
 
 
 	@EventHandler
 	public void onPlayerInteractEvent(HyperPlayerInteractEvent ievent) {
-		if (HyperConomy.mc.isTransactionSign(ievent.getBlock().getLocation())) {
+		if (HC.mc.isTransactionSign(ievent.getBlock().getLocation())) {
 			ievent.cancel();
 		}
 	}

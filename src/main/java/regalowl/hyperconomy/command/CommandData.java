@@ -2,7 +2,7 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 
 public class CommandData {
@@ -42,7 +42,7 @@ public class CommandData {
 	 
 	public HyperPlayer getHyperPlayer() {
 		if (isPlayer) {
-			return HyperConomy.hc.getHyperPlayerManager().getHyperPlayer(senderName);
+			return HC.hc.getHyperPlayerManager().getHyperPlayer(senderName);
 		}
 		return null;
 	}

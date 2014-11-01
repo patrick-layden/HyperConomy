@@ -11,20 +11,21 @@ import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
 import regalowl.databukkit.event.EventHandler;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
-import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.Shop;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 
 public class FrameShop {
 
-	private HyperConomy hc;
+	private HC hc;
 	private short mapId;
-	private HyperObject ho;
+	private TradeObject ho;
 	private int tradeAmount;
 	private FrameShopRenderer fsr;
 
@@ -35,8 +36,8 @@ public class FrameShop {
 	private Shop s;
 
 	@SuppressWarnings("deprecation")
-	public FrameShop(Location l, HyperObject ho, Shop s, int amount) {
-		hc = HyperConomy.hc;
+	public FrameShop(HLocation l, TradeObject ho, Shop s, int amount) {
+		hc = HC.hc;
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
 			delete();
@@ -45,11 +46,11 @@ public class FrameShop {
 		x = l.getBlockX();
 		y = l.getBlockY();
 		z = l.getBlockZ();
-		world = l.getWorld().getName();
+		world = l.getWorld();
 		this.ho = ho;
 		this.tradeAmount = amount;
 		this.s = s;
-		MapView mapView = Bukkit.getServer().createMap(l.getWorld());
+		MapView mapView = Bukkit.getServer().createMap(BukkitCommon.getLocation(l).getWorld());
 		mapId = mapView.getId();
 		String shop = "";
 		if (s != null) {
@@ -59,8 +60,8 @@ public class FrameShop {
 		render();
 	}
 
-	public FrameShop(short mapId, Location l, HyperObject ho, Shop s, int amount) {
-		hc = HyperConomy.hc;
+	public FrameShop(short mapId, Location l, TradeObject ho, Shop s, int amount) {
+		hc = HC.hc;
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
 			delete();

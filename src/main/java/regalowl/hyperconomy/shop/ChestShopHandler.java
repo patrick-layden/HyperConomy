@@ -6,7 +6,7 @@ package regalowl.hyperconomy.shop;
 import regalowl.databukkit.CommonFunctions;
 import regalowl.databukkit.event.EventHandler;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -17,32 +17,30 @@ import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
 import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
 import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
-import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.hyperobject.TempItem;
-import regalowl.hyperconomy.serializable.SerializableEnchantment;
-import regalowl.hyperconomy.serializable.SerializableInventory;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.inventory.HEnchantment;
+import regalowl.hyperconomy.inventory.HInventory;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.minecraft.HBlock;
+import regalowl.hyperconomy.minecraft.HLocation;
+import regalowl.hyperconomy.minecraft.HSign;
+import regalowl.hyperconomy.tradeobject.EnchantmentClass;
+import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.hyperconomy.tradeobject.TempTradeItem;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
-import regalowl.hyperconomy.util.HBlock;
-import regalowl.hyperconomy.util.HSign;
 import regalowl.hyperconomy.util.LanguageFile;
-import regalowl.hyperconomy.util.SimpleLocation;
 
 public class ChestShopHandler {
 
-	private HyperConomy hc;
-	private CommonFunctions cf;
+	private HC hc;
 	private LanguageFile L;
 	private DataManager em;
 
 
 	public ChestShopHandler() {
-		hc = HyperConomy.hc;
-		em = hc.getDataManager();
-		cf = hc.gCF();
+		hc = HC.hc;
+		em = HC.hc.getDataManager();
 		L = hc.getLanguageFile();
 		if (hc.getConf().getBoolean("enable-feature.chest-shops")) hc.getHyperEventHandler().registerListener(this);
 	}
@@ -50,15 +48,14 @@ public class ChestShopHandler {
 
 	@EventHandler
 	public void onBlockBreakEvent(HBlockBreakEvent bbevent) {
-		if (HyperConomy.mc.isChestShop(bbevent.getBlock().getLocation(), false)) {
+		if (HC.mc.isChestShopChest(bbevent.getBlock().getLocation())) {
 			bbevent.cancel();
-			return;
-		}
-		if (HyperConomy.mc.isChestShopSign(bbevent.getBlock().getLocation())) {
+		} else if (HC.mc.isChestShopSign(bbevent.getBlock().getLocation())) {
 			if (bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) {
 				return;
 			}
-		} else {
+			bbevent.cancel();
+		} else if (HC.mc.isChestShopSignBlock(bbevent.getBlock().getLocation())) {
 			bbevent.cancel();
 		}
 	}
@@ -106,13 +103,13 @@ public class ChestShopHandler {
 		try {
 			HSign sign = event.getSign();
 			HyperPlayer hp = event.getHyperPlayer();
-			String line2 = HyperConomy.mc.removeColor(sign.getLine(1)).trim();
+			String line2 = HC.mc.removeColor(sign.getLine(1)).trim();
 			if (!line2.equalsIgnoreCase("[Trade]") && !line2.equalsIgnoreCase("[Buy]") && !line2.equalsIgnoreCase("[Sell]")) {
 				return;
 			}
-			SimpleLocation cLoc = new SimpleLocation(sign.getLocation());
+			HLocation cLoc = new HLocation(sign.getLocation());
 			cLoc.setY(cLoc.getY() - 1);
-			if (!HyperConomy.mc.isChest(cLoc)) {
+			if (!HC.mc.isChest(cLoc)) {
 				sign.setLine(1, "");
 				return;
 			}
@@ -120,7 +117,7 @@ public class ChestShopHandler {
 				sign.setLine(1, "");
 				return;
 			}
-			ChestShop cShop = HyperConomy.mc.getChestShop(cLoc);
+			ChestShop cShop = HC.mc.getChestShop(cLoc);
 			if (cShop.isDoubleChest()) {
 				sign.setLine(0, "&4You can't");
 				sign.setLine(1, "&4use a");
@@ -136,7 +133,7 @@ public class ChestShopHandler {
 				return;
 			}
 			int count = 0;
-			SerializableInventory inv = cShop.getInventory();
+			HInventory inv = cShop.getInventory();
 			boolean empty = true;
 			while (count < inv.getSize()) {
 				if (!cShop.getInventory().getItem(count).isBlank()) empty = false;
@@ -222,7 +219,7 @@ public class ChestShopHandler {
 			boolean hasStaticPrice = cs.hasStaticPrice();
 			double staticPrice = 0.0;
 			if (hasStaticPrice) staticPrice = cs.getStaticPrice();
-			SerializableInventory shopInventory = cs.getInventory();
+			HInventory shopInventory = cs.getInventory();
 			int slot = event.getClickedSlot();
 			if (sign == null) return;
 			if (hc.getHyperLock().isLocked(clicker)) {
@@ -232,7 +229,7 @@ public class ChestShopHandler {
 			}
 			if (clicker.getName().equals(owner.getName())) return; // if clicker is owner of chest return
 
-			SerializableItemStack clickedItem = event.getClickedItem();
+			HItemStack clickedItem = event.getClickedItem();
 			if (clickedItem == null) {
 				event.cancel();
 				return;
@@ -247,12 +244,12 @@ public class ChestShopHandler {
 				HyperPlayer hPlayer = (HyperPlayer)owner;
 				chestOwnerEconomy = hPlayer.getHyperEconomy();
 			}
-			HyperObject hyperObject = null;
+			TradeObject hyperObject = null;
 			if (!clickedItem.hasEnchantments()) {
 				hyperObject = chestOwnerEconomy.getHyperObject(clickedItem);
 				if (hyperObject == null) {
 					if (hasStaticPrice) {
-						hyperObject = TempItem.generate(clickedItem);
+						hyperObject = TempTradeItem.generate(clickedItem);
 					} else {
 						event.cancel();
 						return;
@@ -273,7 +270,7 @@ public class ChestShopHandler {
 						pt.setAmount(camount);
 						pt.setGiveInventory(shopInventory);
 						if (hasStaticPrice) {
-							pt.setMoney(cf.twoDecimals((camount * staticPrice)));
+							pt.setMoney(CommonFunctions.twoDecimals((camount * staticPrice)));
 							pt.setSetPrice(true);
 						}
 						TransactionResponse response = clicker.processTransaction(pt);
@@ -304,7 +301,7 @@ public class ChestShopHandler {
 									pt.setAmount(camount);
 									pt.setReceiveInventory(shopInventory);
 									if (hasStaticPrice) {
-										pt.setMoney(cf.twoDecimals(cost));
+										pt.setMoney(CommonFunctions.twoDecimals(cost));
 										pt.setSetPrice(true);
 									}
 									TransactionResponse response = clicker.processTransaction(pt);
@@ -365,15 +362,15 @@ public class ChestShopHandler {
 					if (slot < 27) {
 						if (type == ChestShopType.BUY) {
 							double price = 0;
-							for (SerializableEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
+							for (HEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
 								String fnam = enchantment.getEnchantmentName() + enchantment.getLvl();
-								HyperObject ho = chestOwnerEconomy.getHyperObject(fnam);
+								TradeObject ho = chestOwnerEconomy.getHyperObject(fnam);
 								price += ho.getSellPrice(EnchantmentClass.fromString(clicker.getItemInHand().getMaterial()), clicker);
 								if (hasStaticPrice) {
 									price = staticPrice;
 								}
 							}
-							price = cf.twoDecimals(price);
+							price = CommonFunctions.twoDecimals(price);
 							if (clicker.getItemInHand().canEnchantItem()) {
 								clicker.sendMessage(L.get("LINE_BREAK"));
 								clicker.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, owner.getName()));
@@ -456,9 +453,9 @@ public class ChestShopHandler {
 				} else {
 					if (slot < 27) {
 						if (type == ChestShopType.BUY) {
-							for (SerializableEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
+							for (HEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
 								String fnam = enchantment.getEnchantmentName() + enchantment.getLvl();
-								HyperObject ho = chestOwnerEconomy.getHyperObject(fnam);
+								TradeObject ho = chestOwnerEconomy.getHyperObject(fnam);
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_ITEM);
 								pt.setHyperObject(ho);
 								pt.setTradePartner(owner);

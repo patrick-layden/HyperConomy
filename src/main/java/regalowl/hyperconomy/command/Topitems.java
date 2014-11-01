@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import regalowl.hyperconomy.HyperConomy;
+import regalowl.databukkit.CommonFunctions;
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.HyperObject;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 
 
 public class Topitems extends BaseCommand implements HyperCommand {
@@ -44,14 +45,14 @@ public class Topitems extends BaseCommand implements HyperCommand {
 			} else {
 				page = Integer.parseInt(args[0]);
 			}
-			SortedMap<Double, HyperObject> itemstocks = new TreeMap<Double, HyperObject>();
-			ArrayList<HyperObject> objects = null;
+			SortedMap<Double, TradeObject> itemstocks = new TreeMap<Double, TradeObject>();
+			ArrayList<TradeObject> objects = null;
 			if (s != null) {
 				objects = he.getHyperObjects(s);
 			} else {
 				objects = he.getHyperObjects();
 			}
-			for (HyperObject ho:objects) {
+			for (TradeObject ho:objects) {
 				boolean stocked = false;
 				if (ho.getStock() > 0.0) {stocked = true;}
 				boolean banned = false;
@@ -92,11 +93,11 @@ public class Topitems extends BaseCommand implements HyperCommand {
 				while (count < numberpage) {
 					double lk = itemstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
-						HyperObject ho = itemstocks.get(lk);
+						TradeObject ho = itemstocks.get(lk);
 						if (ho.isShopObject()) {
-							data.addResponse(L.applyColor("&f"+ho.getDisplayName() + ": &a" + hc.gCF().twoDecimals(ho.getStock()) + " &f(&e" + ho.getStatus().toString() + "&f)" ));
+							data.addResponse(L.applyColor("&f"+ho.getDisplayName() + ": &a" + CommonFunctions.twoDecimals(ho.getStock()) + " &f(&e" + ho.getStatus().toString() + "&f)" ));
 						} else {
-							data.addResponse(HyperConomy.mc.applyColor("&f" + ho.getDisplayName() + "&f: " + "&b" + hc.gCF().twoDecimals(ho.getStock())));
+							data.addResponse(HC.mc.applyColor("&f" + ho.getDisplayName() + "&f: " + "&b" + CommonFunctions.twoDecimals(ho.getStock())));
 						}
 					}
 					itemstocks.remove(lk);

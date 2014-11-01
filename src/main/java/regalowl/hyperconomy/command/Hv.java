@@ -3,11 +3,15 @@ package regalowl.hyperconomy.command;
 import java.util.Iterator;
 
 
+
+
+
+import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.serializable.SerializableEnchantment;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.inventory.HEnchantment;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.tradeobject.EnchantmentClass;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class Hv extends BaseCommand implements HyperCommand {
 	public Hv() {
@@ -22,7 +26,7 @@ public class Hv extends BaseCommand implements HyperCommand {
 			HyperEconomy he = getEconomy();
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
 			if ((requireShop && dm.getHyperShopManager().inAnyShop(hp)) || !requireShop || hp.hasPermission("hyperconomy.admin")) {
-				SerializableItemStack iinhand = hp.getItemInHand();
+				HItemStack iinhand = hp.getItemInHand();
 				if (args.length == 0) {
 					amount = 1;
 				} else {
@@ -32,7 +36,7 @@ public class Hv extends BaseCommand implements HyperCommand {
 					}
 				}
 				if (!iinhand.hasEnchantments()) {
-					HyperObject ho = he.getHyperObject(iinhand, dm.getHyperShopManager().getShop(hp));
+					TradeObject ho = he.getHyperObject(iinhand, dm.getHyperShopManager().getShop(hp));
 					if (ho == null) {
 						data.addResponse(L.get("OBJECT_NOT_AVAILABLE"));
 					} else {
@@ -46,39 +50,39 @@ public class Hv extends BaseCommand implements HyperCommand {
 							}
 						}
 						double salestax = hp.getSalesTax(val);
-						val = cf.twoDecimals(val - salestax);
+						val = CommonFunctions.twoDecimals(val - salestax);
 						data.addResponse(L.get("LINE_BREAK"));
 						data.addResponse(L.f(L.get("CAN_BE_SOLD_FOR"), amount, val, displayName));
 						double cost = ho.getBuyPrice(amount);
 						double taxpaid = ho.getPurchaseTax(cost);
-						cost = cf.twoDecimals(cost + taxpaid);
+						cost = CommonFunctions.twoDecimals(cost + taxpaid);
 						double stock = 0;
 						stock = ho.getStock();
 						data.addResponse(L.f(L.get("CAN_BE_PURCHASED_FOR"), amount, cost, displayName));
-						data.addResponse(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), cf.twoDecimals(stock), displayName));
+						data.addResponse(L.f(L.get("GLOBAL_SHOP_CURRENTLY_HAS"), CommonFunctions.twoDecimals(stock), displayName));
 						data.addResponse(L.get("LINE_BREAK"));
 					}
 				} else {
-					Iterator<SerializableEnchantment> ite = iinhand.getItemMeta().getEnchantments().iterator();
+					Iterator<HEnchantment> ite = iinhand.getItemMeta().getEnchantments().iterator();
 					data.addResponse(L.get("LINE_BREAK"));
 					while (ite.hasNext()) {
-						SerializableEnchantment ench = ite.next();
+						HEnchantment ench = ite.next();
 						int lvl = ench.getLvl();
 						String enam = ench.getEnchantmentName();
 						String fnam = enam + lvl;
 						String mater = hp.getItemInHand().getMaterial();
-						HyperObject ho = he.getHyperObject(fnam, dm.getHyperShopManager().getShop(hp));
+						TradeObject ho = he.getHyperObject(fnam, dm.getHyperShopManager().getShop(hp));
 						double value = ho.getSellPrice(EnchantmentClass.fromString(mater), hp);
 						double cost = ho.getBuyPrice(EnchantmentClass.fromString(mater));
 						cost = cost + ho.getPurchaseTax(cost);
-						value = cf.twoDecimals(value);
-						cost = cf.twoDecimals(cost);
+						value = CommonFunctions.twoDecimals(value);
+						cost = CommonFunctions.twoDecimals(cost);
 						double salestax = 0;
 						salestax = hp.getSalesTax(value);
-						value = cf.twoDecimals(value - salestax);
+						value = CommonFunctions.twoDecimals(value - salestax);
 						data.addResponse(L.f(L.get("EVALUE_SALE"), value, fnam));
 						data.addResponse(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-						data.addResponse(L.f(L.get("EVALUE_STOCK"), cf.twoDecimals(he.getHyperObject(fnam, dm.getHyperShopManager().getShop(hp)).getStock()), fnam));
+						data.addResponse(L.f(L.get("EVALUE_STOCK"), CommonFunctions.twoDecimals(he.getHyperObject(fnam, dm.getHyperShopManager().getShop(hp)).getStock()), fnam));
 					}
 					data.addResponse(L.get("LINE_BREAK"));
 				}

@@ -2,7 +2,7 @@ package regalowl.hyperconomy.event.minecraft;
 
 import regalowl.databukkit.event.Event;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.ChestShop;
 
 public class ChestShopClickEvent extends Event {
@@ -10,12 +10,12 @@ public class ChestShopClickEvent extends Event {
 	private HyperPlayer clicker;
 	private ChestShop chestShop;
 	private int clickedSlot;
-	private SerializableItemStack clickedItem;
+	private HItemStack clickedItem;
 	private boolean isShiftClick;
 	private boolean isLeftClick;
 	private boolean isRightClick;
 	
-	public ChestShopClickEvent(HyperPlayer clicker, ChestShop chestShop, int clickedSlot, SerializableItemStack clickedItem) {
+	public ChestShopClickEvent(HyperPlayer clicker, ChestShop chestShop, int clickedSlot, HItemStack clickedItem) {
 		this.clicker = clicker;
 		this.chestShop = chestShop;
 		this.clickedSlot = clickedSlot;
@@ -31,7 +31,7 @@ public class ChestShopClickEvent extends Event {
 	public int getClickedSlot() {
 		return clickedSlot;
 	}
-	public SerializableItemStack getClickedItem() {
+	public HItemStack getClickedItem() {
 		return clickedItem;
 	}
 	public boolean isShiftClick() {

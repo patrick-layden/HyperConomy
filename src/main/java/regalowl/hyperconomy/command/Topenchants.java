@@ -5,11 +5,12 @@ import java.util.TreeMap;
 
 
 
-import regalowl.hyperconomy.HyperConomy;
+
+import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.hyperobject.HyperObjectStatus;
-import regalowl.hyperconomy.hyperobject.HyperObjectType;
+import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.hyperconomy.tradeobject.TradeObjectStatus;
+import regalowl.hyperconomy.tradeobject.TradeObjectType;
 
 
 public class Topenchants extends BaseCommand implements HyperCommand {
@@ -45,8 +46,8 @@ public class Topenchants extends BaseCommand implements HyperCommand {
 				page = Integer.parseInt(args[0]);
 			}
 			SortedMap<Double, String> enchantstocks = new TreeMap<Double, String>();
-			for (HyperObject ho:he.getHyperObjects()) {
-				if (!(ho.getType() == HyperObjectType.ENCHANTMENT)) {continue;}
+			for (TradeObject ho:he.getHyperObjects()) {
+				if (!(ho.getType() == TradeObjectType.ENCHANTMENT)) {continue;}
 				boolean allowed = false;
 				boolean stocked = false;
 				boolean banned = false;
@@ -56,7 +57,7 @@ public class Topenchants extends BaseCommand implements HyperCommand {
 				if (ho.getStock() > 0) {stocked = true;}
 				if (ho.isShopObject()) {
 					allowed = ho.getShop().isAllowed(hp);
-					if (ho.getStatus() == HyperObjectStatus.NONE && !allowed) {
+					if (ho.getStatus() == TradeObjectStatus.NONE && !allowed) {
 						continue;
 					}
 				}
@@ -87,7 +88,7 @@ public class Topenchants extends BaseCommand implements HyperCommand {
 				while (count < numberpage) {
 					double lk = enchantstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
-						data.addResponse(HyperConomy.mc.applyColor("&f" + enchantstocks.get(lk) + "&f: " + "&b" + Math.floor(lk)/100));
+						data.addResponse(HC.mc.applyColor("&f" + enchantstocks.get(lk) + "&f: " + "&b" + Math.floor(lk)/100));
 					}
 					enchantstocks.remove(lk);
 					count++;

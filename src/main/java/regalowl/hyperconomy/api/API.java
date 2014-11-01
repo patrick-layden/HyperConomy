@@ -6,16 +6,19 @@ import java.util.ArrayList;
 
 
 
+
+
+
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.hyperobject.EnchantmentClass;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.serializable.SerializableInventory;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.inventory.HInventory;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.minecraft.HItem;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
+import regalowl.hyperconomy.tradeobject.EnchantmentClass;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.TransactionResponse;
-import regalowl.hyperconomy.util.HItem;
 
 
 
@@ -52,26 +55,26 @@ public interface API {
 	 */
 	public boolean isItemDisplay(HItem item);
 	
-	public EnchantmentClass getEnchantmentClass(SerializableItemStack stack);
+	public EnchantmentClass getEnchantmentClass(HItemStack stack);
 
-	public HyperObject getHyperObject(String name, String economy);
-	public HyperObject getHyperObject(String name, String economy, Shop s);
-	public HyperObject getHyperObject(SerializableItemStack stack, String economy);
-	public HyperObject getHyperObject(SerializableItemStack stack, String economy, Shop s);
-	public ArrayList<HyperObject> getEnchantmentHyperObjects(SerializableItemStack stack, String player);
+	public TradeObject getHyperObject(String name, String economy);
+	public TradeObject getHyperObject(String name, String economy, Shop s);
+	public TradeObject getHyperObject(HItemStack stack, String economy);
+	public TradeObject getHyperObject(HItemStack stack, String economy, Shop s);
+	public ArrayList<TradeObject> getEnchantmentHyperObjects(HItemStack stack, String player);
 	
-	public ArrayList<HyperObject> getAvailableObjects(String shopname);
-	public ArrayList<HyperObject> getAvailableObjects(String shopname, int startingPosition, int limit);
-	public ArrayList<HyperObject> getAvailableObjects(HyperPlayer p);
-	public ArrayList<HyperObject> getAvailableObjects(HyperPlayer p, int startingPosition, int limit);
+	public ArrayList<TradeObject> getAvailableObjects(String shopname);
+	public ArrayList<TradeObject> getAvailableObjects(String shopname, int startingPosition, int limit);
+	public ArrayList<TradeObject> getAvailableObjects(HyperPlayer p);
+	public ArrayList<TradeObject> getAvailableObjects(HyperPlayer p, int startingPosition, int limit);
 	
-	public TransactionResponse buy(HyperPlayer p, HyperObject o, int amount);
-	public TransactionResponse buy(HyperPlayer p, HyperObject o, int amount, Shop shop);
-	public TransactionResponse sell(HyperPlayer p, HyperObject o, int amount);
-	public TransactionResponse sell(HyperPlayer p, HyperObject o, int amount, Shop shop);
+	public TransactionResponse buy(HyperPlayer p, TradeObject o, int amount);
+	public TransactionResponse buy(HyperPlayer p, TradeObject o, int amount, Shop shop);
+	public TransactionResponse sell(HyperPlayer p, TradeObject o, int amount);
+	public TransactionResponse sell(HyperPlayer p, TradeObject o, int amount, Shop shop);
 	public TransactionResponse sellAll(HyperPlayer p);
-	public TransactionResponse sellAll(HyperPlayer p, SerializableInventory inventory);
+	public TransactionResponse sellAll(HyperPlayer p, HInventory inventory);
 	
-	public boolean addItemToEconomy(SerializableItemStack stack, String economyName, String requestedName);
+	public boolean addItemToEconomy(HItemStack stack, String economyName, String requestedName);
 
 }

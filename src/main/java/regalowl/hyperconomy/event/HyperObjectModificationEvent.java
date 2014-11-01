@@ -1,16 +1,16 @@
 package regalowl.hyperconomy.event;
 
-import regalowl.hyperconomy.hyperobject.HyperObject;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.databukkit.event.Event;
 
 public class HyperObjectModificationEvent extends Event {
-	private HyperObject ho;
+	private TradeObject ho;
 	
-	public HyperObjectModificationEvent(HyperObject ho) {
+	public HyperObjectModificationEvent(TradeObject ho) {
 		this.ho = ho;
 	}
 	
-	public HyperObject getHyperObject() {
+	public TradeObject getHyperObject() {
 		return ho;
 	}
 }

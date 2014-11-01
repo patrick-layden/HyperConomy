@@ -6,10 +6,10 @@ package regalowl.hyperconomy.command;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.hyperobject.HyperObject;
-import regalowl.hyperconomy.serializable.SerializableInventory;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
+import regalowl.hyperconomy.inventory.HInventory;
+import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.Shop;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
@@ -63,13 +63,13 @@ public class Sellall extends BaseCommand implements HyperCommand {
 	
 	
 	public TransactionResponse sellAll(HyperPlayer trader, HyperAccount tradePartner) {
-		SerializableInventory inventory = trader.getInventory();
+		HInventory inventory = trader.getInventory();
 		HyperEconomy he = trader.getHyperEconomy();
 		TransactionResponse totalResponse = new TransactionResponse(trader);
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
 			if (inventory.getItem(slot) == null) {continue;}
-			SerializableItemStack stack = inventory.getItem(slot);
-			HyperObject ho = he.getHyperObject(stack, dm.getHyperShopManager().getShop(trader));
+			HItemStack stack = inventory.getItem(slot);
+			TradeObject ho = he.getHyperObject(stack, dm.getHyperShopManager().getShop(trader));
 			if (ho == null) {continue;}
 			int amount = ho.count(inventory);
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
