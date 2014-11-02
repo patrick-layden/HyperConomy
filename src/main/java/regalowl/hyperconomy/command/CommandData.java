@@ -57,6 +57,9 @@ public class CommandData {
 	public void addResponse(String response) {
 		this.response.add(response);
 	}
+	public void addResponses(ArrayList<String> responses) {
+		this.response.addAll(responses);
+	}
 	public ArrayList<String> getResponse() {
 		return response;
 	}

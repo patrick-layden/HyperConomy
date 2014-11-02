@@ -18,8 +18,8 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 		HItemStack sis = null;
 		TradeObject ho = null;
 		if (args.length == 0) {
-			ho = he.getHyperObject(hp.getItemInHand());
 			sis = hp.getItemInHand();
+			ho = he.getHyperObject(sis);
 		} else {
 			ho = he.getHyperObject(args[0]);
 			if (ho == null) {
@@ -36,7 +36,7 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 			data.addResponse(HC.mc.applyColor("&9HyperConomy Name: " + "&b" + ho.getDisplayName()));
 			data.addResponse(HC.mc.applyColor("&9Aliases: " + "&b" + ho.getAliasesString()));
 		}
-		sis.displayInfo(hp, "&9", "&b");
+		data.addResponses(sis.displayInfo(hp, "&9", "&b"));
 		data.addResponse(L.get("LINE_BREAK"));
 		return data;
 	}

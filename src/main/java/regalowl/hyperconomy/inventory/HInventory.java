@@ -30,24 +30,18 @@ public class HInventory extends SerializableObject implements Serializable {
 		return heldSlot;
 	}
 	
+	public HItemStack getHeldItem() {
+		return getItem(heldSlot);
+	}
+
 	public HItemStack getItem(int slot) {
 		if (slot > items.size() - 1) return null;
 		return items.get(slot);
 	}
 	
-	public void setItem(int slot, HItemStack item) {
-		items.set(slot, item);
-	}
-	
-	public void clearSlot(int slot) {
-		items.set(slot, new HItemStack());
-	}
-	
-	
 	public HInventoryType getInventoryType() {
 		return inventoryType;
 	}
-	
 	
 	public HyperPlayer getHyperPlayer() {
 		if (isPlayerInventory()) return HC.hc.getHyperPlayerManager().getHyperPlayer(owner);
@@ -59,10 +53,6 @@ public class HInventory extends SerializableObject implements Serializable {
 		return false;
 	}
 	
-	public void updateInventory() {
-		HC.mc.setInventory(this);
-	}
-	
 	public int getSize() {
 		return items.size();
 	}
@@ -71,14 +61,18 @@ public class HInventory extends SerializableObject implements Serializable {
 		return location;
 	}
 	
+	public void clearSlot(int slot) {
+		items.set(slot, new HItemStack());
+	}
+
+	public void setItem(int slot, HItemStack item) {
+		items.set(slot, item);
+	}
+
 	public void setHeldSlot(int heldSlot) {
 		this.heldSlot = heldSlot;
 	}
-	
-	public HItemStack getHeldItem() {
-		return getItem(heldSlot);
-	}
-	
+
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
@@ -87,7 +81,95 @@ public class HInventory extends SerializableObject implements Serializable {
 		this.location = location;
 	}
 	
+	public void updateInventory() {
+		HC.mc.setInventory(this);
+	}
 	
+	public void add(int addAmount, HItemStack addStack) {
+		int maxStackSize = addStack.getMaxStackSize();
+		for (int slot = 0; slot < getSize(); slot++) {
+			HItemStack currentItem = getItem(slot);
+			if (getItem(slot).isBlank()) {
+				HItemStack newStack = new HItemStack(addStack.serialize());
+				if (addAmount > maxStackSize) {
+					newStack.setAmount(maxStackSize);
+					setItem(slot, newStack);
+					addAmount -= maxStackSize;
+				} else {
+					newStack.setAmount(addAmount);
+					setItem(slot, newStack);
+					addAmount = 0;
+				}
+			} else if (addStack.isSimilarTo(currentItem)) {
+				int spaceInStack = maxStackSize - currentItem.getAmount();
+				if (spaceInStack == 0) continue;
+				if (spaceInStack < addAmount) {
+					addAmount -= spaceInStack;
+					currentItem.setAmount(maxStackSize);
+				} else {
+					currentItem.setAmount(addAmount + currentItem.getAmount());
+					addAmount = 0;
+				}
+			}
+			if (addAmount <= 0) break;
+		}
+		if (addAmount != 0) HC.hc.gDB().writeError("HInventory add() failure; " + addAmount + " remaining.");
+		updateInventory();
+	}
+	
+	
+	public double remove(int removeAmount, HItemStack removeStack) {
+		double actuallyRemoved = 0;
+		if (inventoryType == HInventoryType.PLAYER) {
+			HItemStack heldStack = getHeldItem();
+			if (removeStack.isSimilarTo(heldStack)) {
+				if (removeAmount >= heldStack.getAmount()) {
+					actuallyRemoved += heldStack.getTrueAmount();
+					clearSlot(heldSlot);
+					removeAmount -= heldStack.getAmount();
+				} else {
+					actuallyRemoved += removeAmount * heldStack.getDurabilityPercent();
+					heldStack.setAmount(heldStack.getAmount() - removeAmount);
+					removeAmount = 0;
+				}
+			}
+		}
+		int slot = 0;
+		while (removeAmount > 0) {
+			HItemStack currentItem = getItem(slot);
+			if (removeStack.isSimilarTo(currentItem)) {
+				if (removeAmount >= currentItem.getAmount()) {
+					actuallyRemoved += currentItem.getTrueAmount();
+					clearSlot(slot);
+					removeAmount -= currentItem.getAmount();
+				} else {
+					actuallyRemoved += removeAmount * currentItem.getDurabilityPercent();
+					currentItem.setAmount(currentItem.getAmount() - removeAmount);
+					removeAmount = 0;
+				}
+			}
+			slot++;
+			if (slot >= getSize()) break;
+		}
+		if (removeAmount != 0) HC.hc.gDB().writeError("HInventory remove() failure.  Items not successfully removed; amount = '" + removeAmount + "'");
+		updateInventory();
+		return actuallyRemoved;
+	}
+	
+	public int getAvailableSpace(HItemStack stack) {
+		int availableSpace = 0;
+		for (int slot = 0; slot < getSize(); slot++) {
+			HItemStack currentItem = getItem(slot);
+			if (currentItem == null || currentItem.isBlank()) {
+				availableSpace += stack.getMaxStackSize();
+			} else if (stack.isSimilarTo(currentItem)) {
+				availableSpace += (stack.getMaxStackSize() - currentItem.getAmount());
+			}
+		}
+		return availableSpace;
+	}
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

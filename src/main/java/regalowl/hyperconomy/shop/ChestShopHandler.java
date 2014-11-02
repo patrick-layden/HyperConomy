@@ -16,7 +16,7 @@ import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
 import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
-import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
+import regalowl.hyperconomy.event.minecraft.HSignChangeEvent;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -99,7 +99,7 @@ public class ChestShopHandler {
 	}
 
 	@EventHandler
-	public void onSignChangeEvent(HyperSignChangeEvent event) {
+	public void onSignChangeEvent(HSignChangeEvent event) {
 		try {
 			HSign sign = event.getSign();
 			HyperPlayer hp = event.getHyperPlayer();

@@ -45,11 +45,11 @@ import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
 import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerDropItemEvent;
-import regalowl.hyperconomy.event.minecraft.HyperPlayerInteractEvent;
-import regalowl.hyperconomy.event.minecraft.HyperPlayerItemHeldEvent;
-import regalowl.hyperconomy.event.minecraft.HyperPlayerJoinEvent;
-import regalowl.hyperconomy.event.minecraft.HyperPlayerQuitEvent;
-import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerInteractEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerItemHeldEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerJoinEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerQuitEvent;
+import regalowl.hyperconomy.event.minecraft.HSignChangeEvent;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -82,10 +82,9 @@ public class BukkitListener implements Listener {
 	public void onSignChangeEvent(SignChangeEvent event) {
 		if (event.isCancelled()) return;
 		HyperPlayer hp = HC.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
-		Location l = event.getBlock().getLocation();
-		HLocation sl = new HLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
+		HLocation sl = BukkitCommon.getLocation(event.getBlock().getLocation());
 		HSign sign = HC.mc.getSign(sl);
-		HyperSignChangeEvent se = new HyperSignChangeEvent(sign, hp);
+		HSignChangeEvent se = new HSignChangeEvent(sign, hp);
 		HC.hc.getHyperEventHandler().fireEvent(se);
 		if (se.isCancelled()) event.setCancelled(true);
 	}
@@ -94,7 +93,7 @@ public class BukkitListener implements Listener {
 	public void onPlayerItemHeldEvent(PlayerItemHeldEvent pihevent) {
 		if (pihevent.isCancelled()) return;
 		HyperPlayer hp = BukkitCommon.getPlayer(pihevent.getPlayer());
-		HyperPlayerItemHeldEvent hpih = new HyperPlayerItemHeldEvent(hp, pihevent.getPreviousSlot(), pihevent.getNewSlot());
+		HPlayerItemHeldEvent hpih = new HPlayerItemHeldEvent(hp, pihevent.getPreviousSlot(), pihevent.getNewSlot());
 		HC.hc.getHyperEventHandler().fireEvent(hpih);
 		if (hpih.isCancelled()) pihevent.setCancelled(true);
 	}
@@ -102,14 +101,14 @@ public class BukkitListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		HyperPlayer hp = HC.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
-		HC.hc.getHyperEventHandler().fireEvent(new HyperPlayerJoinEvent(hp));
+		HC.hc.getHyperEventHandler().fireEvent(new HPlayerJoinEvent(hp));
 	}
 	
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		HyperPlayer hp = HC.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
-		HC.hc.getHyperEventHandler().fireEvent(new HyperPlayerQuitEvent(hp));
+		HC.hc.getHyperEventHandler().fireEvent(new HPlayerQuitEvent(hp));
 	}
 	
 
@@ -170,11 +169,11 @@ public class BukkitListener implements Listener {
 		if (!event.hasBlock()) return;
 		HyperPlayer hp = BukkitCommon.getPlayer(event.getPlayer());
 		HBlock block = BukkitCommon.getBlock(event.getClickedBlock());
-		HyperPlayerInteractEvent hpie;
+		HPlayerInteractEvent hpie;
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-			hpie = new HyperPlayerInteractEvent(hp, block, true);
+			hpie = new HPlayerInteractEvent(hp, block, true);
 		} else {
-			hpie = new HyperPlayerInteractEvent(hp, block, false);
+			hpie = new HPlayerInteractEvent(hp, block, false);
 		}
 		HC.hc.getHyperEventHandler().fireEvent(hpie);
 		if (hpie.isCancelled()) event.setCancelled(true);

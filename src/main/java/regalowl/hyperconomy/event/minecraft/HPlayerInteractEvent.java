@@ -5,13 +5,13 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.databukkit.event.Event;
 
-public class HyperPlayerInteractEvent extends Event {
+public class HPlayerInteractEvent extends Event {
 
 		private HyperPlayer hp;
 		private HBlock block;
 		private boolean isLeftClick;
 		
-		public HyperPlayerInteractEvent(HyperPlayer hp, HBlock block, boolean isLeftClick) {
+		public HPlayerInteractEvent(HyperPlayer hp, HBlock block, boolean isLeftClick) {
 			this.hp = hp;
 			this.block = block;
 			this.isLeftClick = isLeftClick;

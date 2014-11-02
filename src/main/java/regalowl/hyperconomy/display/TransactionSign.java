@@ -7,9 +7,9 @@ import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.minecraft.HyperPlayerInteractEvent;
-import regalowl.hyperconomy.event.minecraft.HyperPlayerItemHeldEvent;
-import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerInteractEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerItemHeldEvent;
+import regalowl.hyperconomy.event.minecraft.HSignChangeEvent;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
@@ -32,7 +32,7 @@ public class TransactionSign {
 
 
 	@EventHandler
-	public void onPlayerItemHeldEvent(HyperPlayerItemHeldEvent event) {
+	public void onPlayerItemHeldEvent(HPlayerItemHeldEvent event) {
 		try {
 			if (hc.getConf().getBoolean("enable-feature.scrolling-transaction-signs")) {
 				HyperPlayer hp = event.getHyperPlayer();
@@ -86,7 +86,7 @@ public class TransactionSign {
 	}
 
 	@EventHandler
-	public void onSignChangeEvent(HyperSignChangeEvent scevent) {
+	public void onSignChangeEvent(HSignChangeEvent scevent) {
 		try {
 			if (hc.getConf().getBoolean("enable-feature.transaction-signs")) {
 				HSign sign = scevent.getSign();
@@ -138,7 +138,7 @@ public class TransactionSign {
 	}
 
 	@EventHandler
-	public void onPlayerInteractEvent(HyperPlayerInteractEvent ievent) {
+	public void onPlayerInteractEvent(HPlayerInteractEvent ievent) {
 		if (ievent == null) {return;}
 		try {
 			if (!hc.getConf().getBoolean("enable-feature.transaction-signs")) {return;}

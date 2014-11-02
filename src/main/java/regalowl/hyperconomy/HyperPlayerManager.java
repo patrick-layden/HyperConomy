@@ -8,8 +8,8 @@ import regalowl.databukkit.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.MineCraftConnector;
-import regalowl.hyperconomy.event.minecraft.HyperPlayerJoinEvent;
-import regalowl.hyperconomy.event.minecraft.HyperPlayerQuitEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerJoinEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerQuitEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.databukkit.event.EventHandler;
 import regalowl.databukkit.file.FileConfiguration;
@@ -81,8 +81,8 @@ public class HyperPlayerManager {
 	
 	
 	@EventHandler
-	public void onHyperPlayerJoinEvent(HyperPlayerJoinEvent event) {
-		HyperPlayerJoinEvent ev = (HyperPlayerJoinEvent) event;
+	public void onHyperPlayerJoinEvent(HPlayerJoinEvent event) {
+		HPlayerJoinEvent ev = (HPlayerJoinEvent) event;
 		try {
 			if (hc.getHyperLock().loadLock()) {
 				return;
@@ -102,7 +102,7 @@ public class HyperPlayerManager {
 	}
 
 	@EventHandler
-	public void onPlayerQuit(HyperPlayerQuitEvent event) {
+	public void onPlayerQuit(HPlayerQuitEvent event) {
 		try {
 			if (hc.getHyperLock().loadLock()) {return;}
 			HLocation l = event.getHyperPlayer().getLocation();

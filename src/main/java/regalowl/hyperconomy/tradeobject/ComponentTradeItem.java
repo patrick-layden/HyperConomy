@@ -68,24 +68,7 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 	}
 	@Override
 	public int getAvailableSpace(HInventory inventory) {
-		HC hc = HC.hc;
-		try {
-			HItemStack stack = getItem();
-			int maxstack = stack.getMaxStackSize();
-			int availablespace = 0;
-			for (int slot = 0; slot < inventory.getSize(); slot++) {
-				HItemStack currentItem = inventory.getItem(slot);
-				if (currentItem == null || currentItem.isBlank()) {
-					availablespace += maxstack;
-				} else if (matchesItemStack(currentItem)) {
-					availablespace += (maxstack - currentItem.getAmount());
-				}
-			}
-			return availablespace;
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-			return 0;
-		}
+		return inventory.getAvailableSpace(getSIS());
 	}
 	
 	@Override
@@ -125,91 +108,11 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 
 	@Override
 	public void add(int amount, HInventory inventory) {
-		HC hc = HC.hc;
-		try {
-			HItemStack stack = getItem();
-			int maxStack = stack.getMaxStackSize();
-			for (int slot = 0; slot < inventory.getSize(); slot++) {
-				HItemStack currentItem = inventory.getItem(slot);
-				if (matchesItemStack(currentItem)) {
-					int stackSize = currentItem.getAmount();
-					int availableSpace = maxStack - stackSize;
-					if (availableSpace == 0) {continue;}
-					if (availableSpace < amount) {
-						amount -= availableSpace;
-						currentItem.setAmount(maxStack);
-					} else {
-						currentItem.setAmount(amount + stackSize);
-						amount = 0;
-					}
-				} else if (inventory.getItem(slot).isBlank()) {
-					if (amount > maxStack) {
-						stack.setAmount(maxStack);
-						inventory.setItem(slot, stack);
-						amount -= maxStack;
-					} else {
-						stack.setAmount(amount);
-						inventory.setItem(slot, stack);
-						amount = 0;
-					}
-				}
-				if (amount <= 0) {break;}
-			}
-			if (amount != 0) {
-				hc.gDB().writeError("ComponentItem add() failure; " + amount + " remaining.");
-			}
-			inventory.updateInventory();
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-		}
+		inventory.add(amount, getItem());
 	}
 	@Override
 	public double remove(int amount, HInventory inventory) {
-		HC hc = HC.hc;
-		try {
-			double amountRemoved = 0;
-			if (inventory.getInventoryType() == HInventoryType.PLAYER) {
-				HItemStack heldStack = inventory.getHeldItem();
-				if (matchesItemStack(heldStack)) {
-					if (amount >= heldStack.getAmount()) {
-						amount -= heldStack.getAmount();
-						amountRemoved += heldStack.getAmount() * heldStack.getDurabilityPercent();
-						inventory.clearSlot(inventory.getHeldSlot());
-					} else {
-						amountRemoved += amount * heldStack.getDurabilityPercent();
-						heldStack.setAmount(heldStack.getAmount() - amount);
-						inventory.updateInventory();
-						return amountRemoved;
-					}
-				}
-			}
-			for (int slot = 0; slot < inventory.getSize(); slot++) {
-				HItemStack currentItem = inventory.getItem(slot);
-				if (matchesItemStack(currentItem)) {
-					if (amount >= currentItem.getAmount()) {
-						amount -= currentItem.getAmount();
-						amountRemoved += currentItem.getAmount() * currentItem.getDurabilityPercent();
-						inventory.clearSlot(slot);
-					} else {
-						amountRemoved += amount * currentItem.getDurabilityPercent();
-						currentItem.setAmount(currentItem.getAmount() - amount);
-						inventory.updateInventory();
-						return amountRemoved;
-					}
-				}
-			}
-			if (amount != 0) {
-				hc.gDB().writeError("remove() failure.  Items not successfully removed; amount = '" + amount + "'");
-				inventory.updateInventory();
-				return amountRemoved;	
-			} else {
-				inventory.updateInventory();
-				return amountRemoved;
-			}
-		} catch (Exception e) {
-			hc.gDB().writeError(e);
-			return 0;
-		}
+		return inventory.remove(amount, getItem());
 	}
 	
 

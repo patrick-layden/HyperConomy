@@ -24,7 +24,6 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 
 	
 	public GlobalShop(String name, String economy, HyperAccount owner, String banned_objects) {
-		HC hc = HC.hc;
 		this.deleted = false;
 		this.name = name;
 		this.economy = economy;

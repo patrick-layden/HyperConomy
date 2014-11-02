@@ -43,8 +43,9 @@ public class HItemMeta extends SerializableObject implements Serializable {
     	}
     }
 	
-	public void displayInfo(HyperPlayer p, String color1, String color2) {
-		p.sendMessage(color1 + "Display Name: " + color2 + displayName);
+	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
+		ArrayList<String> info = new ArrayList<String>();
+		info.add(color1 + "Display Name: " + color2 + displayName);
 		String loreString = "";
 		if (lore != null && lore.size() > 0) {
 			for(String l:lore) {
@@ -52,7 +53,7 @@ public class HItemMeta extends SerializableObject implements Serializable {
 			}
 			loreString = loreString.substring(0, loreString.length() - 1);
 		}
-		p.sendMessage(color1 + "Lore: " + color2 + loreString);
+		info.add(color1 + "Lore: " + color2 + loreString);
 		String enchantString = "";
 		if (enchantments != null && enchantments.size() > 0) {
 			for(HEnchantment se:enchantments) {
@@ -60,7 +61,8 @@ public class HItemMeta extends SerializableObject implements Serializable {
 			}
 			enchantString = enchantString.substring(0, enchantString.length() - 1);
 		}
-		p.sendMessage(color1 + "Enchantments: " + color2 + enchantString);
+		info.add(color1 + "Enchantments: " + color2 + enchantString);
+		return info;
 	}
 	
 

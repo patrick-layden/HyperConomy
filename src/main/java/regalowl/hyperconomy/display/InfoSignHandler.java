@@ -21,7 +21,7 @@ import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
-import regalowl.hyperconomy.event.minecraft.HyperSignChangeEvent;
+import regalowl.hyperconomy.event.minecraft.HSignChangeEvent;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
@@ -100,7 +100,7 @@ public class InfoSignHandler {
 	}
 	
 	@EventHandler
-	public void onHyperSignChangeEvent(HyperSignChangeEvent ev) {
+	public void onHyperSignChangeEvent(HSignChangeEvent ev) {
 		try {
 			HSign s = ev.getSign();
 			DataManager em = HC.hc.getDataManager();

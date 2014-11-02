@@ -50,7 +50,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	
 	@Override
 	public double getValue() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double value = 0;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -62,7 +61,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public String getIsstatic() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		String isstatic = "true";
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -75,7 +73,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public double getStaticprice() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double staticprice = 0;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -87,7 +84,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public double getStock() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double stock = 999999999.99;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -102,7 +98,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public double getTotalStock() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double stock = 999999999.99;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -117,7 +112,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public double getMedian() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double median = 999999999;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -130,7 +124,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public String getInitiation() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		String initial = "false";
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -143,7 +136,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public double getStartprice() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double startprice = 0;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -155,7 +147,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public double getCeiling() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double ceiling = 9999999999999.99;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -172,7 +163,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public double getFloor() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double floor = 0;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -189,7 +179,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public double getMaxstock() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double maxstock = 999999999;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -203,7 +192,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public int getMaxInitial() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		int maxInitial = 999999999;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -220,7 +208,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public double getBuyPrice(double amount) {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double cost = 0;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -233,7 +220,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	
 	@Override
 	public double getSellPrice(double amount) {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		double value = 0;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
@@ -257,7 +243,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	
 	@Override
 	public void setStock(double stock) {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		if (stock < 0.0) {stock = 0.0;}
 		double difference = stock - getStock();
@@ -272,7 +257,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	
 	@Override
 	public void checkInitiationStatus() {
-		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
 		    TradeObject ho = he.getHyperObject(entry.getKey());

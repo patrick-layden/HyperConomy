@@ -62,13 +62,18 @@ public class HItemStack extends SerializableObject implements Serializable {
     	}
     }
 
-	public void displayInfo(HyperPlayer p, String color1, String color2) {
-		p.sendMessage(color1 + "Material: " + color2 + material);
-		p.sendMessage(color1 + "Durability: " + color2 + durability);
-		p.sendMessage(color1 + "Data: " + color2 + data);
+	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
+		ArrayList<String> info = new ArrayList<String>();
+		info.add(color1 + "Material: " + color2 + material);
+		info.add(color1 + "Durability: " + color2 + durability);
+		info.add(color1 + "Data: " + color2 + data);
+		info.add(color1 + "Amount: " + color2 + amount);
+		info.add(color1 + "Max Stack Size: " + color2 + maxStackSize);
+		info.add(color1 + "Max Durability: " + color2 + maxDurability);
 		if (itemMeta != null) {
-			itemMeta.displayInfo(p, color1, color2);
+			info.addAll(itemMeta.displayInfo(p, color1, color2));
 		}
+		return info;
 	}
 
 	public String getMaterial() {
@@ -89,6 +94,10 @@ public class HItemStack extends SerializableObject implements Serializable {
 	
 	public int getAmount() {
 		return amount;
+	}
+	
+	public double getTrueAmount() {
+		return amount * getDurabilityPercent();
 	}
 	
 	public int getMaxStackSize() {

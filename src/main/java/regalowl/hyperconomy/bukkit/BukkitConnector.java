@@ -98,7 +98,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 			}
 			CommandData data = hCommand.onCommand(new CommandData(sender, sender.getName(), isPlayer, cmd.getName(), args));
 			for (String response: data.getResponse()) {
-				sender.sendMessage(response);
+				sender.sendMessage(BukkitCommon.applyColor(response));
 			}
 		} else {
 			hc.getDebugMode().syncDebugConsoleMessage("Command not found: " + cmd.getName());

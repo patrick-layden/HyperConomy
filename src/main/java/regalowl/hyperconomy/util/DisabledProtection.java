@@ -9,7 +9,7 @@ import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
 import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
-import regalowl.hyperconomy.event.minecraft.HyperPlayerInteractEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerInteractEvent;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.shop.ChestShop;
 
@@ -22,7 +22,7 @@ public class DisabledProtection {
 
 
 	@EventHandler
-	public void onPlayerInteractEvent(HyperPlayerInteractEvent ievent) {
+	public void onPlayerInteractEvent(HPlayerInteractEvent ievent) {
 		if (HC.mc.isTransactionSign(ievent.getBlock().getLocation())) {
 			ievent.cancel();
 		}
