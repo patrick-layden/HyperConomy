@@ -1,19 +1,16 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
+import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
  
 
-public class HItemStack extends SerializableObject implements Serializable {
+public class HItemStack {
 
-	private static final long serialVersionUID = 8634824379403255552L;
 	private String material;
     private short durability;
     private byte data;
@@ -40,27 +37,33 @@ public class HItemStack extends SerializableObject implements Serializable {
     	this.isBlank = false;
     }
     
-
-	public HItemStack(String base64String) {
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HItemStack)) {return;}
-			HItemStack sis = (HItemStack)o;
-	        this.material = sis.getMaterial();
-	        this.durability = sis.getDurability();
-	        this.data = sis.getData();
-	        this.itemMeta = sis.getItemMeta();
-	        this.amount = sis.getAmount();
-	        this.maxStackSize = sis.getMaxStackSize();
-	        this.maxDurability = sis.getMaxDurability();
-	        this.isBlank = sis.isBlank;
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+    
+	public HItemStack(String serialized) {
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+    	this.itemMeta = HItemMeta.fromClass(data.get("itemMetaClass"), data.get("itemMetaData"));
+    	this.material = data.get("material");
+    	this.durability = Short.parseShort(data.get("durability"));
+    	this.data = Byte.parseByte(data.get("data"));
+    	this.amount = Integer.parseInt(data.get("amount"));
+    	this.maxStackSize = Integer.parseInt(data.get("maxStackSize"));
+    	this.maxDurability = Integer.parseInt(data.get("maxDurability"));
+    	this.isBlank = Boolean.parseBoolean(data.get("isBlank"));
     }
+	
+	public String serialize() {
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("itemMetaClass", itemMeta.getClass().getSimpleName());
+		data.put("itemMetaData", itemMeta.serialize());
+		data.put("material", material);
+		data.put("durability", durability+"");
+		data.put("data", this.data+"");
+		data.put("amount", amount+"");
+		data.put("maxStackSize", maxStackSize+"");
+		data.put("maxDurability", maxDurability+"");
+		data.put("isBlank", isBlank+"");
+		return CommonFunctions.implodeMap(data);
+	}
+
 
 	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
 		ArrayList<String> info = new ArrayList<String>();
@@ -110,6 +113,10 @@ public class HItemStack extends SerializableObject implements Serializable {
 	
 	public void setAmount(int amount) {
 		this.amount = amount;
+	}
+	
+	public void setHItemMeta(HItemMeta itemMeta) {
+		this.itemMeta = itemMeta;
 	}
 	
 	
@@ -205,7 +212,7 @@ public class HItemStack extends SerializableObject implements Serializable {
 		if (maxStackSize != other.maxStackSize) return false;
 		return true;
 	}
-	
+
 	public boolean isSimilarTo(Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
@@ -224,7 +231,6 @@ public class HItemStack extends SerializableObject implements Serializable {
 		if (maxStackSize != other.maxStackSize) return false;
 		return true;
 	}
-
 
 
 

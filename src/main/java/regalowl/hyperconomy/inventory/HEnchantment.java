@@ -1,16 +1,13 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+import java.util.HashMap;
 
-import regalowl.hyperconomy.HC;
+import regalowl.databukkit.CommonFunctions;
+
  
 
-public class HEnchantment extends SerializableObject implements Serializable {
-	private static final long serialVersionUID = 4510326523024526205L;
+public class HEnchantment {
 	private String enchantment;
     private int lvl;
  
@@ -18,20 +15,18 @@ public class HEnchantment extends SerializableObject implements Serializable {
         this.enchantment = enchantment;
         this.lvl = lvl;
     }
-
-	public HEnchantment(String base64String) {
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HEnchantment)) {return;}
-			HEnchantment se = (HEnchantment)o;
-	        this.enchantment = se.getEnchantmentName();
-	        this.lvl = se.getLvl();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	
+	public String serialize() {
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("enchantment", enchantment);
+		data.put("lvl", lvl+"");
+		return CommonFunctions.implodeMap(data);
+	}
+	
+	public HEnchantment(String serialized) {
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		this.enchantment = data.get("enchantment");
+		this.lvl = Integer.parseInt(data.get("lvl"));
     }
 
 

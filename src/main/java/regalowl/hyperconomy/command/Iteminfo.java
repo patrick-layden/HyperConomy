@@ -21,6 +21,11 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 			sis = hp.getItemInHand();
 			ho = he.getHyperObject(sis);
 		} else {
+			if (args[0].equalsIgnoreCase("printdata")) {
+				sis = hp.getItemInHand();
+				data.addResponse(sis.serialize());
+				return data;
+			}
 			ho = he.getHyperObject(args[0]);
 			if (ho == null) {
 				data.addResponse(HC.mc.applyColor("&9" + "Object not found."));

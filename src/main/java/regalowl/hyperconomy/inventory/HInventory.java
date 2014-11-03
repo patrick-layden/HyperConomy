@@ -1,16 +1,13 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.minecraft.HLocation;
 
-public class HInventory extends SerializableObject implements Serializable {
+public class HInventory {
 
-
-	private static final long serialVersionUID = 4247823594626362499L;
 	private ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 	private int heldSlot;
 	private HInventoryType inventoryType;

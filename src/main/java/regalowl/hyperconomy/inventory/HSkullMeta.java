@@ -1,18 +1,15 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import regalowl.hyperconomy.HC;
+import regalowl.databukkit.CommonFunctions;
+
  
 
-public class HSkullMeta extends HItemMeta implements Serializable {
+public class HSkullMeta extends HItemMeta {
 
-	private static final long serialVersionUID = -1095975801937823837L;
 
 	private String owner;
 
@@ -21,20 +18,18 @@ public class HSkullMeta extends HItemMeta implements Serializable {
 		this.owner = owner;
 	}
 
-	public HSkullMeta(String base64String) {
-		super(base64String);
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HSkullMeta)) {return;}
-			HSkullMeta ssm = (HSkullMeta)o;
-			this.owner = ssm.getOwner();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public HSkullMeta(String serialized) {
+		super(serialized);
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		this.owner = data.get("owner");
     }
+
+	@Override
+	public String serialize() {
+		HashMap<String,String> data = super.getMap();
+		data.put("owner", owner);
+		return CommonFunctions.implodeMap(data);
+	}
 	
 
 	public String getOwner() {

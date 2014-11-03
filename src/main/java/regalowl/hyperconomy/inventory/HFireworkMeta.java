@@ -1,20 +1,16 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import regalowl.databukkit.CommonFunctions;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
-import regalowl.hyperconomy.HC;
  
 
-public class HFireworkMeta extends HItemMeta implements Serializable {
-
-	private static final long serialVersionUID = 7131977924010280498L;
+public class HFireworkMeta extends HItemMeta {
+	
 	private List<HFireworkEffect> effects = new ArrayList<HFireworkEffect>();
 	private int power;
 
@@ -25,21 +21,27 @@ public class HFireworkMeta extends HItemMeta implements Serializable {
 		this.power = power;
 	}
 
-	public HFireworkMeta(String base64String) {
-		super(base64String);
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HFireworkMeta)) {return;}
-			HFireworkMeta sfm = (HFireworkMeta)o;
-			this.effects = sfm.getEffects();
-			this.power = sfm.getPower();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public HFireworkMeta(String serialized) {
+		super(serialized);
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		ArrayList<String> stringEffects = CommonFunctions.explode(data.get("effects"));
+		for (String ef:stringEffects) {
+			effects.add(new HFireworkEffect(ef));
+		}
+		this.power = Integer.parseInt(data.get("power"));
     }
+
+	@Override
+	public String serialize() {
+		HashMap<String,String> data = super.getMap();
+		ArrayList<String> stringEffects = new ArrayList<String>();
+		for (HFireworkEffect hfe:effects) {
+			stringEffects.add(hfe.serialize());
+		}
+		data.put("effects", CommonFunctions.implode(stringEffects));
+		data.put("power", power+"");
+		return CommonFunctions.implodeMap(data);
+	}
 	
 
 	public List<HFireworkEffect> getEffects() {

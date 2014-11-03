@@ -1,20 +1,15 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
-import regalowl.hyperconomy.HC;
+import regalowl.databukkit.CommonFunctions;
  
 
-public class HPotionMeta extends HItemMeta implements Serializable {
+public class HPotionMeta extends HItemMeta {
 
-	private static final long serialVersionUID = 7131977924010280498L;
 	private List<HPotionEffect> potionEffects = new ArrayList<HPotionEffect>();
 
 	public HPotionMeta(String displayName, List<String> lore, List<HEnchantment> enchantments, List<HPotionEffect> potionEffects) {
@@ -22,20 +17,24 @@ public class HPotionMeta extends HItemMeta implements Serializable {
 		this.potionEffects = potionEffects;
 	}
 
-	public HPotionMeta(String base64String) {
-		super(base64String);
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HPotionMeta)) {return;}
-			HPotionMeta spm = (HPotionMeta)o;
-			this.potionEffects = spm.getPotionEffects();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public HPotionMeta(String serialized) {
+		super(serialized);
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		ArrayList<String> sEffects = CommonFunctions.explode(data.get("potionEffects"));
+		for (String e:sEffects) {
+			potionEffects.add(new HPotionEffect(e));
+		}
     }
+
+	public String serialize() {
+		HashMap<String,String> data = super.getMap();
+		ArrayList<String> sEffects = new ArrayList<String>();
+		for (HPotionEffect e:potionEffects) {
+			sEffects.add(e.serialize());
+		}
+		data.put("potionEffects", CommonFunctions.implode(sEffects));
+		return CommonFunctions.implodeMap(data);
+	}
 	
 
 	

@@ -1,16 +1,11 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+import java.util.HashMap;
 
-import regalowl.hyperconomy.HC;
+import regalowl.databukkit.CommonFunctions;
 
-public class HColor extends SerializableObject implements Serializable {
-	
-	private static final long serialVersionUID = 1194773802989404854L;
+public class HColor {
 
 	private int red;
 	private int green;
@@ -22,20 +17,19 @@ public class HColor extends SerializableObject implements Serializable {
 		this.blue = blue;
 	}
 
-	public HColor(String base64String) {
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HColor)) {return;}
-			HColor sc = (HColor)o;
-	        this.red = sc.getRed();
-	        this.green = sc.getGreen();
-	        this.blue = sc.getBlue();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public String serialize() {
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("red", red+"");
+		data.put("green", green+"");
+		data.put("blue", blue+"");
+		return CommonFunctions.implodeMap(data);
+	}
+	
+	public HColor(String serialized) {
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		this.red = Integer.parseInt(data.get("red"));
+		this.green = Integer.parseInt(data.get("green"));
+		this.blue = Integer.parseInt(data.get("blue"));
     }
 	
 
@@ -43,10 +37,10 @@ public class HColor extends SerializableObject implements Serializable {
 		return red;
 	}
 	public int getGreen() {
-		return red;
+		return green;
 	}
 	public int getBlue() {
-		return red;
+		return blue;
 	}
 	
 
@@ -77,4 +71,6 @@ public class HColor extends SerializableObject implements Serializable {
 			return false;
 		return true;
 	}
+
+
 }

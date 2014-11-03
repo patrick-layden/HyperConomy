@@ -1,19 +1,14 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+
+import java.util.HashMap;
 import java.util.List;
 
+import regalowl.databukkit.CommonFunctions;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
-import regalowl.hyperconomy.HC;
  
 
-public class HMapMeta extends HItemMeta implements Serializable {
-
-	private static final long serialVersionUID = -1095975801937823837L;
+public class HMapMeta extends HItemMeta {
 
 	private boolean isScaling;
 
@@ -22,20 +17,17 @@ public class HMapMeta extends HItemMeta implements Serializable {
 		this.isScaling = isScaling;
 	}
 
-	public HMapMeta(String base64String) {
-		super(base64String);
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HMapMeta)) {return;}
-			HMapMeta mm = (HMapMeta)o;
-			this.isScaling = mm.isScaling();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public HMapMeta(String serialized) {
+		super(serialized);
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		isScaling = Boolean.parseBoolean(data.get("isScaling"));
     }
+
+	public String serialize() {
+		HashMap<String,String> data = super.getMap();
+		data.put("isScaling", isScaling+"");
+		return CommonFunctions.implodeMap(data);
+	}
 	
 
 	public boolean isScaling() {

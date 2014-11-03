@@ -344,7 +344,8 @@ public class BukkitCommon {
         int amount = s.getAmount();
         int maxStackSize = s.getType().getMaxStackSize();
         int maxDurability = s.getType().getMaxDurability();
-        HItemStack sis = null;
+        HItemStack sis = new HItemStack(new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>()), material, durability, data, amount, maxStackSize, maxDurability);
+        if (isBlank) sis.setBlank();
         if (s.hasItemMeta()) {
         	ItemMeta im = s.getItemMeta();
             String displayName = im.getDisplayName();
@@ -420,10 +421,8 @@ public class BukkitCommon {
         	} else {
         		itemMeta = new HItemMeta(displayName, lore, enchantments);
         	}
-        	sis = new HItemStack(itemMeta, material, durability, data, amount, maxStackSize, maxDurability);
-        }
-        sis = new HItemStack(null, material, durability, data, amount, maxStackSize, maxDurability);
-        if (isBlank) sis.setBlank();
+        	sis.setHItemMeta(itemMeta);
+        }   
         return sis;
 	}
 	//TODO make protected

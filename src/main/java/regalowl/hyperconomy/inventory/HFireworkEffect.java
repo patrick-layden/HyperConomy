@@ -1,18 +1,15 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import regalowl.hyperconomy.HC;
+import regalowl.databukkit.CommonFunctions;
 
-public class HFireworkEffect extends SerializableObject implements Serializable {
 
-	private static final long serialVersionUID = 2644823685312321272L;
+public class HFireworkEffect {
+
 	private List<HColor> colors = new ArrayList<HColor>();
 	private List<HColor> fadeColors = new ArrayList<HColor>();
 	private String type;
@@ -27,23 +24,38 @@ public class HFireworkEffect extends SerializableObject implements Serializable 
         this.hasTrail = hasTrail;
     }
 
-	public HFireworkEffect(String base64String) {
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HFireworkEffect)) {return;}
-			HFireworkEffect sfe = (HFireworkEffect)o;
-	        this.colors = sfe.getColors();
-	        this.fadeColors = sfe.getFadeColors();
-	        this.type = sfe.getType();
-	        this.hasFlicker = sfe.hasFlicker();
-	        this.hasTrail = sfe.hasTrail();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public HFireworkEffect(String serialized) {
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		ArrayList<String> c = CommonFunctions.explode(data.get("colors"));
+		for (String cString:c) {
+			colors.add(new HColor(cString));
+		}
+		ArrayList<String> fc = CommonFunctions.explode(data.get("fadeColors"));
+		for (String cString:fc) {
+			fadeColors.add(new HColor(cString));
+		}
+		type = data.get("type");
+		hasFlicker = Boolean.parseBoolean(data.get("hasFlicker"));
+		hasTrail = Boolean.parseBoolean(data.get("hasTrail"));
     }
+
+	public String serialize() {
+		ArrayList<String> c = new ArrayList<String>();
+		for (HColor hc:colors) {
+			c.add(hc.serialize());
+		}
+		ArrayList<String> fc = new ArrayList<String>();
+		for (HColor hc:fadeColors) {
+			fc.add(hc.serialize());
+		}
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("colors", CommonFunctions.implode(c));
+		data.put("fadeColors", CommonFunctions.implode(fc));
+		data.put("type", type);
+		data.put("hasFlicker", hasFlicker+"");
+		data.put("hasTrail", hasTrail+"");
+		return CommonFunctions.implodeMap(data);
+	}
 	
 
 	public List<HColor> getColors() {
@@ -104,4 +116,5 @@ public class HFireworkEffect extends SerializableObject implements Serializable 
 			return false;
 		return true;
 	}
+
 }

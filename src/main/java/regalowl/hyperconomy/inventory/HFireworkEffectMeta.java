@@ -1,18 +1,15 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import regalowl.hyperconomy.HC;
+import regalowl.databukkit.CommonFunctions;
+
  
 
-public class HFireworkEffectMeta extends HItemMeta implements Serializable {
+public class HFireworkEffectMeta extends HItemMeta {
 
-	private static final long serialVersionUID = -6227758269858375863L;
 	private HFireworkEffect effect;
 
 	
@@ -22,21 +19,21 @@ public class HFireworkEffectMeta extends HItemMeta implements Serializable {
 	}
 	
 
-	public HFireworkEffectMeta(String base64String) {
-		super(base64String);
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HFireworkEffectMeta)) {return;}
-			HFireworkEffectMeta sfem = (HFireworkEffectMeta)o;
-			this.effect = sfem.getEffect();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public HFireworkEffectMeta(String serialized) {
+		super(serialized);
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		effect = new HFireworkEffect(data.get("effect"));
     }
 
+	@Override
+	public String serialize() {
+		HashMap<String,String> data = super.getMap();
+		data.put("effect", effect.serialize());
+		return CommonFunctions.implodeMap(data);
+	}
+
+	
+	
 	public HFireworkEffect getEffect() {
 		return effect;
 	}

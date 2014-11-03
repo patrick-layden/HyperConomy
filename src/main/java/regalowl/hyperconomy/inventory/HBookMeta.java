@@ -1,18 +1,12 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
-
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
-import regalowl.hyperconomy.HC;
+import regalowl.databukkit.CommonFunctions;
  
 
-public class HBookMeta extends HItemMeta implements Serializable {
-	private static final long serialVersionUID = -1095975801937823837L;
+public class HBookMeta extends HItemMeta {
 
 	private String author;
 	private List<String> pages;
@@ -26,22 +20,22 @@ public class HBookMeta extends HItemMeta implements Serializable {
 	}
 	
 
-	public HBookMeta(String base64String) {
-		super(base64String);
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HBookMeta)) {return;}
-			HBookMeta bm = (HBookMeta)o;
-			this.author = bm.getAuthor();
-			this.pages = bm.getPages();
-			this.title = bm.getTitle();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public HBookMeta(String serialized) {
+		super(serialized);
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		this.author = data.get("author");
+		this.pages = CommonFunctions.explode(data.get("pages"));;
+		this.title = data.get("title");
     }
+	
+	@Override
+	public String serialize() {
+		HashMap<String,String> data = super.getMap();
+		data.put("author", author);
+		data.put("pages", CommonFunctions.implode(pages));
+		data.put("title", title);
+		return CommonFunctions.implodeMap(data);
+	}
 	
 
 	public List<String> getPages() {

@@ -1,20 +1,17 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import regalowl.hyperconomy.HC;
+import regalowl.databukkit.CommonFunctions;
+
  
 
-public class HEnchantmentStorageMeta extends HItemMeta implements Serializable {
+public class HEnchantmentStorageMeta extends HItemMeta {
 
-	private static final long serialVersionUID = -6050487153906386305L;
-	
 	private List<HEnchantment> storedEnchantments = new ArrayList<HEnchantment>();
 
 	public HEnchantmentStorageMeta(String displayName, List<String> lore, List<HEnchantment> enchantments, List<HEnchantment> storedEnchantments) {
@@ -22,20 +19,25 @@ public class HEnchantmentStorageMeta extends HItemMeta implements Serializable {
 		this.storedEnchantments = storedEnchantments;
 	}
 
-	public HEnchantmentStorageMeta(String base64String) {
-		super(base64String);
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HEnchantmentStorageMeta)) {return;}
-			HEnchantmentStorageMeta se = (HEnchantmentStorageMeta)o;
-			this.storedEnchantments = se.getEnchantments();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public HEnchantmentStorageMeta(String serialized) {
+		super(serialized);
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		ArrayList<String> stEnchants = CommonFunctions.explode(data.get("storedEnchantments"));
+		for (String e:stEnchants) {
+			storedEnchantments.add(new HEnchantment(e));
+		}
     }
+
+	public String serialize() {
+		HashMap<String,String> data = super.getMap();
+		ArrayList<String> stEnchants = new ArrayList<String>();
+		for (HEnchantment e:storedEnchantments) {
+			stEnchants.add(e.serialize());
+		}
+		data.put("storedEnchantments", CommonFunctions.implode(stEnchants));
+		return CommonFunctions.implodeMap(data);
+	}
+	
 	
 	@Override
 	public List<HEnchantment> getEnchantments() {

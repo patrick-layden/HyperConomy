@@ -1,19 +1,15 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+
+import java.util.HashMap;
 import java.util.List;
 
+import regalowl.databukkit.CommonFunctions;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
-import regalowl.hyperconomy.HC;
  
 
-public class HLeatherArmorMeta extends HItemMeta implements Serializable {
+public class HLeatherArmorMeta extends HItemMeta {
 
-	private static final long serialVersionUID = -7716626610545205516L;
 	private HColor color;
 
 	
@@ -22,20 +18,17 @@ public class HLeatherArmorMeta extends HItemMeta implements Serializable {
 		this.color = color;
 	}
 
-	public HLeatherArmorMeta(String base64String) {
-		super(base64String);
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HLeatherArmorMeta)) {return;}
-			HLeatherArmorMeta slam = (HLeatherArmorMeta)o;
-			this.color = slam.getColor();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public HLeatherArmorMeta(String serialized) {
+		super(serialized);
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		color = new HColor(data.get("color"));
     }
+
+	public String serialize() {
+		HashMap<String,String> data = super.getMap();
+		data.put("color", color.serialize());
+		return CommonFunctions.implodeMap(data);
+	}
 
 	public HColor getColor() {
 		return color;

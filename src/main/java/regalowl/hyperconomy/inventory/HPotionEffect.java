@@ -1,16 +1,12 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+import java.util.HashMap;
 
-import regalowl.hyperconomy.HC;
+import regalowl.databukkit.CommonFunctions;
 
-public class HPotionEffect extends SerializableObject implements Serializable {
-	
-	private static final long serialVersionUID = 1194773802989404854L;
+public class HPotionEffect {
+
 
 	private String potionEffectType;
 	private int amplifier;
@@ -25,22 +21,22 @@ public class HPotionEffect extends SerializableObject implements Serializable {
 		this.isAmbient = isAmbient;
     }
 
-	public HPotionEffect(String base64String) {
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HPotionEffect)) {return;}
-			HPotionEffect spe = (HPotionEffect)o;
-			this.potionEffectType = spe.getType();
-			this.amplifier = spe.getAmplifier();
-			this.duration = spe.getDuration();
-			this.isAmbient = spe.isAmbient();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	public HPotionEffect(String serialized) {
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		this.potionEffectType = data.get("potionEffectType");
+		this.amplifier = Integer.parseInt(data.get("amplifier"));
+		this.duration = Integer.parseInt(data.get("duration"));
+		this.isAmbient = Boolean.parseBoolean(data.get("isAmbient"));
     }
+
+	public String serialize() {
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("potionEffectType", potionEffectType);
+		data.put("amplifier", amplifier+"");
+		data.put("duration", duration+"");
+		data.put("isAmbient", isAmbient+"");
+		return CommonFunctions.implodeMap(data);
+	}
 
 	public String getType() {
 		return potionEffectType;

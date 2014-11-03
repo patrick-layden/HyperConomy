@@ -1,47 +1,56 @@
 package regalowl.hyperconomy.inventory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
+import regalowl.databukkit.CommonFunctions;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
  
 
-public class HItemMeta extends SerializableObject implements Serializable {
+public class HItemMeta {
 
-	private static final long serialVersionUID = 4510326523024526205L;
 	
 	protected String displayName;
 	protected List<String> lore = new ArrayList<String>();
 	protected List<HEnchantment> enchantments = new ArrayList<HEnchantment>();
  
-	
+
 	public HItemMeta(String displayName, List<String> lore, List<HEnchantment> enchantments) {
         this.displayName = displayName;
         this.lore = lore;
         this.enchantments = enchantments;
     }
-
-	public HItemMeta(String base64String) {
-    	try {
-			byte[] data = Base64Coder.decode(base64String);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o = ois.readObject();
-			ois.close();
-			if (!(o instanceof HItemMeta)) {return;}
-			HItemMeta se = (HItemMeta)o;
-	        this.displayName = se.getDisplayName();
-	        this.lore = se.getLore();
-	        this.enchantments = se.getEnchantments();
-    	} catch (Exception e) {
-    		HC.hc.getDataBukkit().writeError(e);
-    	}
+	
+	public HItemMeta(String serialized) {
+		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+		this.displayName = data.get("displayName");
+		this.lore = CommonFunctions.explode(data.get("lore"));
+		ArrayList<String> sEnchants = CommonFunctions.explode(data.get("enchantments"));
+		for (String e:sEnchants) {
+			enchantments.add(new HEnchantment(e));
+		}
     }
+
+	public String serialize() {
+		return CommonFunctions.implodeMap(getMap());
+	}
+	
+	public HashMap<String,String> getMap() {
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("displayName", displayName);
+		data.put("lore", CommonFunctions.implode(lore));
+		ArrayList<String> sEnchants = new ArrayList<String>();
+		for (HEnchantment e:enchantments) {
+			sEnchants.add(e.serialize());
+		}
+		data.put("enchantments", CommonFunctions.implode(sEnchants));
+		return data;
+	}
+
+
 	
 	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
 		ArrayList<String> info = new ArrayList<String>();
@@ -100,6 +109,32 @@ public class HItemMeta extends SerializableObject implements Serializable {
 	}
 	
 	
+	public static HItemMeta fromClass(String s, String data) {
+		if (s == null || data == null) return null;
+		if (s.equalsIgnoreCase("HItemMeta")) {
+			return new HItemMeta(data);
+		} else if (s.equalsIgnoreCase("HBookMeta")) {
+			return new HBookMeta(data);
+		} else if (s.equalsIgnoreCase("HEnchantmentStorageMeta")) {
+			return new HEnchantmentStorageMeta(data);
+		} else if (s.equalsIgnoreCase("HFireworkEffectMeta")) {
+			return new HFireworkEffectMeta(data);
+		} else if (s.equalsIgnoreCase("HFireworkMeta")) {
+			return new HFireworkMeta(data);
+		} else if (s.equalsIgnoreCase("HLeatherArmorMeta")) {
+			return new HLeatherArmorMeta(data);
+		} else if (s.equalsIgnoreCase("HMapMeta")) {
+			return new HMapMeta(data);
+		} else if (s.equalsIgnoreCase("HPotionMeta")) {
+			return new HPotionMeta(data);
+		} else if (s.equalsIgnoreCase("HSkullMeta")) {
+			return new HSkullMeta(data);
+		} else {
+			return null;
+		}
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -122,13 +157,15 @@ public class HItemMeta extends SerializableObject implements Serializable {
 		if (displayName == null) {
 			if (other.displayName != null)
 				return false;
-		} else if (!displayName.equals(other.displayName))
+		} else if (!displayName.equals(other.displayName)) {
 			return false;
+		}
 		if (enchantments == null) {
 			if (other.enchantments != null)
 				return false;
-		} else if (!enchantments.equals(other.enchantments))
+		} else if (!enchantments.equals(other.enchantments)) {
 			return false;
+		}
 		if (lore == null) {
 			if (other.lore != null)
 				return false;
