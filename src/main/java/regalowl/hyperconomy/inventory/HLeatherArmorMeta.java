@@ -1,8 +1,8 @@
 package regalowl.hyperconomy.inventory;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import regalowl.databukkit.CommonFunctions;
 
@@ -13,7 +13,7 @@ public class HLeatherArmorMeta extends HItemMeta {
 	private HColor color;
 
 	
-	public HLeatherArmorMeta(String displayName, List<String> lore, List<HEnchantment> enchantments, HColor color) {
+	public HLeatherArmorMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, HColor color) {
 		super(displayName, lore, enchantments);
 		this.color = color;
 	}

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import regalowl.databukkit.CommonFunctions;
-import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
  
 
@@ -14,11 +13,11 @@ public class HItemMeta {
 
 	
 	protected String displayName;
-	protected List<String> lore = new ArrayList<String>();
-	protected List<HEnchantment> enchantments = new ArrayList<HEnchantment>();
+	protected ArrayList<String> lore = new ArrayList<String>();
+	protected ArrayList<HEnchantment> enchantments = new ArrayList<HEnchantment>();
  
 
-	public HItemMeta(String displayName, List<String> lore, List<HEnchantment> enchantments) {
+	public HItemMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments) {
         this.displayName = displayName;
         this.lore = lore;
         this.enchantments = enchantments;
@@ -147,31 +146,21 @@ public class HItemMeta {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
 		HItemMeta other = (HItemMeta) obj;
-		if (displayName == null) {
-			if (other.displayName != null)
-				return false;
-		} else if (!displayName.equals(other.displayName)) {
-			return false;
-		}
+		if (displayName == null && other.getDisplayName() != null) return false;
+		if (!displayName.equals(other.getDisplayName())) return false;
 		if (enchantments == null) {
-			if (other.enchantments != null)
-				return false;
-		} else if (!enchantments.equals(other.enchantments)) {
-			return false;
-		}
+			if (other.getEnchantments() != null) return false;
+		} else if (!enchantments.equals(other.getEnchantments())) return false;
 		if (lore == null) {
-			if (other.lore != null)
-				return false;
-		} else if (!lore.equals(other.lore))
-			return false;
+			if (other.getLore() != null) return false;
+		} else if (!lore.equals(other.getLore())) return false;
 		return true;
 	}
+
+
 
 }

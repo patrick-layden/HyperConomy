@@ -1,7 +1,7 @@
 package regalowl.hyperconomy.inventory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import regalowl.databukkit.CommonFunctions;
  
@@ -9,10 +9,10 @@ import regalowl.databukkit.CommonFunctions;
 public class HBookMeta extends HItemMeta {
 
 	private String author;
-	private List<String> pages;
+	private ArrayList<String> pages;
 	private String title;
 
-	public HBookMeta(String displayName, List<String> lore, List<HEnchantment> enchantments, String author, List<String> pages, String title) {
+	public HBookMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, String author, ArrayList<String> pages, String title) {
 		super(displayName, lore, enchantments);
 		this.author = author;
 		this.pages = pages;
@@ -38,7 +38,7 @@ public class HBookMeta extends HItemMeta {
 	}
 	
 
-	public List<String> getPages() {
+	public ArrayList<String> getPages() {
 		return pages;
 	}
 	

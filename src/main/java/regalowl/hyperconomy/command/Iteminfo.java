@@ -21,10 +21,25 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 			sis = hp.getItemInHand();
 			ho = he.getHyperObject(sis);
 		} else {
-			if (args[0].equalsIgnoreCase("printdata")) {
+			if (args[0].equalsIgnoreCase("pd")) {
 				sis = hp.getItemInHand();
 				data.addResponse(sis.serialize());
 				return data;
+			} else if (args[0].equalsIgnoreCase("comp")) {
+				if (args.length == 2) {
+					TradeObject to = HC.hc.getDataManager().getDefaultEconomy().getHyperObject(args[1]);
+					sis = hp.getItemInHand();
+					HItemStack sis2 = to.getItem();
+					if (sis.equals(sis2)) {
+						data.addResponse("Objects equal.");
+						return data;
+					} else {
+						data.addResponse("Objects not equal.");
+						data.addResponse("Held: "+sis.serialize());
+						data.addResponse("TradeObject: "+sis2.serialize());
+						return data;
+					}
+				}
 			}
 			ho = he.getHyperObject(args[0]);
 			if (ho == null) {

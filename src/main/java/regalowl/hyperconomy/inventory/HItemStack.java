@@ -127,9 +127,11 @@ public class HItemStack {
 		return true;
 	}
 	
-	public double getDurabilityPercent() {return (isDurable()) ? (1 - (durability / maxDurability)) : 1.0;}
+	public double getDurabilityPercent() {return (isDurable()) ? (1.0 - ((double)durability / (double)maxDurability)) : 1.0;}
 	public boolean isDurable() {return (maxDurability > 0) ? true : false;}
 	public boolean isDamaged() {return (isDurable() && durability > 0) ? true : false;}
+	public int getComparisonData() {return (isDamaged()) ? 0:data;}
+	public int getComparisonDurability() {return (isDamaged()) ? 0:durability;}
 	
 	public void setBlank() {
 		this.isBlank = true;
@@ -177,6 +179,9 @@ public class HItemStack {
 		return itemMeta.hasEnchantments();
 	}
 
+
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -198,37 +203,41 @@ public class HItemStack {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		HItemStack other = (HItemStack) obj;
-		if (amount != other.amount) return false;
-		if (data != other.data) return false;
-		if (durability != other.durability) return false;
-		if (isBlank != other.isBlank) return false;
+		if (amount != other.getAmount()) return false;
+		if (data != other.getData()) return false;
+		if (durability != other.getDurability()) return false;
+		if (isBlank != other.isBlank()) return false;
 		if (itemMeta == null) {
-			if (other.itemMeta != null) return false;
-		} else if (!itemMeta.equals(other.itemMeta)) return false;
+			if (other.getItemMeta() != null) return false;
+		} else if (!itemMeta.equals(other.getItemMeta()))
+			return false;
 		if (material == null) {
-			if (other.material != null) return false;
-		} else if (!material.equals(other.material)) return false;
-		if (maxDurability != other.maxDurability) return false;
-		if (maxStackSize != other.maxStackSize) return false;
+			if (other.getMaterial() != null) return false;
+		} else if (!material.equals(other.getMaterial()))
+			return false;
+		if (maxDurability != other.getMaxDurability()) return false;
+		if (maxStackSize != other.getMaxStackSize()) return false;
 		return true;
 	}
-
+	
 	public boolean isSimilarTo(Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		HItemStack other = (HItemStack) obj;
-		if (data != other.data) return false;
-		if (durability != other.durability) return false;
-		if (isBlank != other.isBlank) return false;
+		if (getComparisonData() != other.getComparisonData()) return false;
+		if (getComparisonDurability() != other.getComparisonDurability()) return false;
+		if (isBlank != other.isBlank()) return false;
 		if (itemMeta == null) {
-			if (other.itemMeta != null) return false;
-		} else if (!itemMeta.equals(other.itemMeta)) return false;
+			if (other.getItemMeta() != null) return false;
+		} else if (!itemMeta.equals(other.getItemMeta()))
+			return false;
 		if (material == null) {
-			if (other.material != null) return false;
-		} else if (!material.equals(other.material)) return false;
-		if (maxDurability != other.maxDurability) return false;
-		if (maxStackSize != other.maxStackSize) return false;
+			if (other.getMaterial() != null) return false;
+		} else if (!material.equals(other.getMaterial()))
+			return false;
+		if (maxDurability != other.getMaxDurability()) return false;
+		if (maxStackSize != other.getMaxStackSize()) return false;
 		return true;
 	}
 

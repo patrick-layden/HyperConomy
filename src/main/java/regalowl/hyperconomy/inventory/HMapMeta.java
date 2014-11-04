@@ -1,8 +1,8 @@
 package regalowl.hyperconomy.inventory;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import regalowl.databukkit.CommonFunctions;
 
@@ -12,7 +12,7 @@ public class HMapMeta extends HItemMeta {
 
 	private boolean isScaling;
 
-	public HMapMeta(String displayName, List<String> lore, List<HEnchantment> enchantments, boolean isScaling) {
+	public HMapMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, boolean isScaling) {
 		super(displayName, lore, enchantments);
 		this.isScaling = isScaling;
 	}

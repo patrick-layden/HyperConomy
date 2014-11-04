@@ -1,8 +1,7 @@
 package regalowl.hyperconomy.inventory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
 
 import regalowl.databukkit.CommonFunctions;
 
@@ -13,7 +12,7 @@ public class HSkullMeta extends HItemMeta {
 
 	private String owner;
 
-	public HSkullMeta(String displayName, List<String> lore, List<HEnchantment> enchantments, String owner) {
+	public HSkullMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, String owner) {
 		super(displayName, lore, enchantments);
 		this.owner = owner;
 	}

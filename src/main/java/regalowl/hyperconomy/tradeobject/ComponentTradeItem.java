@@ -9,24 +9,19 @@ import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HInventory;
-import regalowl.hyperconomy.inventory.HInventoryType;
 import regalowl.hyperconomy.inventory.HItemStack;
 
 
 public class ComponentTradeItem extends BasicTradeObject implements TradeObject {
 
 	private static final long serialVersionUID = -845888542311735442L;
-	private String base64Item;
+	private String itemData;
 
 	
 
-	public ComponentTradeItem(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String base64ItemData) {
+	public ComponentTradeItem(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String itemData) {
 		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
-		this.base64Item = base64ItemData;
-	}
-	
-	private HItemStack getSIS() {
-		return new HItemStack(base64Item);
+		this.itemData = itemData;
 	}
 	
 	@Override
@@ -34,7 +29,7 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 		HC hc = HC.hc;
 		Image i = null;
 		URL url = null;
-		HItemStack sis = getSIS();
+		HItemStack sis = getItem();
 		if (sis.getMaterial().equalsIgnoreCase("POTION")) {
 			url = hc.getClass().getClassLoader().getResource("Images/potion.png");
 		} else {
@@ -57,39 +52,31 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 
 	@Override
 	public int count(HInventory inventory) {
-		int totalitems = 0;
-		for (int slot = 0; slot < inventory.getSize(); slot++) {
-			HItemStack currentItem = inventory.getItem(slot);
-			if (matchesItemStack(currentItem)) {
-				totalitems += currentItem.getAmount();
-			}
-		}
-		return totalitems;
+		return inventory.count(getItem());
 	}
 	@Override
 	public int getAvailableSpace(HInventory inventory) {
-		return inventory.getAvailableSpace(getSIS());
+		return inventory.getAvailableSpace(getItem());
 	}
 	
 	@Override
 	public HItemStack getItemStack(int amount) {
-		HItemStack sis = getSIS();
+		HItemStack sis = getItem();
 		sis.setAmount(amount);
 		return sis;
 	}
 	@Override
 	public HItemStack getItem() {
-		return getSIS();
+		return new HItemStack(itemData);
 	}
 	@Override
 	public boolean matchesItemStack(HItemStack stack) {
-		HItemStack thisSis = getSIS();
 		if (stack == null) {return false;}
-		return stack.isSimilarTo(thisSis);
+		return stack.isSimilarTo(getItem());
 	}
 	@Override
 	public String getData() {
-		return base64Item;
+		return itemData;
 	}
 	
 	@Override
@@ -99,7 +86,7 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 	@Override
 	public void setData(String data) {
 		HC hc = HC.hc;
-		this.base64Item = data;
+		this.itemData = data;
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
@@ -118,38 +105,7 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 
 	@Override
 	public double getDamageMultiplier(int amount, HInventory inventory) {
-		HC hc = HC.hc;
-		HItemStack sis = getSIS();
-		try {
-			double damage = 0;
-			if (!isDurable()) {return 1;}
-			int totalitems = 0;
-			int heldslot = -1;
-			if (inventory.getInventoryType() == HInventoryType.PLAYER) {
-				HItemStack ci = inventory.getHeldItem();
-				if (ci.isSimilarTo(sis)) {
-					damage += ci.getDurabilityPercent();
-					totalitems++;
-					heldslot = inventory.getHeldSlot();
-					if (totalitems >= amount) {return damage;}
-				}
-			}
-			for (int slot = 0; slot < inventory.getSize(); slot++) {
-				if (slot == heldslot) {continue;}
-				HItemStack ci = inventory.getItem(slot);
-				if (!ci.isSimilarTo(sis)) {continue;}
-				damage += ci.getDurabilityPercent();
-				totalitems++;
-				if (totalitems >= amount) {break;}
-			}
-			damage /= amount;
-			if (damage == 0) {return 1;}
-			return damage;
-		} catch (Exception e) {
-			String info = "getDamageMultiplier() passed values amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
-			return 0;
-		}
+		return inventory.getPercentDamaged(amount, getItem());
 	}
 
 

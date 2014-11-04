@@ -3,7 +3,6 @@ package regalowl.hyperconomy.inventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import regalowl.databukkit.CommonFunctions;
 
@@ -11,11 +10,11 @@ import regalowl.databukkit.CommonFunctions;
 
 public class HFireworkMeta extends HItemMeta {
 	
-	private List<HFireworkEffect> effects = new ArrayList<HFireworkEffect>();
+	private ArrayList<HFireworkEffect> effects = new ArrayList<HFireworkEffect>();
 	private int power;
 
 	
-	public HFireworkMeta(String displayName, List<String> lore, List<HEnchantment> enchantments, List<HFireworkEffect> effects, int power) {
+	public HFireworkMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HFireworkEffect> effects, int power) {
 		super(displayName, lore, enchantments);
 		this.effects = effects;
 		this.power = power;
@@ -44,7 +43,7 @@ public class HFireworkMeta extends HItemMeta {
 	}
 	
 
-	public List<HFireworkEffect> getEffects() {
+	public ArrayList<HFireworkEffect> getEffects() {
 		return effects;
 	}
 	public int getPower() {

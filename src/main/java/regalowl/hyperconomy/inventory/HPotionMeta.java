@@ -3,16 +3,15 @@ package regalowl.hyperconomy.inventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import regalowl.databukkit.CommonFunctions;
  
 
 public class HPotionMeta extends HItemMeta {
 
-	private List<HPotionEffect> potionEffects = new ArrayList<HPotionEffect>();
+	private ArrayList<HPotionEffect> potionEffects = new ArrayList<HPotionEffect>();
 
-	public HPotionMeta(String displayName, List<String> lore, List<HEnchantment> enchantments, List<HPotionEffect> potionEffects) {
+	public HPotionMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HPotionEffect> potionEffects) {
 		super(displayName, lore, enchantments);
 		this.potionEffects = potionEffects;
 	}
@@ -38,7 +37,7 @@ public class HPotionMeta extends HItemMeta {
 	
 
 	
-	public List<HPotionEffect> getPotionEffects() {
+	public ArrayList<HPotionEffect> getPotionEffects() {
 		return potionEffects;
 	}
 

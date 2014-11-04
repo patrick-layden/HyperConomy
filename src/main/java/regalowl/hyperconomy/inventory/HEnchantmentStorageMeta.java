@@ -3,7 +3,6 @@ package regalowl.hyperconomy.inventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 
 import regalowl.databukkit.CommonFunctions;
@@ -12,9 +11,9 @@ import regalowl.databukkit.CommonFunctions;
 
 public class HEnchantmentStorageMeta extends HItemMeta {
 
-	private List<HEnchantment> storedEnchantments = new ArrayList<HEnchantment>();
+	private ArrayList<HEnchantment> storedEnchantments = new ArrayList<HEnchantment>();
 
-	public HEnchantmentStorageMeta(String displayName, List<String> lore, List<HEnchantment> enchantments, List<HEnchantment> storedEnchantments) {
+	public HEnchantmentStorageMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HEnchantment> storedEnchantments) {
 		super(displayName, lore, enchantments);
 		this.storedEnchantments = storedEnchantments;
 	}
@@ -40,7 +39,7 @@ public class HEnchantmentStorageMeta extends HItemMeta {
 	
 	
 	@Override
-	public List<HEnchantment> getEnchantments() {
+	public ArrayList<HEnchantment> getEnchantments() {
 		return storedEnchantments;
 	}
 	

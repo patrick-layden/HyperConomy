@@ -1,8 +1,7 @@
 package regalowl.hyperconomy.inventory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
 
 import regalowl.databukkit.CommonFunctions;
 
@@ -13,7 +12,7 @@ public class HFireworkEffectMeta extends HItemMeta {
 	private HFireworkEffect effect;
 
 	
-	public HFireworkEffectMeta(String displayName, List<String> lore, List<HEnchantment> enchantments, HFireworkEffect effect) {
+	public HFireworkEffectMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, HFireworkEffect effect) {
 		super(displayName, lore, enchantments);
 		this.effect = effect;
 	}

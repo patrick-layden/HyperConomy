@@ -116,18 +116,18 @@ public class HInventory {
 	
 	
 	public double remove(int removeAmount, HItemStack removeStack) {
-		double actuallyRemoved = 0;
+		double actuallyRemoved = 0.0;
 		if (inventoryType == HInventoryType.PLAYER) {
 			HItemStack heldStack = getHeldItem();
 			if (removeStack.isSimilarTo(heldStack)) {
 				if (removeAmount >= heldStack.getAmount()) {
 					actuallyRemoved += heldStack.getTrueAmount();
-					clearSlot(heldSlot);
 					removeAmount -= heldStack.getAmount();
+					clearSlot(heldSlot);
 				} else {
 					actuallyRemoved += removeAmount * heldStack.getDurabilityPercent();
-					heldStack.setAmount(heldStack.getAmount() - removeAmount);
 					removeAmount = 0;
+					heldStack.setAmount(heldStack.getAmount() - removeAmount);
 				}
 			}
 		}
@@ -137,12 +137,12 @@ public class HInventory {
 			if (removeStack.isSimilarTo(currentItem)) {
 				if (removeAmount >= currentItem.getAmount()) {
 					actuallyRemoved += currentItem.getTrueAmount();
-					clearSlot(slot);
 					removeAmount -= currentItem.getAmount();
+					clearSlot(slot);
 				} else {
 					actuallyRemoved += removeAmount * currentItem.getDurabilityPercent();
-					currentItem.setAmount(currentItem.getAmount() - removeAmount);
 					removeAmount = 0;
+					currentItem.setAmount(currentItem.getAmount() - removeAmount);
 				}
 			}
 			slot++;
@@ -152,6 +152,7 @@ public class HInventory {
 		updateInventory();
 		return actuallyRemoved;
 	}
+
 	
 	public int getAvailableSpace(HItemStack stack) {
 		int availableSpace = 0;
@@ -164,6 +165,43 @@ public class HInventory {
 			}
 		}
 		return availableSpace;
+	}
+	
+	public int count(HItemStack stack) {
+		int itemCount = 0;
+		for (int slot = 0; slot < getSize(); slot++) {
+			HItemStack currentItem = getItem(slot);
+			if (currentItem.isSimilarTo(stack)) {
+				itemCount += currentItem.getAmount();
+			}
+		}
+		return itemCount;
+	}
+	
+	public double getPercentDamaged(int amount, HItemStack stack) {
+		double totalDamage = 0;
+		if (!stack.isDurable()) return 1;
+		int totalItems = 0;
+		int heldslot = -1;
+		if (inventoryType == HInventoryType.PLAYER) {
+			HItemStack heldItem = getHeldItem();
+			if (heldItem.isSimilarTo(stack)) {
+				heldslot = getHeldSlot();
+				totalDamage += heldItem.getDurabilityPercent();
+				totalItems += heldItem.getAmount();
+				if (totalItems >= amount) return totalDamage;
+			}
+		}
+		for (int slot = 0; slot < getSize(); slot++) {
+			if (slot == heldslot) continue;
+			HItemStack ci = getItem(slot);
+			if (!ci.isSimilarTo(stack)) continue;
+			totalDamage += ci.getDurabilityPercent();
+			totalItems += ci.getAmount();
+			if (totalItems >= amount) break;
+		}
+		totalDamage /= amount;
+		return totalDamage;
 	}
 	
 

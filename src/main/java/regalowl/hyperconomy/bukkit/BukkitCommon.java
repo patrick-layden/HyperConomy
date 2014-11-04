@@ -2,7 +2,6 @@ package regalowl.hyperconomy.bukkit;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -348,9 +347,10 @@ public class BukkitCommon {
         if (isBlank) sis.setBlank();
         if (s.hasItemMeta()) {
         	ItemMeta im = s.getItemMeta();
-            String displayName = im.getDisplayName();
-            List<String> lore = im.getLore();
-            List<HEnchantment> enchantments = new ArrayList<HEnchantment>();
+            String displayName = (im.getDisplayName() == null) ? "":im.getDisplayName();
+            ArrayList<String> lore = new ArrayList<String>();
+            if (im.getLore() != null) lore.addAll(im.getLore());
+            ArrayList<HEnchantment> enchantments = new ArrayList<HEnchantment>();
             Map<Enchantment, Integer> enchants = im.getEnchants();
     		Iterator<Enchantment> it = enchants.keySet().iterator();
     		while (it.hasNext()) {
@@ -361,7 +361,7 @@ public class BukkitCommon {
     		HItemMeta itemMeta = null;
         	if (im instanceof EnchantmentStorageMeta) {
         		EnchantmentStorageMeta sItemMeta = (EnchantmentStorageMeta)im;
-        		List<HEnchantment> storedEnchantments = new ArrayList<HEnchantment>();
+        		ArrayList<HEnchantment> storedEnchantments = new ArrayList<HEnchantment>();
     			Map<Enchantment, Integer> stored = sItemMeta.getStoredEnchants();
     			Iterator<Enchantment> iter = stored.keySet().iterator();
     			while (iter.hasNext()) {
@@ -372,34 +372,40 @@ public class BukkitCommon {
         		itemMeta = new HEnchantmentStorageMeta(displayName, lore, enchantments, storedEnchantments);
         	} else if (im instanceof BookMeta) {
         		BookMeta sItemMeta = (BookMeta)im;
-        		itemMeta = new HBookMeta(displayName, lore, enchantments, sItemMeta.getAuthor(), sItemMeta.getPages(), sItemMeta.getTitle());
+        		ArrayList<String> pages = new ArrayList<String>();
+        		if (sItemMeta.getPages() != null) pages.addAll(sItemMeta.getPages());
+        		itemMeta = new HBookMeta(displayName, lore, enchantments, sItemMeta.getAuthor(), pages, sItemMeta.getTitle());
         	} else if (im instanceof FireworkEffectMeta) {
         		FireworkEffectMeta sItemMeta = (FireworkEffectMeta)im;
         		FireworkEffect fe = sItemMeta.getEffect();
         		ArrayList<HColor> colors = new ArrayList<HColor>();
-        		for (Color color:fe.getColors()) {
-        			colors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
-        		}
         		ArrayList<HColor> fadeColors = new ArrayList<HColor>();
-        		for (Color color:fe.getFadeColors()) {
-        			fadeColors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
+        		if (fe != null) {
+	        		for (Color color:fe.getColors()) {
+	        			colors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
+	        		}
+	        		for (Color color:fe.getFadeColors()) {
+	        			fadeColors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
+	        		}
         		}
         		HFireworkEffect sfe = new HFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail());
         		itemMeta = new HFireworkEffectMeta(displayName, lore, enchantments, sfe);
         	} else if (im instanceof FireworkMeta) {
         		FireworkMeta sItemMeta = (FireworkMeta)im;
         		ArrayList<HFireworkEffect> fireworkEffects = new ArrayList<HFireworkEffect>();
-    			for (FireworkEffect fe:sItemMeta.getEffects()) {
-	        		ArrayList<HColor> colors = new ArrayList<HColor>();
-	        		for (Color color:fe.getColors()) {
-	        			colors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
-	        		}
-	        		ArrayList<HColor> fadeColors = new ArrayList<HColor>();
-	        		for (Color color:fe.getFadeColors()) {
-	        			fadeColors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
-	        		}
-	        		fireworkEffects.add(new HFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail()));
-    			}
+        		if (sItemMeta.getEffects() != null) {
+	    			for (FireworkEffect fe:sItemMeta.getEffects()) {
+		        		ArrayList<HColor> colors = new ArrayList<HColor>();
+		        		ArrayList<HColor> fadeColors = new ArrayList<HColor>();
+		        		for (Color color:fe.getColors()) {
+		        			colors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
+		        		}
+		        		for (Color color:fe.getFadeColors()) {
+		        			fadeColors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
+		        		}
+		        		fireworkEffects.add(new HFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail()));
+	    			}
+        		}
         		itemMeta = new HFireworkMeta(displayName, lore, enchantments, fireworkEffects, sItemMeta.getPower());
         	} else if (im instanceof LeatherArmorMeta) {
         		LeatherArmorMeta sItemMeta = (LeatherArmorMeta)im;
@@ -408,8 +414,10 @@ public class BukkitCommon {
         	} else if (im instanceof PotionMeta) {
         		PotionMeta sItemMeta = (PotionMeta)im;
         		ArrayList<HPotionEffect> potionEffects = new ArrayList<HPotionEffect>();
-        		for (PotionEffect pe:sItemMeta.getCustomEffects()) {
-        			potionEffects.add(new HPotionEffect(pe.getType().toString(), pe.getAmplifier(), pe.getDuration(), pe.isAmbient()));
+        		if (sItemMeta.getCustomEffects() != null) {
+	        		for (PotionEffect pe:sItemMeta.getCustomEffects()) {
+	        			potionEffects.add(new HPotionEffect(pe.getType().toString(), pe.getAmplifier(), pe.getDuration(), pe.isAmbient()));
+	        		}
         		}
         		itemMeta = new HPotionMeta(displayName, lore, enchantments, potionEffects);
         	} else if (im instanceof SkullMeta) {
