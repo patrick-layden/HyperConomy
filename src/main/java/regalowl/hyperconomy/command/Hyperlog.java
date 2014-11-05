@@ -163,9 +163,9 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 			time = time.substring(0, time.indexOf(" "));
 			time = time.substring(time.indexOf("-") + 1, time.length());
 			if (action.equalsIgnoreCase("purchase")) {
-				entry = HC.mc.applyColor("[" + "&c" + time + "&f" + "]" + "&e" + store + "&f" + "->" + "&b" + customer + "&f" + "[" + "&9" + amount + " " + "&9" + object + "&f" + "]" + "[" + "&a" + L.fC(money) + "&f" + "]");
+				entry = "[" + "&c" + time + "&f" + "]" + "&e" + store + "&f" + "->" + "&b" + customer + "&f" + "[" + "&9" + amount + " " + "&9" + object + "&f" + "]" + "[" + "&a" + L.fC(money) + "&f" + "]";
 			} else if (action.equalsIgnoreCase("sale")) {
-				entry = HC.mc.applyColor("[" + "&c" + time + "&f" + "]" + "&b" + customer + "&f" + "->" + "&e" + store + "&f" + "[" + "&9" + amount + " " + "&9" + object + "&f" + "]" + "[" + "&a" + L.fC(money) + "&f" + "]");
+				entry = "[" + "&c" + time + "&f" + "]" + "&b" + customer + "&f" + "->" + "&e" + store + "&f" + "[" + "&9" + amount + " " + "&9" + object + "&f" + "]" + "[" + "&a" + L.fC(money) + "&f" + "]";
 			}
 			entries.add(entry);
 		}

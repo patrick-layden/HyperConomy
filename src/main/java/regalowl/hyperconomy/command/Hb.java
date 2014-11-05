@@ -17,6 +17,7 @@ public class Hb extends BaseCommand implements HyperCommand{
 	@Override
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
+		try {
 		double amount;
 		boolean ma = false;
 		HyperEconomy he = hp.getHyperEconomy();
@@ -62,7 +63,9 @@ public class Hb extends BaseCommand implements HyperCommand{
 		pt.setTradePartner(s.getOwner());
 		TransactionResponse response = hp.processTransaction(pt);
 		response.sendMessages();
-
+		} catch (Exception e) {
+			hc.gDB().writeError(e);
+		}
 		return data;
 	}
 }

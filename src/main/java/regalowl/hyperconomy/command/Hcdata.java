@@ -130,7 +130,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				if (dm.economyExists(economy)) {
 					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
 					ArrayList<String> added = dm.getEconomy(economy).loadNewItems();
-					data.addResponse(HC.mc.applyColor("&6" + added.toString() + " " + L.get("LOADED_INTO_ECONOMY")));
+					data.addResponse("&6" + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
 				} else {
 					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
 				}

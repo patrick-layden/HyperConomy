@@ -67,11 +67,11 @@ public class InfoSign {
 		line1 = HC.mc.removeColor(s.getLine(0).trim());
 		line2 = HC.mc.removeColor(s.getLine(1).trim());
 		if (line1.length() > 13) {
-			line2 = HC.mc.applyColor("&1" + line1.substring(13, line1.length()) + line2);
-			line1 = HC.mc.applyColor("&1" + line1.substring(0, 13));
+			line2 = "&1" + line1.substring(13, line1.length()) + line2;
+			line1 = "&1" + line1.substring(0, 13);
 		} else {
-			line1 = HC.mc.applyColor("&1" + line1);
-			line2 = HC.mc.applyColor("&1" + line2);
+			line1 = "&1" + line1;
+			line2 = "&1" + line2;
 		}
 		line3 = s.getLine(2);
 		line4 = s.getLine(3);
@@ -103,11 +103,11 @@ public class InfoSign {
 		line1 = HC.mc.removeColor(lines[0].trim());
 		line2 = HC.mc.removeColor(lines[1].trim());
 		if (line1.length() > 13) {
-			line2 = HC.mc.applyColor("&1" + line1.substring(13, line1.length()) + line2);
-			line1 = HC.mc.applyColor("&1" + line1.substring(0, 13));
+			line2 = "&1" + line1.substring(13, line1.length()) + line2;
+			line1 = "&1" + line1.substring(0, 13);
 		} else {
-			line1 = HC.mc.applyColor("&1" + line1);
-			line2 = HC.mc.applyColor("&1" + line2);
+			line1 = "&1" + line1;
+			line2 = "&1" + line2;
 		}
 		line3 = lines[2];
 		line4 = lines[3];
@@ -179,75 +179,75 @@ public class InfoSign {
 					if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 						double cost = ho.getBuyPrice(enchantClass);
 						cost = CommonFunctions.twoDecimals((cost + ho.getPurchaseTax(cost)) * multiplier);
-						line3 = HC.mc.applyColor("&f" + "Buy:");
-						line4 = HC.mc.applyColor("&a" + L.fCS(cost));
+						line3 = "&f" + "Buy:";
+						line4 = "&a" + L.fCS(cost);
 					} else if (ho.getType() == TradeObjectType.ITEM) {
 						double pcost = ho.getBuyPrice(1);
-						line3 = HC.mc.applyColor("&f" + "Buy:");
-						line4 = HC.mc.applyColor("&a" + L.fCS(CommonFunctions.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier)));
+						line3 = "&f" + "Buy:";
+						line4 = "&a" + L.fCS(CommonFunctions.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
 					} else {
 						double pcost = ho.getBuyPrice(1);
-						line3 = HC.mc.applyColor("&f" + "Buy:");
-						line4 = HC.mc.applyColor("&a" + L.fCS(CommonFunctions.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier)));
+						line3 = "&f" + "Buy:";
+						line4 = "&a" + L.fCS(CommonFunctions.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
 					}
 					break;
 				case SELL:
 					if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 						double value = ho.getSellPrice(enchantClass);
 						value = CommonFunctions.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
-						line3 = HC.mc.applyColor("&f" + "Sell:");
-						line4 = HC.mc.applyColor("&a" + L.fCS(value));
+						line3 = "&f" + "Sell:";
+						line4 = "&a" + L.fCS(value);
 					} else if (ho.getType() == TradeObjectType.ITEM) {
 						double value = ho.getSellPrice(1);
 						value = CommonFunctions.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
-						line3 = HC.mc.applyColor("&f" + "Sell:");
-						line4 = HC.mc.applyColor("&a" + L.fCS(value));
+						line3 = "&f" + "Sell:";
+						line4 = "&a" + L.fCS(value);
 					} else {
 						double value = ho.getSellPrice(1);
 						value = CommonFunctions.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
-						line3 = HC.mc.applyColor("&f" + "Sell:");
-						line4 = HC.mc.applyColor("&a" + L.fCS(value));
+						line3 = "&f" + "Sell:";
+						line4 = "&a" + L.fCS(value);
 					}
 					break;
 				case STOCK:
-					line3 = HC.mc.applyColor("&f" + "Stock:");
-					line4 = HC.mc.applyColor("&a" + "" + CommonFunctions.twoDecimals(ho.getStock()));
+					line3 = "&f" + "Stock:";
+					line4 = "&a" + "" + CommonFunctions.twoDecimals(ho.getStock());
 					break;
 				case TOTALSTOCK:
-					line3 = HC.mc.applyColor("&f" + "Total Stock:");
-					line4 = HC.mc.applyColor("&a" + "" + CommonFunctions.twoDecimals(ho.getTotalStock()));
+					line3 = "&f" + "Total Stock:";
+					line4 = "&a" + "" + CommonFunctions.twoDecimals(ho.getTotalStock());
 					break;
 				case VALUE:
-					line3 = HC.mc.applyColor("&f" + "Value:");
-					line4 = HC.mc.applyColor("&a" + "" + ho.getValue() * multiplier);
+					line3 = "&f" + "Value:";
+					line4 = "&a" + "" + ho.getValue() * multiplier;
 					break;
 				case STATUS:
 					boolean staticstatus;
 					staticstatus = Boolean.parseBoolean(ho.getIsstatic());
-					line3 = HC.mc.applyColor("&f" + "Status:");
+					line3 = "&f" + "Status:";
 					if (staticstatus) {
-						line4 = HC.mc.applyColor("&a" + "Static");
+						line4 = "&a" + "Static";
 					} else {
 						boolean initialstatus;
 						initialstatus = Boolean.parseBoolean(ho.getInitiation());
 						if (initialstatus) {
-							line4 = HC.mc.applyColor("&a" + "Initial");
+							line4 = "&a" + "Initial";
 						} else {
-							line4 = HC.mc.applyColor("&a" + "Dynamic");
+							line4 = "&a" + "Dynamic";
 						}
 					}
 					break;
 				case STATICPRICE:
-					line3 = HC.mc.applyColor("&f" + "Static Price:");
-					line4 = HC.mc.applyColor("&a" + "" + ho.getStaticprice() * multiplier);
+					line3 = "&f" + "Static Price:";
+					line4 = "&a" + "" + ho.getStaticprice() * multiplier;
 					break;
 				case STARTPRICE:
-					line3 = HC.mc.applyColor("&f" + "Start Price:");
-					line4 = HC.mc.applyColor("&a" + "" + ho.getStartprice() * multiplier);
+					line3 = "&f" + "Start Price:";
+					line4 = "&a" + "" + ho.getStartprice() * multiplier;
 					break;
 				case MEDIAN:
-					line3 = HC.mc.applyColor("&f" + "Median:");
-					line4 = HC.mc.applyColor("&a" + "" + ho.getMedian());
+					line3 = "&f" + "Median:";
+					line4 = "&a" + "" + ho.getMedian();
 					break;
 				case HISTORY:
 					String increment = HC.mc.removeColor(line4.replace(" ", "")).toUpperCase().replaceAll("[0-9]", "");
@@ -278,37 +278,37 @@ public class InfoSign {
 					if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 						double price = ho.getBuyPrice(enchantClass);
 						double taxpaid = CommonFunctions.twoDecimals(ho.getPurchaseTax(price) * multiplier);
-						line3 = HC.mc.applyColor("&f" + "Tax:");
-						line4 = HC.mc.applyColor("&a" + "" + L.fCS(taxpaid));
+						line3 = "&f" + "Tax:";
+						line4 = "&a" + "" + L.fCS(taxpaid);
 					} else if (ho.getType() == TradeObjectType.ITEM) {
-						line3 = HC.mc.applyColor("&f" + "Tax:");
-						line4 = HC.mc.applyColor("&a" + L.fCS(CommonFunctions.twoDecimals(ho.getPurchaseTax(ho.getBuyPrice(1) * multiplier))));
+						line3 = "&f" + "Tax:";
+						line4 = "&a" + L.fCS(CommonFunctions.twoDecimals(ho.getPurchaseTax(ho.getBuyPrice(1) * multiplier)));
 					} else {
 						BasicTradeObject bo = (BasicTradeObject)ho;
-						line3 = HC.mc.applyColor("&f" + "Tax:");
-						line4 = HC.mc.applyColor("&a" + L.fCS(CommonFunctions.twoDecimals(bo.getPurchaseTax(bo.getBuyPrice(1) * multiplier))));
+						line3 = "&f" + "Tax:";
+						line4 = "&a" + L.fCS(CommonFunctions.twoDecimals(bo.getPurchaseTax(bo.getBuyPrice(1) * multiplier)));
 					}
 					break;
 				case SB:
 					if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 						double cost = ho.getBuyPrice(enchantClass);
 						cost = CommonFunctions.twoDecimals((cost + ho.getPurchaseTax(cost)) * multiplier);
-						line4 = HC.mc.applyColor("&f" + "B:" + "\u00A7a" + L.fCS(cost));
+						line4 = "&f" + "B:" + "&a" + L.fCS(cost);
 						double value = ho.getSellPrice(enchantClass);
 						value = CommonFunctions.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
-						line3 = HC.mc.applyColor("&f" + "S:" + "&a" + L.fCS(value));
+						line3 = "&f" + "S:" + "&a" + L.fCS(value);
 					} else if (ho.getType() == TradeObjectType.ITEM) {
 						double pcost = ho.getBuyPrice(1);
-						line4 = HC.mc.applyColor("&f" + "B:" + "&a" + L.fCS(CommonFunctions.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier)));
+						line4 = "&f" + "B:" + "&a" + L.fCS(CommonFunctions.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
 						double value = ho.getSellPrice(1);
 						value = CommonFunctions.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
-						line3 = HC.mc.applyColor("&f" + "S:" + "&a" + L.fCS(value));
+						line3 = "&f" + "S:" + "&a" + L.fCS(value);
 					} else {
 						double pcost = ho.getBuyPrice(1);
-						line4 = HC.mc.applyColor("&f" + "B:" + "&a" + L.fCS(CommonFunctions.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier)));
+						line4 = "&f" + "B:" + "&a" + L.fCS(CommonFunctions.twoDecimals((pcost + ho.getPurchaseTax(pcost)) * multiplier));
 						double value = ho.getSellPrice(1);
 						value = CommonFunctions.twoDecimals((value - ho.getSalesTaxEstimate(value)) * multiplier);
-						line3 = HC.mc.applyColor("&f" + "S:" + "&a" + L.fCS(value));
+						line3 = "&f" + "S:" + "&a" + L.fCS(value);
 					}
 					break;
 				default:
@@ -338,8 +338,8 @@ public class InfoSign {
 				public void run() {
 					String percentchange = hc.getHistory().getPercentChange(ho, timeValueHours);
 					String colorcode = getcolorCode(percentchange);
-					line3 = HC.mc.applyColor("&f" + "History:");
-					line4 = HC.mc.applyColor("&f" + "" + timeValue + increment.toLowerCase() + colorcode + "(" + percentchange + ")");
+					line3 = "&f" + "History:";
+					line4 = "&f" + "" + timeValue + increment.toLowerCase() + colorcode + "(" + percentchange + ")";
 					if (line3.length() > 14) {
 						line3 = line3.substring(0, 13) + ")";
 					}
@@ -364,15 +364,15 @@ public class InfoSign {
 	
 
 	private String getcolorCode(String percentchange) {
-		String colorcode = "\u00A71";
+		String colorcode = "&1";
 		if (percentchange.equalsIgnoreCase("?")) {
-			colorcode = "\u00A71";
+			colorcode = "&1";
 		} else {
 			Double percentc = Double.parseDouble(percentchange);
 			if (percentc > 0) {
-				colorcode = "\u00A7a";
+				colorcode = "&a";
 			} else if (percentc < 0) {
-				colorcode = "\u00A74";
+				colorcode = "&4";
 			}
 		}
 		return colorcode;

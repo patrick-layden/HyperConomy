@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.HumanEntity;
@@ -81,9 +80,10 @@ public class BukkitListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChangeEvent(SignChangeEvent event) {
 		if (event.isCancelled()) return;
-		HyperPlayer hp = HC.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
+		HyperPlayer hp = BukkitCommon.getPlayer(event.getPlayer());
 		HLocation sl = BukkitCommon.getLocation(event.getBlock().getLocation());
 		HSign sign = HC.mc.getSign(sl);
+		sign.setLines(event.getLines().clone());
 		HSignChangeEvent se = new HSignChangeEvent(sign, hp);
 		HC.hc.getHyperEventHandler().fireEvent(se);
 		if (se.isCancelled()) event.setCancelled(true);

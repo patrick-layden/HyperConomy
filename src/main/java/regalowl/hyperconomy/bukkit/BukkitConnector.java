@@ -243,8 +243,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public long runRepeatingTask(Runnable r, Long delayTicks, Long intervalTicks) {
 		BukkitTask t = getServer().getScheduler().runTaskTimer(this, r, delayTicks, intervalTicks);
-		tasks.put(taskCounter.getAndIncrement(), t);
-		return taskCounter.get();
+		long taskCount = taskCounter.getAndIncrement();
+		tasks.put(taskCount, t);
+		return taskCount;
 	}
 	@Override
 	public void cancelTask(long id) {
@@ -495,7 +496,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public void sendMessage(HyperPlayer hp, String message) {
 		Player p = Bukkit.getPlayer(hp.getName());
-		runTask(new Messager(p,message));
+		runTask(new Messager(p,applyColor(message)));
 	}
 	private class Messager implements Runnable {
 		private Player p;
@@ -604,7 +605,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
 			Sign s = (Sign) b.getState();
 			boolean isWallSign = (b.getType().equals(Material.WALL_SIGN)) ? true:false;
-			HSign sign = new HSign(location, s.getLines(), isWallSign);
+			HSign sign = new HSign(new HLocation(location), s.getLines().clone(), isWallSign);
 			return sign;
 		}
 		return null;
@@ -617,6 +618,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		s.setLine(1, applyColor(sign.getLine(1)));
 		s.setLine(2, applyColor(sign.getLine(2)));
 		s.setLine(3, applyColor(sign.getLine(3)));
+		s.update();
 	}
 
 	@Override

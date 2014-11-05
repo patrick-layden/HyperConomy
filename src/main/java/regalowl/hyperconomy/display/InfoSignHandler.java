@@ -108,7 +108,6 @@ public class InfoSignHandler {
 			if (hp.hasPermission("hyperconomy.createsign")) {
 				String[] lines = s.getLines();
 				String economy = "default";
-				economy = "default";
 				if (hp != null && hp.getEconomy() != null) {
 					economy = hp.getEconomy();
 				}
@@ -130,6 +129,7 @@ public class InfoSignHandler {
 				if (em.getEconomy(hp.getEconomy()).objectTest(objectName)) {
 					SignType type = SignType.fromString(lines[2]);
 					if (type != null) {
+						HC.mc.logSevere("create");
 						infoSigns.put(signCounter.getAndIncrement(), new InfoSign(s.getLocation(), type, objectName, multiplier, economy, enchantClass, lines));
 						updateSigns();
 					}

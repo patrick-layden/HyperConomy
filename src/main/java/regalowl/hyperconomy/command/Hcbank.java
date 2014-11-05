@@ -302,7 +302,7 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				HyperBank hb = hbm.getHyperBank(args[1]);
 				if (hb.isOwner(hp) || hp.hasPermission("hyperconomy.viewbanks")) {
 					data.addResponse(L.get("LINE_BREAK"));
-					data.addResponse(L.applyColor("&b&o" + hb.getName()));
+					data.addResponse("&b&o" + hb.getName());
 					data.addResponse(L.f(L.get("BANK_BALANCE"), hb.getBalance()));
 					data.addResponse(L.f(L.get("BANK_OWNERS"), hb.getOwnersList()));
 					data.addResponse(L.f(L.get("BANK_MEMBERS"), hb.getMembersList()));

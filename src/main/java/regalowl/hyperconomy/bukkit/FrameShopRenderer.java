@@ -145,6 +145,6 @@ public class FrameShopRenderer extends MapRenderer {
     }
     
     public String color(String message, byte color) {
-    	return L.get("CC") + color + ";" + message;
+    	return HC.mc.applyColor(color+";") + message;
     }
 }

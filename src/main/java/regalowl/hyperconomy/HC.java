@@ -143,10 +143,7 @@ public class HC {
 		hc = this;
 		api = new HyperAPI();
 		economyApi = new HyperEconAPI();
-		if (db != null) {
-			db.shutDown();
-			db = null;
-		}
+		if (db != null) db.shutDown();
 		db = new DataBukkit("HyperConomy");
 		db.initialize();
 		db.registerListener(this);
@@ -218,14 +215,11 @@ public class HC {
 		if (dm != null) {
 			dm.shutDown();
 		}
-		if (db != null && !protect) {
-			db.shutDown();
-			db = null;
-		}
 		mc.cancelAllTasks();
 		if (heh != null && !protect) {
 			heh.clearListeners();
 		}
+		if (db != null) db.shutDown();
 		if (protect) {
 			new DisabledProtection();
 		}

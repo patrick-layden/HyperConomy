@@ -38,14 +38,14 @@ public class Setchestowner extends BaseCommand implements HyperCommand {
 			if (HC.mc.isChestShopChest(l)) {
 				ChestShop cs = new ChestShop(l);
 				HSign s = cs.getSign();
-				s.setLine(2, "\u00A7f" + line3);
-				s.setLine(3, "\u00A7f" + line4);
+				s.setLine(2, "&f" + line3);
+				s.setLine(3, "&f" + line4);
 				s.update();
 				data.addResponse(L.get("CHEST_OWNER_UPDATED"));
 			} else if (HC.mc.isChestShopSign(l)) {
 				HSign s = HC.mc.getSign(l);
-				s.setLine(2, "\u00A7f" + line3);
-				s.setLine(3, "\u00A7f" + line4);
+				s.setLine(2, "&f" + line3);
+				s.setLine(3, "&f" + line4);
 				s.update();
 				data.addResponse(L.get("CHEST_OWNER_UPDATED"));
 

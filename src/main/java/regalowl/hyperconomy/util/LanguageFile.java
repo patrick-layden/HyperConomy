@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import regalowl.databukkit.file.FileTools;
 import regalowl.hyperconomy.HC;
-import regalowl.hyperconomy.account.HyperPlayer;
 
 public class LanguageFile {
 	
@@ -114,10 +113,8 @@ public class LanguageFile {
 				if (text.startsWith(" ")) {
 					text = text.substring(1, text.length());
 				}
-				text = HC.mc.applyColor(text);
 				language.put(name, text);
 			}
-			language.put("CC", "\u00A7");
 		} catch (Exception e) {
 			Logger log = Logger.getLogger("Minecraft");
 			log.severe("[HyperConomy]You likely have an error in your language file...using a backup.");
@@ -133,10 +130,8 @@ public class LanguageFile {
 			if (text.startsWith(" ")) {
 				text = text.substring(1, text.length());
 			}
-			text = HC.mc.applyColor(text);
 			languageBackup.put(name, text);
 		}
-		languageBackup.put("CC", "\u00A7");
 	}
 	
 
@@ -222,14 +217,7 @@ public class LanguageFile {
 		}
 		return formatted;
 	}
-	
 
-	public String applyColor(String string) {
-		return HC.mc.applyColor(string);
-	}
-	
-	
-	
 	
 	public String f(String inputstring, int value, int value2) {
 		inputstring = inputstring.replace("%v",value+"");
@@ -315,13 +303,15 @@ public class LanguageFile {
 		return inputstring;
 	}
 	
+	
 	public String f(String inputstring, double value, boolean status) {
 		inputstring = inputstring.replace("%s",status+"");
 		inputstring = inputstring.replace("%v",value+"");
 		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
-
+	
+	/*
 	public String f(String inputstring, int amount, double price, String name, HyperPlayer player) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%y",player.getName());
@@ -330,7 +320,8 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%c",get("CURRENCY"));
 		return inputstring;
 	}
-	
+	*/
+	/*
 	public String f(String inputstring, int amount, double price, String name, String isstatic, String isinitial, HyperPlayer player) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%y",player.getName());
@@ -341,7 +332,8 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%zb",isinitial);
 		return inputstring;
 	}
-	
+	*/
+	/*
 	public String f(String inputstring, int amount, double price, String name, String isstatic, String isinitial, HyperPlayer player, String owner) {
 		inputstring = inputstring.replace("%a",amount+"");
 		inputstring = inputstring.replace("%y",player.getName());
@@ -353,6 +345,6 @@ public class LanguageFile {
 		inputstring = inputstring.replace("%zc",owner);
 		return inputstring;
 	}
-	
+	*/
 	
 }

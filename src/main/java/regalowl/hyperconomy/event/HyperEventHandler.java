@@ -5,21 +5,15 @@ import regalowl.hyperconomy.HC;
 
 public class HyperEventHandler {
 	
-	private HC hc;
-	
-    public HyperEventHandler() {
-    	hc = HC.hc;
-    }
-
     public void registerListener(Object listener) {
-    	hc.getDataBukkit().getEventPublisher().registerListener(listener);
+    	HC.hc.getDataBukkit().getEventPublisher().registerListener(listener);
     }
     public void unRegisterListener(Object listener) {
-    	hc.getDataBukkit().getEventPublisher().unRegisterListener(listener);
+    	HC.hc.getDataBukkit().getEventPublisher().unRegisterListener(listener);
     }
     
     public void clearListeners() {
-    	hc.getDataBukkit().getEventPublisher().unRegisterAllListeners();
+    	HC.hc.getDataBukkit().getEventPublisher().unRegisterAllListeners();
     }
 	
 	public void fireEventFromAsyncThread(Event event) {
@@ -31,12 +25,12 @@ public class HyperEventHandler {
     		this.event = event;
     	}
 		public void run() {
-			hc.getDataBukkit().getEventPublisher().fireEvent(event);
+			HC.hc.getDataBukkit().getEventPublisher().fireEvent(event);
 		}
     }
 	
 	public Event fireEvent(Event event) {
-		return hc.getDataBukkit().getEventPublisher().fireEvent(event);
+		return HC.hc.getDataBukkit().getEventPublisher().fireEvent(event);
 	}
 	
 }

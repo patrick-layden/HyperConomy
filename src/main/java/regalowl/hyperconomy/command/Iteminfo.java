@@ -43,18 +43,18 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 			}
 			ho = he.getHyperObject(args[0]);
 			if (ho == null) {
-				data.addResponse(HC.mc.applyColor("&9" + "Object not found."));
+				data.addResponse("&9" + "Object not found.");
 				return data;
 			}
 			sis = ho.getItem();
 		}
 		data.addResponse(L.get("LINE_BREAK"));
 		if (ho == null) {
-			data.addResponse(HC.mc.applyColor("&cItem not in database."));
+			data.addResponse("&cItem not in database.");
 		} else {
-			data.addResponse(HC.mc.applyColor("&9Identifier: " + "&b" + ho.getName()));
-			data.addResponse(HC.mc.applyColor("&9HyperConomy Name: " + "&b" + ho.getDisplayName()));
-			data.addResponse(HC.mc.applyColor("&9Aliases: " + "&b" + ho.getAliasesString()));
+			data.addResponse("&9Identifier: " + "&b" + ho.getName());
+			data.addResponse("&9HyperConomy Name: " + "&b" + ho.getDisplayName());
+			data.addResponse("&9Aliases: " + "&b" + ho.getAliasesString());
 		}
 		data.addResponses(sis.displayInfo(hp, "&9", "&b"));
 		data.addResponse(L.get("LINE_BREAK"));

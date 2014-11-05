@@ -8,7 +8,6 @@ import java.util.Collections;
 
 
 import regalowl.databukkit.CommonFunctions;
-import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.shop.PlayerShop;
@@ -141,7 +140,7 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 			double maxpages = rsize/10;
 			maxpages = Math.ceil(maxpages);
 			int maxpi = (int)maxpages + 1;
-			data.addResponse(HC.mc.applyColor("&c" + L.get("PAGE") + " &f" + "(" + "&c" + page + "&f/" + "&c" + maxpi + "&f)"));
+			data.addResponse("&c" + L.get("PAGE") + " &f" + "(" + "&c" + page + "&f/" + "&c" + maxpi + "&f)");
 			while (count < numberpage) {
 				if (count > ((page * 10) - 11)) {
 					if (count < rsize) {
@@ -166,9 +165,9 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 							stock = CommonFunctions.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
 						}
 			            if (ho.isShopObject()) {
-			            	data.addResponse(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "; (&e" + ho.getStatus().toString()+ "&9)]"));
+			            	data.addResponse("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "; (&e" + ho.getStatus().toString()+ "&9)]");
 			            } else {
-			            	data.addResponse(L.applyColor("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "]"));
+			            	data.addResponse("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "]");
 			            }			
 					} else {
 						data.addResponse(L.get("REACHED_END"));

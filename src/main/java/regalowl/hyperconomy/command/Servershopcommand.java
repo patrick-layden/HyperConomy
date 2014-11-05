@@ -83,7 +83,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			data.addResponse(L.f(L.get("MANAGESHOP_HELP2"), css.getDisplayName()));
-			data.addResponse(HC.mc.applyColor(L.f(L.get("MANAGESHOP_HELP3"), css.getName()) + " &b" + css.getOwner().getName()));
+			data.addResponse(L.f(L.get("MANAGESHOP_HELP3"), css.getName()) + " &b" + css.getOwner().getName());
 			data.addResponse(L.f(L.get("SERVERSHOP_ECONOMY_INFO"), css.getEconomy()));
 		} else if (args[0].equalsIgnoreCase("p1")) {
 			try {
@@ -129,7 +129,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				sList = sList.substring(0, sList.length() - 1);
 			}
 			String shoplist = sList.replace("_", " ");
-			data.addResponse(HC.mc.applyColor("&b" + shoplist));
+			data.addResponse("&b" + shoplist);
 		} else if (args[0].equalsIgnoreCase("owner") || args[0].equalsIgnoreCase("o")) {
 			try {
 				HyperAccount owner = null;
@@ -197,7 +197,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				}
 				if (args[1].equalsIgnoreCase("all")) {
 					css.unBanAllObjects();
-					data.addResponse(HC.mc.applyColor("&6" + L.get("ALL_ITEMS_ADDED") + " " + css.getDisplayName()));
+					data.addResponse("&6" + L.get("ALL_ITEMS_ADDED") + " " + css.getDisplayName());
 					return data;
 				}
 				TradeObject ho = dm.getEconomy(css.getEconomy()).getHyperObject(args[1]);
@@ -212,7 +212,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				ArrayList<TradeObject> add = new ArrayList<TradeObject>();
 				add.add(ho);
 				css.unBanObjects(add);
-				data.addResponse(HC.mc.applyColor("&6" + ho.getDisplayName() + " " + L.get("ADDED_TO") + " " + css.getDisplayName()));
+				data.addResponse("&6" + ho.getDisplayName() + " " + L.get("ADDED_TO") + " " + css.getDisplayName());
 			} catch (Exception e) {
 				hc.getDebugMode().debugWriteError(e);
 				data.addResponse(L.get("SERVERSHOP_ALLOW_INVALID"));
@@ -267,7 +267,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					}
 				}
 				css.unBanObjects(add);
-				data.addResponse(HC.mc.applyColor("&6" + args[1] + " " + L.get("ADDED_TO") + " " + css.getDisplayName()));
+				data.addResponse("&6" + args[1] + " " + L.get("ADDED_TO") + " " + css.getDisplayName());
 			} catch (Exception e) {
 				hc.getDebugMode().debugWriteError(e);
 				data.addResponse(L.get("SERVERSHOP_ADDCATEGORY_INVALID"));

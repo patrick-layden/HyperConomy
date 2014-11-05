@@ -46,7 +46,7 @@ public class Buy extends BaseCommand implements HyperCommand {
 			TransactionResponse response = hp.processTransaction(pt);
 			response.sendMessages();
 		} catch (Exception e) {
-			data.addResponse(L.get("BUY_INVALID"));
+			hc.gDB().writeError(e);
 		}
 		return data;
 	}

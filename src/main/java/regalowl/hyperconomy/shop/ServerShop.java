@@ -223,13 +223,11 @@ public class ServerShop implements Shop, Comparable<Shop>{
 
 	
 	public void sendEntryMessage(HyperPlayer player) {
-		HC hc = HC.hc;
-		LanguageFile L = hc.getLanguageFile();
 		if (message == "") {setDefaultMessage();}
 		if (message.equalsIgnoreCase("none")) {return;}
 		String[] lines = message.replace("_", " ").split("%n");
 		for (String line:lines) {
-			player.sendMessage(L.applyColor(line));
+			player.sendMessage(line);
 		}
 	}
 	

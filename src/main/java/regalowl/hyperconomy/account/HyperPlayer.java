@@ -312,7 +312,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 
 	public void sendMessage(String message) {
-		HC.mc.sendMessage(this, HC.mc.applyColor(message));
+		HC.mc.sendMessage(this, message);
 	}
 	
 	public boolean hasPermission(String permission) {

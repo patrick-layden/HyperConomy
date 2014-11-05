@@ -38,8 +38,8 @@ PURCHASE_MESSAGE: &9&oYou bought &a&o%a &b&o%n &9&ofor &a&o%c%p &9&oof which &a&
 SELL_MESSAGE: &9&oYou sold &a&o%a &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owent to tax.
 PURCHASE_CHEST_MESSAGE: &9&oYou bought &a&o%a &b&o%n &9&ofor &a&o%c%p &9&ofrom %zc.
 SELL_CHEST_MESSAGE: &9&oYou sold &a&o%a &b&o%n &9&ofor &a&o%c%p &9&oto %zc.
-CHEST_BUY_NOTIFICATION: &9&o%y bought &a&o%a &b&o%n &9&ofrom you for &a&o%c%p &9&o.
-CHEST_SELL_NOTIFICATION: &9&o%y sold &a&o%a &b&o%n &9&oto you for &a&o%c%p &9&o.
+CHEST_BUY_NOTIFICATION: &9&o{playerName} bought &a&o{amount} &b&o{objectName} &9&ofrom you for &a&o{currencySymbol}{price} &9&o.
+CHEST_SELL_NOTIFICATION: &9&o{playerName} sold &a&o{amount} &b&o{objectName} &9&oto you for &a&o{currencySymbol}{price} &9&o.
 BOW_VALUE: &9Bow Value: &a%v
 WOOD_VALUE: &9Wood Value: &a%v
 LEATHER_VALUE: &9Leather Value: &a%v
@@ -127,7 +127,7 @@ ITEM_CANT_ACCEPT_ENCHANTMENT: &9The item you're holding cannot accept that encha
 ITEM_DOESNT_HAVE_ENCHANTMENT: &9The item you're holding doesn't have &b%n!
 ENCHANTMENT_SELL_MESSAGE: &9&oYou sold &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owent to tax.
 ENCHANTMENT_PURCHASE_MESSAGE: &9&oYou bought &b&o%n &9&ofor &a&o%c%p &9&oof which &a&o%c%t &9&owas tax.
-CHEST_ENCHANTMENT_BUY_NOTIFICATION: &9&o%y bought &b&o%n &9&ofrom you for &a&o%c%p &9&o.
+CHEST_ENCHANTMENT_BUY_NOTIFICATION: &9&o{playerName} bought &b&o{objectName} &9&ofrom you for &a&o{currencySymbol}{price} &9&o.
 PURCHASE_ENCHANTMENT_CHEST_MESSAGE: &9&oYou bought &b&o%n &9&ofor &a&o%c%p &9&ofrom %zc.
 LOG_BUY_ENCHANTMENT: %y bought %n for %c%p. [Static Price=%za][Initial Price=%zb]
 LOG_SELL_ENCHANTMENT: %y sold %n for %c%p. [Static Price=%za][Initial Price=%zb]

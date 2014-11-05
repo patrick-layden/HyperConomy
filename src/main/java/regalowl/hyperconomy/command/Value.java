@@ -17,8 +17,9 @@ public class Value extends BaseCommand implements HyperCommand {
 	@Override
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
-		HyperEconomy he = super.getEconomy();
+
 		try {
+			HyperEconomy he = super.getEconomy();
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
 			if (hp != null && requireShop && !dm.getHyperShopManager().inAnyShop(hp) && !hp.hasPermission("hyperconomy.admin")) {
 				data.addResponse(L.get("REQUIRE_SHOP_FOR_INFO"));
@@ -85,7 +86,7 @@ public class Value extends BaseCommand implements HyperCommand {
 			data.addResponse(L.get("LINE_BREAK"));
 
 		} catch (Exception e) {
-			data.addResponse(L.get("VALUE_INVALID"));
+			hc.gDB().writeError(e);
 		}
 		return data;
 	}

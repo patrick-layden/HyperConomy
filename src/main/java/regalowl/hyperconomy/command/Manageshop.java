@@ -73,8 +73,8 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			data.addResponse(L.get("MANAGESHOP_HELP"));
 			if (cps != null) {
 				data.addResponse(L.f(L.get("MANAGESHOP_HELP2"), cps.getName()));
-				data.addResponse(HC.mc.applyColor(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " &b" + cps.getOwner().getName()));
-				data.addResponse(HC.mc.applyColor(L.get("MANAGESHOP_HELP4") + " &b" +  CommonFunctions.implode(cps.getAllowed(), ",")));
+				data.addResponse(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " &b" + cps.getOwner().getName());
+				data.addResponse(L.get("MANAGESHOP_HELP4") + " &b" +  CommonFunctions.implode(cps.getAllowed(), ","));
 			} else {
 				data.addResponse(L.get("NO_SHOP_SELECTED"));
 			}
@@ -683,13 +683,13 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				sList = sList.substring(0, sList.length() - 1);
 			}
 			String shoplist = sList.replace("_", " ");
-			data.addResponse(HC.mc.applyColor("&b" + shoplist));
+			data.addResponse("&b" + shoplist);
 		} else {
 			data.addResponse(L.get("MANAGESHOP_HELP"));
 			if (cps != null) {
 				data.addResponse(L.f(L.get("MANAGESHOP_HELP2"), cps.getName()));
-				data.addResponse(HC.mc.applyColor(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " &b" + cps.getOwner().getName()));
-				data.addResponse(HC.mc.applyColor(L.get("MANAGESHOP_HELP4") + " &b" + CommonFunctions.implode(cps.getAllowed(), ",")));
+				data.addResponse(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " &b" + cps.getOwner().getName());
+				data.addResponse(L.get("MANAGESHOP_HELP4") + " &b" + CommonFunctions.implode(cps.getAllowed(), ","));
 			} else {
 				data.addResponse(L.get("NO_SHOP_SELECTED"));
 			}

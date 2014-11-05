@@ -91,7 +91,7 @@ public class Hceconomy extends BaseCommand implements HyperCommand {
 			}
 		} else if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("l")) {
 			ArrayList<String> economies = dm.getEconomyList();
-			data.addResponse(HC.mc.applyColor("&b" + economies.toString()));
+			data.addResponse("&b" + economies.toString());
 		} else {
 			data.addResponse(L.get("HCECONOMY_INVALID"));
 			return data;

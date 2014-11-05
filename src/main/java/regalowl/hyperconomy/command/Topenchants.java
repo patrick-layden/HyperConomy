@@ -6,7 +6,6 @@ import java.util.TreeMap;
 
 
 
-import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObjectStatus;
@@ -88,7 +87,7 @@ public class Topenchants extends BaseCommand implements HyperCommand {
 				while (count < numberpage) {
 					double lk = enchantstocks.lastKey();
 					if (count > ((page * 10) - 11)) {
-						data.addResponse(HC.mc.applyColor("&f" + enchantstocks.get(lk) + "&f: " + "&b" + Math.floor(lk)/100));
+						data.addResponse("&f" + enchantstocks.get(lk) + "&f: " + "&b" + Math.floor(lk)/100);
 					}
 					enchantstocks.remove(lk);
 					count++;

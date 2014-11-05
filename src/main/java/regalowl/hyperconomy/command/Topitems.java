@@ -5,7 +5,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import regalowl.databukkit.CommonFunctions;
-import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
@@ -95,9 +94,9 @@ public class Topitems extends BaseCommand implements HyperCommand {
 					if (count > ((page * 10) - 11)) {
 						TradeObject ho = itemstocks.get(lk);
 						if (ho.isShopObject()) {
-							data.addResponse(L.applyColor("&f"+ho.getDisplayName() + ": &a" + CommonFunctions.twoDecimals(ho.getStock()) + " &f(&e" + ho.getStatus().toString() + "&f)" ));
+							data.addResponse("&f"+ho.getDisplayName() + ": &a" + CommonFunctions.twoDecimals(ho.getStock()) + " &f(&e" + ho.getStatus().toString() + "&f)" );
 						} else {
-							data.addResponse(HC.mc.applyColor("&f" + ho.getDisplayName() + "&f: " + "&b" + CommonFunctions.twoDecimals(ho.getStock())));
+							data.addResponse("&f" + ho.getDisplayName() + "&f: " + "&b" + CommonFunctions.twoDecimals(ho.getStock()));
 						}
 					}
 					itemstocks.remove(lk);

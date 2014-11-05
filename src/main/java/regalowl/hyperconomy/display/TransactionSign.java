@@ -74,7 +74,7 @@ public class TransactionSign {
 							} else if (amount > 512) {
 								amount = 512;
 							}
-							sign.setLine(3, "\u00A7a" + amount);
+							sign.setLine(3, "&a" + amount);
 							sign.update();
 						}
 					}
@@ -106,22 +106,22 @@ public class TransactionSign {
 							String line1 = HC.mc.removeColor(sign.getLine(0).trim());
 							String line2 = HC.mc.removeColor(sign.getLine(1).trim());
 							if (line1.length() > 13) {
-								line2 = HC.mc.applyColor("&1" + line1.substring(13, line1.length()) + line2);
-								line1 = HC.mc.applyColor("&1" + line1.substring(0, 13));
+								line2 = "&1" + line1.substring(13, line1.length()) + line2;
+								line1 = "&1" + line1.substring(0, 13);
 							} else {
-								line1 = HC.mc.applyColor("&1" + line1);
-								line2 = HC.mc.applyColor("&1" + line2);
+								line1 = "&1" + line1;
+								line2 = "&1" + line2;
 							}
 							sign.setLine(0, line1);
 							sign.setLine(1, line2);
 							if (line3.equalsIgnoreCase("[sell:buy]")) {
-								sign.setLine(2, "\u00A7f[Sell:Buy]");
+								sign.setLine(2, "&f[Sell:Buy]");
 							} else if (line3.equalsIgnoreCase("[sell]")) {
-								sign.setLine(2, "\u00A7f[Sell]");
+								sign.setLine(2, "&f[Sell]");
 							} else if (line3.equalsIgnoreCase("[buy]")) {
-								sign.setLine(2, "\u00A7f[Buy]");
+								sign.setLine(2, "&f[Buy]");
 							}
-							sign.setLine(3, "\u00A7a" + amount);
+							sign.setLine(3, "&a" + amount);
 						} else if (!scevent.getHyperPlayer().hasPermission("hyperconomy.createsign")) {
 							sign.setLine(0, "");
 							sign.setLine(1, "");
@@ -168,11 +168,11 @@ public class TransactionSign {
 					String line12 = HC.mc.removeColor(s.getLine(0)).trim() + HC.mc.removeColor(s.getLine(1)).trim();
 					line12 = he.fixName(line12);
 					if (he.objectTest(line12)) {
-						if (!s.getLine(0).startsWith("\u00A7")) {
-							s.setLine(0, "\u00A71" + s.getLine(0));
-							s.setLine(1, "\u00A71" + s.getLine(1));
-							s.setLine(2, "\u00A7f" + s.getLine(2));
-							s.setLine(3, "\u00A7a" + s.getLine(3));
+						if (!s.getLine(0).startsWith("&")) {
+							s.setLine(0, "&1" + s.getLine(0));
+							s.setLine(1, "&1" + s.getLine(1));
+							s.setLine(2, "&f" + s.getLine(2));
+							s.setLine(3, "&a" + s.getLine(3));
 							s.update();
 						}
 						if (!ievent.isLeftClick()) {

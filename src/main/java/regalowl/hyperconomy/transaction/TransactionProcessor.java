@@ -21,6 +21,7 @@ import regalowl.hyperconomy.tradeobject.TradeObjectStatus;
 import regalowl.hyperconomy.tradeobject.TradeObjectType;
 import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
+import regalowl.hyperconomy.util.MessageBuilder;
 
 
 
@@ -532,7 +533,13 @@ public class TransactionProcessor {
 			response.addSuccess(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, price, hyperObject.getDisplayName(), tradePartner.getName()), price, hyperObject);
 			response.setSuccessful();
 			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
-			tradePartner.sendMessage(L.f(L.get("CHEST_BUY_NOTIFICATION"), amount, price, hyperObject.getDisplayName(), hp));
+			
+			MessageBuilder mb = new MessageBuilder("CHEST_BUY_NOTIFICATION");
+			mb.setAmount(amount);
+			mb.setObjectName(hyperObject.getDisplayName());
+			mb.setPrice(price);
+			mb.setPlayerName(hp.getName());
+			tradePartner.sendMessage(mb.build());
 		} catch (Exception e) {
 			String info = "Transaction buyChest() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
@@ -566,7 +573,13 @@ public class TransactionProcessor {
 			response.addSuccess(L.f(L.get("SELL_CHEST_MESSAGE"), amount, price, hyperObject.getDisplayName(), tradePartner.getName()), price, hyperObject);
 			response.setSuccessful();
 			log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
-			tradePartner.sendMessage(L.f(L.get("CHEST_SELL_NOTIFICATION"), amount, price, hyperObject.getDisplayName(), hp));
+			
+			MessageBuilder mb = new MessageBuilder("CHEST_SELL_NOTIFICATION");
+			mb.setAmount(amount);
+			mb.setObjectName(hyperObject.getDisplayName());
+			mb.setPrice(price);
+			mb.setPlayerName(hp.getName());
+			tradePartner.sendMessage(mb.build());
 		} catch (Exception e) {
 			String info = "Transaction sellChest() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
 			hc.gDB().writeError(e, info);
@@ -615,7 +628,13 @@ public class TransactionProcessor {
 			response.addSuccess(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, price, hyperObject.getDisplayName(), tradePartner.getName()), CommonFunctions.twoDecimals(price), hyperObject);
 			response.setSuccessful();
 			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), 1.0, price, 0.0, tradePartner.getName(), "chestshop");
-			tradePartner.sendMessage(L.f(L.get("CHEST_ENCHANTMENT_BUY_NOTIFICATION"), 1, price, hyperObject.getDisplayName(), hp));
+			MessageBuilder mb = new MessageBuilder("CHEST_ENCHANTMENT_BUY_NOTIFICATION");
+			mb.setAmount(1);
+			mb.setObjectName(hyperObject.getDisplayName());
+			mb.setPrice(price);
+			mb.setPlayerName(hp.getName());
+			tradePartner.sendMessage(mb.build());
+			//tradePartner.sendMessage(L.f(L.get("CHEST_ENCHANTMENT_BUY_NOTIFICATION"), 1, price, hyperObject.getDisplayName(), hp));
 		} catch (Exception e) {
 			String info = "ETransaction buyChestEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "'";
 			hc.gDB().writeError(e, info);
