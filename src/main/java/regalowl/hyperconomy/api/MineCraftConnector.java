@@ -100,7 +100,6 @@ public interface MineCraftConnector {
 	public ChestShop getChestShop(HLocation location);
 	public HSign getSign(HLocation location);
 	public void setSign(HSign sign);
-	public void updateSign(HSign sign);
 	public HBlock getAttachedBlock(HSign sign);
 	public boolean isChest(HLocation l);
 	public boolean canHoldChestShopSign(HLocation l);

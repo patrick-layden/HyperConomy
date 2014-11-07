@@ -605,7 +605,11 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
 			Sign s = (Sign) b.getState();
 			boolean isWallSign = (b.getType().equals(Material.WALL_SIGN)) ? true:false;
-			HSign sign = new HSign(new HLocation(location), s.getLines().clone(), isWallSign);
+			ArrayList<String> lines = new ArrayList<String>();
+			for (String l:s.getLines()) {
+				lines.add(l);
+			}
+			HSign sign = new HSign(new HLocation(location), lines, isWallSign);
 			return sign;
 		}
 		return null;
@@ -614,12 +618,16 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public void setSign(HSign sign) {
 		Sign s = BukkitCommon.getSign(sign.getLocation());
+		if (s == null) return;
 		s.setLine(0, applyColor(sign.getLine(0)));
 		s.setLine(1, applyColor(sign.getLine(1)));
 		s.setLine(2, applyColor(sign.getLine(2)));
 		s.setLine(3, applyColor(sign.getLine(3)));
 		s.update();
 	}
+
+
+
 
 	@Override
 	public HBlock getAttachedBlock(HSign sign) {
@@ -636,14 +644,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public boolean isChest(HLocation l) {
 		BlockState b = BukkitCommon.getBlock(l).getState();
 		return (b instanceof Chest) ? true:false;
-	}
-
-
-
-	@Override
-	public void updateSign(HSign sign) {
-		Sign s = BukkitCommon.getSign(sign.getLocation());
-		if (s != null) s.update();
 	}
 
 

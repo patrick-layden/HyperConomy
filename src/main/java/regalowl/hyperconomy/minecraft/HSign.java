@@ -1,16 +1,18 @@
 package regalowl.hyperconomy.minecraft;
 
+import java.util.ArrayList;
+
 import regalowl.hyperconomy.HC;
 
 public class HSign {
 
 	private HLocation location;
-	private String[] lines;
+	private ArrayList<String> lines = new ArrayList<String>();
 	private boolean isWallSign;
 	
-	public HSign(HLocation location, String[] lines, boolean isWallSign) {
+	public HSign(HLocation location, ArrayList<String> lines, boolean isWallSign) {
 		this.location = location;
-		this.lines = lines;
+		this.lines.addAll(lines);
 		this.isWallSign = isWallSign;
 	}
 
@@ -19,15 +21,21 @@ public class HSign {
 	}
 
 	public String[] getLines() {
-		return lines;
+		String[] aLines = new String[4];
+		aLines[0] = lines.get(0);
+		aLines[1] = lines.get(1);
+		aLines[2] = lines.get(2);
+		aLines[3] = lines.get(3);
+		return aLines;
 	}
 
 	public void setLocation(HLocation location) {
 		this.location = location;
 	}
 
-	public void setLines(String[] lines) {
-		this.lines = lines;
+	public void setLines(ArrayList<String> lines) {
+		this.lines.clear();
+		this.lines.addAll(lines);
 		HC.mc.setSign(this);
 	}
 	
@@ -41,20 +49,18 @@ public class HSign {
 	}
 	
 	public String getLine(int line) {
-		if (lines.length > line && line >= 0) {
-			return lines[line];
+		if (lines.size() > line && line >= 0) {
+			return lines.get(line);
 		}
 		return "";
 	}
-	
 	public void setLine(int line, String text) {
-		if (lines.length > line && line >= 0) {
-			lines[line] = text;
-			HC.mc.setSign(this);
+		if (lines.size() > line && line >= 0) {
+			lines.set(line, text);
 		}
 	}
 	
 	public void update() {
-		HC.mc.updateSign(this);
+		HC.mc.setSign(this);
 	}
 }

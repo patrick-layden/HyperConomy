@@ -25,14 +25,12 @@ public class TransactionSign {
 	public TransactionSign() {
 		hc = HC.hc;
 		em = HC.hc.getDataManager();
-		if (hc.getConf().getBoolean("enable-feature.transaction-signs")) {
-			hc.getHyperEventHandler().registerListener(this);
-		}
+		if (hc.getConf().getBoolean("enable-feature.transaction-signs")) hc.getHyperEventHandler().registerListener(this);
 	}
 
 
 	@EventHandler
-	public void onPlayerItemHeldEvent(HPlayerItemHeldEvent event) {
+	public void onScrollingStockChange(HPlayerItemHeldEvent event) {
 		try {
 			if (hc.getConf().getBoolean("enable-feature.scrolling-transaction-signs")) {
 				HyperPlayer hp = event.getHyperPlayer();
@@ -122,13 +120,16 @@ public class TransactionSign {
 								sign.setLine(2, "&f[Buy]");
 							}
 							sign.setLine(3, "&a" + amount);
+							HC.mc.logSevere("1 lines set");
 						} else if (!scevent.getHyperPlayer().hasPermission("hyperconomy.createsign")) {
 							sign.setLine(0, "");
 							sign.setLine(1, "");
 							sign.setLine(2, "");
 							sign.setLine(3, "");
 						}
-						sign.update();
+						HC.mc.logSevere("sign updated");
+						new SignUpdater(sign);
+						//sign.update();
 					}
 				}
 			}
@@ -136,136 +137,104 @@ public class TransactionSign {
 			hc.gDB().writeError(e);
 		}
 	}
+	
+	private class SignUpdater {
+		private HSign s;
+		public SignUpdater(HSign sign) {
+			this.s = sign;
+			HC.mc.runTask(new Runnable() {
+				public void run() {
+					s.update();
+				}
+			});
+		}
+	}
 
 	@EventHandler
 	public void onPlayerInteractEvent(HPlayerInteractEvent ievent) {
 		if (ievent == null) {return;}
 		try {
-			if (!hc.getConf().getBoolean("enable-feature.transaction-signs")) {return;}
+			if (!hc.getConf().getBoolean("enable-feature.transaction-signs")) return;
 			HyperPlayer hp = ievent.getHyperPlayer();
-			if (hp == null) {return;}
+			if (hp == null) return;
 			HyperEconomy he = null;
 			if (!hc.getHyperLock().loadLock()) {
 				he = hp.getHyperEconomy();
 			}
-			if (hp.isSneaking() && hp.hasPermission("hyperconomy.admin")) {return;}
+			if (hp.isSneaking() && hp.hasPermission("hyperconomy.admin")) return;
 			LanguageFile L = hc.getLanguageFile();
 			boolean requireShop = hc.getConf().getBoolean("shop.require-transaction-signs-to-be-in-shop");
-
 			HBlock b = ievent.getBlock();
-			if (b == null) {return;}
-			if (b.isTransactionSign()) {
-				HSign s = HC.mc.getSign(b.getLocation());
-				String line3 = HC.mc.removeColor(s.getLine(2)).trim();
-				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
-					String line4 = HC.mc.removeColor(s.getLine(3)).trim();
-					int amount = 0;
-					try {
-						amount = Integer.parseInt(line4);
-					} catch (Exception e) {
-						return;
+			if (b == null) return;
+			if (!b.isTransactionSign()) return;
+			HSign s = HC.mc.getSign(b.getLocation());
+			String line3 = HC.mc.removeColor(s.getLine(2)).trim();
+			String line4 = HC.mc.removeColor(s.getLine(3)).trim();
+			int amount = 0;
+			try {
+				amount = Integer.parseInt(line4);
+			} catch (Exception e) {
+				return;
+			}
+			String line12 = HC.mc.removeColor(s.getLine(0)).trim() + HC.mc.removeColor(s.getLine(1)).trim();
+			line12 = he.fixName(line12);
+			if (!he.objectTest(line12)) return;
+			ievent.cancel();
+			if (!ievent.isLeftClick()) {
+				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[buy]")) {
+					if (hp.hasPermission("hyperconomy.buysign")) {
+						if ((em.getHyperShopManager().inAnyShop(hp) && requireShop) || !requireShop) {
+							if (!requireShop || hp.hasBuyPermission(em.getHyperShopManager().getShop(hp))) {
+								TradeObject ho = he.getHyperObject(line12);
+								if (!hc.getHyperLock().isLocked(hp)) {
+									PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+									pt.setAmount(amount);
+									pt.setHyperObject(ho);
+									TransactionResponse response = hp.processTransaction(pt);
+									response.sendMessages();
+								} else {
+									hp.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
+								}
+							} else {
+								hp.sendMessage(L.get("NO_TRADE_PERMISSION"));
+							}
+						} else {
+							hp.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
+						}
+					} else {
+						hp.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
 					}
-					String line12 = HC.mc.removeColor(s.getLine(0)).trim() + HC.mc.removeColor(s.getLine(1)).trim();
-					line12 = he.fixName(line12);
-					if (he.objectTest(line12)) {
-						if (!s.getLine(0).startsWith("&")) {
-							s.setLine(0, "&1" + s.getLine(0));
-							s.setLine(1, "&1" + s.getLine(1));
-							s.setLine(2, "&f" + s.getLine(2));
-							s.setLine(3, "&a" + s.getLine(3));
-							s.update();
-						}
-						if (!ievent.isLeftClick()) {
-							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[buy]")) {
-								String l1 = s.getLine(0);
-								String l2 = s.getLine(1);
-								String l3 = s.getLine(2);
-								String l4 = s.getLine(3);
-								if (hp.hasPermission("hyperconomy.buysign")) {
-									if ((em.getHyperShopManager().inAnyShop(hp) && requireShop) || !requireShop) {
-										if (!requireShop || hp.hasBuyPermission(em.getHyperShopManager().getShop(hp))) {
-											TradeObject ho = he.getHyperObject(line12);
-											if (!hc.getHyperLock().isLocked(hp)) {
-												PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
-												pt.setAmount(amount);
-												pt.setHyperObject(ho);
-												TransactionResponse response = hp.processTransaction(pt);
-												response.sendMessages();
-											} else {
-												hp.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-											}
-										} else {
-											hp.sendMessage(L.get("NO_TRADE_PERMISSION"));
-										}
-									} else {
-										hp.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
-									}
-								} else {
-									hp.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+				}
+			} else if (ievent.isLeftClick()) {
+				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]")) {
+					if (hp.hasPermission("hyperconomy.sellsign")) {
+						if ((em.getHyperShopManager().inAnyShop(hp) && requireShop) || !requireShop) {
+							if (!requireShop || hp.hasSellPermission(em.getHyperShopManager().getShop(hp))) {
+								if (hp.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
+									hp.sendMessage(L.get("CANT_SELL_CREATIVE"));
+									return;
 								}
-								ievent.cancel();;
-								s.setLine(0, l1);
-								s.setLine(1, l2);
-								s.setLine(2, l3);
-								s.setLine(3, l4);
-								s.update();
-							}
-						} else if (ievent.isLeftClick()) {
-							if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]")) {
-								String l1 = s.getLine(0);
-								String l2 = s.getLine(1);
-								String l3 = s.getLine(2);
-								String l4 = s.getLine(3);
-								if (hp.hasPermission("hyperconomy.sellsign")) {
-									if ((em.getHyperShopManager().inAnyShop(hp) && requireShop) || !requireShop) {
-										if (!requireShop || hp.hasSellPermission(em.getHyperShopManager().getShop(hp))) {
-											if (hp.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
-												hp.sendMessage(L.get("CANT_SELL_CREATIVE"));
-												ievent.cancel();
-												return;
-											}
-											TradeObject ho = he.getHyperObject(line12);
-											if (!hc.getHyperLock().isLocked(hp)) {
-												PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-												pt.setAmount(amount);
-												pt.setHyperObject(ho);
-												TransactionResponse response = hp.processTransaction(pt);
-												response.sendMessages();
-											} else {
-												hp.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
-											}
-										} else {
-											hp.sendMessage(L.get("NO_TRADE_PERMISSION"));
-										}
-									} else {
-										hp.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
-									}
+								TradeObject ho = he.getHyperObject(line12);
+								if (!hc.getHyperLock().isLocked(hp)) {
+									PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+									pt.setAmount(amount);
+									pt.setHyperObject(ho);
+									TransactionResponse response = hp.processTransaction(pt);
+									response.sendMessages();
 								} else {
-									hp.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
+									hp.sendMessage(L.get("GLOBAL_SHOP_LOCKED"));
 								}
-								ievent.cancel();
-								s.setLine(0, l1);
-								s.setLine(1, l2);
-								s.setLine(2, l3);
-								s.setLine(3, l4);
-								s.update();
-							} else if (line3.equalsIgnoreCase("[buy]")) {
-								String l1 = s.getLine(0);
-								String l2 = s.getLine(1);
-								String l3 = s.getLine(2);
-								String l4 = s.getLine(3);
-								ievent.cancel();
-								s.setLine(0, l1);
-								s.setLine(1, l2);
-								s.setLine(2, l3);
-								s.setLine(3, l4);
-								s.update();
+							} else {
+								hp.sendMessage(L.get("NO_TRADE_PERMISSION"));
 							}
+						} else {
+							hp.sendMessage(L.get("TRANSACTION_SIGN_MUST_BE_IN_SHOP"));
 						}
+					} else {
+						hp.sendMessage(L.get("YOU_DONT_HAVE_PERMISSION"));
 					}
 				}
 			}
-
 		} catch (Exception e) {
 			hc.gDB().writeError(e);
 		}

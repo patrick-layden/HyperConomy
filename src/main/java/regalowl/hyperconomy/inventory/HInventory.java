@@ -122,12 +122,12 @@ public class HInventory {
 			if (removeStack.isSimilarTo(heldStack)) {
 				if (removeAmount >= heldStack.getAmount()) {
 					actuallyRemoved += heldStack.getTrueAmount();
-					removeAmount -= heldStack.getAmount();
 					clearSlot(heldSlot);
+					removeAmount -= heldStack.getAmount();
 				} else {
 					actuallyRemoved += removeAmount * heldStack.getDurabilityPercent();
-					removeAmount = 0;
 					heldStack.setAmount(heldStack.getAmount() - removeAmount);
+					removeAmount = 0;
 				}
 			}
 		}
@@ -137,12 +137,12 @@ public class HInventory {
 			if (removeStack.isSimilarTo(currentItem)) {
 				if (removeAmount >= currentItem.getAmount()) {
 					actuallyRemoved += currentItem.getTrueAmount();
-					removeAmount -= currentItem.getAmount();
 					clearSlot(slot);
+					removeAmount -= currentItem.getAmount();
 				} else {
 					actuallyRemoved += removeAmount * currentItem.getDurabilityPercent();
-					removeAmount = 0;
 					currentItem.setAmount(currentItem.getAmount() - removeAmount);
+					removeAmount = 0;
 				}
 			}
 			slot++;

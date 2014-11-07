@@ -162,7 +162,11 @@ public class BukkitCommon {
 				BlockFace attachedface = sign.getFacing();
 				if (block.getRelative(attachedface.getOppositeFace()).equals(b)) {
 					Sign s = (Sign) block.getState();
-					return new HSign(l, s.getLines(), true);
+					ArrayList<String> lines = new ArrayList<String>();
+					for (String li:s.getLines()) {
+						lines.add(li);
+					}
+					return new HSign(l, lines, true);
 				}
 			}
 		}

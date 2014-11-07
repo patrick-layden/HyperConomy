@@ -83,7 +83,11 @@ public class BukkitListener implements Listener {
 		HyperPlayer hp = BukkitCommon.getPlayer(event.getPlayer());
 		HLocation sl = BukkitCommon.getLocation(event.getBlock().getLocation());
 		HSign sign = HC.mc.getSign(sl);
-		sign.setLines(event.getLines().clone());
+		ArrayList<String> lines = new ArrayList<String>();
+		for (String li:event.getLines()) {
+			lines.add(li);
+		}
+		sign.setLines(lines);
 		HSignChangeEvent se = new HSignChangeEvent(sign, hp);
 		HC.hc.getHyperEventHandler().fireEvent(se);
 		if (se.isCancelled()) event.setCancelled(true);
