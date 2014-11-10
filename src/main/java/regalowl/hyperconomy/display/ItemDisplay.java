@@ -55,7 +55,7 @@ public class ItemDisplay {
 	
 	public HBlock getBaseBlock() {
 		int x = (int) Math.floor(l.getX());
-		int y = (int) Math.floor(l.getY() - 1);
+		int y = (int) Math.floor(l.getY() -1);
 		int z = (int) Math.floor(l.getZ());
 		return new HBlock(new HLocation(l.getWorld(), x, y, z));
 	}
@@ -109,7 +109,7 @@ public class ItemDisplay {
 		if (!getLocation().isLoaded()) {return;}
 		HyperEconomy he = HC.hc.getDataManager().getEconomy("default");
 		HItemStack dropstack = he.getHyperObject(name).getItem();
-		this.item = HC.mc.dropItemDisplay(l, dropstack);
+		this.item = HC.mc.dropItemDisplay(new HLocation(l.getWorld(), l.getX(), l.getY() + 1, l.getZ()), dropstack);
 		active = true;
 	}
 	

@@ -115,10 +115,9 @@ public class TradeEnchant extends BasicTradeObject implements TradeObject {
 	public double removeEnchantment(HItemStack stack) {
 		if (stack == null) {return 0;}
 		HEnchantment e = getEnchantment();
-		if (getEnchantmentLevel() == e.getLvl() && stack.containsEnchantment(e)) {
+		if (stack.containsEnchantment(e)) {
 			stack.removeEnchantment(e);
-			double duramult = stack.getDurabilityPercent();
-			return duramult;
+			return stack.getDurabilityPercent();
 		}
 		return 0;
 	}

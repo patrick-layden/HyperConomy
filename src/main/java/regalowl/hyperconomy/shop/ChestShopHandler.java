@@ -110,11 +110,17 @@ public class ChestShopHandler {
 			HLocation cLoc = new HLocation(sign.getLocation());
 			cLoc.setY(cLoc.getY() - 1);
 			if (!HC.mc.isChest(cLoc)) {
-				sign.setLine(1, "");
+				sign.setLine(0, "&4Place a");
+				sign.setLine(1, "&4chest");
+				sign.setLine(2, "&4below");
+				sign.setLine(3, "&4first.");
+				sign.update();
 				return;
 			}
 			if (!hp.hasPermission("hyperconomy.chestshop")) {
-				sign.setLine(1, "");
+				sign.setLine(0, "&4No");
+				sign.setLine(1, "&4Permission");
+				sign.update();
 				return;
 			}
 			ChestShop cShop = HC.mc.getChestShop(cLoc);
@@ -123,6 +129,7 @@ public class ChestShopHandler {
 				sign.setLine(1, "&4use a");
 				sign.setLine(2, "&4double");
 				sign.setLine(3, "&4chest.");
+				sign.update();
 				return;
 			}
 			if (hc.getConf().getBoolean("shop.require-chest-shops-to-be-in-shop") && !em.getHyperShopManager().inAnyShop(hp)) {
@@ -130,6 +137,7 @@ public class ChestShopHandler {
 				sign.setLine(1, "&4place your");
 				sign.setLine(2, "&4chest shop");
 				sign.setLine(3, "&4in a shop.");
+				sign.update();
 				return;
 			}
 			int count = 0;
@@ -137,12 +145,14 @@ public class ChestShopHandler {
 			boolean empty = true;
 			while (count < inv.getSize()) {
 				if (!cShop.getInventory().getItem(count).isBlank()) empty = false;
+				count++;
 			}
 			if (!empty) {
 				sign.setLine(0, "&4You must");
 				sign.setLine(1, "&4use an");
 				sign.setLine(2, "&4empty");
 				sign.setLine(3, "&4chest.");
+				sign.update();
 				return;
 			}
 
@@ -151,6 +161,7 @@ public class ChestShopHandler {
 				sign.setLine(1, "&4attach your");
 				sign.setLine(2, "&4sign to that");
 				sign.setLine(3, "&4block!");
+				sign.update();
 				return;
 			}
 
@@ -213,7 +224,6 @@ public class ChestShopHandler {
 		try {
 			HyperPlayer clicker = event.getClicker();
 			ChestShop cs = event.getChestShop();
-			ChestShopType type = cs.getType();
 			HyperAccount owner = cs.getOwner();
 			HSign sign = cs.getSign();
 			boolean hasStaticPrice = cs.hasStaticPrice();
@@ -263,7 +273,7 @@ public class ChestShopHandler {
 				}
 				int camount = clickedItem.getAmount();
 				if (slot < 27) {
-					if (type == ChestShopType.BUY) {
+					if (cs.isBuyChest()) {
 						PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
 						pt.setHyperObject(hyperObject);
 						pt.setTradePartner(owner);
@@ -279,7 +289,7 @@ public class ChestShopHandler {
 						clicker.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
 					}
 				} else if (slot >= 27) {
-					if (type == ChestShopType.SELL) {
+					if (cs.isSellChest()) {
 						if (clicker.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
 							clicker.sendMessage(L.get("CANT_SELL_CREATIVE"));
 							event.cancel();
@@ -328,20 +338,20 @@ public class ChestShopHandler {
 				if (!clickedItem.hasEnchantments()) {
 					if (slot < 27 && hyperObject != null) {
 						String name = hyperObject.getDisplayName();
-						if (type == ChestShopType.BUY) {
+						if (cs.isBuyChest()) {
 							double price = hyperObject.getSellPrice(1);
 							if (hasStaticPrice) {
 								price = staticPrice;
 							}
 							clicker.sendMessage(L.get("LINE_BREAK"));
-							clicker.sendMessage(L.f(L.get("CHEST_SHOP_BUY_VALUE"), 1, price, name, owner.getName()));
+							clicker.sendMessage(L.f(L.get("CHEST_SHOP_BUY_VALUE"), 1, CommonFunctions.twoDecimals(price), name, owner.getName()));
 							clicker.sendMessage(L.get("LINE_BREAK"));
 						} else {
 							clicker.sendMessage(L.get("CANNOT_PURCHASE_ITEMS_FROM_CHEST"));
 						}
 					} else if (slot >= 27 && hyperObject != null) {
 						String name = hyperObject.getDisplayName();
-						if (type == ChestShopType.SELL) {
+						if (cs.isSellChest()) {
 							int itemamount = hyperObject.count(shopInventory);
 							if (itemamount > 0) {
 								double price = hyperObject.getSellPrice(1, clicker);
@@ -349,7 +359,7 @@ public class ChestShopHandler {
 									price = staticPrice;
 								}
 								clicker.sendMessage(L.get("LINE_BREAK"));
-								clicker.sendMessage(L.f(L.get("CHEST_SHOP_SELL_VALUE"), 1, price, name, owner.getName()));
+								clicker.sendMessage(L.f(L.get("CHEST_SHOP_SELL_VALUE"), 1, CommonFunctions.twoDecimals(price), name, owner.getName()));
 								clicker.sendMessage(L.get("LINE_BREAK"));
 							} else {
 								clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
@@ -360,7 +370,7 @@ public class ChestShopHandler {
 					}
 				} else {
 					if (slot < 27) {
-						if (type == ChestShopType.BUY) {
+						if (cs.isBuyChest()) {
 							double price = 0;
 							for (HEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
 								String fnam = enchantment.getEnchantmentName() + enchantment.getLvl();
@@ -390,7 +400,7 @@ public class ChestShopHandler {
 			} else if (event.isRightClick()) {
 				if (!clickedItem.hasEnchantments()) {
 					if (slot < 27 && hyperObject != null) {
-						if (type == ChestShopType.BUY) {
+						if (cs.isBuyChest()) {
 							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
 							pt.setHyperObject(hyperObject);
 							pt.setTradePartner(owner);
@@ -408,7 +418,7 @@ public class ChestShopHandler {
 						}
 
 					} else if (slot >= 27 && hyperObject != null) {
-						if (type == ChestShopType.SELL) {
+						if (cs.isSellChest()) {
 							if (clicker.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
 								clicker.sendMessage(L.get("CANT_SELL_CREATIVE"));
 								event.cancel();
@@ -452,7 +462,7 @@ public class ChestShopHandler {
 					}
 				} else {
 					if (slot < 27) {
-						if (type == ChestShopType.BUY) {
+						if (cs.isBuyChest()) {
 							for (HEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
 								String fnam = enchantment.getEnchantmentName() + enchantment.getLvl();
 								TradeObject ho = chestOwnerEconomy.getHyperObject(fnam);

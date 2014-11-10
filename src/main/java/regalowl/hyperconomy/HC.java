@@ -67,7 +67,7 @@ import regalowl.hyperconomy.command.Value;
 import regalowl.hyperconomy.command.Xpinfo;
 import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.display.ItemDisplayFactory;
-import regalowl.hyperconomy.display.TransactionSign;
+import regalowl.hyperconomy.display.TransactionSignHandler;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.HyperEventHandler;
@@ -194,7 +194,7 @@ public class HC {
 		dMode.syncDebugConsoleMessage("Data loading started.");
 		dm.load();
 		l = new Log();
-		new TransactionSign();
+		new TransactionSignHandler();
 		yh.startSaveTask(saveInterval);
 		cs = new ChestShopHandler();
 		cos = new ConsoleSettings("default");

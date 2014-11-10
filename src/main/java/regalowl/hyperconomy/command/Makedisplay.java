@@ -26,7 +26,7 @@ public class Makedisplay extends BaseCommand implements HyperCommand {
 			HLocation sl = hp.getTargetLocation();
 			String name = he.fixName(args[0]);
 			if (he.itemTest(name)) {
-				itdi.addDisplay(sl.getX(), sl.getY() + 2, sl.getZ(), sl.getWorld(), name);
+				itdi.addDisplay(sl.getX(), sl.getY() + 1, sl.getZ(), sl.getWorld(), name);
 			} else {
 				data.addResponse(L.get("INVALID_ITEM_NAME"));
 			}

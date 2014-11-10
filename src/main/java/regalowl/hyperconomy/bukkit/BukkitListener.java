@@ -205,12 +205,12 @@ public class BukkitListener implements Listener {
 		int slot = icevent.getRawSlot();
 		HItemStack clickedStack = BukkitCommon.getSerializableItemStack(icevent.getCurrentItem());
 		ChestShopClickEvent event = new ChestShopClickEvent(clicker, cs, slot, clickedStack);
-		if (icevent.isLeftClick()) {
+		if (icevent.isShiftClick()) {
+			event.setShiftClick();
+		} else if (icevent.isLeftClick()) {
 			event.setLeftClick();
 		} else if (icevent.isRightClick()) {
 			event.setRightClick();
-		} else if (icevent.isShiftClick()) {
-			event.setShiftClick();
 		}
 		HC.hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) icevent.setCancelled(true);

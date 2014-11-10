@@ -507,6 +507,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		}
 		@Override
 		public void run() {
+			if (p == null || m == null || m == "") return;
 			p.sendMessage(m);
 		}
 	}

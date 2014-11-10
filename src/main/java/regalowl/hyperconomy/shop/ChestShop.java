@@ -43,13 +43,6 @@ public class ChestShop {
 		if (sign == null) return;
 		attachedBlock = sign.getAttachedBlock();
 		if (attachedBlock == null) return;
-		String chestOwnerName = HC.mc.removeColor(sign.getLine(2)).trim() + HC.mc.removeColor(sign.getLine(3)).trim();
-		this.owner = HC.hc.getHyperPlayerManager().getAccount(chestOwnerName);
-		if (owner == null && !chestOwnerName.equals("")) {
-			this.owner = HC.hc.getHyperPlayerManager().getHyperPlayer(chestOwnerName);
-		} else {
-			return;
-		}
 		type = ChestShopType.fromString(HC.mc.removeColor(sign.getLine(1)).trim());
 		if (type == null) return;
 		inventory = HC.mc.getChestInventory(location);
@@ -69,6 +62,13 @@ public class ChestShop {
 				staticPrice = CommonFunctions.twoDecimals(Double.parseDouble(price));
 				hasStaticPrice = true;
 			} catch (Exception e) {}
+		}
+		String chestOwnerName = HC.mc.removeColor(sign.getLine(2)).trim() + HC.mc.removeColor(sign.getLine(3)).trim();
+		this.owner = HC.hc.getHyperPlayerManager().getAccount(chestOwnerName);
+		if (owner == null && !chestOwnerName.equals("")) {
+			this.owner = HC.hc.getHyperPlayerManager().getHyperPlayer(chestOwnerName);
+		} else {
+			return;
 		}
 		isValidChestShop = true;
 	}
@@ -114,6 +114,14 @@ public class ChestShop {
 		for (HBlock b:surrounding) {
 			if (HC.mc.isChest(b.getLocation())) return true;
 		}
+		return false;
+	}
+	public boolean isBuyChest() {
+		if (type == ChestShopType.TRADE || type == ChestShopType.BUY) return true;
+		return false;
+	}
+	public boolean isSellChest() {
+		if (type == ChestShopType.TRADE || type == ChestShopType.SELL) return true;
 		return false;
 	}
 	

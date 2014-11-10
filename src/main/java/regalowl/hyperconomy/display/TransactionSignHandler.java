@@ -19,10 +19,10 @@ import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.LanguageFile;
 
-public class TransactionSign {
+public class TransactionSignHandler {
 	private HC hc;
 	private DataManager em;
-	public TransactionSign() {
+	public TransactionSignHandler() {
 		hc = HC.hc;
 		em = HC.hc.getDataManager();
 		if (hc.getConf().getBoolean("enable-feature.transaction-signs")) hc.getHyperEventHandler().registerListener(this);
@@ -128,8 +128,7 @@ public class TransactionSign {
 							sign.setLine(3, "");
 						}
 						HC.mc.logSevere("sign updated");
-						new SignUpdater(sign);
-						//sign.update();
+						sign.update();
 					}
 				}
 			}
@@ -138,17 +137,7 @@ public class TransactionSign {
 		}
 	}
 	
-	private class SignUpdater {
-		private HSign s;
-		public SignUpdater(HSign sign) {
-			this.s = sign;
-			HC.mc.runTask(new Runnable() {
-				public void run() {
-					s.update();
-				}
-			});
-		}
-	}
+
 
 	@EventHandler
 	public void onPlayerInteractEvent(HPlayerInteractEvent ievent) {

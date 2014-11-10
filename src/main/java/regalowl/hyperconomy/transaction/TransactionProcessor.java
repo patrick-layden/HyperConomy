@@ -471,6 +471,7 @@ public class TransactionProcessor {
 			}
 			double shopstock = hyperObject.getStock();
 			double amountRemoved = hyperObject.removeEnchantment(heldItem);
+			inv.updateInventory();
 			hyperObject.setStock(shopstock + amountRemoved);
 			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
 			hp.deposit(price - salestax);
@@ -607,7 +608,8 @@ public class TransactionProcessor {
 			} else {
 				price = CommonFunctions.twoDecimals(hyperObject.getSellPrice(EnchantmentClass.fromString(hp.getItemInHand().getMaterial()), hp));
 			}
-			HItemStack heldItem = hp.getItemInHand();
+			HInventory inv = hp.getInventory();
+			HItemStack heldItem = inv.getHeldItem();
 			if (heldItem.containsEnchantment(hyperObject.getEnchantment())) {
 				response.addFailed(L.get("ITEM_ALREADY_HAS_ENCHANTMENT"), hyperObject);
 				return;
@@ -624,6 +626,7 @@ public class TransactionProcessor {
 			tradePartner.deposit(price);
 			hyperObject.addEnchantment(heldItem);
 			hyperObject.removeEnchantment(giveItem);
+			inv.updateInventory();
 			price = CommonFunctions.twoDecimals(price);
 			response.addSuccess(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, price, hyperObject.getDisplayName(), tradePartner.getName()), CommonFunctions.twoDecimals(price), hyperObject);
 			response.setSuccessful();

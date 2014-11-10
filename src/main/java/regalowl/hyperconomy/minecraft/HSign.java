@@ -61,6 +61,19 @@ public class HSign {
 	}
 	
 	public void update() {
-		HC.mc.setSign(this);
+		new SignUpdater(this);
 	}
+	
+	private class SignUpdater {
+		private HSign s;
+		public SignUpdater(HSign sign) {
+			this.s = sign;
+			HC.mc.runTask(new Runnable() {
+				public void run() {
+					HC.mc.setSign(s);
+				}
+			});
+		}
+	}
+	
 }

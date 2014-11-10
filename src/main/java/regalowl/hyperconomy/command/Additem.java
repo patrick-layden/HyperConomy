@@ -121,7 +121,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 			name = generateName(sis);
 		}
 		if (econ.objectTest(displayName) || displayName.equalsIgnoreCase("")) {
-			displayName = generateName(sis);
+			displayName = name;
 		}
 		String aliases = displayName.replace("_", "");
 		if (econ.objectTest(aliases)) {

@@ -121,20 +121,26 @@ public class BukkitCommon {
 	
 	protected static boolean isChestShopChest(HLocation l) {
 		Block b = getBlock(l);
-		if (b == null) return false;
-		if (!(b.getState() instanceof Chest)) return false;
+		if (b == null) {
+			return false;
+		}
+		if (!(b.getState() instanceof Chest)) {
+			return false;
+		}
 		Chest chest = (Chest) b.getState();
 		HLocation sl = getLocation(chest.getLocation());
 		sl.setY(sl.getY() + 1);
-		if (isChestShopSign(sl)) return true;
-		return false;
+		if (!isChestShopSign(sl)) {
+			return false;
+		}
+		return true;
 	}
 	
 	protected static boolean isChestShopSign(HLocation l) {
 		Block b = getBlock(l);
 		if (b == null) return false;
-		if (!(b instanceof Sign)) return false;
-		Sign s = (Sign) b;
+		if (!(b.getState() instanceof Sign)) return false;
+		Sign s = (Sign) b.getState();
 		String line2 = ChatColor.stripColor(s.getLine(1)).trim();
 		if (!(line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]"))) return false;
 		HLocation sl = new HLocation(l);
@@ -166,7 +172,8 @@ public class BukkitCommon {
 					for (String li:s.getLines()) {
 						lines.add(li);
 					}
-					return new HSign(l, lines, true);
+					HLocation sl = getLocation(s.getLocation());
+					return new HSign(sl, lines, true);
 				}
 			}
 		}
@@ -182,9 +189,7 @@ public class BukkitCommon {
 
 	protected static ChestShop getChestShop(HLocation l) {
 		Block b = getBlock(l);
-		if (b == null) {
-			return null;
-		}
+		if (b == null) return null;
 		if (isChestShopChest(l)) {
 			return new ChestShop(l);
 		} else if (isChestShopSign(l)) {
@@ -278,7 +283,7 @@ public class BukkitCommon {
 	
 
 	protected static HInventory getChestInventory(HLocation l) {
-		Location loc = new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
+		Location loc = getLocation(l);
 		if (loc.getBlock().getState() instanceof Chest) {
 			Chest chest = (Chest)loc.getBlock().getState();
 			Inventory i = chest.getInventory();
@@ -297,43 +302,34 @@ public class BukkitCommon {
 	
 	@SuppressWarnings("deprecation")
 	protected static void setInventory(HInventory inventory) {
+		ArrayList<HItemStack> newInventory = inventory.getItems();
+		ArrayList<HItemStack> currentInventory = null;
+		Inventory bukkitInv = null;
+		Player p = null;
 		if (inventory.getInventoryType() == HInventoryType.PLAYER) {
 			HyperPlayer hp = inventory.getHyperPlayer();
-			Player p = Bukkit.getPlayer(hp.getName());
+			p = Bukkit.getPlayer(hp.getName());
 			p.getInventory().setHeldItemSlot(inventory.getHeldSlot());
-			ArrayList<HItemStack> currentInventory = getInventory(hp).getItems();
-			ArrayList<HItemStack> newInventory = inventory.getItems();
-			if (currentInventory.size() != newInventory.size()) return;
-			Inventory inv = p.getInventory();
-			for (int i = 0; i < newInventory.size(); i++) {
-				if (newInventory.get(i).equals(currentInventory.get(i))) continue;
-				ItemStack is = getItemStack(newInventory.get(i));
-				if (is == null) {
-					inv.clear(i);
-				} else {
-					inv.setItem(i, is);
-				}
-			}
-			p.updateInventory();
+			currentInventory = getInventory(hp).getItems();
+			bukkitInv = p.getInventory();
 		} else if (inventory.getInventoryType() == HInventoryType.CHEST) {
-			HLocation l = inventory.getLocation();
-			Location loc = new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
-			if (loc.getBlock() instanceof Chest) {
-				Chest chest = (Chest)loc.getBlock();
-				ArrayList<HItemStack> currentInventory = getChestInventory(l).getItems();
-				ArrayList<HItemStack> newInventory = inventory.getItems();
-				Inventory chestInv = chest.getInventory();
-				for (int i = 0; i < newInventory.size(); i++) {
-					if (newInventory.get(i).equals(currentInventory.get(i))) continue;
-					ItemStack is = getItemStack(newInventory.get(i));
-					if (is == null) {
-						chestInv.clear(i);
-					} else {
-						chestInv.setItem(i, is);
-					}
-				}
+			Location loc = getLocation(inventory.getLocation());
+			if (!(loc.getBlock().getState() instanceof Chest)) return;
+			Chest chest = (Chest)loc.getBlock().getState();
+			currentInventory = getChestInventory(inventory.getLocation()).getItems();
+			bukkitInv = chest.getInventory();
+		}
+		if (currentInventory.size() != newInventory.size()) return;
+		for (int i = 0; i < newInventory.size(); i++) {
+			if (newInventory.get(i).equals(currentInventory.get(i))) continue;
+			ItemStack is = getItemStack(newInventory.get(i));
+			if (is == null) {
+				bukkitInv.clear(i);
+			} else {
+				bukkitInv.setItem(i, is);
 			}
 		}
+		if (inventory.getInventoryType() == HInventoryType.PLAYER) p.updateInventory();
 	}
 	
 	//TODO make protected
