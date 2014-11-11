@@ -30,6 +30,11 @@ public class HSkullMeta extends HItemMeta {
 		return CommonFunctions.implodeMap(data);
 	}
 	
+	@Override
+	public HItemMetaType getType() {
+		return HItemMetaType.SKULL;
+	}
+	
 
 	public String getOwner() {
 		return owner;

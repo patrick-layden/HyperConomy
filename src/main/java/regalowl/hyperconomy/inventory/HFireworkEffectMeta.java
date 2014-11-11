@@ -31,7 +31,10 @@ public class HFireworkEffectMeta extends HItemMeta {
 		return CommonFunctions.implodeMap(data);
 	}
 
-	
+	@Override
+	public HItemMetaType getType() {
+		return HItemMetaType.FIREWORK_EFFECT;
+	}
 	
 	public HFireworkEffect getEffect() {
 		return effect;

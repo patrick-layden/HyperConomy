@@ -35,7 +35,10 @@ public class HPotionMeta extends HItemMeta {
 		return CommonFunctions.implodeMap(data);
 	}
 	
-
+	@Override
+	public HItemMetaType getType() {
+		return HItemMetaType.POTION;
+	}
 	
 	public ArrayList<HPotionEffect> getPotionEffects() {
 		return potionEffects;

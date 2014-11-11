@@ -5,6 +5,7 @@ import regalowl.databukkit.sql.QueryResult;
 import regalowl.databukkit.sql.SQLRead;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperAccount;
+import regalowl.hyperconomy.account.HyperPlayer;
 
 public class Audit extends BaseCommand implements HyperCommand {
 	
@@ -12,6 +13,7 @@ public class Audit extends BaseCommand implements HyperCommand {
 	private double cbalance;
 	private double logbalance;
 	private double auditbalance;
+	private HyperPlayer hp;
 	
 	public Audit() {
 		super(false);
@@ -23,8 +25,15 @@ public class Audit extends BaseCommand implements HyperCommand {
 	public CommandData onCommand(CommandData d) {
 		this.data = d;
 		if (!validate(data)) return data;
-		
+		hp = null;
+		if (data.isPlayer()) {
+			hp = data.getHyperPlayer();
+		}
 		try {
+			if (args.length < 1) {
+				data.addResponse(L.get("AUDIT_INVALID"));
+				return data;
+			}
 			account = args[0];
 			if (!dm.accountExists(account)) {
 				data.addResponse(L.get("ACCOUNT_NOT_FOUND"));
@@ -39,17 +48,26 @@ public class Audit extends BaseCommand implements HyperCommand {
 	    			auditbalance = getAuditLogTotal(account);
 	    			HC.mc.runTask(new Runnable() {
 	    	    		public void run() {
-	    	    			data.addResponse(L.get("LINE_BREAK"));
-	    	    			data.addResponse(L.f(L.get("AUDIT_TRUE"), cbalance));
-	    	    			data.addResponse(L.f(L.get("AUDIT_THEORETICAL1"), CommonFunctions.twoDecimals(logbalance)));
-	    	    			data.addResponse(L.f(L.get("AUDIT_THEORETICAL2"), CommonFunctions.twoDecimals(auditbalance)));
-	    	    			data.addResponse(L.get("LINE_BREAK"));
+	    	    			if (hp == null) {
+	    	    				HC.mc.logInfo(L.get("LINE_BREAK"));
+	    	    				HC.mc.logInfo(L.f(L.get("AUDIT_TRUE"), cbalance));
+	    	    				HC.mc.logInfo(L.f(L.get("AUDIT_THEORETICAL1"), CommonFunctions.twoDecimals(logbalance)));
+	    	    				HC.mc.logInfo(L.f(L.get("AUDIT_THEORETICAL2"), CommonFunctions.twoDecimals(auditbalance)));
+	    	    				HC.mc.logInfo(L.get("LINE_BREAK"));
+	    	    			} else {
+		    	    			hp.sendMessage(L.get("LINE_BREAK"));
+		    	    			hp.sendMessage(L.f(L.get("AUDIT_TRUE"), cbalance));
+		    	    			hp.sendMessage(L.f(L.get("AUDIT_THEORETICAL1"), CommonFunctions.twoDecimals(logbalance)));
+		    	    			hp.sendMessage(L.f(L.get("AUDIT_THEORETICAL2"), CommonFunctions.twoDecimals(auditbalance)));
+		    	    			hp.sendMessage(L.get("LINE_BREAK"));
+	    	    			}
+
 	    	    		}
 	    	    	});
 	    		}
 	    	}).start();
 		} catch (Exception e) {
-			data.addResponse(L.get("AUDIT_INVALID"));
+			hc.gDB().writeError(e);
 		}
 		return data;
 	}

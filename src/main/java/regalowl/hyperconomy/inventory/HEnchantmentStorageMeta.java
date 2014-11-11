@@ -4,7 +4,6 @@ package regalowl.hyperconomy.inventory;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 import regalowl.databukkit.CommonFunctions;
 
  
@@ -35,6 +34,11 @@ public class HEnchantmentStorageMeta extends HItemMeta {
 		}
 		data.put("storedEnchantments", CommonFunctions.implode(stEnchants));
 		return CommonFunctions.implodeMap(data);
+	}
+	
+	@Override
+	public HItemMetaType getType() {
+		return HItemMetaType.ENCHANTMENT_STORAGE;
 	}
 	
 	

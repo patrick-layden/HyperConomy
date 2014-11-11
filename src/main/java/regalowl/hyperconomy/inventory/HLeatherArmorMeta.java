@@ -29,6 +29,11 @@ public class HLeatherArmorMeta extends HItemMeta {
 		data.put("color", color.serialize());
 		return CommonFunctions.implodeMap(data);
 	}
+	
+	@Override
+	public HItemMetaType getType() {
+		return HItemMetaType.LEATHER_ARMOR;
+	}
 
 	public HColor getColor() {
 		return color;

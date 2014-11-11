@@ -42,7 +42,11 @@ public class HFireworkMeta extends HItemMeta {
 		return CommonFunctions.implodeMap(data);
 	}
 	
-
+	@Override
+	public HItemMetaType getType() {
+		return HItemMetaType.FIREWORK;
+	}
+	
 	public ArrayList<HFireworkEffect> getEffects() {
 		return effects;
 	}

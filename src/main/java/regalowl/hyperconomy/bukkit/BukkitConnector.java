@@ -410,14 +410,14 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public void logInfo(String message) {
 		Logger log = Logger.getLogger("Minecraft");
-		log.info(message);
+		log.info(applyColor(message));
 	}
 
 
 	@Override
 	public void logSevere(String message) {
 		Logger log = Logger.getLogger("Minecraft");
-		log.severe(message);
+		log.severe(applyColor(message));
 	}
 
 

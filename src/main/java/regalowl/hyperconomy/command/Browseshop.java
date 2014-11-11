@@ -177,7 +177,7 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 				count++;
 			}
 		} catch (Exception e) {
-			data.addResponse(L.get("BROWSE_SHOP_INVALID"));
+			hc.gDB().writeError(e);
 		}
 		return data;
 	}

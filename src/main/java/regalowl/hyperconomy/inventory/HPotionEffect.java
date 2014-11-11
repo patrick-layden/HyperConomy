@@ -38,6 +38,7 @@ public class HPotionEffect {
 		return CommonFunctions.implodeMap(data);
 	}
 
+	
 	public String getType() {
 		return potionEffectType;
 	}

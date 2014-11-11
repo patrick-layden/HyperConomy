@@ -40,7 +40,7 @@ public class HItemStack {
     
 	public HItemStack(String serialized) {
 		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
-    	this.itemMeta = HItemMeta.fromClass(data.get("itemMetaClass"), data.get("itemMetaData"));
+    	this.itemMeta = HItemMetaFactory.generate(HItemMetaType.fromString(data.get("metaType")), data.get("itemMetaData"));
     	this.material = data.get("material");
     	this.durability = Short.parseShort(data.get("durability"));
     	this.data = Byte.parseByte(data.get("data"));
@@ -52,7 +52,7 @@ public class HItemStack {
 	
 	public String serialize() {
 		HashMap<String,String> data = new HashMap<String,String>();
-		data.put("itemMetaClass", itemMeta.getClass().getSimpleName());
+		data.put("metaType", itemMeta.getType().toString());
 		data.put("itemMetaData", itemMeta.serialize());
 		data.put("material", material);
 		data.put("durability", durability+"");

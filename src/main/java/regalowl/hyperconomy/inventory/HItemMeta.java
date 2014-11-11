@@ -15,6 +15,7 @@ public class HItemMeta {
 	protected String displayName;
 	protected ArrayList<String> lore = new ArrayList<String>();
 	protected ArrayList<HEnchantment> enchantments = new ArrayList<HEnchantment>();
+	protected HItemMetaType type;
  
 
 	public HItemMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments) {
@@ -49,6 +50,10 @@ public class HItemMeta {
 		return data;
 	}
 
+	
+	public HItemMetaType getType() {
+		return HItemMetaType.ITEM;
+	}
 
 	
 	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
@@ -105,32 +110,6 @@ public class HItemMeta {
 			if (se.equals(e)) return true;
 		}
 		return false;
-	}
-	
-	
-	public static HItemMeta fromClass(String s, String data) {
-		if (s == null || data == null) return null;
-		if (s.equalsIgnoreCase("HItemMeta")) {
-			return new HItemMeta(data);
-		} else if (s.equalsIgnoreCase("HBookMeta")) {
-			return new HBookMeta(data);
-		} else if (s.equalsIgnoreCase("HEnchantmentStorageMeta")) {
-			return new HEnchantmentStorageMeta(data);
-		} else if (s.equalsIgnoreCase("HFireworkEffectMeta")) {
-			return new HFireworkEffectMeta(data);
-		} else if (s.equalsIgnoreCase("HFireworkMeta")) {
-			return new HFireworkMeta(data);
-		} else if (s.equalsIgnoreCase("HLeatherArmorMeta")) {
-			return new HLeatherArmorMeta(data);
-		} else if (s.equalsIgnoreCase("HMapMeta")) {
-			return new HMapMeta(data);
-		} else if (s.equalsIgnoreCase("HPotionMeta")) {
-			return new HPotionMeta(data);
-		} else if (s.equalsIgnoreCase("HSkullMeta")) {
-			return new HSkullMeta(data);
-		} else {
-			return null;
-		}
 	}
 	
 	

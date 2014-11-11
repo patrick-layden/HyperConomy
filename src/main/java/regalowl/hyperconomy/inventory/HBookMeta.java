@@ -37,6 +37,11 @@ public class HBookMeta extends HItemMeta {
 		return CommonFunctions.implodeMap(data);
 	}
 	
+	@Override
+	public HItemMetaType getType() {
+		return HItemMetaType.BOOK;
+	}
+	
 
 	public ArrayList<String> getPages() {
 		return pages;
