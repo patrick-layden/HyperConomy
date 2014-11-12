@@ -1,7 +1,7 @@
 package regalowl.hyperconomy.command;
 
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 

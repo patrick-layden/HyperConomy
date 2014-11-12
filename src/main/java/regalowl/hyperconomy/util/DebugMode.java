@@ -8,13 +8,13 @@ public class DebugMode {
 	public DebugMode() {
 		HC hc = HC.hc;
 		if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
-		hc.getDataBukkit().setDebug(true);
+		hc.getSimpleDataLib().setDebug(true);
 	}
 	
 	public void debugWriteError(Exception e) {
 		HC hc = HC.hc;
 		if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
-		hc.gDB().writeError(e, "[Debug Mode Error]");
+		hc.gSDL().getErrorWriter().writeError(e, "[Debug Mode Error]");
 	}
 
 
@@ -22,7 +22,7 @@ public class DebugMode {
 	public void debugWriteMessage(String entry) {
 		HC hc = HC.hc;
 		if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
-		hc.gDB().writeError("[Debug Mode Message]" + entry);
+		hc.gSDL().getErrorWriter().writeError("[Debug Mode Message]" + entry);
 	}
 	
 	

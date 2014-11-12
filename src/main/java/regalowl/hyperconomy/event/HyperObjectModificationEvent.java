@@ -1,7 +1,7 @@
 package regalowl.hyperconomy.event;
 
 import regalowl.hyperconomy.tradeobject.TradeObject;
-import regalowl.databukkit.event.Event;
+import regalowl.simpledatalib.event.Event;
 
 public class HyperObjectModificationEvent extends Event {
 	private TradeObject ho;

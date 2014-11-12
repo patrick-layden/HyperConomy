@@ -13,9 +13,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 
-import regalowl.databukkit.event.EventHandler;
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.SQLRead;
+import regalowl.simpledatalib.event.EventHandler;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -83,7 +83,7 @@ public class InfoSignHandler {
 				is.deleteSign();
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 	
@@ -135,7 +135,7 @@ public class InfoSignHandler {
 				}
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 

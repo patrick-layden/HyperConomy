@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.event.EventHandler;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.HyperBankManager;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;

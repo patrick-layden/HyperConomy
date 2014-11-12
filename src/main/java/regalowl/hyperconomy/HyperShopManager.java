@@ -3,14 +3,14 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.databukkit.sql.QueryResult;
+import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.GlobalShop;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
-import regalowl.databukkit.file.FileConfiguration;
+import regalowl.simpledatalib.file.FileConfiguration;
 
 public class HyperShopManager {
 	

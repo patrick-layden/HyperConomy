@@ -2,8 +2,8 @@ package regalowl.hyperconomy.account;
 
 import java.util.ArrayList;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.sql.WriteStatement;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.event.HyperBankModificationEvent;
@@ -28,7 +28,7 @@ public class HyperBank implements HyperAccount {
 		if (owner != null) {
 			owners.add(owner.getName().toLowerCase());
 		}
-		WriteStatement ws = new WriteStatement("INSERT INTO hyperconomy_banks (NAME, BALANCE, OWNERS, MEMBERS) VALUES (?,?,?,?)",hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("INSERT INTO hyperconomy_banks (NAME, BALANCE, OWNERS, MEMBERS) VALUES (?,?,?,?)",hc.getSimpleDataLib());
 		ws.addParameter(name);
 		ws.addParameter(0.0);
 		if (owner != null) {
@@ -50,7 +50,7 @@ public class HyperBank implements HyperAccount {
 	
 	public void delete() {
 		HC hc = HC.hc;
-		WriteStatement ws = new WriteStatement("DELETE FROM hyperconomy_banks WHERE NAME=?",hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("DELETE FROM hyperconomy_banks WHERE NAME=?",hc.getSimpleDataLib());
 		ws.addParameter(name);
 		hc.getSQLWrite().addToQueue(ws);
 		HC.hc.getDataManager().getHyperBankManager().removeHyperBank(this);
@@ -96,7 +96,7 @@ public class HyperBank implements HyperAccount {
 	@Override
 	public void setName(String newName) {
 		HC hc = HC.hc;
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET NAME=? WHERE NAME=?",hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET NAME=? WHERE NAME=?",hc.getSimpleDataLib());
 		ws.addParameter(newName);
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);
@@ -120,7 +120,7 @@ public class HyperBank implements HyperAccount {
 	public void setBalance(double balance) {
 		HC hc = HC.hc;
 		this.balance = balance;
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET BALANCE=? WHERE NAME=?",hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET BALANCE=? WHERE NAME=?",hc.getSimpleDataLib());
 		ws.addParameter(this.balance);
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);
@@ -233,14 +233,14 @@ public class HyperBank implements HyperAccount {
 
 	private void saveOwners() {
 		HC hc = HC.hc;
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET OWNERS=? WHERE NAME=?",hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET OWNERS=? WHERE NAME=?",hc.getSimpleDataLib());
 		ws.addParameter(CommonFunctions.implode(owners, ","));
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);
 	}
 	private void saveMembers() {
 		HC hc = HC.hc;
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET MEMBERS=? WHERE NAME=?",hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET MEMBERS=? WHERE NAME=?",hc.getSimpleDataLib());
 		ws.addParameter(CommonFunctions.implode(members, ","));
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);

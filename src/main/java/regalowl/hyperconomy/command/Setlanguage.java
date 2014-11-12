@@ -4,7 +4,7 @@ import java.io.File;
 
 
 
-import regalowl.databukkit.file.FileTools;
+import regalowl.simpledatalib.file.FileTools;
 import regalowl.hyperconomy.HC;
 
 public class Setlanguage extends BaseCommand implements HyperCommand {
@@ -19,7 +19,7 @@ public class Setlanguage extends BaseCommand implements HyperCommand {
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		FileTools ft = hc.getFileTools();
-		String folderpath = HC.hc.getDataBukkit().getStoragePath() + File.separator + "Languages";
+		String folderpath = HC.hc.getSimpleDataLib().getStoragePath() + File.separator + "Languages";
 		ft.makeFolder(folderpath);
 		try {
 			if (args.length == 1) {

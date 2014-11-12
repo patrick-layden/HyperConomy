@@ -1,8 +1,8 @@
 package regalowl.hyperconomy.command;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.SQLRead;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -67,7 +67,7 @@ public class Audit extends BaseCommand implements HyperCommand {
 	    		}
 	    	}).start();
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 		return data;
 	}

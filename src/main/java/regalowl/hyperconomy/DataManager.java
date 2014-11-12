@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.databukkit.file.FileConfiguration;
-import regalowl.databukkit.file.FileTools;
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.SQLRead;
-import regalowl.databukkit.sql.SQLWrite;
-import regalowl.databukkit.sql.SyncSQLWrite;
+import regalowl.simpledatalib.file.FileConfiguration;
+import regalowl.simpledatalib.file.FileTools;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.SQLRead;
+import regalowl.simpledatalib.sql.SQLWrite;
+import regalowl.simpledatalib.sql.SyncSQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.DataLoadEvent;
@@ -81,7 +81,7 @@ public class DataManager {
 		loadActive = true;
 		hc = HC.hc;
 		sr = hc.getSQLRead();
-		ssw = hc.getDataBukkit().getSQLManager().getSyncSQLWrite();
+		ssw = hc.getSimpleDataLib().getSQLManager().getSyncSQLWrite();
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -105,7 +105,7 @@ public class DataManager {
 					hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent());
 					loadActive = false;
 				} catch (Exception e) {
-					hc.gDB().writeError(e);
+					hc.gSDL().getErrorWriter().writeError(e);
 				}
 			}
 		}).start();

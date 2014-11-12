@@ -3,8 +3,8 @@ package regalowl.hyperconomy.account;
 import java.util.HashMap;
 import java.util.UUID;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.sql.SQLWrite;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;

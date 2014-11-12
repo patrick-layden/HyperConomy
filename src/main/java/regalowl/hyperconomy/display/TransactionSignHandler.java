@@ -2,7 +2,7 @@ package regalowl.hyperconomy.display;
 
 
 
-import regalowl.databukkit.event.EventHandler;
+import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
@@ -79,7 +79,7 @@ public class TransactionSignHandler {
 				}
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 
@@ -133,7 +133,7 @@ public class TransactionSignHandler {
 				}
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 	
@@ -225,7 +225,7 @@ public class TransactionSignHandler {
 				}
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 }

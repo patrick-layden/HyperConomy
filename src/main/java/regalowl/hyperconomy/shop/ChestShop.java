@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.shop;
 
-import regalowl.databukkit.CommonFunctions;
+
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.inventory.HInventory;
@@ -91,10 +92,7 @@ public class ChestShop {
 	public ChestShopType getType() {
 		return type;
 	}
-	public HLocation[] getProtectedLocations() {
-		//TODO
-		return null;
-	}
+
 	public boolean hasStaticPrice() {
 		return hasStaticPrice;
 	}

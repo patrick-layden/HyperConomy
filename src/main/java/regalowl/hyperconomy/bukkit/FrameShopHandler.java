@@ -18,7 +18,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
-import regalowl.databukkit.sql.QueryResult;
+import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;

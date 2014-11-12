@@ -1,7 +1,7 @@
 package regalowl.hyperconomy.command;
 
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -86,7 +86,7 @@ public class Value extends BaseCommand implements HyperCommand {
 			data.addResponse(L.get("LINE_BREAK"));
 
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 		return data;
 	}

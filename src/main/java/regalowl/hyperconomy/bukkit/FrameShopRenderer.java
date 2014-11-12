@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import org.bukkit.map.MapRenderer;
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
 import regalowl.hyperconomy.tradeobject.TradeObject;

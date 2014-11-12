@@ -8,7 +8,6 @@ import regalowl.hyperconomy.util.LanguageFile;
 public class HyperEconAPI implements EconomyAPI {
 
 	public boolean checkFunds(double money, HyperPlayer player) {
-		HC hc = HC.hc;
 		if (!HC.hc.getDataManager().accountExists(player.getName())) {
 			return false;
 		}
@@ -16,7 +15,6 @@ public class HyperEconAPI implements EconomyAPI {
 	}
 	
 	public boolean checkFunds(double money, String name) {
-		HC hc = HC.hc;
 		if (!HC.hc.getDataManager().accountExists(name)) {
 			return false;
 		}
@@ -24,7 +22,6 @@ public class HyperEconAPI implements EconomyAPI {
 	}
 
 	public void withdraw(double money, HyperPlayer player) {
-		HC hc = HC.hc;
 		if (!HC.hc.getDataManager().hyperPlayerExists(player.getName())) {
 			return;
 		}
@@ -32,7 +29,6 @@ public class HyperEconAPI implements EconomyAPI {
 	}
 
 	public void withdrawAccount(double money, String name) {
-		HC hc = HC.hc;
 		if (!HC.hc.getDataManager().accountExists(name)) {
 			return;
 		}
@@ -40,7 +36,6 @@ public class HyperEconAPI implements EconomyAPI {
 	}
 
 	public void deposit(double money, HyperPlayer player) {
-		HC hc = HC.hc;
 		if (!HC.hc.getDataManager().hyperPlayerExists(player.getName())) {
 			return;
 		}
@@ -48,7 +43,6 @@ public class HyperEconAPI implements EconomyAPI {
 	}
 
 	public void depositAccount(double money, String name) {
-		HC hc = HC.hc;
 		if (!HC.hc.getDataManager().accountExists(name)) {
 			return;
 		}
@@ -56,7 +50,6 @@ public class HyperEconAPI implements EconomyAPI {
 	}
 
 	public void setBalance(double balance, String name) {
-		HC hc = HC.hc;
 		if (!HC.hc.getDataManager().accountExists(name)) {
 			return;
 		}
@@ -64,12 +57,10 @@ public class HyperEconAPI implements EconomyAPI {
 	}
 
 	public boolean checkAccount(String name) {
-		HC hc = HC.hc;
 		return HC.hc.getDataManager().accountExists(name);
 	}
 
 	public double getBalance(String account) {
-		HC hc = HC.hc;
 		if (!HC.hc.getDataManager().accountExists(account)) {
 			return 0.0;
 		}

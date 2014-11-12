@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.sql.BasicStatement;
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.WriteStatement;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.sql.BasicStatement;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -121,7 +121,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private void loadPlayerShopObjects() {
 		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
-		BasicStatement statement = new BasicStatement("SELECT * FROM hyperconomy_shop_objects WHERE SHOP = ?", hc.getDataBukkit());
+		BasicStatement statement = new BasicStatement("SELECT * FROM hyperconomy_shop_objects WHERE SHOP = ?", hc.getSimpleDataLib());
 		statement.addParameter(name);
 		QueryResult result = hc.getSQLRead().select(statement);
 		while (result.next()) {
@@ -525,7 +525,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		if (shopContents.containsKey(hyperObject.getName())) {
 			return shopContents.get(hyperObject.getName());
 		}
-		WriteStatement ws = new WriteStatement("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, BUY_PRICE, SELL_PRICE, MAX_STOCK, STATUS) VALUES (?,?,?,?,?,?,?)", hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("INSERT INTO hyperconomy_shop_objects (SHOP, HYPEROBJECT, QUANTITY, BUY_PRICE, SELL_PRICE, MAX_STOCK, STATUS) VALUES (?,?,?,?,?,?,?)", hc.getSimpleDataLib());
 		ws.addParameter(name);
 		ws.addParameter(hyperObject.getName());
 		ws.addParameter(0.0);
@@ -561,7 +561,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		if (he == null) {
-			hc.getDataBukkit().writeError("Null HyperEconomy for economy: " + economy + ", shop: " + name);
+			hc.getSimpleDataLib().getErrorWriter().writeError("Null HyperEconomy for economy: " + economy + ", shop: " + name);
 			he = HC.hc.getDataManager().getEconomy("default");
 		}
 		return he;

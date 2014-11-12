@@ -55,7 +55,7 @@ public class Hs extends BaseCommand implements HyperCommand {
 				response.sendMessages();
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 		return data;
 	}

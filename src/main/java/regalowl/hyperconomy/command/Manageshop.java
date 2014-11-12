@@ -11,8 +11,8 @@ import java.util.HashMap;
 
 
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.file.FileConfiguration;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
@@ -224,7 +224,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}
 			} else {
-				hc.getDataBukkit().writeError("Setting PlayerShopObject stock failed in /ms add.");
+				hc.getSimpleDataLib().getErrorWriter().writeError("Setting PlayerShopObject stock failed in /ms add.");
 				return data;
 			}	
 		} else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("r")) {
@@ -299,7 +299,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}
 			} else {
-				hc.getDataBukkit().writeError("Setting PlayerShopObject stock failed in /ms remove.");
+				hc.getSimpleDataLib().getErrorWriter().writeError("Setting PlayerShopObject stock failed in /ms remove.");
 				return data;
 			}
 		} else if ((args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("c"))) {
@@ -445,7 +445,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("PRICE_SET"));
 				return data;
 			} else {
-				hc.getDataBukkit().writeError("Setting PlayerShopObject price failed.");
+				hc.getSimpleDataLib().getErrorWriter().writeError("Setting PlayerShopObject price failed.");
 				return data;
 			}
 		} else if (args[0].equalsIgnoreCase("buyprice") || args[0].equalsIgnoreCase("bp")) {
@@ -474,7 +474,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("PRICE_SET"));
 				return data;
 			} else {
-				hc.getDataBukkit().writeError("Setting PlayerShopObject buyprice failed.");
+				hc.getSimpleDataLib().getErrorWriter().writeError("Setting PlayerShopObject buyprice failed.");
 				return data;
 			}
 		} else if (args[0].equalsIgnoreCase("sellprice") || args[0].equalsIgnoreCase("sp")) {
@@ -503,7 +503,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("PRICE_SET"));
 				return data;
 			} else {
-				hc.getDataBukkit().writeError("Setting PlayerShopObject sellprice failed.");
+				hc.getSimpleDataLib().getErrorWriter().writeError("Setting PlayerShopObject sellprice failed.");
 				return data;
 			}
 		} else if (args[0].equalsIgnoreCase("maxstock") || args[0].equalsIgnoreCase("ms")) {
@@ -532,7 +532,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("MAXSTOCK_SET"));
 				return data;
 			} else {
-				hc.getDataBukkit().writeError("Setting PlayerShopObject max stock failed.");
+				hc.getSimpleDataLib().getErrorWriter().writeError("Setting PlayerShopObject max stock failed.");
 				return data;
 			}
 		} else if (args[0].equalsIgnoreCase("status") || args[0].equalsIgnoreCase("s")) {

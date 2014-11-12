@@ -2,11 +2,11 @@ package regalowl.hyperconomy.util;
 
 import java.util.ArrayList;
 
-import regalowl.databukkit.sql.Field;
-import regalowl.databukkit.sql.FieldType;
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.SyncSQLWrite;
-import regalowl.databukkit.sql.Table;
+import regalowl.simpledatalib.sql.Field;
+import regalowl.simpledatalib.sql.FieldType;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.SyncSQLWrite;
+import regalowl.simpledatalib.sql.Table;
 import regalowl.hyperconomy.HC;
 
 public class DatabaseUpdater {

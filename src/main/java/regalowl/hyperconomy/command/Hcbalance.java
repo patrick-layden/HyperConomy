@@ -34,7 +34,7 @@ public class Hcbalance extends BaseCommand implements HyperCommand {
     			data.addResponse(L.get("HCBALANCE_INVALID"));
     		}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 		return data;
 	}

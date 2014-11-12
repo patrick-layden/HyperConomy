@@ -2,7 +2,7 @@ package regalowl.hyperconomy.event.minecraft;
 
 
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.databukkit.event.Event;
+import regalowl.simpledatalib.event.Event;
 
 public class HPlayerJoinEvent extends Event {
 

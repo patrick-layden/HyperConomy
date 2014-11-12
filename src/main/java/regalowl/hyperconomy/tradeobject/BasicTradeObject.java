@@ -5,7 +5,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
@@ -438,7 +438,7 @@ public class BasicTradeObject implements TradeObject {
 			}
 			return applyCeilingFloor(totalPrice, amount);
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 			return Math.pow(10, 21);
 		}
 	}
@@ -463,7 +463,7 @@ public class BasicTradeObject implements TradeObject {
 			}
 			return applyCeilingFloor(totalPrice, amount);
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 			return 0;
 		}
 	}

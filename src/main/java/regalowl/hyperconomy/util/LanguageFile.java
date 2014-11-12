@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import regalowl.databukkit.file.FileTools;
+import regalowl.simpledatalib.file.FileTools;
 import regalowl.hyperconomy.HC;
 
 public class LanguageFile {
@@ -66,7 +66,7 @@ public class LanguageFile {
 		try {
 		ft.copyFileFromJar("Languages/enUS.hl", backuppath);
 		} catch (Exception e) {
-			HC.hc.gDB().writeError(e);
+			HC.hc.gSDL().getErrorWriter().writeError(e);
 		}
 		buildBackupHashMap(backuppath);
 		

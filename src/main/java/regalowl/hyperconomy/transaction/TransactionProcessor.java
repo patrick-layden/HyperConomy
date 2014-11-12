@@ -4,7 +4,7 @@ package regalowl.hyperconomy.transaction;
 
 
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -227,7 +227,7 @@ public class TransactionProcessor {
 			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), (double) amount, CommonFunctions.twoDecimals(price - taxpaid), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "Transaction buy() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
+			hc.gSDL().getErrorWriter().writeError(e, info);
 			return;
 		}
 	}
@@ -255,7 +255,7 @@ public class TransactionProcessor {
 			log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, CommonFunctions.twoDecimals(price), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "Transaction buyXP() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
+			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
 	
@@ -298,7 +298,7 @@ public class TransactionProcessor {
 			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), 1.0, CommonFunctions.twoDecimals(price), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "ETransaction buyEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "'";
-			hc.gDB().writeError(e, info);
+			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
 	
@@ -403,7 +403,7 @@ public class TransactionProcessor {
 			log.writeSQLLog(hp.getName(), "sale", name, (double)amount, price - salestax, salestax, tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "Transaction sell() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + ", amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
+			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
 	
@@ -437,7 +437,7 @@ public class TransactionProcessor {
 			log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), (double) amount, price - salestax, salestax, tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "Transaction sellXP() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
+			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
 
@@ -483,7 +483,7 @@ public class TransactionProcessor {
 			log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), 1.0, price - salestax, salestax, tradePartner.getName(), hyperObject.getStatusString());
 		} catch (Exception e) {
 			String info = "ETransaction sellEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "'";
-			hc.gDB().writeError(e, info);
+			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
 
@@ -543,7 +543,7 @@ public class TransactionProcessor {
 			tradePartner.sendMessage(mb.build());
 		} catch (Exception e) {
 			String info = "Transaction buyChest() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
+			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
 
@@ -583,7 +583,7 @@ public class TransactionProcessor {
 			tradePartner.sendMessage(mb.build());
 		} catch (Exception e) {
 			String info = "Transaction sellChest() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
-			hc.gDB().writeError(e, info);
+			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
 	
@@ -640,7 +640,7 @@ public class TransactionProcessor {
 			//tradePartner.sendMessage(L.f(L.get("CHEST_ENCHANTMENT_BUY_NOTIFICATION"), 1, price, hyperObject.getDisplayName(), hp));
 		} catch (Exception e) {
 			String info = "ETransaction buyChestEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "'";
-			hc.gDB().writeError(e, info);
+			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
 

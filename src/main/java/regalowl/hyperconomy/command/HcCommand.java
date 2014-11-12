@@ -197,7 +197,7 @@ public class HcCommand extends BaseCommand implements HyperCommand {
 				}
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 }

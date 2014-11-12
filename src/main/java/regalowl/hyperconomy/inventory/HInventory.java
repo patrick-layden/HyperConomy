@@ -110,7 +110,7 @@ public class HInventory {
 			}
 			if (addAmount <= 0) break;
 		}
-		if (addAmount != 0) HC.hc.gDB().writeError("HInventory add() failure; " + addAmount + " remaining.");
+		if (addAmount != 0) HC.hc.gSDL().getErrorWriter().writeError("HInventory add() failure; " + addAmount + " remaining.");
 		updateInventory();
 	}
 	
@@ -148,7 +148,7 @@ public class HInventory {
 			slot++;
 			if (slot >= getSize()) break;
 		}
-		if (removeAmount != 0) HC.hc.gDB().writeError("HInventory remove() failure.  Items not successfully removed; amount = '" + removeAmount + "'");
+		if (removeAmount != 0) HC.hc.gSDL().getErrorWriter().writeError("HInventory remove() failure.  Items not successfully removed; amount = '" + removeAmount + "'");
 		updateInventory();
 		return actuallyRemoved;
 	}

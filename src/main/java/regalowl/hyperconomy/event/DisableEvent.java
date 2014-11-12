@@ -1,5 +1,5 @@
 package regalowl.hyperconomy.event;
 
-import regalowl.databukkit.event.Event;
+import regalowl.simpledatalib.event.Event;
 
 public class DisableEvent extends Event {}

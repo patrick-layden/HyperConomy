@@ -37,8 +37,8 @@
               </filters>
               <relocations>
                 <relocation>
-                  <pattern>regalowl.databukkit</pattern>
-                  <shadedPattern>regalowl.hyperconomy.databukkit</shadedPattern>
+                  <pattern>regalowl.simpledatalib</pattern>
+                  <shadedPattern>regalowl.hyperconomy.simpledatalib</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>

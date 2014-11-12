@@ -33,7 +33,7 @@ public class Hcpay extends BaseCommand implements HyperCommand{
 				data.addResponse(L.get("HCPAY_INVALID"));
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 		return data;
 		

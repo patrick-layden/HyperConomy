@@ -1,6 +1,6 @@
 package regalowl.hyperconomy.util;
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HC;
 
 

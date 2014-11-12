@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.event.EventHandler;
-import regalowl.databukkit.file.FileTools;
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.SQLRead;
-import regalowl.databukkit.sql.SQLWrite;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.event.EventHandler;
+import regalowl.simpledatalib.file.FileTools;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.SQLRead;
+import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.inventory.HEnchantment;
@@ -130,7 +130,7 @@ public class HyperEconomy implements Serializable {
 		while (!loaded) {
 			counter++;
 			if (counter > 100) {
-				hc.getDataBukkit().writeError("Infinite loop when loading composites.yml.  You likely have an error in your composites.yml file.  Your items will not work properly until this is fixed.");
+				hc.getSimpleDataLib().getErrorWriter().writeError("Infinite loop when loading composites.yml.  You likely have an error in your composites.yml file.  Your items will not work properly until this is fixed.");
 				return;
 			}
 			loaded = true;

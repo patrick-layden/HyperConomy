@@ -1,6 +1,6 @@
 package regalowl.hyperconomy.command;
 
-import regalowl.databukkit.file.FileConfiguration;
+import regalowl.simpledatalib.file.FileConfiguration;
 
 
 public class Taxsettings extends BaseCommand implements HyperCommand {

@@ -9,8 +9,8 @@ import java.util.HashMap;
 
 
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.file.FileConfiguration;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;

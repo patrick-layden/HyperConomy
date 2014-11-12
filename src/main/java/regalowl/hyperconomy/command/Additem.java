@@ -63,7 +63,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 			data.addResponse(L.get("ITEM_ADDED"));
 			return data;
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 			return data;
 		}
 	}

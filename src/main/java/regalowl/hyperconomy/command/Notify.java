@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.event.EventHandler;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;

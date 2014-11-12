@@ -1,8 +1,8 @@
 package regalowl.hyperconomy.util;
 
 
-import regalowl.databukkit.file.FileConfiguration;
-import regalowl.databukkit.file.YamlHandler;
+import regalowl.simpledatalib.file.FileConfiguration;
+import regalowl.simpledatalib.file.YamlHandler;
 import regalowl.hyperconomy.HC;
 
 

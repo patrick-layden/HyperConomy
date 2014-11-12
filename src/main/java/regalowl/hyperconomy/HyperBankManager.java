@@ -3,7 +3,7 @@ package regalowl.hyperconomy;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.databukkit.sql.QueryResult;
+import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperBank;
 
 public class HyperBankManager {

@@ -1,7 +1,7 @@
 package regalowl.hyperconomy.event;
 
 import regalowl.hyperconomy.shop.Shop;
-import regalowl.databukkit.event.Event;
+import regalowl.simpledatalib.event.Event;
 
 public class ShopCreationEvent extends Event {
 	private Shop s;

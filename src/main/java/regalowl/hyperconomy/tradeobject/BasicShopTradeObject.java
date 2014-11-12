@@ -3,8 +3,8 @@ package regalowl.hyperconomy.tradeobject;
 import java.awt.Image;
 import java.util.ArrayList;
 
-import regalowl.databukkit.sql.SQLWrite;
-import regalowl.databukkit.sql.WriteStatement;
+import regalowl.simpledatalib.sql.SQLWrite;
+import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
@@ -80,7 +80,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	public void setTradeObject(TradeObject ho) {
 		HC hc = HC.hc;
 		SQLWrite sw = hc.getSQLWrite();
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET HYPEROBJECT=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET HYPEROBJECT=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(ho.getName());
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
@@ -92,7 +92,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		HC hc = HC.hc;
 		SQLWrite sw = hc.getSQLWrite();
 		this.playerShop = playerShop.getName();
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SHOP=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SHOP=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(playerShop.getName());
 		ws.addParameter(playerShop.getName());
 		ws.addParameter(hyperObject);
@@ -108,7 +108,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		} else {
 			if (stock < 0.0) {stock = 0.0;}
 			this.stock = stock;
-			WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET QUANTITY=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+			WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET QUANTITY=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 			ws.addParameter(stock);
 			ws.addParameter(playerShop);
 			ws.addParameter(hyperObject);
@@ -121,7 +121,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		HC hc = HC.hc;
 		SQLWrite sw = hc.getSQLWrite();
 		this.buyPrice = buyPrice;
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET BUY_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET BUY_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(buyPrice);
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
@@ -133,7 +133,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		HC hc = HC.hc;
 		SQLWrite sw = hc.getSQLWrite();
 		this.sellPrice = sellPrice;
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SELL_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SELL_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(sellPrice);
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
@@ -145,7 +145,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		HC hc = HC.hc;
 		SQLWrite sw = hc.getSQLWrite();
 		this.maxStock = maxStock;
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET MAX_STOCK=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET MAX_STOCK=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(maxStock);
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
@@ -157,7 +157,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		HC hc = HC.hc;
 		SQLWrite sw = hc.getSQLWrite();
 		this.status = status;
-		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET STATUS=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getDataBukkit());
+		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET STATUS=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(status.toString());
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);

@@ -2,7 +2,7 @@ package regalowl.hyperconomy.command;
 
 import java.util.Iterator;
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.inventory.HEnchantment;
@@ -87,7 +87,7 @@ public class Hv extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("REQUIRE_SHOP_FOR_INFO"));
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 		return data;
 	}

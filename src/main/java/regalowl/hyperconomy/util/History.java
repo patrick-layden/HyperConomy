@@ -3,10 +3,10 @@ package regalowl.hyperconomy.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.SQLRead;
-import regalowl.databukkit.sql.SQLWrite;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.SQLRead;
+import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.display.InfoSignHandler;
@@ -151,7 +151,7 @@ public class History {
 			result.close();
 			return -1.0;
 		} catch (Exception e) {
-			hc.gDB().writeError(e, "getHistoricValue() passed arguments: name = '" + name + "', economy = '" + economy + "', count = '" + count + "'");
+			hc.gSDL().getErrorWriter().writeError(e, "getHistoricValue() passed arguments: name = '" + name + "', economy = '" + economy + "', count = '" + count + "'");
 			return -1.0;
 		}
 	}
@@ -165,7 +165,7 @@ public class History {
 	 */
 	public synchronized String getPercentChange(TradeObject ho, int timevalue) {
 		if (ho == null || sr == null) {
-			hc.gDB().writeError("getPercentChange passed null HyperObject or SQLRead");
+			hc.gSDL().getErrorWriter().writeError("getPercentChange passed null HyperObject or SQLRead");
 			return "?";
 		}
 		double percentChange = 0.0;

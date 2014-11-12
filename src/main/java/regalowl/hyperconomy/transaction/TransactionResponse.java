@@ -2,7 +2,7 @@ package regalowl.hyperconomy.transaction;
 
 import java.util.ArrayList;
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.tradeobject.TradeObject;

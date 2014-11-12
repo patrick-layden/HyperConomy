@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -325,7 +325,7 @@ public class InfoSign {
 				}
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 
@@ -358,7 +358,7 @@ public class InfoSign {
 				}
 			}).start();
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 	

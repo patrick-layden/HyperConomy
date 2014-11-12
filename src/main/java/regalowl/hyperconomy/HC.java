@@ -1,17 +1,17 @@
 package regalowl.hyperconomy;
 
 
-import regalowl.databukkit.DataBukkit;
-import regalowl.databukkit.event.EventHandler;
-import regalowl.databukkit.events.LogEvent;
-import regalowl.databukkit.events.LogLevel;
-import regalowl.databukkit.events.ShutdownEvent;
-import regalowl.databukkit.file.FileConfiguration;
-import regalowl.databukkit.file.FileTools;
-import regalowl.databukkit.file.YamlHandler;
-import regalowl.databukkit.sql.SQLManager;
-import regalowl.databukkit.sql.SQLRead;
-import regalowl.databukkit.sql.SQLWrite;
+import regalowl.simpledatalib.SimpleDataLib;
+import regalowl.simpledatalib.event.EventHandler;
+import regalowl.simpledatalib.events.LogEvent;
+import regalowl.simpledatalib.events.LogLevel;
+import regalowl.simpledatalib.events.ShutdownEvent;
+import regalowl.simpledatalib.file.FileConfiguration;
+import regalowl.simpledatalib.file.FileTools;
+import regalowl.simpledatalib.file.YamlHandler;
+import regalowl.simpledatalib.sql.SQLManager;
+import regalowl.simpledatalib.sql.SQLRead;
+import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.api.API;
 import regalowl.hyperconomy.api.EconomyAPI;
 import regalowl.hyperconomy.api.HyperAPI;
@@ -88,7 +88,7 @@ public class HC {
 	public static EconomyAPI economyApi;
 	public static MineCraftConnector mc;
 	private DataManager dm;
-	private DataBukkit db;
+	private SimpleDataLib sdl;
 	private YamlHandler yh;
 	private Log l;
 	private InfoSignHandler isign;
@@ -120,7 +120,7 @@ public class HC {
 	}
 	
 	@EventHandler
-	public void onDataBukkitShutdownRequest(ShutdownEvent event) {
+	public void onSimpleDataLibShutdownRequest(ShutdownEvent event) {
 		disable(false);
 	}
 	
@@ -143,12 +143,12 @@ public class HC {
 		hc = this;
 		api = new HyperAPI();
 		economyApi = new HyperEconAPI();
-		if (db != null) db.shutDown();
-		db = new DataBukkit("HyperConomy");
-		db.initialize();
-		db.registerListener(this);
-		ft = db.getFileTools();
-		yh = db.getYamlHandler();
+		if (sdl != null) sdl.shutDown();
+		sdl = new SimpleDataLib("HyperConomy");
+		sdl.initialize();
+		sdl.registerListener(this);
+		ft = sdl.getFileTools();
+		yh = sdl.getYamlHandler();
 		yh.copyFromJar("categories");
 		yh.copyFromJar("config");
 		yh.registerFileConfiguration("categories");
@@ -177,13 +177,13 @@ public class HC {
 			int port = hConfig.getInt("sql.mysql-connection.port");
 			String host = hConfig.getString("sql.mysql-connection.host");
 			String database = hConfig.getString("sql.mysql-connection.database");
-			db.getSQLManager().enableMySQL(host, database, username, password, port);
+			sdl.getSQLManager().enableMySQL(host, database, username, password, port);
 		}
-		dMode.syncDebugConsoleMessage("Expected plugin folder path: [" + db.getStoragePath() + "]");
-		db.getSQLManager().createDatabase();
+		dMode.syncDebugConsoleMessage("Expected plugin folder path: [" + sdl.getStoragePath() + "]");
+		sdl.getSQLManager().createDatabase();
 		dMode.syncDebugConsoleMessage("Database created.");
-		sw = db.getSQLManager().getSQLWrite();
-		sr = db.getSQLManager().getSQLRead();
+		sw = sdl.getSQLManager().getSQLWrite();
+		sr = sdl.getSQLManager().getSQLRead();
 		sw.setLogSQL(hConfig.getBoolean("sql.log-sql-statements"));
 		mc.setupExternalEconomy();
 		if (mc.useExternalEconomy()) {
@@ -219,7 +219,7 @@ public class HC {
 		if (heh != null && !protect) {
 			heh.clearListeners();
 		}
-		if (db != null) db.shutDown();
+		if (sdl != null) sdl.shutDown();
 		if (protect) {
 			new DisabledProtection();
 		}
@@ -356,14 +356,14 @@ public class HC {
 	public FrameShopHandler getFrameShopHandler() {
 		return fsh;
 	}
-	public DataBukkit getDataBukkit() {
-		return db;
+	public SimpleDataLib getSimpleDataLib() {
+		return sdl;
 	}
-	public DataBukkit gDB() {
-		return db;
+	public SimpleDataLib gSDL() {
+		return sdl;
 	}
 	public SQLManager getSQLManager() {
-		return db.getSQLManager();
+		return sdl.getSQLManager();
 	}
 	public FileTools getFileTools() {
 		return ft;
@@ -376,7 +376,7 @@ public class HC {
 	}
 	
 	public String getFolderPath() {
-		return db.getStoragePath();
+		return sdl.getStoragePath();
 	}
 	
 	public DebugMode getDebugMode() {

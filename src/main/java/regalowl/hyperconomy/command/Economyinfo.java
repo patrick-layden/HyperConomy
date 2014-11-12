@@ -16,7 +16,7 @@ public class Economyinfo extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("ECONOMYINFO_INVALID"));
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 		return data;
 	}

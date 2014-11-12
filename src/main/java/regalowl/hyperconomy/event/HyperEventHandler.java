@@ -1,19 +1,19 @@
 package regalowl.hyperconomy.event;
 
-import regalowl.databukkit.event.Event;
+import regalowl.simpledatalib.event.Event;
 import regalowl.hyperconomy.HC;
 
 public class HyperEventHandler {
 	
     public void registerListener(Object listener) {
-    	HC.hc.getDataBukkit().getEventPublisher().registerListener(listener);
+    	HC.hc.getSimpleDataLib().getEventPublisher().registerListener(listener);
     }
     public void unRegisterListener(Object listener) {
-    	HC.hc.getDataBukkit().getEventPublisher().unRegisterListener(listener);
+    	HC.hc.getSimpleDataLib().getEventPublisher().unRegisterListener(listener);
     }
     
     public void clearListeners() {
-    	HC.hc.getDataBukkit().getEventPublisher().unRegisterAllListeners();
+    	HC.hc.getSimpleDataLib().getEventPublisher().unRegisterAllListeners();
     }
 	
 	public void fireEventFromAsyncThread(Event event) {
@@ -25,12 +25,12 @@ public class HyperEventHandler {
     		this.event = event;
     	}
 		public void run() {
-			HC.hc.getDataBukkit().getEventPublisher().fireEvent(event);
+			HC.hc.getSimpleDataLib().getEventPublisher().fireEvent(event);
 		}
     }
 	
 	public Event fireEvent(Event event) {
-		return HC.hc.getDataBukkit().getEventPublisher().fireEvent(event);
+		return HC.hc.getSimpleDataLib().getEventPublisher().fireEvent(event);
 	}
 	
 }

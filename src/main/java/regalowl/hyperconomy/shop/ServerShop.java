@@ -3,7 +3,7 @@ package regalowl.hyperconomy.shop;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -239,7 +239,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		HC hc = HC.hc;
 		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
 		if (he == null) {
-			hc.getDataBukkit().writeError("Null HyperEconomy for economy: " + economy + ", shop: " + name);
+			hc.getSimpleDataLib().getErrorWriter().writeError("Null HyperEconomy for economy: " + economy + ", shop: " + name);
 			he = HC.hc.getDataManager().getEconomy("default");
 		}
 		return he;

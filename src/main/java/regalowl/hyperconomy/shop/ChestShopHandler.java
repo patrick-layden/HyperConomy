@@ -2,9 +2,8 @@ package regalowl.hyperconomy.shop;
 
 
 
-
-import regalowl.databukkit.CommonFunctions;
-import regalowl.databukkit.event.EventHandler;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
@@ -51,14 +50,13 @@ public class ChestShopHandler {
 		if (HC.mc.isChestShopChest(bbevent.getBlock().getLocation())) {
 			bbevent.cancel();
 		} else if (HC.mc.isChestShopSign(bbevent.getBlock().getLocation())) {
-			if (bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) {
-				return;
-			}
+			if (bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) return;
 			bbevent.cancel();
 		} else if (HC.mc.isChestShopSignBlock(bbevent.getBlock().getLocation())) {
 			bbevent.cancel();
 		}
 	}
+
 
 
 
@@ -92,11 +90,12 @@ public class ChestShopHandler {
 	public void onBlockPlaceEvent(HBlockPlaceEvent bpevent) {
 		HBlock block = bpevent.getBlock();
 		for (HBlock b : block.getSurroundingBlocks()) {
-			if (new ChestShop(b.getLocation()).isValid()) {
+			if (HC.mc.isChestShopChest(b.getLocation())) {
 				bpevent.cancel();
 			}
 		}
 	}
+
 
 	@EventHandler
 	public void onSignChangeEvent(HSignChangeEvent event) {
@@ -215,7 +214,7 @@ public class ChestShopHandler {
 			sign.update();
 
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 
@@ -491,7 +490,7 @@ public class ChestShopHandler {
 				return;
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 

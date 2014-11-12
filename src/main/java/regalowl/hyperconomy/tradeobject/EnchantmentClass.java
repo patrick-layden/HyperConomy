@@ -61,7 +61,7 @@ public enum EnchantmentClass {
 			}
 		} catch (Exception e) {
 			String info = "getclassValue() passed values eclass='" + eclass.toString() + "'";
-			HC.hc.gDB().writeError(e, info);
+			HC.hc.gSDL().getErrorWriter().writeError(e, info);
 			return 0;
 		}
 	}

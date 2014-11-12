@@ -7,7 +7,7 @@ import java.util.Collections;
 
 
 
-import regalowl.databukkit.CommonFunctions;
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.shop.PlayerShop;
@@ -177,7 +177,7 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 				count++;
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 		return data;
 	}

@@ -49,7 +49,7 @@ public class Sell extends BaseCommand implements HyperCommand {
 			TransactionResponse response = hp.processTransaction(pt);
 			response.sendMessages(); 
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 		return data;
 	}

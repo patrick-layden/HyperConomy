@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.databukkit.sql.QueryResult;
+import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.event.minecraft.HPlayerJoinEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerQuitEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
-import regalowl.databukkit.event.EventHandler;
-import regalowl.databukkit.file.FileConfiguration;
+import regalowl.simpledatalib.event.EventHandler;
+import regalowl.simpledatalib.file.FileConfiguration;
 
 public class HyperPlayerManager {
 
@@ -97,7 +97,7 @@ public class HyperPlayerManager {
 				getHyperPlayer(name).checkUUID();
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class HyperPlayerManager {
 				hp.setLocation(l);
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 

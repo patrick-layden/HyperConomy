@@ -11,9 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 
-import regalowl.databukkit.event.EventHandler;
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.SQLRead;
+import regalowl.simpledatalib.event.EventHandler;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
@@ -44,7 +44,7 @@ public class ItemDisplayFactory {
 				startRefreshThread();
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 	
@@ -80,7 +80,7 @@ public class ItemDisplayFactory {
 				}
 			}).start();
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 	
@@ -181,7 +181,7 @@ public class ItemDisplayFactory {
 			}
 		}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 
@@ -207,7 +207,7 @@ public class ItemDisplayFactory {
 				}
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 
@@ -225,7 +225,7 @@ public class ItemDisplayFactory {
 				}
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 
@@ -242,7 +242,7 @@ public class ItemDisplayFactory {
 				}
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 
@@ -261,7 +261,7 @@ public class ItemDisplayFactory {
 				}
 			}
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 
@@ -276,7 +276,7 @@ public class ItemDisplayFactory {
 			}
 			return false;
 		} catch (Exception e) {
-			hc.gDB().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 			return false;
 		}
 	}

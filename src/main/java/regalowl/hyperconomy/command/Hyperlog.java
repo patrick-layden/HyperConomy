@@ -3,8 +3,8 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
-import regalowl.databukkit.sql.QueryResult;
-import regalowl.databukkit.sql.SQLRead;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.util.LanguageFile;
 
@@ -54,7 +54,7 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 						data.addResponse(L.get("HYPERLOG_INVALID_INCREMENT"));
 						return data;
 					}
-					if (hc.gDB().getSQLManager().useMySQL()) {
+					if (hc.gSDL().getSQLManager().useMySQL()) {
 						statement += " TIME > DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
 					} else {
 						statement += " TIME > date('now','" + formatSQLiteTime(quantity * -1) + " minute')";
@@ -74,7 +74,7 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 						return data;
 					}
 
-					if (hc.gDB().getSQLManager().useMySQL()) {
+					if (hc.gSDL().getSQLManager().useMySQL()) {
 						statement += " TIME < DATE_SUB(NOW(), INTERVAL " + quantity + " MINUTE)";
 					} else {
 						statement += " TIME < date('now','" + formatSQLiteTime(quantity * -1) + " minute')";

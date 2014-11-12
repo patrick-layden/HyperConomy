@@ -9,8 +9,8 @@ import java.util.HashMap;
 
 
 
-import regalowl.databukkit.file.FileTools;
-import regalowl.databukkit.sql.QueryResult;
+import regalowl.simpledatalib.file.FileTools;
+import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -192,7 +192,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("NAME_REPAIR_ATTEMPTED"));
 				hc.restart();
 			} catch (Exception e) {
-				hc.gDB().writeError(e);
+				hc.gSDL().getErrorWriter().writeError(e);
 			}
 		} else if (args[0].equalsIgnoreCase("updateitemstack") || args[0].equalsIgnoreCase("uis")) {
 			try {
@@ -224,13 +224,13 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				new Backup();
 				data.addResponse(L.get("ALL_BACKED_UP"));
 			} catch (Exception e) {
-				hc.gDB().writeError(e);
+				hc.gSDL().getErrorWriter().writeError(e);
 			}
 		} else if (args[0].equalsIgnoreCase("purgeaccounts")) {
 			try {
 				data.addResponse(L.f(L.get("HCDATA_ACCOUNTS_PURGED"), hc.getHyperPlayerManager().purgeDeadAccounts()));
 			} catch (Exception e) {
-				hc.gDB().writeError(e);
+				hc.gSDL().getErrorWriter().writeError(e);
 			}
 		} else {
 			data.addResponse(L.get("HCDATA_INVALID"));

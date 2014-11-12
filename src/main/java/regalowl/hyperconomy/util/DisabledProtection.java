@@ -1,7 +1,7 @@
 package regalowl.hyperconomy.util;
 
 
-import regalowl.databukkit.event.EventHandler;
+import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.HC;
 import regalowl.hyperconomy.event.minecraft.ChestShopClickEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
