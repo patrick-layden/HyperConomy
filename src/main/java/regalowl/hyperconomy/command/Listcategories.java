@@ -3,11 +3,13 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import regalowl.hyperconomy.HyperConomy;
+
 public class Listcategories extends BaseCommand implements HyperCommand {
 
 
-	public Listcategories() {
-		super(false);
+	public Listcategories(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override

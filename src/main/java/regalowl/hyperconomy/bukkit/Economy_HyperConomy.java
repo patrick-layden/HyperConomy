@@ -23,29 +23,29 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HyperBankManager;
-import regalowl.hyperconomy.HC;
-import regalowl.hyperconomy.HyperPlayerManager;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperBank;
+import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.api.EconomyAPI;
 import regalowl.hyperconomy.util.LanguageFile;
 
 public class Economy_HyperConomy implements Economy {
 	private final String name = "HyperConomy";
-	private HC hc;
+	private HyperConomy hc;
 	private EconomyAPI api;
 
-	public Economy_HyperConomy() {
-		hc = HC.hc;
-		api = HC.economyApi;
+	public Economy_HyperConomy(HyperConomy hc) {
+		this.hc = hc;
+		api = hc.getEconomyAPI();
 	}
 	@Override
 	public boolean isEnabled() {
 		if (hc == null) {
 			return false;
 		} else {
-			return HC.mc.isEnabled();
+			return hc.getMC().isEnabled();
 		}
 	}
 	@Override
@@ -207,7 +207,7 @@ public class Economy_HyperConomy implements Economy {
 
 	@Override
 	public EconomyResponse createBank(String name, String player) {
-		DataManager dm = HC.hc.getDataManager();
+		DataManager dm = hc.getDataManager();
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
 		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -218,7 +218,7 @@ public class Economy_HyperConomy implements Economy {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
 		HyperPlayer hp = hpm.getHyperPlayer(player);
-		HyperBank hb = new HyperBank(name, hp);
+		HyperBank hb = new HyperBank(hc, name, hp);
 		hbm.addHyperBank(hb);
 		return new EconomyResponse(0, hb.getBalance(), ResponseType.SUCCESS, "");
 	}
@@ -228,7 +228,7 @@ public class Economy_HyperConomy implements Economy {
 	}
 	@Override
 	public EconomyResponse deleteBank(String name) {
-		DataManager dm = HC.hc.getDataManager();
+		DataManager dm = hc.getDataManager();
 		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
 		if (!hbm.hasBank(name)) {
@@ -240,7 +240,7 @@ public class Economy_HyperConomy implements Economy {
 	}
 	@Override
 	public EconomyResponse bankHas(String name, double amount) {
-		DataManager dm = HC.hc.getDataManager();
+		DataManager dm = hc.getDataManager();
 		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
 		if (!hbm.hasBank(name)) {
@@ -256,7 +256,7 @@ public class Economy_HyperConomy implements Economy {
 	}
 	@Override
 	public EconomyResponse bankWithdraw(String name, double amount) {
-		DataManager dm = HC.hc.getDataManager();
+		DataManager dm = hc.getDataManager();
 		HyperBankManager hbm = dm.getHyperBankManager();
 		EconomyResponse er = bankHas(name, amount);
 		if (!er.transactionSuccess()) {
@@ -269,7 +269,7 @@ public class Economy_HyperConomy implements Economy {
 	}
 	@Override
 	public EconomyResponse bankDeposit(String name, double amount) {
-		DataManager dm = HC.hc.getDataManager();
+		DataManager dm = hc.getDataManager();
 		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
 		if (!hbm.hasBank(name)) {
@@ -282,7 +282,7 @@ public class Economy_HyperConomy implements Economy {
 	}
 	@Override
 	public EconomyResponse isBankOwner(String name, String playerName) {
-		DataManager dm = HC.hc.getDataManager();
+		DataManager dm = hc.getDataManager();
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
 		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -306,7 +306,7 @@ public class Economy_HyperConomy implements Economy {
 	}
 	@Override
 	public EconomyResponse isBankMember(String name, String playerName) {
-		DataManager dm = HC.hc.getDataManager();
+		DataManager dm = hc.getDataManager();
 		HyperBankManager hbm = dm.getHyperBankManager();
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
 		LanguageFile L = hc.getLanguageFile();
@@ -330,7 +330,7 @@ public class Economy_HyperConomy implements Economy {
 	}
 	@Override
 	public EconomyResponse bankBalance(String name) {
-		DataManager dm = HC.hc.getDataManager();
+		DataManager dm = hc.getDataManager();
 		HyperBankManager hbm = dm.getHyperBankManager();
 		LanguageFile L = hc.getLanguageFile();
 		if (!hbm.hasBank(name)) {
@@ -341,7 +341,7 @@ public class Economy_HyperConomy implements Economy {
 	}
 	@Override
 	public List<String> getBanks() {
-		DataManager dm = HC.hc.getDataManager();
+		DataManager dm = hc.getDataManager();
 		HyperBankManager hbm = dm.getHyperBankManager();
 		return hbm.getHyperBankNames();
 	}

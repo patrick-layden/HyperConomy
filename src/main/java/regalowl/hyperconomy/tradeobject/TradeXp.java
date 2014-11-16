@@ -5,7 +5,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 
 
@@ -13,8 +13,8 @@ public class TradeXp extends BasicTradeObject implements TradeObject {
 
 	private static final long serialVersionUID = -5156550871200368032L;
 
-	public TradeXp(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
-		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
+	public TradeXp(HyperConomy hc, String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
+		super(hc, name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
 	}
 	
 	@Override
@@ -45,7 +45,6 @@ public class TradeXp extends BasicTradeObject implements TradeObject {
 	
 	@Override
 	public Image getImage(int width, int height) {
-		HC hc = HC.hc;
 		Image i = null;
 		URL url = hc.getClass().getClassLoader().getResource("Images/exp_bottle_0.png");
 		try {

@@ -3,6 +3,7 @@ package regalowl.hyperconomy.command;
 
 
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -18,8 +19,8 @@ import regalowl.hyperconomy.transaction.TransactionType;
 
 public class Sellall extends BaseCommand implements HyperCommand {
 	
-	public Sellall() {
-		super(true);
+	public Sellall(HyperConomy hc) {
+		super(hc, true);
 	}
 
 
@@ -65,11 +66,11 @@ public class Sellall extends BaseCommand implements HyperCommand {
 	public TransactionResponse sellAll(HyperPlayer trader, HyperAccount tradePartner) {
 		HInventory inventory = trader.getInventory();
 		HyperEconomy he = trader.getHyperEconomy();
-		TransactionResponse totalResponse = new TransactionResponse(trader);
+		TransactionResponse totalResponse = new TransactionResponse(hc, trader);
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
 			if (inventory.getItem(slot) == null) {continue;}
 			HItemStack stack = inventory.getItem(slot);
-			TradeObject ho = he.getHyperObject(stack, dm.getHyperShopManager().getShop(trader));
+			TradeObject ho = he.getTradeObject(stack, dm.getHyperShopManager().getShop(trader));
 			if (ho == null) {continue;}
 			int amount = ho.count(inventory);
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);

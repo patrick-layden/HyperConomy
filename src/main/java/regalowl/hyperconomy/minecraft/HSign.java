@@ -2,15 +2,18 @@ package regalowl.hyperconomy.minecraft;
 
 import java.util.ArrayList;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 
 public class HSign {
 
+	private transient HyperConomy hc;
+	
 	private HLocation location;
 	private ArrayList<String> lines = new ArrayList<String>();
 	private boolean isWallSign;
 	
-	public HSign(HLocation location, ArrayList<String> lines, boolean isWallSign) {
+	public HSign(HyperConomy hc, HLocation location, ArrayList<String> lines, boolean isWallSign) {
+		this.hc = hc;
 		this.location = location;
 		this.lines.addAll(lines);
 		this.isWallSign = isWallSign;
@@ -36,7 +39,7 @@ public class HSign {
 	public void setLines(ArrayList<String> lines) {
 		this.lines.clear();
 		this.lines.addAll(lines);
-		HC.mc.setSign(this);
+		hc.getMC().setSign(this);
 	}
 	
 	public boolean isWallSign() {
@@ -45,7 +48,7 @@ public class HSign {
 	
 	public HBlock getAttachedBlock() {
 		if (!isWallSign) return null;
-		return HC.mc.getAttachedBlock(this);
+		return hc.getMC().getAttachedBlock(this);
 	}
 	
 	public String getLine(int line) {
@@ -68,9 +71,9 @@ public class HSign {
 		private HSign s;
 		public SignUpdater(HSign sign) {
 			this.s = sign;
-			HC.mc.runTask(new Runnable() {
+			hc.getMC().runTask(new Runnable() {
 				public void run() {
-					HC.mc.setSign(s);
+					hc.getMC().setSign(s);
 				}
 			});
 		}

@@ -1,21 +1,19 @@
-package regalowl.hyperconomy;
+package regalowl.hyperconomy.account;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import regalowl.simpledatalib.sql.QueryResult;
-import regalowl.hyperconomy.account.HyperBank;
+import regalowl.hyperconomy.HyperConomy;
 
 public class HyperBankManager {
 	
-	private HC hc;
-	//private DataManager dm;
+	private transient HyperConomy hc;
 	private ConcurrentHashMap<String, HyperBank> hyperBanks = new ConcurrentHashMap<String, HyperBank>();
 	
 	
-	public HyperBankManager(DataManager dm) {
-		hc = HC.hc;
-		//this.dm = dm;
+	public HyperBankManager(HyperConomy hc) {
+		this.hc = hc;
 	}
 	
 	

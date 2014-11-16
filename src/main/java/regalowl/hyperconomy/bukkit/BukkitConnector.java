@@ -40,7 +40,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.command.CommandData;
@@ -59,8 +59,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	private HashMap<String, HyperCommand> commands = new HashMap<String, HyperCommand>();
 	private ConcurrentHashMap<Long, BukkitTask> tasks = new ConcurrentHashMap<Long, BukkitTask>();
 	private AtomicLong taskCounter = new AtomicLong();
-	private HC hc;
+	private HyperConomy hc;
 	private BukkitListener bl;
+	private BukkitCommon common;
 	
 	private boolean vaultInstalled;
 	private boolean useExternalEconomy;
@@ -68,8 +69,13 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	
 	public BukkitConnector() {
-		new HC(this);
+		this.hc = new HyperConomy(this);
 		this.bl = new BukkitListener(this);
+	}
+	
+	//TODO make protected
+	public BukkitCommon getBukkitCommon() {
+		return common;
 	}
 	
 	
@@ -77,8 +83,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	//JavaPlugin Bukkit methods
 	@Override
 	public void onLoad() {
-		if (hc == null) hc = new HC(this);
+		if (hc == null) hc = new HyperConomy(this);
 		hc.load();
+		this.common = new BukkitCommon(hc);
 	}
 	@Override
 	public void onEnable() {
@@ -96,9 +103,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 			if (sender instanceof Player) {
 				isPlayer = true;
 			}
-			CommandData data = hCommand.onCommand(new CommandData(sender, sender.getName(), isPlayer, cmd.getName(), args));
+			CommandData data = hCommand.onCommand(new CommandData(hc, sender, sender.getName(), isPlayer, cmd.getName(), args));
 			for (String response: data.getResponse()) {
-				sender.sendMessage(BukkitCommon.applyColor(response));
+				sender.sendMessage(common.applyColor(response));
 			}
 		} else {
 			hc.getDebugMode().syncDebugConsoleMessage("Command not found: " + cmd.getName());
@@ -124,12 +131,12 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		} else {
 			vaultInstalled = false;
 		}
-		useExternalEconomy = HC.hc.gYH().getFileConfiguration("config").getBoolean("economy-plugin.use-external");
+		useExternalEconomy = hc.gYH().getFileConfiguration("config").getBoolean("economy-plugin.use-external");
 		if (!vaultInstalled) {
 			useExternalEconomy = false;
 		}
-		if (vaultInstalled && HC.hc.gYH().gFC("config").getBoolean("economy-plugin.hook-internal-economy-into-vault")) {
-			getServer().getServicesManager().register(Economy.class, new Economy_HyperConomy(), this, ServicePriority.Highest);
+		if (vaultInstalled && hc.gYH().gFC("config").getBoolean("economy-plugin.hook-internal-economy-into-vault")) {
+			getServer().getServicesManager().register(Economy.class, new Economy_HyperConomy(hc), this, ServicePriority.Highest);
 			this.getLogger().info("[HyperConomy]Internal economy hooked into Vault.");
 		}
 	}
@@ -313,24 +320,16 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	@Override
 	public boolean isLoaded(HLocation l) {
-		Location loc = BukkitCommon.getLocation(l);
+		Location loc = common.getLocation(l);
 		return loc.getChunk().isLoaded();
 	}
 		
 	@Override
 	public void load(HLocation l) {
-		Location loc = BukkitCommon.getLocation(l);
+		Location loc = common.getLocation(l);
 		loc.getChunk().load();
 	}
 	
-
-
-	@Override
-	public BukkitConnector getConnector() {
-		return this;
-	}
-
-
 
 	@Override
 	public HLocation getLocation(HyperPlayer hp) {
@@ -350,7 +349,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	@Override
 	public boolean canEnchantItem(HItemStack item) {
-		ItemStack s = BukkitCommon.getItemStack(item);
+		ItemStack s = common.getItemStack(item);
 		for (Enchantment enchant:Enchantment.values()) {
 			if (enchant.canEnchantItem(s)) return true;
 		}
@@ -362,17 +361,17 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public HInventory getInventory(HyperPlayer hp) {
-		return BukkitCommon.getInventory(hp);
+		return common.getInventory(hp);
 	}
 
 	@Override
 	public HInventory getChestInventory(HLocation l) {
-		return BukkitCommon.getChestInventory(l);
+		return common.getChestInventory(l);
 	}
 
 	@Override
 	public void setInventory(HInventory inventory) {
-		BukkitCommon.setInventory(inventory);
+		common.setInventory(inventory);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -386,14 +385,14 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public HItemStack getItem(HyperPlayer hp, int slot) {
 		Player p = Bukkit.getPlayer(hp.getName());
-		return BukkitCommon.getSerializableItemStack(p.getInventory().getItem(slot));
+		return common.getSerializableItemStack(p.getInventory().getItem(slot));
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void setItem(HyperPlayer hp, HItemStack item, int slot) {
 		Player p = Bukkit.getPlayer(hp.getName());
-		p.getInventory().setItem(slot, BukkitCommon.getItemStack(item));
+		p.getInventory().setItem(slot, common.getItemStack(item));
 	}
 	
 
@@ -404,7 +403,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public String applyColor(String message) {
-		return BukkitCommon.applyColor(message);
+		return common.applyColor(message);
 	}
 
 	@Override
@@ -438,13 +437,13 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public boolean isSneaking(HyperPlayer hp) {
-		Player p = BukkitCommon.getPlayer(hp);
+		Player p = common.getPlayer(hp);
 		return p.isSneaking();
 	}
 
 	@Override
 	public boolean isInCreativeMode(HyperPlayer hp) {
-		Player p = BukkitCommon.getPlayer(hp);
+		Player p = common.getPlayer(hp);
 		return (p.getGameMode() == GameMode.CREATIVE) ? true:false;
 	}
 
@@ -455,7 +454,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		ArrayList<HyperPlayer> onlinePlayers = new ArrayList<HyperPlayer>();
 		for (World world : Bukkit.getWorlds()) {
 			for (Player p:world.getPlayers()) {
-				onlinePlayers.add(HC.hc.getHyperPlayerManager().getHyperPlayer(p.getName()));
+				onlinePlayers.add(hc.getHyperPlayerManager().getHyperPlayer(p.getName()));
 			}
 		}
 		return onlinePlayers;
@@ -467,7 +466,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public HyperPlayer getPlayer(UUID uuid) {
 		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
 		if (!playerExists(uuid)) return null;
-		HyperPlayer hp = HC.hc.getHyperPlayerManager().getHyperPlayer(op.getName());
+		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(op.getName());
 		hp.setUUID(uuid.toString());
 		return hp;
 	}
@@ -485,8 +484,8 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public void teleport(HyperPlayer hp, HLocation sl) {
-		Player p = BukkitCommon.getPlayer(hp);
-		Location l = BukkitCommon.getLocation(sl);
+		Player p = common.getPlayer(hp);
+		Location l = common.getLocation(sl);
 		p.teleport(l);
 	}
 
@@ -516,7 +515,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	@Override
 	public boolean isOnline(HyperPlayer hp) {
-		Player p = BukkitCommon.getPlayer(hp);
+		Player p = common.getPlayer(hp);
 		if (p == null) return false;
 		return true;
 	}
@@ -525,7 +524,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public UUID getUUID(HyperPlayer hp) {
-		Player p = BukkitCommon.getPlayer(hp);
+		Player p = common.getPlayer(hp);
 		if (p == null) return null;
 		return p.getUniqueId();
 	}
@@ -534,7 +533,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public boolean isPermissionSet(HyperPlayer hp, String permission) {
-		Player p = BukkitCommon.getPlayer(hp);
+		Player p = common.getPlayer(hp);
 		if (p == null) return false;
 		return p.isPermissionSet(permission);
 	}
@@ -550,35 +549,35 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public boolean isInfoSign(HLocation l) {
-		return BukkitCommon.isInfoSign(l);
+		return common.isInfoSign(l);
 	}
 
 
 	@Override
 	public boolean isChestShopChest(HLocation l) {
-		return BukkitCommon.isChestShopChest(l);
+		return common.isChestShopChest(l);
 	}
 	@Override
 	public boolean isChestShopSign(HLocation l) {
-		return BukkitCommon.isChestShopSign(l);
+		return common.isChestShopSign(l);
 	}
 	@Override
 	public boolean isChestShopSignBlock(HLocation l) {
-		return BukkitCommon.isChestShopSignBlock(l);
+		return common.isChestShopSignBlock(l);
 	}
 	@Override
 	public boolean isPartOfChestShop(HLocation l) {
-		return BukkitCommon.isPartOfChestShop(l);
+		return common.isPartOfChestShop(l);
 	}
 	@Override
 	public ChestShop getChestShop(HLocation location) {
-		return BukkitCommon.getChestShop(location);
+		return common.getChestShop(location);
 	}
 
 
 	@Override
 	public boolean canHoldChestShopSign(HLocation l) {
-		Block b = BukkitCommon.getBlock(l);
+		Block b = common.getBlock(l);
 		Material m = b.getType();
 		if (m == Material.ICE || m == Material.LEAVES || m == Material.SAND || m == Material.GRAVEL || m == Material.SIGN || m == Material.SIGN_POST || m == Material.TNT) {
 			return false;
@@ -602,7 +601,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public HSign getSign(HLocation location) {
 		if (location == null) return null;
-		Block b = BukkitCommon.getLocation(location).getBlock();
+		Block b = common.getLocation(location).getBlock();
 		if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
 			Sign s = (Sign) b.getState();
 			boolean isWallSign = (b.getType().equals(Material.WALL_SIGN)) ? true:false;
@@ -610,7 +609,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 			for (String l:s.getLines()) {
 				lines.add(l);
 			}
-			HSign sign = new HSign(new HLocation(location), lines, isWallSign);
+			HSign sign = new HSign(hc, new HLocation(location), lines, isWallSign);
 			return sign;
 		}
 		return null;
@@ -618,7 +617,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	@Override
 	public void setSign(HSign sign) {
-		Sign s = BukkitCommon.getSign(sign.getLocation());
+		Sign s = common.getSign(sign.getLocation());
 		if (s == null) return;
 		s.setLine(0, applyColor(sign.getLine(0)));
 		s.setLine(1, applyColor(sign.getLine(1)));
@@ -632,18 +631,18 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public HBlock getAttachedBlock(HSign sign) {
-		Block b = BukkitCommon.getBlock(sign.getLocation());
+		Block b = common.getBlock(sign.getLocation());
 		org.bukkit.material.Sign msign = (org.bukkit.material.Sign) b.getState().getData();
 		BlockFace attachedface = msign.getAttachedFace();
 		Block attachedblock = b.getRelative(attachedface);
-		return BukkitCommon.getBlock(attachedblock);
+		return common.getBlock(attachedblock);
 	}
 
 
 
 	@Override
 	public boolean isChest(HLocation l) {
-		BlockState b = BukkitCommon.getBlock(l).getState();
+		BlockState b = common.getBlock(l).getState();
 		return (b instanceof Chest) ? true:false;
 	}
 
@@ -651,17 +650,17 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public boolean isTransactionSign(HLocation l) {
-		return BukkitCommon.isTransactionSign(l);
+		return common.isTransactionSign(l);
 	}
 
 	@Override
 	public HItem dropItemDisplay(HLocation location, HItemStack item) {
 		World w = Bukkit.getWorld(location.getWorld());
 		if (w == null) return null;
-		Item i = w.dropItem(BukkitCommon.getLocation(location), BukkitCommon.getItemStack(item));
+		Item i = w.dropItem(common.getLocation(location), common.getItemStack(item));
 		i.setVelocity(new org.bukkit.util.Vector(0, 0, 0));
 		i.setMetadata("HyperConomy", new FixedMetadataValue(this, "item_display"));
-		return new HItem(location, i.getEntityId(), item);
+		return new HItem(hc, location, i.getEntityId(), item);
 	}
 
 
@@ -669,7 +668,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public void removeItem(HItem item) {
 		HLocation l = item.getLocation();
-		Location loc = BukkitCommon.getLocation(l);
+		Location loc = common.getLocation(l);
 		for (Entity ent:loc.getChunk().getEntities()) {
 			if (ent instanceof Item) {
 				Item i = (Item)ent;
@@ -684,7 +683,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public void zeroVelocity(HItem item) {
-		Item i = BukkitCommon.getItem(item);
+		Item i = common.getItem(item);
 		if (i != null) {
 			i.setVelocity(new Vector(0,0,0));
 		}
@@ -694,21 +693,21 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public HBlock getFirstNonAirBlockInColumn(HLocation location) {
-		Location loc = BukkitCommon.getLocation(location);
+		Location loc = common.getLocation(location);
 		Block dblock = loc.getBlock();
 		while (dblock.getType().equals(Material.AIR)) {
 			dblock = dblock.getRelative(BlockFace.DOWN);
 		}
-		return BukkitCommon.getBlock(dblock);
+		return common.getBlock(dblock);
 	}
 
 
 
 	@Override
 	public void clearNearbyNonDisplayItems(HItem item, double radius) {
-		Item i = BukkitCommon.getItem(item);
+		Item i = common.getItem(item);
 		ItemStack tStack = new ItemStack(Material.ROTTEN_FLESH);
-		Location l = BukkitCommon.getLocation(item.getLocation());
+		Location l = common.getLocation(item.getLocation());
 		Item tempItem = l.getWorld().dropItem(l, tStack);
 		entityLoop : for (Entity entity : tempItem.getNearbyEntities(radius, radius, radius)) {
 			if (!(entity instanceof Item)) {continue;}
@@ -720,7 +719,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 			}
 			if (nearbyItem.equals(tempItem)) continue;
 			if (nearbyItem.equals(i)) continue;
-			if (!BukkitCommon.getSerializableItemStack(tStack).equals(BukkitCommon.getSerializableItemStack(nearbyItem.getItemStack()))) continue;
+			if (!common.getSerializableItemStack(tStack).equals(common.getSerializableItemStack(nearbyItem.getItemStack()))) continue;
 			if (nearbyItem.getItemStack().getType() != tempItem.getItemStack().getType()) continue;
 			entity.remove();
 		}
@@ -731,7 +730,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public boolean canFall(HBlock block) {
-		Block b = BukkitCommon.getBlock(block.getLocation());
+		Block b = common.getBlock(block.getLocation());
 		if (b.getType().equals(Material.GRAVEL) || b.getType().equals(Material.SAND)) return true;
 		return false;
 	}
@@ -740,14 +739,14 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public int getLevel(HyperPlayer hp) {
-		Player p = BukkitCommon.getPlayer(hp);
+		Player p = common.getPlayer(hp);
 		if (p == null) return 0;
 		return p.getLevel();
 	}
 
 	@Override
 	public float getExp(HyperPlayer hp) {
-		Player p = BukkitCommon.getPlayer(hp);
+		Player p = common.getPlayer(hp);
 		if (p == null) return 0;
 		return p.getExp();
 	}
@@ -756,7 +755,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public String getName(HyperPlayer hp) {
-		Player p = BukkitCommon.getPlayer(hp);
+		Player p = common.getPlayer(hp);
 		if (p == null) return null;
 		return p.getName();
 	}
@@ -765,7 +764,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public void setLevel(HyperPlayer hp, int level) {
-		Player p = BukkitCommon.getPlayer(hp);
+		Player p = common.getPlayer(hp);
 		if (p == null) return;
 		p.setLevel(level);
 	}
@@ -774,7 +773,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public void setExp(HyperPlayer hp, float exp) {
-		Player p = BukkitCommon.getPlayer(hp);
+		Player p = common.getPlayer(hp);
 		if (p == null) return;
 		p.setExp(exp);
 	}
@@ -790,7 +789,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		}
 		if (p == null) {return;}
 		if (p.getName().equals(hp.getName())) {return;}
-		if (HC.mc.useExternalEconomy()) {
+		if (hc.getMC().useExternalEconomy()) {
 			double oldBalance = hp.getBalance();
 			hp.setBalance(0.0);
 			hp.setName(p.getName());
@@ -809,6 +808,11 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	}
 
 
+
+	@Override
+	public HyperConomy getHC() {
+		return hc;
+	}
 
 
 

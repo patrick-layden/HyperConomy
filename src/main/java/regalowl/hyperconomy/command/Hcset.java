@@ -3,6 +3,7 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.tradeobject.CompositeTradeItem;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -13,8 +14,8 @@ import regalowl.hyperconomy.util.Backup;
 
 public class Hcset extends BaseCommand implements HyperCommand {
 	
-	public Hcset() {
-		super(false);
+	public Hcset(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 					String name = args[1];
 					String newName = args[2];
 					if (he.objectTest(name)) {
-						he.getHyperObject(name).setName(newName);
+						he.getTradeObject(name).setName(newName);
 						data.addResponse(L.get("NAME_SET"));
 						hc.restart();
 					} else {
@@ -46,7 +47,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 					String name = args[1];
 					double ceiling = Double.parseDouble(args[2]);
 					if (he.objectTest(name)) {
-						he.getHyperObject(name).setCeiling(ceiling);
+						he.getTradeObject(name).setCeiling(ceiling);
 						data.addResponse(L.f(L.get("CEILING_SET"), name));
 					} else {
 						data.addResponse(L.get("INVALID_NAME"));
@@ -59,8 +60,8 @@ public class Hcset extends BaseCommand implements HyperCommand {
 					String name = args[1];
 					String newName = args[2];
 					if (he.objectTest(name)) {
-						TradeObject ho = he.getHyperObject(name);
-						TradeObject to = he.getHyperObject(newName);
+						TradeObject ho = he.getTradeObject(name);
+						TradeObject to = he.getTradeObject(newName);
 						if (to != null && !(ho.equals(to))) {
 							data.addResponse(L.get("NAME_IN_USE"));
 							return data;
@@ -77,7 +78,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 				try {
 					String name = args[1];
 					if (name.equalsIgnoreCase("all:copy") || name.equalsIgnoreCase("all:true") || name.equalsIgnoreCase("all:false")) {
-						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
+						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
 						boolean state = false;
 						boolean copy = false;
 						String message = "";
@@ -92,7 +93,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 							state = true;
 							message = "true";
 						}
-						ArrayList<TradeObject> hyperObjects = he.getHyperObjects();
+						ArrayList<TradeObject> hyperObjects = he.getTradeObjects();
 						for (TradeObject ho:hyperObjects) {
 							if (ho instanceof CompositeTradeItem) {continue;}
 							if (copy) {
@@ -103,7 +104,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						data.addResponse(L.f(L.get("ALL_OBJECTS_SET_TO_STATIC"), message));
 						return data;
 					}
-					TradeObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getTradeObject(name);
 					if (ho == null) {
 						data.addResponse(L.get("INVALID_NAME"));
 						return data;
@@ -127,8 +128,8 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						stock = Double.parseDouble(args[2]);
 					}
 					if (name.equalsIgnoreCase("all")) {
-						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
-						ArrayList<TradeObject> hyperObjects = he.getHyperObjects();
+						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
+						ArrayList<TradeObject> hyperObjects = he.getTradeObjects();
 						for (TradeObject ho:hyperObjects) {
 							if (ho instanceof CompositeTradeItem) {continue;}
 							ho.setStock(stock);
@@ -136,8 +137,8 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						data.addResponse(L.get("ALL_STOCKS_SET"));
 						return data;
 					} else if (name.equalsIgnoreCase("all:median")) {
-						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
-						for (TradeObject ho:he.getHyperObjects()) {
+						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
+						for (TradeObject ho:he.getTradeObjects()) {
 							if ((ho instanceof CompositeTradeItem)) {continue;}
 							ho.setStock(ho.getMedian());
 							ho.setInitiation("false");
@@ -145,7 +146,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						data.addResponse(L.get("SETSTOCKMEDIANALL_SUCCESS"));
 						return data;
 					}
-					TradeObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getTradeObject(name);
 					if (ho == null) {
 						data.addResponse(L.get("INVALID_NAME"));
 						return data;
@@ -158,7 +159,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 			} else if (args[0].equalsIgnoreCase("startprice") || args[0].equalsIgnoreCase("starp")) {
 				try {
 					String name = args[1];
-					TradeObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getTradeObject(name);
 					if (ho == null) {
 						data.addResponse(L.get("INVALID_NAME"));
 						return data;
@@ -172,7 +173,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 			} else if (args[0].equalsIgnoreCase("staticprice") || args[0].equalsIgnoreCase("statp")) {
 				try {
 					String name = args[1];
-					TradeObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getTradeObject(name);
 					if (ho == null) {
 						data.addResponse(L.get("INVALID_NAME"));
 						return data;
@@ -186,7 +187,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 			} else if (args[0].equalsIgnoreCase("value") || args[0].equalsIgnoreCase("v")) {
 				try {
 					String name = args[1];
-					TradeObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getTradeObject(name);
 					if (ho == null) {
 						data.addResponse(L.get("INVALID_NAME"));
 						return data;
@@ -200,7 +201,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 			} else if (args[0].equalsIgnoreCase("median") || args[0].equalsIgnoreCase("m")) {
 				try {
 					String name = args[1];
-					TradeObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getTradeObject(name);
 					if (ho == null) {
 						data.addResponse(L.get("INVALID_NAME"));
 						return data;
@@ -214,7 +215,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 			} else if (args[0].equalsIgnoreCase("floor") || args[0].equalsIgnoreCase("f")) {
 				try {
 					String name = args[1];
-					TradeObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getTradeObject(name);
 					if (ho == null) {
 						data.addResponse(L.get("INVALID_NAME"));
 						return data;
@@ -242,7 +243,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 				try {
 					String name = args[1];
 					if (name.equalsIgnoreCase("all:true") || name.equalsIgnoreCase("all:false")) {
-						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
+						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
 						boolean state = false;
 						String message = "";
 						if (name.equalsIgnoreCase("all:false")) {
@@ -252,7 +253,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 							state = true;
 							message = "true";
 						}
-						ArrayList<TradeObject> hyperObjects = he.getHyperObjects();
+						ArrayList<TradeObject> hyperObjects = he.getTradeObjects();
 						for (TradeObject ho:hyperObjects) {
 							if (ho instanceof CompositeTradeItem) {continue;}
 							ho.setInitiation(state+"");
@@ -260,7 +261,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						data.addResponse(L.f(L.get("ALL_OBJECTS_SET_TO"), message));
 						return data;
 					}
-					TradeObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getTradeObject(name);
 					if (ho == null) {
 						data.addResponse(L.get("INVALID_NAME"));
 						return data;

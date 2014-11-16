@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -25,9 +25,9 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 	private FileTools ft;
 	private String folderPath;
 	
-	public Hcdata() {
-		super(false);
-		tables = HC.hc.getDataManager().getTablesList();
+	public Hcdata(HyperConomy hc) {
+		super(hc, false);
+		tables = hc.getDataManager().getTablesList();
 	}
 
 
@@ -128,7 +128,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					economy = args[1];
 				}
 				if (dm.economyExists(economy)) {
-					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
+					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
 					ArrayList<String> added = dm.getEconomy(economy).loadNewItems();
 					data.addResponse("&6" + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
 				} else {
@@ -144,7 +144,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					economy = args[1];
 				}
 				if (dm.economyExists(economy)) {
-					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
+					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
 					String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
 					FileTools ft = hc.getFileTools();
 					if (!ft.fileExists(defaultObjectsPath)) {
@@ -153,7 +153,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					QueryResult qr = hc.getFileTools().readCSV(defaultObjectsPath);
 					while (qr.next()) {
 						String objectName = qr.getString("NAME");
-						TradeObject ho = dm.getEconomy(economy).getHyperObject(objectName);
+						TradeObject ho = dm.getEconomy(economy).getTradeObject(objectName);
 						ho.setStartprice(qr.getDouble("STARTPRICE"));
 						ho.setStaticprice(qr.getDouble("STATICPRICE"));
 						ho.setValue(qr.getDouble("VALUE"));
@@ -172,7 +172,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 			data.addResponse(L.get("HCCLEARHISTORY_CLEARED"));
 		} else if (args[0].equalsIgnoreCase("clearlogs")) {
 			if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {
-				new Backup();
+				new Backup(hc);
 			}
 			String statement = "DELETE FROM hyperconomy_audit_log";
 			hc.getSQLWrite().addToQueue(statement);
@@ -185,8 +185,8 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("MUST_DISABLE_COMPOSITES"));
 					return data;
 				}
-				if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup();}
-				for (HyperEconomy he : HC.hc.getDataManager().getEconomies()) {
+				if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
+				for (HyperEconomy he : hc.getDataManager().getEconomies()) {
 					he.updateNamesFromYml();
 				}
 				data.addResponse(L.get("NAME_REPAIR_ATTEMPTED"));
@@ -204,7 +204,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
 					return data;
 				}
-				TradeObject ho = hp.getHyperEconomy().getHyperObject(args[1]);
+				TradeObject ho = hp.getHyperEconomy().getTradeObject(args[1]);
 				if (ho == null) {
 					data.addResponse(L.get("OBJECT_NOT_FOUND"));
 					return data;
@@ -221,7 +221,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 			}
 		} else if (args[0].equalsIgnoreCase("backup")) {
 			try {
-				new Backup();
+				new Backup(hc);
 				data.addResponse(L.get("ALL_BACKED_UP"));
 			} catch (Exception e) {
 				hc.gSDL().getErrorWriter().writeError(e);

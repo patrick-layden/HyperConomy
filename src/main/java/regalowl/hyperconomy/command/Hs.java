@@ -1,5 +1,6 @@
 package regalowl.hyperconomy.command;
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -9,8 +10,8 @@ import regalowl.hyperconomy.transaction.TransactionType;
 
 public class Hs extends BaseCommand implements HyperCommand {
 	
-	public Hs() {
-		super(true);
+	public Hs(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override
@@ -31,7 +32,7 @@ public class Hs extends BaseCommand implements HyperCommand {
 				} catch (Exception e) {
 					String max = args[0];
 					if (max.equalsIgnoreCase("max")) {
-						TradeObject hi = he.getHyperObject(hp.getItemInHand());
+						TradeObject hi = he.getTradeObject(hp.getItemInHand());
 						amount = hi.count(hp.getInventory());
 					} else {
 						data.addResponse(L.get("HS_INVALID"));
@@ -39,7 +40,7 @@ public class Hs extends BaseCommand implements HyperCommand {
 					}
 				}
 			}
-			TradeObject ho = he.getHyperObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
+			TradeObject ho = he.getTradeObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
 			if (ho == null) {
 				data.addResponse(L.get("CANT_BE_TRADED"));
 			} else {

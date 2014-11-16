@@ -5,7 +5,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HInventory;
@@ -19,14 +19,13 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 
 	
 
-	public ComponentTradeItem(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String itemData) {
-		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
+	public ComponentTradeItem(HyperConomy hc, String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String itemData) {
+		super(hc, name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
 		this.itemData = itemData;
 	}
 	
 	@Override
 	public Image getImage(int width, int height) {
-		HC hc = HC.hc;
 		Image i = null;
 		URL url = null;
 		HItemStack sis = getItem();
@@ -85,10 +84,9 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 	}
 	@Override
 	public void setData(String data) {
-		HC hc = HC.hc;
 		this.itemData = data;
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
-		hc.getSQLWrite().addToQueue(statement);
+		sw.addToQueue(statement);
 		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 

@@ -1,12 +1,13 @@
 package regalowl.hyperconomy.command;
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 
 public class Makeaccount extends BaseCommand implements HyperCommand {
 
 
-	public Makeaccount() {
-		super(false);
+	public Makeaccount(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override

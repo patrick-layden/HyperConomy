@@ -6,7 +6,7 @@ import java.util.UUID;
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
 import regalowl.hyperconomy.inventory.HInventory;
@@ -21,7 +21,8 @@ import regalowl.hyperconomy.transaction.TransactionResponse;
 
 public class HyperPlayer implements HyperAccount {
 
-
+	private transient HyperConomy hc;
+	
 	private static final long serialVersionUID = -5665733095958448373L;
 	private String name;
 	private String uuid;
@@ -33,18 +34,18 @@ public class HyperPlayer implements HyperAccount {
 	private boolean validUUID;
 	
 	
-	public HyperPlayer(String player) {
-		HC hc = HC.hc;
+	public HyperPlayer(HyperConomy hc, String player) {
+		this.hc = hc;
 		name = player;
-		name = HC.mc.getName(this);
+		name = hc.getMC().getName(this);
 		SQLWrite sw = hc.getSQLWrite();
 		balance = hc.getConf().getDouble("economy-plugin.starting-player-account-balance");
 		economy = "default";
-		if (HC.mc.isOnline(this)) {
+		if (hc.getMC().isOnline(this)) {
 			if (hc.getHyperPlayerManager().uuidSupport()) {
-				uuid = HC.mc.getUUID(this).toString();
+				uuid = hc.getMC().getUUID(this).toString();
 			}
-			this.location = HC.mc.getLocation(this);
+			this.location = hc.getMC().getLocation(this);
 			HashMap<String,String> values = new HashMap<String,String>();
 			values.put("NAME", name);
 			values.put("UUID", uuid);
@@ -84,7 +85,7 @@ public class HyperPlayer implements HyperAccount {
 		this.location = location;
 		this.hash = hash;
 		this.salt = salt;
-		HC.mc.runTask(new Runnable() {
+		hc.getMC().runTask(new Runnable() {
 			public void run() {
 				checkUUID();
 				//checkExternalAccount();
@@ -96,30 +97,29 @@ public class HyperPlayer implements HyperAccount {
 	
 	@SuppressWarnings("deprecation")
 	private void checkExternalAccount() {
-		if (!HC.mc.useExternalEconomy()) {return;}
+		if (!hc.getMC().useExternalEconomy()) {return;}
 		if (name == null) {return;}
-		if (!HC.mc.getEconomy().hasAccount(name)) {
-			HC.mc.getEconomy().createPlayerAccount(name);
+		if (!hc.getMC().getEconomy().hasAccount(name)) {
+			hc.getMC().getEconomy().createPlayerAccount(name);
 			setBalance(balance);
 		}
 		checkForNameChange();
 	}
 	
 	public void checkUUID() {
-		HC hc = HC.hc;
 		this.validUUID = false;
 		if (!hc.getHyperPlayerManager().uuidSupport()) {return;}
 		if (name == null) {return;}
 		if (uuid == null || uuid == "") {
-			if (!HC.mc.isOnline(this)) {return;}
-			setUUID(HC.mc.getUUID(this).toString());
+			if (!hc.getMC().isOnline(this)) {return;}
+			setUUID(hc.getMC().getUUID(this).toString());
 			if (uuid == null || uuid == "") {return;}
 		}
 		this.validUUID = true;
 	}
 	
 	private void checkForNameChange() {
-		HC.mc.checkForNameChange(this);
+		hc.getMC().checkForNameChange(this);
 	}
 	
 	public boolean validUUID() {
@@ -147,14 +147,14 @@ public class HyperPlayer implements HyperAccount {
 		return economy;
 	}
 	public HyperEconomy getHyperEconomy() {
-		DataManager em = HC.hc.getDataManager();
+		DataManager em = hc.getDataManager();
 		return em.getEconomy(economy);
 	}
 	@SuppressWarnings("deprecation")
 	public double getBalance() {
 		checkExternalAccount();
-		if (HC.mc.useExternalEconomy()) {
-			return HC.mc.getEconomy().getBalance(name);
+		if (hc.getMC().useExternalEconomy()) {
+			return hc.getMC().getEconomy().getBalance(name);
 		} else {
 			return balance;
 		}
@@ -179,9 +179,9 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public boolean safeToDelete() {
-		DataManager em = HC.hc.getDataManager();
+		DataManager em = hc.getDataManager();
 		if (balance > 0) {return false;}
-		if (HC.mc.isOnline(this)) {return false;}
+		if (hc.getMC().isOnline(this)) {return false;}
 		if (em.getHyperShopManager().getShops(this).size() > 0) {return false;}
 		for (HyperEconomy he:em.getEconomies()) {
 			if (he.getDefaultAccount().equals(this)) {
@@ -197,7 +197,6 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public void delete() {
-		HC hc = HC.hc;
 		hc.getHyperPlayerManager().removeHyperPlayer(this);
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		conditions.put("NAME", name);
@@ -205,7 +204,6 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public void setName(String name) {
-		HC hc = HC.hc;
 		hc.getHyperPlayerManager().removeHyperPlayer(this);
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
@@ -217,7 +215,6 @@ public class HyperPlayer implements HyperAccount {
 		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setUUID(String uuid) {
-		HC hc = HC.hc;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", this.name);
@@ -228,7 +225,6 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public void setEconomy(String economy) {
-		HC hc = HC.hc;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
@@ -238,7 +234,6 @@ public class HyperPlayer implements HyperAccount {
 		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setLocation(HLocation loc) {
-		HC hc = HC.hc;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
@@ -251,7 +246,6 @@ public class HyperPlayer implements HyperAccount {
 		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setHash(String hash) {
-		HC hc = HC.hc;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
@@ -261,7 +255,6 @@ public class HyperPlayer implements HyperAccount {
 		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setSalt(String salt) {
-		HC hc = HC.hc;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
@@ -308,22 +301,21 @@ public class HyperPlayer implements HyperAccount {
 	}
 	*/
 	public HInventory getInventory() {
-		return HC.mc.getInventory(this);
+		return hc.getMC().getInventory(this);
 	}
 
 	public void sendMessage(String message) {
-		HC.mc.sendMessage(this, message);
+		hc.getMC().sendMessage(this, message);
 	}
 	
 	public boolean hasPermission(String permission) {
-		if (HC.mc.isOnline(this)) {
-			return HC.mc.hasPermission(this, permission);
+		if (hc.getMC().isOnline(this)) {
+			return hc.getMC().hasPermission(this, permission);
 		}
 		return false;
 	}
 	
 	public double getSalesTax(Double price) {
-		HC hc = HC.hc;
 		double salestax = 0;
 		if (hc.getConf().getBoolean("tax.dynamic.enable")) {
 			double moneyfloor = hc.getConf().getDouble("tax.dynamic.money-floor");
@@ -350,43 +342,41 @@ public class HyperPlayer implements HyperAccount {
 	
 	
 	public TransactionResponse processTransaction(PlayerTransaction playerTransaction) {
-		TransactionProcessor tp = new TransactionProcessor(this);
+		TransactionProcessor tp = new TransactionProcessor(hc, this);
 		return tp.processTransaction(playerTransaction);
 	}
 	
 	
 	public boolean hasSellPermission(Shop s) {
-		HC hc = HC.hc;
 		if (!hc.getConf().getBoolean("enable-feature.per-shop-permissions")) {
 			return true;
 		}
 		boolean hasPermission = false;
-		if (HC.mc.isPermissionSet(this, "hyperconomy.shop")) {
-			hasPermission = HC.mc.hasPermission(this, "hyperconomy.shop");
+		if (hc.getMC().isPermissionSet(this, "hyperconomy.shop")) {
+			hasPermission = hc.getMC().hasPermission(this, "hyperconomy.shop");
 		}
-		if (HC.mc.isPermissionSet(this, "hyperconomy.shop." + s.getName())) {
-			hasPermission = HC.mc.hasPermission(this, "hyperconomy.shop." + s.getName());
+		if (hc.getMC().isPermissionSet(this, "hyperconomy.shop." + s.getName())) {
+			hasPermission = hc.getMC().hasPermission(this, "hyperconomy.shop." + s.getName());
 		}
-		if (HC.mc.isPermissionSet(this, "hyperconomy.shop." + s.getName() + ".sell")) {
-			hasPermission = HC.mc.hasPermission(this, "hyperconomy.shop." + s.getName() + ".sell");
+		if (hc.getMC().isPermissionSet(this, "hyperconomy.shop." + s.getName() + ".sell")) {
+			hasPermission = hc.getMC().hasPermission(this, "hyperconomy.shop." + s.getName() + ".sell");
 		}
 		return hasPermission;
 	}
 	
 	public boolean hasBuyPermission(Shop s) {
-		HC hc = HC.hc;
 		if (!(hc.getConf().getBoolean("enable-feature.per-shop-permissions"))) {
 			return true;
 		}
 		boolean hasPermission = false;
-		if (HC.mc.isPermissionSet(this, "hyperconomy.shop")) {
-			hasPermission = HC.mc.hasPermission(this, "hyperconomy.shop");
+		if (hc.getMC().isPermissionSet(this, "hyperconomy.shop")) {
+			hasPermission = hc.getMC().hasPermission(this, "hyperconomy.shop");
 		}
-		if (HC.mc.isPermissionSet(this, "hyperconomy.shop." + s.getName())) {
-			hasPermission = HC.mc.hasPermission(this, "hyperconomy.shop." + s.getName());
+		if (hc.getMC().isPermissionSet(this, "hyperconomy.shop." + s.getName())) {
+			hasPermission = hc.getMC().hasPermission(this, "hyperconomy.shop." + s.getName());
 		}
-		if (HC.mc.isPermissionSet(this, "hyperconomy.shop." + s.getName() + ".buy")) {
-			hasPermission = HC.mc.hasPermission(this, "hyperconomy.shop." + s.getName() + ".buy");
+		if (hc.getMC().isPermissionSet(this, "hyperconomy.shop." + s.getName() + ".buy")) {
+			hasPermission = hc.getMC().hasPermission(this, "hyperconomy.shop." + s.getName() + ".buy");
 		}
 		return hasPermission;
 	}
@@ -401,22 +391,20 @@ public class HyperPlayer implements HyperAccount {
 
 	@SuppressWarnings("deprecation")
 	public void setBalance(double balance) {
-		HC hc = HC.hc;
 		checkExternalAccount();
-		if (HC.mc.useExternalEconomy()) {
-			if (HC.mc.getEconomy().hasAccount(name)) {
-				HC.mc.getEconomy().withdrawPlayer(name, HC.mc.getEconomy().getBalance(name));
+		if (hc.getMC().useExternalEconomy()) {
+			if (hc.getMC().getEconomy().hasAccount(name)) {
+				hc.getMC().getEconomy().withdrawPlayer(name, hc.getMC().getEconomy().getBalance(name));
 			} else {
-				HC.mc.getEconomy().createPlayerAccount(name);
+				hc.getMC().getEconomy().createPlayerAccount(name);
 			}
-			HC.mc.getEconomy().depositPlayer(name, balance);
-			hc.getLog().writeAuditLog(name, "setbalance", balance, HC.mc.getEconomy().getName());
+			hc.getMC().getEconomy().depositPlayer(name, balance);
+			hc.getLog().writeAuditLog(name, "setbalance", balance, hc.getMC().getEconomy().getName());
 		} else {
 			setInternalBalance(balance);
 		}
 	}
 	public void setInternalBalance(double balance) {
-		HC hc = HC.hc;
 		this.balance = balance;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
@@ -428,11 +416,10 @@ public class HyperPlayer implements HyperAccount {
 	}
 	@SuppressWarnings("deprecation")
 	public void deposit(double amount) {
-		HC hc = HC.hc;
 		checkExternalAccount();
-		if (HC.mc.useExternalEconomy()) {
-			HC.mc.getEconomy().depositPlayer(name, amount);
-			hc.getLog().writeAuditLog(name, "deposit", amount, HC.mc.getEconomy().getName());
+		if (hc.getMC().useExternalEconomy()) {
+			hc.getMC().getEconomy().depositPlayer(name, amount);
+			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getMC().getEconomy().getName());
 		} else {
 			this.balance += amount;
 			HashMap<String,String> conditions = new HashMap<String,String>();
@@ -446,11 +433,10 @@ public class HyperPlayer implements HyperAccount {
 	
 	@SuppressWarnings("deprecation")
 	public void withdraw(double amount) {
-		HC hc = HC.hc;
 		checkExternalAccount();
-		if (HC.mc.useExternalEconomy()) {
-			HC.mc.getEconomy().withdrawPlayer(name, amount);
-			hc.getLog().writeAuditLog(name, "withdrawal", amount, HC.mc.getEconomy().getName());
+		if (hc.getMC().useExternalEconomy()) {
+			hc.getMC().getEconomy().withdrawPlayer(name, amount);
+			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getMC().getEconomy().getName());
 		} else {
 			this.balance -= amount;
 			HashMap<String,String> conditions = new HashMap<String,String>();
@@ -464,8 +450,8 @@ public class HyperPlayer implements HyperAccount {
 	
 	
 	public int getBarXpPoints() {
-		int lvl = HC.mc.getLevel(this);
-		int exppoints = (int) Math.floor(((3.5 * lvl) + 6.7) * HC.mc.getExp(this) + .5);
+		int lvl = hc.getMC().getLevel(this);
+		int exppoints = (int) Math.floor(((3.5 * lvl) + 6.7) * hc.getMC().getExp(this) + .5);
 		return exppoints;
 	}
 
@@ -480,7 +466,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 
 	public int getTotalXpPoints() {
-		int lvl = HC.mc.getLevel(this);
+		int lvl = hc.getMC().getLevel(this);
 		int lvlxp = getLvlXpPoints(lvl);
 		int barxp = getBarXpPoints();
 		int totalxp = lvlxp + barxp;
@@ -497,76 +483,76 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	public boolean addXp(int amount) {
-		if (!HC.mc.isOnline(this) || amount < 0) {return false;}
+		if (!hc.getMC().isOnline(this) || amount < 0) {return false;}
 		int totalxp = getTotalXpPoints();
 		int newxp = totalxp + amount;
 		int newlvl = getLvlFromXP(newxp);
 		newxp = newxp - getLvlXpPoints(newlvl);
 		float xpbarxp = (float) newxp / (float) getXpForNextLvl(newlvl);
-		HC.mc.setLevel(this, newlvl);
-		HC.mc.setExp(this, xpbarxp);
+		hc.getMC().setLevel(this, newlvl);
+		hc.getMC().setExp(this, xpbarxp);
 		return true;
 	}
 	
 	public boolean removeXp(int amount) {
-		if (!HC.mc.isOnline(this) || amount < 0) {return false;}
+		if (!hc.getMC().isOnline(this) || amount < 0) {return false;}
 		int totalxp = getTotalXpPoints();
 		int newxp = totalxp - amount;
 		if (newxp < 0) {return false;}
 		int newlvl = getLvlFromXP(newxp);
 		newxp = newxp - getLvlXpPoints(newlvl);
 		float xpbarxp = (float) newxp / (float) getXpForNextLvl(newlvl);
-		HC.mc.setLevel(this, newlvl);
-		HC.mc.setExp(this, xpbarxp);
+		hc.getMC().setLevel(this, newlvl);
+		hc.getMC().setExp(this, xpbarxp);
 		return true;
 	}
 	
 	public HLocation getTargetLocation() {
-		return HC.mc.getTargetLocation(this);
+		return hc.getMC().getTargetLocation(this);
 	}
 	
 	public HLocation getLocationBeforeTargetLocation() {
-		return HC.mc.getLocationBeforeTargetLocation(this);
+		return hc.getMC().getLocationBeforeTargetLocation(this);
 	}
 	
 	public HLocation getLocation() {
-		return HC.mc.getLocation(this);
+		return hc.getMC().getLocation(this);
 	}
 
 	public int getHeldItemSlot() {
-		return HC.mc.getHeldItemSlot(this);
+		return hc.getMC().getHeldItemSlot(this);
 	}
 	
 	public HItemStack getItemInHand() {
-		return HC.mc.getItem(this, getHeldItemSlot());
+		return hc.getMC().getItem(this, getHeldItemSlot());
 	}
 	
 	public void teleport(HLocation newLocation) {
-		HC.mc.teleport(this, newLocation);
+		hc.getMC().teleport(this, newLocation);
 	}
 
 	public boolean isInCreativeMode() {
-		return HC.mc.isInCreativeMode(this);
+		return hc.getMC().isInCreativeMode(this);
 	}
 	
 	public void kickPlayer(String message) {
-		HC.mc.kickPlayer(this, message);
+		hc.getMC().kickPlayer(this, message);
 	}
 	
 	public boolean isSneaking() {
-		return HC.mc.isSneaking(this);
+		return hc.getMC().isSneaking(this);
 	}
 	
 	public int getLevel() {
-		return HC.mc.getLevel(this);
+		return hc.getMC().getLevel(this);
 	}
 	
 	public void setLevel(int level) {
-		HC.mc.setLevel(this, level);
+		hc.getMC().setLevel(this, level);
 	}
 	
 	public void setExp(float exp) {
-		HC.mc.setExp(this, exp);
+		hc.getMC().setExp(this, exp);
 	}
 	
 }

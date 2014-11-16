@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import org.bukkit.map.MapRenderer;
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObjectType;
@@ -26,17 +26,18 @@ import regalowl.hyperconomy.util.LanguageFile;
 
 public class FrameShopRenderer extends MapRenderer {
 
-	private HC hc;
+	private transient HyperConomy hc;
+	private transient LanguageFile L;
 	private TradeObject ho;
     private Image image;
-    private LanguageFile L;
+    
     private ArrayList<String> renderedFor = new ArrayList<String>();
     @SuppressWarnings("deprecation")
 	private final byte borderColor = MapPalette.DARK_BROWN;
     
-    public FrameShopRenderer(TradeObject ho) {
+    public FrameShopRenderer(HyperConomy hc, TradeObject ho) {
         super();
-        hc = HC.hc;
+        this.hc = hc;
         L = hc.getLanguageFile();
         this.ho = ho;
         this.image = ho.getImage(60,60);
@@ -145,6 +146,6 @@ public class FrameShopRenderer extends MapRenderer {
     }
     
     public String color(String message, byte color) {
-    	return HC.mc.applyColor(color+";") + message;
+    	return hc.getMC().applyColor(color+";") + message;
     }
 }

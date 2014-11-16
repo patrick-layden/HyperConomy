@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
  
 
 public class HItemStack {
 
+	private transient HyperConomy hc;
+	
 	private String material;
     private short durability;
     private byte data;
@@ -21,12 +23,14 @@ public class HItemStack {
     private boolean isBlank;
   
  
-    public HItemStack() {
+    public HItemStack(HyperConomy hc) {
+    	this.hc = hc;
     	this.isBlank = true;
     	this.material = "AIR";
     }
     
-    public HItemStack(HItemMeta itemMeta, String material, short durability, byte data, int amount, int maxStackSize, int maxDurability) {
+    public HItemStack(HyperConomy hc, HItemMeta itemMeta, String material, short durability, byte data, int amount, int maxStackSize, int maxDurability) {
+    	this.hc = hc;
     	this.itemMeta = itemMeta;
     	this.material = material;
     	this.durability = durability;
@@ -121,7 +125,7 @@ public class HItemStack {
 	
 	
 	public boolean considerDamage() {
-		boolean ignoreDamage = HC.hc.getConf().getBoolean("enable-feature.treat-damaged-items-as-equals-to-undamaged-ones");
+		boolean ignoreDamage = hc.getConf().getBoolean("enable-feature.treat-damaged-items-as-equals-to-undamaged-ones");
 		if (!ignoreDamage) return true;
 		if (maxDurability > 0) return false;
 		return true;
@@ -143,7 +147,7 @@ public class HItemStack {
 	public boolean canEnchantItem() {
 		if (material.equalsIgnoreCase("AIR")) return false;
 		if (material.equalsIgnoreCase("BOOK")) return true;
-		return HC.mc.canEnchantItem(this);
+		return hc.getMC().canEnchantItem(this);
 	}
 	
 	public boolean canAcceptEnchantment(HEnchantment e) {
@@ -153,7 +157,7 @@ public class HItemStack {
 		if (amount > 1) return false;
 		if (itemMeta != null) {
 			for (HEnchantment en:itemMeta.getEnchantments()) {
-				if (HC.mc.conflictsWith(e, en)) return false;
+				if (hc.getMC().conflictsWith(e, en)) return false;
 			}
 		}
 		return canEnchantItem();

@@ -4,7 +4,7 @@ package regalowl.hyperconomy.display;
 
 import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.minecraft.HPlayerInteractEvent;
@@ -20,11 +20,11 @@ import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.LanguageFile;
 
 public class TransactionSignHandler {
-	private HC hc;
+	private HyperConomy hc;
 	private DataManager em;
-	public TransactionSignHandler() {
-		hc = HC.hc;
-		em = HC.hc.getDataManager();
+	public TransactionSignHandler(HyperConomy hc) {
+		this.hc = hc;
+		em = hc.getDataManager();
 		if (hc.getConf().getBoolean("enable-feature.transaction-signs")) hc.getHyperEventHandler().registerListener(this);
 	}
 
@@ -37,14 +37,14 @@ public class TransactionSignHandler {
 				if (hc.getHyperLock().loadLock()) return;
 				HyperEconomy he = hp.getHyperEconomy();
 				HLocation target = hp.getTargetLocation();
-				HSign sign = HC.mc.getSign(target);
+				HSign sign = hc.getMC().getSign(target);
 				if (sign != null) {
-					String line3 = HC.mc.removeColor(sign.getLine(2)).trim();
+					String line3 = hc.getMC().removeColor(sign.getLine(2)).trim();
 					if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
-						String line12 = HC.mc.removeColor(sign.getLine(0)).trim() + HC.mc.removeColor(sign.getLine(1)).trim();
+						String line12 = hc.getMC().removeColor(sign.getLine(0)).trim() + hc.getMC().removeColor(sign.getLine(1)).trim();
 						line12 = he.fixName(line12);
 						if (he.objectTest(line12)) {
-							String line4 = HC.mc.removeColor(sign.getLine(3)).trim();
+							String line4 = hc.getMC().removeColor(sign.getLine(3)).trim();
 							int amount = 0;
 							try {
 								amount = Integer.parseInt(line4);
@@ -88,21 +88,21 @@ public class TransactionSignHandler {
 		try {
 			if (hc.getConf().getBoolean("enable-feature.transaction-signs")) {
 				HSign sign = scevent.getSign();
-				String line3 = HC.mc.removeColor(sign.getLine(2)).trim();
+				String line3 = hc.getMC().removeColor(sign.getLine(2)).trim();
 				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
-					String line4 = HC.mc.removeColor(sign.getLine(3)).trim();
+					String line4 = hc.getMC().removeColor(sign.getLine(3)).trim();
 					int amount = 0;
 					try {
 						amount = Integer.parseInt(line4);
 					} catch (Exception e) {
 						amount = 0;
 					}
-					String line12 = HC.mc.removeColor(sign.getLine(0)).trim() + HC.mc.removeColor(sign.getLine(1)).trim();
+					String line12 = hc.getMC().removeColor(sign.getLine(0)).trim() + hc.getMC().removeColor(sign.getLine(1)).trim();
 					line12 = em.getEconomy("default").fixName(line12);
 					if (em.getEconomy("default").objectTest(line12)) {
 						if (scevent.getHyperPlayer().hasPermission("hyperconomy.createsign")) {
-							String line1 = HC.mc.removeColor(sign.getLine(0).trim());
-							String line2 = HC.mc.removeColor(sign.getLine(1).trim());
+							String line1 = hc.getMC().removeColor(sign.getLine(0).trim());
+							String line2 = hc.getMC().removeColor(sign.getLine(1).trim());
 							if (line1.length() > 13) {
 								line2 = "&1" + line1.substring(13, line1.length()) + line2;
 								line1 = "&1" + line1.substring(0, 13);
@@ -120,14 +120,14 @@ public class TransactionSignHandler {
 								sign.setLine(2, "&f[Buy]");
 							}
 							sign.setLine(3, "&a" + amount);
-							HC.mc.logSevere("1 lines set");
+							hc.getMC().logSevere("1 lines set");
 						} else if (!scevent.getHyperPlayer().hasPermission("hyperconomy.createsign")) {
 							sign.setLine(0, "");
 							sign.setLine(1, "");
 							sign.setLine(2, "");
 							sign.setLine(3, "");
 						}
-						HC.mc.logSevere("sign updated");
+						hc.getMC().logSevere("sign updated");
 						sign.update();
 					}
 				}
@@ -156,16 +156,16 @@ public class TransactionSignHandler {
 			HBlock b = ievent.getBlock();
 			if (b == null) return;
 			if (!b.isTransactionSign()) return;
-			HSign s = HC.mc.getSign(b.getLocation());
-			String line3 = HC.mc.removeColor(s.getLine(2)).trim();
-			String line4 = HC.mc.removeColor(s.getLine(3)).trim();
+			HSign s = hc.getMC().getSign(b.getLocation());
+			String line3 = hc.getMC().removeColor(s.getLine(2)).trim();
+			String line4 = hc.getMC().removeColor(s.getLine(3)).trim();
 			int amount = 0;
 			try {
 				amount = Integer.parseInt(line4);
 			} catch (Exception e) {
 				return;
 			}
-			String line12 = HC.mc.removeColor(s.getLine(0)).trim() + HC.mc.removeColor(s.getLine(1)).trim();
+			String line12 = hc.getMC().removeColor(s.getLine(0)).trim() + hc.getMC().removeColor(s.getLine(1)).trim();
 			line12 = he.fixName(line12);
 			if (!he.objectTest(line12)) return;
 			ievent.cancel();
@@ -174,7 +174,7 @@ public class TransactionSignHandler {
 					if (hp.hasPermission("hyperconomy.buysign")) {
 						if ((em.getHyperShopManager().inAnyShop(hp) && requireShop) || !requireShop) {
 							if (!requireShop || hp.hasBuyPermission(em.getHyperShopManager().getShop(hp))) {
-								TradeObject ho = he.getHyperObject(line12);
+								TradeObject ho = he.getTradeObject(line12);
 								if (!hc.getHyperLock().isLocked(hp)) {
 									PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 									pt.setAmount(amount);
@@ -203,7 +203,7 @@ public class TransactionSignHandler {
 									hp.sendMessage(L.get("CANT_SELL_CREATIVE"));
 									return;
 								}
-								TradeObject ho = he.getHyperObject(line12);
+								TradeObject ho = he.getTradeObject(line12);
 								if (!hc.getHyperLock().isLocked(hp)) {
 									PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 									pt.setAmount(amount);

@@ -2,6 +2,7 @@ package regalowl.hyperconomy.command;
 
 
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 
@@ -10,8 +11,8 @@ import regalowl.hyperconomy.account.HyperPlayer;
 
 public class Hcdelete extends BaseCommand implements HyperCommand {
 	
-	public Hcdelete() {
-		super(false);
+	public Hcdelete(HyperConomy hc) {
+		super(hc, false);
 	}
 
 
@@ -27,7 +28,7 @@ public class Hcdelete extends BaseCommand implements HyperCommand {
 			try {
 				String name = args[1];
 				if (he.objectTest(name)) {
-					he.getHyperObject(name).delete();
+					he.getTradeObject(name).delete();
 					data.addResponse(L.get("HCDELETE_SUCCESS"));
 				} else {
 					data.addResponse(L.get("INVALID_NAME"));

@@ -2,6 +2,7 @@ package regalowl.hyperconomy.command;
 
 
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.bukkit.FrameShopHandler;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -10,8 +11,8 @@ import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class Frameshopcommand extends BaseCommand implements HyperCommand {
-	public Frameshopcommand() {
-		super(true);
+	public Frameshopcommand(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override
@@ -21,7 +22,7 @@ public class Frameshopcommand extends BaseCommand implements HyperCommand {
 		HyperEconomy he = getEconomy();
 		if (args.length == 1) {
 			HLocation bl = hp.getLocationBeforeTargetLocation();
-			TradeObject ho = he.getHyperObject(args[0]);
+			TradeObject ho = he.getTradeObject(args[0]);
 			if (ho != null) {
 				if (hc.getHyperShopManager().inAnyShop(hp)) {
 					Shop s = hc.getHyperShopManager().getShop(hp);

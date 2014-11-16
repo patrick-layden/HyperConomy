@@ -6,10 +6,11 @@ import java.util.ArrayList;
 
 
 
-import regalowl.hyperconomy.HC;
-import regalowl.hyperconomy.HyperBankManager;
+
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperBank;
+import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.shop.Shop;
 
@@ -17,8 +18,8 @@ import regalowl.hyperconomy.shop.Shop;
 
 public class Hcbank extends BaseCommand implements HyperCommand {
 	
-	public Hcbank() {
-		super(true);
+	public Hcbank(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("CANNOT_OWN_MORE_BANKS"));
 				return data;
 			}
-			HyperBank hb = new HyperBank(args[1], hp);
+			HyperBank hb = new HyperBank(hc, args[1], hp);
 			hbm.addHyperBank(hb);
 			data.addResponse(L.get("BANK_CREATED"));
 		} else if (args[0].equalsIgnoreCase("delete")) {
@@ -70,7 +71,7 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("DONT_OWN_THIS_BANK"));
 				return data;
 			}
-			for (HyperEconomy he:HC.hc.getDataManager().getEconomies()) {
+			for (HyperEconomy he:hc.getDataManager().getEconomies()) {
 				if (he.getDefaultAccount() == hb) {
 					data.addResponse(L.get("BANK_IN_USE_BY_ECONOMY"));
 					return data;

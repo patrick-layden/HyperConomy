@@ -1,14 +1,14 @@
 package regalowl.hyperconomy.command;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class Iteminfo extends BaseCommand implements HyperCommand{
 
-	public Iteminfo() {
-		super(true);
+	public Iteminfo(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override
@@ -19,7 +19,7 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 		TradeObject ho = null;
 		if (args.length == 0) {
 			sis = hp.getItemInHand();
-			ho = he.getHyperObject(sis);
+			ho = he.getTradeObject(sis);
 		} else {
 			if (args[0].equalsIgnoreCase("pd")) {
 				sis = hp.getItemInHand();
@@ -27,7 +27,7 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 				return data;
 			} else if (args[0].equalsIgnoreCase("comp")) {
 				if (args.length == 2) {
-					TradeObject to = HC.hc.getDataManager().getDefaultEconomy().getHyperObject(args[1]);
+					TradeObject to = hc.getDataManager().getDefaultEconomy().getTradeObject(args[1]);
 					sis = hp.getItemInHand();
 					HItemStack sis2 = to.getItem();
 					if (sis.equals(sis2)) {
@@ -41,7 +41,7 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 					}
 				}
 			}
-			ho = he.getHyperObject(args[0]);
+			ho = he.getTradeObject(args[0]);
 			if (ho == null) {
 				data.addResponse("&9" + "Object not found.");
 				return data;

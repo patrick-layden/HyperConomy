@@ -1,12 +1,15 @@
 package regalowl.hyperconomy.minecraft;
 
+import regalowl.hyperconomy.HyperConomy;
 
-import regalowl.hyperconomy.HC;
+
 
 
 
 public class HLocation {
 
+
+	
 	private double x;
 	private double y;
 	private double z;
@@ -50,11 +53,6 @@ public class HLocation {
 		return (int)z;
 	}
 	
-	public HBlock getBlock() {
-		return new HBlock(this);
-	}
-
-	
 	public void setX(double x) {
 		this.x = x;
 	}
@@ -68,12 +66,17 @@ public class HLocation {
 		this.world = world;
 	}
 	
-	public boolean isLoaded() {
-		return HC.mc.isLoaded(this);
+	
+	public boolean isLoaded(HyperConomy hc) {
+		return hc.getMC().isLoaded(this);
 	}
-	public void load() {
-		HC.mc.load(this);
+	public void load(HyperConomy hc) {
+		hc.getMC().load(this);
 	}
+	public HBlock getBlock(HyperConomy hc) {
+		return new HBlock(hc, this);
+	}
+
 	
 
 	@Override

@@ -36,7 +36,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.display.SignType;
 import regalowl.hyperconomy.inventory.HBookMeta;
@@ -65,30 +65,33 @@ public class BukkitCommon {
 
 	protected static final BlockFace[] planeFaces = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
 	protected static final BlockFace[] allFaces = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.DOWN, BlockFace.UP};
+	private HyperConomy hc;
 	
-	private BukkitCommon() {}
+	protected BukkitCommon(HyperConomy hc) {
+		this.hc = hc;
+	}
 	
 	
 	
-	protected static Location getLocation(HLocation l) {
+	protected Location getLocation(HLocation l) {
 		return new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
 	}
 
-	protected static HLocation getLocation(Location l) {
+	protected HLocation getLocation(Location l) {
 		return new HLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
 	}
 	
-	protected static Block getBlock(HLocation location) {
+	protected Block getBlock(HLocation location) {
 		Location l = getLocation(location);
 		return l.getBlock();
 	}
 	
-	protected static HBlock getBlock(Block b) {
+	protected HBlock getBlock(Block b) {
 		HLocation l = getLocation(b.getLocation());
-		return new HBlock(l);
+		return new HBlock(hc, l);
 	}
 	
-	protected static Sign getSign(HLocation l) {
+	protected Sign getSign(HLocation l) {
 		BlockState bs = getBlock(l).getState();
 		if (bs instanceof Sign) {
 			return (Sign)bs;
@@ -97,7 +100,7 @@ public class BukkitCommon {
 	}
 	
 
-	protected static boolean isTransactionSign(HLocation l) {
+	protected boolean isTransactionSign(HLocation l) {
 		Block b = getBlock(l);
 		if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
 			Sign s = (Sign) b.getState();
@@ -109,7 +112,7 @@ public class BukkitCommon {
 		return false;
 	}
 
-	protected static boolean isInfoSign(HLocation l) {
+	protected boolean isInfoSign(HLocation l) {
 		Block b = getBlock(l);
 		if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
 			Sign s = (Sign) b.getState();
@@ -119,7 +122,7 @@ public class BukkitCommon {
 		return false;
 	}
 	
-	protected static boolean isChestShopChest(HLocation l) {
+	protected boolean isChestShopChest(HLocation l) {
 		Block b = getBlock(l);
 		if (b == null) {
 			return false;
@@ -136,7 +139,7 @@ public class BukkitCommon {
 		return true;
 	}
 	
-	protected static boolean isChestShopSign(HLocation l) {
+	protected boolean isChestShopSign(HLocation l) {
 		Block b = getBlock(l);
 		if (b == null) return false;
 		if (!(b.getState() instanceof Sign)) return false;
@@ -151,14 +154,14 @@ public class BukkitCommon {
 		return true;
 	}
 	
-	protected static boolean isChestShopSignBlock(HLocation l) {
+	protected boolean isChestShopSignBlock(HLocation l) {
 		HSign sign = getAttachedSign(l);
 		if (sign == null) return false;
 		if (!isChestShopSign(sign.getLocation())) return false;
 		return true;
 	}
 	
-	protected static HSign getAttachedSign(HLocation l) {
+	protected HSign getAttachedSign(HLocation l) {
 		Block b = getBlock(l);
 		if (b == null) return null;
 		for (BlockFace cface : planeFaces) {
@@ -173,34 +176,34 @@ public class BukkitCommon {
 						lines.add(li);
 					}
 					HLocation sl = getLocation(s.getLocation());
-					return new HSign(sl, lines, true);
+					return new HSign(hc, sl, lines, true);
 				}
 			}
 		}
 		return null;
 	}
 	
-	protected static boolean isPartOfChestShop(HLocation l) {
+	protected boolean isPartOfChestShop(HLocation l) {
 		if (isChestShopChest(l)) return true;
 		if (isChestShopSign(l)) return true;
 		if (isChestShopSignBlock(l)) return true;
 		return false;
 	}
 
-	protected static ChestShop getChestShop(HLocation l) {
+	protected ChestShop getChestShop(HLocation l) {
 		Block b = getBlock(l);
 		if (b == null) return null;
 		if (isChestShopChest(l)) {
-			return new ChestShop(l);
+			return new ChestShop(hc, l);
 		} else if (isChestShopSign(l)) {
 			HLocation cl = new HLocation(l);
 			cl.setY(cl.getY() - 1);
-			return new ChestShop(cl);
+			return new ChestShop(hc, cl);
 		} else if (isChestShopSignBlock(l)) {
 			HSign s = getAttachedSign(l);
 			HLocation cl = s.getLocation();
 			cl.setY(cl.getY() - 1);
-			return new ChestShop(cl);
+			return new ChestShop(hc, cl);
 		}
 		return null;
 	}
@@ -221,13 +224,13 @@ public class BukkitCommon {
 	
 	
 	
-	protected static HyperPlayer getPlayer(Player p) {
+	protected HyperPlayer getPlayer(Player p) {
 		if (p == null) return null;
-		return HC.hc.getHyperPlayerManager().getHyperPlayer(p.getName());
+		return hc.getHyperPlayerManager().getHyperPlayer(p.getName());
 	}
 	
 	@SuppressWarnings("deprecation")
-	protected static Player getPlayer(HyperPlayer hp) {
+	protected Player getPlayer(HyperPlayer hp) {
 		if (hp.getName() == null) return null;
 		return Bukkit.getPlayer(hp.getName());
 	}
@@ -238,7 +241,7 @@ public class BukkitCommon {
 	
 	
 	@SuppressWarnings("deprecation")
-	protected static HInventory getInventory(HyperPlayer hp) {
+	protected HInventory getInventory(HyperPlayer hp) {
 		ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 		Player p = Bukkit.getPlayer(hp.getName());
 		Inventory i = p.getInventory();
@@ -247,13 +250,13 @@ public class BukkitCommon {
 		for (int c = 0; c < size; c++) {
 	        items.add(getSerializableItemStack(i.getItem(c)));
 		}
-		HInventory si = new HInventory(items, HInventoryType.PLAYER);
+		HInventory si = new HInventory(hc, items, HInventoryType.PLAYER);
 		si.setOwner(hp.getName());
 		si.setHeldSlot(heldSlot);
 		return si;
 	}
 
-	protected static HInventory getInventory(Inventory i) {
+	protected HInventory getInventory(Inventory i) {
 		ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 		HInventoryType type = null;
 		if (i.getType() == InventoryType.PLAYER) {
@@ -265,7 +268,7 @@ public class BukkitCommon {
 		for (int c = 0; c < size; c++) {
 	        items.add(getSerializableItemStack(i.getItem(c)));
 		}
-		HInventory si = new HInventory(items, type);
+		HInventory si = new HInventory(hc, items, type);
 		if (i.getType() == InventoryType.PLAYER) {
 			if (i.getHolder() instanceof Player) {
 				Player p = (Player)i.getHolder();
@@ -282,7 +285,7 @@ public class BukkitCommon {
 	}
 	
 
-	protected static HInventory getChestInventory(HLocation l) {
+	protected HInventory getChestInventory(HLocation l) {
 		Location loc = getLocation(l);
 		if (loc.getBlock().getState() instanceof Chest) {
 			Chest chest = (Chest)loc.getBlock().getState();
@@ -292,7 +295,7 @@ public class BukkitCommon {
 			for (int c = 0; c < size; c++) {
 		        items.add(getSerializableItemStack(i.getItem(c)));
 			}
-			HInventory si = new HInventory(items, HInventoryType.CHEST);
+			HInventory si = new HInventory(hc, items, HInventoryType.CHEST);
 			si.setLocation(l);
 			return si;
 		}
@@ -301,7 +304,7 @@ public class BukkitCommon {
 	
 	
 	@SuppressWarnings("deprecation")
-	protected static void setInventory(HInventory inventory) {
+	protected void setInventory(HInventory inventory) {
 		ArrayList<HItemStack> newInventory = inventory.getItems();
 		ArrayList<HItemStack> currentInventory = null;
 		Inventory bukkitInv = null;
@@ -334,8 +337,8 @@ public class BukkitCommon {
 	
 	//TODO make protected
 	@SuppressWarnings("deprecation")
-	public static HItemStack getSerializableItemStack(ItemStack s) {
-		if (s == null) return new HItemStack();
+	public HItemStack getSerializableItemStack(ItemStack s) {
+		if (s == null) return new HItemStack(hc);
 		boolean isBlank = (s.getType() == Material.AIR) ? true:false;
         String material = s.getType().toString();
         short durability = s.getDurability();
@@ -343,7 +346,7 @@ public class BukkitCommon {
         int amount = s.getAmount();
         int maxStackSize = s.getType().getMaxStackSize();
         int maxDurability = s.getType().getMaxDurability();
-        HItemStack sis = new HItemStack(new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>()), material, durability, data, amount, maxStackSize, maxDurability);
+        HItemStack sis = new HItemStack(hc, new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>()), material, durability, data, amount, maxStackSize, maxDurability);
         if (isBlank) sis.setBlank();
         if (s.hasItemMeta()) {
         	ItemMeta im = s.getItemMeta();
@@ -435,7 +438,7 @@ public class BukkitCommon {
 	}
 	//TODO make protected
 	@SuppressWarnings("deprecation")
-	public static ItemStack getItemStack(HItemStack sis) {
+	public ItemStack getItemStack(HItemStack sis) {
 		if (sis == null || sis.isBlank()) return null;
         ItemStack item = new ItemStack(Material.matchMaterial(sis.getMaterial()));
         item.setAmount(sis.getAmount());
@@ -521,7 +524,7 @@ public class BukkitCommon {
 	
 	
 	
-	protected static String applyColor(String message) {
+	protected String applyColor(String message) {
 		message = message.replace("&0", ChatColor.BLACK + "");
 		message = message.replace("&1", ChatColor.DARK_BLUE + "");
 		message = message.replace("&2", ChatColor.DARK_GREEN + "");
@@ -549,7 +552,7 @@ public class BukkitCommon {
 	
 	
 	
-	protected static Item getItem(HItem i) {
+	protected Item getItem(HItem i) {
 		Location l = getLocation(i.getLocation());
 		for (Entity e:l.getWorld().getEntities()) {
 			if (e instanceof Item) {
@@ -562,13 +565,13 @@ public class BukkitCommon {
 		return null;
 	}
 	
-	protected static HItem getItem(Item i) {
+	protected HItem getItem(Item i) {
 		HLocation l = getLocation(i.getLocation());
 		HItemStack stack = getSerializableItemStack(i.getItemStack());
-		return new HItem(l, i.getEntityId(), stack);
+		return new HItem(hc, l, i.getEntityId(), stack);
 	}
 	
-	protected static boolean chunkContainsLocation(HLocation l, Chunk c) {
+	protected boolean chunkContainsLocation(HLocation l, Chunk c) {
 		Location loc = getLocation(l);
 		if (loc.getChunk().equals(c)) return true;
 		return false;

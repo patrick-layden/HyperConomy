@@ -2,7 +2,7 @@ package regalowl.hyperconomy.command;
 
 
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
@@ -11,8 +11,8 @@ import regalowl.hyperconomy.shop.ChestShop;
 public class Setchestowner extends BaseCommand implements HyperCommand {
 
 
-	public Setchestowner() {
-		super(true);
+	public Setchestowner(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override
@@ -35,15 +35,15 @@ public class Setchestowner extends BaseCommand implements HyperCommand {
 			}
 			HyperPlayer hp = data.getHyperPlayer();
 			HLocation l = hp.getTargetLocation();
-			if (HC.mc.isChestShopChest(l)) {
-				ChestShop cs = new ChestShop(l);
+			if (hc.getMC().isChestShopChest(l)) {
+				ChestShop cs = new ChestShop(hc, l);
 				HSign s = cs.getSign();
 				s.setLine(2, "&f" + line3);
 				s.setLine(3, "&f" + line4);
 				s.update();
 				data.addResponse(L.get("CHEST_OWNER_UPDATED"));
-			} else if (HC.mc.isChestShopSign(l)) {
-				HSign s = HC.mc.getSign(l);
+			} else if (hc.getMC().isChestShopSign(l)) {
+				HSign s = hc.getMC().getSign(l);
 				s.setLine(2, "&f" + line3);
 				s.setLine(3, "&f" + line4);
 				s.update();

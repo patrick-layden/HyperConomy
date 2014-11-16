@@ -3,44 +3,42 @@ package regalowl.hyperconomy.command;
 
 
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.util.ConsoleSettings;
 import regalowl.hyperconomy.util.LanguageFile;
 
 public class BaseCommand {
 
 	protected boolean requirePlayer;
 
-	protected HC hc;
+	protected HyperConomy hc;
 	protected LanguageFile L;
 	protected DataManager dm;
-	protected ConsoleSettings cs;
+
 	
 	protected HyperPlayer hp;
 	protected boolean isPlayer;
 	protected String[] args;
 	protected CommandData data;
 	
-	public BaseCommand(boolean requirePlayer) {
-		this.hc = HC.hc;
+	public BaseCommand(HyperConomy hc, boolean requirePlayer) {
+		this.hc = hc;
 		this.L = hc.getLanguageFile();
-		this.dm = HC.hc.getDataManager();
-		this.cs = hc.getConsoleSettings();
+		this.dm = hc.getDataManager();
 		this.requirePlayer = requirePlayer;
 	}
 	
 	
 	protected HyperEconomy getEconomy() {
-		return HC.hc.getDataManager().getEconomy(getEconomyName());
+		return hc.getDataManager().getEconomy(getEconomyName());
 	}
 	
 	protected String getEconomyName() {
 		if (isPlayer && hp != null) {
 			return hp.getEconomy();
 		} else if (!isPlayer) {
-			return cs.getEconomy();
+			return hc.getConsoleEconomy();
 		}
 		return "default";
 	}

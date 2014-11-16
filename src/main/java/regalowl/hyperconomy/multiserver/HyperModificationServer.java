@@ -12,18 +12,18 @@ import java.util.TimerTask;
 
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.event.EventHandler;
-import regalowl.hyperconomy.HyperBankManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.HyperPlayerManager;
-import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperBank;
+import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.HyperBankModificationEvent;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
 import regalowl.hyperconomy.event.ShopModificationEvent;
+import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -31,7 +31,7 @@ import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class HyperModificationServer {
 
-	private HC hc;
+	private HyperConomy hc;
 	private int port;
 	private ArrayList<String> ipAddresses = new ArrayList<String>();
 	private int timeout;
@@ -45,8 +45,8 @@ public class HyperModificationServer {
 	private RemoteUpdater remoteUpdater;
 	private Timer t = new Timer();
 	
-	public HyperModificationServer() {
-		this.hc = HC.hc;
+	public HyperModificationServer(HyperConomy hc) {
+		this.hc = hc;
 		if (hc.getConf().getBoolean("multi-server.enable")) {
 			ipAddresses = CommonFunctions.explode(hc.getConf().getString("multi-server.remote-server-ip-addresses"), ",");
 			port = hc.getConf().getInt("multi-server.port");
@@ -88,7 +88,7 @@ public class HyperModificationServer {
 						serverSocket.close();
 					} catch (Exception e) {
 						try {
-							HC.hc.getDebugMode().debugWriteError(e);
+							hc.getDebugMode().debugWriteError(e);
 							if (sClientSocket != null) sClientSocket.close();
 							if (serverSocket != null) serverSocket.close();
 						} catch (IOException e1) {}
@@ -101,14 +101,14 @@ public class HyperModificationServer {
 	private void processHyperObjects(ArrayList<TradeObject> objects) {
 		for (TradeObject ho:objects) {
 			if (ho != null && ho.getEconomy() != null && !ho.getEconomy().equalsIgnoreCase("")) {
-				HyperEconomy he = HC.hc.getDataManager().getEconomy(ho.getEconomy());
+				HyperEconomy he = hc.getDataManager().getEconomy(ho.getEconomy());
 				if (he != null) {
 					if (ho.isShopObject()) {
 						PlayerShop ps = ho.getShop();
 						if (ps != null) ps.updateHyperObject(ho);
 					} else {
-						he.removeHyperObject(ho.getName());
-						he.addHyperObject(ho);
+						he.removeTradeObject(ho.getName());
+						he.addTradeObject(ho);
 					}
 				}
 			}
@@ -175,7 +175,7 @@ public class HyperModificationServer {
 			if (serverSocket != null) serverSocket.close();
 			if (clientSocket != null) clientSocket.close();
 		} catch (Exception e) {
-			HC.hc.getDebugMode().debugWriteError(e);
+			hc.getDebugMode().debugWriteError(e);
 		}
 	}
 	
@@ -201,7 +201,7 @@ public class HyperModificationServer {
 					clientSocket.close();
 					sendObject.clear();
 				} catch (Exception e) {
-					HC.hc.getDebugMode().debugWriteError(e);
+					hc.getDebugMode().debugWriteError(e);
 					continue;
 				}
 			}

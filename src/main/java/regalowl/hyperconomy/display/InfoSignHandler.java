@@ -17,7 +17,7 @@ import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
@@ -29,7 +29,7 @@ import regalowl.hyperconomy.tradeobject.EnchantmentClass;
 
 public class InfoSignHandler {
 
-	private HC hc;
+	private HyperConomy hc;
 	private ConcurrentHashMap<Integer, InfoSign> infoSigns = new ConcurrentHashMap<Integer, InfoSign>();
 	private AtomicInteger signCounter = new AtomicInteger();
 	private final long signUpdateInterval = 1L;
@@ -38,8 +38,8 @@ public class InfoSignHandler {
 	private AtomicBoolean repeatUpdate = new AtomicBoolean();
 
 
-	public InfoSignHandler() {
-		hc = HC.hc;
+	public InfoSignHandler(HyperConomy hc) {
+		this.hc = hc;
 		updateActive.set(false);
 		repeatUpdate.set(false);
 		if (hc.getConf().getBoolean("enable-feature.info-signs")) {
@@ -55,11 +55,11 @@ public class InfoSignHandler {
 			public void run() {
 				SQLRead sr = hc.getSQLRead();
 				dbData = sr.select("SELECT * FROM hyperconomy_info_signs");
-				HC.mc.runTask(new Runnable() {
+				hc.getMC().runTask(new Runnable() {
 					public void run() {
 						while (dbData.next()) {
 							HLocation l = new HLocation(dbData.getString("WORLD"), dbData.getInt("X"),dbData.getInt("Y"),dbData.getInt("Z"));
-							infoSigns.put(signCounter.getAndIncrement(), new InfoSign(l, SignType.fromString(dbData.getString("TYPE")), dbData.getString("HYPEROBJECT"), 
+							infoSigns.put(signCounter.getAndIncrement(), new InfoSign(hc, l, SignType.fromString(dbData.getString("TYPE")), dbData.getString("HYPEROBJECT"), 
 									dbData.getDouble("MULTIPLIER"), dbData.getString("ECONOMY"), EnchantmentClass.fromString(dbData.getString("ECLASS"))));
 						}
 						dbData.close();
@@ -103,7 +103,7 @@ public class InfoSignHandler {
 	public void onHyperSignChangeEvent(HSignChangeEvent ev) {
 		try {
 			HSign s = ev.getSign();
-			DataManager em = HC.hc.getDataManager();
+			DataManager em = hc.getDataManager();
 			HyperPlayer hp = ev.getHyperPlayer();
 			if (hp.hasPermission("hyperconomy.createsign")) {
 				String[] lines = s.getLines();
@@ -129,7 +129,7 @@ public class InfoSignHandler {
 				if (em.getEconomy(hp.getEconomy()).objectTest(objectName)) {
 					SignType type = SignType.fromString(lines[2]);
 					if (type != null) {
-						infoSigns.put(signCounter.getAndIncrement(), new InfoSign(s.getLocation(), type, objectName, multiplier, economy, enchantClass, lines));
+						infoSigns.put(signCounter.getAndIncrement(), new InfoSign(hc, s.getLocation(), type, objectName, multiplier, economy, enchantClass, lines));
 						updateSigns();
 					}
 				}
@@ -154,19 +154,19 @@ public class InfoSignHandler {
 		private long updateTaskId;
 		SignUpdater() {
 			this.signs = getInfoSigns();
-			updateTaskId = HC.mc.runRepeatingTask(new Runnable() {
+			updateTaskId = hc.getMC().runRepeatingTask(new Runnable() {
 				public void run() {
 					if (signs.isEmpty()) {
 						if (repeatUpdate.get()) {
 							signs = getInfoSigns();
 							if (signs.isEmpty()) {
-								HC.mc.cancelTask(updateTaskId);
+								hc.getMC().cancelTask(updateTaskId);
 								updateActive.set(false);
 								return;
 							}
 							repeatUpdate.set(false);
 						} else {
-							HC.mc.cancelTask(updateTaskId);
+							hc.getMC().cancelTask(updateTaskId);
 							updateActive.set(false);
 							return;
 						}

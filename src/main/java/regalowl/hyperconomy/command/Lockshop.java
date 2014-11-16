@@ -2,12 +2,13 @@ package regalowl.hyperconomy.command;
 
 
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.util.HyperLock;
 
 public class Lockshop extends BaseCommand implements HyperCommand {
 
-	public Lockshop() {
-		super(false);
+	public Lockshop(HyperConomy hc) {
+		super(hc, false);
 	}
 
 

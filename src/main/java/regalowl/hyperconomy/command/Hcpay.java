@@ -1,10 +1,12 @@
 package regalowl.hyperconomy.command;
 
+import regalowl.hyperconomy.HyperConomy;
+
 
 public class Hcpay extends BaseCommand implements HyperCommand{
 	
-	public Hcpay() {
-		super(true);
+	public Hcpay(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override

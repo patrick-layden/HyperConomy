@@ -2,7 +2,7 @@ package regalowl.hyperconomy.util;
 
 
 import regalowl.simpledatalib.event.EventHandler;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.event.minecraft.ChestShopClickEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
@@ -15,15 +15,17 @@ import regalowl.hyperconomy.shop.ChestShop;
 
 public class DisabledProtection {
 
-
-	public DisabledProtection() {
-		HC.hc.getHyperEventHandler().registerListener(this);
+	private transient HyperConomy hc;
+	
+	public DisabledProtection(HyperConomy hc) {
+		this.hc = hc;
+		hc.getHyperEventHandler().registerListener(this);
 	}
 
 
 	@EventHandler
 	public void onPlayerInteractEvent(HPlayerInteractEvent ievent) {
-		if (HC.mc.isTransactionSign(ievent.getBlock().getLocation())) {
+		if (hc.getMC().isTransactionSign(ievent.getBlock().getLocation())) {
 			ievent.cancel();
 		}
 	}
@@ -35,7 +37,7 @@ public class DisabledProtection {
 
 	@EventHandler
 	public void onBlockBreakEvent(HBlockBreakEvent bbevent) {
-		if (new ChestShop(bbevent.getBlock().getLocation()).isValid()) {
+		if (new ChestShop(hc, bbevent.getBlock().getLocation()).isValid()) {
 			bbevent.cancel();
 		}
 	}
@@ -43,7 +45,7 @@ public class DisabledProtection {
 	@EventHandler
 	public void onEntityExplodeEvent(HEntityExplodeEvent eeevent) {
 		for (HBlock b : eeevent.getBrokenBlocks()) {
-			if (new ChestShop(b.getLocation()).isValid()) {
+			if (new ChestShop(hc, b.getLocation()).isValid()) {
 				eeevent.cancel();
 			}
 		}
@@ -52,7 +54,7 @@ public class DisabledProtection {
 	@EventHandler
 	public void onBlockPistonExtendEvent(HBlockPistonExtendEvent bpeevent) {
 		for (HBlock b : bpeevent.getBlocks()) {
-			if (new ChestShop(b.getLocation()).isValid()) {
+			if (new ChestShop(hc, b.getLocation()).isValid()) {
 				bpeevent.cancel();
 			}
 		}
@@ -60,7 +62,7 @@ public class DisabledProtection {
 
 	@EventHandler
 	public void onBlockPistonRetractEvent(HBlockPistonRetractEvent bprevent) {
-		if (new ChestShop(bprevent.getRetractedBlock().getLocation()).isValid()) {
+		if (new ChestShop(hc, bprevent.getRetractedBlock().getLocation()).isValid()) {
 			bprevent.cancel();
 		}
 	}
@@ -69,7 +71,7 @@ public class DisabledProtection {
 	public void onBlockPlaceEvent(HBlockPlaceEvent bpevent) {
 		HBlock block = bpevent.getBlock();
 		for (HBlock b : block.getSurroundingBlocks()) {
-			if (new ChestShop(b.getLocation()).isValid()) {
+			if (new ChestShop(hc, b.getLocation()).isValid()) {
 				bpevent.cancel();
 			}
 		}

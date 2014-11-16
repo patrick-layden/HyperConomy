@@ -6,7 +6,7 @@ package regalowl.hyperconomy.transaction;
 
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperEventHandler;
@@ -27,7 +27,7 @@ import regalowl.hyperconomy.util.MessageBuilder;
 
 public class TransactionProcessor {
 
-	private HC hc;
+	private HyperConomy hc;
 	private HyperEventHandler heh;
 	private LanguageFile L;
 	private HyperPlayer hp;
@@ -54,11 +54,11 @@ public class TransactionProcessor {
 	private TransactionResponse response;
 	
 	
-	public TransactionProcessor(HyperPlayer hp) {
+	public TransactionProcessor(HyperConomy hc, HyperPlayer hp) {
+		this.hc = hc;
 		this.hp = hp;
-		hc = HC.hc;
 		L = hc.getLanguageFile();
-		dm = HC.hc.getDataManager();
+		dm = hc.getDataManager();
 		log = hc.getLog();
 		heh = hc.getHyperEventHandler();
 	}
@@ -99,7 +99,7 @@ public class TransactionProcessor {
 		
 		shopUnlimitedMoney = hc.getConf().getBoolean("shop.server-shops-have-unlimited-money");
 		
-		response = new TransactionResponse(hp);
+		response = new TransactionResponse(hc, hp);
 
 		switch (this.transactionType) {
 			case BUY:
@@ -535,7 +535,7 @@ public class TransactionProcessor {
 			response.setSuccessful();
 			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
 			
-			MessageBuilder mb = new MessageBuilder("CHEST_BUY_NOTIFICATION");
+			MessageBuilder mb = new MessageBuilder(hc, "CHEST_BUY_NOTIFICATION");
 			mb.setAmount(amount);
 			mb.setObjectName(hyperObject.getDisplayName());
 			mb.setPrice(price);
@@ -575,7 +575,7 @@ public class TransactionProcessor {
 			response.setSuccessful();
 			log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
 			
-			MessageBuilder mb = new MessageBuilder("CHEST_SELL_NOTIFICATION");
+			MessageBuilder mb = new MessageBuilder(hc, "CHEST_SELL_NOTIFICATION");
 			mb.setAmount(amount);
 			mb.setObjectName(hyperObject.getDisplayName());
 			mb.setPrice(price);
@@ -631,7 +631,7 @@ public class TransactionProcessor {
 			response.addSuccess(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, price, hyperObject.getDisplayName(), tradePartner.getName()), CommonFunctions.twoDecimals(price), hyperObject);
 			response.setSuccessful();
 			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), 1.0, price, 0.0, tradePartner.getName(), "chestshop");
-			MessageBuilder mb = new MessageBuilder("CHEST_ENCHANTMENT_BUY_NOTIFICATION");
+			MessageBuilder mb = new MessageBuilder(hc, "CHEST_ENCHANTMENT_BUY_NOTIFICATION");
 			mb.setAmount(1);
 			mb.setObjectName(hyperObject.getDisplayName());
 			mb.setPrice(price);

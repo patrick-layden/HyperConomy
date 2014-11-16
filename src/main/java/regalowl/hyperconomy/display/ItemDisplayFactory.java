@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
@@ -27,7 +27,7 @@ import regalowl.hyperconomy.minecraft.HLocation;
 
 public class ItemDisplayFactory {
 	
-	private HC hc; 
+	private HyperConomy hc; 
 	private long refreshthreadid;
 	private final long refreshInterval = 4800L;
 	//private final long refreshInterval = 100L;
@@ -35,9 +35,9 @@ public class ItemDisplayFactory {
 	private QueryResult dbData;
 
 
-	public ItemDisplayFactory() {
+	public ItemDisplayFactory(HyperConomy hc) {
 		try {
-			hc = HC.hc;
+			this.hc = hc;
 			if (hc.getConf().getBoolean("enable-feature.item-displays")) {
 				hc.getHyperEventHandler().registerListener(this);
 				loadDisplays();
@@ -56,7 +56,7 @@ public class ItemDisplayFactory {
 				public void run() {
 					SQLRead sr = hc.getSQLRead();
 					dbData = sr.select("SELECT * FROM hyperconomy_item_displays");
-					HC.mc.runTask(new Runnable() {
+					hc.getMC().runTask(new Runnable() {
 						public void run() {
 							while (dbData.next()) {
 								String w = dbData.getString("WORLD");
@@ -65,7 +65,7 @@ public class ItemDisplayFactory {
 								double z = dbData.getDouble("Z");
 								String name = dbData.getString("HYPEROBJECT");
 								HLocation l = new HLocation(w,x,y,z);
-								ItemDisplay display = new ItemDisplay(l, name, false);
+								ItemDisplay display = new ItemDisplay(hc, l, name, false);
 								HLocation key = new HLocation(w, x, y, z);
 								displays.put(key, display);
 							}
@@ -99,7 +99,7 @@ public class ItemDisplayFactory {
 	
 
 	public void startRefreshThread() {
-		refreshthreadid = HC.mc.runRepeatingTask(new Runnable() {
+		refreshthreadid = hc.getMC().runRepeatingTask(new Runnable() {
 			public void run() {
 				for (ItemDisplay display:displays.values()) {
 					display.refresh();
@@ -109,7 +109,7 @@ public class ItemDisplayFactory {
 	}
 	
 	public void cancelRefreshThread() {
-		HC.mc.cancelTask(refreshthreadid);
+		hc.getMC().cancelTask(refreshthreadid);
 	}
 	
 
@@ -144,9 +144,9 @@ public class ItemDisplayFactory {
 			}
 		}
 		HLocation l = new HLocation(w, x, y, z);
-		ItemDisplay display = new ItemDisplay(l, name, true);
+		ItemDisplay display = new ItemDisplay(hc, l, name, true);
 		displays.put(l, display);
-		if (l.isLoaded()) {
+		if (l.isLoaded(hc)) {
 			display.makeDisplay();
 			display.clearNearbyItems(7,false,false);
 		}
@@ -158,7 +158,7 @@ public class ItemDisplayFactory {
 	@EventHandler
 	public void onPlayerDropItemEvent(HPlayerDropItemEvent event) {
 		HItem i = event.getItem();
-		for (ItemDisplay display : HC.hc.getItemDisplay().getDisplays()) {
+		for (ItemDisplay display : hc.getItemDisplay().getDisplays()) {
 			if (!display.isActive()) continue;
 			if (display.blockItemDrop(i)) {
 				event.cancel();

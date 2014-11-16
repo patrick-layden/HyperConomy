@@ -1,14 +1,15 @@
 package regalowl.hyperconomy.command;
 
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.display.InfoSignHandler;
 
 public class Settax extends BaseCommand implements HyperCommand {
 
 
 
-	public Settax() {
-		super(false);
+	public Settax(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override

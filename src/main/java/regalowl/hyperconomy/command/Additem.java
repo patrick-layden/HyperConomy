@@ -9,8 +9,9 @@ import java.util.HashMap;
 
 
 
+
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.inventory.HInventory;
@@ -22,8 +23,8 @@ public class Additem extends BaseCommand implements HyperCommand {
 	
 	private ArrayList<String> usedNames = new ArrayList<String>();
 	
-	public Additem() {
-		super(true);
+	public Additem(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	
@@ -52,7 +53,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			HyperEconomy econ = super.getEconomy();
-			TradeObject ho =  econ.getHyperObject(hp.getItemInHand());
+			TradeObject ho =  econ.getTradeObject(hp.getItemInHand());
 			if (ho != null) {
 				data.addResponse(L.get("ALREADY_IN_DATABASE"));
 				return data;
@@ -71,8 +72,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 	
 	
 	public boolean addItem(TradeObject hobj, String economy) {
-		HC hc = HC.hc;
-		DataManager em = HC.hc.getDataManager();
+		DataManager em = hc.getDataManager();
 		if (hobj == null || economy == null) {return false;}
 		HyperEconomy he = em.getEconomy(economy);
 		if (he == null) {return false;}
@@ -99,7 +99,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 		values.put("MAXSTOCK", hobj.getMaxstock()+"");
 		values.put("DATA", hobj.getData());
 		hc.getSQLWrite().performInsert("hyperconomy_objects", values);
-		he.addHyperObject(hobj);
+		he.addTradeObject(hobj);
 		return true;
 	}
 	
@@ -109,11 +109,11 @@ public class Additem extends BaseCommand implements HyperCommand {
 	
 	public TradeObject generateNewHyperObject(HItemStack sis, String economy, String displayName, double value) {
 		if (sis == null || economy == null || displayName == null) {return null;}
-		DataManager em = HC.hc.getDataManager();
+		DataManager em = hc.getDataManager();
 		if (sis.isBlank()) {return null;}
 		HyperEconomy econ = em.getEconomy(economy);
 		if (econ == null) {return null;}
-		TradeObject ho =  econ.getHyperObject(sis);
+		TradeObject ho =  econ.getTradeObject(sis);
 		if (ho != null) {return null;}
 		String name = sis.getMaterial() + "_" + sis.getDurability();
 		if (econ.objectTest(name) || name.equalsIgnoreCase("")) {
@@ -147,7 +147,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 		} else {
 			median = 25000;
 		}
-		TradeObject hobj = new ComponentTradeItem(name, economy, displayName, aliases, "item", value, "false", value*2,
+		TradeObject hobj = new ComponentTradeItem(hc, name, economy, displayName, aliases, "item", value, "false", value*2,
 				0, median, "true", value*2, 1000000000,0, 1000000000, sis.serialize());
 		return hobj;
 	}
@@ -171,7 +171,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 	}
 	
 	private boolean nameInUse(String name) {
-		if (HC.hc.getDataManager().getDefaultEconomy().objectTest(name)) {
+		if (hc.getDataManager().getDefaultEconomy().objectTest(name)) {
 			return true;
 		}
 		for (String cName:usedNames) {

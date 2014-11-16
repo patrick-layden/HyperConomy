@@ -11,8 +11,9 @@ import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
 import regalowl.simpledatalib.event.EventHandler;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.Shop;
@@ -23,7 +24,8 @@ import regalowl.hyperconomy.transaction.TransactionType;
 
 public class FrameShop {
 
-	private HC hc;
+	private transient HyperConomy hc;
+	
 	private short mapId;
 	private TradeObject ho;
 	private int tradeAmount;
@@ -36,8 +38,8 @@ public class FrameShop {
 	private Shop s;
 
 	@SuppressWarnings("deprecation")
-	public FrameShop(HLocation l, TradeObject ho, Shop s, int amount) {
-		hc = HC.hc;
+	public FrameShop(MineCraftConnector mc, HLocation l, TradeObject ho, Shop s, int amount) {
+		this.hc = mc.getHC();
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
 			delete();
@@ -50,7 +52,8 @@ public class FrameShop {
 		this.ho = ho;
 		this.tradeAmount = amount;
 		this.s = s;
-		MapView mapView = Bukkit.getServer().createMap(BukkitCommon.getLocation(l).getWorld());
+		BukkitConnector bc = (BukkitConnector)mc;
+		MapView mapView = Bukkit.getServer().createMap(bc.getBukkitCommon().getLocation(l).getWorld());
 		mapId = mapView.getId();
 		String shop = "";
 		if (s != null) {
@@ -60,8 +63,8 @@ public class FrameShop {
 		render();
 	}
 
-	public FrameShop(short mapId, Location l, TradeObject ho, Shop s, int amount) {
-		hc = HC.hc;
+	public FrameShop(HyperConomy hc, short mapId, Location l, TradeObject ho, Shop s, int amount) {
+		this.hc = hc;
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
 			delete();
@@ -127,7 +130,7 @@ public class FrameShop {
 		for (MapRenderer mr : mapView.getRenderers()) {
 			mapView.removeRenderer(mr);
 		}
-		fsr = new FrameShopRenderer(ho);
+		fsr = new FrameShopRenderer(hc, ho);
 		mapView.addRenderer(fsr);
 		ItemStack stack = new ItemStack(Material.MAP, 1);
 		stack.setDurability(mapId);

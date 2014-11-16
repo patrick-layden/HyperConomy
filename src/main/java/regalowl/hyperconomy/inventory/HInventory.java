@@ -2,19 +2,22 @@ package regalowl.hyperconomy.inventory;
 
 import java.util.ArrayList;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.minecraft.HLocation;
 
 public class HInventory {
 
+	private transient HyperConomy hc;
+	
 	private ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 	private int heldSlot;
 	private HInventoryType inventoryType;
 	private String owner;
 	private HLocation location;
 
-	public HInventory(ArrayList<HItemStack> items, HInventoryType inventoryType) {
+	public HInventory(HyperConomy hc, ArrayList<HItemStack> items, HInventoryType inventoryType) {
+		this.hc = hc;
 		this.items.addAll(items);
 		this.inventoryType = inventoryType;
 	}
@@ -41,7 +44,7 @@ public class HInventory {
 	}
 	
 	public HyperPlayer getHyperPlayer() {
-		if (isPlayerInventory()) return HC.hc.getHyperPlayerManager().getHyperPlayer(owner);
+		if (isPlayerInventory()) return hc.getHyperPlayerManager().getHyperPlayer(owner);
 		return null;
 	}
 	
@@ -59,7 +62,7 @@ public class HInventory {
 	}
 	
 	public void clearSlot(int slot) {
-		items.set(slot, new HItemStack());
+		items.set(slot, new HItemStack(hc));
 	}
 
 	public void setItem(int slot, HItemStack item) {
@@ -79,7 +82,7 @@ public class HInventory {
 	}
 	
 	public void updateInventory() {
-		HC.mc.setInventory(this);
+		hc.getMC().setInventory(this);
 	}
 	
 	public void add(int addAmount, HItemStack addStack) {
@@ -110,7 +113,7 @@ public class HInventory {
 			}
 			if (addAmount <= 0) break;
 		}
-		if (addAmount != 0) HC.hc.gSDL().getErrorWriter().writeError("HInventory add() failure; " + addAmount + " remaining.");
+		if (addAmount != 0) hc.gSDL().getErrorWriter().writeError("HInventory add() failure; " + addAmount + " remaining.");
 		updateInventory();
 	}
 	
@@ -148,7 +151,7 @@ public class HInventory {
 			slot++;
 			if (slot >= getSize()) break;
 		}
-		if (removeAmount != 0) HC.hc.gSDL().getErrorWriter().writeError("HInventory remove() failure.  Items not successfully removed; amount = '" + removeAmount + "'");
+		if (removeAmount != 0) hc.gSDL().getErrorWriter().writeError("HInventory remove() failure.  Items not successfully removed; amount = '" + removeAmount + "'");
 		updateInventory();
 		return actuallyRemoved;
 	}

@@ -5,7 +5,7 @@ package regalowl.hyperconomy.shop;
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -32,14 +32,14 @@ import regalowl.hyperconomy.util.LanguageFile;
 
 public class ChestShopHandler {
 
-	private HC hc;
+	private HyperConomy hc;
 	private LanguageFile L;
 	private DataManager em;
 
 
-	public ChestShopHandler() {
-		hc = HC.hc;
-		em = HC.hc.getDataManager();
+	public ChestShopHandler(HyperConomy hc) {
+		this.hc = hc;
+		em = hc.getDataManager();
 		L = hc.getLanguageFile();
 		if (hc.getConf().getBoolean("enable-feature.chest-shops")) hc.getHyperEventHandler().registerListener(this);
 	}
@@ -47,12 +47,12 @@ public class ChestShopHandler {
 
 	@EventHandler
 	public void onBlockBreakEvent(HBlockBreakEvent bbevent) {
-		if (HC.mc.isChestShopChest(bbevent.getBlock().getLocation())) {
+		if (hc.getMC().isChestShopChest(bbevent.getBlock().getLocation())) {
 			bbevent.cancel();
-		} else if (HC.mc.isChestShopSign(bbevent.getBlock().getLocation())) {
+		} else if (hc.getMC().isChestShopSign(bbevent.getBlock().getLocation())) {
 			if (bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) return;
 			bbevent.cancel();
-		} else if (HC.mc.isChestShopSignBlock(bbevent.getBlock().getLocation())) {
+		} else if (hc.getMC().isChestShopSignBlock(bbevent.getBlock().getLocation())) {
 			bbevent.cancel();
 		}
 	}
@@ -64,7 +64,7 @@ public class ChestShopHandler {
 	@EventHandler
 	public void onEntityExplodeEvent(HEntityExplodeEvent eeevent) {
 		for (HBlock b : eeevent.getBrokenBlocks()) {
-			if (new ChestShop(b.getLocation()).isValid()) {
+			if (new ChestShop(hc, b.getLocation()).isValid()) {
 				eeevent.cancel();
 			}
 		}
@@ -73,7 +73,7 @@ public class ChestShopHandler {
 	@EventHandler
 	public void onBlockPistonExtendEvent(HBlockPistonExtendEvent bpeevent) {
 		for (HBlock b : bpeevent.getBlocks()) {
-			if (new ChestShop(b.getLocation()).isValid()) {
+			if (new ChestShop(hc, b.getLocation()).isValid()) {
 				bpeevent.cancel();
 			}
 		}
@@ -81,7 +81,7 @@ public class ChestShopHandler {
 
 	@EventHandler
 	public void onBlockPistonRetractEvent(HBlockPistonRetractEvent bprevent) {
-		if (new ChestShop(bprevent.getRetractedBlock().getLocation()).isValid()) {
+		if (new ChestShop(hc, bprevent.getRetractedBlock().getLocation()).isValid()) {
 			bprevent.cancel();
 		}
 	}
@@ -90,7 +90,7 @@ public class ChestShopHandler {
 	public void onBlockPlaceEvent(HBlockPlaceEvent bpevent) {
 		HBlock block = bpevent.getBlock();
 		for (HBlock b : block.getSurroundingBlocks()) {
-			if (HC.mc.isChestShopChest(b.getLocation())) {
+			if (hc.getMC().isChestShopChest(b.getLocation())) {
 				bpevent.cancel();
 			}
 		}
@@ -102,13 +102,13 @@ public class ChestShopHandler {
 		try {
 			HSign sign = event.getSign();
 			HyperPlayer hp = event.getHyperPlayer();
-			String line2 = HC.mc.removeColor(sign.getLine(1)).trim();
+			String line2 = hc.getMC().removeColor(sign.getLine(1)).trim();
 			if (!line2.equalsIgnoreCase("[Trade]") && !line2.equalsIgnoreCase("[Buy]") && !line2.equalsIgnoreCase("[Sell]")) {
 				return;
 			}
 			HLocation cLoc = new HLocation(sign.getLocation());
 			cLoc.setY(cLoc.getY() - 1);
-			if (!HC.mc.isChest(cLoc)) {
+			if (!hc.getMC().isChest(cLoc)) {
 				sign.setLine(0, "&4Place a");
 				sign.setLine(1, "&4chest");
 				sign.setLine(2, "&4below");
@@ -122,7 +122,7 @@ public class ChestShopHandler {
 				sign.update();
 				return;
 			}
-			ChestShop cShop = HC.mc.getChestShop(cLoc);
+			ChestShop cShop = hc.getMC().getChestShop(cLoc);
 			if (cShop.isDoubleChest()) {
 				sign.setLine(0, "&4You can't");
 				sign.setLine(1, "&4use a");
@@ -255,10 +255,10 @@ public class ChestShopHandler {
 			}
 			TradeObject hyperObject = null;
 			if (!clickedItem.hasEnchantments()) {
-				hyperObject = chestOwnerEconomy.getHyperObject(clickedItem);
+				hyperObject = chestOwnerEconomy.getTradeObject(clickedItem);
 				if (hyperObject == null) {
 					if (hasStaticPrice) {
-						hyperObject = TempTradeItem.generate(clickedItem);
+						hyperObject = TempTradeItem.generate(hc, clickedItem);
 					} else {
 						event.cancel();
 						return;
@@ -373,7 +373,7 @@ public class ChestShopHandler {
 							double price = 0;
 							for (HEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
 								String fnam = enchantment.getEnchantmentName() + enchantment.getLvl();
-								TradeObject ho = chestOwnerEconomy.getHyperObject(fnam);
+								TradeObject ho = chestOwnerEconomy.getTradeObject(fnam);
 								price += ho.getSellPrice(EnchantmentClass.fromString(clicker.getItemInHand().getMaterial()), clicker);
 								if (hasStaticPrice) {
 									price = staticPrice;
@@ -464,7 +464,7 @@ public class ChestShopHandler {
 						if (cs.isBuyChest()) {
 							for (HEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
 								String fnam = enchantment.getEnchantmentName() + enchantment.getLvl();
-								TradeObject ho = chestOwnerEconomy.getHyperObject(fnam);
+								TradeObject ho = chestOwnerEconomy.getTradeObject(fnam);
 								PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_ITEM);
 								pt.setHyperObject(ho);
 								pt.setTradePartner(owner);

@@ -20,8 +20,9 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
@@ -30,15 +31,17 @@ import regalowl.hyperconomy.util.LanguageFile;
 
 public class FrameShopHandler implements Listener {
 
-	private HC hc;
+	private BukkitConnector mc;
+	private HyperConomy hc;
 	private DataManager em;
 	private HashMap<String, FrameShop> frameShops = new HashMap<String, FrameShop>();
 	private QueryResult dbData;
 
-	public FrameShopHandler() {
-		hc = HC.hc;
-		em = HC.hc.getDataManager();
-		Bukkit.getPluginManager().registerEvents(this, (BukkitConnector)HC.mc);
+	public FrameShopHandler(MineCraftConnector mc) {
+		this.mc = (BukkitConnector) mc;
+		this.hc = mc.getHC();
+		em = hc.getDataManager();
+		Bukkit.getPluginManager().registerEvents(this, (BukkitConnector)hc.getMC());
 		load();
 	}
 
@@ -47,7 +50,7 @@ public class FrameShopHandler implements Listener {
 			public void run() {
 				frameShops.clear();
 				dbData = hc.getSQLRead().select("SELECT * FROM hyperconomy_frame_shops");
-				HC.mc.runTask(new Runnable() {
+				hc.getMC().runTask(new Runnable() {
 					public void run() {
 						while (dbData.next()) {
 							double x = dbData.getDouble("X");
@@ -60,8 +63,8 @@ public class FrameShopHandler implements Listener {
 							if (s != null) {
 								economy = s.getEconomy();
 							}
-							TradeObject ho = em.getEconomy(economy).getHyperObject(dbData.getString("HYPEROBJECT"), s);
-							FrameShop fs = new FrameShop((short) (int) dbData.getInt("ID"), l, ho, s, dbData.getInt("TRADE_AMOUNT"));
+							TradeObject ho = em.getEconomy(economy).getTradeObject(dbData.getString("HYPEROBJECT"), s);
+							FrameShop fs = new FrameShop(hc, (short) (int) dbData.getInt("ID"), l, ho, s, dbData.getInt("TRADE_AMOUNT"));
 							frameShops.put(fs.getKey(), fs);
 
 						}
@@ -98,7 +101,7 @@ public class FrameShopHandler implements Listener {
 	}
 
 	public void createFrameShop(HLocation l, TradeObject ho, Shop s) {
-		FrameShop fs = new FrameShop(l, ho, s, 1);
+		FrameShop fs = new FrameShop(mc, l, ho, s, 1);
 		frameShops.put(fs.getKey(), fs);
 	}
 
@@ -109,18 +112,18 @@ public class FrameShopHandler implements Listener {
 			return;
 		}
 		Entity entity = event.getEntity();
-		LanguageFile L = HC.hc.getLanguageFile();
+		LanguageFile L = hc.getLanguageFile();
 		if (event.getDamager() instanceof Player) {
 			Player p = (Player) event.getDamager();
 			if (entity instanceof ItemFrame) {
 				if (frameShopExists(entity.getLocation())) {
-					if (hc.getHyperLock().isLocked(BukkitCommon.getPlayer(p))) {
-						hc.getHyperLock().sendLockMessage(BukkitCommon.getPlayer(p));
+					if (hc.getHyperLock().isLocked(mc.getBukkitCommon().getPlayer(p))) {
+						hc.getHyperLock().sendLockMessage(mc.getBukkitCommon().getPlayer(p));
 						event.setCancelled(true);
 						return;
 					}
 					FrameShop fs = getFrameShop(entity.getLocation());
-					HyperPlayer hp = BukkitCommon.getPlayer(p);
+					HyperPlayer hp = mc.getBukkitCommon().getPlayer(p);
 					Shop s = fs.getShop();
 					PlayerShop ps = null;
 					if (s instanceof PlayerShop) {
@@ -152,7 +155,7 @@ public class FrameShopHandler implements Listener {
 			return;
 		}
 		Entity entity = event.getRightClicked();
-		LanguageFile L = HC.hc.getLanguageFile();
+		LanguageFile L = hc.getLanguageFile();
 		if (entity instanceof ItemFrame) {
 			ItemFrame iFrame = (ItemFrame) entity;
 			if (iFrame.getItem().getType().equals(Material.MAP)) {
@@ -160,11 +163,11 @@ public class FrameShopHandler implements Listener {
 				if (frameShopExists(l)) {
 					event.setCancelled(true);
 					Player p = event.getPlayer();
-					if (hc.getHyperLock().isLocked(BukkitCommon.getPlayer(p))) {
-						hc.getHyperLock().sendLockMessage(BukkitCommon.getPlayer(p));
+					if (hc.getHyperLock().isLocked(mc.getBukkitCommon().getPlayer(p))) {
+						hc.getHyperLock().sendLockMessage(mc.getBukkitCommon().getPlayer(p));
 						return;
 					}
-					HyperPlayer hp = BukkitCommon.getPlayer(p);
+					HyperPlayer hp = mc.getBukkitCommon().getPlayer(p);
 					FrameShop fs = getFrameShop(l);
 					if (p.hasPermission("hyperconomy.buy")) {
 						fs.buy(hp);

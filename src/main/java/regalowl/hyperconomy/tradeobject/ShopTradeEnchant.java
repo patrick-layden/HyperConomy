@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.tradeobject;
 
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -12,8 +13,8 @@ public class ShopTradeEnchant extends BasicShopTradeObject implements TradeObjec
 
 	private static final long serialVersionUID = -213806188136759445L;
 
-	public ShopTradeEnchant(String playerShop, TradeObject ho, double stock, double buyPrice, double sellPrice, int maxStock, TradeObjectStatus status, boolean useEconomyStock) {
-		super(playerShop, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
+	public ShopTradeEnchant(HyperConomy hc, String playerShop, TradeObject ho, double stock, double buyPrice, double sellPrice, int maxStock, TradeObjectStatus status, boolean useEconomyStock) {
+		super(hc, playerShop, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 	}
 
 	@Override

@@ -5,23 +5,22 @@ import java.util.ArrayList;
 
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.util.LanguageFile;
 
 public class Hyperlog extends BaseCommand implements HyperCommand {
 
 	private String statement;
 	private ArrayList<String> result;
-	private HC hc;
+	private HyperConomy hc;
 	
-	public Hyperlog() {
-		super(false);
+	public Hyperlog(HyperConomy hc) {
+		super(hc, false);
 	}
 	
 	@Override
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
-		hc = HC.hc;
 		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length % 2 != 0 || args.length == 0) {
@@ -114,7 +113,7 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 			new Thread(new Runnable() {
 	    		public void run() {
 	    			result = getHyperLog(statement);
-	    			HC.mc.runTask(new Runnable() {
+	    			hc.getMC().runTask(new Runnable() {
 	    	    		public void run() {
 	    	    			int m = result.size();
 	    	    			if (m > 100) {
@@ -144,7 +143,7 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 	 * @return a display of the selected HyperLog entry
 	 */
 	private ArrayList<String> getHyperLog(String statement) {
-		SQLRead sr = HC.hc.getSQLRead();
+		SQLRead sr = hc.getSQLRead();
 		ArrayList<String> entries = new ArrayList<String>();
 		LanguageFile L = hc.getLanguageFile();
 		QueryResult result = sr.select(statement);

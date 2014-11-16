@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.event.EventHandler;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TransactionEvent;
@@ -19,8 +19,8 @@ import regalowl.hyperconomy.transaction.TransactionType;
 
 public class Notify extends BaseCommand implements HyperCommand {
 
-	public Notify() {
-		super(false);
+	public Notify(HyperConomy hc) {
+		super(hc, false);
 		enabled = hc.getConf().getBoolean("enable-feature.price-change-notifications");
 		notifyNames = CommonFunctions.explode(hc.getConf().getString("shop.send-price-change-notifications-for"), ",");
 		hc.getHyperEventHandler().registerListener(this);
@@ -71,8 +71,8 @@ public class Notify extends BaseCommand implements HyperCommand {
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		try {
-			HyperEconomy he = HC.hc.getDataManager().getEconomy("default");
-			TradeObject ho = he.getHyperObject(args[0]);
+			HyperEconomy he = hc.getDataManager().getEconomy("default");
+			TradeObject ho = he.getTradeObject(args[0]);
 			if (!enabled) {
 				data.addResponse(L.get("NOTIFICATIONS_DISABLED"));
 				return data;

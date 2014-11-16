@@ -1,12 +1,12 @@
-package regalowl.hyperconomy;
+package regalowl.hyperconomy.account;
 
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import regalowl.simpledatalib.sql.QueryResult;
-import regalowl.hyperconomy.account.HyperAccount;
-import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.DataManager;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.event.minecraft.HPlayerJoinEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerQuitEvent;
@@ -16,18 +16,18 @@ import regalowl.simpledatalib.file.FileConfiguration;
 
 public class HyperPlayerManager {
 
-	private HC hc;
-	private DataManager dm;
+	private transient HyperConomy hc;
+	private transient DataManager dm;
+	private transient FileConfiguration config;
 	private boolean playersLoaded;
 	private String defaultServerShopAccount;
-	private FileConfiguration config;
 	private boolean uuidSupport;
 	private ConcurrentHashMap<String, HyperPlayer> hyperPlayers = new ConcurrentHashMap<String, HyperPlayer>();
 	private ConcurrentHashMap<String, String> uuidIndex = new ConcurrentHashMap<String, String>();
 	
-	public HyperPlayerManager(DataManager dm) {
-		hc = HC.hc;
-		this.dm = dm;
+	public HyperPlayerManager(HyperConomy hc) {
+		this.hc = hc;
+		this.dm = hc.getDataManager();
 		playersLoaded = false;
 		config = hc.getConf();
 		defaultServerShopAccount = config.getString("shop.default-server-shop-account");
@@ -55,7 +55,7 @@ public class HyperPlayerManager {
 			defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
 			defaultAccount.setUUID(UUID.randomUUID().toString());
 		}
-		HC.mc.runTask(new Runnable() {
+		hc.getMC().runTask(new Runnable() {
 			public void run() {
 				addOnlinePlayers();
 			}
@@ -76,7 +76,7 @@ public class HyperPlayerManager {
 	}
 	
 	public ArrayList<HyperPlayer> getOnlinePlayers() {
-		return HC.mc.getOnlinePlayers();
+		return hc.getMC().getOnlinePlayers();
 	}
 	
 	
@@ -89,7 +89,7 @@ public class HyperPlayerManager {
 			}
 			String name = ev.getHyperPlayer().getName();
 			if (name.equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
-				HC.mc.kickPlayer(ev.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+				hc.getMC().kickPlayer(ev.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
 			}
 			if (!playerAccountExists(name)) {
 				addPlayer(name);
@@ -133,8 +133,8 @@ public class HyperPlayerManager {
 	@SuppressWarnings("deprecation")
 	public boolean playerAccountExists(String name) {
 		if (name == null || name == "") {return false;}
-		if (HC.mc.useExternalEconomy()) {
-			return HC.mc.getEconomy().hasAccount(name);
+		if (hc.getMC().useExternalEconomy()) {
+			return hc.getMC().getEconomy().hasAccount(name);
 		} else {
 			return hyperPlayers.containsKey(name.toLowerCase());
 		}
@@ -143,8 +143,8 @@ public class HyperPlayerManager {
 	@SuppressWarnings("deprecation")
 	public boolean playerAccountExists(UUID uuid) {
 		if (uuid == null) {return false;}
-		if (HC.mc.useExternalEconomy()) {
-			return HC.mc.getEconomy().hasAccount(getHyperPlayer(uuid).getName());
+		if (hc.getMC().useExternalEconomy()) {
+			return hc.getMC().getEconomy().hasAccount(getHyperPlayer(uuid).getName());
 		} else {
 			return uuidIndex.containsKey(uuid.toString());
 		}
@@ -200,7 +200,7 @@ public class HyperPlayerManager {
 			String pName = uuidIndex.get(uuid.toString());
 			return hyperPlayers.get(pName);
 		} else {
-			MineCraftConnector mc = HC.mc;
+			MineCraftConnector mc = hc.getMC();
 			if (!mc.playerExists(uuid)) return null;
 			return mc.getPlayer(uuid);
 		}
@@ -255,7 +255,7 @@ public class HyperPlayerManager {
 		String playerName = player.toLowerCase();
 		if (!hyperPlayers.containsKey(playerName)) {
 			//dm.getHyperBankManager().renameBanksWithThisName(playerName);
-			HyperPlayer newHp = new HyperPlayer(player);
+			HyperPlayer newHp = new HyperPlayer(hc, player);
 			hyperPlayers.put(playerName, newHp);
 			if (newHp.getUUIDString() != null && playerName != null) {
 				uuidIndex.put(newHp.getUUIDString(), playerName);
@@ -266,7 +266,7 @@ public class HyperPlayerManager {
 			if (hp != null) {
 				return hp;
 			} else {
-				HyperPlayer newHp = new HyperPlayer(player);
+				HyperPlayer newHp = new HyperPlayer(hc, player);
 				hyperPlayers.put(playerName, newHp);
 				if (newHp.getUUIDString() != null && playerName != null) {
 					uuidIndex.put(newHp.getUUIDString(), playerName);

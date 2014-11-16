@@ -34,7 +34,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.display.ItemDisplay;
 import regalowl.hyperconomy.event.minecraft.ChestShopClickEvent;
@@ -59,9 +59,11 @@ import regalowl.hyperconomy.shop.ChestShop;
 public class BukkitListener implements Listener {
 
 	private BukkitConnector bc;
+	private HyperConomy hc;
 	
 	public BukkitListener(BukkitConnector bc) {
 		this.bc = bc;
+		this.hc = bc.getHC();
 	}
 	
 
@@ -80,39 +82,39 @@ public class BukkitListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChangeEvent(SignChangeEvent event) {
 		if (event.isCancelled()) return;
-		HyperPlayer hp = BukkitCommon.getPlayer(event.getPlayer());
-		HLocation sl = BukkitCommon.getLocation(event.getBlock().getLocation());
-		HSign sign = HC.mc.getSign(sl);
+		HyperPlayer hp = bc.getBukkitCommon().getPlayer(event.getPlayer());
+		HLocation sl = bc.getBukkitCommon().getLocation(event.getBlock().getLocation());
+		HSign sign = hc.getMC().getSign(sl);
 		ArrayList<String> lines = new ArrayList<String>();
 		for (String li:event.getLines()) {
 			lines.add(li);
 		}
 		sign.setLines(lines);
 		HSignChangeEvent se = new HSignChangeEvent(sign, hp);
-		HC.hc.getHyperEventHandler().fireEvent(se);
+		hc.getHyperEventHandler().fireEvent(se);
 		if (se.isCancelled()) event.setCancelled(true);
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerItemHeldEvent(PlayerItemHeldEvent pihevent) {
 		if (pihevent.isCancelled()) return;
-		HyperPlayer hp = BukkitCommon.getPlayer(pihevent.getPlayer());
+		HyperPlayer hp = bc.getBukkitCommon().getPlayer(pihevent.getPlayer());
 		HPlayerItemHeldEvent hpih = new HPlayerItemHeldEvent(hp, pihevent.getPreviousSlot(), pihevent.getNewSlot());
-		HC.hc.getHyperEventHandler().fireEvent(hpih);
+		hc.getHyperEventHandler().fireEvent(hpih);
 		if (hpih.isCancelled()) pihevent.setCancelled(true);
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		HyperPlayer hp = HC.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
-		HC.hc.getHyperEventHandler().fireEvent(new HPlayerJoinEvent(hp));
+		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
+		hc.getHyperEventHandler().fireEvent(new HPlayerJoinEvent(hp));
 	}
 	
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		HyperPlayer hp = HC.hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
-		HC.hc.getHyperEventHandler().fireEvent(new HPlayerQuitEvent(hp));
+		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
+		hc.getHyperEventHandler().fireEvent(new HPlayerQuitEvent(hp));
 	}
 	
 
@@ -120,9 +122,9 @@ public class BukkitListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreak(BlockBreakEvent bbevent) {
 		if (bbevent.isCancelled()) {return;}
-		HyperPlayer hp = BukkitCommon.getPlayer(bbevent.getPlayer());
-		HBlockBreakEvent event = new HBlockBreakEvent(BukkitCommon.getBlock(bbevent.getBlock()), hp);
-		HC.hc.getHyperEventHandler().fireEvent(event);
+		HyperPlayer hp = bc.getBukkitCommon().getPlayer(bbevent.getPlayer());
+		HBlockBreakEvent event = new HBlockBreakEvent(bc.getBukkitCommon().getBlock(bbevent.getBlock()), hp);
+		hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) bbevent.setCancelled(true);
 	}
 
@@ -132,10 +134,10 @@ public class BukkitListener implements Listener {
 		if (eeevent.isCancelled()) {return;}
 		ArrayList<HBlock> blocks = new ArrayList<HBlock>();
 		for (Block b:eeevent.blockList()) {
-			blocks.add(BukkitCommon.getBlock(b));
+			blocks.add(bc.getBukkitCommon().getBlock(b));
 		}
 		HEntityExplodeEvent event = new HEntityExplodeEvent(blocks);
-		HC.hc.getHyperEventHandler().fireEvent(event);
+		hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) eeevent.setCancelled(true);
 	}
 
@@ -144,26 +146,26 @@ public class BukkitListener implements Listener {
 		if (bpeevent.isCancelled()) {return;}
 		ArrayList<HBlock> blocks = new ArrayList<HBlock>();
 		for (Block b:bpeevent.getBlocks()) {
-			blocks.add(BukkitCommon.getBlock(b));
+			blocks.add(bc.getBukkitCommon().getBlock(b));
 		}
 		HBlockPistonExtendEvent event = new HBlockPistonExtendEvent(blocks);
-		HC.hc.getHyperEventHandler().fireEvent(event);
+		hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) bpeevent.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonRetractEvent(BlockPistonRetractEvent bprevent) {
 		if (bprevent.isCancelled()) {return;}
-		HBlockPistonRetractEvent event = new HBlockPistonRetractEvent(BukkitCommon.getBlock(bprevent.getBlock()));
-		HC.hc.getHyperEventHandler().fireEvent(event);
+		HBlockPistonRetractEvent event = new HBlockPistonRetractEvent(bc.getBukkitCommon().getBlock(bprevent.getBlock()));
+		hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) bprevent.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPlaceEvent(BlockPlaceEvent bpevent) {
 		if (bpevent.isCancelled()) {return;}
-		HBlockPlaceEvent event = new HBlockPlaceEvent(BukkitCommon.getBlock(bpevent.getBlock()));
-		HC.hc.getHyperEventHandler().fireEvent(event);
+		HBlockPlaceEvent event = new HBlockPlaceEvent(bc.getBukkitCommon().getBlock(bpevent.getBlock()));
+		hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) bpevent.setCancelled(true);
 	}
 	
@@ -171,15 +173,15 @@ public class BukkitListener implements Listener {
 	public void onPlayerInteractEvent(PlayerInteractEvent event) {
 		if (event.isCancelled()) return;
 		if (!event.hasBlock()) return;
-		HyperPlayer hp = BukkitCommon.getPlayer(event.getPlayer());
-		HBlock block = BukkitCommon.getBlock(event.getClickedBlock());
+		HyperPlayer hp = bc.getBukkitCommon().getPlayer(event.getPlayer());
+		HBlock block = bc.getBukkitCommon().getBlock(event.getClickedBlock());
 		HPlayerInteractEvent hpie;
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			hpie = new HPlayerInteractEvent(hp, block, true);
 		} else {
 			hpie = new HPlayerInteractEvent(hp, block, false);
 		}
-		HC.hc.getHyperEventHandler().fireEvent(hpie);
+		hc.getHyperEventHandler().fireEvent(hpie);
 		if (hpie.isCancelled()) event.setCancelled(true);
 	}
 	
@@ -199,11 +201,11 @@ public class BukkitListener implements Listener {
 		InventoryHolder ih = icevent.getView().getTopInventory().getHolder();
 		if (!(ih instanceof Chest)) return;
 		Chest c = (Chest)ih;
-		if (!BukkitCommon.isChestShopChest(BukkitCommon.getLocation(c.getLocation()))) return;
-		ChestShop cs = new ChestShop(BukkitCommon.getLocation(c.getBlock().getLocation()));
-		HyperPlayer clicker = HC.hc.getHyperPlayerManager().getHyperPlayer(p.getName());
+		if (!bc.getBukkitCommon().isChestShopChest(bc.getBukkitCommon().getLocation(c.getLocation()))) return;
+		ChestShop cs = new ChestShop(hc, bc.getBukkitCommon().getLocation(c.getBlock().getLocation()));
+		HyperPlayer clicker = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
 		int slot = icevent.getRawSlot();
-		HItemStack clickedStack = BukkitCommon.getSerializableItemStack(icevent.getCurrentItem());
+		HItemStack clickedStack = bc.getBukkitCommon().getSerializableItemStack(icevent.getCurrentItem());
 		ChestShopClickEvent event = new ChestShopClickEvent(clicker, cs, slot, clickedStack);
 		if (icevent.isShiftClick()) {
 			event.setShiftClick();
@@ -212,7 +214,7 @@ public class BukkitListener implements Listener {
 		} else if (icevent.isRightClick()) {
 			event.setRightClick();
 		}
-		HC.hc.getHyperEventHandler().fireEvent(event);
+		hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) icevent.setCancelled(true);
 	}
 	
@@ -221,9 +223,9 @@ public class BukkitListener implements Listener {
 	public void onItemDisplayLoad(ChunkLoadEvent event) {
 		Chunk chunk = event.getChunk();
 		if (chunk == null) return;
-		for (ItemDisplay display : HC.hc.getItemDisplay().getDisplays()) {
+		for (ItemDisplay display : hc.getItemDisplay().getDisplays()) {
 			if (display == null) continue;
-			if (BukkitCommon.chunkContainsLocation(display.getLocation(), chunk)) {
+			if (bc.getBukkitCommon().chunkContainsLocation(display.getLocation(), chunk)) {
 				display.refresh();
 				return;
 			}
@@ -234,9 +236,9 @@ public class BukkitListener implements Listener {
 	public void onItemDisplayUnload(ChunkUnloadEvent event) {
 		Chunk chunk = event.getChunk();
 		if (chunk == null) {return;}
-		for (ItemDisplay display:HC.hc.getItemDisplay().getDisplays()) {
+		for (ItemDisplay display:hc.getItemDisplay().getDisplays()) {
 			if (display == null) {continue;}
-			if (BukkitCommon.chunkContainsLocation(display.getLocation(), chunk)) {
+			if (bc.getBukkitCommon().chunkContainsLocation(display.getLocation(), chunk)) {
 				display.removeItem();
 				return;
 			}
@@ -245,9 +247,9 @@ public class BukkitListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPickupDisplayCreatureSpawn(CreatureSpawnEvent event) {
-		HLocation l = BukkitCommon.getLocation(event.getLocation());
+		HLocation l = bc.getBukkitCommon().getLocation(event.getLocation());
 		HMob mob = new HMob(l, event.getEntity().getCanPickupItems());
-		for (ItemDisplay display : HC.hc.getItemDisplay().getDisplays()) {
+		for (ItemDisplay display : hc.getItemDisplay().getDisplays()) {
 			if (!display.isActive()) {continue;}
 			if (display.blockEntityPickup(mob)) {
 				event.getEntity().setCanPickupItems(false);
@@ -267,7 +269,7 @@ public class BukkitListener implements Listener {
 				}
 			}
 		}
-		for (ItemDisplay display : HC.hc.getItemDisplay().getDisplays()) {
+		for (ItemDisplay display : hc.getItemDisplay().getDisplays()) {
 			if (display.getEntityId() == item.getEntityId() || item.equals(display.getItem())) {
 				event.setCancelled(true);
 				return;
@@ -278,8 +280,8 @@ public class BukkitListener implements Listener {
 	@EventHandler
 	public void onPlayerDropItemEvent(PlayerDropItemEvent devent) {
 		if (devent.isCancelled()) return;
-		HPlayerDropItemEvent event = new HPlayerDropItemEvent(BukkitCommon.getItem(devent.getItemDrop()), BukkitCommon.getPlayer(devent.getPlayer()));
-		HC.hc.getHyperEventHandler().fireEvent(event);
+		HPlayerDropItemEvent event = new HPlayerDropItemEvent(bc.getBukkitCommon().getItem(devent.getItemDrop()), bc.getBukkitCommon().getPlayer(devent.getPlayer()));
+		hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) devent.setCancelled(true);
 	}
 	

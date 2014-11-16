@@ -8,7 +8,7 @@ import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -23,7 +23,7 @@ import regalowl.hyperconomy.tradeobject.TradeObjectType;
  */
 public class History {
 	
-	private HC hc;
+	private HyperConomy hc;
 	private DataManager em;
 	private InfoSignHandler isign;
 	private SQLWrite sw;
@@ -39,11 +39,11 @@ public class History {
 	
 	private final int millisecondsInHour = 3600000;
 	
-	public History() {
-		hc = HC.hc;
+	public History(HyperConomy hc) {
+		this.hc = hc;
 		useHistory = hc.getConf().getBoolean("enable-feature.price-history-storage");
 		if (!useHistory) {return;}
-		em = HC.hc.getDataManager();
+		em = hc.getDataManager();
 		isign = hc.getInfoSignHandler();
 		sw = hc.getSQLWrite();
 		sr = hc.getSQLRead();
@@ -84,7 +84,7 @@ public class History {
 
 	
 	private void startTimer() {
-		historylogtaskid = HC.mc.runRepeatingTask(new Runnable() {
+		historylogtaskid = hc.getMC().runRepeatingTask(new Runnable() {
 			public void run() {
 				long currentTime = System.currentTimeMillis();
 				timeCounter += (currentTime - lastTime);
@@ -93,7 +93,7 @@ public class History {
 					// if (timeCounter >= 600) {
 					timeCounter = 0;
 					writeHistoryThread();
-					HC.mc.runTaskLater(new Runnable() {
+					hc.getMC().runTaskLater(new Runnable() {
 						public void run() {
 							if (isign != null) {
 								isign.updateSigns();
@@ -109,7 +109,7 @@ public class History {
 
 	
 	private void writeHistoryThread() {
-		ArrayList<TradeObject> objects = em.getHyperObjects();
+		ArrayList<TradeObject> objects = em.getTradeObjects();
 		ArrayList<String> statements = new ArrayList<String>();
 		for (TradeObject object : objects) {
 			if (object.getType() == TradeObjectType.ENCHANTMENT) {
@@ -134,7 +134,7 @@ public class History {
   	
     
     public void stopHistoryLog() {
-    	HC.mc.cancelTask(historylogtaskid);
+    	hc.getMC().cancelTask(historylogtaskid);
     }
 
 	public double getHistoricValue(String name, String economy, int count) {
@@ -207,7 +207,7 @@ public class History {
 		HashMap<TradeObject, ArrayList<Double>> allValues = new HashMap<TradeObject, ArrayList<Double>>();
 		QueryResult result = sr.select("SELECT OBJECT, PRICE FROM hyperconomy_history WHERE ECONOMY = '" + economy + "' ORDER BY TIME DESC");
 		while (result.next()) {
-			TradeObject ho = em.getEconomy(economy).getHyperObject(result.getString("OBJECT"));
+			TradeObject ho = em.getEconomy(economy).getTradeObject(result.getString("OBJECT"));
 			double price = result.getDouble("PRICE");
 			if (!allValues.containsKey(ho)) {
 				ArrayList<Double> values = new ArrayList<Double>();
@@ -221,7 +221,7 @@ public class History {
 		}
 		result.close();
 		
-		ArrayList<TradeObject> hobjects =  em.getEconomy(economy).getHyperObjects();
+		ArrayList<TradeObject> hobjects =  em.getEconomy(economy).getTradeObjects();
 		HashMap<TradeObject, String> relevantValues = new HashMap<TradeObject, String>();
 		for (TradeObject ho:hobjects) {
 			if (allValues.containsKey(ho)) {

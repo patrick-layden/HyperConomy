@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.command;
 
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -10,8 +11,8 @@ import regalowl.hyperconomy.transaction.TransactionType;
 
 public class Hb extends BaseCommand implements HyperCommand{
 
-	public Hb() {
-		super(true);
+	public Hb(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override
@@ -21,7 +22,7 @@ public class Hb extends BaseCommand implements HyperCommand{
 		double amount;
 		boolean ma = false;
 		HyperEconomy he = hp.getHyperEconomy();
-		TradeObject ho = he.getHyperObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
+		TradeObject ho = he.getTradeObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
 		if (ho == null) {
 			data.addResponse(L.get("OBJECT_NOT_AVAILABLE"));
 			return data;

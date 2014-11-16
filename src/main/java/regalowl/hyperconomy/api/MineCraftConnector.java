@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import net.milkbowl.vault.economy.Economy;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.bukkit.BukkitConnector;
 import regalowl.hyperconomy.command.HyperCommand;
@@ -19,6 +20,7 @@ import regalowl.hyperconomy.shop.ChestShop;
 
 public interface MineCraftConnector {
 	
+	public HyperConomy getHC();
 	public boolean isEnabled();
 	public void disablePlugin();
 	
@@ -44,7 +46,6 @@ public interface MineCraftConnector {
 	
 
 	public Economy getEconomy();  	//remove later
-	public BukkitConnector getConnector();
 	
 	public boolean isInCreativeMode(HyperPlayer hp);
 	public HLocation getLocation(HyperPlayer hp);

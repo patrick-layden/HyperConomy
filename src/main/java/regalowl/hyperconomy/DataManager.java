@@ -14,48 +14,44 @@ import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.simpledatalib.sql.SyncSQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
+import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.EconomyLoadEvent;
 import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
+import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.util.DatabaseUpdater;
 
 public class DataManager {
 
-	private HC hc;
-	private SQLRead sr;
-	private SyncSQLWrite ssw;
+	private transient HyperConomy hc;
+	private transient SQLRead sr;
+	private transient SyncSQLWrite ssw;
+	private transient DatabaseUpdater du;
+	private transient FileConfiguration config;
+
+	
+	
 	private boolean loadActive;
-	
 	private ConcurrentHashMap<String, HyperEconomy> economies = new ConcurrentHashMap<String, HyperEconomy>();
-
-
-
-	
-	private DatabaseUpdater du;
-	
-
-
-
 	private String defaultServerShopAccount;
-	private FileConfiguration config;
 	private HyperPlayerManager hpm;
 	private HyperBankManager hbm;
 	private HyperShopManager hsm;
-	
-	
-	
-	public DataManager() {
-		hc = HC.hc;
-		hpm = new HyperPlayerManager(this);
-		hbm = new HyperBankManager(this);
-		hsm = new HyperShopManager();
+
+
+
+	public DataManager(HyperConomy hc) {
+		this.hc = hc;
+		hpm = new HyperPlayerManager(hc);
+		hbm = new HyperBankManager(hc);
+		hsm = new HyperShopManager(hc);
 		loadActive = false;
 		config = hc.getConf();
-
 		defaultServerShopAccount = config.getString("shop.default-server-shop-account");
-		du = new DatabaseUpdater();
+		du = new DatabaseUpdater(hc);
 	}
 	
 
@@ -79,7 +75,6 @@ public class DataManager {
 	public void load() {
 		if (loadActive) {return;}
 		loadActive = true;
-		hc = HC.hc;
 		sr = hc.getSQLRead();
 		ssw = hc.getSimpleDataLib().getSQLManager().getSyncSQLWrite();
 		new Thread(new Runnable() {
@@ -94,7 +89,7 @@ public class DataManager {
 					economies.clear();
 					ArrayList<String> econs = sr.getStringList("hyperconomy_economies", "NAME", null);
 					for (String e : econs) {
-						economies.put(e, new HyperEconomy(e));
+						economies.put(e, new HyperEconomy(hc, e));
 					}
 					hc.getDebugMode().ayncDebugConsoleMessage("Economies loaded.");
 					hc.getHyperEventHandler().fireEventFromAsyncThread(new EconomyLoadEvent());
@@ -204,11 +199,11 @@ public class DataManager {
 
 
 	
-	public ArrayList<TradeObject> getHyperObjects() {
+	public ArrayList<TradeObject> getTradeObjects() {
 		ArrayList<TradeObject> hyperObjects = new ArrayList<TradeObject>();
 		for (Map.Entry<String,HyperEconomy> entry : economies.entrySet()) {
 			HyperEconomy he = entry.getValue();
-			for (TradeObject ho:he.getHyperObjects()) {
+			for (TradeObject ho:he.getTradeObjects()) {
 				hyperObjects.add(ho);
 			}
 		}
@@ -230,7 +225,7 @@ public class DataManager {
 		values.put("NAME", name);
 		values.put("HYPERACCOUNT", defaultServerShopAccount);
 		sw.performInsert("hyperconomy_economies", values);
-		for (TradeObject ho:template.getHyperObjects()) {
+		for (TradeObject ho:template.getTradeObjects()) {
 			values = new HashMap<String,String>();
 			values.put("NAME", ho.getName());
 			values.put("DISPLAY_NAME", ho.getDisplayName());

@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import regalowl.simpledatalib.file.FileTools;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 
 public class LanguageFile {
 	
-	private HC hc;
+	private HyperConomy hc;
 	private FileTools ft;
 	private HashMap<String, String> language = new HashMap<String, String>();
 	private HashMap<String, String> languageBackup = new HashMap<String, String>();
@@ -20,7 +20,8 @@ public class LanguageFile {
 	private HashMap<String, String> languageConversions = new HashMap<String, String>();
 
 	
-	public LanguageFile() {		
+	public LanguageFile(HyperConomy hc) {	
+		this.hc = hc;
 		languageConversions.put("french", "frFR");
 		languageConversions.put("français", "frFR");
 		languageConversions.put("le français", "frFR");
@@ -42,10 +43,9 @@ public class LanguageFile {
 	
 	
 	public String buildLanguageFile(boolean overwrite) {
-		hc = HC.hc;
 		ft = hc.getFileTools();
 		updateBackup();
-		String lang = HC.hc.getConf().getString("language");
+		String lang = hc.getConf().getString("language");
 		if (lang == null) {
 			lang = "enUS";
 		}
@@ -66,7 +66,7 @@ public class LanguageFile {
 		try {
 		ft.copyFileFromJar("Languages/enUS.hl", backuppath);
 		} catch (Exception e) {
-			HC.hc.gSDL().getErrorWriter().writeError(e);
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 		buildBackupHashMap(backuppath);
 		
@@ -191,28 +191,28 @@ public class LanguageFile {
 	
 	public String fC(String amount) {
 		String formatted = gC(true) + amount;
-		if (HC.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
+		if (hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
 			formatted = amount + gC(true);
 		}
 		return formatted;
 	}
 	public String fC(double amount) {
 		String formatted = gC(true) + amount;
-		if (HC.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
+		if (hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
 			formatted = amount + gC(true);
 		}
 		return formatted;
 	}
 	public String fCS(double amount) {
 		String formatted = gC(false) + amount;
-		if (HC.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
+		if (hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
 			formatted = amount + gC(false);
 		}
 		return formatted;
 	}
 	public String fCS(String amount) {
 		String formatted = gC(false) + amount;
-		if (HC.hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
+		if (hc.getConf().getBoolean("shop.show-currency-symbol-after-price")) {
 			formatted = amount + gC(false);
 		}
 		return formatted;

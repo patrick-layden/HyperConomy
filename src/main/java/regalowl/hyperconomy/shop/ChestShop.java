@@ -2,7 +2,7 @@ package regalowl.hyperconomy.shop;
 
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.minecraft.HBlock;
@@ -12,6 +12,8 @@ import regalowl.hyperconomy.util.LanguageFile;
 
 public class ChestShop {
 
+	private transient HyperConomy hc;
+	
 	private HLocation location;
 	private HSign sign;
 	private HyperAccount owner;
@@ -24,12 +26,14 @@ public class ChestShop {
 	private boolean isValidChestShop;
 
 	
-	public ChestShop(HBlock b) {
+	public ChestShop(HyperConomy hc, HBlock b) {
+		this.hc = hc;
 		this.location = b.getLocation();
 		initialize();
 	}
 	
-	public ChestShop(HLocation location) {
+	public ChestShop(HyperConomy hc, HLocation location) {
+		this.hc = hc;
 		this.location = location;
 		initialize();
 	}
@@ -37,19 +41,19 @@ public class ChestShop {
 	private void initialize() {
 		isValidChestShop = false;
 		if (location == null) return;
-		if (!HC.mc.isChestShopChest(location)) return;
+		if (!hc.getMC().isChestShopChest(location)) return;
 		signLocation = new HLocation(location);
 		signLocation.setY(location.getY() + 1);
-		this.sign = HC.mc.getSign(signLocation);
+		this.sign = hc.getMC().getSign(signLocation);
 		if (sign == null) return;
 		attachedBlock = sign.getAttachedBlock();
 		if (attachedBlock == null) return;
-		type = ChestShopType.fromString(HC.mc.removeColor(sign.getLine(1)).trim());
+		type = ChestShopType.fromString(hc.getMC().removeColor(sign.getLine(1)).trim());
 		if (type == null) return;
-		inventory = HC.mc.getChestInventory(location);
+		inventory = hc.getMC().getChestInventory(location);
 		if (inventory == null) return;
-		LanguageFile L = HC.hc.getLanguageFile();
-		String line1 = HC.mc.removeColor(sign.getLine(0)).trim();
+		LanguageFile L = hc.getLanguageFile();
+		String line1 = hc.getMC().removeColor(sign.getLine(0)).trim();
 		hasStaticPrice = false;
 		if (line1.startsWith(L.gC(false))) {
 			try {
@@ -64,10 +68,10 @@ public class ChestShop {
 				hasStaticPrice = true;
 			} catch (Exception e) {}
 		}
-		String chestOwnerName = HC.mc.removeColor(sign.getLine(2)).trim() + HC.mc.removeColor(sign.getLine(3)).trim();
-		this.owner = HC.hc.getHyperPlayerManager().getAccount(chestOwnerName);
+		String chestOwnerName = hc.getMC().removeColor(sign.getLine(2)).trim() + hc.getMC().removeColor(sign.getLine(3)).trim();
+		this.owner = hc.getHyperPlayerManager().getAccount(chestOwnerName);
 		if (owner == null && !chestOwnerName.equals("")) {
-			this.owner = HC.hc.getHyperPlayerManager().getHyperPlayer(chestOwnerName);
+			this.owner = hc.getHyperPlayerManager().getHyperPlayer(chestOwnerName);
 		} else {
 			return;
 		}
@@ -103,14 +107,14 @@ public class ChestShop {
 		return isValidChestShop;
 	}
 	public boolean isSignAttachedToValidBlock() {
-		return HC.mc.canHoldChestShopSign(attachedBlock.getLocation());
+		return hc.getMC().canHoldChestShopSign(attachedBlock.getLocation());
 	}
 	public boolean isDoubleChest() {
-		if (!HC.mc.isChest(location)) return false;
-		HBlock cBlock = new HBlock(location);
+		if (!hc.getMC().isChest(location)) return false;
+		HBlock cBlock = new HBlock(hc, location);
 		HBlock[] surrounding = cBlock.getNorthSouthEastWestBlocks();
 		for (HBlock b:surrounding) {
-			if (HC.mc.isChest(b.getLocation())) return true;
+			if (hc.getMC().isChest(b.getLocation())) return true;
 		}
 		return false;
 	}

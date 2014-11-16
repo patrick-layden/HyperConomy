@@ -3,7 +3,7 @@ package regalowl.hyperconomy.command;
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 
@@ -15,8 +15,8 @@ public class Audit extends BaseCommand implements HyperCommand {
 	private double auditbalance;
 	private HyperPlayer hp;
 	
-	public Audit() {
-		super(false);
+	public Audit(HyperConomy hc) {
+		super(hc, false);
 
 	}
 	
@@ -46,14 +46,14 @@ public class Audit extends BaseCommand implements HyperCommand {
 	    			cbalance = ha.getBalance();
 	    			logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
 	    			auditbalance = getAuditLogTotal(account);
-	    			HC.mc.runTask(new Runnable() {
+	    			hc.getMC().runTask(new Runnable() {
 	    	    		public void run() {
 	    	    			if (hp == null) {
-	    	    				HC.mc.logInfo(L.get("LINE_BREAK"));
-	    	    				HC.mc.logInfo(L.f(L.get("AUDIT_TRUE"), cbalance));
-	    	    				HC.mc.logInfo(L.f(L.get("AUDIT_THEORETICAL1"), CommonFunctions.twoDecimals(logbalance)));
-	    	    				HC.mc.logInfo(L.f(L.get("AUDIT_THEORETICAL2"), CommonFunctions.twoDecimals(auditbalance)));
-	    	    				HC.mc.logInfo(L.get("LINE_BREAK"));
+	    	    				hc.getMC().logInfo(L.get("LINE_BREAK"));
+	    	    				hc.getMC().logInfo(L.f(L.get("AUDIT_TRUE"), cbalance));
+	    	    				hc.getMC().logInfo(L.f(L.get("AUDIT_THEORETICAL1"), CommonFunctions.twoDecimals(logbalance)));
+	    	    				hc.getMC().logInfo(L.f(L.get("AUDIT_THEORETICAL2"), CommonFunctions.twoDecimals(auditbalance)));
+	    	    				hc.getMC().logInfo(L.get("LINE_BREAK"));
 	    	    			} else {
 		    	    			hp.sendMessage(L.get("LINE_BREAK"));
 		    	    			hp.sendMessage(L.f(L.get("AUDIT_TRUE"), cbalance));
@@ -81,7 +81,6 @@ public class Audit extends BaseCommand implements HyperCommand {
 	 * @return returns the theoretical amount of money an account should have after all logged (buy or sell individually) transactions in the hyperconomy_log
 	 */
 	private Double getHyperLogTotal(String account, String type) {
-		HC hc = HC.hc;
 		SQLRead sr = hc.getSQLRead();
 		String query = "";
 		if (type.equalsIgnoreCase("sale")) {
@@ -105,7 +104,6 @@ public class Audit extends BaseCommand implements HyperCommand {
 	 * @return returns the theoretical amount of money an account should have after all logged transactions in the hyperconomy_audit_log
 	 */
 	private Double getAuditLogTotal(String account) {
-		HC hc = HC.hc;
 		SQLRead sr = hc.getSQLRead();
 		QueryResult result = sr.select("SELECT * FROM hyperconomy_audit_log WHERE ACCOUNT = '" + account + "' ORDER BY TIME ASC");
 		double tBalance = 0.0;

@@ -1,7 +1,7 @@
 package regalowl.hyperconomy.command;
 
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.util.HyperLock;
 import regalowl.hyperconomy.util.LanguageFile;
@@ -10,13 +10,12 @@ import regalowl.hyperconomy.util.LanguageFile;
 
 public class HcCommand extends BaseCommand implements HyperCommand {
 	
-	public HcCommand() {
-		super(false);
+	public HcCommand(HyperConomy hc) {
+		super(hc, false);
 	}
 	
 	public CommandData onCommand(CommandData data) {
 		String args[] = data.getArgs();
-		HC hc = HC.hc;
 		HyperLock hl = hc.getHyperLock();
 		LanguageFile L = hc.getLanguageFile();
 		HyperPlayer hp = data.getHyperPlayer();
@@ -45,7 +44,7 @@ public class HcCommand extends BaseCommand implements HyperCommand {
 	
 	private void displayInfo(CommandData data) {
 		String args[] = data.getArgs();
-		LanguageFile L = HC.hc.getLanguageFile();
+		LanguageFile L = hc.getLanguageFile();
 		try {
 			if (args.length == 0) {
 				data.addResponse(L.get("LINE_BREAK"));

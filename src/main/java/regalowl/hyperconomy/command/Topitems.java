@@ -5,6 +5,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import regalowl.simpledatalib.CommonFunctions;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
@@ -14,8 +15,8 @@ import regalowl.hyperconomy.tradeobject.TradeObject;
 public class Topitems extends BaseCommand implements HyperCommand {
 
 
-	public Topitems() {
-		super(false);
+	public Topitems(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override
@@ -47,9 +48,9 @@ public class Topitems extends BaseCommand implements HyperCommand {
 			SortedMap<Double, TradeObject> itemstocks = new TreeMap<Double, TradeObject>();
 			ArrayList<TradeObject> objects = null;
 			if (s != null) {
-				objects = he.getHyperObjects(s);
+				objects = he.getTradeObjects(s);
 			} else {
-				objects = he.getHyperObjects();
+				objects = he.getTradeObjects();
 			}
 			for (TradeObject ho:objects) {
 				boolean stocked = false;

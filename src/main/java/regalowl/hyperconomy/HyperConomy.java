@@ -12,10 +12,10 @@ import regalowl.simpledatalib.file.YamlHandler;
 import regalowl.simpledatalib.sql.SQLManager;
 import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
+import regalowl.hyperconomy.account.HyperBankManager;
+import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.api.API;
 import regalowl.hyperconomy.api.EconomyAPI;
-import regalowl.hyperconomy.api.HyperAPI;
-import regalowl.hyperconomy.api.HyperEconAPI;
 import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.bukkit.FrameShopHandler;
 import regalowl.hyperconomy.command.Additem;
@@ -73,7 +73,7 @@ import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.HyperEventHandler;
 import regalowl.hyperconomy.multiserver.HyperModificationServer;
 import regalowl.hyperconomy.shop.ChestShopHandler;
-import regalowl.hyperconomy.util.ConsoleSettings;
+import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.util.DebugMode;
 import regalowl.hyperconomy.util.DisabledProtection;
 import regalowl.hyperconomy.util.History;
@@ -82,34 +82,35 @@ import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
 import regalowl.hyperconomy.util.UpdateYML;
 
-public class HC {
-	public static HC hc;
-	public static API api;
-	public static EconomyAPI economyApi;
-	public static MineCraftConnector mc;
-	private DataManager dm;
-	private SimpleDataLib sdl;
-	private YamlHandler yh;
-	private Log l;
-	private InfoSignHandler isign;
-	private History hist;
-	private ItemDisplayFactory itdi;
-	private SQLWrite sw;
-	private SQLRead sr;
-	private ChestShopHandler cs;
-	private FrameShopHandler fsh;
-	private HyperLock hl;
-	private LanguageFile L;
-	private HyperEventHandler heh;
-	private boolean enabled;
-	private FileTools ft;
-	private ConsoleSettings cos;
-	private FileConfiguration hConfig;
-	private DebugMode dMode;
-	private final int saveInterval = 1200000;
+public class HyperConomy {
 
-	public HC(MineCraftConnector mc) {
-		HC.mc = mc;
+	private transient MineCraftConnector mc;
+	private transient API api;
+	private transient EconomyAPI economyApi;
+	private transient DataManager dm;
+	private transient SimpleDataLib sdl;
+	private transient YamlHandler yh;
+	private transient Log l;
+	private transient InfoSignHandler isign;
+	private transient History hist;
+	private transient ItemDisplayFactory itdi;
+	private transient SQLWrite sw;
+	private transient SQLRead sr;
+	private transient ChestShopHandler cs;
+	private transient FrameShopHandler fsh;
+	private transient HyperLock hl;
+	private transient LanguageFile L;
+	private transient HyperEventHandler heh;
+	private transient FileTools ft;
+	private transient FileConfiguration hConfig;
+	private transient DebugMode dMode;
+	private final int saveInterval = 1200000;
+	private boolean enabled;
+	private String consoleEconomy;
+
+	public HyperConomy(MineCraftConnector mc) {
+		this.mc = mc;
+		this.consoleEconomy = "default";
 	}
 	
 	@EventHandler
@@ -126,10 +127,10 @@ public class HC {
 	
 	@EventHandler
 	public void onDataLoad(DataLoadEvent event) {
-		hist = new History();
-		itdi = new ItemDisplayFactory();
-		isign = new InfoSignHandler();
-		fsh = new FrameShopHandler();
+		hist = new History(this);
+		itdi = new ItemDisplayFactory(this);
+		isign = new InfoSignHandler(this);
+		fsh = new FrameShopHandler(mc);
 		registerCommands();
 		enabled = true;
 		hl.setLoadLock(false);
@@ -140,9 +141,8 @@ public class HC {
 
 	public void load() {
 		enabled = false;
-		hc = this;
-		api = new HyperAPI();
-		economyApi = new HyperEconAPI();
+		api = new HyperAPI(this);
+		economyApi = new HyperEconAPI(this);
 		if (sdl != null) sdl.shutDown();
 		sdl = new SimpleDataLib("HyperConomy");
 		sdl.initialize();
@@ -153,16 +153,16 @@ public class HC {
 		yh.copyFromJar("config");
 		yh.registerFileConfiguration("categories");
 		yh.registerFileConfiguration("config");
-		new UpdateYML();
+		new UpdateYML(this);
 		hConfig = yh.gFC("config");
-		dMode = new DebugMode();
+		dMode = new DebugMode(this);
 		dMode.syncDebugConsoleMessage("HyperConomy loaded with Debug Mode enabled.  Configuration files created and loaded.");
-		L = new LanguageFile();
-		hl = new HyperLock(true, false, false);
+		L = new LanguageFile(this);
+		hl = new HyperLock(this, true, false, false);
 		if (heh != null) {
 			heh.clearListeners();
 		}
-		heh = new HyperEventHandler();
+		heh = new HyperEventHandler(this);
 		heh.registerListener(this);
 		mc.hookExternalEconomy();
 		
@@ -170,7 +170,7 @@ public class HC {
 	
 	public void enable() {
 		mc.unregisterAllListeners();
-		dm = new DataManager();
+		dm = new DataManager(this);
 		if (hConfig.getBoolean("sql.use-mysql")) {
 			String username = hConfig.getString("sql.mysql-connection.username");
 			String password = hConfig.getString("sql.mysql-connection.password");
@@ -193,12 +193,11 @@ public class HC {
 		}
 		dMode.syncDebugConsoleMessage("Data loading started.");
 		dm.load();
-		l = new Log();
-		new TransactionSignHandler();
+		l = new Log(this);
+		new TransactionSignHandler(this);
 		yh.startSaveTask(saveInterval);
-		cs = new ChestShopHandler();
-		cos = new ConsoleSettings("default");
-		new HyperModificationServer();
+		cs = new ChestShopHandler(this);
+		new HyperModificationServer(this);
 	}
 
 	public void disable(boolean protect) {
@@ -221,7 +220,7 @@ public class HC {
 		}
 		if (sdl != null) sdl.shutDown();
 		if (protect) {
-			new DisabledProtection();
+			new DisabledProtection(this);
 		}
 	}
 	
@@ -232,53 +231,53 @@ public class HC {
 	}
 
 	private void registerCommands() {
-		mc.registerCommand("additem", new Additem());
-		mc.registerCommand("audit", new Audit());
-		mc.registerCommand("browseshop", new Browseshop());
-		mc.registerCommand("buy", new Buy());
-		mc.registerCommand("economyinfo", new Economyinfo());
-		mc.registerCommand("frameshop", new Frameshopcommand());
-		mc.registerCommand("heldbuy", new Hb());
-		mc.registerCommand("hc", new HcCommand());
-		mc.registerCommand("hcbalance", new Hcbalance());
-		mc.registerCommand("hcbank", new Hcbank());
-		mc.registerCommand("hcdata", new Hcdata());
-		mc.registerCommand("hcdelete", new Hcdelete());
-		mc.registerCommand("hceconomy", new Hceconomy());
-		mc.registerCommand("hcpay", new Hcpay());
-		mc.registerCommand("hcset", new Hcset());
-		mc.registerCommand("hctest", new Hctest());
-		mc.registerCommand("hctop", new Hctop());
-		mc.registerCommand("heldsell", new Hs());
-		mc.registerCommand("heldvalue", new Hv());
-		mc.registerCommand("hyperlog", new Hyperlog());
-		mc.registerCommand("importbalance", new Importbalance());
-		mc.registerCommand("intervals", new Intervals());
-		mc.registerCommand("iteminfo", new Iteminfo());
-		mc.registerCommand("listcategories", new Listcategories());
-		mc.registerCommand("lockshop", new Lockshop());
-		mc.registerCommand("makeaccount", new Makeaccount());
-		mc.registerCommand("makedisplay", new Makedisplay());
-		mc.registerCommand("manageshop", new Manageshop());
-		mc.registerCommand("notify", new Notify());
-		mc.registerCommand("objectsettings", new Objectsettings());
-		mc.registerCommand("removedisplay", new Removedisplay());
-		mc.registerCommand("repairsigns", new Repairsigns());
-		mc.registerCommand("scalebypercent", new Scalebypercent());
-		mc.registerCommand("sell", new Sell());
-		mc.registerCommand("sellall", new Sellall());
-		mc.registerCommand("servershop", new Servershopcommand());
-		mc.registerCommand("setchestowner", new Setchestowner());
-		mc.registerCommand("seteconomy", new Seteconomy());
-		mc.registerCommand("setlanguage", new Setlanguage());
-		mc.registerCommand("setpassword", new Setpassword());
-		mc.registerCommand("settax", new Settax());
-		mc.registerCommand("taxsettings", new Taxsettings());
-		mc.registerCommand("toggleeconomy", new Toggleeconomy());
-		mc.registerCommand("topenchants", new Topenchants());
-		mc.registerCommand("topitems", new Topitems());
-		mc.registerCommand("value", new Value());
-		mc.registerCommand("xpinfo", new Xpinfo());
+		mc.registerCommand("additem", new Additem(this));
+		mc.registerCommand("audit", new Audit(this));
+		mc.registerCommand("browseshop", new Browseshop(this));
+		mc.registerCommand("buy", new Buy(this));
+		mc.registerCommand("economyinfo", new Economyinfo(this));
+		mc.registerCommand("frameshop", new Frameshopcommand(this));
+		mc.registerCommand("heldbuy", new Hb(this));
+		mc.registerCommand("hc", new HcCommand(this));
+		mc.registerCommand("hcbalance", new Hcbalance(this));
+		mc.registerCommand("hcbank", new Hcbank(this));
+		mc.registerCommand("hcdata", new Hcdata(this));
+		mc.registerCommand("hcdelete", new Hcdelete(this));
+		mc.registerCommand("hceconomy", new Hceconomy(this));
+		mc.registerCommand("hcpay", new Hcpay(this));
+		mc.registerCommand("hcset", new Hcset(this));
+		mc.registerCommand("hctest", new Hctest(this));
+		mc.registerCommand("hctop", new Hctop(this));
+		mc.registerCommand("heldsell", new Hs(this));
+		mc.registerCommand("heldvalue", new Hv(this));
+		mc.registerCommand("hyperlog", new Hyperlog(this));
+		mc.registerCommand("importbalance", new Importbalance(this));
+		mc.registerCommand("intervals", new Intervals(this));
+		mc.registerCommand("iteminfo", new Iteminfo(this));
+		mc.registerCommand("listcategories", new Listcategories(this));
+		mc.registerCommand("lockshop", new Lockshop(this));
+		mc.registerCommand("makeaccount", new Makeaccount(this));
+		mc.registerCommand("makedisplay", new Makedisplay(this));
+		mc.registerCommand("manageshop", new Manageshop(this));
+		mc.registerCommand("notify", new Notify(this));
+		mc.registerCommand("objectsettings", new Objectsettings(this));
+		mc.registerCommand("removedisplay", new Removedisplay(this));
+		mc.registerCommand("repairsigns", new Repairsigns(this));
+		mc.registerCommand("scalebypercent", new Scalebypercent(this));
+		mc.registerCommand("sell", new Sell(this));
+		mc.registerCommand("sellall", new Sellall(this));
+		mc.registerCommand("servershop", new Servershopcommand(this));
+		mc.registerCommand("setchestowner", new Setchestowner(this));
+		mc.registerCommand("seteconomy", new Seteconomy(this));
+		mc.registerCommand("setlanguage", new Setlanguage(this));
+		mc.registerCommand("setpassword", new Setpassword(this));
+		mc.registerCommand("settax", new Settax(this));
+		mc.registerCommand("taxsettings", new Taxsettings(this));
+		mc.registerCommand("toggleeconomy", new Toggleeconomy(this));
+		mc.registerCommand("topenchants", new Topenchants(this));
+		mc.registerCommand("topitems", new Topitems(this));
+		mc.registerCommand("value", new Value(this));
+		mc.registerCommand("xpinfo", new Xpinfo(this));
 	}
 
 	
@@ -286,73 +285,54 @@ public class HC {
 	public HyperLock getHyperLock() {
 		return hl;
 	}
-
-	
 	public YamlHandler getYamlHandler() {
 		return yh;
 	}
 	public YamlHandler gYH() {
 		return yh;
 	}
-	
 	public FileConfiguration getConf() {
 		return hConfig;
 	}
-	
 	public DataManager getDataManager() {
 		return dm;
 	}
-	
 	public HyperPlayerManager getHyperPlayerManager() {
 		return dm.getHyperPlayerManager();
 	}
-	
 	public HyperBankManager getHyperBankManager() {
 		return dm.getHyperBankManager();
 	}
-	
 	public HyperShopManager getHyperShopManager() {
 		return dm.getHyperShopManager();
 	}
-
-
-
 	public Log getLog() {
 		return l;
 	}
-
 	public InfoSignHandler getInfoSignHandler() {
 		return isign;
 	}
-
 	public SQLWrite getSQLWrite() {
 		return sw;
 	}
-
 	public SQLRead getSQLRead() {
 		return sr;
 	}
-
 	public ItemDisplayFactory getItemDisplay() {
 		return itdi;
 	}
-
 	public History getHistory() {
 		return hist;
 	}
-
 	public LanguageFile getLanguageFile() {
 		return L;
 	}
-	
 	public boolean enabled() {
 		return enabled;
 	}
-	
 	public ChestShopHandler getChestShop() {
 		return cs;
 	}
-	
 	public FrameShopHandler getFrameShopHandler() {
 		return fsh;
 	}
@@ -368,23 +348,30 @@ public class HC {
 	public FileTools getFileTools() {
 		return ft;
 	}
-	public ConsoleSettings getConsoleSettings() {
-		return cos;
+	public String getConsoleEconomy() {
+		return consoleEconomy;
+	}
+	public void setConsoleEconomy(String economy) {
+		this.consoleEconomy = economy;
 	}
 	public HyperEventHandler getHyperEventHandler() {
 		return heh;
 	}
-	
 	public String getFolderPath() {
 		return sdl.getStoragePath();
 	}
-	
 	public DebugMode getDebugMode() {
 		return dMode;
 	}
-
-
-
+	public API getAPI() {
+		return api;
+	}
+	public EconomyAPI getEconomyAPI() {
+		return economyApi;
+	}
+	public MineCraftConnector getMC() {
+		return mc;
+	}
 
 
 }

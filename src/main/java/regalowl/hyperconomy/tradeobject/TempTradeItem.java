@@ -3,7 +3,7 @@ package regalowl.hyperconomy.tradeobject;
 
 import java.util.ArrayList;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.inventory.HItemStack;
 
@@ -12,8 +12,8 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 
 
 	private static final long serialVersionUID = 4228578172340543286L;
-	public TempTradeItem(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String itemData) {
-		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, itemData);
+	public TempTradeItem(HyperConomy hc, String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String itemData) {
+		super(hc, name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, itemData);
 	}
 	
 	//Override all set methods to prevent database changes.
@@ -94,17 +94,17 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 	@Override
 	public void checkInitiationStatus() {}
 	
-	public static TradeObject generate(HItemStack stack){
+	public static TradeObject generate(HyperConomy hc, HItemStack stack){
 		if (stack.isBlank()) {return null;}
-		String name = generateName(stack);
+		String name = generateName(hc, stack);
 		double value = 10.0;
 		double median = 10000;
 		double startprice = 20.0;
-		return new TempTradeItem(name, "default", name, "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, stack.serialize());
+		return new TempTradeItem(hc, name, "default", name, "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, stack.serialize());
 	}
 	
-	public static String generateName(HItemStack stack) {
-		HyperEconomy econ = HC.hc.getDataManager().getDefaultEconomy();
+	public static String generateName(HyperConomy hc, HItemStack stack) {
+		HyperEconomy econ = hc.getDataManager().getDefaultEconomy();
 		String name = stack.getMaterial() + "_" + stack.getDurability();
 		if (econ.objectTest(name)) {
 			name = "object1";

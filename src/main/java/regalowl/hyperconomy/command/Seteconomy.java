@@ -1,11 +1,13 @@
 package regalowl.hyperconomy.command;
 
+import regalowl.hyperconomy.HyperConomy;
+
 
 
 public class Seteconomy extends BaseCommand implements HyperCommand {
 
-	public Seteconomy() {
-		super(false);
+	public Seteconomy(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override
@@ -19,8 +21,7 @@ public class Seteconomy extends BaseCommand implements HyperCommand {
 						hp.setEconomy(economy);
 						data.addResponse(L.get("ECONOMY_SET"));
 					} else {
-						cs.setConsoleEconomy(economy);
-						hc.getConsoleSettings().setConsoleEconomy(economy);
+						hc.setConsoleEconomy(economy);
 						data.addResponse(L.get("ECONOMY_SET"));
 					}
 				} else {

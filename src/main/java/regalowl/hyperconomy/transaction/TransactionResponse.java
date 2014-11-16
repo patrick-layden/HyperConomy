@@ -3,13 +3,14 @@ package regalowl.hyperconomy.transaction;
 import java.util.ArrayList;
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.util.LanguageFile;
 
 public class TransactionResponse {
 
+	private transient HyperConomy hc;
 	private boolean success;
 	private HyperPlayer hp;
 	
@@ -19,7 +20,8 @@ public class TransactionResponse {
 	//private ArrayList<ItemStack> failedItemStacks = new ArrayList<ItemStack>();
 	private ArrayList<TradeObject> successfulObjects = new ArrayList<TradeObject>();
 	
-	public TransactionResponse(HyperPlayer hp) {
+	public TransactionResponse(HyperConomy hc, HyperPlayer hp) {
+		this.hc = hc;
 		this.success = false;
 		this.hp = hp;
 	}
@@ -48,7 +50,7 @@ public class TransactionResponse {
 	
 	
 	public void sendMessages() {
-		LanguageFile L = HC.hc.getLanguageFile();
+		LanguageFile L = hc.getLanguageFile();
 		if (success) {
 			hp.sendMessage(L.get("LINE_BREAK"));
 		}

@@ -1,13 +1,15 @@
 package regalowl.hyperconomy.command;
 
+import regalowl.hyperconomy.HyperConomy;
+
 
 
 
 public class Toggleeconomy extends BaseCommand implements HyperCommand {
 
 
-	public Toggleeconomy() {
-		super(false);
+	public Toggleeconomy(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override

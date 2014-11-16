@@ -6,7 +6,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HEnchantment;
@@ -16,33 +16,32 @@ import regalowl.hyperconomy.inventory.HItemStack;
 public class TradeEnchant extends BasicTradeObject implements TradeObject {
 
 	private static final long serialVersionUID = -6150719215822283210L;
-	private String base64Enchant;
+	private String enchantData;
 
 	
-	public TradeEnchant(String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String base64ItemData) {
-		super(name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
-		this.base64Enchant = base64ItemData;
+	public TradeEnchant(HyperConomy hc, String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String base64ItemData) {
+		super(hc, name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
+		this.enchantData = base64ItemData;
 	}
 	
 	private HEnchantment getSE() {
-		return new HEnchantment(base64Enchant);
+		return new HEnchantment(enchantData);
 	}
 	
 	@Override
 	public String getEnchantmentName() {
-		return base64Enchant;
+		return enchantData;
 	}
 
 
 	
 	@Override
 	public String getData() {
-		return base64Enchant;
+		return enchantData;
 	}
 	@Override
 	public void setData(String data) {
-		HC hc = HC.hc;
-		this.base64Enchant = data;
+		this.enchantData = data;
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
@@ -51,7 +50,6 @@ public class TradeEnchant extends BasicTradeObject implements TradeObject {
 	
 	@Override
 	public Image getImage(int width, int height) {
-		HC hc = HC.hc;
 		Image i = null;
 		URL url = hc.getClass().getClassLoader().getResource("Images/enchanted_book_0.png");
 		try {
@@ -66,18 +64,18 @@ public class TradeEnchant extends BasicTradeObject implements TradeObject {
 	
 	@Override
 	public double getBuyPrice(EnchantmentClass eclass) {
-		return super.getBuyPrice(1) * EnchantmentClass.getclassValue(eclass);
+		return super.getBuyPrice(1) * EnchantmentClass.getclassValue(hc, eclass);
 	}
 	
 
 	@Override
 	public double getSellPrice(EnchantmentClass eclass) {
-		return super.getSellPrice(1) * EnchantmentClass.getclassValue(eclass);
+		return super.getSellPrice(1) * EnchantmentClass.getclassValue(hc, eclass);
 	}
 	
 	@Override
 	public double getSellPrice(EnchantmentClass eclass, HyperPlayer hp) {
-		HInventory inv = HC.mc.getInventory(hp);
+		HInventory inv = hc.getMC().getInventory(hp);
 		return inv.getHeldItem().getDurabilityPercent() * getSellPrice(eclass);
 	}
 

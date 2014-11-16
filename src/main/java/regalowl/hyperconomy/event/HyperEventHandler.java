@@ -1,23 +1,29 @@
 package regalowl.hyperconomy.event;
 
 import regalowl.simpledatalib.event.Event;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 
 public class HyperEventHandler {
 	
+	private HyperConomy hc;
+	
+	public HyperEventHandler(HyperConomy hc) {
+		this.hc = hc;
+	}
+	
     public void registerListener(Object listener) {
-    	HC.hc.getSimpleDataLib().getEventPublisher().registerListener(listener);
+    	hc.getSimpleDataLib().getEventPublisher().registerListener(listener);
     }
     public void unRegisterListener(Object listener) {
-    	HC.hc.getSimpleDataLib().getEventPublisher().unRegisterListener(listener);
+    	hc.getSimpleDataLib().getEventPublisher().unRegisterListener(listener);
     }
     
     public void clearListeners() {
-    	HC.hc.getSimpleDataLib().getEventPublisher().unRegisterAllListeners();
+    	hc.getSimpleDataLib().getEventPublisher().unRegisterAllListeners();
     }
 	
 	public void fireEventFromAsyncThread(Event event) {
-		HC.mc.runTask(new EventFire(event));
+		hc.getMC().runTask(new EventFire(event));
 	}
     private class EventFire implements Runnable {
     	private Event event;
@@ -25,12 +31,12 @@ public class HyperEventHandler {
     		this.event = event;
     	}
 		public void run() {
-			HC.hc.getSimpleDataLib().getEventPublisher().fireEvent(event);
+			hc.getSimpleDataLib().getEventPublisher().fireEvent(event);
 		}
     }
 	
 	public Event fireEvent(Event event) {
-		return HC.hc.getSimpleDataLib().getEventPublisher().fireEvent(event);
+		return hc.getSimpleDataLib().getEventPublisher().fireEvent(event);
 	}
 	
 }

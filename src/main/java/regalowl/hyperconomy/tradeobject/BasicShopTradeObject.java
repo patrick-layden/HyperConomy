@@ -3,9 +3,8 @@ package regalowl.hyperconomy.tradeobject;
 import java.awt.Image;
 import java.util.ArrayList;
 
-import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.simpledatalib.sql.WriteStatement;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HInventory;
@@ -25,7 +24,8 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	protected int maxStock;
 	protected boolean useEconomyStock;
 	
-	public BasicShopTradeObject(String playerShop, TradeObject ho, double stock, double buyPrice, double sellPrice, int maxStock, TradeObjectStatus status, boolean useEconomyStock) {
+	public BasicShopTradeObject(HyperConomy hc, String playerShop, TradeObject ho, double stock, double buyPrice, double sellPrice, int maxStock, TradeObjectStatus status, boolean useEconomyStock) {
+		super(hc);
 		this.playerShop = playerShop;
 		this.hyperObject = ho.getName();
 		this.economy = ho.getEconomy();
@@ -40,12 +40,11 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 
 	@Override
 	public PlayerShop getShop() {
-		HC hc = HC.hc;
 		return (PlayerShop)hc.getHyperShopManager().getShop(playerShop);
 	}
 	@Override
 	public TradeObject getTradeObject() {
-		TradeObject ho = HC.hc.getDataManager().getEconomy(economy).getHyperObject(hyperObject);
+		TradeObject ho = hc.getDataManager().getEconomy(economy).getTradeObject(hyperObject);
 		return ho;
 	}
 	@Override
@@ -78,8 +77,6 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	}
 	@Override
 	public void setTradeObject(TradeObject ho) {
-		HC hc = HC.hc;
-		SQLWrite sw = hc.getSQLWrite();
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET HYPEROBJECT=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(ho.getName());
 		ws.addParameter(playerShop);
@@ -89,8 +86,6 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	}
 	@Override
 	public void setShop(PlayerShop playerShop) {
-		HC hc = HC.hc;
-		SQLWrite sw = hc.getSQLWrite();
 		this.playerShop = playerShop.getName();
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SHOP=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(playerShop.getName());
@@ -101,8 +96,6 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	}
 	@Override
 	public void setStock(double stock) {
-		HC hc = HC.hc;
-		SQLWrite sw = hc.getSQLWrite();
 		if (useEconomyStock) {
 			getTradeObject().setStock(stock);
 		} else {
@@ -118,8 +111,6 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	}
 	@Override
 	public void setBuyPrice(double buyPrice) {
-		HC hc = HC.hc;
-		SQLWrite sw = hc.getSQLWrite();
 		this.buyPrice = buyPrice;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET BUY_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(buyPrice);
@@ -130,8 +121,6 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	}
 	@Override
 	public void setSellPrice(double sellPrice) {
-		HC hc = HC.hc;
-		SQLWrite sw = hc.getSQLWrite();
 		this.sellPrice = sellPrice;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SELL_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(sellPrice);
@@ -142,8 +131,6 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	}
 	@Override
 	public void setMaxStock(int maxStock) {
-		HC hc = HC.hc;
-		SQLWrite sw = hc.getSQLWrite();
 		this.maxStock = maxStock;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET MAX_STOCK=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(maxStock);
@@ -154,8 +141,6 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	}
 	@Override
 	public void setStatus(TradeObjectStatus status) {
-		HC hc = HC.hc;
-		SQLWrite sw = hc.getSQLWrite();
 		this.status = status;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET STATUS=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(status.toString());

@@ -1,7 +1,7 @@
 package regalowl.hyperconomy.util;
 
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.command.CommandData;
 
@@ -12,10 +12,8 @@ public class HyperLock {
 	private boolean playerLock;
 	
 	private LanguageFile L;
-	private HC hc;
 	
-	public HyperLock(boolean loadLock, boolean fullLock, boolean playerLock) {
-		hc = HC.hc;
+	public HyperLock(HyperConomy hc, boolean loadLock, boolean fullLock, boolean playerLock) {
 		L = hc.getLanguageFile();
 		this.loadLock = loadLock;
 		this.fullLock = fullLock;

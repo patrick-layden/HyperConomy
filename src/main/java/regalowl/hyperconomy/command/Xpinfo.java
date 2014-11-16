@@ -1,12 +1,14 @@
 package regalowl.hyperconomy.command;
 
+import regalowl.hyperconomy.HyperConomy;
+
 
 
 public class Xpinfo extends BaseCommand implements HyperCommand {
 
 
-	public Xpinfo() {
-		super(true);
+	public Xpinfo(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override

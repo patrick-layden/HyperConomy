@@ -9,24 +9,25 @@ import java.util.HashMap;
 
 
 
+
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.file.FileConfiguration;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.ShopCreationEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.GlobalShop;
+import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class Servershopcommand extends BaseCommand implements HyperCommand {
 	
-	public Servershopcommand() {
-		super(true);
+	public Servershopcommand(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	private HashMap<HyperPlayer, Shop> currentShop = new HashMap<HyperPlayer, Shop>();
@@ -92,7 +93,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					hsm.getShop(name).setPoint1(hp.getLocation());
 				} else {
 					HLocation l = hp.getLocation();
-					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
+					Shop shop = new ServerShop(hc, name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					hsm.addShop(shop);
 					hc.getHyperEventHandler().fireEvent(new ShopCreationEvent(shop));
 				}
@@ -108,7 +109,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					hsm.getShop(name).setPoint2(hp.getLocation());
 				} else {
 					HLocation l = hp.getLocation();
-					Shop shop = new ServerShop(name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
+					Shop shop = new ServerShop(hc, name, hp.getEconomy(), hp.getHyperEconomy().getDefaultAccount(), l, l);
 					hsm.addShop(shop);
 					hc.getHyperEventHandler().fireEvent(new ShopCreationEvent(shop));
 				}
@@ -200,7 +201,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse("&6" + L.get("ALL_ITEMS_ADDED") + " " + css.getDisplayName());
 					return data;
 				}
-				TradeObject ho = dm.getEconomy(css.getEconomy()).getHyperObject(args[1]);
+				TradeObject ho = dm.getEconomy(css.getEconomy()).getTradeObject(args[1]);
 				if (ho == null) {
 					data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 					return data;
@@ -228,7 +229,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse(L.f(L.get("ALL_REMOVED_FROM"), css.getDisplayName()));
 					return data;
 				}
-				TradeObject ho = dm.getEconomy(css.getEconomy()).getHyperObject(args[1]);
+				TradeObject ho = dm.getEconomy(css.getEconomy()).getTradeObject(args[1]);
 				if (ho == null) {
 					data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 					return data;
@@ -261,7 +262,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				HyperEconomy he = css.getHyperEconomy();
 				ArrayList<TradeObject> add = new ArrayList<TradeObject>();
 				for (String name:categoryNames) {
-					TradeObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getTradeObject(name);
 					if (ho != null) {
 						add.add(ho);
 					}
@@ -288,7 +289,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 				HyperEconomy he = css.getHyperEconomy();
 				ArrayList<TradeObject> remove = new ArrayList<TradeObject>();
 				for (String name:categoryNames) {
-					TradeObject ho = he.getHyperObject(name);
+					TradeObject ho = he.getTradeObject(name);
 					if (ho != null) {
 						remove.add(ho);
 					}
@@ -306,7 +307,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					return data;
 				}
 				String economy = args[1];
-				if (HC.hc.getDataManager().economyExists(economy)) {
+				if (hc.getDataManager().economyExists(economy)) {
 					css.setEconomy(economy);
 					data.addResponse(L.get("SHOP_ECONOMY_SET"));
 				} else {

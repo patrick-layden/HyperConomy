@@ -1,6 +1,6 @@
 package regalowl.hyperconomy.tradeobject;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 
 public enum EnchantmentClass {
 	WOOD, LEATHER, STONE, CHAINMAIL, IRON, GOLD, DIAMOND, BOW, BOOK, NONE;
@@ -35,9 +35,8 @@ public enum EnchantmentClass {
 		
 	}
 	
-	public static double getclassValue(EnchantmentClass eclass) {
+	public static double getclassValue(HyperConomy hc, EnchantmentClass eclass) {
 		try {
-			HC hc = HC.hc;
 			if (eclass.equals(EnchantmentClass.LEATHER)) {
 				return hc.getConf().getDouble("enchantment.classvalue.leather");
 			} else if (eclass.equals(EnchantmentClass.WOOD)) {
@@ -61,7 +60,7 @@ public enum EnchantmentClass {
 			}
 		} catch (Exception e) {
 			String info = "getclassValue() passed values eclass='" + eclass.toString() + "'";
-			HC.hc.gSDL().getErrorWriter().writeError(e, info);
+			hc.gSDL().getErrorWriter().writeError(e, info);
 			return 0;
 		}
 	}

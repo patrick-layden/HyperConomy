@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.minecraft.HBlock;
@@ -22,16 +22,16 @@ import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class ItemDisplay {
 	
-	private HC hc;
+	private HyperConomy hc;
 	private String name;
 	private HLocation l;
 	private HItem item;
 	private boolean active;
 	
-	ItemDisplay(HLocation location, String name, boolean newDisplay) {
-		this.hc = HC.hc;
+	ItemDisplay(HyperConomy hc, HLocation location, String name, boolean newDisplay) {
+		this.hc = hc;
 		this.active = false;
-		HyperEconomy he = HC.hc.getDataManager().getEconomy("default");
+		HyperEconomy he = hc.getDataManager().getEconomy("default");
 		this.l = location;
 		this.name = he.fixName(name);
 		if (newDisplay) {
@@ -57,14 +57,14 @@ public class ItemDisplay {
 		int x = (int) Math.floor(l.getX());
 		int y = (int) Math.floor(l.getY() -1);
 		int z = (int) Math.floor(l.getZ());
-		return new HBlock(new HLocation(l.getWorld(), x, y, z));
+		return new HBlock(hc, new HLocation(l.getWorld(), x, y, z));
 	}
 	
 	public HBlock getItemBlock() {
 		int x = (int) Math.floor(l.getX());
 		int y = (int) Math.floor(l.getY());
 		int z = (int) Math.floor(l.getZ());
-		return new HBlock(new HLocation(l.getWorld(), x, y, z));
+		return new HBlock(hc, new HLocation(l.getWorld(), x, y, z));
 	}
 	
 	public HLocation getLocation() {
@@ -102,14 +102,15 @@ public class ItemDisplay {
 	}
 	
 	public TradeObject getHyperObject() {
-		return HC.hc.getDataManager().getDefaultEconomy().getHyperObject(name);
+		return hc.getDataManager().getDefaultEconomy().getTradeObject(name);
 	}
 	
 	public void makeDisplay() {
-		if (!getLocation().isLoaded()) {return;}
-		HyperEconomy he = HC.hc.getDataManager().getEconomy("default");
-		HItemStack dropstack = he.getHyperObject(name).getItem();
-		this.item = HC.mc.dropItemDisplay(new HLocation(l.getWorld(), l.getX(), l.getY() + 1, l.getZ()), dropstack);
+		HBlock db = new HBlock(hc, l);
+		if (!db.isLoaded()) {return;}
+		HyperEconomy he = hc.getDataManager().getEconomy("default");
+		HItemStack dropstack = he.getTradeObject(name).getItem();
+		this.item = hc.getMC().dropItemDisplay(new HLocation(l.getWorld(), l.getX(), l.getY() + 1, l.getZ()), dropstack);
 		active = true;
 	}
 	
@@ -120,7 +121,8 @@ public class ItemDisplay {
 	
 
 	public void removeItem() {
-		l.load();
+		HBlock db = new HBlock(hc, l);
+		db.load();
 		if (item != null) {
 			item.remove();
 		}
@@ -160,8 +162,8 @@ public class ItemDisplay {
 		if (Math.abs(dl.getX() - l.getX()) > 10) return false;
 		if (Math.abs(dl.getZ() - l.getZ()) > 10) return false;
 		if (Math.abs(dl.getY() - l.getY()) > 30) return false;
-		HC.mc.zeroVelocity(droppedItem);
-		if (HC.mc.getFirstNonAirBlockInColumn(dl).getLocation().getY() > (l.getY() + 10)) return false;
+		hc.getMC().zeroVelocity(droppedItem);
+		if (hc.getMC().getFirstNonAirBlockInColumn(dl).getLocation().getY() > (l.getY() + 10)) return false;
 		return true;
 	}
 	
@@ -182,7 +184,7 @@ public class ItemDisplay {
 	
 
 	public void clearNearbyItems(double radius, boolean removeDisplays, boolean removeSelf) {
-		HC.mc.clearNearbyNonDisplayItems(item, radius);
+		hc.getMC().clearNearbyNonDisplayItems(item, radius);
 	}
 
 }

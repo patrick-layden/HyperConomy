@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.command;
 
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.display.ItemDisplayFactory;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -8,8 +9,8 @@ import regalowl.hyperconomy.minecraft.HLocation;
 public class Makedisplay extends BaseCommand implements HyperCommand {
 
 
-	public Makedisplay() {
-		super(true);
+	public Makedisplay(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override

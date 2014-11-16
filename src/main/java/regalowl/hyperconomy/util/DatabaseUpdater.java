@@ -7,16 +7,16 @@ import regalowl.simpledatalib.sql.FieldType;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SyncSQLWrite;
 import regalowl.simpledatalib.sql.Table;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 
 public class DatabaseUpdater {
 
-	private HC hc;
+	private HyperConomy hc;
 	public final double version = 1.35;
 	ArrayList<String> tables = new ArrayList<String>();
 	
-	public DatabaseUpdater() {
-		hc = HC.hc;
+	public DatabaseUpdater(HyperConomy hc) {
+		this.hc = hc;
 		tables.add("settings");
 		tables.add("objects");
 		tables.add("players");
@@ -52,7 +52,6 @@ public class DatabaseUpdater {
 	
 
 	public void updateTables(QueryResult qr) {
-		hc = HC.hc;
 		SyncSQLWrite sw = hc.getSQLManager().getSyncSQLWrite();
 		if (qr.next()) {
 			double version = Double.parseDouble(qr.getString("VALUE"));
@@ -91,7 +90,7 @@ public class DatabaseUpdater {
 
 	public void createTables(boolean copydatabase) {
 		hc.getDebugMode().ayncDebugConsoleMessage("Creating database tables.");
-		SyncSQLWrite sw = HC.hc.getSQLManager().getSyncSQLWrite();
+		SyncSQLWrite sw = hc.getSQLManager().getSyncSQLWrite();
 		if (copydatabase) {
 			for (String table:tables) {
 				sw.queue("DROP TABLE IF EXISTS hyperconomy_"+table);
@@ -263,11 +262,11 @@ public class DatabaseUpdater {
 		f = t.addField("DISPLAY_NAME", FieldType.VARCHAR);f.setFieldSize(255);
 		f = t.addField("COMPONENTS", FieldType.VARCHAR);f.setFieldSize(1000);
 		
-		HC.hc.getSQLManager().saveTables();
+		hc.getSQLManager().saveTables();
 		
 		if (!copydatabase) {
 			sw.queue("DELETE FROM hyperconomy_settings");
-			sw.queue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+HC.hc.getDataManager().getDatabaseUpdater().getVersion()+"', NOW() )");
+			sw.queue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getDataManager().getDatabaseUpdater().getVersion()+"', NOW() )");
 			sw.writeQueue();
 		}
 	}

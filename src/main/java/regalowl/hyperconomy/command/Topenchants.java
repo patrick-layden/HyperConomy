@@ -6,6 +6,8 @@ import java.util.TreeMap;
 
 
 
+
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObjectStatus;
@@ -14,8 +16,8 @@ import regalowl.hyperconomy.tradeobject.TradeObjectType;
 
 public class Topenchants extends BaseCommand implements HyperCommand {
 
-	public Topenchants() {
-		super(false);
+	public Topenchants(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class Topenchants extends BaseCommand implements HyperCommand {
 				page = Integer.parseInt(args[0]);
 			}
 			SortedMap<Double, String> enchantstocks = new TreeMap<Double, String>();
-			for (TradeObject ho:he.getHyperObjects()) {
+			for (TradeObject ho:he.getTradeObjects()) {
 				if (!(ho.getType() == TradeObjectType.ENCHANTMENT)) {continue;}
 				boolean allowed = false;
 				boolean stocked = false;
@@ -67,7 +69,7 @@ public class Topenchants extends BaseCommand implements HyperCommand {
 					}
 				}
 				if (!unavailable) {
-					double samount = he.getHyperObject(ho.getName(), dm.getHyperShopManager().getShop(hp)).getStock();
+					double samount = he.getTradeObject(ho.getName(), dm.getHyperShopManager().getShop(hp)).getStock();
 					if (samount > 0) {
 						while (enchantstocks.containsKey(samount * 100)) {
 							samount += .00001;

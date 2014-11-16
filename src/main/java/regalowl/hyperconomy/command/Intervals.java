@@ -1,12 +1,13 @@
 package regalowl.hyperconomy.command;
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.simpledatalib.sql.SQLWrite;
 
 
 public class Intervals extends BaseCommand implements HyperCommand {
 
-	public Intervals() {
-		super(false);
+	public Intervals(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override

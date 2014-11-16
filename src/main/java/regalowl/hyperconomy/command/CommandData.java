@@ -2,11 +2,12 @@ package regalowl.hyperconomy.command;
 
 import java.util.ArrayList;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 
 public class CommandData {
 
+	private HyperConomy hc;
 	private Object sender;
 	private String senderName;
 	private boolean isPlayer;
@@ -15,7 +16,8 @@ public class CommandData {
 	private boolean wasSuccessful;
 	private ArrayList<String> response = new ArrayList<String>();
 	
-	public CommandData(Object sender, String senderName, boolean isPlayer, String command, String[] args) {
+	public CommandData(HyperConomy hc, Object sender, String senderName, boolean isPlayer, String command, String[] args) {
+		this.hc = hc;
 		this.sender = sender;
 		this.senderName = senderName;
 		this.isPlayer = isPlayer;
@@ -42,7 +44,7 @@ public class CommandData {
 	 
 	public HyperPlayer getHyperPlayer() {
 		if (isPlayer) {
-			return HC.hc.getHyperPlayerManager().getHyperPlayer(senderName);
+			return hc.getHyperPlayerManager().getHyperPlayer(senderName);
 		}
 		return null;
 	}

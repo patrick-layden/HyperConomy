@@ -11,17 +11,18 @@ import java.util.HashMap;
 
 
 
+
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.hyperconomy.DataManager;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.HyperShopManager;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.ShopCreationEvent;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.minecraft.HLocation;
+import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -33,8 +34,8 @@ import regalowl.hyperconomy.tradeobject.TradeObjectType;
 
 public class Manageshop extends BaseCommand implements HyperCommand {
 	
-	public Manageshop() {
-		super(true);
+	public Manageshop(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	private HashMap<HyperPlayer, PlayerShop> currentShop = new HashMap<HyperPlayer, PlayerShop>();
@@ -48,7 +49,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			return data;
 		}
 		int maxVolume = hc.getConf().getInt("shop.max-player-shop-volume");
-		DataManager em = HC.hc.getDataManager();
+		DataManager em = hc.getDataManager();
 		HyperShopManager hsm = hc.getHyperShopManager();
 		if (hp == null) {return data;}
 		HyperEconomy he = em.getEconomy(hp.getEconomy());
@@ -109,7 +110,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			TradeObject ho = null;
 			double amount = 0.0;
 			if (args.length == 3) {
-				ho = hp.getHyperEconomy().getHyperObject(args[1]);
+				ho = hp.getHyperEconomy().getTradeObject(args[1]);
 				try {
 					amount = Double.parseDouble(args[2]);
 				} catch (Exception e) {
@@ -124,7 +125,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 				return data;
 			}
-			TradeObject ho2 = he.getHyperObject(ho.getName(), cps);
+			TradeObject ho2 = he.getTradeObject(ho.getName(), cps);
 			if (ho2.isShopObject()) {
 				ho2.setStock(amount);
 				data.addResponse(L.f(L.get("STOCK_SET"), ho2.getName()));
@@ -145,7 +146,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			TradeObject ho = null;
 			if (args.length == 1) {
 				HItemStack selectedItem = hp.getItemInHand();
-				ho = hp.getHyperEconomy().getHyperObject(selectedItem);
+				ho = hp.getHyperEconomy().getTradeObject(selectedItem);
 			} else if (args.length == 2) {
 				try {
 					amount = Integer.parseInt(args[1]);
@@ -154,9 +155,9 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 					return data;
 				}
 				HItemStack selectedItem = hp.getItemInHand();
-				ho = hp.getHyperEconomy().getHyperObject(selectedItem);
+				ho = hp.getHyperEconomy().getTradeObject(selectedItem);
 			} else if (args.length == 3) {
-				ho = hp.getHyperEconomy().getHyperObject(args[1]);
+				ho = hp.getHyperEconomy().getTradeObject(args[1]);
 				try {
 					amount = Integer.parseInt(args[2]);
 				} catch (Exception e) {
@@ -175,7 +176,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			
-			TradeObject ho2 = he.getHyperObject(ho.getName(), cps);
+			TradeObject ho2 = he.getTradeObject(ho.getName(), cps);
 			int globalMaxStock = hc.getConf().getInt("shop.max-stock-per-item-in-playershops");
 			if (ho2.getStock() + amount > globalMaxStock) {
 				data.addResponse(L.get("CANT_ADD_MORE_STOCK"));
@@ -248,7 +249,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			}
 
 			
-			TradeObject ho = he.getHyperObject(args[1], cps);
+			TradeObject ho = he.getTradeObject(args[1], cps);
 			if (ho == null) {
 				data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 				return data;
@@ -332,7 +333,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			HLocation l = hp.getLocation();
 			HLocation p1 = new HLocation(l.getWorld(), l.getBlockX() - radius, l.getBlockY() - radius, l.getBlockZ() - radius);
 			HLocation p2 = new HLocation(l.getWorld(), l.getBlockX() + radius, l.getBlockY() + radius, l.getBlockZ() + radius);
-			PlayerShop newShop = new PlayerShop(name, hp.getEconomy(), hp, p1, p2);
+			PlayerShop newShop = new PlayerShop(hc, name, hp.getEconomy(), hp, p1, p2);
 			if (newShop.getVolume() > maxVolume) {
 				data.addResponse(L.f(L.get("CANT_MAKE_SHOP_LARGER_THAN"), maxVolume));
 				newShop.deleteShop();
@@ -345,7 +346,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 					return data;
 				}
 			}
-			for (TradeObject ho:he.getHyperObjects(newShop)) {
+			for (TradeObject ho:he.getTradeObjects(newShop)) {
 				if (ho.isShopObject()) {
 					ho.setStatus(TradeObjectStatus.NONE);
 				}
@@ -438,7 +439,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 				return data;
 			}
-			TradeObject ho = he.getHyperObject(args[1], cps);
+			TradeObject ho = he.getTradeObject(args[1], cps);
 			if (ho.isShopObject()) {
 				ho.setBuyPrice(price);
 				ho.setSellPrice(price);
@@ -468,7 +469,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 				return data;
 			}
-			TradeObject ho = he.getHyperObject(args[1], cps);
+			TradeObject ho = he.getTradeObject(args[1], cps);
 			if (ho.isShopObject()) {
 				ho.setBuyPrice(price);
 				data.addResponse(L.get("PRICE_SET"));
@@ -497,7 +498,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 				return data;
 			}
-			TradeObject ho = he.getHyperObject(args[1], cps);
+			TradeObject ho = he.getTradeObject(args[1], cps);
 			if (ho.isShopObject()) {
 				ho.setSellPrice(price);
 				data.addResponse(L.get("PRICE_SET"));
@@ -526,7 +527,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 				return data;
 			}
-			TradeObject ho = he.getHyperObject(args[1], cps);
+			TradeObject ho = he.getTradeObject(args[1], cps);
 			if (ho.isShopObject()) {
 				ho.setMaxStock(maxStock);
 				data.addResponse(L.get("MAXSTOCK_SET"));
@@ -550,14 +551,14 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			if (args[1].equalsIgnoreCase("all")) {
-				for (TradeObject ho:he.getHyperObjects(cps)) {
+				for (TradeObject ho:he.getTradeObjects(cps)) {
 					ho.setStatus(status);
 				}
 				data.addResponse(L.get("ALL_STATUS_SET"));
 				return data;
 			}
 			if (args[1].equalsIgnoreCase("instock")) {
-				for (TradeObject ho:he.getHyperObjects(cps)) {
+				for (TradeObject ho:he.getTradeObjects(cps)) {
 					if (ho.getStock() > 0) {
 						ho.setStatus(status);
 					}
@@ -566,7 +567,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			if (he.objectTest(args[1])) {
-				TradeObject ho = he.getHyperObject(args[1], cps);
+				TradeObject ho = he.getTradeObject(args[1], cps);
 				ho.setStatus(status);
 				data.addResponse(L.get("STATUS_SET"));
 				return data;
@@ -576,7 +577,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			if (categoryString != null) {
 				ArrayList<String> names = CommonFunctions.explode(categoryString, ",");
 				for (String name:names) {
-					TradeObject ho = he.getHyperObject(name, cps);
+					TradeObject ho = he.getTradeObject(name, cps);
 					if (ho != null) {
 						ho.setStatus(status);
 					}

@@ -5,14 +5,15 @@ import java.util.ArrayList;
 
 import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 
 public class Backup {
 
+	private transient HyperConomy hc;
 	private String destinationPath;
 	
-	public Backup() {
-		HC hc = HC.hc;
+	public Backup(HyperConomy hc) {
+		this.hc = hc;
 		FileTools ft = hc.getFileTools();
 
 		ArrayList<String> backupFiles = new ArrayList<String>();
@@ -41,21 +42,24 @@ public class Backup {
 		for (int i = 0; i < backupFiles.size(); i++) {
 			ft.copyFile(spath + File.separator + backupFiles.get(i), languagePath + File.separator + backupFiles.get(i));
 		}
-		new Thread(new Runnable() {
-			public void run() {
-				HC hc = HC.hc;
-				ArrayList<String> tables = HC.hc.getDataManager().getTablesList();
-				FileTools ft = hc.getFileTools();
-				String folderPath = destinationPath + File.separator + "SQL_Tables";
-				ft.makeFolder(folderPath);
-				for (String table:tables) {
-					if (table.equalsIgnoreCase("history")) {continue;}
-					QueryResult data = hc.getSQLRead().select("SELECT * FROM hyperconomy_" + table);
-					String writePath = folderPath + File.separator + table + ".csv";
-					hc.getFileTools().writeCSV(data, writePath);
-				}
-			}
-		}).start();
-		
+		new Thread(new BackupTask()).start();
 	}
+	
+	private class BackupTask implements Runnable {
+		@Override
+		public void run() {
+			ArrayList<String> tables = hc.getDataManager().getTablesList();
+			FileTools ft = hc.getFileTools();
+			String folderPath = destinationPath + File.separator + "SQL_Tables";
+			ft.makeFolder(folderPath);
+			for (String table:tables) {
+				if (table.equalsIgnoreCase("history")) {continue;}
+				QueryResult data = hc.getSQLRead().select("SELECT * FROM hyperconomy_" + table);
+				String writePath = folderPath + File.separator + table + ".csv";
+				hc.getFileTools().writeCSV(data, writePath);
+			}
+		}
+	}
+	
+	
 }

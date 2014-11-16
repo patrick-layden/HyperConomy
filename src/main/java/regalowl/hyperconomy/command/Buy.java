@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.command;
 
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -12,8 +13,8 @@ import regalowl.hyperconomy.transaction.TransactionType;
 
 public class Buy extends BaseCommand implements HyperCommand {
 
-	public Buy() {
-		super(true);
+	public Buy(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override
@@ -23,7 +24,7 @@ public class Buy extends BaseCommand implements HyperCommand {
 		try {
 			Shop s = hc.getHyperShopManager().getShop(hp);
 			String name = he.fixName(args[0]);
-			TradeObject ho = he.getHyperObject(name, hc.getHyperShopManager().getShop(hp));
+			TradeObject ho = he.getTradeObject(name, hc.getHyperShopManager().getShop(hp));
 			int amount = 1;
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("max")) {

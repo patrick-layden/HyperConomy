@@ -7,9 +7,11 @@ import java.util.HashMap;
 
 
 
+
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.tradeobject.BasicTradeObject;
@@ -26,7 +28,7 @@ public class InfoSign {
 	private EnchantmentClass enchantClass;
 	private TradeObject ho;
 	private HLocation loc;
-	private HC hc;
+	private HyperConomy hc;
 	private LanguageFile L;
 	private String line1;
 	private String line2;
@@ -37,15 +39,15 @@ public class InfoSign {
 	private int timeValue;
 	private String increment;
 
-	InfoSign(HLocation signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass) {
+	InfoSign(HyperConomy hc, HLocation signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass) {
 		this.multiplier = multiplier;
 		if (enchantClass == null) {
 			this.enchantClass = EnchantmentClass.DIAMOND;
 		} else {
 			this.enchantClass = enchantClass;
 		}
-		hc = HC.hc;
-		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
+		this.hc = hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		L = hc.getLanguageFile();
 		this.economy = "default";
 		if (economy != null) {
@@ -54,7 +56,7 @@ public class InfoSign {
 		this.loc = signLoc;
 		this.type = type;
 		this.objectName = he.fixName(objectName);
-		ho = he.getHyperObject(this.objectName);
+		ho = he.getTradeObject(this.objectName);
 		if (ho == null) {
 			deleteSign();
 			return;
@@ -64,8 +66,8 @@ public class InfoSign {
 			deleteSign();
 			return;
 		}
-		line1 = HC.mc.removeColor(s.getLine(0).trim());
-		line2 = HC.mc.removeColor(s.getLine(1).trim());
+		line1 = hc.getMC().removeColor(s.getLine(0).trim());
+		line2 = hc.getMC().removeColor(s.getLine(1).trim());
 		if (line1.length() > 13) {
 			line2 = "&1" + line1.substring(13, line1.length()) + line2;
 			line1 = "&1" + line1.substring(0, 13);
@@ -78,15 +80,15 @@ public class InfoSign {
 	}
 
 	
-	InfoSign(HLocation signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass, String[] lines) {
+	InfoSign(HyperConomy hc, HLocation signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass, String[] lines) {
 		this.multiplier = multiplier;
 		if (enchantClass == null) {
 			this.enchantClass = EnchantmentClass.DIAMOND;
 		} else {
 			this.enchantClass = enchantClass;
 		}
-		hc = HC.hc;
-		HyperEconomy he = HC.hc.getDataManager().getEconomy(economy);
+		this.hc = hc;
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		L = hc.getLanguageFile();
 		this.economy = "default";
 		this.loc = signLoc;
@@ -95,13 +97,13 @@ public class InfoSign {
 		if (economy != null) {
 			this.economy = economy;
 		}
-		ho = he.getHyperObject(this.objectName);
+		ho = he.getTradeObject(this.objectName);
 		if (ho == null) {
 			deleteSign();
 			return;
 		}
-		line1 = HC.mc.removeColor(lines[0].trim());
-		line2 = HC.mc.removeColor(lines[1].trim());
+		line1 = hc.getMC().removeColor(lines[0].trim());
+		line2 = hc.getMC().removeColor(lines[1].trim());
 		if (line1.length() > 13) {
 			line2 = "&1" + line1.substring(13, line1.length()) + line2;
 			line1 = "&1" + line1.substring(0, 13);
@@ -250,11 +252,11 @@ public class InfoSign {
 					line4 = "&a" + "" + ho.getMedian();
 					break;
 				case HISTORY:
-					String increment = HC.mc.removeColor(line4.replace(" ", "")).toUpperCase().replaceAll("[0-9]", "");
+					String increment = hc.getMC().removeColor(line4.replace(" ", "")).toUpperCase().replaceAll("[0-9]", "");
 					if (increment.contains("(")) {
 						increment = increment.substring(0, increment.indexOf("("));
 					}
-					String timev = HC.mc.removeColor(line4.replace(" ", "")).toUpperCase().replaceAll("[A-Z]", "");
+					String timev = hc.getMC().removeColor(line4.replace(" ", "")).toUpperCase().replaceAll("[A-Z]", "");
 					int timevalue;
 					int timevalueHours;
 					if (timev.contains("(")) {
@@ -343,7 +345,7 @@ public class InfoSign {
 					if (line3.length() > 14) {
 						line3 = line3.substring(0, 13) + ")";
 					}
-					HC.mc.runTask(new Runnable() {
+					hc.getMC().runTask(new Runnable() {
 						public void run() {
 							HSign s = getSign();
 							if (s != null) {
@@ -401,8 +403,9 @@ public class InfoSign {
 	
 	public HSign getSign() {
 		if (loc == null) return null;
-		if (!loc.isLoaded()) loc.load();
-		return HC.mc.getSign(loc);
+		HBlock sb = new HBlock(hc, loc);
+		if (!sb.isLoaded()) sb.load();
+		return hc.getMC().getSign(loc);
 	}
 	
 	

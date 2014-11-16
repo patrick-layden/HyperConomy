@@ -1,12 +1,14 @@
 package regalowl.hyperconomy.command;
 
+import regalowl.hyperconomy.HyperConomy;
+
 
 
 public class Hcbalance extends BaseCommand implements HyperCommand {
 	
 	
-	public Hcbalance() {
-		super(false);
+	public Hcbalance(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override

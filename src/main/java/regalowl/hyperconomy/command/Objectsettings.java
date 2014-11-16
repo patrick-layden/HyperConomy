@@ -2,13 +2,14 @@ package regalowl.hyperconomy.command;
 
 
 import regalowl.simpledatalib.CommonFunctions;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class Objectsettings extends BaseCommand implements HyperCommand {
 
-	public Objectsettings() {
-		super(false);
+	public Objectsettings(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override
@@ -18,7 +19,7 @@ public class Objectsettings extends BaseCommand implements HyperCommand {
 			TradeObject ho = null;
 			if (args.length == 0) {
 				HyperEconomy he = hp.getHyperEconomy();
-				ho = he.getHyperObject(hp.getItemInHand());
+				ho = he.getTradeObject(hp.getItemInHand());
 				if (ho == null) {
 					data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 					return data;
@@ -27,7 +28,7 @@ public class Objectsettings extends BaseCommand implements HyperCommand {
 				HyperEconomy he = super.getEconomy();
 				String nam = he.fixName(args[0]);
 				if (he.objectTest(nam)) {
-					ho = he.getHyperObject(nam);
+					ho = he.getTradeObject(nam);
 				} else {
 	    			data.addResponse(L.get("INVALID_ITEM_NAME"));
 	    			return data;

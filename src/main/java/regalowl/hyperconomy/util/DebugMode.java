@@ -1,18 +1,19 @@
 package regalowl.hyperconomy.util;
 
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 
 public class DebugMode {
 
-	public DebugMode() {
-		HC hc = HC.hc;
+	private transient HyperConomy hc;
+	
+	public DebugMode(HyperConomy hc) {
+		this.hc = hc;
 		if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
 		hc.getSimpleDataLib().setDebug(true);
 	}
 	
 	public void debugWriteError(Exception e) {
-		HC hc = HC.hc;
 		if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
 		hc.gSDL().getErrorWriter().writeError(e, "[Debug Mode Error]");
 	}
@@ -20,16 +21,14 @@ public class DebugMode {
 
 	
 	public void debugWriteMessage(String entry) {
-		HC hc = HC.hc;
 		if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
 		hc.gSDL().getErrorWriter().writeError("[Debug Mode Message]" + entry);
 	}
 	
 	
 	public void syncDebugConsoleMessage(String message) {
-		HC hc = HC.hc;
 		if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
-		HC.mc.logInfo("[HyperConomy Debug]" + message);
+		hc.getMC().logInfo("[HyperConomy Debug]" + message);
 	}
 	
 	public void ayncDebugConsoleMessage(String message) {
@@ -38,15 +37,13 @@ public class DebugMode {
 	}
 	private class AsyncConsoleDebug implements Runnable {
 		private String m;
-		private HC hc;
 		public AsyncConsoleDebug(String message) {
 			this.m = message;
-			this.hc = HC.hc;
 		}
 		@Override
 		public void run() {
 			if (!hc.getConf().getBoolean("enable-feature.debug-mode")) {return;}
-			HC.mc.logInfo("[HyperConomy Debug]" + m);
+			hc.getMC().logInfo("[HyperConomy Debug]" + m);
 		}
 	}
 	

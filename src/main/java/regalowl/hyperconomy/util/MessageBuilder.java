@@ -1,10 +1,10 @@
 package regalowl.hyperconomy.util;
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 
 public class MessageBuilder {
 	
-	LanguageFile L;
+	private transient LanguageFile L;
 	private String message;
 	
 	private int amount;
@@ -13,8 +13,8 @@ public class MessageBuilder {
 	private String playerName;
 	
 	
-	public MessageBuilder(String message) {
-		L = HC.hc.getLanguageFile();
+	public MessageBuilder(HyperConomy hc, String message) {
+		L = hc.getLanguageFile();
 		this.message = L.get(message);
 	}
 	

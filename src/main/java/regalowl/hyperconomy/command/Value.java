@@ -2,6 +2,7 @@ package regalowl.hyperconomy.command;
 
 
 import regalowl.simpledatalib.CommonFunctions;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -10,8 +11,8 @@ import regalowl.hyperconomy.tradeobject.TradeObjectType;
 
 public class Value extends BaseCommand implements HyperCommand {
 
-	public Value() {
-		super(false);
+	public Value(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override
@@ -26,7 +27,7 @@ public class Value extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			String name = he.fixName(args[0]);
-			TradeObject ho = he.getHyperObject(name, dm.getHyperShopManager().getShop(hp));
+			TradeObject ho = he.getTradeObject(name, dm.getHyperShopManager().getShop(hp));
 			if (ho == null) {
 				data.addResponse(L.get("INVALID_ITEM_NAME"));
 				return data;

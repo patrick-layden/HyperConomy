@@ -5,7 +5,9 @@ import java.util.ArrayList;
 
 
 
+
 import regalowl.simpledatalib.CommonFunctions;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObjectType;
@@ -14,8 +16,8 @@ import regalowl.hyperconomy.util.Backup;
 public class Scalebypercent extends BaseCommand implements HyperCommand {
 
 
-	public Scalebypercent() {
-		super(false);
+	public Scalebypercent(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override
@@ -42,11 +44,11 @@ public class Scalebypercent extends BaseCommand implements HyperCommand {
 				if (percent >= 0) {
 					if (type.equalsIgnoreCase("value") || type.equalsIgnoreCase("staticprice") || type.equalsIgnoreCase("stock") || type.equalsIgnoreCase("median") || type.equalsIgnoreCase("startprice")) {
 						if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {
-							new Backup();
+							new Backup(hc);
 						}
 						for (int c = 0; c < names.size(); c++) {
 							String cname = names.get(c);
-							TradeObject ho = he.getHyperObject(cname);
+							TradeObject ho = he.getTradeObject(cname);
 							if (!(ho.getType() == TradeObjectType.ITEM) && onlyItems) {continue;}
 							if (!(ho.getType() == TradeObjectType.ENCHANTMENT) && onlyEnchants) {continue;}
 							if (!ho.isCompositeObject()) {

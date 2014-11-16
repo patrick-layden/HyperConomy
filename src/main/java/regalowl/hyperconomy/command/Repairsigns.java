@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 
 
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.display.SignType;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -22,8 +22,8 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 	
 	
 
-	public Repairsigns() {
-		super(true);
+	public Repairsigns(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override
@@ -60,14 +60,14 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 				for (int j = (pz - zrad); j <= (pz + zrad); j++) {
 					for (int k = (py - yrad); k <= (py + yrad); k++) {
 						HLocation loc = new HLocation(w, i, k, j);
-						if (loc.isLoaded()) {
-							HBlock cb = loc.getBlock();
+						if (loc.isLoaded(hc)) {
+							HBlock cb = loc.getBlock(hc);
 							if (cb != null && cb.isInfoSign()) {
-								HSign s = HC.mc.getSign(loc);
-								String objectName = HC.mc.removeColor(s.getLine(0)).trim() + HC.mc.removeColor(s.getLine(1)).trim();
+								HSign s = hc.getMC().getSign(loc);
+								String objectName = hc.getMC().removeColor(s.getLine(0)).trim() + hc.getMC().removeColor(s.getLine(1)).trim();
 								objectName = dm.getEconomy("default").fixName(objectName);
 								if (dm.getEconomy("default").objectTest(objectName)) {
-									String ttype = HC.mc.removeColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
+									String ttype = hc.getMC().removeColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
 									if (ttype.contains("[")) {
 										continue;
 									}
@@ -113,9 +113,9 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 			}
 			if (signsRepaired > 0) {
 				hc.getInfoSignHandler().reloadSigns();
-				HC.mc.runTaskLater(new Runnable() {
+				hc.getMC().runTaskLater(new Runnable() {
 					public void run() {
-						HC.hc.getInfoSignHandler().updateSigns();
+						hc.getInfoSignHandler().updateSigns();
 					}
 				}, 60L);
 				data.addResponse(L.f(L.get("X_SIGNS_REPAIRED"), signsRepaired));

@@ -8,13 +8,15 @@ import java.security.SecureRandom;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
+import regalowl.hyperconomy.HyperConomy;
+
 
 public class Setpassword extends BaseCommand implements HyperCommand {
 
 	
 	
-	public Setpassword() {
-		super(true);
+	public Setpassword(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	public String sha256Digest(String string) {

@@ -7,9 +7,12 @@ import java.util.Collections;
 
 
 
+
+
 import regalowl.simpledatalib.CommonFunctions;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.HyperShopManager;
+import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.BasicTradeObject;
@@ -21,8 +24,8 @@ import regalowl.hyperconomy.tradeobject.TradeObjectType;
 public class Browseshop extends BaseCommand implements HyperCommand {
 	
 
-	public Browseshop() {
-		super(false);
+	public Browseshop(HyperConomy hc) {
+		super(hc, false);
 	}
 	
 	@Override
@@ -88,7 +91,7 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 			int i = 0;
 			while(i < names.size()) {
 				String cname = names.get(i);
-				TradeObject ho = he.getHyperObject(cname);
+				TradeObject ho = he.getTradeObject(cname);
 				String displayName = ho.getDisplayName();
 				if (alphabetic) {
 					if (ho.nameStartsWith(input)) {
@@ -147,22 +150,22 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 						String iname = rnames.get(count);
 			            Double cost = 0.0;
 			            double stock = 0;
-			            TradeObject ho = he.getHyperObject(iname, hsm.getShop(hp));
+			            TradeObject ho = he.getTradeObject(iname, hsm.getShop(hp));
 			            if (ho.getType() == TradeObjectType.ITEM) {
 							cost = ho.getBuyPrice(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = CommonFunctions.twoDecimals(cost + taxpaid);
-							stock = CommonFunctions.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
+							stock = CommonFunctions.twoDecimals(he.getTradeObject(iname, hsm.getShop(hp)).getStock());
 						} else if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 							cost = ho.getBuyPrice(EnchantmentClass.DIAMOND);
 							cost = cost + ho.getPurchaseTax(cost);
-							stock = CommonFunctions.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
+							stock = CommonFunctions.twoDecimals(he.getTradeObject(iname, hsm.getShop(hp)).getStock());
 						} else {
 							BasicTradeObject hi = (BasicTradeObject)ho;
 							cost = hi.getBuyPrice(1);
 							double taxpaid = ho.getPurchaseTax(cost);
 							cost = CommonFunctions.twoDecimals(cost + taxpaid);
-							stock = CommonFunctions.twoDecimals(he.getHyperObject(iname, hsm.getShop(hp)).getStock());
+							stock = CommonFunctions.twoDecimals(he.getTradeObject(iname, hsm.getShop(hp)).getStock());
 						}
 			            if (ho.isShopObject()) {
 			            	data.addResponse("&b" + iname + " &9[&a" + stock + " &9" + L.get("AVAILABLE") + "; &a" + L.fC(cost) + " &9" + L.get("EACH") + "; (&e" + ho.getStatus().toString()+ "&9)]");

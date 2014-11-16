@@ -2,13 +2,14 @@ package regalowl.hyperconomy.command;
 
 
 
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.display.ItemDisplayFactory;
 
 public class Removedisplay extends BaseCommand implements HyperCommand {
 
 
-	public Removedisplay() {
-		super(true);
+	public Removedisplay(HyperConomy hc) {
+		super(hc, true);
 	}
 
 	@Override

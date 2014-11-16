@@ -1,9 +1,11 @@
 package regalowl.hyperconomy.command;
 
+import regalowl.hyperconomy.HyperConomy;
+
 
 public class Economyinfo extends BaseCommand implements HyperCommand {
-	public Economyinfo() {
-		super(false);
+	public Economyinfo(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override

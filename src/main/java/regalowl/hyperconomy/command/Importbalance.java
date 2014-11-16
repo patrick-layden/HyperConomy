@@ -7,19 +7,19 @@ import java.util.UUID;
 
 
 import regalowl.simpledatalib.file.FileTools;
-import regalowl.hyperconomy.HC;
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 
 public class Importbalance extends BaseCommand implements HyperCommand {
 
-	public Importbalance() {
-		super(false);
+	public Importbalance(HyperConomy hc) {
+		super(hc, false);
 	}
 
 	@Override
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
-		if (!HC.mc.useExternalEconomy()) {
+		if (!hc.getMC().useExternalEconomy()) {
 			data.addResponse(L.get("MUST_USE_EXTERNAL_ECONOMY"));
 			return data;
 		}
@@ -28,7 +28,7 @@ public class Importbalance extends BaseCommand implements HyperCommand {
 			return data;
 		}
 		String world = args[0];
-		if (!HC.mc.worldExists(world)) {
+		if (!hc.getMC().worldExists(world)) {
 			data.addResponse(L.get("WORLD_NOT_FOUND"));
 			return data;
 		}
@@ -42,15 +42,15 @@ public class Importbalance extends BaseCommand implements HyperCommand {
 			HyperPlayer hp = null;
 			try {
 				puid = UUID.fromString(uuidName.substring(0, uuidName.indexOf(".")));
-				hp = HC.mc.getPlayer(puid);
+				hp = hc.getMC().getPlayer(puid);
 			} catch (Exception e) {
 				continue;
 			}
 			if (hp == null ||hp.getName() == null || hp.getName() == "") {
 				continue;
 			}
-			if (HC.mc.getEconomy().hasAccount(hp.getName())) {
-				hp.setInternalBalance(HC.mc.getEconomy().getBalance(hp.getName()));
+			if (hc.getMC().getEconomy().hasAccount(hp.getName())) {
+				hp.setInternalBalance(hc.getMC().getEconomy().getBalance(hp.getName()));
 				hp.setUUID(puid.toString());
 			}
 			importedPlayers.add(hp.getName());
