@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.gui;
 
 import java.awt.EventQueue;
+import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -16,8 +17,10 @@ import regalowl.simpledatalib.SimpleDataLib;
 import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.events.LogEvent;
 import regalowl.simpledatalib.events.LogLevel;
+import regalowl.simpledatalib.file.FileTools;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -70,7 +73,8 @@ public class MainPanel {
 		notificationText.setBounds(65, 130, 812, 800);
 		frame.getContentPane().add(notificationText);
 		notificationText.setColumns(10);
-
+		Font font = new Font("Verdana", Font.PLAIN, 9);
+		notificationText.setFont(font);
 		
 		try {
 			JList<String> list = new JList<String>();
@@ -78,8 +82,11 @@ public class MainPanel {
 			this.hc = mc.getHC();
 			hc.load();
 			hc.getSimpleDataLib().getEventPublisher().registerListener(this);
-			hc.enable();
 			this.sdl = hc.gSDL();
+			FileTools ft = sdl.getFileTools();
+			String sqlitePath = sdl.getStoragePath() + File.separator + "addons" + "sqlite-jdbc-3.7.2.jar";
+			ft.loadExternalJar(sqlitePath);
+			hc.enable();
 			ArrayList<TradeObject> tObjects = hc.getDataManager().getDefaultEconomy().getTradeObjects();
 			String[] objectNames = new String[tObjects.size()];
 			for (int i = 0; i < tObjects.size(); i++) {
