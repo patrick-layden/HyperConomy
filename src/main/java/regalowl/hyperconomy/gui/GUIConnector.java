@@ -18,12 +18,14 @@ public class GUIConnector extends DefaultConnector implements MineCraftConnector
 	
 	@Override
 	public void logInfo(String message) {
-		notificationText.append("\n" + message);
+		System.out.println(message);
+		//notificationText.append("\n" + message);
 	}
 
 	@Override
 	public void logSevere(String message) {
-		notificationText.append("\n" + message);
+		System.out.println(message);
+		//notificationText.append("\n" + message);
 	}
 
 

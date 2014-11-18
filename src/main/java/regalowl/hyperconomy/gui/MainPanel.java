@@ -63,7 +63,7 @@ public class MainPanel {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		redirectSystemStreams();
+		//redirectSystemStreams();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 956, 993);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,30 +77,35 @@ public class MainPanel {
 		notificationText.setFont(font);
 		
 		try {
-			JList<String> list = new JList<String>();
+			
 			MineCraftConnector mc = new GUIConnector(notificationText);
 			this.hc = mc.getHC();
 			hc.load();
 			hc.getSimpleDataLib().getEventPublisher().registerListener(this);
 			this.sdl = hc.gSDL();
-			FileTools ft = sdl.getFileTools();
-			String sqlitePath = sdl.getStoragePath() + File.separator + "addons" + "sqlite-jdbc-3.7.2.jar";
-			ft.loadExternalJar(sqlitePath);
+			sdl.setDebug(true);
+			//FileTools ft = sdl.getFileTools();
+			//String sqlitePath = sdl.getStoragePath() + File.separator + "addons" + File.separator + "sqlite-jdbc-3.8.7.jar";
+			//ft.loadExternalJar(sqlitePath);
 			hc.enable();
 			ArrayList<TradeObject> tObjects = hc.getDataManager().getDefaultEconomy().getTradeObjects();
 			String[] objectNames = new String[tObjects.size()];
 			for (int i = 0; i < tObjects.size(); i++) {
 				objectNames[i] = tObjects.get(i).getDisplayName();
 			}
+			/*
+			JList<String> list = new JList<String>();
 			list.setListData(objectNames);
 			
 			
 			list.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 			list.setBounds(224, 236, -156, -146);
 			frame.getContentPane().add(list);
+			*/
 		} catch (Exception e) {
-			String error = CommonFunctions.getErrorString(e);
-			updateTextArea(error);
+			e.printStackTrace();
+			//String error = CommonFunctions.getErrorString(e);
+			//updateTextArea(error);
 		}
 		
 
@@ -108,10 +113,11 @@ public class MainPanel {
 	
 	@EventHandler
 	public void onLogMessage(LogEvent event) {
-		if (event.getMessage() != null) updateTextArea(event.getMessage());
+		if (event.getException() != null) event.getException().printStackTrace();
+		//if (event.getMessage() != null) updateTextArea(event.getMessage());
 	}
 	
-	
+	/*
 	private void updateTextArea(final String text) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -141,4 +147,5 @@ public class MainPanel {
 		System.setOut(new PrintStream(out, true));
 		System.setErr(new PrintStream(out, true));
 	}
+	*/
 }
