@@ -5,9 +5,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import regalowl.simpledatalib.sql.QueryResult;
-import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.api.MineCraftConnector;
+import regalowl.hyperconomy.event.DataLoadEvent;
+import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.event.minecraft.HPlayerJoinEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerQuitEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -17,7 +18,6 @@ import regalowl.simpledatalib.file.FileConfiguration;
 public class HyperPlayerManager {
 
 	private transient HyperConomy hc;
-	private transient DataManager dm;
 	private transient FileConfiguration config;
 	private boolean playersLoaded;
 	private String defaultServerShopAccount;
@@ -27,21 +27,31 @@ public class HyperPlayerManager {
 	
 	public HyperPlayerManager(HyperConomy hc) {
 		this.hc = hc;
-		this.dm = hc.getDataManager();
 		playersLoaded = false;
 		config = hc.getConf();
 		defaultServerShopAccount = config.getString("shop.default-server-shop-account");
 		uuidSupport = config.getBoolean("enable-feature.uuid-support");
 		hc.getHyperEventHandler().registerListener(this);
 	}
-
-	public void loadData() {
+	
+	
+	@EventHandler
+	public void onDataLoad(DataLoadEvent event) {
+		if (!(event.loadType == DataLoadType.ECONOMY)) return;
+		new Thread(new Runnable() {
+			public void run() {
+				loadData();
+			}
+		}).start();
+	}
+	
+	private void loadData() {
 		hyperPlayers.clear();
 		uuidIndex.clear();
 		QueryResult playerData = hc.getSQLRead().select("SELECT * FROM hyperconomy_players");
 		while (playerData.next()) {
 			HLocation sl = new HLocation(playerData.getString("WORLD"), playerData.getDouble("X"), playerData.getDouble("Y"), playerData.getDouble("Z"));
-			HyperPlayer hplayer = new HyperPlayer(playerData.getString("NAME"), playerData.getString("UUID"), playerData.getString("ECONOMY"), 
+			HyperPlayer hplayer = new HyperPlayer(hc, playerData.getString("NAME"), playerData.getString("UUID"), playerData.getString("ECONOMY"), 
 					playerData.getDouble("BALANCE"), sl, playerData.getString("HASH"), playerData.getString("SALT"));
 			hyperPlayers.put(hplayer.getName().toLowerCase(), hplayer);
 			if (hplayer.getUUIDString() != null && hplayer.getName() != null) {
@@ -49,19 +59,21 @@ public class HyperPlayerManager {
 			}
 		}
 		playerData.close();
-		playersLoaded = true;
-		if (!accountExists(defaultServerShopAccount)) {
-			HyperPlayer defaultAccount = addPlayer(defaultServerShopAccount);
-			defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
-			defaultAccount.setUUID(UUID.randomUUID().toString());
-		}
 		hc.getMC().runTask(new Runnable() {
 			public void run() {
+				playersLoaded = true;
+				if (!accountExists(defaultServerShopAccount)) {
+					HyperPlayer defaultAccount = addPlayer(defaultServerShopAccount);
+					defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
+					defaultAccount.setUUID(UUID.randomUUID().toString());
+				}
 				addOnlinePlayers();
+				hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.PLAYER));
+				hc.getDebugMode().ayncDebugConsoleMessage("Players loaded.");
 			}
 		});
-		hc.getDebugMode().ayncDebugConsoleMessage("Players loaded.");
 	}
+	
 	
 	private void addOnlinePlayers() {
 		for (HyperPlayer p : getOnlinePlayers()) {
@@ -130,28 +142,28 @@ public class HyperPlayerManager {
 		}
 	}
 	*/
-	@SuppressWarnings("deprecation")
+
 	public boolean playerAccountExists(String name) {
 		if (name == null || name == "") {return false;}
 		if (hc.getMC().useExternalEconomy()) {
-			return hc.getMC().getEconomy().hasAccount(name);
+			return hc.getMC().getEconomyProvider().hasAccount(name);
 		} else {
 			return hyperPlayers.containsKey(name.toLowerCase());
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
+
 	public boolean playerAccountExists(UUID uuid) {
 		if (uuid == null) {return false;}
 		if (hc.getMC().useExternalEconomy()) {
-			return hc.getMC().getEconomy().hasAccount(getHyperPlayer(uuid).getName());
+			return hc.getMC().getEconomyProvider().hasAccount(getHyperPlayer(uuid).getName());
 		} else {
 			return uuidIndex.containsKey(uuid.toString());
 		}
 	}
 	
 	public boolean accountExists(String name) {
-		if (playerAccountExists(name) || dm.getHyperBankManager().hasBank(name)) {
+		if (playerAccountExists(name) || hc.getDataManager().getHyperBankManager().hasBank(name)) {
 			return true;
 		}
 		return false;
@@ -166,8 +178,8 @@ public class HyperPlayerManager {
 		if (playerAccountExists(name)) {
 			return getHyperPlayer(name);
 		}
-		if (dm.getHyperBankManager().hasBank(name)) {
-			return dm.getHyperBankManager().getHyperBank(name);
+		if (hc.getDataManager().getHyperBankManager().hasBank(name)) {
+			return hc.getDataManager().getHyperBankManager().getHyperBank(name);
 		}
 		return null;
 	}
@@ -232,7 +244,7 @@ public class HyperPlayerManager {
 	}
 	
 	public void removeHyperPlayer(HyperPlayer hp) {
-		if (hyperPlayers.contains(hp)) {
+		if (hyperPlayers.containsValue(hp)) {
 			hyperPlayers.remove(hp.getName().toLowerCase());
 			if (hp.getUUIDString() != null && uuidIndex.containsKey(hp.getUUIDString())) {
 				uuidIndex.remove(hp.getUUIDString());
@@ -240,7 +252,7 @@ public class HyperPlayerManager {
 		}
 	}
 	public void addHyperPlayer(HyperPlayer hp) {
-		if (!hyperPlayers.contains(hp)) {
+		if (!hyperPlayers.containsValue(hp)) {
 			hyperPlayers.put(hp.getName().toLowerCase(), hp);
 			if (hp.getUUIDString() != null && hp.getName() != null) {
 				uuidIndex.put(hp.getUUIDString(), hp.getName().toLowerCase());
@@ -251,7 +263,10 @@ public class HyperPlayerManager {
 	 
 
 	public HyperPlayer addPlayer(String player) {
-		if (!playersLoaded) {return null;}
+		if (!playersLoaded) {
+			hc.getDebugMode().ayncDebugConsoleMessage("addPlayer() called before players loaded for: " + player);
+			return null;
+		}
 		String playerName = player.toLowerCase();
 		if (!hyperPlayers.containsKey(playerName)) {
 			//dm.getHyperBankManager().renameBanksWithThisName(playerName);

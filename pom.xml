@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>regalowl.simpledatalib</groupId>
 			<artifactId>simpledatalib</artifactId>
-			<version>0.1.025-SNAPSHOT</version>
+			<version>0.1.026-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -45,7 +45,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.3</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -53,6 +53,11 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+						    <transformers>
+						      <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+						        <mainClass>regalowl.hyperconomy.gui.MainPanel</mainClass>
+						      </transformer>
+						    </transformers>
 							<minimizeJar>true</minimizeJar>
 							<filters>
 								<filter>

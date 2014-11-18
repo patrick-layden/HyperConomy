@@ -41,10 +41,13 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.InternalEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.api.HEconomyProvider;
 import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.command.CommandData;
 import regalowl.hyperconomy.command.HyperCommand;
+import regalowl.hyperconomy.display.FrameShopHandler;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -65,12 +68,15 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	private boolean vaultInstalled;
 	private boolean useExternalEconomy;
-	private Economy economy;
+	private Economy vaultEconomy;
+	private HEconomyProvider economyProvider;
 
 	
 	public BukkitConnector() {
 		this.hc = new HyperConomy(this);
 		this.bl = new BukkitListener(this);
+		this.common = new BukkitCommon(hc);
+		useExternalEconomy = false;	
 	}
 	
 	//TODO make protected
@@ -78,6 +84,8 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return common;
 	}
 	
+
+
 	
 	
 	//JavaPlugin Bukkit methods
@@ -85,7 +93,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public void onLoad() {
 		if (hc == null) hc = new HyperConomy(this);
 		hc.load();
-		this.common = new BukkitCommon(hc);
 	}
 	@Override
 	public void onEnable() {
@@ -118,10 +125,10 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	
 	
-	
-	
-	
-	
+	@Override
+	public HEconomyProvider getEconomyProvider() {
+		return economyProvider;
+	}
 	
 	@Override
 	public void hookExternalEconomy() {
@@ -142,9 +149,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	}
 	@Override
 	public void unhookExternalEconomy() {
-		if (!vaultInstalled) {
-			return;
-		}
+		if (!vaultInstalled) return;
 	    RegisteredServiceProvider<Economy> eco = getServer().getServicesManager().getRegistration(Economy.class);
 	    if (eco != null) {
 	    	Economy registeredEconomy = eco.getProvider();
@@ -162,31 +167,32 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 			useExternalEconomy = false;
 			return;
 		}
-		economy = economyProvider.getProvider();
-		if (economy == null) {
+		vaultEconomy = economyProvider.getProvider();
+		if (vaultEconomy == null) {
 			useExternalEconomy = false;
 			return;
 		}
-		if (economy.getName().equalsIgnoreCase("HyperConomy")) {
+		if (vaultEconomy.getName().equalsIgnoreCase("HyperConomy")) {
 			useExternalEconomy = false;
 			return;
+		}
+		if (useExternalEconomy) {
+			this.economyProvider = new BukkitEconomy(vaultEconomy);
+		} else {
+			this.economyProvider = new InternalEconomy(hc);
 		}
 	}
 	@Override
 	public boolean useExternalEconomy() {
 		return useExternalEconomy;
 	}
-	public Economy getEconomy() {
-		if (economy == null) {
-			setupExternalEconomy();
-		}
-		return economy;
-	}
+	
+
 
 	@Override
 	public String getEconomyName() {
-		if (economy != null && useExternalEconomy) {
-			return economy.getName();
+		if (vaultEconomy != null && useExternalEconomy) {
+			return vaultEconomy.getName();
 		}
 		return "N/A";
 	}
@@ -813,6 +819,12 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public HyperConomy getHC() {
 		return hc;
 	}
+
+	@Override
+	public FrameShopHandler getFrameShopHandler() {
+		return new BukkitFrameShopHandler(this);
+	}
+
 
 
 

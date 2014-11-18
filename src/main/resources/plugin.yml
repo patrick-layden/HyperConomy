@@ -3,7 +3,6 @@ main: regalowl.hyperconomy.bukkit.BukkitConnector
 version: 0.974.58
 author: RegalOwl
 website: http://dev.bukkit.org/server-mods/hyperconomy/
-load: STARTUP
 softdepend: [HeroStronghold, Buycraft, Essentials, Vault]
 loadbefore: []
 commands:

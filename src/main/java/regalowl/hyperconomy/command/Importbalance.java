@@ -49,8 +49,8 @@ public class Importbalance extends BaseCommand implements HyperCommand {
 			if (hp == null ||hp.getName() == null || hp.getName() == "") {
 				continue;
 			}
-			if (hc.getMC().getEconomy().hasAccount(hp.getName())) {
-				hp.setInternalBalance(hc.getMC().getEconomy().getBalance(hp.getName()));
+			if (hc.getMC().getEconomyProvider().hasAccount(hp.getName())) {
+				hp.setInternalBalance(hc.getMC().getEconomyProvider().getAccountBalance(hp.getName()));
 				hp.setUUID(puid.toString());
 			}
 			importedPlayers.add(hp.getName());

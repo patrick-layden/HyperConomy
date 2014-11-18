@@ -3,8 +3,11 @@ package regalowl.hyperconomy.account;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.event.DataLoadEvent;
+import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 
 public class HyperBankManager {
 	
@@ -14,10 +17,20 @@ public class HyperBankManager {
 	
 	public HyperBankManager(HyperConomy hc) {
 		this.hc = hc;
+		hc.getHyperEventHandler().registerListener(this);
 	}
 	
+	@EventHandler
+	public void onDataLoad(DataLoadEvent event) {
+		if (!(event.loadType == DataLoadType.PLAYER)) return;
+		new Thread(new Runnable() {
+			public void run() {
+				loadData();
+			}
+		}).start();
+	}
 	
-	public void loadData() {
+	private void loadData() {
 		hyperBanks.clear();
 		QueryResult bankData = hc.getSQLRead().select("SELECT * FROM hyperconomy_banks");
 		while (bankData.next()) {
@@ -25,6 +38,7 @@ public class HyperBankManager {
 			hyperBanks.put(hBank.getName().toLowerCase(), hBank);
 		}
 		bankData.close();
+		hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.BANK));
 		hc.getDebugMode().ayncDebugConsoleMessage("Banks loaded.");
 	}
 	

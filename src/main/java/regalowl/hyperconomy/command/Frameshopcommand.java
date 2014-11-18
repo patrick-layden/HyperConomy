@@ -4,7 +4,7 @@ package regalowl.hyperconomy.command;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.bukkit.FrameShopHandler;
+import regalowl.hyperconomy.display.FrameShopHandler;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;

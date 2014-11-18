@@ -24,7 +24,7 @@ import regalowl.hyperconomy.util.LanguageFile;
 
 
 
-public class FrameShopRenderer extends MapRenderer {
+public class BukkitFrameShopRenderer extends MapRenderer {
 
 	private transient HyperConomy hc;
 	private transient LanguageFile L;
@@ -35,7 +35,7 @@ public class FrameShopRenderer extends MapRenderer {
     @SuppressWarnings("deprecation")
 	private final byte borderColor = MapPalette.DARK_BROWN;
     
-    public FrameShopRenderer(HyperConomy hc, TradeObject ho) {
+    public BukkitFrameShopRenderer(HyperConomy hc, TradeObject ho) {
         super();
         this.hc = hc;
         L = hc.getLanguageFile();

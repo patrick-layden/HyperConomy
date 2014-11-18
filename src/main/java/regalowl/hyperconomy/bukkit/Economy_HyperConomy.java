@@ -28,17 +28,17 @@ import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.account.HyperPlayerManager;
-import regalowl.hyperconomy.api.EconomyAPI;
+import regalowl.hyperconomy.api.HEconomyProvider;
 import regalowl.hyperconomy.util.LanguageFile;
 
 public class Economy_HyperConomy implements Economy {
 	private final String name = "HyperConomy";
 	private HyperConomy hc;
-	private EconomyAPI api;
+	private HEconomyProvider internalEconomy;
 
 	public Economy_HyperConomy(HyperConomy hc) {
 		this.hc = hc;
-		api = hc.getEconomyAPI();
+		internalEconomy = hc.getEconomyAPI();
 	}
 	@Override
 	public boolean isEnabled() {
@@ -56,7 +56,7 @@ public class Economy_HyperConomy implements Economy {
 	
 	@Override
 	public double getBalance(String playerName) {
-		return api.getBalance(playerName);
+		return internalEconomy.getAccountBalance(playerName);
 	}
     @Override
     public double getBalance(String playerName, String world) {
@@ -74,7 +74,8 @@ public class Economy_HyperConomy implements Economy {
 	
 	@Override
 	public boolean createPlayerAccount(String playerName) {
-		return api.createAccount(playerName);
+		internalEconomy.createAccount(playerName);
+		return true;
 	}
 	@Override
     public boolean createPlayerAccount(String playerName, String worldName) {
@@ -95,9 +96,9 @@ public class Economy_HyperConomy implements Economy {
 		if (amount < 0) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");
 		}
-		if (api.checkAccount(playerName)) {
-			if (api.checkFunds(amount, playerName)) {
-				api.withdrawAccount(amount, playerName);
+		if (internalEconomy.hasAccount(playerName)) {
+			if (internalEconomy.accountHasBalance(playerName, amount)) {
+				internalEconomy.withdrawAccount(playerName, amount);
 				return new EconomyResponse(0, 0, ResponseType.SUCCESS, null);
 			} else {
 				return new EconomyResponse(0, 0, ResponseType.FAILURE, "Insufficient funds");
@@ -126,8 +127,8 @@ public class Economy_HyperConomy implements Economy {
 		if (amount < 0) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative funds");
 		}
-		if (api.checkAccount(playerName)) {
-			api.depositAccount(amount, playerName);
+		if (internalEconomy.hasAccount(playerName)) {
+			internalEconomy.depositAccount(playerName, amount);
 			return new EconomyResponse(0, 0, ResponseType.SUCCESS, null);
 		} else {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Account does not exist");
@@ -149,21 +150,21 @@ public class Economy_HyperConomy implements Economy {
 	
 	@Override
 	public String format(double amount) {
-		return api.formatMoney(amount);
+		return internalEconomy.getAmountAsString(amount);
 	}
 	@Override
 	public String currencyNameSingular() {
-		return api.currencyNamePlural();
+		return internalEconomy.currencyNamePlural();
 	}
 	@Override
 	public String currencyNamePlural() {
-		return api.currencyName();
+		return internalEconomy.currencyNamePlural();
 	}
 	
 	
 	@Override
 	public boolean has(String playerName, double amount) {
-		return api.checkFunds(amount, playerName);
+		return internalEconomy.accountHasBalance(playerName, amount);
 	}
 	@Override
     public boolean has(String playerName, String worldName, double amount) {
@@ -181,7 +182,7 @@ public class Economy_HyperConomy implements Economy {
 	
 	@Override
 	public boolean hasAccount(String playerName) {
-		return api.checkAccount(playerName);
+		return internalEconomy.hasAccount(playerName);
 	}
 	@Override
     public boolean hasAccount(String playerName, String worldName) {
@@ -199,7 +200,7 @@ public class Economy_HyperConomy implements Economy {
 	
 	@Override
 	public int fractionalDigits() {
-		return api.fractionalDigits();
+		return internalEconomy.fractionalDigits();
 	}
 
 
@@ -349,7 +350,6 @@ public class Economy_HyperConomy implements Economy {
 	public boolean hasBankSupport() {
 		return true;
 	}
-
 
 
 

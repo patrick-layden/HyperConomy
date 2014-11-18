@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import regalowl.simpledatalib.sql.QueryResult;
+
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.DataLoadEvent;
+import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.minecraft.HLocation;
+import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.file.FileConfiguration;
 
 public class HyperShopManager {
 	
 	private transient FileConfiguration config;
 	private transient HyperConomy hc;
+
 	private transient long shopCheckTaskId;
 	
 	private ConcurrentHashMap<String, Shop> shops = new ConcurrentHashMap<String, Shop>();
@@ -24,9 +29,21 @@ public class HyperShopManager {
 		config = hc.getConf();
 		useShops = config.getBoolean("enable-feature.shops");
 		shopinterval = config.getLong("intervals.shop-check");
+		hc.getHyperEventHandler().registerListener(this);
 	}
 	
-	public void loadData() {
+	
+	@EventHandler
+	public void onDataLoad(DataLoadEvent event) {
+		if (!(event.loadType == DataLoadType.BANK)) return;
+		new Thread(new Runnable() {
+			public void run() {
+				loadData();
+			}
+		}).start();
+	}
+	
+	private void loadData() {
 		shops.clear();
 		QueryResult shopData = hc.getSQLRead().select("SELECT * FROM hyperconomy_shops");
 		while (shopData.next()) {
@@ -57,6 +74,7 @@ public class HyperShopManager {
 			Shop shop = new GlobalShop(hc, "GlobalShop", "default", hc.getHyperPlayerManager().getDefaultServerShopAccount());
 			shops.put("GlobalShop", shop);
 		}
+		hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.SHOP));
 		hc.getDebugMode().ayncDebugConsoleMessage("Shops loaded.");
 		stopShopCheck();
 		startShopCheck();

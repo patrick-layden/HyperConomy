@@ -17,6 +17,7 @@ import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.event.DataLoadEvent;
+import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
@@ -176,6 +177,7 @@ public class HyperEconomy implements Serializable {
 	
 	@EventHandler
 	public void onDataLoadEvent(DataLoadEvent event) {
+		if (!(event.loadType == DataLoadType.COMPLETE)) return;
 		new Thread(new Runnable() {
 			public void run() {
 				SQLRead sr = hc.getSQLRead();

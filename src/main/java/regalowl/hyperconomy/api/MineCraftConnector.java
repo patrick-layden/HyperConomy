@@ -4,11 +4,10 @@ package regalowl.hyperconomy.api;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import net.milkbowl.vault.economy.Economy;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.bukkit.BukkitConnector;
 import regalowl.hyperconomy.command.HyperCommand;
+import regalowl.hyperconomy.display.FrameShopHandler;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -21,10 +20,15 @@ import regalowl.hyperconomy.shop.ChestShop;
 public interface MineCraftConnector {
 	
 	public HyperConomy getHC();
+	public FrameShopHandler getFrameShopHandler();
+	
+	
 	public boolean isEnabled();
 	public void disablePlugin();
 	
+	
 	public void registerCommand(String command, HyperCommand hCommand);
+	
 	
 	public void unregisterAllListeners();
 	public void registerListeners();
@@ -37,26 +41,18 @@ public interface MineCraftConnector {
 	public void cancelAllTasks();
 	
 
-	
 	public boolean useExternalEconomy();
 	public String getEconomyName();
 	public void hookExternalEconomy();
 	public void unhookExternalEconomy();
 	public void setupExternalEconomy();
+	public HEconomyProvider getEconomyProvider();
 	
-
-	public Economy getEconomy();  	//remove later
 	
 	public boolean isInCreativeMode(HyperPlayer hp);
 	public HLocation getLocation(HyperPlayer hp);
 	public HLocation getTargetLocation(HyperPlayer hp);
 	public HLocation getLocationBeforeTargetLocation(HyperPlayer hp);
-	public boolean isLoaded(HLocation l);
-	public void load(HLocation l);
-	public ArrayList<HyperPlayer> getOnlinePlayers();
-	public boolean worldExists(String world);
-	
-	
 	public boolean isOnline(HyperPlayer hp);
 	public UUID getUUID(HyperPlayer hp);
 	public void teleport(HyperPlayer hp, HLocation sl);
@@ -73,23 +69,31 @@ public interface MineCraftConnector {
 	public void setExp(HyperPlayer hp, float exp);
 	public String getName(HyperPlayer hp);
 	public void checkForNameChange(HyperPlayer hp);
+	public HItemStack getItem(HyperPlayer hp, int slot);
+	public int getHeldItemSlot(HyperPlayer hp);
+	public HInventory getInventory(HyperPlayer hp);
+	public void setItem(HyperPlayer hp, HItemStack item, int slot);
 	
 	
+	public HInventory getChestInventory(HLocation l);
+	public void setInventory(HInventory inventory);
+	public boolean conflictsWith(HEnchantment e1, HEnchantment e2);
+	public boolean canEnchantItem(HItemStack item);
+	
+	
+	public ArrayList<HyperPlayer> getOnlinePlayers();
+	public boolean worldExists(String world);
+	
+	
+	public boolean isLoaded(HLocation l);
+	public void load(HLocation l);
+
 	
 	public void logInfo(String message);
 	public void logSevere(String message);
 	public String applyColor(String text);
 	public String removeColor(String text);
 	
-	public HInventory getInventory(HyperPlayer hp);
-	public HInventory getChestInventory(HLocation l);
-	public void setInventory(HInventory inventory);
-	public HItemStack getItem(HyperPlayer hp, int slot);
-	public int getHeldItemSlot(HyperPlayer hp);
-	public void setItem(HyperPlayer hp, HItemStack item, int slot);
-	
-	public boolean conflictsWith(HEnchantment e1, HEnchantment e2);
-	public boolean canEnchantItem(HItemStack item);
 	
 	public boolean isTransactionSign(HLocation l);
 	public boolean isInfoSign(HLocation l);
@@ -97,13 +101,13 @@ public interface MineCraftConnector {
 	public boolean isChestShopSignBlock(HLocation l);
 	public boolean isChestShopChest(HLocation l);
 	public boolean isPartOfChestShop(HLocation l);
-	
 	public ChestShop getChestShop(HLocation location);
 	public HSign getSign(HLocation location);
 	public void setSign(HSign sign);
 	public HBlock getAttachedBlock(HSign sign);
 	public boolean isChest(HLocation l);
 	public boolean canHoldChestShopSign(HLocation l);
+	
 	
 	public HItem dropItemDisplay(HLocation location, HItemStack item);
 	public void removeItem(HItem item);

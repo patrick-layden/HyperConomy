@@ -77,7 +77,8 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	
-	public HyperPlayer(String name, String uuid, String economy, double balance, HLocation location, String hash, String salt) {
+	public HyperPlayer(HyperConomy hc, String name, String uuid, String economy, double balance, HLocation location, String hash, String salt) {
+		this.hc = hc;
 		this.name = name;
 		this.uuid = uuid;
 		this.economy = economy;
@@ -95,12 +96,11 @@ public class HyperPlayer implements HyperAccount {
 	}
 
 	
-	@SuppressWarnings("deprecation")
 	private void checkExternalAccount() {
 		if (!hc.getMC().useExternalEconomy()) {return;}
 		if (name == null) {return;}
-		if (!hc.getMC().getEconomy().hasAccount(name)) {
-			hc.getMC().getEconomy().createPlayerAccount(name);
+		if (!hc.getMC().getEconomyProvider().hasAccount(name)) {
+			hc.getMC().getEconomyProvider().createAccount(name);
 			setBalance(balance);
 		}
 		checkForNameChange();
@@ -150,11 +150,11 @@ public class HyperPlayer implements HyperAccount {
 		DataManager em = hc.getDataManager();
 		return em.getEconomy(economy);
 	}
-	@SuppressWarnings("deprecation")
+
 	public double getBalance() {
 		checkExternalAccount();
 		if (hc.getMC().useExternalEconomy()) {
-			return hc.getMC().getEconomy().getBalance(name);
+			return hc.getMC().getEconomyProvider().getAccountBalance(name);
 		} else {
 			return balance;
 		}
@@ -265,41 +265,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	
-	/*
-	@SuppressWarnings("deprecation")
-	public Player getPlayer() {
-		HyperConomy hc = HyperConomy.hc;
-		UUID id = getUUID();
-		Player p = null;
-		if (id != null && hc.getHyperPlayerManager().uuidSupport()) {
-			p = Bukkit.getPlayer(id);
-		}
-		if (p == null && name != null) {
-			p = Bukkit.getPlayer(name);
-		}
-		return p;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public OfflinePlayer getOfflinePlayer() {
-		HyperConomy hc = HyperConomy.hc;
-		UUID id = getUUID();
-		OfflinePlayer op = null;
-		if (id != null && hc.getHyperPlayerManager().uuidSupport()) {
-			op = Bukkit.getOfflinePlayer(id);
-			//if (op == null) {
-			//	hc.log().severe("Null OfflinePlayer UUID [" + name + "]");
-			//}
-		}
-		if (op == null && name != null) {
-			op = Bukkit.getOfflinePlayer(name);
-			//if (op == null) {
-			//	hc.log().severe("Null OfflinePlayer name [" + name + "]");
-			//}
-		}
-		return op;
-	}
-	*/
+
 	public HInventory getInventory() {
 		return hc.getMC().getInventory(this);
 	}
@@ -389,17 +355,17 @@ public class HyperPlayer implements HyperAccount {
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
+
 	public void setBalance(double balance) {
 		checkExternalAccount();
 		if (hc.getMC().useExternalEconomy()) {
-			if (hc.getMC().getEconomy().hasAccount(name)) {
-				hc.getMC().getEconomy().withdrawPlayer(name, hc.getMC().getEconomy().getBalance(name));
+			if (hc.getMC().getEconomyProvider().hasAccount(name)) {
+				hc.getMC().getEconomyProvider().withdrawAccount(name, hc.getMC().getEconomyProvider().getAccountBalance(name));
 			} else {
-				hc.getMC().getEconomy().createPlayerAccount(name);
+				hc.getMC().getEconomyProvider().createAccount(name);
 			}
-			hc.getMC().getEconomy().depositPlayer(name, balance);
-			hc.getLog().writeAuditLog(name, "setbalance", balance, hc.getMC().getEconomy().getName());
+			hc.getMC().getEconomyProvider().depositAccount(name, balance);
+			hc.getLog().writeAuditLog(name, "setbalance", balance, hc.getMC().getEconomyProvider().getEconomyName());
 		} else {
 			setInternalBalance(balance);
 		}
@@ -414,12 +380,12 @@ public class HyperPlayer implements HyperAccount {
 		hc.getLog().writeAuditLog(name, "setbalance", balance, "HyperConomy");
 		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
-	@SuppressWarnings("deprecation")
+
 	public void deposit(double amount) {
 		checkExternalAccount();
 		if (hc.getMC().useExternalEconomy()) {
-			hc.getMC().getEconomy().depositPlayer(name, amount);
-			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getMC().getEconomy().getName());
+			hc.getMC().getEconomyProvider().depositAccount(name, amount);
+			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getMC().getEconomyProvider().getEconomyName());
 		} else {
 			this.balance += amount;
 			HashMap<String,String> conditions = new HashMap<String,String>();
@@ -431,12 +397,12 @@ public class HyperPlayer implements HyperAccount {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
+
 	public void withdraw(double amount) {
 		checkExternalAccount();
 		if (hc.getMC().useExternalEconomy()) {
-			hc.getMC().getEconomy().withdrawPlayer(name, amount);
-			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getMC().getEconomy().getName());
+			hc.getMC().getEconomyProvider().withdrawAccount(name, amount);
+			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getMC().getEconomyProvider().getEconomyName());
 		} else {
 			this.balance -= amount;
 			HashMap<String,String> conditions = new HashMap<String,String>();

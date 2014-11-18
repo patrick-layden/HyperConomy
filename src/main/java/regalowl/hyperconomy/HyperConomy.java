@@ -15,9 +15,8 @@ import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.api.API;
-import regalowl.hyperconomy.api.EconomyAPI;
+import regalowl.hyperconomy.api.HEconomyProvider;
 import regalowl.hyperconomy.api.MineCraftConnector;
-import regalowl.hyperconomy.bukkit.FrameShopHandler;
 import regalowl.hyperconomy.command.Additem;
 import regalowl.hyperconomy.command.Audit;
 import regalowl.hyperconomy.command.Browseshop;
@@ -65,12 +64,14 @@ import regalowl.hyperconomy.command.Topenchants;
 import regalowl.hyperconomy.command.Topitems;
 import regalowl.hyperconomy.command.Value;
 import regalowl.hyperconomy.command.Xpinfo;
+import regalowl.hyperconomy.display.FrameShopHandler;
 import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.display.ItemDisplayFactory;
 import regalowl.hyperconomy.display.TransactionSignHandler;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.HyperEventHandler;
+import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.multiserver.HyperModificationServer;
 import regalowl.hyperconomy.shop.ChestShopHandler;
 import regalowl.hyperconomy.shop.HyperShopManager;
@@ -86,7 +87,7 @@ public class HyperConomy {
 
 	private transient MineCraftConnector mc;
 	private transient API api;
-	private transient EconomyAPI economyApi;
+	private transient HEconomyProvider economyApi;
 	private transient DataManager dm;
 	private transient SimpleDataLib sdl;
 	private transient YamlHandler yh;
@@ -127,10 +128,11 @@ public class HyperConomy {
 	
 	@EventHandler
 	public void onDataLoad(DataLoadEvent event) {
+		if (!(event.loadType == DataLoadType.COMPLETE)) return;
 		hist = new History(this);
 		itdi = new ItemDisplayFactory(this);
 		isign = new InfoSignHandler(this);
-		fsh = new FrameShopHandler(mc);
+		fsh = mc.getFrameShopHandler();
 		registerCommands();
 		enabled = true;
 		hl.setLoadLock(false);
@@ -141,8 +143,6 @@ public class HyperConomy {
 
 	public void load() {
 		enabled = false;
-		api = new HyperAPI(this);
-		economyApi = new HyperEconAPI(this);
 		if (sdl != null) sdl.shutDown();
 		sdl = new SimpleDataLib("HyperConomy");
 		sdl.initialize();
@@ -165,12 +165,10 @@ public class HyperConomy {
 		heh = new HyperEventHandler(this);
 		heh.registerListener(this);
 		mc.hookExternalEconomy();
-		
 	}
 	
 	public void enable() {
 		mc.unregisterAllListeners();
-		dm = new DataManager(this);
 		if (hConfig.getBoolean("sql.use-mysql")) {
 			String username = hConfig.getString("sql.mysql-connection.username");
 			String password = hConfig.getString("sql.mysql-connection.password");
@@ -191,13 +189,16 @@ public class HyperConomy {
 		} else {
 			mc.logInfo("[HyperConomy]Using internal economy plugin.");
 		}
-		dMode.syncDebugConsoleMessage("Data loading started.");
-		dm.load();
 		l = new Log(this);
+		dm = new DataManager(this);
+		dMode.syncDebugConsoleMessage("Data loading started.");
+		heh.fireEvent(new DataLoadEvent(DataLoadType.START));
 		new TransactionSignHandler(this);
 		yh.startSaveTask(saveInterval);
 		cs = new ChestShopHandler(this);
 		new HyperModificationServer(this);
+		api = new HyperAPI(this);
+		economyApi = mc.getEconomyProvider();
 	}
 
 	public void disable(boolean protect) {
@@ -366,7 +367,7 @@ public class HyperConomy {
 	public API getAPI() {
 		return api;
 	}
-	public EconomyAPI getEconomyAPI() {
+	public HEconomyProvider getEconomyAPI() {
 		return economyApi;
 	}
 	public MineCraftConnector getMC() {

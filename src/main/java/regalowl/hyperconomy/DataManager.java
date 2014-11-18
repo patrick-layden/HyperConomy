@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
@@ -18,7 +19,7 @@ import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.event.DataLoadEvent;
-import regalowl.hyperconomy.event.EconomyLoadEvent;
+import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
 import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -45,15 +46,18 @@ public class DataManager {
 
 	public DataManager(HyperConomy hc) {
 		this.hc = hc;
-		hpm = new HyperPlayerManager(hc);
-		hbm = new HyperBankManager(hc);
-		hsm = new HyperShopManager(hc);
 		loadActive = false;
 		config = hc.getConf();
 		defaultServerShopAccount = config.getString("shop.default-server-shop-account");
+		hc.getHyperEventHandler().registerListener(this);
+		sr = hc.getSQLRead();
+		ssw = hc.getSimpleDataLib().getSQLManager().getSyncSQLWrite();
+		hpm = new HyperPlayerManager(hc);
+		hbm = new HyperBankManager(hc);
+		hsm = new HyperShopManager(hc);
 		du = new DatabaseUpdater(hc);
 	}
-	
+
 
 	public ArrayList<String> getTablesList() {
 		return du.getTablesList();
@@ -72,39 +76,41 @@ public class DataManager {
 		return hsm;
 	}
 	
-	public void load() {
-		if (loadActive) {return;}
-		loadActive = true;
-		sr = hc.getSQLRead();
-		ssw = hc.getSimpleDataLib().getSQLManager().getSyncSQLWrite();
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					hc.getSQLRead().setErrorLogging(false);
-					QueryResult qr = sr.select("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'version'");
-					hc.getSQLRead().setErrorLogging(true);
-					du.updateTables(qr);
-					qr = sr.select("SELECT * FROM hyperconomy_objects WHERE economy = 'default'");
-					if (!qr.next()) {setupDefaultEconomy();}
-					economies.clear();
-					ArrayList<String> econs = sr.getStringList("hyperconomy_economies", "NAME", null);
-					for (String e : econs) {
-						economies.put(e, new HyperEconomy(hc, e));
-					}
-					hc.getDebugMode().ayncDebugConsoleMessage("Economies loaded.");
-					hc.getHyperEventHandler().fireEventFromAsyncThread(new EconomyLoadEvent());
-					hpm.loadData();
-					hbm.loadData();
-					hsm.loadData();
-					hc.getHyperLock().setLoadLock(false);
-					hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent());
-					loadActive = false;
-				} catch (Exception e) {
-					hc.gSDL().getErrorWriter().writeError(e);
+
+	@EventHandler
+	public void onDataLoad(DataLoadEvent event) {
+		if (event.loadType == DataLoadType.START) {
+			if (loadActive) {return;}
+			loadActive = true;
+			new Thread(new Runnable() {
+				public void run() {
+					loadEconomies();
 				}
-			}
-		}).start();
+			}).start();
+		} else if (event.loadType == DataLoadType.SHOP) {
+			hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.COMPLETE));
+		} else if (event.loadType == DataLoadType.COMPLETE) {
+			hc.getHyperLock().setLoadLock(false);
+			loadActive = false;
+		}
 	}
+	
+	private void loadEconomies() {
+		hc.getSQLRead().setErrorLogging(false);
+		QueryResult qr = sr.select("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'version'");
+		hc.getSQLRead().setErrorLogging(true);
+		du.updateTables(qr);
+		qr = sr.select("SELECT * FROM hyperconomy_objects WHERE economy = 'default'");
+		if (!qr.next()) {setupDefaultEconomy();}
+		economies.clear();
+		ArrayList<String> econs = sr.getStringList("hyperconomy_economies", "NAME", null);
+		for (String e : econs) {
+			economies.put(e, new HyperEconomy(hc, e));
+		}
+		hc.getDebugMode().ayncDebugConsoleMessage("Economies loaded.");
+		hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.ECONOMY));
+	}
+	
 	private void setupDefaultEconomy() {
 		//set up default hyperconomy_objects and economies if they don't exist
 		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
