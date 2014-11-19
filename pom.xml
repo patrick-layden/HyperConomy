@@ -58,7 +58,6 @@
 						        <mainClass>regalowl.hyperconomy.gui.MainPanel</mainClass>
 						      </transformer>
 						    </transformers>
-							<minimizeJar>true</minimizeJar>
 							<filters>
 								<filter>
 									<artifact>*:*</artifact>
