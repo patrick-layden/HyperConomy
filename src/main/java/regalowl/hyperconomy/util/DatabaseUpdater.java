@@ -7,7 +7,7 @@ import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.simpledatalib.sql.Field;
 import regalowl.simpledatalib.sql.FieldType;
 import regalowl.simpledatalib.sql.QueryResult;
-import regalowl.simpledatalib.sql.SyncSQLWrite;
+import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.simpledatalib.sql.Table;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
@@ -15,7 +15,8 @@ import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class DatabaseUpdater {
 
-	private HyperConomy hc;
+	private transient HyperConomy hc;
+	private transient SQLWrite sw;
 	public final double version = 1.36;
 	ArrayList<String> tables = new ArrayList<String>();
 	
@@ -56,7 +57,9 @@ public class DatabaseUpdater {
 	
 
 	public void updateTables(QueryResult qr) {
-		SyncSQLWrite sw = hc.getSQLManager().getSyncSQLWrite();
+		sw = hc.getSQLManager().getSQLWrite();
+		boolean writeState = sw.writeSync();
+		sw.writeSync(true);
 		if (qr.next()) {
 			double version = Double.parseDouble(qr.getString("VALUE"));
 			//new LegacyDatabaseUpdates().applyLegacyUpdates(version, sw);
@@ -66,8 +69,8 @@ public class DatabaseUpdater {
 				Table t = hc.getSQLManager().getTable("hyperconomy_shops");
 				Field f = t.generateField("USE_ECONOMY_STOCK", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setDefault("1");
 				t.addFieldToDatabase(f, t.getField("WORLD"));
-				sw.queue("UPDATE hyperconomy_shops SET USE_ECONOMY_STOCK = '0' WHERE TYPE = 'player'");
-				setDBVersion(sw, 1.35);
+				sw.addToQueue("UPDATE hyperconomy_shops SET USE_ECONOMY_STOCK = '0' WHERE TYPE = 'player'");
+				setDBVersion(1.35);
 			}
 			if (version < 1.36) {
 				Table t = hc.getSQLManager().getTable("hyperconomy_objects");
@@ -86,26 +89,24 @@ public class DatabaseUpdater {
 						}
 					}
 				}
-				setDBVersion(sw, 1.36);
+				setDBVersion(1.36);
 			}
 		} else {
-			createTables(false);
+			createTables();
 		}
-		sw.writeQueue();
+		sw.writeSyncQueue();
+		sw.writeSync(writeState);
 	}
 	
-	private void setDBVersion(SyncSQLWrite sw, double version) {
-		sw.queue("UPDATE hyperconomy_settings SET VALUE = '"+version+"' WHERE SETTING = 'version'");
+	private void setDBVersion(double version) {
+		sw.addToQueue("UPDATE hyperconomy_settings SET VALUE = '"+version+"' WHERE SETTING = 'version'");
 	}
 
-	public void createTables(boolean copydatabase) {
+	public void createTables() {
 		hc.getDebugMode().ayncDebugConsoleMessage("Creating database tables.");
-		SyncSQLWrite sw = hc.getSQLManager().getSyncSQLWrite();
-		if (copydatabase) {
-			for (String table:tables) {
-				sw.queue("DROP TABLE IF EXISTS hyperconomy_"+table);
-			}
-		}
+		SQLWrite sw = hc.getSQLManager().getSQLWrite();
+		boolean writeState = sw.writeSync();
+		sw.writeSync(true);
 
 		Table t = hc.getSQLManager().addTable("hyperconomy_settings");
 		Field f = t.addField("SETTING", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
@@ -275,11 +276,12 @@ public class DatabaseUpdater {
 		
 		hc.getSQLManager().saveTables();
 		
-		if (!copydatabase) {
-			sw.queue("DELETE FROM hyperconomy_settings");
-			sw.queue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getDataManager().getDatabaseUpdater().getVersion()+"', NOW() )");
-			sw.writeQueue();
-		}
+
+		sw.addToQueue("DELETE FROM hyperconomy_settings");
+		sw.addToQueue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getDataManager().getDatabaseUpdater().getVersion()+"', NOW() )");
+		
+		sw.writeSyncQueue();
+		sw.writeSync(writeState);
 	}
 	
 	

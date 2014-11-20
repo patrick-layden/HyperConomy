@@ -13,7 +13,6 @@ import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
-import regalowl.simpledatalib.sql.SyncSQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -29,7 +28,7 @@ public class DataManager {
 
 	private transient HyperConomy hc;
 	private transient SQLRead sr;
-	private transient SyncSQLWrite ssw;
+	private transient SQLWrite sw;
 	private transient DatabaseUpdater du;
 	private transient FileConfiguration config;
 
@@ -51,7 +50,7 @@ public class DataManager {
 		defaultServerShopAccount = config.getString("shop.default-server-shop-account");
 		hc.getHyperEventHandler().registerListener(this);
 		sr = hc.getSQLRead();
-		ssw = hc.getSimpleDataLib().getSQLManager().getSyncSQLWrite();
+		sw = hc.getSimpleDataLib().getSQLManager().getSQLWrite();
 		hpm = new HyperPlayerManager(hc);
 		hbm = new HyperBankManager(hc);
 		hsm = new HyperShopManager(hc);
@@ -113,6 +112,8 @@ public class DataManager {
 	
 	private void setupDefaultEconomy() {
 		//set up default hyperconomy_objects and economies if they don't exist
+		boolean writeState = sw.writeSync();
+		sw.writeSync(true);
 		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
 		FileTools ft = hc.getFileTools();
 		if (ft.fileExists(defaultObjectsPath)) {ft.deleteFile(defaultObjectsPath);}
@@ -120,7 +121,7 @@ public class DataManager {
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("NAME", "default");
 		values.put("HYPERACCOUNT", config.getString("shop.default-server-shop-account"));
-		ssw.queueInsert("hyperconomy_economies", values);
+		sw.performInsert("hyperconomy_economies", values);
 		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
 		ArrayList<String> columns = data.getColumnNames();
 		while (data.next()) {
@@ -128,7 +129,7 @@ public class DataManager {
 			for (String column : columns) {
 				values.put(column, data.getString(column));
 			}
-			ssw.queueInsert("hyperconomy_objects", values);
+			sw.performInsert("hyperconomy_objects", values);
 		}
 		ft.deleteFile(defaultObjectsPath);
 
@@ -143,10 +144,11 @@ public class DataManager {
 			for (String column : columns) {
 				values.put(column, data.getString(column));
 			}
-			ssw.queueInsert("hyperconomy_composites", values);
+			sw.performInsert("hyperconomy_composites", values);
 		}
 		ft.deleteFile(defaultObjectsPath);
-		ssw.writeQueue();
+		sw.writeSyncQueue();
+		sw.writeSync(writeState);
 		hc.getDebugMode().ayncDebugConsoleMessage("Default economy created.");
 	}
 
