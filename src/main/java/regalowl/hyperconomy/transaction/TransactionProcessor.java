@@ -70,8 +70,8 @@ public class TransactionProcessor {
 		amount = pt.getAmount();
 		overMaxStock = false;
 		if (hyperObject.isShopObject()) {
-			status = hyperObject.getStatus();
-			int maxStock = hyperObject.getMaxStock();
+			status = hyperObject.getShopObjectStatus();
+			int maxStock = hyperObject.getShopObjectMaxStock();
 			int globalMaxStock = hc.getConf().getInt("shop.max-stock-per-item-in-playershops");
 			if ((hyperObject.getStock() + amount) > maxStock || (hyperObject.getStock() + amount) > globalMaxStock) {
 				overMaxStock = true;
@@ -215,7 +215,7 @@ public class TransactionProcessor {
 				return;
 			}
 			hyperObject.add(amount, receiveInventory);
-			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
+			if (!hyperObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
 				hyperObject.setStock(hyperObject.getStock() - amount);
 			}
 			hp.withdraw(price);
@@ -243,7 +243,7 @@ public class TransactionProcessor {
 				return;
 			}
 			hyperObject.add(amount, hp);
-			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
+			if (!hyperObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
 				hyperObject.setStock(hyperObject.getStock() - amount);
 			}
 			hp.withdraw(price);
@@ -390,7 +390,7 @@ public class TransactionProcessor {
 			double price = CommonFunctions.twoDecimals(hyperObject.getSellPrice(amount, hp));
 			double amountRemoved = hyperObject.remove(amount, giveInventory);
 			double shopstock = hyperObject.getStock();
-			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
+			if (!hyperObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
 				hyperObject.setStock(shopstock + amountRemoved);
 			}
 			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
@@ -424,7 +424,7 @@ public class TransactionProcessor {
 				return;
 			}
 			hyperObject.remove(amount, hp);
-			if (!Boolean.parseBoolean(hyperObject.getIsstatic()) || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
+			if (!hyperObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
 				hyperObject.setStock(amount + hyperObject.getStock());
 			}
 			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));

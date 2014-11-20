@@ -95,7 +95,7 @@ public class Topitems extends BaseCommand implements HyperCommand {
 					if (count > ((page * 10) - 11)) {
 						TradeObject ho = itemstocks.get(lk);
 						if (ho.isShopObject()) {
-							data.addResponse("&f"+ho.getDisplayName() + ": &a" + CommonFunctions.twoDecimals(ho.getStock()) + " &f(&e" + ho.getStatus().toString() + "&f)" );
+							data.addResponse("&f"+ho.getDisplayName() + ": &a" + CommonFunctions.twoDecimals(ho.getStock()) + " &f(&e" + ho.getShopObjectStatus().toString() + "&f)" );
 						} else {
 							data.addResponse("&f" + ho.getDisplayName() + "&f: " + "&b" + CommonFunctions.twoDecimals(ho.getStock()));
 						}

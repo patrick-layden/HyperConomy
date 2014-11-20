@@ -80,7 +80,7 @@ public class HyperEconomy implements Serializable {
 			TradeObjectType type = TradeObjectType.fromString(result.getString("TYPE"));
 			if (type == TradeObjectType.ITEM) {
 				TradeObject hobj = new ComponentTradeItem(hc, result.getString("NAME"), result.getString("ECONOMY"), 
-						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
+						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
 						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
 				tradeObjectsName.put(hobj.getName().toLowerCase(), hobj);
@@ -91,7 +91,7 @@ public class HyperEconomy implements Serializable {
 				tradeObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 			} else if (type == TradeObjectType.ENCHANTMENT) {
 				TradeObject hobj = new TradeEnchant(hc, result.getString("NAME"), result.getString("ECONOMY"), 
-						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
+						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), 
 						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
 						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
@@ -103,7 +103,7 @@ public class HyperEconomy implements Serializable {
 				tradeObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 			} else if (type == TradeObjectType.EXPERIENCE) {
 				TradeObject hobj = new TradeXp(hc, result.getString("NAME"), result.getString("ECONOMY"), 
-						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("TYPE"), 
+						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), 
 						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
 						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
@@ -138,7 +138,7 @@ public class HyperEconomy implements Serializable {
 			}
 			loaded = true;
 			QueryResult result = sr.select("SELECT hyperconomy_objects.NAME, hyperconomy_objects.DISPLAY_NAME, "
-					+ "hyperconomy_objects.ALIASES, hyperconomy_objects.TYPE, hyperconomy_composites.COMPONENTS,"
+					+ "hyperconomy_objects.ALIASES, hyperconomy_objects.CATEGORIES, hyperconomy_objects.TYPE, hyperconomy_composites.COMPONENTS,"
 					+ " hyperconomy_objects.DATA FROM hyperconomy_composites, hyperconomy_objects WHERE "
 					+ "hyperconomy_composites.NAME = hyperconomy_objects.NAME");
 			while (result.next()) {
@@ -147,7 +147,7 @@ public class HyperEconomy implements Serializable {
 					loaded = false;
 					continue;
 				}
-				TradeObject ho = new CompositeTradeItem(hc, this, name, economyName, result.getString("DISPLAY_NAME"), result.getString("ALIASES"), 
+				TradeObject ho = new CompositeTradeItem(hc, this, name, economyName, result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), 
 						result.getString("TYPE"), result.getString("COMPONENTS"), result.getString("DATA"));
 				tradeObjectsName.put(ho.getName().toLowerCase(), ho);
 				for (String alias:ho.getAliases()) {
@@ -473,7 +473,7 @@ public class HyperEconomy implements Serializable {
 			if (s instanceof PlayerShop) {
 				PlayerShop ps = (PlayerShop)s;
 				for (TradeObject ho:ps.getShopObjects()) {
-					ho.setTradeObject(ho.getTradeObject());
+					ho.setParentTradeObject(ho.getParentTradeObject());
 				}
 			}
 		}

@@ -26,6 +26,9 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	public int compareTo(TradeObject ho);
+	
+	@Override
+	public String toString();
 	/**
 	 * Deletes the TradeObject.
 	 */
@@ -48,6 +51,14 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 */
 	public String getAliasesString();
 	/**
+	 * @return A list of all the categories for this TradeObject
+	 */
+	public ArrayList<String> getCategories();
+	/**
+	 * @return A comma delimited list of categories.
+	 */
+	public String getCategoriesString();
+	/**
 	 * @param name
 	 * @return True if the name, displayname, or an alias matches the given name, false if not.
 	 */
@@ -67,11 +78,11 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	/**
 	 * @return True if this TradeObject uses static pricing, false if not.
 	 */
-	public String getIsstatic();
+	public boolean isStatic();
 	/**
 	 * @return The static price for this TradeObject.
 	 */
-	public double getStaticprice();
+	public double getStaticPrice();
 	/**
 	 * @return The stock level for this TradeObject.
 	 */
@@ -87,11 +98,11 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	/**
 	 * @return True if this TradeObject uses initial pricing, false if not.
 	 */
-	public String getInitiation();
+	public boolean useInitialPricing();
 	/**
 	 * @return The TradeObject's initial price.
 	 */
-	public double getStartprice();
+	public double getStartPrice();
 	/**
 	 * @return The TradeObject's ceiling value.  (Max price)
 	 */
@@ -103,7 +114,7 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	/**
 	 * @return The TradeObject's maximum stock value.
 	 */
-	public double getMaxstock();
+	public double getMaxStock();
 	/**
 	 * @return The TradeObject's serialized data String.
 	 */
@@ -133,6 +144,22 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 * @param alias 
 	 */
 	public void removeAlias(String alias);
+	/**Sets the TradeObject's categories to the given category List.
+	 * @param categories 
+	 */
+	public void setCategories(ArrayList<String> categories);
+	/**Adds the TradeObject to the specified category.
+	 * @param category 
+	 */
+	public void addCategory(String category);
+	/**Removes the TradeObject from the specified category.
+	 * @param category 
+	 */
+	public void removeCategory(String category);
+	/**Returns true if the TradeObject is in the given category.
+	 * @param category 
+	 */
+	public boolean inCategory(String category);
 	/**Sets the TradeObject's economy to the given economy.
 	 * @param economy
 	 */
@@ -148,11 +175,11 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	/** If set to true, the TradeObject will use static pricing.  It will use standard pricing if set to false.
 	 * @param isstatic
 	 */
-	public void setIsstatic(String isstatic);
+	public void setStatic(boolean isStatic);
 	/**Sets the static price.
 	 * @param staticprice
 	 */
-	public void setStaticprice(double staticprice);
+	public void setStaticPrice(double staticprice);
 	/**Sets the stock level.
 	 * @param stock
 	 */
@@ -164,11 +191,11 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	/**If set to true the TradeObject will use initial pricing.  It will use standard pricing if set to false.
 	 * @param initiation
 	 */
-	public void setInitiation(String initiation);
+	public void setUseInitialPricing(boolean initiation);
 	/**Sets the TradeObject's start price.
 	 * @param startprice
 	 */
-	public void setStartprice(double startprice);
+	public void setStartPrice(double startprice);
 	/**Set's the TradeObject's ceiling value.  (Maximum price)
 	 * @param ceiling
 	 */
@@ -180,7 +207,7 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	/**Sets the TradeObject's maximum stock.
 	 * @param maxstock
 	 */
-	public void setMaxstock(double maxstock);
+	public void setMaxStock(double maxstock);
 
 	
 	/**Returns true if this TradeObject is a composite object, false if not.
@@ -421,27 +448,27 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	/**
 	 * @return This PlayerShop object's Shop. (Can only be used with PlayerShop objects.)
 	 */
-	public PlayerShop getShop();
+	public PlayerShop getShopObjectShop();
 	/**
 	 * @return This PlayerShop object's TradeObject. (Can only be used with PlayerShop objects.)
 	 */
-	public TradeObject getTradeObject();
+	public TradeObject getParentTradeObject();
 	/**
 	 * @return This PlayerShop object's buy price. (Can only be used with PlayerShop objects.)
 	 */
-	public double getBuyPrice();
+	public double getShopObjectBuyPrice();
 	/**
 	 * @return This PlayerShop object's sell price. (Can only be used with PlayerShop objects.)
 	 */
-	public double getSellPrice();
+	public double getShopObjectSellPrice();
 	/**
 	 * @return This PlayerShop object's maximum stock. (Can only be used with PlayerShop objects.)
 	 */
-	public int getMaxStock();
+	public int getShopObjectMaxStock();
 	/**
 	 * @return This PlayerShop object's trade status. (Can only be used with PlayerShop objects.)
 	 */
-	public TradeObjectStatus getStatus();
+	public TradeObjectStatus getShopObjectStatus();
 	/**
 	 * @return Returns true if this playershop object is set to use its economy's stock levels.
 	 */
@@ -449,27 +476,27 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	/**Sets this PlayerShop object's Shop.
 	 * @param playerShop
 	 */
-	public void setShop(PlayerShop playerShop);
+	public void setShopObjectShop(PlayerShop playerShop);
 	/**Sets this PlayerShop object's buy price.
 	 * @param buyPrice
 	 */
-	public void setBuyPrice(double buyPrice);
+	public void setShopObjectBuyPrice(double buyPrice);
 	/**Sets this PlayerShop object's sell price.
 	 * @param sellPrice
 	 */
-	public void setSellPrice(double sellPrice);
+	public void setShopObjectSellPrice(double sellPrice);
 	/**Sets this PlayerShop object's maximum stock.
 	 * @param maxStock
 	 */
-	public void setMaxStock(int maxStock);
+	public void setShopObjectMaxStock(int maxStock);
 	/**Sets this PlayerShop object's trade status.
 	 * @param status
 	 */
-	public void setStatus(TradeObjectStatus status);
+	public void setShopObjectStatus(TradeObjectStatus status);
 	/**Sets this PlayerShop object's TradeObject.
 	 * @param ho
 	 */
-	public void setTradeObject(TradeObject ho);
+	public void setParentTradeObject(TradeObject ho);
 	/**Sets this PlayerShop object to use or not use its economy's stock levels.
 	 * @param ho
 	 */

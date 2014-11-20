@@ -154,8 +154,8 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					while (qr.next()) {
 						String objectName = qr.getString("NAME");
 						TradeObject ho = dm.getEconomy(economy).getTradeObject(objectName);
-						ho.setStartprice(qr.getDouble("STARTPRICE"));
-						ho.setStaticprice(qr.getDouble("STATICPRICE"));
+						ho.setStartPrice(qr.getDouble("STARTPRICE"));
+						ho.setStaticPrice(qr.getDouble("STATICPRICE"));
 						ho.setValue(qr.getDouble("VALUE"));
 					}
 					ft.deleteFile(defaultObjectsPath);

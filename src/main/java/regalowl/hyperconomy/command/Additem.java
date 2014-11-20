@@ -88,15 +88,15 @@ public class Additem extends BaseCommand implements HyperCommand {
 		values.put("ECONOMY", hobj.getEconomy());
 		values.put("TYPE", hobj.getType().toString());
 		values.put("VALUE", hobj.getValue()+"");
-		values.put("STATIC", hobj.getIsstatic());
-		values.put("STATICPRICE", hobj.getStaticprice()+"");
+		values.put("STATIC", hobj.isStatic()+"");
+		values.put("STATICPRICE", hobj.getStaticPrice()+"");
 		values.put("STOCK", hobj.getStock()+"");
 		values.put("MEDIAN", hobj.getMedian()+"");
-		values.put("INITIATION", hobj.getInitiation());
-		values.put("STARTPRICE",hobj.getStartprice()+"");
+		values.put("INITIATION", hobj.useInitialPricing()+"");
+		values.put("STARTPRICE",hobj.getStartPrice()+"");
 		values.put("CEILING", hobj.getCeiling()+"");
 		values.put("FLOOR", hobj.getFloor()+"");
-		values.put("MAXSTOCK", hobj.getMaxstock()+"");
+		values.put("MAXSTOCK", hobj.getMaxStock()+"");
 		values.put("DATA", hobj.getData());
 		hc.getSQLWrite().performInsert("hyperconomy_objects", values);
 		he.addTradeObject(hobj);
@@ -147,7 +147,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 		} else {
 			median = 25000;
 		}
-		TradeObject hobj = new ComponentTradeItem(hc, name, economy, displayName, aliases, "item", value, "false", value*2,
+		TradeObject hobj = new ComponentTradeItem(hc, name, economy, displayName, aliases, "", "item", value, "false", value*2,
 				0, median, "true", value*2, 1000000000,0, 1000000000, sis.serialize());
 		return hobj;
 	}

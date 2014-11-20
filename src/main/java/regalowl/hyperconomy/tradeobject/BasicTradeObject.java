@@ -28,14 +28,15 @@ public class BasicTradeObject implements TradeObject {
 	protected String name;
 	protected String displayName;
 	protected ArrayList<String> aliases = new ArrayList<String>();
+	protected ArrayList<String> categories = new ArrayList<String>();
 	protected String economy;
 	protected TradeObjectType type;
 	protected double value;
-	protected String isstatic;
+	protected boolean isstatic;
 	protected double staticprice;
 	protected double stock;
 	protected double median;
-	protected String initiation;
+	protected boolean initiation;
 	protected double startprice;
 	protected double ceiling;
 	protected double floor;
@@ -50,34 +51,40 @@ public class BasicTradeObject implements TradeObject {
 	/**
 	 * Standard Constructor
 	 */
-	public BasicTradeObject(HyperConomy hc, String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
+	public BasicTradeObject(HyperConomy hc, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
 		this.hc = hc;
 		this.sw = hc.getSQLWrite();
 		this.name = name;
 		this.economy = economy;
 		this.displayName = displayName;
-		ArrayList<String> tAliases = CommonFunctions.explode(aliases, ",");
-		for (String cAlias:tAliases) {
-			this.aliases.add(cAlias);
-		}
+		this.aliases = CommonFunctions.explode(aliases, ",");
+		this.categories = CommonFunctions.explode(categories, ",");
 		this.type = TradeObjectType.fromString(type);
 		this.value = value;
-		this.isstatic = isstatic;
+		this.isstatic = Boolean.parseBoolean(isstatic);
 		this.staticprice = staticprice;
 		this.stock = stock;
 		this.median = median;
-		this.initiation = initiation;
+		this.initiation = Boolean.parseBoolean(initiation);
 		this.startprice = startprice;
 		this.ceiling = ceiling;
 		this.floor = floor;
 		this.maxstock = maxstock;
 	}
+	
+	
+	
 	@Override
 	public void delete() {
 		hc.getDataManager().getEconomy(economy).removeTradeObject(name);
 		String statement = "DELETE FROM hyperconomy_objects WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
 		sw.addToQueue(statement);
 		fireModificationEvent();
+	}
+	
+	@Override
+	public String toString() {
+		return displayName;
 	}
 	
 	@Override
@@ -104,6 +111,14 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public String getAliasesString() {
 		return CommonFunctions.implode(aliases, ",");
+	}
+	@Override
+	public ArrayList<String> getCategories() {
+		return new ArrayList<String>(categories);
+	}
+	@Override
+	public String getCategoriesString() {
+		return CommonFunctions.implode(categories, ",");
 	}
 	@Override
 	public boolean hasName(String testName) {
@@ -134,11 +149,11 @@ public class BasicTradeObject implements TradeObject {
 		return value;
 	}
 	@Override
-	public String getIsstatic() {
+	public boolean isStatic() {
 		return isstatic;
 	}
 	@Override
-	public double getStaticprice() {
+	public double getStaticPrice() {
 		return staticprice;
 	}
 	@Override
@@ -163,11 +178,11 @@ public class BasicTradeObject implements TradeObject {
 		return median;
 	}
 	@Override
-	public String getInitiation() {
+	public boolean useInitialPricing() {
 		return initiation;
 	}
 	@Override
-	public double getStartprice() {
+	public double getStartPrice() {
 		return startprice;
 	}
 	@Override
@@ -185,7 +200,7 @@ public class BasicTradeObject implements TradeObject {
 		return floor;
 	}
 	@Override
-	public double getMaxstock() {
+	public double getMaxStock() {
 		return maxstock;
 	}
 	
@@ -207,21 +222,19 @@ public class BasicTradeObject implements TradeObject {
 	}
 	@Override
 	public void setAliases(ArrayList<String> newAliases) {
-		String stringAliases = CommonFunctions.implode(newAliases, ",");
-		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
-		sw.addToQueue(statement);
 		aliases.clear();
 		for (String cAlias:newAliases) {
 			aliases.add(cAlias);
 		}
+		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + getAliasesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		sw.addToQueue(statement);
 		fireModificationEvent();
 	}
 	@Override
 	public void addAlias(String addAlias) {
 		if (aliases.contains(addAlias)) {return;}
 		aliases.add(addAlias);
-		String stringAliases = CommonFunctions.implode(aliases, ",");
-		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + getAliasesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		fireModificationEvent();
 	}
@@ -229,10 +242,39 @@ public class BasicTradeObject implements TradeObject {
 	public void removeAlias(String removeAlias) {
 		if (!aliases.contains(removeAlias)) {return;}
 		aliases.remove(removeAlias);
-		String stringAliases = CommonFunctions.implode(aliases, ",");
-		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + stringAliases + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + getAliasesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		fireModificationEvent();
+	}
+	@Override
+	public void setCategories(ArrayList<String> newCategories) {
+		categories.clear();
+		for (String cCat:newCategories) {
+			categories.add(cCat);
+		}
+		String statement = "UPDATE hyperconomy_objects SET CATEGORIES='" + getCategoriesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		sw.addToQueue(statement);
+		fireModificationEvent();
+	}
+	@Override
+	public void addCategory(String category) {
+		if (categories.contains(category)) {return;}
+		categories.add(category);
+		String statement = "UPDATE hyperconomy_objects SET CATEGORIES='" + getCategoriesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		sw.addToQueue(statement);
+		fireModificationEvent();
+	}
+	@Override
+	public void removeCategory(String category) {
+		if (!categories.contains(category)) {return;}
+		categories.remove(category);
+		String statement = "UPDATE hyperconomy_objects SET CATEGORIES='" + getCategoriesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		sw.addToQueue(statement);
+		fireModificationEvent();
+	}
+	@Override
+	public boolean inCategory(String category) {
+		return categories.contains(category);
 	}
 	@Override
 	public void setEconomy(String economy) {
@@ -256,14 +298,14 @@ public class BasicTradeObject implements TradeObject {
 		fireModificationEvent();
 	}
 	@Override
-	public void setIsstatic(String isstatic) {
-		String statement = "UPDATE hyperconomy_objects SET STATIC='" + isstatic + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+	public void setStatic(boolean isStatic) {
+		String statement = "UPDATE hyperconomy_objects SET STATIC='" + isStatic + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
-		this.isstatic = isstatic;
+		this.isstatic = isStatic;
 		fireModificationEvent();
 	}
 	@Override
-	public void setStaticprice(double staticprice) {
+	public void setStaticPrice(double staticprice) {
 		String statement = "UPDATE hyperconomy_objects SET STATICPRICE='" + staticprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.staticprice = staticprice;
@@ -285,14 +327,14 @@ public class BasicTradeObject implements TradeObject {
 		fireModificationEvent();
 	}
 	@Override
-	public void setInitiation(String initiation) {
+	public void setUseInitialPricing(boolean initiation) {
 		String statement = "UPDATE hyperconomy_objects SET INITIATION='" + initiation + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.initiation = initiation;
 		fireModificationEvent();
 	}
 	@Override
-	public void setStartprice(double startprice) {
+	public void setStartPrice(double startprice) {
 		String statement = "UPDATE hyperconomy_objects SET STARTPRICE='" + startprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.startprice = startprice;
@@ -313,7 +355,7 @@ public class BasicTradeObject implements TradeObject {
 		fireModificationEvent();
 	}
 	@Override
-	public void setMaxstock(double maxstock) {
+	public void setMaxStock(double maxstock) {
 		String statement = "UPDATE hyperconomy_objects SET MAXSTOCK='" + maxstock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.maxstock = maxstock;
@@ -333,17 +375,17 @@ public class BasicTradeObject implements TradeObject {
 	
 	@Override
 	public void checkInitiationStatus() {
-		if (((getMedian() * getValue()) / getTotalStock()) <= getStartprice()) {
-			setInitiation("false");
+		if (((getMedian() * getValue()) / getTotalStock()) <= getStartPrice()) {
+			setUseInitialPricing(false);
 		}
 	}
 	
 	@Override
 	public String getStatusString() {
 		String status = "dynamic";
-		if (Boolean.parseBoolean(getInitiation())) {
+		if (useInitialPricing()) {
 			status = "initial";
-		} else if (Boolean.parseBoolean(getIsstatic())) {
+		} else if (isstatic) {
 			status = "static";
 		}
 		return status;
@@ -353,13 +395,13 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public double getPurchaseTax(double cost) {
 		double tax = 0.0;
-		if (Boolean.parseBoolean(getIsstatic())) {
+		if (isstatic) {
 			tax = hc.getConf().getDouble("tax.static") / 100.0;
 		} else {
 			if (getType() == TradeObjectType.ENCHANTMENT) {
 				tax = hc.getConf().getDouble("tax.enchant") / 100.0;
 			} else {
-				if (Boolean.parseBoolean(getInitiation())) {
+				if (useInitialPricing()) {
 					tax = hc.getConf().getDouble("tax.initial") / 100.0;
 				} else {
 					tax = hc.getConf().getDouble("tax.purchase") / 100.0;
@@ -410,16 +452,16 @@ public class BasicTradeObject implements TradeObject {
 	public double getSellPrice(double amount) {
 		try {
 			double totalPrice = 0;
-			if (Boolean.parseBoolean(getIsstatic())) {
-				totalPrice = getStaticprice() * amount;
+			if (isstatic) {
+				totalPrice = getStaticPrice() * amount;
 			} else {
 				if (getTotalStock() <= 0) {
 					totalPrice = Math.pow(10, 21);
 				} else {
 					totalPrice = (Math.log(getTotalStock() + amount) - Math.log(getTotalStock())) * getMedian() * getValue();
 				}
-				if (Boolean.parseBoolean(getInitiation()) && totalPrice > (getStartprice() * amount)) {
-					totalPrice = getStartprice() * amount;
+				if (useInitialPricing() && totalPrice > (getStartPrice() * amount)) {
+					totalPrice = getStartPrice() * amount;
 				}
 			}
 			return applyCeilingFloor(totalPrice, amount);
@@ -434,16 +476,16 @@ public class BasicTradeObject implements TradeObject {
 	public double getBuyPrice(double amount) {
 		try {
 			double totalPrice = 0;
-			if (Boolean.parseBoolean(getIsstatic())) {
-				totalPrice = getStaticprice() * amount;
+			if (isstatic) {
+				totalPrice = getStaticPrice() * amount;
 			} else {
 				if (getTotalStock() - amount <= 0) {
 					totalPrice = Math.pow(10, 21);
 				} else {
 					totalPrice = (Math.log(getTotalStock()) - Math.log(getTotalStock() - amount)) * getMedian() * getValue();
 				}
-				if (Boolean.parseBoolean(getInitiation()) && totalPrice > (getStartprice() * amount)) {
-					totalPrice = getStartprice() * amount;
+				if (useInitialPricing() && totalPrice > (getStartPrice() * amount)) {
+					totalPrice = getStartPrice() * amount;
 				}
 			}
 			return applyCeilingFloor(totalPrice, amount);
@@ -580,31 +622,31 @@ public class BasicTradeObject implements TradeObject {
 	
 	//SHOP OBJECT METHODS
 	@Override
-	public PlayerShop getShop() {return null;}
+	public PlayerShop getShopObjectShop() {return null;}
 	@Override
-	public TradeObject getTradeObject() {return null;}
+	public TradeObject getParentTradeObject() {return null;}
 	@Override
-	public double getBuyPrice() {return 0;}
+	public double getShopObjectBuyPrice() {return 0;}
 	@Override
-	public double getSellPrice() {return 0;}
+	public double getShopObjectSellPrice() {return 0;}
 	@Override
-	public int getMaxStock() {return 0;}
+	public int getShopObjectMaxStock() {return 0;}
 	@Override
-	public TradeObjectStatus getStatus() {return null;}
+	public TradeObjectStatus getShopObjectStatus() {return null;}
 	@Override
 	public boolean useEconomyStock() {return true;}
 	@Override
-	public void setShop(PlayerShop playerShop) {}
+	public void setShopObjectShop(PlayerShop playerShop) {}
 	@Override
-	public void setBuyPrice(double buyPrice) {}
+	public void setShopObjectBuyPrice(double buyPrice) {}
 	@Override
-	public void setSellPrice(double sellPrice) {}
+	public void setShopObjectSellPrice(double sellPrice) {}
 	@Override
-	public void setMaxStock(int maxStock) {}
+	public void setShopObjectMaxStock(int maxStock) {}
 	@Override
-	public void setStatus(TradeObjectStatus status) {}
+	public void setShopObjectStatus(TradeObjectStatus status) {}
 	@Override
-	public void setTradeObject(TradeObject ho) {}
+	public void setParentTradeObject(TradeObject ho) {}
 	@Override
 	public void setUseEconomyStock(boolean state) {}
 

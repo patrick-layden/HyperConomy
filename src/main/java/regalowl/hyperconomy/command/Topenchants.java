@@ -57,8 +57,8 @@ public class Topenchants extends BaseCommand implements HyperCommand {
 				}
 				if (ho.getStock() > 0) {stocked = true;}
 				if (ho.isShopObject()) {
-					allowed = ho.getShop().isAllowed(hp);
-					if (ho.getStatus() == TradeObjectStatus.NONE && !allowed) {
+					allowed = ho.getShopObjectShop().isAllowed(hp);
+					if (ho.getShopObjectStatus() == TradeObjectStatus.NONE && !allowed) {
 						continue;
 					}
 				}

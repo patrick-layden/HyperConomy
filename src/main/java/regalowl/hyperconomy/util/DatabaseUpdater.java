@@ -2,17 +2,21 @@ package regalowl.hyperconomy.util;
 
 import java.util.ArrayList;
 
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.simpledatalib.sql.Field;
 import regalowl.simpledatalib.sql.FieldType;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SyncSQLWrite;
 import regalowl.simpledatalib.sql.Table;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class DatabaseUpdater {
 
 	private HyperConomy hc;
-	public final double version = 1.35;
+	public final double version = 1.36;
 	ArrayList<String> tables = new ArrayList<String>();
 	
 	public DatabaseUpdater(HyperConomy hc) {
@@ -59,33 +63,39 @@ public class DatabaseUpdater {
 			loadTables();
 			if (version < 1.35) {
 				//adds ability for player shops to behave like server shops
-
-				//Table t = hc.getSQLManager().generateTable("hyperconomy_shops");
-				//Field f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
-				//f = t.addField("TYPE", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
-				//f = t.addField("ECONOMY", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
-				//f = t.addField("OWNER", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
-				//f = t.addField("WORLD", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
-				//Field afterField = f;
-				//f = t.addField("MESSAGE", FieldType.TEXT);f.setNotNull();
-				//f = t.addField("BANNED_OBJECTS", FieldType.TEXT);f.setNotNull();
-				//f = t.addField("ALLOWED_PLAYERS", FieldType.TEXT);f.setNotNull();
-				//f = t.addField("P1X", FieldType.DOUBLE);f.setNotNull();
-				//f = t.addField("P1Y", FieldType.DOUBLE);f.setNotNull();
-				//f = t.addField("P1Z", FieldType.DOUBLE);f.setNotNull();
-				//f = t.addField("P2X", FieldType.DOUBLE);f.setNotNull();
-				//f = t.addField("P2Y", FieldType.DOUBLE);f.setNotNull();
-				//f = t.addField("P2Z", FieldType.DOUBLE);f.setNotNull();
 				Table t = hc.getSQLManager().getTable("hyperconomy_shops");
 				Field f = t.generateField("USE_ECONOMY_STOCK", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setDefault("1");
 				t.addFieldToDatabase(f, t.getField("WORLD"));
 				sw.queue("UPDATE hyperconomy_shops SET USE_ECONOMY_STOCK = '0' WHERE TYPE = 'player'");
-				sw.queue("UPDATE hyperconomy_settings SET VALUE = '1.35' WHERE SETTING = 'version'");
+				setDBVersion(sw, 1.35);
+			}
+			if (version < 1.36) {
+				Table t = hc.getSQLManager().getTable("hyperconomy_objects");
+				Field f = t.generateField("CATEGORIES", FieldType.TEXT);
+				t.addFieldToDatabase(f, t.getField("ALIASES"));
+				FileConfiguration cat = hc.getYamlHandler().getFileConfiguration("categories");
+				if (cat != null) {
+					for (String key:cat.getTopLevelKeys()) {
+						ArrayList<String> names = CommonFunctions.explode(cat.getString(key), ",");
+						for (String name:names) {
+							for (HyperEconomy he:hc.getDataManager().getEconomies()) {
+								TradeObject to = he.getTradeObject(name);
+								if (to == null) continue;
+								to.addCategory(key);
+							}
+						}
+					}
+				}
+				setDBVersion(sw, 1.36);
 			}
 		} else {
 			createTables(false);
 		}
 		sw.writeQueue();
+	}
+	
+	private void setDBVersion(SyncSQLWrite sw, double version) {
+		sw.queue("UPDATE hyperconomy_settings SET VALUE = '"+version+"' WHERE SETTING = 'version'");
 	}
 
 	public void createTables(boolean copydatabase) {
@@ -111,6 +121,7 @@ public class DatabaseUpdater {
 		compositeKey.add(f);
 		f = t.addField("DISPLAY_NAME", FieldType.VARCHAR);f.setFieldSize(255);
 		f = t.addField("ALIASES", FieldType.VARCHAR);f.setFieldSize(1000);
+		f = t.addField("CATEGORIES", FieldType.TEXT);
 		f = t.addField("TYPE", FieldType.TINYTEXT);
 		f = t.addField("VALUE", FieldType.DOUBLE);
 		f = t.addField("STATIC", FieldType.TINYTEXT);

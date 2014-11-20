@@ -104,7 +104,7 @@ public class HyperModificationServer {
 				HyperEconomy he = hc.getDataManager().getEconomy(ho.getEconomy());
 				if (he != null) {
 					if (ho.isShopObject()) {
-						PlayerShop ps = ho.getShop();
+						PlayerShop ps = ho.getShopObjectShop();
 						if (ps != null) ps.updateHyperObject(ho);
 					} else {
 						he.removeTradeObject(ho.getName());

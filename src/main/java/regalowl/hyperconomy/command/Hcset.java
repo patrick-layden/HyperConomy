@@ -97,9 +97,9 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						for (TradeObject ho:hyperObjects) {
 							if (ho instanceof CompositeTradeItem) {continue;}
 							if (copy) {
-								ho.setStaticprice(ho.getStartprice());
+								ho.setStaticPrice(ho.getStartPrice());
 							}
-							ho.setIsstatic(state+"");
+							ho.setStatic(state);
 						}
 						data.addResponse(L.f(L.get("ALL_OBJECTS_SET_TO_STATIC"), message));
 						return data;
@@ -109,12 +109,12 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						data.addResponse(L.get("INVALID_NAME"));
 						return data;
 					}
-					boolean isStatic = Boolean.parseBoolean(ho.getIsstatic());
+					boolean isStatic = ho.isStatic();
 					if (isStatic) {
-						ho.setIsstatic("false");
+						ho.setStatic(false);
 						data.addResponse(L.get("USE_DYNAMIC_PRICE"));
 					} else {
-						ho.setIsstatic("true");
+						ho.setStatic(true);
 						data.addResponse(L.get("USE_STATIC_PRICE"));
 					}
 				} catch (Exception e) {
@@ -141,7 +141,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						for (TradeObject ho:he.getTradeObjects()) {
 							if ((ho instanceof CompositeTradeItem)) {continue;}
 							ho.setStock(ho.getMedian());
-							ho.setInitiation("false");
+							ho.setUseInitialPricing(false);
 						}
 						data.addResponse(L.get("SETSTOCKMEDIANALL_SUCCESS"));
 						return data;
@@ -165,7 +165,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						return data;
 					}
 					Double price = Double.parseDouble(args[2]);
-					ho.setStartprice(price);
+					ho.setStartPrice(price);
 					data.addResponse(L.f(L.get("START_PRICE_SET"), ho.getDisplayName()));
 				} catch (Exception e) {
 					data.addResponse(L.get("HCSET_STARTPRICE_INVALID"));
@@ -179,7 +179,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						return data;
 					}
 					Double price = Double.parseDouble(args[2]);
-					ho.setStaticprice(price);
+					ho.setStaticPrice(price);
 					data.addResponse(L.f(L.get("STATIC_PRICE_SET"), ho.getDisplayName()));
 				} catch (Exception e) {
 					data.addResponse(L.get("HCSET_STATICPRICE_INVALID"));
@@ -256,7 +256,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						ArrayList<TradeObject> hyperObjects = he.getTradeObjects();
 						for (TradeObject ho:hyperObjects) {
 							if (ho instanceof CompositeTradeItem) {continue;}
-							ho.setInitiation(state+"");
+							ho.setUseInitialPricing(state);
 						}
 						data.addResponse(L.f(L.get("ALL_OBJECTS_SET_TO"), message));
 						return data;
@@ -266,12 +266,12 @@ public class Hcset extends BaseCommand implements HyperCommand {
 						data.addResponse(L.get("INVALID_NAME"));
 						return data;
 					}
-					boolean isInitial= Boolean.parseBoolean(ho.getInitiation());
+					boolean isInitial= ho.useInitialPricing();
 					if (isInitial) {
-						ho.setInitiation("false");
+						ho.setUseInitialPricing(false);
 						data.addResponse(L.f(L.get("INITIATION_FALSE"), ho.getDisplayName()));
 					} else {
-						ho.setInitiation("true");
+						ho.setUseInitialPricing(true);
 						data.addResponse(L.f(L.get("INITIATION_TRUE"), ho.getDisplayName()));
 					}
 				} catch (Exception e) {

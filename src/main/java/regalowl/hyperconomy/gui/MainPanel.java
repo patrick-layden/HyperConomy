@@ -38,13 +38,17 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JToggleButton;
 import javax.swing.JRadioButton;
 import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
+
 import java.awt.Color;
+
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
@@ -56,6 +60,7 @@ public class MainPanel {
 	private SimpleDataLib sdl;
 	private JTextField stockData;
 	JList<String> listObjectSelector;
+	DefaultListModel<String> listModel;
 	private JComboBox<String> tradeObjectSelector;
 	private JTextField displayNameData;
 	private JLabel displayNameLabel;
@@ -74,6 +79,7 @@ public class MainPanel {
 	private JLabel dataLabel;
 	private JTextArea dataData;
 	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_1;
 	
 	/**
 	 * Launch the application.
@@ -257,15 +263,15 @@ public class MainPanel {
 				stockData.setText(to.getStock()+"");
 				aliasesData.setText(to.getAliasesString());
 				displayNameData.setText(to.getDisplayName());
-				staticPricingToggle.setSelected(Boolean.parseBoolean(to.getIsstatic()));
-				initialPricingToggle.setSelected(Boolean.parseBoolean(to.getInitiation()));
+				staticPricingToggle.setSelected(to.isStatic());
+				initialPricingToggle.setSelected(to.useInitialPricing());
 				valueData.setText(to.getValue()+"");
-				staticPriceData.setText(to.getStaticprice()+"");
+				staticPriceData.setText(to.getStaticPrice()+"");
 				medianData.setText(to.getMedian()+"");
-				startPriceData.setText(to.getStartprice()+"");
+				startPriceData.setText(to.getStartPrice()+"");
 				ceilingData.setText(to.getCeiling()+"");
 				floorData.setText(to.getFloor()+"");
-				maxStockData.setText(to.getMaxStock()+"");
+				maxStockData.setText(to.getShopObjectMaxStock()+"");
 				dataData.setText(to.getData());
 			}
 		});
@@ -280,17 +286,17 @@ public class MainPanel {
 				to.setStock(Double.parseDouble(stockData.getText()));
 				to.setAliases(CommonFunctions.explode(aliasesData.getText(), ","));
 				to.setDisplayName(displayNameData.getText());
-				to.setInitiation(initialPricingToggle.isSelected()+"");
-				to.setIsstatic(staticPricingToggle.isSelected()+"");
+				to.setUseInitialPricing(initialPricingToggle.isSelected());
+				to.setStatic(staticPricingToggle.isSelected());
 				
 				
 				to.setValue(Double.parseDouble(valueData.getText()));
-				to.setStaticprice(Double.parseDouble(staticPriceData.getText()));
+				to.setStaticPrice(Double.parseDouble(staticPriceData.getText()));
 				to.setMedian(Double.parseDouble(medianData.getText()));
-				to.setStartprice(Double.parseDouble(startPriceData.getText()));
+				to.setStartPrice(Double.parseDouble(startPriceData.getText()));
 				to.setCeiling(Double.parseDouble(ceilingData.getText()));
 				to.setFloor(Double.parseDouble(floorData.getText()));
-				to.setMaxStock(Integer.parseInt(maxStockData.getText()));
+				to.setShopObjectMaxStock(Integer.parseInt(maxStockData.getText()));
 				to.setData(dataData.getText());
 
 				updateObjectSelector();
@@ -299,14 +305,21 @@ public class MainPanel {
 		updateButton.setBounds(158, 638, 297, 24);
 		frame.getContentPane().add(updateButton);
 		
-		listObjectSelector = new JList<String>();
+		listModel = new DefaultListModel<String>();
+		listModel.addElement("test");
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(495, 62, 233, 525);
+		frame.getContentPane().add(scrollPane_1);
+		listObjectSelector = new JList<String>(listModel);
+		listObjectSelector.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane_1.setViewportView(listObjectSelector);
 		listObjectSelector.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent event) {
 			}
 		});
 		listObjectSelector.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		listObjectSelector.setBounds(495, 155, 178, 231);
-		frame.getContentPane().add(listObjectSelector);
+		listObjectSelector.setSelectedIndex(0);
+		listObjectSelector.setVisibleRowCount(10);
 		
 
 
@@ -334,12 +347,15 @@ public class MainPanel {
 	private void updateObjectSelector() {
 		int index = tradeObjectSelector.getSelectedIndex();
 		tradeObjectSelector.removeAllItems();
+		listModel.clear();
 		ArrayList<TradeObject> tObjects = hc.getDataManager().getDefaultEconomy().getTradeObjects();
 		Collections.sort(tObjects);
 		for (TradeObject t:tObjects) {
 			if (t.isCompositeObject()) continue;
 			tradeObjectSelector.addItem(t.getDisplayName());
+			listModel.addElement(t.getDisplayName());
 		}
+		//listObjectSelector.repaint();
 		tradeObjectSelector.repaint();
 		if (tradeObjectSelector.getItemAt(index) != null) tradeObjectSelector.setSelectedIndex(index);
 	}

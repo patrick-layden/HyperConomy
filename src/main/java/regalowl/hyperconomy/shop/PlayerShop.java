@@ -334,7 +334,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	public boolean isBanned(TradeObject ho) {
 		TradeObject co = ho;
 		if (ho.isShopObject()) {
-			co = ho.getTradeObject();
+			co = ho.getParentTradeObject();
 		}
 		if (availableObjects.contains(co.getName())) {
 			return false;
@@ -347,7 +347,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	public boolean isTradeable(TradeObject ho) {
 		if (!isBanned(ho)) {
 			if (ho.isShopObject()) {
-				if (ho.getStatus() == TradeObjectStatus.NONE) {return false;}
+				if (ho.getShopObjectStatus() == TradeObjectStatus.NONE) {return false;}
 				return true;
 			} else {
 				return true;
@@ -396,7 +396,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		for (TradeObject ho:objects) {
 			TradeObject add = null;
 			if (ho.isShopObject()) {
-				add = ho.getTradeObject();
+				add = ho.getParentTradeObject();
 			} else {
 				add = ho;
 			}
@@ -410,7 +410,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		for (TradeObject ho:objects) {
 			TradeObject remove = null;
 			if (ho.isShopObject()) {
-				remove = ho.getTradeObject();
+				remove = ho.getParentTradeObject();
 			} else {
 				remove = ho;
 			}
@@ -678,7 +678,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	public void updateHyperObject(TradeObject ho) {
 		if (!ho.isShopObject()) return;
-		if (!ho.getShop().equals(this)) return;
+		if (!ho.getShopObjectShop().equals(this)) return;
 		if (!shopContents.containsKey(ho.getName())) return;
 		shopContents.put(ho.getName(), ho);
 	}

@@ -225,13 +225,13 @@ public class InfoSign {
 					break;
 				case STATUS:
 					boolean staticstatus;
-					staticstatus = Boolean.parseBoolean(ho.getIsstatic());
+					staticstatus = ho.isStatic();
 					line3 = "&f" + "Status:";
 					if (staticstatus) {
 						line4 = "&a" + "Static";
 					} else {
 						boolean initialstatus;
-						initialstatus = Boolean.parseBoolean(ho.getInitiation());
+						initialstatus = ho.useInitialPricing();
 						if (initialstatus) {
 							line4 = "&a" + "Initial";
 						} else {
@@ -241,11 +241,11 @@ public class InfoSign {
 					break;
 				case STATICPRICE:
 					line3 = "&f" + "Static Price:";
-					line4 = "&a" + "" + ho.getStaticprice() * multiplier;
+					line4 = "&a" + "" + ho.getStaticPrice() * multiplier;
 					break;
 				case STARTPRICE:
 					line3 = "&f" + "Start Price:";
-					line4 = "&a" + "" + ho.getStartprice() * multiplier;
+					line4 = "&a" + "" + ho.getStartPrice() * multiplier;
 					break;
 				case MEDIAN:
 					line3 = "&f" + "Median:";

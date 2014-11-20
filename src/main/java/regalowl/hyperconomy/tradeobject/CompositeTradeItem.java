@@ -1,6 +1,5 @@
 package regalowl.hyperconomy.tradeobject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,13 +18,8 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	private ConcurrentHashMap<String,Double> components = new ConcurrentHashMap<String,Double>();
 	
 	
-	public CompositeTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String type, String composites, String data) {
-		super(hc,name,economy,"","","",0,"",0,0,0,"",0,0,0,0,data);
-		this.displayName = displayName;
-		ArrayList<String> tAliases = CommonFunctions.explode(aliases, ",");
-		for (String cAlias:tAliases) {
-			this.aliases.add(cAlias);
-		}
+	public CompositeTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, String composites, String data) {
+		super(hc,name,economy,displayName,aliases,categories,"",0,"",0,0,0,"",0,0,0,0,data);
 		this.type = TradeObjectType.fromString(type);
 		HashMap<String,String> tempComponents = CommonFunctions.explodeMap(composites);
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
@@ -60,25 +54,25 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 		return value;
 	}
 	@Override
-	public String getIsstatic() {
+	public boolean isStatic() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
-		String isstatic = "true";
+		boolean isstatic = true;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
 		    TradeObject ho = he.getTradeObject(entry.getKey());
-		    if (!Boolean.parseBoolean(ho.getIsstatic())) {
-		    	isstatic = "false";
+		    if (!ho.isStatic()) {
+		    	isstatic = false;
 		    }
 		}
 		return isstatic;
 	}
 	@Override
-	public double getStaticprice() {
+	public double getStaticPrice() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double staticprice = 0;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
 		    TradeObject ho = he.getTradeObject(entry.getKey());
 		    Double qty = entry.getValue();
-		    staticprice += (ho.getStaticprice() * qty);
+		    staticprice += (ho.getStaticPrice() * qty);
 		}
 		return staticprice;
 	}
@@ -123,25 +117,25 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 		return median;
 	}
 	@Override
-	public String getInitiation() {
+	public boolean useInitialPricing() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
-		String initial = "false";
+		boolean initial = false;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
 		    TradeObject ho = he.getTradeObject(entry.getKey());
-		    if (Boolean.parseBoolean(ho.getInitiation())) {
-		    	initial = "true";
+		    if (ho.useInitialPricing()) {
+		    	initial = true;
 		    }
 		}
 		return initial;
 	}
 	@Override
-	public double getStartprice() {
+	public double getStartPrice() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double startprice = 0;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
 		    TradeObject ho = he.getTradeObject(entry.getKey());
 		    Double qty = entry.getValue();
-		    startprice += (ho.getStartprice() * qty);
+		    startprice += (ho.getStartPrice() * qty);
 		}
 		return startprice;
 	}
@@ -178,12 +172,12 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 		return floor;
 	}
 	@Override
-	public double getMaxstock() {
+	public double getMaxStock() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		double maxstock = 999999999;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
 		    TradeObject ho = he.getTradeObject(entry.getKey());
-		    double cm = ho.getMaxstock();
+		    double cm = ho.getMaxStock();
 		    if (cm < maxstock) {
 		    	maxstock = cm;
 		    }
@@ -197,7 +191,7 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
 		    TradeObject ho = he.getTradeObject(entry.getKey());
 		    Double qty = entry.getValue();
-		    if (Boolean.parseBoolean(ho.getInitiation())) {
+		    if (ho.useInitialPricing()) {
 				int ci = (int) Math.floor(ho.getMaxInitial() / qty);
 				if (ci < maxInitial) {
 				    maxInitial = ci;
@@ -326,21 +320,21 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	@Override
 	public void setMedian(double median) {}
 	@Override
-	public void setInitiation(String initiation) {}
+	public void setUseInitialPricing(boolean initiation) {}
 	@Override
-	public void setStartprice(double startprice) {}
+	public void setStartPrice(double startprice) {}
 	@Override
 	public void setCeiling(double ceiling) {}
 	@Override
 	public void setFloor(double floor) {}
 	@Override
-	public void setMaxstock(double maxstock) {}
+	public void setMaxStock(double maxstock) {}
 	@Override
 	public void setValue(double value) {}
 	@Override
-	public void setIsstatic(String isstatic) {}
+	public void setStatic(boolean isstatic) {}
 	@Override
-	public void setStaticprice(double staticprice) {}
+	public void setStaticPrice(double staticprice) {}
 	@Override
 	public void setType(TradeObjectType type) {}
 

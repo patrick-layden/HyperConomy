@@ -55,13 +55,13 @@ public class Scalebypercent extends BaseCommand implements HyperCommand {
 								if (type.equalsIgnoreCase("value")) {
 									ho.setValue(CommonFunctions.twoDecimals(ho.getValue() * percent));
 								} else if (type.equalsIgnoreCase("staticprice")) {
-									ho.setStaticprice(CommonFunctions.twoDecimals(ho.getStaticprice() * percent));
+									ho.setStaticPrice(CommonFunctions.twoDecimals(ho.getStaticPrice() * percent));
 								} else if (type.equalsIgnoreCase("stock")) {
 									ho.setStock(Math.floor(ho.getStock() * percent + .5));
 								} else if (type.equalsIgnoreCase("median")) {
 									ho.setMedian(CommonFunctions.twoDecimals(ho.getMedian() * percent));
 								} else if (type.equalsIgnoreCase("startprice")) {
-									ho.setStartprice(CommonFunctions.twoDecimals(ho.getStartprice() * percent));
+									ho.setStartPrice(CommonFunctions.twoDecimals(ho.getStartPrice() * percent));
 								}
 							}
 						}

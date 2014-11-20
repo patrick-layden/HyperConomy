@@ -19,14 +19,14 @@ public class ShopTradeEnchant extends BasicShopTradeObject implements TradeObjec
 
 	@Override
 	public String getEnchantmentName() {
-		return getTradeObject().getEnchantmentName();
+		return getParentTradeObject().getEnchantmentName();
 	}
 	@Override
 	public double getBuyPrice(EnchantmentClass enchantClass) {
 		if (buyPrice != 0.0) {
 			return buyPrice;
 		} else {
-			return getTradeObject().getBuyPrice(enchantClass);
+			return getParentTradeObject().getBuyPrice(enchantClass);
 		}
 	}
 	@Override
@@ -34,7 +34,7 @@ public class ShopTradeEnchant extends BasicShopTradeObject implements TradeObjec
 		if (sellPrice != 0.0) {
 			return sellPrice;
 		} else {
-			return getTradeObject().getSellPrice(enchantClass);
+			return getParentTradeObject().getSellPrice(enchantClass);
 		}
 	}
 	@Override
@@ -42,7 +42,7 @@ public class ShopTradeEnchant extends BasicShopTradeObject implements TradeObjec
 		if (sellPrice != 0.0) {
 			return sellPrice;
 		} else {
-			return getTradeObject().getSellPrice(enchantClass, hp);
+			return getParentTradeObject().getSellPrice(enchantClass, hp);
 		}
 	}
 	
@@ -61,27 +61,27 @@ public class ShopTradeEnchant extends BasicShopTradeObject implements TradeObjec
 
 	@Override
 	public HEnchantment getEnchantment() {
-		return getTradeObject().getEnchantment();
+		return getParentTradeObject().getEnchantment();
 	}
 
 	@Override
 	public int getEnchantmentLevel() {
-		return getTradeObject().getEnchantmentLevel();
+		return getParentTradeObject().getEnchantmentLevel();
 	}
 
 	@Override
 	public double addEnchantment(HItemStack stack) {
-		return getTradeObject().addEnchantment(stack);
+		return getParentTradeObject().addEnchantment(stack);
 	}
 
 	@Override
 	public double removeEnchantment(HItemStack stack) {
-		return getTradeObject().removeEnchantment(stack);
+		return getParentTradeObject().removeEnchantment(stack);
 	}
 
 	@Override
 	public boolean matchesEnchantment(HEnchantment enchant) {
-		return getTradeObject().matchesEnchantment(enchant);
+		return getParentTradeObject().matchesEnchantment(enchant);
 	}
 
 

@@ -39,36 +39,36 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	
 
 	@Override
-	public PlayerShop getShop() {
+	public PlayerShop getShopObjectShop() {
 		return (PlayerShop)hc.getHyperShopManager().getShop(playerShop);
 	}
 	@Override
-	public TradeObject getTradeObject() {
+	public TradeObject getParentTradeObject() {
 		TradeObject ho = hc.getDataManager().getEconomy(economy).getTradeObject(hyperObject);
 		return ho;
 	}
 	@Override
 	public double getStock() {
 		if (useEconomyStock) {
-			return getTradeObject().getStock();
+			return getParentTradeObject().getStock();
 		} else {
 			return stock;
 		}
 	}
 	@Override
-	public double getBuyPrice() {
+	public double getShopObjectBuyPrice() {
 		return buyPrice;
 	}
 	@Override
-	public double getSellPrice() {
+	public double getShopObjectSellPrice() {
 		return sellPrice;
 	}
 	@Override
-	public TradeObjectStatus getStatus() {
+	public TradeObjectStatus getShopObjectStatus() {
 		return status;
 	}
 	@Override
-	public int getMaxStock() {
+	public int getShopObjectMaxStock() {
 		return maxStock;
 	}
 	@Override
@@ -76,7 +76,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		return useEconomyStock;
 	}
 	@Override
-	public void setTradeObject(TradeObject ho) {
+	public void setParentTradeObject(TradeObject ho) {
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET HYPEROBJECT=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(ho.getName());
 		ws.addParameter(playerShop);
@@ -85,7 +85,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
-	public void setShop(PlayerShop playerShop) {
+	public void setShopObjectShop(PlayerShop playerShop) {
 		this.playerShop = playerShop.getName();
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SHOP=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(playerShop.getName());
@@ -97,7 +97,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	@Override
 	public void setStock(double stock) {
 		if (useEconomyStock) {
-			getTradeObject().setStock(stock);
+			getParentTradeObject().setStock(stock);
 		} else {
 			if (stock < 0.0) {stock = 0.0;}
 			this.stock = stock;
@@ -110,7 +110,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		}
 	}
 	@Override
-	public void setBuyPrice(double buyPrice) {
+	public void setShopObjectBuyPrice(double buyPrice) {
 		this.buyPrice = buyPrice;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET BUY_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(buyPrice);
@@ -120,7 +120,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
-	public void setSellPrice(double sellPrice) {
+	public void setShopObjectSellPrice(double sellPrice) {
 		this.sellPrice = sellPrice;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SELL_PRICE=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(sellPrice);
@@ -130,7 +130,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
-	public void setMaxStock(int maxStock) {
+	public void setShopObjectMaxStock(int maxStock) {
 		this.maxStock = maxStock;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET MAX_STOCK=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(maxStock);
@@ -140,7 +140,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
 	}
 	@Override
-	public void setStatus(TradeObjectStatus status) {
+	public void setShopObjectStatus(TradeObjectStatus status) {
 		this.status = status;
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET STATUS=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
 		ws.addParameter(status.toString());
@@ -173,18 +173,18 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	}
 	@Override
 	public double getBuyPrice(double amount) {
-		if (getBuyPrice() != 0.0) {
-			return getBuyPrice() * amount;
+		if (getShopObjectBuyPrice() != 0.0) {
+			return getShopObjectBuyPrice() * amount;
 		} else {
-			return getTradeObject().getBuyPrice(amount);
+			return getParentTradeObject().getBuyPrice(amount);
 		}
 	}
 	@Override
 	public double getSellPrice(double amount) {
-		if (getSellPrice() != 0.0) {
-			return getSellPrice() * amount;
+		if (getShopObjectSellPrice() != 0.0) {
+			return getShopObjectSellPrice() * amount;
 		} else {
-			return getTradeObject().getSellPrice(amount);
+			return getParentTradeObject().getSellPrice(amount);
 		}
 	}
 	@Override
@@ -192,7 +192,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	
 	@Override
 	public void checkInitiationStatus() {
-		getTradeObject().checkInitiationStatus();
+		getParentTradeObject().checkInitiationStatus();
 	}
 	
 	
@@ -217,21 +217,21 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	@Override
 	public void setValue(double value) {}
 	@Override
-	public void setIsstatic(String isstatic) {}
+	public void setStatic(boolean isstatic) {}
 	@Override
-	public void setStaticprice(double staticprice) {}
+	public void setStaticPrice(double staticprice) {}
 	@Override
 	public void setMedian(double median) {}
 	@Override
-	public void setInitiation(String initiation) {}
+	public void setUseInitialPricing(boolean initiation) {}
 	@Override
-	public void setStartprice(double startprice) {}
+	public void setStartPrice(double startprice) {}
 	@Override
 	public void setCeiling(double ceiling) {}
 	@Override
 	public void setFloor(double floor) {}
 	@Override
-	public void setMaxstock(double maxstock) {}
+	public void setMaxStock(double maxstock) {}
 	@Override
 	public double getPurchaseTax(double cost) {return 0;}
 	@Override
@@ -246,141 +246,141 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	//The following methods don't apply to PlayerShop objects and have been overridden to forward the request to the PlayerShop object's parent object.
 	@Override
 	public String getData() {
-		return getTradeObject().getData();
+		return getParentTradeObject().getData();
 	}
 	@Override
 	public void setData(String data) {
-		getTradeObject().setData(data);
+		getParentTradeObject().setData(data);
 	}
 	@Override
 	public Image getImage(int width, int height) {
-		return getTradeObject().getImage(width, height);
+		return getParentTradeObject().getImage(width, height);
 	}
 	@Override
 	public double getTotalStock() {
-		return getTradeObject().getTotalStock();
+		return getParentTradeObject().getTotalStock();
 	}
 	@Override
 	public String getName() {
-		return getTradeObject().getName();
+		return getParentTradeObject().getName();
 	}
 	@Override
 	public String getDisplayName() {
-		return getTradeObject().getDisplayName();
+		return getParentTradeObject().getDisplayName();
 	}
 	@Override
 	public ArrayList<String> getAliases() {
-		return getTradeObject().getAliases();
+		return getParentTradeObject().getAliases();
 	}
 	@Override
 	public String getAliasesString() {
-		return getTradeObject().getAliasesString();
+		return getParentTradeObject().getAliasesString();
 	}
 	@Override
 	public boolean hasName(String testName) {
-		return getTradeObject().hasName(testName);
+		return getParentTradeObject().hasName(testName);
 	}
 	@Override
 	public String getEconomy() {
-		return getTradeObject().getEconomy();
+		return getParentTradeObject().getEconomy();
 	}
 	@Override
 	public TradeObjectType getType() {
-		return getTradeObject().getType();
+		return getParentTradeObject().getType();
 	}
 	@Override
 	public double getValue() {
-		return getTradeObject().getValue();
+		return getParentTradeObject().getValue();
 	}
 	@Override
-	public String getIsstatic() {
-		return getTradeObject().getIsstatic();
+	public boolean isStatic() {
+		return getParentTradeObject().isStatic();
 	}
 	@Override
-	public double getStaticprice() {
-		return getTradeObject().getStaticprice();
+	public double getStaticPrice() {
+		return getParentTradeObject().getStaticPrice();
 	}
 	@Override
 	public double getMedian() {
-		return getTradeObject().getMedian();
+		return getParentTradeObject().getMedian();
 	}
 	@Override
-	public String getInitiation() {
-		return getTradeObject().getInitiation();
+	public boolean useInitialPricing() {
+		return getParentTradeObject().useInitialPricing();
 	}
 	@Override
-	public double getStartprice() {
-		return getTradeObject().getStartprice();
+	public double getStartPrice() {
+		return getParentTradeObject().getStartPrice();
 	}
 	@Override
 	public double getCeiling() {
-		return getTradeObject().getCeiling();
+		return getParentTradeObject().getCeiling();
 	}
 	@Override
 	public double getFloor() {
-		return getTradeObject().getFloor();
+		return getParentTradeObject().getFloor();
 	}
 	@Override
-	public double getMaxstock() {
-		return getTradeObject().getMaxstock();
+	public double getMaxStock() {
+		return getParentTradeObject().getMaxStock();
 	}
 	@Override
 	public int getMaxInitial() {
-		return getTradeObject().getMaxInitial();
+		return getParentTradeObject().getMaxInitial();
 	}
 	@Override
 	public boolean nameStartsWith(String part) {
-		return getTradeObject().nameStartsWith(part);
+		return getParentTradeObject().nameStartsWith(part);
 	}
 	@Override
 	public boolean nameContains(String part) {
-		return getTradeObject().nameContains(part);
+		return getParentTradeObject().nameContains(part);
 	}
 	
 	
 	@Override
 	public boolean isDurable() {
-		return getTradeObject().isDurable();
+		return getParentTradeObject().isDurable();
 	}
 	@Override
 	public int count(HInventory inventory) {
-		return getTradeObject().count(inventory);
+		return getParentTradeObject().count(inventory);
 	}
 	@Override
 	public int getAvailableSpace(HInventory inventory) {
-		return getTradeObject().getAvailableSpace(inventory);
+		return getParentTradeObject().getAvailableSpace(inventory);
 	}
 	@Override
 	public void add(int amount, HyperPlayer hp) {
-		getTradeObject().add(amount, hp);
+		getParentTradeObject().add(amount, hp);
 	}
 	@Override
 	public double remove(int amount, HyperPlayer hp) {
-		return getTradeObject().remove(amount, hp);
+		return getParentTradeObject().remove(amount, hp);
 	}
 	@Override
 	public HItemStack getItem() {
-		return getTradeObject().getItem();
+		return getParentTradeObject().getItem();
 	}
 	@Override
 	public HItemStack getItemStack(int amount) {
-		return getTradeObject().getItemStack(amount);
+		return getParentTradeObject().getItemStack(amount);
 	}
 	@Override
 	public void add(int amount, HInventory inventory) {
-		getTradeObject().add(amount, inventory);
+		getParentTradeObject().add(amount, inventory);
 	}
 	@Override
 	public double remove(int amount, HInventory inventory) {
-		return getTradeObject().remove(amount, inventory);
+		return getParentTradeObject().remove(amount, inventory);
 	}
 	@Override
 	public double getDamageMultiplier(int amount, HInventory inventory) {
-		return getTradeObject().getDamageMultiplier(amount, inventory);
+		return getParentTradeObject().getDamageMultiplier(amount, inventory);
 	}
 	@Override
 	public boolean matchesItemStack(HItemStack stack) {
-		return getTradeObject().matchesItemStack(stack);
+		return getParentTradeObject().matchesItemStack(stack);
 	}
 	
 	

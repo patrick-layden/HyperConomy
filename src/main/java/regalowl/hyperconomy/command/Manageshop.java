@@ -348,7 +348,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			}
 			for (TradeObject ho:he.getTradeObjects(newShop)) {
 				if (ho.isShopObject()) {
-					ho.setStatus(TradeObjectStatus.NONE);
+					ho.setShopObjectStatus(TradeObjectStatus.NONE);
 				}
 			}
 			hsm.addShop(newShop);
@@ -441,8 +441,8 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			}
 			TradeObject ho = he.getTradeObject(args[1], cps);
 			if (ho.isShopObject()) {
-				ho.setBuyPrice(price);
-				ho.setSellPrice(price);
+				ho.setShopObjectBuyPrice(price);
+				ho.setShopObjectSellPrice(price);
 				data.addResponse(L.get("PRICE_SET"));
 				return data;
 			} else {
@@ -471,7 +471,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			}
 			TradeObject ho = he.getTradeObject(args[1], cps);
 			if (ho.isShopObject()) {
-				ho.setBuyPrice(price);
+				ho.setShopObjectBuyPrice(price);
 				data.addResponse(L.get("PRICE_SET"));
 				return data;
 			} else {
@@ -500,7 +500,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			}
 			TradeObject ho = he.getTradeObject(args[1], cps);
 			if (ho.isShopObject()) {
-				ho.setSellPrice(price);
+				ho.setShopObjectSellPrice(price);
 				data.addResponse(L.get("PRICE_SET"));
 				return data;
 			} else {
@@ -529,7 +529,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			}
 			TradeObject ho = he.getTradeObject(args[1], cps);
 			if (ho.isShopObject()) {
-				ho.setMaxStock(maxStock);
+				ho.setShopObjectMaxStock(maxStock);
 				data.addResponse(L.get("MAXSTOCK_SET"));
 				return data;
 			} else {
@@ -552,7 +552,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			}
 			if (args[1].equalsIgnoreCase("all")) {
 				for (TradeObject ho:he.getTradeObjects(cps)) {
-					ho.setStatus(status);
+					ho.setShopObjectStatus(status);
 				}
 				data.addResponse(L.get("ALL_STATUS_SET"));
 				return data;
@@ -560,7 +560,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			if (args[1].equalsIgnoreCase("instock")) {
 				for (TradeObject ho:he.getTradeObjects(cps)) {
 					if (ho.getStock() > 0) {
-						ho.setStatus(status);
+						ho.setShopObjectStatus(status);
 					}
 				}
 				data.addResponse(L.get("INSTOCK_STATUS_SET"));
@@ -568,7 +568,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			}
 			if (he.objectTest(args[1])) {
 				TradeObject ho = he.getTradeObject(args[1], cps);
-				ho.setStatus(status);
+				ho.setShopObjectStatus(status);
 				data.addResponse(L.get("STATUS_SET"));
 				return data;
 			}
@@ -579,7 +579,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				for (String name:names) {
 					TradeObject ho = he.getTradeObject(name, cps);
 					if (ho != null) {
-						ho.setStatus(status);
+						ho.setShopObjectStatus(status);
 					}
 				}
 				data.addResponse(L.get("CATEGORY_STATUS_SET"));

@@ -37,14 +37,14 @@ public class Objectsettings extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("ITEMSETTINGS_INVALID"));
 				return data;
 			}
-			int itemsBeforeDynamicPricing = (int) ((ho.getMedian() * ho.getValue())/ho.getStartprice() - ho.getTotalStock());
+			int itemsBeforeDynamicPricing = (int) ((ho.getMedian() * ho.getValue())/ho.getStartPrice() - ho.getTotalStock());
 			data.addResponse(L.get("LINE_BREAK"));
 			data.addResponse(L.f(L.get("SETTINGS_NAME"), ho.getName()));
 			data.addResponse(L.f(L.get("SETTINGS_DISPLAY"), ho.getDisplayName()));
 			data.addResponse(L.f(L.get("SETTINGS_ALIAS"), ho.getAliasesString()));
 			data.addResponse(L.f(L.get("SETTINGS_VALUE"), ho.getValue()));
-			data.addResponse(L.f(L.get("SETTINGS_STARTPRICE"), ho.getStartprice(), Boolean.parseBoolean(ho.getInitiation())));
-			data.addResponse(L.f(L.get("SETTINGS_STATICPRICE"), ho.getStaticprice(), Boolean.parseBoolean(ho.getIsstatic())));
+			data.addResponse(L.f(L.get("SETTINGS_STARTPRICE"), ho.getStartPrice(), ho.useInitialPricing()));
+			data.addResponse(L.f(L.get("SETTINGS_STATICPRICE"), ho.getStaticPrice(), ho.isStatic()));
 			data.addResponse(L.f(L.get("SETTINGS_STOCK"), CommonFunctions.round(ho.getStock(), 3)));
 			data.addResponse(L.f(L.get("SETTINGS_TOTAL_STOCK"), CommonFunctions.round(ho.getTotalStock(),3)));
 			data.addResponse(L.f(L.get("SETTINGS_MEDIAN"), ho.getMedian()));

@@ -239,16 +239,16 @@ public class DataManager {
 			values.put("ECONOMY", name);
 			values.put("TYPE", ho.getType().toString());
 			values.put("VALUE", ho.getValue()+"");
-			values.put("STATIC", ho.getIsstatic());
-			values.put("STATICPRICE", ho.getStaticprice()+"");
+			values.put("STATIC", ho.isStatic()+"");
+			values.put("STATICPRICE", ho.getStaticPrice()+"");
 			values.put("MEDIAN", ho.getMedian()+"");
-			values.put("STARTPRICE", ho.getStartprice()+"");
+			values.put("STARTPRICE", ho.getStartPrice()+"");
 			values.put("CEILING", ho.getCeiling()+"");
 			values.put("FLOOR", ho.getFloor()+"");
-			values.put("MAXSTOCK", ho.getMaxstock()+"");
+			values.put("MAXSTOCK", ho.getMaxStock()+"");
 			values.put("DATA", ho.getData());
 			if (cloneAll) {
-				values.put("INITIATION", ho.getInitiation());
+				values.put("INITIATION", ho.useInitialPricing()+"");
 				values.put("STOCK", ho.getStock()+"");
 			} else {
 				values.put("INITIATION", "true");

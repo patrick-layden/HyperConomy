@@ -191,14 +191,14 @@ public class HyperConomy {
 		}
 		l = new Log(this);
 		dm = new DataManager(this);
-		dMode.syncDebugConsoleMessage("Data loading started.");
-		heh.fireEvent(new DataLoadEvent(DataLoadType.START));
 		new TransactionSignHandler(this);
 		yh.startSaveTask(saveInterval);
 		cs = new ChestShopHandler(this);
 		new HyperModificationServer(this);
 		api = new HyperAPI(this);
 		economyApi = mc.getEconomyProvider();
+		dMode.syncDebugConsoleMessage("Data loading started.");
+		heh.fireEvent(new DataLoadEvent(DataLoadType.START));
 	}
 
 	public void disable(boolean protect) {

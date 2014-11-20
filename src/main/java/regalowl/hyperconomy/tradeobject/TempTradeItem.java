@@ -12,8 +12,8 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 
 
 	private static final long serialVersionUID = 4228578172340543286L;
-	public TempTradeItem(HyperConomy hc, String name, String economy, String displayName, String aliases, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String itemData) {
-		super(hc, name, economy, displayName, aliases, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, itemData);
+	public TempTradeItem(HyperConomy hc, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String itemData) {
+		super(hc, name, economy, displayName, aliases, categories, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, itemData);
 	}
 	
 	//Override all set methods to prevent database changes.
@@ -34,11 +34,11 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 		this.value = value;
 	}
 	@Override
-	public void setIsstatic(String isstatic) {
+	public void setStatic(boolean isstatic) {
 		this.isstatic = isstatic;
 	}
 	@Override
-	public void setStaticprice(double staticprice) {
+	public void setStaticPrice(double staticprice) {
 		this.staticprice = staticprice;
 	}
 	@Override
@@ -51,11 +51,11 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 		this.median = median;
 	}
 	@Override
-	public void setInitiation(String initiation) {
+	public void setUseInitialPricing(boolean initiation) {
 		this.initiation = initiation;
 	}
 	@Override
-	public void setStartprice(double startprice) {
+	public void setStartPrice(double startprice) {
 		this.startprice = startprice;
 	}
 	@Override
@@ -67,7 +67,7 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 		this.floor = floor;
 	}
 	@Override
-	public void setMaxstock(double maxstock) {
+	public void setMaxStock(double maxstock) {
 		this.maxstock = maxstock;
 	}
 	@Override
@@ -100,7 +100,7 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 		double value = 10.0;
 		double median = 10000;
 		double startprice = 20.0;
-		return new TempTradeItem(hc, name, "default", name, "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, stack.serialize());
+		return new TempTradeItem(hc, name, "default", name, "", "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, stack.serialize());
 	}
 	
 	public static String generateName(HyperConomy hc, HItemStack stack) {
