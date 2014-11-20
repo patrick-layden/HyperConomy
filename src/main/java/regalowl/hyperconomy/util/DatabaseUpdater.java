@@ -1,12 +1,14 @@
 package regalowl.hyperconomy.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.simpledatalib.sql.Field;
 import regalowl.simpledatalib.sql.FieldType;
 import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.simpledatalib.sql.Table;
 import regalowl.hyperconomy.HyperConomy;
@@ -17,6 +19,7 @@ public class DatabaseUpdater {
 
 	private transient HyperConomy hc;
 	private transient SQLWrite sw;
+	private transient SQLRead sr;
 	public final double version = 1.36;
 	ArrayList<String> tables = new ArrayList<String>();
 	
@@ -58,6 +61,7 @@ public class DatabaseUpdater {
 
 	public void updateTables(QueryResult qr) {
 		sw = hc.getSQLManager().getSQLWrite();
+		sr = hc.getSQLManager().getSQLRead();
 		boolean writeState = sw.writeSync();
 		sw.writeSync(true);
 		if (qr.next()) {
@@ -74,7 +78,7 @@ public class DatabaseUpdater {
 			}
 			if (version < 1.36) {
 				Table t = hc.getSQLManager().getTable("hyperconomy_objects");
-				Field f = t.generateField("CATEGORIES", FieldType.TEXT);
+				Field f = t.generateField("CATEGORIES", FieldType.TEXT);f.setNotNull();
 				t.addFieldToDatabase(f, t.getField("ALIASES"));
 				FileConfiguration cat = hc.getYamlHandler().getFileConfiguration("categories");
 				if (cat != null) {
@@ -82,6 +86,10 @@ public class DatabaseUpdater {
 						ArrayList<String> names = CommonFunctions.explode(cat.getString(key), ",");
 						for (String name:names) {
 							for (HyperEconomy he:hc.getDataManager().getEconomies()) {
+								HashMap<String,String> conditions = new HashMap<String,String>();
+								conditions.put("NAME", name);
+								sr.getString("hyperconomy_objects", "CATEGORIES", conditions);
+								sw.addToQueue("UPDATE hyperconomy_objects SET USE_ECONOMY_STOCK = '0' WHERE TYPE = 'player'");
 								TradeObject to = he.getTradeObject(name);
 								if (to == null) continue;
 								to.addCategory(key);
@@ -122,7 +130,7 @@ public class DatabaseUpdater {
 		compositeKey.add(f);
 		f = t.addField("DISPLAY_NAME", FieldType.VARCHAR);f.setFieldSize(255);
 		f = t.addField("ALIASES", FieldType.VARCHAR);f.setFieldSize(1000);
-		f = t.addField("CATEGORIES", FieldType.TEXT);
+		f = t.addField("CATEGORIES", FieldType.TEXT);f.setNotNull();
 		f = t.addField("TYPE", FieldType.TINYTEXT);
 		f = t.addField("VALUE", FieldType.DOUBLE);
 		f = t.addField("STATIC", FieldType.TINYTEXT);
