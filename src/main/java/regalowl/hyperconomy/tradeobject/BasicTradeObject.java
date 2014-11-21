@@ -89,8 +89,10 @@ public class BasicTradeObject implements TradeObject {
 	
 	@Override
 	public int compareTo(TradeObject ho) {
-		if (displayName == null || ho == null) {return 0;}
-		return displayName.compareTo(ho.getDisplayName());
+		if (ho == null) return 1;
+		String d1 = (displayName == null) ? name:displayName;
+		String d2 = (ho.getDisplayName() == null) ? ho.getName():ho.getDisplayName();
+		return d1.compareTo(d2);
 	}
 	@Override
 	public String getName() {

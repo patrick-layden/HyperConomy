@@ -1,21 +1,8 @@
 package regalowl.hyperconomy.command;
 
-import java.util.ArrayList;
-
-import org.bukkit.inventory.ItemStack;
 
 import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.bukkit.BukkitCommon;
-import regalowl.hyperconomy.bukkit.BukkitConnector;
-import regalowl.hyperconomy.inventory.HEnchantment;
-import regalowl.hyperconomy.inventory.HItemStack;
-import regalowl.hyperconomy.serializable.SerializableEnchantment;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
-import regalowl.hyperconomy.tradeobject.TradeObject;
-import regalowl.hyperconomy.tradeobject.TradeObjectType;
-import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.file.FileConfiguration;
+
 
 
 
@@ -28,7 +15,7 @@ public class Hctest extends BaseCommand implements HyperCommand {
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		
-		
+		/*
 		FileConfiguration cat = hc.getYamlHandler().getFileConfiguration("categories");
 		if (cat != null) {
 			for (String key:cat.getTopLevelKeys()) {
@@ -42,6 +29,7 @@ public class Hctest extends BaseCommand implements HyperCommand {
 				}
 			}
 		}
+		*/
 		/*
 		BukkitConnector bc = (BukkitConnector)hc.getMC();
 		for (TradeObject ho:hc.getDataManager().getTradeObjects()) {

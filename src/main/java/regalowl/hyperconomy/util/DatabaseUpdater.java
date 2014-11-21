@@ -2,6 +2,7 @@ package regalowl.hyperconomy.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.file.FileConfiguration;
@@ -12,8 +13,11 @@ import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.simpledatalib.sql.Table;
 import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.hyperconomy.bukkit.BukkitConnector;
+import regalowl.hyperconomy.inventory.HEnchantment;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.serializable.SerializableEnchantment;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 public class DatabaseUpdater {
 
@@ -77,25 +81,45 @@ public class DatabaseUpdater {
 				setDBVersion(1.35);
 			}
 			if (version < 1.36) {
+				BukkitConnector bc = (BukkitConnector)hc.getMC();
+				QueryResult result = sr.select("SELECT NAME, TYPE, DATA FROM hyperconomy_objects WHERE ECONOMY = 'default'");
+				while (result.next()) {
+					String name = result.getString("NAME");
+					String type = result.getString("TYPE");
+					String data = result.getString("DATA");
+					//System.out.println("data:"+name);
+					if (type.equalsIgnoreCase("ITEM")) {
+						SerializableItemStack sis = new SerializableItemStack(data);
+						HItemStack n = bc.getBukkitCommon().getSerializableItemStack(sis.getItem());
+						sw.addToQueue("UPDATE hyperconomy_objects SET DATA = '"+n.serialize()+"' WHERE NAME = '"+name+"'");
+					} else if (type.equalsIgnoreCase("ENCHANTMENT")) {
+						SerializableEnchantment sis = new SerializableEnchantment(data);
+						HEnchantment n = new HEnchantment(sis.getEnchantmentName(), sis.getLvl());
+						sw.addToQueue("UPDATE hyperconomy_objects SET DATA = '"+n.serialize()+"' WHERE NAME = '"+name+"'");
+					}
+				}
+				sw.writeSyncQueue();
 				Table t = hc.getSQLManager().getTable("hyperconomy_objects");
-				Field f = t.generateField("CATEGORIES", FieldType.TEXT);f.setNotNull();
+				Field f = t.generateField("CATEGORIES", FieldType.TEXT);
 				t.addFieldToDatabase(f, t.getField("ALIASES"));
 				FileConfiguration cat = hc.getYamlHandler().getFileConfiguration("categories");
+				HashMap<String,String> data = new HashMap<String,String>();
 				if (cat != null) {
 					for (String key:cat.getTopLevelKeys()) {
 						ArrayList<String> names = CommonFunctions.explode(cat.getString(key), ",");
 						for (String name:names) {
-							for (HyperEconomy he:hc.getDataManager().getEconomies()) {
-								HashMap<String,String> conditions = new HashMap<String,String>();
-								conditions.put("NAME", name);
-								sr.getString("hyperconomy_objects", "CATEGORIES", conditions);
-								sw.addToQueue("UPDATE hyperconomy_objects SET USE_ECONOMY_STOCK = '0' WHERE TYPE = 'player'");
-								TradeObject to = he.getTradeObject(name);
-								if (to == null) continue;
-								to.addCategory(key);
+							String cString = "";
+							if (data.containsKey(name)) {
+								cString = data.get(name);
 							}
+							data.put(name, cString + key + ",");
 						}
 					}
+				}
+				for (Map.Entry<String,String> entry : data.entrySet()) {
+					//System.out.println("cat:"+entry.getKey());
+					sw.addToQueue("UPDATE hyperconomy_objects SET CATEGORIES = '"+entry.getValue()+"'"
+							+ " WHERE (NAME = '"+entry.getKey()+"' OR DISPLAY_NAME = '"+entry.getKey()+"' OR ALIASES LIKE '%"+entry.getKey()+",%')");
 				}
 				setDBVersion(1.36);
 			}
@@ -130,7 +154,7 @@ public class DatabaseUpdater {
 		compositeKey.add(f);
 		f = t.addField("DISPLAY_NAME", FieldType.VARCHAR);f.setFieldSize(255);
 		f = t.addField("ALIASES", FieldType.VARCHAR);f.setFieldSize(1000);
-		f = t.addField("CATEGORIES", FieldType.TEXT);f.setNotNull();
+		f = t.addField("CATEGORIES", FieldType.TEXT);
 		f = t.addField("TYPE", FieldType.TINYTEXT);
 		f = t.addField("VALUE", FieldType.DOUBLE);
 		f = t.addField("STATIC", FieldType.TINYTEXT);
