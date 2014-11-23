@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.file.FileConfiguration;
@@ -20,6 +21,7 @@ import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.util.DatabaseUpdater;
@@ -36,6 +38,7 @@ public class DataManager {
 	
 	private boolean loadActive;
 	private ConcurrentHashMap<String, HyperEconomy> economies = new ConcurrentHashMap<String, HyperEconomy>();
+	private CopyOnWriteArrayList<String> categories = new CopyOnWriteArrayList<String>();
 	private String defaultServerShopAccount;
 	private HyperPlayerManager hpm;
 	private HyperBankManager hbm;
@@ -87,11 +90,44 @@ public class DataManager {
 				}
 			}).start();
 		} else if (event.loadType == DataLoadType.SHOP) {
+			loadAllCategories();
 			hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.COMPLETE));
 		} else if (event.loadType == DataLoadType.COMPLETE) {
 			hc.getHyperLock().setLoadLock(false);
 			loadActive = false;
 		}
+	}
+	
+	@EventHandler
+	public void onHyperObjectModification(TradeObjectModificationEvent event) {
+		TradeObject to = event.getTradeObject();
+		if (to != null) {
+			for (String cat:to.getCategories()) {
+				if (!categories.contains(cat)) {
+					categories.add(cat);
+				}
+			}
+		}
+	}
+	
+	private void loadAllCategories() {
+		for (TradeObject to:getTradeObjects()) {
+			for (String cat:to.getCategories()) {
+				if (!categories.contains(cat)) {
+					categories.add(cat);
+				}
+			}
+		}
+	}
+	
+	public ArrayList<String> getCategories() {
+		ArrayList<String> cats = new ArrayList<String>();
+		cats.addAll(categories);
+		return cats;
+	}
+	
+	public boolean categoryExists(String category) {
+		return categories.contains(category);
 	}
 	
 	private void loadEconomies() {
@@ -224,42 +260,59 @@ public class DataManager {
 
 	
 	public void createNewEconomy(String name, String templateEconomy, boolean cloneAll) {
-		if (!economyExists(templateEconomy)) {
-			templateEconomy = "default";
+		new Thread(new EconomyBuilder(name, templateEconomy, cloneAll)).start();
+	}
+	
+	private class EconomyBuilder implements Runnable {
+		private String name;
+		private String templateEconomy;
+		private boolean cloneAll;
+		public EconomyBuilder(String name, String templateEconomy, boolean cloneAll) {
+			this.name = name;
+			this.templateEconomy = templateEconomy;
+			this.cloneAll = cloneAll;
 		}
-		HyperEconomy template = getEconomy(templateEconomy);
-		SQLWrite sw = hc.getSQLWrite();
-		HashMap<String,String> values = new HashMap<String,String>();
-		values.put("NAME", name);
-		values.put("HYPERACCOUNT", defaultServerShopAccount);
-		sw.performInsert("hyperconomy_economies", values);
-		for (TradeObject ho:template.getTradeObjects()) {
-			values = new HashMap<String,String>();
-			values.put("NAME", ho.getName());
-			values.put("DISPLAY_NAME", ho.getDisplayName());
-			values.put("ALIASES", ho.getAliasesString());
-			values.put("ECONOMY", name);
-			values.put("TYPE", ho.getType().toString());
-			values.put("VALUE", ho.getValue()+"");
-			values.put("STATIC", ho.isStatic()+"");
-			values.put("STATICPRICE", ho.getStaticPrice()+"");
-			values.put("MEDIAN", ho.getMedian()+"");
-			values.put("STARTPRICE", ho.getStartPrice()+"");
-			values.put("CEILING", ho.getCeiling()+"");
-			values.put("FLOOR", ho.getFloor()+"");
-			values.put("MAXSTOCK", ho.getMaxStock()+"");
-			values.put("DATA", ho.getData());
-			if (cloneAll) {
-				values.put("INITIATION", ho.useInitialPricing()+"");
-				values.put("STOCK", ho.getStock()+"");
-			} else {
-				values.put("INITIATION", "true");
-				values.put("STOCK", 0+"");
+		@Override
+		public void run() {
+			if (!economyExists(templateEconomy)) templateEconomy = "default";
+			HyperEconomy template = getEconomy(templateEconomy);
+			SQLWrite sw = hc.getSQLWrite();
+			boolean writeState = sw.writeSync();
+			sw.writeSync(true);
+			HashMap<String,String> values = new HashMap<String,String>();
+			values.put("NAME", name);
+			values.put("HYPERACCOUNT", defaultServerShopAccount);
+			sw.performInsert("hyperconomy_economies", values);
+			for (TradeObject ho:template.getTradeObjects()) {
+				values = new HashMap<String,String>();
+				values.put("NAME", ho.getName());
+				values.put("DISPLAY_NAME", ho.getDisplayName());
+				values.put("ALIASES", ho.getAliasesString());
+				values.put("ECONOMY", name);
+				values.put("TYPE", ho.getType().toString());
+				values.put("VALUE", ho.getValue()+"");
+				values.put("STATIC", ho.isStatic()+"");
+				values.put("STATICPRICE", ho.getStaticPrice()+"");
+				values.put("MEDIAN", ho.getMedian()+"");
+				values.put("STARTPRICE", ho.getStartPrice()+"");
+				values.put("CEILING", ho.getCeiling()+"");
+				values.put("FLOOR", ho.getFloor()+"");
+				values.put("MAXSTOCK", ho.getMaxStock()+"");
+				values.put("DATA", ho.getData());
+				if (cloneAll) {
+					values.put("INITIATION", ho.useInitialPricing()+"");
+					values.put("STOCK", ho.getStock()+"");
+				} else {
+					values.put("INITIATION", "true");
+					values.put("STOCK", 0+"");
+				}
+				sw.performInsert("hyperconomy_objects", values);
 			}
-			sw.performInsert("hyperconomy_objects", values);
+			sw.writeSyncQueue();
+			sw.writeSync(writeState);
+			economies.put(name, new HyperEconomy(hc, name));
+			hc.getHyperEventHandler().fireEvent(new HyperEconomyCreationEvent());
 		}
-		hc.restart();
-		hc.getHyperEventHandler().fireEvent(new HyperEconomyCreationEvent());
 	}
 	
 	public void deleteEconomy(String economy) {
@@ -269,7 +322,7 @@ public class DataManager {
 		conditions = new HashMap<String,String>();
 		conditions.put("NAME", economy);
 		hc.getSQLWrite().performDelete("hyperconomy_economies", conditions);
-		hc.restart();
+		economies.remove(economy);
 	}
 
 	

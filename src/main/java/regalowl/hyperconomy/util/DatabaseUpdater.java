@@ -1,5 +1,6 @@
 package regalowl.hyperconomy.util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,6 +103,7 @@ public class DatabaseUpdater {
 				Table t = hc.getSQLManager().getTable("hyperconomy_objects");
 				Field f = t.generateField("CATEGORIES", FieldType.TEXT);
 				t.addFieldToDatabase(f, t.getField("ALIASES"));
+				hc.getYamlHandler().registerFileConfiguration("categories");
 				FileConfiguration cat = hc.getYamlHandler().getFileConfiguration("categories");
 				HashMap<String,String> data = new HashMap<String,String>();
 				if (cat != null) {
@@ -121,6 +123,9 @@ public class DatabaseUpdater {
 					sw.addToQueue("UPDATE hyperconomy_objects SET CATEGORIES = '"+entry.getValue()+"'"
 							+ " WHERE (NAME = '"+entry.getKey()+"' OR DISPLAY_NAME = '"+entry.getKey()+"' OR ALIASES LIKE '%"+entry.getKey()+",%')");
 				}
+				new Backup(hc);
+				hc.getYamlHandler().unRegisterFileConfiguration("categories");
+				hc.getFileTools().deleteFile(hc.getSimpleDataLib().getStoragePath() + File.separator + "categories.yml");
 				setDBVersion(1.36);
 			}
 		} else {

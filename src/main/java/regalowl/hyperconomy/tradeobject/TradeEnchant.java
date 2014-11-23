@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -44,7 +44,7 @@ public class TradeEnchant extends BasicTradeObject implements TradeObject {
 		this.enchantData = data;
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 	}
 	
 	

@@ -149,9 +149,7 @@ public class HyperConomy {
 		sdl.registerListener(this);
 		ft = sdl.getFileTools();
 		yh = sdl.getYamlHandler();
-		yh.copyFromJar("categories");
 		yh.copyFromJar("config");
-		yh.registerFileConfiguration("categories");
 		yh.registerFileConfiguration("config");
 		new UpdateYML(this);
 		hConfig = yh.gFC("config");

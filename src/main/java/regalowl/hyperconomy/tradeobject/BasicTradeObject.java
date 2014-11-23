@@ -9,7 +9,7 @@ import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -117,6 +117,16 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public ArrayList<String> getCategories() {
 		return new ArrayList<String>(categories);
+	}
+	@Override
+	public ArrayList<String> getOtherCategories() {
+		ArrayList<String> otherCats = hc.getDataManager().getCategories();
+		for (String category:categories) {
+			if (otherCats.contains(category)) {
+				otherCats.remove(category);
+			}
+		}
+		return otherCats;
 	}
 	@Override
 	public String getCategoriesString() {
@@ -655,7 +665,7 @@ public class BasicTradeObject implements TradeObject {
 
 	protected void fireModificationEvent() {
 		if (hc != null) {
-			hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
+			hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 		}
 	}
 

@@ -8,7 +8,7 @@ import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class CompositeTradeItem extends ComponentTradeItem implements TradeObject {
@@ -287,7 +287,7 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 		    TradeObject ho = hc.getDataManager().getEconomy(economy).getTradeObject(oname);
 		    this.components.put(ho.getName(), amount);
 		}
-		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 	}
 	
 	@Override
@@ -295,19 +295,19 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 		String statement = "UPDATE hyperconomy_composites SET NAME='" + name + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
 		this.name = name;
-		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 	}
 	@Override
 	public void setEconomy(String economy) {
 		this.economy = economy;
-		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 	}
 	@Override
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 		String statement = "UPDATE hyperconomy_composites SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 	}
 
 

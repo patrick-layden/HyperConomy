@@ -16,6 +16,7 @@ import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.inventory.HEnchantment;
@@ -187,6 +188,20 @@ public class HyperEconomy implements Serializable {
 				defaultAccount = hc.getDataManager().getAccount(account);
 			}
 		}).start();
+	}
+	
+	public void delete() {
+		for (Shop shop:hc.getDataManager().getHyperShopManager().getShops()) {
+			if (shop.getEconomy().equalsIgnoreCase(economyName)) {
+				shop.setEconomy("default");
+			}
+		}
+		for (HyperPlayer hp:hc.getDataManager().getHyperPlayerManager().getHyperPlayers()) {
+			if (hp.getEconomy().equalsIgnoreCase(economyName)) {
+				hp.setEconomy("default");
+			}
+		}
+		hc.getDataManager().deleteEconomy(economyName);
 	}
 
 	public HyperAccount getDefaultAccount() {

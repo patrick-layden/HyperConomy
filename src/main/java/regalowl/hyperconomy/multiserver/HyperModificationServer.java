@@ -20,7 +20,7 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.HyperBankModificationEvent;
-import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
 import regalowl.hyperconomy.event.ShopModificationEvent;
 import regalowl.hyperconomy.shop.HyperShopManager;
@@ -147,8 +147,8 @@ public class HyperModificationServer {
 	
 	
 	@EventHandler
-	public void onHyperObjectModification(HyperObjectModificationEvent event) {
-		sendObject.addHyperObject(event.getHyperObject());
+	public void onHyperObjectModification(TradeObjectModificationEvent event) {
+		sendObject.addHyperObject(event.getTradeObject());
 	}
 	
 	@EventHandler

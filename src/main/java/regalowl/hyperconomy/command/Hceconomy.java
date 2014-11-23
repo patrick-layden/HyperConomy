@@ -4,8 +4,6 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 
 import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.util.Backup;
 
 public class Hceconomy extends BaseCommand implements HyperCommand {
@@ -57,17 +55,7 @@ public class Hceconomy extends BaseCommand implements HyperCommand {
 				if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {
 					new Backup(hc);
 				}
-				for (Shop shop:dm.getHyperShopManager().getShops()) {
-					if (shop.getEconomy().equalsIgnoreCase(economy)) {
-						shop.setEconomy("default");
-					}
-				}
-				for (HyperPlayer hp:dm.getHyperPlayerManager().getHyperPlayers()) {
-					if (hp.getEconomy().equalsIgnoreCase(economy)) {
-						hp.setEconomy("default");
-					}
-				}
-				dm.deleteEconomy(economy);
+				dm.getEconomy(economy).delete();
 				data.addResponse(L.get("ECONOMY_DELETED"));
 			} catch (Exception e) {
 				data.addResponse(L.get("HCECONOMY_DELETE_INVALID"));

@@ -19,7 +19,7 @@ import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HSignChangeEvent;
 import regalowl.hyperconomy.minecraft.HBlock;
@@ -95,7 +95,7 @@ public class InfoSignHandler {
 	
 	
 	@EventHandler
-	public void onHyperObjectModification(HyperObjectModificationEvent event) {
+	public void onHyperObjectModification(TradeObjectModificationEvent event) {
 		updateSigns();
 	}
 	

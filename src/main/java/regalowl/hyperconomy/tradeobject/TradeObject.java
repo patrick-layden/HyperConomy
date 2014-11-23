@@ -51,9 +51,13 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 */
 	public String getAliasesString();
 	/**
-	 * @return A list of all the categories for this TradeObject
+	 * @return A list of all the categories this TradeObject is in.
 	 */
 	public ArrayList<String> getCategories();
+	/**
+	 * @return A list of all the categories this TradeObject is not in
+	 */
+	public ArrayList<String> getOtherCategories();
 	/**
 	 * @return A comma delimited list of categories.
 	 */

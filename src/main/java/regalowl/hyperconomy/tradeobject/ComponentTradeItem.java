@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
 
@@ -87,7 +87,7 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 		this.itemData = data;
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
-		hc.getHyperEventHandler().fireEvent(new HyperObjectModificationEvent(this));
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 	}
 
 

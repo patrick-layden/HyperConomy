@@ -15,7 +15,7 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.display.FrameShop;
-import regalowl.hyperconomy.event.HyperObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -84,8 +84,8 @@ public class BukkitFrameShop implements FrameShop {
 	}
 	
 	@EventHandler
-	public void onHyperObjectModification(HyperObjectModificationEvent event) {
-		if (event.getHyperObject().equals(ho)) {
+	public void onHyperObjectModification(TradeObjectModificationEvent event) {
+		if (event.getTradeObject().equals(ho)) {
 			render();
 		}
 	}
