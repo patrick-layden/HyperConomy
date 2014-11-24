@@ -12,7 +12,6 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 
 	private String statement;
 	private ArrayList<String> result;
-	private HyperConomy hc;
 	
 	public Hyperlog(HyperConomy hc) {
 		super(hc, false);

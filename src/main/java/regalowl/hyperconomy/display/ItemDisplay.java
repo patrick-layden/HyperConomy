@@ -33,7 +33,8 @@ public class ItemDisplay {
 		this.active = false;
 		HyperEconomy he = hc.getDataManager().getEconomy("default");
 		this.l = location;
-		this.name = he.fixName(name);
+		TradeObject to = he.getTradeObject(name);
+		if (to != null) this.name = to.getName();
 		if (newDisplay) {
 			HashMap<String,String> values = new HashMap<String,String>();
 			values.put("WORLD", location.getWorld());
@@ -54,17 +55,16 @@ public class ItemDisplay {
 	}
 	
 	public HBlock getBaseBlock() {
-		int x = (int) Math.floor(l.getX());
-		int y = (int) Math.floor(l.getY() -1);
-		int z = (int) Math.floor(l.getZ());
-		return new HBlock(hc, new HLocation(l.getWorld(), x, y, z));
+		HLocation loc = new HLocation(l);
+		loc.convertToBlockLocation();
+		loc.setY(loc.getBlockY() - 1);
+		return new HBlock(hc, loc);
 	}
 	
 	public HBlock getItemBlock() {
-		int x = (int) Math.floor(l.getX());
-		int y = (int) Math.floor(l.getY());
-		int z = (int) Math.floor(l.getZ());
-		return new HBlock(hc, new HLocation(l.getWorld(), x, y, z));
+		HLocation loc = new HLocation(l);
+		loc.convertToBlockLocation();
+		return new HBlock(hc, l);
 	}
 	
 	public HLocation getLocation() {

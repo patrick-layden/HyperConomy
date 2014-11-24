@@ -15,7 +15,7 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.API;
 import regalowl.hyperconomy.command.Additem;
 import regalowl.hyperconomy.command.Sellall;
-import regalowl.hyperconomy.display.ItemDisplayFactory;
+import regalowl.hyperconomy.display.ItemDisplayHandler;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -78,7 +78,7 @@ public class HyperAPI implements API {
 			if (item == null) {
 				return false;
 			}
-			ItemDisplayFactory idf = hc.getItemDisplay();
+			ItemDisplayHandler idf = hc.getItemDisplay();
 			if (idf == null) {
 				return false;
 			} else {

@@ -27,6 +27,7 @@ public class DataEditor extends JFrame {
 	 * Create the frame.
 	 */
 	public DataEditor(TradeObject to) {
+		setTitle("Object Data Editor");
 		dataEditor = this;
 		this.tradeObject = to;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

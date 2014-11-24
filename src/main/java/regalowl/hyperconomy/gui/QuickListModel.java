@@ -29,6 +29,10 @@ public class QuickListModel<T> extends AbstractListModel<T> {
 		return null;
 	}
 	
+	public int indexOf(T d) {
+		return data.indexOf(d);
+	}
+	
 	public void removeIndex(int index) {
 		if (data.size() > index) {
 			data.remove(index);

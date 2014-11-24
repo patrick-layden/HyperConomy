@@ -1,7 +1,7 @@
 package regalowl.hyperconomy.display;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 
@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 
-
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.sql.QueryResult;
@@ -25,17 +25,17 @@ import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HItem;
 import regalowl.hyperconomy.minecraft.HLocation;
 
-public class ItemDisplayFactory {
+public class ItemDisplayHandler {
 	
 	private HyperConomy hc; 
 	private long refreshthreadid;
 	private final long refreshInterval = 4800L;
 	//private final long refreshInterval = 100L;
-	private ConcurrentHashMap<HLocation, ItemDisplay> displays = new ConcurrentHashMap<HLocation, ItemDisplay>();
+	private CopyOnWriteArrayList<ItemDisplay> displays = new CopyOnWriteArrayList<ItemDisplay>();
 	private QueryResult dbData;
 
 
-	public ItemDisplayFactory(HyperConomy hc) {
+	public ItemDisplayHandler(HyperConomy hc) {
 		try {
 			this.hc = hc;
 			if (hc.getConf().getBoolean("enable-feature.item-displays")) {
@@ -65,13 +65,11 @@ public class ItemDisplayFactory {
 								double z = dbData.getDouble("Z");
 								String name = dbData.getString("HYPEROBJECT");
 								HLocation l = new HLocation(w,x,y,z);
-								ItemDisplay display = new ItemDisplay(hc, l, name, false);
-								HLocation key = new HLocation(w, x, y, z);
-								displays.put(key, display);
+								displays.add(new ItemDisplay(hc, l, name, false));
 							}
 							dbData.close();
 							dbData = null;
-							for (ItemDisplay display:displays.values()) {
+							for (ItemDisplay display:displays) {
 								display.makeDisplay();
 								display.clearNearbyItems(7,false,false);
 							}
@@ -85,11 +83,11 @@ public class ItemDisplayFactory {
 	}
 	
 	public Collection<ItemDisplay> getDisplays() {
-		return displays.values();
+		return new ArrayList<ItemDisplay>(displays);
 	}
 
 	public void unloadDisplays() {
-		for (ItemDisplay display:displays.values()) {
+		for (ItemDisplay display:displays) {
 			display.clearNearbyItems(.5,true,true);
 			display.clear();
 		}
@@ -101,7 +99,7 @@ public class ItemDisplayFactory {
 	public void startRefreshThread() {
 		refreshthreadid = hc.getMC().runRepeatingTask(new Runnable() {
 			public void run() {
-				for (ItemDisplay display:displays.values()) {
+				for (ItemDisplay display:displays) {
 					display.refresh();
 				}
 			}
@@ -114,21 +112,25 @@ public class ItemDisplayFactory {
 	
 
 	public boolean removeDisplay(HLocation sl) {
-		if (displays.containsKey(sl)) {
-			ItemDisplay display = displays.get(sl);
-			display.delete();
-			displays.remove(sl);
-			return true;
-		} 
+		sl.convertToBlockLocation();
+		for (ItemDisplay display:displays) {
+			HLocation dLoc = display.getBaseBlock().getLocation();
+			if (dLoc.equals(sl)) {
+				display.delete();
+				displays.remove(display);
+				return true;
+			}
+		}
 		return false;
 	}
 	
-	public boolean removeDisplay(double x, double z, String w) {
-		for (HLocation key:displays.keySet()) {
-			if (key.getX() == x && key.getZ() == z && key.getWorld().equalsIgnoreCase(w)) {
-				ItemDisplay display = displays.get(key);
-				display.delete();
-				displays.remove(key);
+	public boolean removeDisplayInColumn(HLocation l) {
+		l.convertToBlockLocation();
+		for (ItemDisplay d:displays) {
+			HLocation dLoc = d.getBaseBlock().getLocation();
+			if (dLoc.getBlockX() == l.getBlockX() && dLoc.getBlockZ() == l.getBlockZ() && dLoc.getWorld().equalsIgnoreCase(l.getWorld())) {
+				d.delete();
+				displays.remove(d);
 				return true;
 			}
 		}
@@ -138,14 +140,16 @@ public class ItemDisplayFactory {
 	public boolean addDisplay(double x, double y, double z, String w, String name) {
 		x = Math.floor(x) + .5;
 		z = Math.floor(z) + .5;	
-		for (ItemDisplay display:displays.values()) {
+		for (ItemDisplay display:displays) {
 			if (x == display.getX() && y == display.getY() && z == display.getZ() && w.equals(display.getWorld())) {
 				return false;
 			}
 		}
 		HLocation l = new HLocation(w, x, y, z);
 		ItemDisplay display = new ItemDisplay(hc, l, name, true);
-		displays.put(l, display);
+		HLocation loc = new HLocation(l);
+		loc.convertToBlockLocation();
+		displays.add(display);
 		if (l.isLoaded(hc)) {
 			display.makeDisplay();
 			display.clearNearbyItems(7,false,false);
@@ -172,7 +176,7 @@ public class ItemDisplayFactory {
 	public void onBlockBreakEvent(HBlockBreakEvent event) {
 		try {
 		HBlock b = event.getBlock();
-		for (ItemDisplay display:displays.values()) {
+		for (ItemDisplay display:displays) {
 			if (!display.isActive()) {continue;}
 			if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
 				event.cancel();
@@ -189,7 +193,7 @@ public class ItemDisplayFactory {
 	public void onBlockPlaceEvent(HBlockPlaceEvent event) {
 		try {
 			HBlock b = event.getBlock();
-			for (ItemDisplay display : displays.values()) {
+			for (ItemDisplay display : displays) {
 				if (!display.isActive()) {continue;}
 				if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
 					event.cancel();
@@ -198,7 +202,7 @@ public class ItemDisplayFactory {
 			}
 			if (b.canFall()) {
 				HBlock below = b.getFirstNonAirBlockBelow();
-				for (ItemDisplay display : displays.values()) {
+				for (ItemDisplay display : displays) {
 					if (!display.isActive()) {continue;}
 					if (display.getBaseBlock().equals(below) || display.getItemBlock().equals(below)) {
 						event.cancel();
@@ -215,7 +219,7 @@ public class ItemDisplayFactory {
 	public void onBlockPistonRetractEvent(HBlockPistonRetractEvent event) {
 		try {
 			HBlock b = event.getRetractedBlock();
-			for (ItemDisplay display : displays.values()) {
+			for (ItemDisplay display : displays) {
 				if (!display.isActive()) {
 					continue;
 				}
@@ -233,7 +237,7 @@ public class ItemDisplayFactory {
 	public void onBlockPistonExtendEvent(HBlockPistonExtendEvent event) {
 		try {
 			for (HBlock cblock : event.getBlocks()) {
-				for (ItemDisplay display : displays.values()) {
+				for (ItemDisplay display : displays) {
 					if (!display.isActive()) {continue;}
 					if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
 						event.cancel();
@@ -250,7 +254,7 @@ public class ItemDisplayFactory {
 	public void onEntityExplodeEvent(HEntityExplodeEvent event) {
 		try {
 			for (HBlock cblock : event.getBrokenBlocks()) {
-				for (ItemDisplay display : displays.values()) {
+				for (ItemDisplay display : displays) {
 					if (!display.isActive()) {
 						continue;
 					}
@@ -269,7 +273,7 @@ public class ItemDisplayFactory {
 
 	public boolean isDisplay(HItem item) {
 		try {
-			for (ItemDisplay display : displays.values()) {
+			for (ItemDisplay display : displays) {
 				if (item.equals(display.getItem())) {
 					return true;
 				}

@@ -1,6 +1,9 @@
 package regalowl.hyperconomy.minecraft;
 
+import java.util.HashMap;
+
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.simpledatalib.CommonFunctions;
 
 
 
@@ -44,13 +47,13 @@ public class HLocation {
 	}
 	
 	public int getBlockX() {
-		return (int)x;
+		return (int)Math.floor(x);
 	}
 	public int getBlockY() {
-		return (int)y;
+		return (int)Math.floor(y);
 	}
 	public int getBlockZ() {
-		return (int)z;
+		return (int)Math.floor(z);
 	}
 	
 	public void setX(double x) {
@@ -66,6 +69,11 @@ public class HLocation {
 		this.world = world;
 	}
 	
+	public void convertToBlockLocation() {
+		this.x = getBlockX();
+		this.y = getBlockY();
+		this.z = getBlockZ();
+	}
 	
 	public boolean isLoaded(HyperConomy hc) {
 		return hc.getMC().isLoaded(this);
@@ -75,6 +83,15 @@ public class HLocation {
 	}
 	public HBlock getBlock(HyperConomy hc) {
 		return new HBlock(hc, this);
+	}
+	@Override
+	public String toString() {
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("x", x+"");
+		data.put("y", y+"");
+		data.put("z", z+"");
+		data.put("world", world);
+		return CommonFunctions.implodeMap(data);
 	}
 
 	

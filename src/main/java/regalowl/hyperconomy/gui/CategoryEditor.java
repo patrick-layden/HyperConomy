@@ -3,9 +3,12 @@ package regalowl.hyperconomy.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.MouseInputAdapter;
@@ -22,6 +25,7 @@ public class CategoryEditor extends JFrame {
 
 
 	private static final long serialVersionUID = -7483650005071403119L;
+	private ObjectPanel economyPanel;
 	private TradeObject tradeObject;
 	private JPanel contentPane;
 	private JList<String> selectedCategories;
@@ -33,8 +37,10 @@ public class CategoryEditor extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CategoryEditor(TradeObject to) {
+	public CategoryEditor(TradeObject to, ObjectPanel ePanel) {
+		setTitle("Economy Editor");
 		this.tradeObject = to;
+		this.economyPanel = ePanel;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 569, 620);
 		setLocationRelativeTo(null);
@@ -52,7 +58,7 @@ public class CategoryEditor extends JFrame {
 		UnselectedMouseAdapter unselectedMouseAdapter = new UnselectedMouseAdapter();
 		unselectedCategories.addMouseListener(unselectedMouseAdapter);
 		unselectedCategories.addMouseMotionListener(unselectedMouseAdapter);
-		unselectedModel.addData(to.getOtherCategories());
+		unselectedCategories.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(296, 30, 244, 453);
@@ -80,6 +86,7 @@ public class CategoryEditor extends JFrame {
 				if (selectedModel.contains(text)) return;
 				selectedModel.addData(text);
 				tradeObject.addCategory(text);
+				economyPanel.loadCatgories();
 			}
 		});
 		
@@ -100,7 +107,20 @@ public class CategoryEditor extends JFrame {
 		SelectedMouseAdapter selectedMouseAdapter = new SelectedMouseAdapter();
 		selectedCategories.addMouseListener(selectedMouseAdapter);
 		selectedCategories.addMouseMotionListener(selectedMouseAdapter);
-		selectedModel.addData(to.getCategories());
+		selectedCategories.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		refreshLists();
+	}
+	
+	private void refreshLists() {
+		unselectedModel.clear();
+		selectedModel.clear();
+		ArrayList<String> otherCategories = tradeObject.getOtherCategories();
+		ArrayList<String> categories = tradeObject.getCategories();
+		Collections.sort(otherCategories);
+		Collections.sort(categories);
+		unselectedModel.addData(otherCategories);
+		selectedModel.addData(categories);
+		economyPanel.loadCatgories();
 	}
 	
 	
@@ -109,9 +129,8 @@ public class CategoryEditor extends JFrame {
 		public void mousePressed(MouseEvent e) {
 			if (SwingUtilities.isLeftMouseButton(e)) {
 				String selected = unselectedCategories.getSelectedValue();
-				unselectedModel.removeData(selected);
-				selectedModel.addData(selected);
 				tradeObject.addCategory(selected);
+				refreshLists();
 			}
 		}
 	}
@@ -120,9 +139,8 @@ public class CategoryEditor extends JFrame {
 		public void mousePressed(MouseEvent e) {
 			if (SwingUtilities.isLeftMouseButton(e)) {
 				String selected = selectedCategories.getSelectedValue();
-				selectedModel.removeData(selected);
-				unselectedModel.addData(selected);
 				tradeObject.removeCategory(selected);
+				refreshLists();
 			}
 		}
 	}

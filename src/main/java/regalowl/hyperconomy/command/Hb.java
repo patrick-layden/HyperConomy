@@ -19,51 +19,36 @@ public class Hb extends BaseCommand implements HyperCommand{
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		try {
-		double amount;
-		boolean ma = false;
-		HyperEconomy he = hp.getHyperEconomy();
-		TradeObject ho = he.getTradeObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
-		if (ho == null) {
-			data.addResponse(L.get("OBJECT_NOT_AVAILABLE"));
-			return data;
-		}
-		if (args.length == 0) {
-			amount = 1;
-		} else {
-			try {
-				amount = Integer.parseInt(args[0]);
-				if (amount > 10000) {
-					amount = 10000;
-				}
-			} catch (Exception e) {
-				String max = args[0];
-				if (max.equalsIgnoreCase("max")) {
-					ma = true;
-					int space = ho.getAvailableSpace(hp.getInventory());
-					amount = space;
+			int amount = 1;
+			HyperEconomy he = getEconomy();
+			TradeObject ho = he.getTradeObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
+			if (ho == null) {
+				data.addResponse(L.get("OBJECT_NOT_AVAILABLE"));
+				return data;
+			}
+			if (args.length > 0) {
+				if (args[0].equalsIgnoreCase("max")) {
+					amount = ho.getAvailableSpace(hp.getInventory());
+					if (amount > ho.getStock())
+						amount = (int) Math.floor(ho.getStock());
 				} else {
-					data.addResponse(L.get("HB_INVALID"));
-					return data;
+					try {
+						amount = Integer.parseInt(args[0]);
+						if (amount > 10000) amount = 10000;
+					} catch (Exception e) {
+						data.addResponse(L.get("HB_INVALID"));
+						return data;
+					}
 				}
 			}
-		}
-
-		double shopstock = 0;
-		shopstock = ho.getStock();
-		// Buys the most possible from the shop if the
-		// amount is more than that for max.
-		if (amount > shopstock && ma) {
-			amount = shopstock;
-		}
-		Shop s = hc.getHyperShopManager().getShop(hp);
-
-		PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
-		pt.setObeyShops(true);
-		pt.setHyperObject(ho);
-		pt.setAmount((int) Math.rint(amount));
-		pt.setTradePartner(s.getOwner());
-		TransactionResponse response = hp.processTransaction(pt);
-		response.sendMessages();
+			Shop s = hc.getHyperShopManager().getShop(hp);
+			PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
+			pt.setObeyShops(true);
+			pt.setHyperObject(ho);
+			pt.setAmount((int) Math.rint(amount));
+			if (s != null) pt.setTradePartner(s.getOwner());
+			TransactionResponse response = hp.processTransaction(pt);
+			response.sendMessages();
 		} catch (Exception e) {
 			hc.gSDL().getErrorWriter().writeError(e);
 		}

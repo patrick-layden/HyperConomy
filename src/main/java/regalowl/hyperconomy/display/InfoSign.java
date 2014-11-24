@@ -55,12 +55,12 @@ public class InfoSign {
 		}
 		this.loc = signLoc;
 		this.type = type;
-		this.objectName = he.fixName(objectName);
-		ho = he.getTradeObject(this.objectName);
+		ho = he.getTradeObject(objectName);
 		if (ho == null) {
 			deleteSign();
 			return;
 		}
+		this.objectName = ho.getDisplayName();
 		HSign s = getSign();
 		if (s == null) {
 			deleteSign();
@@ -93,15 +93,15 @@ public class InfoSign {
 		this.economy = "default";
 		this.loc = signLoc;
 		this.type = type;
-		this.objectName = he.fixName(objectName);
 		if (economy != null) {
 			this.economy = economy;
 		}
-		ho = he.getTradeObject(this.objectName);
+		ho = he.getTradeObject(objectName);
 		if (ho == null) {
 			deleteSign();
 			return;
 		}
+		this.objectName = ho.getDisplayName();
 		line1 = hc.getMC().removeColor(lines[0].trim());
 		line2 = hc.getMC().removeColor(lines[1].trim());
 		if (line1.length() > 13) {

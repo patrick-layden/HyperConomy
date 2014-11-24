@@ -288,6 +288,7 @@ public class DataManager {
 				values.put("NAME", ho.getName());
 				values.put("DISPLAY_NAME", ho.getDisplayName());
 				values.put("ALIASES", ho.getAliasesString());
+				values.put("CATEGORIES", ho.getCategoriesString());
 				values.put("ECONOMY", name);
 				values.put("TYPE", ho.getType().toString());
 				values.put("VALUE", ho.getValue()+"");

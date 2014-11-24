@@ -64,32 +64,32 @@ public class TradeEnchant extends BasicTradeObject implements TradeObject {
 	
 	@Override
 	public double getBuyPrice(EnchantmentClass eclass) {
-		return super.getBuyPrice(1) * EnchantmentClass.getclassValue(hc, eclass);
+		return CommonFunctions.twoDecimals(super.getBuyPrice(1) * EnchantmentClass.getclassValue(hc, eclass));
 	}
 	
 
 	@Override
 	public double getSellPrice(EnchantmentClass eclass) {
-		return super.getSellPrice(1) * EnchantmentClass.getclassValue(hc, eclass);
+		return CommonFunctions.twoDecimals(super.getSellPrice(1) * EnchantmentClass.getclassValue(hc, eclass));
 	}
 	
 	@Override
 	public double getSellPrice(EnchantmentClass eclass, HyperPlayer hp) {
 		HInventory inv = hc.getMC().getInventory(hp);
-		return inv.getHeldItem().getDurabilityPercent() * getSellPrice(eclass);
+		return CommonFunctions.twoDecimals(inv.getHeldItem().getDurabilityPercent() * getSellPrice(eclass));
 	}
 
 	@Override
 	public double getBuyPrice(double amount) {
-		return getBuyPrice(EnchantmentClass.DIAMOND) * amount;
+		return CommonFunctions.twoDecimals(getBuyPrice(EnchantmentClass.DIAMOND) * amount);
 	}
 	@Override
 	public double getSellPrice(double amount) {
-		return getSellPrice(EnchantmentClass.DIAMOND) * amount;
+		return CommonFunctions.twoDecimals(getSellPrice(EnchantmentClass.DIAMOND) * amount);
 	}
 	@Override
 	public double getSellPrice(double amount, HyperPlayer hp) {
-		return getSellPrice(EnchantmentClass.DIAMOND, hp) * amount;
+		return CommonFunctions.twoDecimals(getSellPrice(EnchantmentClass.DIAMOND, hp) * amount);
 	}
 	@Override
 	public HEnchantment getEnchantment() {

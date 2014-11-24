@@ -11,12 +11,14 @@ import java.util.HashMap;
 
 
 
+
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.display.SignType;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class Repairsigns extends BaseCommand implements HyperCommand {
 	
@@ -65,8 +67,8 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 							if (cb != null && cb.isInfoSign()) {
 								HSign s = hc.getMC().getSign(loc);
 								String objectName = hc.getMC().removeColor(s.getLine(0)).trim() + hc.getMC().removeColor(s.getLine(1)).trim();
-								objectName = dm.getEconomy("default").fixName(objectName);
-								if (dm.getEconomy("default").objectTest(objectName)) {
+								TradeObject to = dm.getEconomy("default").getTradeObject(objectName);
+								if (to != null) {
 									String ttype = hc.getMC().removeColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
 									if (ttype.contains("[")) {
 										continue;
@@ -91,7 +93,7 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 										values.put("X", loc.getX()+"");
 										values.put("Y", loc.getY()+"");
 										values.put("Z", loc.getZ()+"");
-										values.put("HYPEROBJECT", objectName);
+										values.put("HYPEROBJECT", to.getName());
 										values.put("TYPE", type.toString());
 										values.put("MULTIPLIER", "1");
 										values.put("ECONOMY", hp.getEconomy());

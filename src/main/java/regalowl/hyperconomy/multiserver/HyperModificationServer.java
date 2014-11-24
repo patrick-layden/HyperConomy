@@ -107,8 +107,8 @@ public class HyperModificationServer {
 						PlayerShop ps = ho.getShopObjectShop();
 						if (ps != null) ps.updateHyperObject(ho);
 					} else {
-						he.removeTradeObject(ho.getName());
-						he.addTradeObject(ho);
+						he.removeObject(ho.getName());
+						he.addObject(ho);
 					}
 				}
 			}

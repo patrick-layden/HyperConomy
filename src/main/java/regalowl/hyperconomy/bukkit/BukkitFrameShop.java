@@ -13,7 +13,6 @@ import org.bukkit.map.MapView;
 import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.display.FrameShop;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -38,8 +37,8 @@ public class BukkitFrameShop implements FrameShop {
 	private BukkitConnector bc;
 
 	@SuppressWarnings("deprecation")
-	public BukkitFrameShop(MineCraftConnector mc, HLocation l, TradeObject ho, Shop s, int amount) {
-		this.hc = mc.getHC();
+	public BukkitFrameShop(HyperConomy hc, HLocation l, TradeObject ho, Shop s, int amount) {
+		this.hc = hc;
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
 			delete();
@@ -49,7 +48,7 @@ public class BukkitFrameShop implements FrameShop {
 		this.ho = ho;
 		this.tradeAmount = amount;
 		this.s = s;
-		bc = (BukkitConnector)mc;
+		this.bc = (BukkitConnector)hc.getMC();
 		MapView mapView = Bukkit.getServer().createMap(bc.getBukkitCommon().getLocation(l).getWorld());
 		mapId = mapView.getId();
 		String shop = "";
@@ -64,6 +63,7 @@ public class BukkitFrameShop implements FrameShop {
 
 	public BukkitFrameShop(HyperConomy hc, short mapId, HLocation l, TradeObject ho, Shop s, int amount) {
 		this.hc = hc;
+		this.bc = (BukkitConnector)hc.getMC();
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
 			delete();

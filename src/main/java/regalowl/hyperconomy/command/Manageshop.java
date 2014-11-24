@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
@@ -572,15 +571,9 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("STATUS_SET"));
 				return data;
 			}
-			FileConfiguration category = hc.gYH().getFileConfiguration("categories");
-			String categoryString = category.getString(args[1]);
-			if (categoryString != null) {
-				ArrayList<String> names = CommonFunctions.explode(categoryString, ",");
-				for (String name:names) {
-					TradeObject ho = he.getTradeObject(name, cps);
-					if (ho != null) {
-						ho.setShopObjectStatus(status);
-					}
+			if (dm.categoryExists(args[1])) {
+				for (TradeObject to:he.getCategory(args[1], cps)) {
+					if (to != null) to.setShopObjectStatus(status);
 				}
 				data.addResponse(L.get("CATEGORY_STATUS_SET"));
 				return data;

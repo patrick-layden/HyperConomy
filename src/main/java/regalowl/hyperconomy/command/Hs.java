@@ -17,24 +17,17 @@ public class Hs extends BaseCommand implements HyperCommand {
 	@Override
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
-			try {
-			int amount;
-	
+		try {
+			int amount = 1;
 			HyperEconomy he = getEconomy();
-			if (args.length == 0) {
-				amount = 1;
-			} else {
-				try {
-					amount = Integer.parseInt(args[0]);
-					if (amount > 10000) {
-						amount = 10000;
-					}
-				} catch (Exception e) {
-					String max = args[0];
-					if (max.equalsIgnoreCase("max")) {
-						TradeObject hi = he.getTradeObject(hp.getItemInHand());
-						amount = hi.count(hp.getInventory());
-					} else {
+			if (args.length > 0) {
+				if (args[0].equalsIgnoreCase("max")) {
+					amount = he.getTradeObject(hp.getItemInHand()).count(hp.getInventory());
+				} else {
+					try {
+						amount = Integer.parseInt(args[0]);
+						if (amount > 10000) amount = 10000;
+					} catch (Exception e) {
 						data.addResponse(L.get("HS_INVALID"));
 						return data;
 					}
@@ -43,18 +36,16 @@ public class Hs extends BaseCommand implements HyperCommand {
 			TradeObject ho = he.getTradeObject(hp.getItemInHand(), dm.getHyperShopManager().getShop(hp));
 			if (ho == null) {
 				data.addResponse(L.get("CANT_BE_TRADED"));
-			} else {
-				Shop s = dm.getHyperShopManager().getShop(hp);
-				PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
-				pt.setObeyShops(true);
-				pt.setHyperObject(ho);
-				pt.setAmount(amount);
-				if (s != null) {
-					pt.setTradePartner(s.getOwner());
-				}
-				TransactionResponse response = hp.processTransaction(pt);
-				response.sendMessages();
+				return data;
 			}
+			Shop s = dm.getHyperShopManager().getShop(hp);
+			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
+			pt.setObeyShops(true);
+			pt.setHyperObject(ho);
+			pt.setAmount(amount);
+			if (s != null) pt.setTradePartner(s.getOwner());
+			TransactionResponse response = hp.processTransaction(pt);
+			response.sendMessages();
 		} catch (Exception e) {
 			hc.gSDL().getErrorWriter().writeError(e);
 		}

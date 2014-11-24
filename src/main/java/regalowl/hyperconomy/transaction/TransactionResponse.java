@@ -63,11 +63,13 @@ public class TransactionResponse {
 	}
 	
 	public String getMessage() {
-		return messages.get(0);
+		if (messages.size() > 0) return messages.get(0);
+		return "";
 	}
 	
-	public Double getPrice() {
-		return prices.get(0);
+	public double getPrice() {
+		if (prices.size() > 0) return prices.get(0);
+		return 0.0;
 	}
 	
 	public ArrayList<String> getMessages() {

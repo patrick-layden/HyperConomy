@@ -23,8 +23,11 @@ public class Sell extends BaseCommand implements HyperCommand {
 		try {
 			HyperEconomy he = hp.getHyperEconomy();
 			Shop s = dm.getHyperShopManager().getShop(hp);
-			String name = he.fixName(args[0]);
-			TradeObject ho = he.getTradeObject(name, dm.getHyperShopManager().getShop(hp));
+			TradeObject ho = he.getTradeObject(args[0], dm.getHyperShopManager().getShop(hp));
+			if (ho == null) {
+				data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
+				return data;
+			}
 			int amount = 1;
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("max")) {
@@ -36,7 +39,13 @@ public class Sell extends BaseCommand implements HyperCommand {
 						amount = 1;
 					}
 				} else {
-					amount = Integer.parseInt(args[1]);
+					try {
+						amount = Integer.parseInt(args[1]);
+						if (amount > 10000) amount = 10000;
+					} catch (Exception e) {
+						data.addResponse(L.get("SELL_INVALID"));
+						return data;
+					}
 				}
 			}
 			if (amount > 10000) {
@@ -46,7 +55,7 @@ public class Sell extends BaseCommand implements HyperCommand {
 			pt.setObeyShops(true);
 			pt.setHyperObject(ho);
 			pt.setAmount(amount);
-			pt.setTradePartner(s.getOwner());
+			if (s != null) pt.setTradePartner(s.getOwner());
 			TransactionResponse response = hp.processTransaction(pt);
 			response.sendMessages(); 
 		} catch (Exception e) {

@@ -142,17 +142,14 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	@Override
 	public double getCeiling() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
-		double ceiling = 9999999999999.99;
+		double ceiling = 1000000000000000.0;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
 		    TradeObject ho = he.getTradeObject(entry.getKey());
-		    double cc = ho.getCeiling();
-		    if (cc < ceiling) {
-		    	ceiling = cc;
+		    if (ho.getCeiling() < ceiling) {
+		    	ceiling = ho.getCeiling();
 		    }
 		}
-		if (ceiling <= 0) {
-			return 9999999999999.99;
-		}
+		if (ceiling <= 0) return 1000000000000000.0;
 		return ceiling;
 	}
 	@Override
@@ -304,10 +301,9 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	}
 	@Override
 	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+		super.setDisplayName(displayName);
 		String statement = "UPDATE hyperconomy_composites SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "'";
 		hc.getSQLWrite().addToQueue(statement);
-		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 	}
 
 

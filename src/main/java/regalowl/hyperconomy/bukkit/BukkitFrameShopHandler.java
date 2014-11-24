@@ -61,6 +61,7 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 							double z = dbData.getDouble("Z");
 							String w = dbData.getString("WORLD");
 							HLocation l = new HLocation(w, x, y, z);
+							l.convertToBlockLocation();
 							Shop s = em.getHyperShopManager().getShop(dbData.getString("SHOP"));
 							String economy = em.getDefaultEconomy().getName();
 							if (s != null) {
@@ -80,36 +81,38 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 	}
 
 	public FrameShop getFrameShop(HLocation l) {
-		if (frameShops.containsKey(l)) {
-			return frameShops.get(l);
+		HLocation loc = new HLocation(l);
+		loc.convertToBlockLocation();
+		if (frameShops.containsKey(loc)) {
+			return frameShops.get(loc);
 		}
 		return null;
 	}
 
 	public boolean frameShopExists(HLocation l) {
-		if (getFrameShop(l) != null) {
-			return true;
-		}
+		if (getFrameShop(l) != null) return true;
 		return false;
 	}
 
 	public void removeFrameShop(HLocation l) {
-		if (frameShops.containsKey(l)) {
-			frameShops.remove(l);
+		HLocation loc = new HLocation(l);
+		loc.convertToBlockLocation();
+		if (frameShops.containsKey(loc)) {
+			frameShops.remove(loc);
 		}
 	}
 
 	public void createFrameShop(HLocation l, TradeObject ho, Shop s) {
-		BukkitFrameShop fs = new BukkitFrameShop(mc, l, ho, s, 1);
-		frameShops.put(l, fs);
+		HLocation loc = new HLocation(l);
+		loc.convertToBlockLocation();
+		BukkitFrameShop fs = new BukkitFrameShop(hc, loc, ho, s, 1);
+		frameShops.put(loc, fs);
 	}
 
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDamageEvent(EntityDamageByEntityEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
+		if (event.isCancelled()) return;
 		Entity entity = event.getEntity();
 		LanguageFile L = hc.getLanguageFile();
 		if (event.getDamager() instanceof Player) {
@@ -181,7 +184,8 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPlaceEvent(BlockPlaceEvent event) {
-		Location placeLocation = event.getBlock().getLocation();
+		HLocation placeLocation = bc.getLocation(event.getBlock().getLocation());
+		placeLocation.convertToBlockLocation();
 		for (BukkitFrameShop fs:frameShops.values()) {
 			if (fs.getLocation().equals(placeLocation)) {
 				event.setCancelled(true);

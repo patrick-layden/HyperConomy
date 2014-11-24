@@ -26,7 +26,7 @@ import regalowl.hyperconomy.util.LanguageFile;
 
 public class BukkitFrameShopRenderer extends MapRenderer {
 
-	private transient HyperConomy hc;
+
 	private transient LanguageFile L;
 	private TradeObject ho;
     private Image image;
@@ -37,7 +37,6 @@ public class BukkitFrameShopRenderer extends MapRenderer {
     
     public BukkitFrameShopRenderer(HyperConomy hc, TradeObject ho) {
         super();
-        this.hc = hc;
         L = hc.getLanguageFile();
         this.ho = ho;
         this.image = ho.getImage(60,60);
@@ -146,6 +145,6 @@ public class BukkitFrameShopRenderer extends MapRenderer {
     }
     
     public String color(String message, byte color) {
-    	return hc.getMC().applyColor(color+";") + message;
+    	return "\u00A7"+color+";" + message;
     }
 }

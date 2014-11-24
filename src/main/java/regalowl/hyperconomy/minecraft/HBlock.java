@@ -12,11 +12,12 @@ public class HBlock {
 	
 	public HBlock(HyperConomy hc, HLocation location) {
 		this.hc = hc;
-		this.location = location;
+		this.location = new HLocation(location);
+		this.location.convertToBlockLocation();
 	}
 
 	public HLocation getLocation() {
-		return location;
+		return new HLocation(location);
 	}
 	
 	public boolean isChest() {

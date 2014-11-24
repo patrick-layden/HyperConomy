@@ -42,7 +42,8 @@ public class HyperBank implements HyperAccount {
 		hc.getSQLWrite().addToQueue(ws);
 	}
 	
-	public HyperBank(String name, double balance, String owners, String members) {
+	public HyperBank(HyperConomy hc, String name, double balance, String owners, String members) {
+		this.hc = hc;
 		deleted = false;
 		this.name = name;
 		this.balance = balance;

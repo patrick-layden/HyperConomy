@@ -34,7 +34,7 @@ public class HyperBankManager {
 		hyperBanks.clear();
 		QueryResult bankData = hc.getSQLRead().select("SELECT * FROM hyperconomy_banks");
 		while (bankData.next()) {
-			HyperBank hBank = new HyperBank(bankData.getString("NAME"), bankData.getDouble("BALANCE"), bankData.getString("OWNERS"), bankData.getString("MEMBERS"));
+			HyperBank hBank = new HyperBank(hc, bankData.getString("NAME"), bankData.getDouble("BALANCE"), bankData.getString("OWNERS"), bankData.getString("MEMBERS"));
 			hyperBanks.put(hBank.getName().toLowerCase(), hBank);
 		}
 		bankData.close();

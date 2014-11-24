@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.event.EventHandler;
@@ -38,8 +39,8 @@ public class HyperEconomy implements Serializable {
 	private transient HyperConomy hc;
 	
 	private HyperAccount defaultAccount;
-	private ConcurrentHashMap<String, TradeObject> tradeObjectsName = new ConcurrentHashMap<String, TradeObject>();
-	private ConcurrentHashMap<String, String> tradeObjectsAliases = new ConcurrentHashMap<String, String>();
+	private ConcurrentHashMap<String, TradeObject> tradeObjectsNameMap = new ConcurrentHashMap<String, TradeObject>();
+	private CopyOnWriteArrayList<TradeObject> tradeObjects = new CopyOnWriteArrayList<TradeObject>();
 	private HashMap<String,String> composites = new HashMap<String,String>();
 	private boolean useComposites;
 	private String economyName;
@@ -55,13 +56,6 @@ public class HyperEconomy implements Serializable {
 		loadData(sr);
 	}
 	
-	
-	/**
-	 * Constructor for GUI editor
-	 * @param economy name
-	 * @param SQLRead sr
-	 * @param FileConfiguration config
-	 */
 	public HyperEconomy(String economy, SQLRead sr, FileConfiguration config) {
 		this.economyName = economy;
 		useComposites = config.getBoolean("enable-feature.composite-items");
@@ -74,48 +68,32 @@ public class HyperEconomy implements Serializable {
 		while (result.next()) {
 			composites.put(result.getString("NAME").toLowerCase(), result.getString("COMPONENTS"));
 		}
-		tradeObjectsName.clear();
+		tradeObjectsNameMap.clear();
 		result = sr.select("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economyName+"'");
 		while (result.next()) {
 			if (useComposites && composites.containsKey(result.getString("NAME").toLowerCase())) {continue;}
 			TradeObjectType type = TradeObjectType.fromString(result.getString("TYPE"));
+			TradeObject to = null;
 			if (type == TradeObjectType.ITEM) {
-				TradeObject hobj = new ComponentTradeItem(hc, result.getString("NAME"), result.getString("ECONOMY"), 
+				to = new ComponentTradeItem(hc, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
 						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
-				tradeObjectsName.put(hobj.getName().toLowerCase(), hobj);
-				for (String alias:hobj.getAliases()) {
-					tradeObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
-				}
-				tradeObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
-				tradeObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 			} else if (type == TradeObjectType.ENCHANTMENT) {
-				TradeObject hobj = new TradeEnchant(hc, result.getString("NAME"), result.getString("ECONOMY"), 
+				to = new TradeEnchant(hc, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), 
 						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
 						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
-				tradeObjectsName.put(hobj.getName().toLowerCase(), hobj);
-				for (String alias:hobj.getAliases()) {
-					tradeObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
-				}
-				tradeObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
-				tradeObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 			} else if (type == TradeObjectType.EXPERIENCE) {
-				TradeObject hobj = new TradeXp(hc, result.getString("NAME"), result.getString("ECONOMY"), 
+				to = new TradeXp(hc, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), 
 						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
 						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
-				tradeObjectsName.put(hobj.getName().toLowerCase(), hobj);
 				xpName = result.getString("NAME");
-				for (String alias:hobj.getAliases()) {
-					tradeObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
-				}
-				tradeObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
-				tradeObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 			}
+			if (to != null) addObject(to);
 		}
 		result.close();
 		if (xpName == null) xpName = "xp";
@@ -123,12 +101,41 @@ public class HyperEconomy implements Serializable {
 	}
 
 	
-
+	
+	public void addObject(TradeObject to) {
+		if (to == null) return;
+		tradeObjectsNameMap.put(to.getName().toLowerCase(), to);
+		tradeObjectsNameMap.put(to.getDisplayName().toLowerCase(), to);
+		for (String alias:to.getAliases()) {
+			tradeObjectsNameMap.put(alias.toLowerCase(), to);
+		}
+		tradeObjects.add(to);
+	}
+	
+	public void removeObject(TradeObject to) {
+		if (to == null) return;
+		tradeObjectsNameMap.remove(to.getName().toLowerCase());
+		tradeObjectsNameMap.remove(to.getDisplayName().toLowerCase());
+		for (String alias:to.getAliases()) {
+			tradeObjectsNameMap.remove(alias.toLowerCase());
+		}
+		tradeObjects.remove(to);
+	}
+	
+	public void removeObject(String name) {
+		TradeObject to = getTradeObject(name);
+		if (to == null) return;
+		removeObject(to);
+	}
 
 	
 	private void loadComposites(SQLRead sr) {
 		boolean loaded = false;
 		int counter = 0;
+		QueryResult result = sr.select("SELECT hyperconomy_objects.NAME, hyperconomy_objects.DISPLAY_NAME, "
+				+ "hyperconomy_objects.ALIASES, hyperconomy_objects.CATEGORIES, hyperconomy_objects.TYPE, hyperconomy_composites.COMPONENTS,"
+				+ " hyperconomy_objects.DATA FROM hyperconomy_composites, hyperconomy_objects WHERE "
+				+ "hyperconomy_composites.NAME = hyperconomy_objects.NAME");
 		while (!loaded) {
 			counter++;
 			if (counter > 100) {
@@ -138,24 +145,17 @@ public class HyperEconomy implements Serializable {
 				return;
 			}
 			loaded = true;
-			QueryResult result = sr.select("SELECT hyperconomy_objects.NAME, hyperconomy_objects.DISPLAY_NAME, "
-					+ "hyperconomy_objects.ALIASES, hyperconomy_objects.CATEGORIES, hyperconomy_objects.TYPE, hyperconomy_composites.COMPONENTS,"
-					+ " hyperconomy_objects.DATA FROM hyperconomy_composites, hyperconomy_objects WHERE "
-					+ "hyperconomy_composites.NAME = hyperconomy_objects.NAME");
+			result.reset();
 			while (result.next()) {
 				String name = result.getString("NAME");
+				if (getTradeObject(name) != null) continue;
 				if (!componentsLoaded(name)) {
 					loaded = false;
 					continue;
 				}
-				TradeObject ho = new CompositeTradeItem(hc, this, name, economyName, result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), 
+				TradeObject to = new CompositeTradeItem(hc, this, name, economyName, result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), 
 						result.getString("TYPE"), result.getString("COMPONENTS"), result.getString("DATA"));
-				tradeObjectsName.put(ho.getName().toLowerCase(), ho);
-				for (String alias:ho.getAliases()) {
-					tradeObjectsAliases.put(alias.toLowerCase(), ho.getName().toLowerCase());
-				}
-				tradeObjectsAliases.put(ho.getName().toLowerCase(), ho.getName().toLowerCase());
-				tradeObjectsAliases.put(ho.getDisplayName().toLowerCase(), ho.getName().toLowerCase());
+				addObject(to);
 			}
 		}
 	}
@@ -230,13 +230,13 @@ public class HyperEconomy implements Serializable {
 	public TradeObject getTradeObject(HEnchantment enchant, Shop s) {
 		if (enchant == null) {return null;}
 		if (s != null && s instanceof PlayerShop) {
-			for (TradeObject ho:tradeObjectsName.values()) {
+			for (TradeObject ho:tradeObjects) {
 				if (ho.getType() != TradeObjectType.ENCHANTMENT) {continue;}
 				if (!ho.matchesEnchantment(enchant)) {continue;}
 				return (TradeObject) ((PlayerShop) s).getPlayerShopObject(ho);
 			}
 		} else {
-			for (TradeObject ho:tradeObjectsName.values()) {
+			for (TradeObject ho:tradeObjects) {
 				if (ho.getType() != TradeObjectType.ENCHANTMENT) {continue;}
 				if (ho.matchesEnchantment(enchant)) {return ho;}
 			}
@@ -251,13 +251,13 @@ public class HyperEconomy implements Serializable {
 	public TradeObject getTradeObject(HItemStack stack, Shop s) {
 		if (stack == null) {return null;}
 		if (s != null && s instanceof PlayerShop) {
-			for (TradeObject ho:tradeObjectsName.values()) {
+			for (TradeObject ho:tradeObjects) {
 				if (ho.getType() != TradeObjectType.ITEM) {continue;}
 				if (!ho.matchesItemStack(stack)) {continue;}
 				return (TradeObject) ((PlayerShop) s).getPlayerShopObject(ho);
 			}
 		} else {
-			for (TradeObject ho:tradeObjectsName.values()) {
+			for (TradeObject ho:tradeObjects) {
 				if (ho.getType() != TradeObjectType.ITEM) {continue;}
 				if (ho.matchesItemStack(stack)) {return ho;}
 			}
@@ -267,18 +267,15 @@ public class HyperEconomy implements Serializable {
 	public TradeObject getTradeObject(String name, Shop s) {
 		if (name == null) {return null;}
 		String sname = name.toLowerCase();
-		if (tradeObjectsAliases.containsKey(sname)) {
-			sname = tradeObjectsAliases.get(sname);
-		}
 		if (s != null && s instanceof PlayerShop) {
-			if (tradeObjectsName.containsKey(sname)) {
-				return (TradeObject) ((PlayerShop) s).getPlayerShopObject(tradeObjectsName.get(sname));
+			if (tradeObjectsNameMap.containsKey(sname)) {
+				return (TradeObject) ((PlayerShop) s).getPlayerShopObject(tradeObjectsNameMap.get(sname));
 			} else {
 				return null;
 			}
 		} else {
-			if (tradeObjectsName.containsKey(sname)) {
-				return tradeObjectsName.get(sname);
+			if (tradeObjectsNameMap.containsKey(sname)) {
+				return tradeObjectsNameMap.get(sname);
 			} else {
 				return null;
 			}
@@ -287,19 +284,25 @@ public class HyperEconomy implements Serializable {
 	public TradeObject getTradeObject(String name) {
 		return getTradeObject(name, null);
 	}
-
-	public void removeTradeObject(String name) {
-		TradeObject ho = getTradeObject(name);
-		if (ho == null) return;
-		if (tradeObjectsName.containsKey(ho.getName().toLowerCase())) {
-			tradeObjectsName.remove(ho.getName().toLowerCase());
+	
+	public ArrayList<TradeObject> getCategory(String category) {
+		ArrayList<TradeObject> objs = new ArrayList<TradeObject>();
+		for (TradeObject t:tradeObjects) {
+			if (t.inCategory(category)) objs.add(t);
 		}
+		return objs;
 	}
-	
-	
+	public ArrayList<TradeObject> getCategory(String category, Shop s) {
+		ArrayList<TradeObject> tos = new ArrayList<TradeObject>();
+		for (TradeObject to:getCategory(category)) {
+			tos.add(getTradeObject(to.getName(), s));
+		}
+		return tos;
+	}
+
 	public ArrayList<TradeObject> getTradeObjects(Shop s) {
 		ArrayList<TradeObject> hos = new ArrayList<TradeObject>();
-		for (TradeObject ho:tradeObjectsName.values()) {
+		for (TradeObject ho:tradeObjects) {
 			hos.add(getTradeObject(ho.getName(), s));
 		}
 		return hos;
@@ -307,32 +310,14 @@ public class HyperEconomy implements Serializable {
 	
 	
 	public ArrayList<TradeObject> getTradeObjects() {
-		ArrayList<TradeObject> hos = new ArrayList<TradeObject>();
-		for (TradeObject ho:tradeObjectsName.values()) {
-			hos.add(ho);
-		}
-		return hos;
+		return new ArrayList<TradeObject>(tradeObjects);
 	}
-
-
-
-
-	public ArrayList<String> getObjectKeys() {
-		ArrayList<String> keys = new ArrayList<String>();
-		for (String key:tradeObjectsName.keySet()) {
-			keys.add(key);
-		}
-		return keys;
-	}
-
-
-
-	
 
 
 
 	public void clearData() {
-		tradeObjectsName.clear();
+		tradeObjectsNameMap.clear();
+		tradeObjects.clear();
 	}
 
 
@@ -343,7 +328,7 @@ public class HyperEconomy implements Serializable {
 	
 	public ArrayList<String> getNames() {
 		ArrayList<String> names = new ArrayList<String>();
-		for (TradeObject ho:tradeObjectsName.values()) {
+		for (TradeObject ho:tradeObjects) {
 			names.add(ho.getName());
 		}
 		return names;
@@ -352,7 +337,7 @@ public class HyperEconomy implements Serializable {
 
 	
 	public String getEnchantNameWithoutLevel(String bukkitName) {
-		for (TradeObject ho:tradeObjectsName.values()) {
+		for (TradeObject ho:tradeObjectsNameMap.values()) {
 			if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 				if (ho.getEnchantmentName().equalsIgnoreCase(bukkitName)) {
 					String name = ho.getName();
@@ -364,72 +349,18 @@ public class HyperEconomy implements Serializable {
 	}
 	
 	public boolean objectTest(String name) {
-		String sname = name.toLowerCase();
-		if (tradeObjectsAliases.containsKey(sname)) {
-			sname = tradeObjectsAliases.get(sname);
-		}
-		if (tradeObjectsName.containsKey(sname)) {
-			return true;
-		}
-		return false;
+		if (!tradeObjectsNameMap.containsKey(name.toLowerCase())) return false;
+		return true;
 	}
-	
-	
 	public boolean itemTest(String name) {
-		String sname = name.toLowerCase();
-		if (tradeObjectsAliases.containsKey(sname)) {
-			sname = tradeObjectsAliases.get(sname);
-		}
-		if (tradeObjectsName.containsKey(sname)) {
-			TradeObject ho = tradeObjectsName.get(sname);
-			if (ho.getType() == TradeObjectType.ITEM) {
-				return true;
-			}
-		}
-		return false;
+		if (!objectTest(name)) return false;
+		if (tradeObjectsNameMap.get(name.toLowerCase()).getType() != TradeObjectType.ITEM) return false;
+		return true;
 	}
-	
-
 	public boolean enchantTest(String name) {
-		String sname = name.toLowerCase();
-		if (tradeObjectsAliases.containsKey(sname)) {
-			sname = tradeObjectsAliases.get(sname);
-		}
-		if (tradeObjectsName.containsKey(sname)) {
-			TradeObject ho = tradeObjectsName.get(sname);
-			if (ho.getType() == TradeObjectType.ENCHANTMENT) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	
-	public String fixName(String nam) {
-		String sname = nam.toLowerCase();
-		if (tradeObjectsAliases.containsKey(sname)) {
-			sname = tradeObjectsAliases.get(sname);
-		}
-		for (String name:getNames()) {
-			if (name.equalsIgnoreCase(sname)) {
-				return name;
-			}
-		}
-		return nam;
-	}
-	
-	public String fixNameTest(String nam) {
-		String sname = nam.toLowerCase();
-		if (tradeObjectsAliases.containsKey(sname)) {
-			sname = tradeObjectsAliases.get(sname);
-		}
-		ArrayList<String> names = getNames();
-		for (int i = 0; i < names.size(); i++) {
-			if (names.get(i).equalsIgnoreCase(sname)) {
-				return names.get(i);
-			}
-		}
-		return null;
+		if (!objectTest(name)) return false;
+		if (tradeObjectsNameMap.get(name.toLowerCase()).getType() != TradeObjectType.ENCHANTMENT) return false;
+		return true;
 	}
 	
 
@@ -448,7 +379,7 @@ public class HyperEconomy implements Serializable {
 		ArrayList<String> columns = data.getColumnNames();
 		while (data.next()) {
 			String objectName = data.getString("NAME");
-			if (tradeObjectsName.keySet().contains(objectName.toLowerCase())) {continue;}
+			if (tradeObjectsNameMap.keySet().contains(objectName.toLowerCase())) {continue;}
 			objectsAdded.add(objectName);
 			HashMap<String, String> values = new HashMap<String, String>();
 			for (String column : columns) {
@@ -497,16 +428,6 @@ public class HyperEconomy implements Serializable {
 
 	public String getXpName() {
 		return xpName;
-	}
-	
-	public void addTradeObject(TradeObject hobj) {
-		if (hobj == null) return;
-		tradeObjectsName.put(hobj.getName().toLowerCase(), hobj);
-		for (String alias:hobj.getAliases()) {
-			tradeObjectsAliases.put(alias.toLowerCase(), hobj.getName().toLowerCase());
-		}
-		tradeObjectsAliases.put(hobj.getName().toLowerCase(), hobj.getName().toLowerCase());
-		tradeObjectsAliases.put(hobj.getDisplayName().toLowerCase(), hobj.getName().toLowerCase());
 	}
 
 

@@ -66,7 +66,7 @@ import regalowl.hyperconomy.command.Value;
 import regalowl.hyperconomy.command.Xpinfo;
 import regalowl.hyperconomy.display.FrameShopHandler;
 import regalowl.hyperconomy.display.InfoSignHandler;
-import regalowl.hyperconomy.display.ItemDisplayFactory;
+import regalowl.hyperconomy.display.ItemDisplayHandler;
 import regalowl.hyperconomy.display.TransactionSignHandler;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DisableEvent;
@@ -94,7 +94,7 @@ public class HyperConomy {
 	private transient Log l;
 	private transient InfoSignHandler isign;
 	private transient History hist;
-	private transient ItemDisplayFactory itdi;
+	private transient ItemDisplayHandler itdi;
 	private transient SQLWrite sw;
 	private transient SQLRead sr;
 	private transient ChestShopHandler cs;
@@ -130,7 +130,7 @@ public class HyperConomy {
 	public void onDataLoad(DataLoadEvent event) {
 		if (!(event.loadType == DataLoadType.COMPLETE)) return;
 		hist = new History(this);
-		itdi = new ItemDisplayFactory(this);
+		itdi = new ItemDisplayHandler(this);
 		isign = new InfoSignHandler(this);
 		fsh = mc.getFrameShopHandler();
 		registerCommands();
@@ -317,7 +317,7 @@ public class HyperConomy {
 	public SQLRead getSQLRead() {
 		return sr;
 	}
-	public ItemDisplayFactory getItemDisplay() {
+	public ItemDisplayHandler getItemDisplay() {
 		return itdi;
 	}
 	public History getHistory() {

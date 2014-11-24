@@ -42,7 +42,6 @@ public class TransactionSignHandler {
 					String line3 = hc.getMC().removeColor(sign.getLine(2)).trim();
 					if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
 						String line12 = hc.getMC().removeColor(sign.getLine(0)).trim() + hc.getMC().removeColor(sign.getLine(1)).trim();
-						line12 = he.fixName(line12);
 						if (he.objectTest(line12)) {
 							String line4 = hc.getMC().removeColor(sign.getLine(3)).trim();
 							int amount = 0;
@@ -98,7 +97,6 @@ public class TransactionSignHandler {
 						amount = 0;
 					}
 					String line12 = hc.getMC().removeColor(sign.getLine(0)).trim() + hc.getMC().removeColor(sign.getLine(1)).trim();
-					line12 = em.getEconomy("default").fixName(line12);
 					if (em.getEconomy("default").objectTest(line12)) {
 						if (scevent.getHyperPlayer().hasPermission("hyperconomy.createsign")) {
 							String line1 = hc.getMC().removeColor(sign.getLine(0).trim());
@@ -166,7 +164,6 @@ public class TransactionSignHandler {
 				return;
 			}
 			String line12 = hc.getMC().removeColor(s.getLine(0)).trim() + hc.getMC().removeColor(s.getLine(1)).trim();
-			line12 = he.fixName(line12);
 			if (!he.objectTest(line12)) return;
 			ievent.cancel();
 			if (!ievent.isLeftClick()) {

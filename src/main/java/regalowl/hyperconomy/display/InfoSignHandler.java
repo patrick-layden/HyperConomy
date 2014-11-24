@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 
+
 import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
@@ -26,6 +27,7 @@ import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class InfoSignHandler {
 
@@ -112,7 +114,8 @@ public class InfoSignHandler {
 					economy = hp.getEconomy();
 				}
 				String objectName = lines[0].trim() + lines[1].trim();
-				objectName = em.getEconomy(hp.getEconomy()).fixName(objectName);
+				TradeObject to = em.getEconomy(hp.getEconomy()).getTradeObject(objectName);
+				if (to != null) objectName = to.getDisplayName();
 				int multiplier = 1;
 				try {
 					multiplier = Integer.parseInt(lines[3]);

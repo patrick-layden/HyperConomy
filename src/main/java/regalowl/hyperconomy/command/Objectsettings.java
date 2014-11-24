@@ -26,7 +26,7 @@ public class Objectsettings extends BaseCommand implements HyperCommand {
 				}
 			} else if (args.length == 1) {
 				HyperEconomy he = super.getEconomy();
-				String nam = he.fixName(args[0]);
+				String nam = args[0];
 				if (he.objectTest(nam)) {
 					ho = he.getTradeObject(nam);
 				} else {

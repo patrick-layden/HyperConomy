@@ -27,9 +27,12 @@ public class Hv extends BaseCommand implements HyperCommand {
 				if (args.length == 0) {
 					amount = 1;
 				} else {
-					amount = Integer.parseInt(args[0]);
-					if (amount > 10000) {
-						amount = 10000;
+					try {
+						amount = Integer.parseInt(args[0]);
+						if (amount > 10000) amount = 10000;
+					} catch (Exception e) {
+						data.addResponse(L.get("VALUE_INVALID"));
+						return data;
 					}
 				}
 				if (!iinhand.hasEnchantments()) {

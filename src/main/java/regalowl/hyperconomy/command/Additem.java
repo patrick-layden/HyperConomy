@@ -99,7 +99,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 		values.put("MAXSTOCK", hobj.getMaxStock()+"");
 		values.put("DATA", hobj.getData());
 		hc.getSQLWrite().performInsert("hyperconomy_objects", values);
-		he.addTradeObject(hobj);
+		he.addObject(hobj);
 		return true;
 	}
 	

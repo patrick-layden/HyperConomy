@@ -10,8 +10,6 @@ import java.util.HashMap;
 
 
 
-import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -248,9 +246,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 			}
 		} else if (args[0].equalsIgnoreCase("addcategory") || args[0].equalsIgnoreCase("acat")) {
 			try {
-				FileConfiguration category = hc.gYH().gFC("categories");
-				String categoryString = category.getString(args[1]);
-				if (categoryString == null) {
+				if (!dm.categoryExists(args[1])) {
 					data.addResponse(L.get("CATEGORY_NOT_EXIST"));
 					return data;
 				}
@@ -258,16 +254,9 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("NO_SHOP_SELECTED"));
 					return data;
 				}
-				ArrayList<String> categoryNames = CommonFunctions.explode(categoryString, ",");
 				HyperEconomy he = css.getHyperEconomy();
-				ArrayList<TradeObject> add = new ArrayList<TradeObject>();
-				for (String name:categoryNames) {
-					TradeObject ho = he.getTradeObject(name);
-					if (ho != null) {
-						add.add(ho);
-					}
-				}
-				css.unBanObjects(add);
+				ArrayList<TradeObject> category = he.getCategory(args[1]);
+				css.unBanObjects(category);
 				data.addResponse("&6" + args[1] + " " + L.get("ADDED_TO") + " " + css.getDisplayName());
 			} catch (Exception e) {
 				hc.getDebugMode().debugWriteError(e);
@@ -275,9 +264,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 			}
 		} else if (args[0].equalsIgnoreCase("removecategory") || args[0].equalsIgnoreCase("rcat")) {
 			try {
-				FileConfiguration category = hc.gYH().gFC("categories");
-				String categoryString = category.getString(args[1]);
-				if (categoryString == null) {
+				if (!dm.categoryExists(args[1])) {
 					data.addResponse(L.get("CATEGORY_NOT_EXIST"));
 					return data;
 				}
@@ -285,16 +272,9 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("NO_SHOP_SELECTED"));
 					return data;
 				}
-				ArrayList<String> categoryNames = CommonFunctions.explode(categoryString, ",");
 				HyperEconomy he = css.getHyperEconomy();
-				ArrayList<TradeObject> remove = new ArrayList<TradeObject>();
-				for (String name:categoryNames) {
-					TradeObject ho = he.getTradeObject(name);
-					if (ho != null) {
-						remove.add(ho);
-					}
-				}
-				css.banObjects(remove);
+				ArrayList<TradeObject> category = he.getCategory(args[1]);
+				css.banObjects(category);
 				data.addResponse(L.f(L.get("REMOVED_FROM"), args[1], css.getDisplayName()));
 			} catch (Exception e) {
 				hc.getDebugMode().debugWriteError(e);

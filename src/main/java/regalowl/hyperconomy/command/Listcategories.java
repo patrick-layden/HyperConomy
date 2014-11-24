@@ -1,9 +1,7 @@
 package regalowl.hyperconomy.command;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.simpledatalib.CommonFunctions;
 
 public class Listcategories extends BaseCommand implements HyperCommand {
 
@@ -16,12 +14,7 @@ public class Listcategories extends BaseCommand implements HyperCommand {
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		try {
-			Iterator<String> it = hc.gYH().getFileConfiguration("categories").getTopLevelKeys().iterator();
-			ArrayList<String> categories = new ArrayList<String>();
-			while (it.hasNext()) {
-				categories.add(it.next().toString());
-			}
-			data.addResponse("&b" + categories.toString());
+			data.addResponse("&b" + CommonFunctions.implode(dm.getCategories()));
 			return data;
 		} catch (Exception e) {
 			data.addResponse(L.get("LISTCATEGORIES_INVALID"));

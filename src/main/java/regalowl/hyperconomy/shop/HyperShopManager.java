@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import regalowl.simpledatalib.sql.QueryResult;
-
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
@@ -48,12 +48,14 @@ public class HyperShopManager {
 		QueryResult shopData = hc.getSQLRead().select("SELECT * FROM hyperconomy_shops");
 		while (shopData.next()) {
 			String type = shopData.getString("TYPE");
+			HyperAccount owner = hc.getHyperPlayerManager().getAccount(shopData.getString("OWNER"));
+			if (owner == null) continue;
 			if (type.equalsIgnoreCase("server")) {
 				if (!useShops) {continue;}
 				String name = shopData.getString("NAME");
 				HLocation p1 = new HLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
 				HLocation p2 = new HLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
-				Shop shop = new ServerShop(hc, name, shopData.getString("ECONOMY"), hc.getHyperPlayerManager().getAccount(shopData.getString("OWNER")), shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"));
+				Shop shop = new ServerShop(hc, name, shopData.getString("ECONOMY"), owner, shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"));
 				shops.put(name, shop);
 			} else if (type.equalsIgnoreCase("player")) {
 				if (!useShops) {continue;}
@@ -61,7 +63,7 @@ public class HyperShopManager {
 				String name = shopData.getString("NAME");
 				HLocation p1 = new HLocation(shopData.getString("WORLD"), shopData.getInt("P1X"), shopData.getInt("P1Y"), shopData.getInt("P1Z"));
 				HLocation p2 = new HLocation(shopData.getString("WORLD"), shopData.getInt("P2X"), shopData.getInt("P2Y"), shopData.getInt("P2Z"));
-				Shop shop = new PlayerShop(hc, name, shopData.getString("ECONOMY"), hc.getHyperPlayerManager().getAccount(shopData.getString("OWNER")), shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"), shopData.getString("ALLOWED_PLAYERS"), (shopData.getString("USE_ECONOMY_STOCK").equalsIgnoreCase("1")) ? true : false);
+				Shop shop = new PlayerShop(hc, name, shopData.getString("ECONOMY"), owner, shopData.getString("MESSAGE"), p1, p2, shopData.getString("BANNED_OBJECTS"), shopData.getString("ALLOWED_PLAYERS"), (shopData.getString("USE_ECONOMY_STOCK").equalsIgnoreCase("1")) ? true : false);
 				shops.put(name, shop);
 			} else if (type.equalsIgnoreCase("global")) {
 				if (useShops) {continue;}

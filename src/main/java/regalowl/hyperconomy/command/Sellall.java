@@ -68,7 +68,7 @@ public class Sellall extends BaseCommand implements HyperCommand {
 		HyperEconomy he = trader.getHyperEconomy();
 		TransactionResponse totalResponse = new TransactionResponse(hc, trader);
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
-			if (inventory.getItem(slot) == null) {continue;}
+			if (inventory.getItem(slot).isBlank()) {continue;}
 			HItemStack stack = inventory.getItem(slot);
 			TradeObject ho = he.getTradeObject(stack, dm.getHyperShopManager().getShop(trader));
 			if (ho == null) {continue;}
@@ -84,6 +84,7 @@ public class Sellall extends BaseCommand implements HyperCommand {
 			} else {
 				totalResponse.addFailed(response.getMessage(), response.getFailedObjects().get(0));
 			}
+			if (amount > inventory.getItem(slot).getMaxStackSize()) inventory = trader.getInventory();
 		}
 		return totalResponse;
 	}

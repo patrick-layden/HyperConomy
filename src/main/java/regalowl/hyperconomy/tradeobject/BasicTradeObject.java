@@ -76,7 +76,7 @@ public class BasicTradeObject implements TradeObject {
 	
 	@Override
 	public void delete() {
-		hc.getDataManager().getEconomy(economy).removeTradeObject(name);
+		hc.getDataManager().getEconomy(economy).removeObject(name);
 		String statement = "DELETE FROM hyperconomy_objects WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
 		sw.addToQueue(statement);
 		fireModificationEvent();
@@ -200,7 +200,7 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public double getCeiling() {
 		if (ceiling <= 0 || floor > ceiling) {
-			return 9999999999999.99;
+			return 1000000000000000.0;
 		}
 		return ceiling;
 	}
@@ -220,42 +220,52 @@ public class BasicTradeObject implements TradeObject {
 	
 	@Override
 	public void setName(String name) {
+		hc.getDataManager().getEconomy(economy).removeObject(this);
 		String statement = "UPDATE hyperconomy_objects SET NAME='" + name + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.name = name;
+		hc.getDataManager().getEconomy(economy).addObject(this);
 		fireModificationEvent();
 	}
 	@Override
 	public void setDisplayName(String displayName) {
+		hc.getDataManager().getEconomy(economy).removeObject(this);
 		String statement = "UPDATE hyperconomy_objects SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.displayName = displayName;
+		hc.getDataManager().getEconomy(economy).addObject(this);
 		fireModificationEvent();
 	}
 	@Override
 	public void setAliases(ArrayList<String> newAliases) {
+		hc.getDataManager().getEconomy(economy).removeObject(this);
 		aliases.clear();
 		for (String cAlias:newAliases) {
 			aliases.add(cAlias);
 		}
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + getAliasesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
+		hc.getDataManager().getEconomy(economy).addObject(this);
 		fireModificationEvent();
 	}
 	@Override
 	public void addAlias(String addAlias) {
 		if (aliases.contains(addAlias)) {return;}
+		hc.getDataManager().getEconomy(economy).removeObject(this);
 		aliases.add(addAlias);
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + getAliasesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
+		hc.getDataManager().getEconomy(economy).addObject(this);
 		fireModificationEvent();
 	}
 	@Override
 	public void removeAlias(String removeAlias) {
 		if (!aliases.contains(removeAlias)) {return;}
+		hc.getDataManager().getEconomy(economy).removeObject(this);
 		aliases.remove(removeAlias);
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + getAliasesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
+		hc.getDataManager().getEconomy(economy).addObject(this);
 		fireModificationEvent();
 	}
 	@Override
@@ -450,14 +460,14 @@ public class BasicTradeObject implements TradeObject {
 	public double getSellPriceWithTax(double amount, HyperPlayer hp) {
 		double price = getSellPrice(amount, hp);
 		price -= hp.getSalesTax(price);
-		return CommonFunctions.twoDecimals(price);
+		return price;
 	}
 	
 	@Override
 	public double getBuyPriceWithTax(double amount) {
 		double price = getBuyPrice(amount);
 		price += getPurchaseTax(price);
-		return CommonFunctions.twoDecimals(price);
+		return price;
 	}
 	
 	@Override

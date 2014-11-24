@@ -18,7 +18,6 @@ public class Value extends BaseCommand implements HyperCommand {
 	@Override
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
-
 		try {
 			HyperEconomy he = super.getEconomy();
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
@@ -26,18 +25,20 @@ public class Value extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("REQUIRE_SHOP_FOR_INFO"));
 				return data;
 			}
-			String name = he.fixName(args[0]);
-			TradeObject ho = he.getTradeObject(name, dm.getHyperShopManager().getShop(hp));
+			TradeObject ho = he.getTradeObject(args[0], dm.getHyperShopManager().getShop(hp));
 			if (ho == null) {
 				data.addResponse(L.get("INVALID_ITEM_NAME"));
 				return data;
 			}
 			int amount = 1;
 			if (ho.getType() != TradeObjectType.ENCHANTMENT && args.length > 1) {
-				amount = Integer.parseInt(args[1]);
-				if (amount > 10000) {
-					amount = 10000;
+				try {
+					amount = Integer.parseInt(args[1]);
+				} catch (Exception e) {
+					data.addResponse(L.get("VALUE_INVALID"));
+					return data;
 				}
+				if (amount > 10000) amount = 10000;
 			}
 			EnchantmentClass eClass = EnchantmentClass.DIAMOND;
 			if (ho.getType() == TradeObjectType.ENCHANTMENT && args.length > 1) {
