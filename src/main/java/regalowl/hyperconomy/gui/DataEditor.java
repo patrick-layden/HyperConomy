@@ -6,8 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
@@ -47,20 +45,14 @@ public class DataEditor extends JFrame {
 		dataTextArea.setWrapStyleWord(true);
 		if (tradeObject != null) dataTextArea.setText(tradeObject.getData());
 		scrollPane.setViewportView(dataTextArea);
-		dataTextArea.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				tradeObject.setData(dataTextArea.getText());
-			}
-		});
+
 		
-		JButton exitButton = new JButton("Close");
-		exitButton.setBounds(185, 475, 117, 25);
-		contentPane.add(exitButton);
-		exitButton.addActionListener(new ActionListener() {
+		JButton saveButton = new JButton("Save");
+		saveButton.setBounds(185, 475, 117, 25);
+		contentPane.add(saveButton);
+		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
+				tradeObject.setData(dataTextArea.getText());
 				dataEditor.dispose();
 			}
 		});

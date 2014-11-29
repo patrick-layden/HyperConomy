@@ -28,9 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 
-
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
@@ -116,6 +113,7 @@ public class ObjectPanel extends JFrame {
 		scrollPane_1.setBounds(12, 35, 266, 333);
 		getContentPane().add(scrollPane_1);
 		listObjectSelector = new JList<String>(tradeObjectList);
+		listObjectSelector.setBackground(new Color(248, 248, 255));
 		scrollPane_1.setViewportView(listObjectSelector);
 		listObjectSelector.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listObjectSelector.addListSelectionListener(new ListSelectionListener() {
@@ -144,7 +142,7 @@ public class ObjectPanel extends JFrame {
 		listObjectSelector.setVisibleRowCount(10);
 		
 		settingsPanel = new JPanel();
-		settingsPanel.setBackground(Color.WHITE);
+		settingsPanel.setBackground(new Color(248, 248, 255));
 		settingsPanel.setBounds(290, 12, 328, 356);
 		getContentPane().add(settingsPanel);
 		GridBagLayout gbl_settingsPanel = new GridBagLayout();
@@ -170,17 +168,6 @@ public class ObjectPanel extends JFrame {
 		gbc_nameData.gridy = 0;
 		settingsPanel.add(nameData, gbc_nameData);
 		nameData.setColumns(10);
-		nameData.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				to.setName(nameData.getText());
-			}
-		});
 		
 		displayNameLabel = new JLabel("Display Name");
 		GridBagConstraints gbc_displayNameLabel = new GridBagConstraints();
@@ -199,16 +186,6 @@ public class ObjectPanel extends JFrame {
 		gbc_displayNameData.gridy = 1;
 		settingsPanel.add(displayNameData, gbc_displayNameData);
 		displayNameData.setColumns(10);
-		displayNameData.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				to.setDisplayName(displayNameData.getText());
-			}
-		});
 		
 		aliasesLabel = new JLabel("Aliases");
 		GridBagConstraints gbc_aliasesLabel = new GridBagConstraints();
@@ -227,21 +204,7 @@ public class ObjectPanel extends JFrame {
 		gbc_aliasesData.gridy = 2;
 		settingsPanel.add(aliasesData, gbc_aliasesData);
 		aliasesData.setColumns(10);
-		aliasesData.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				try {
-					to.setAliases(CommonFunctions.explode(aliasesData.getText(), ","));
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "The aliases must be a comma separated string.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
+
 		
 		JLabel stockLabel = new JLabel("Stock");
 		GridBagConstraints gbc_stockLabel = new GridBagConstraints();
@@ -262,23 +225,6 @@ public class ObjectPanel extends JFrame {
 		gbc_stockData.gridy = 3;
 		settingsPanel.add(stockData, gbc_stockData);
 		stockData.setColumns(10);
-		stockData.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				try {
-					double value = Double.parseDouble(stockData.getText());
-					to.setStock(value);
-					updatePrice(to);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "The stock must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
 
 		JLabel valueLabel = new JLabel("Value");
 		GridBagConstraints gbc_valueLabel = new GridBagConstraints();
@@ -297,23 +243,7 @@ public class ObjectPanel extends JFrame {
 		gbc_valueData.gridy = 4;
 		settingsPanel.add(valueData, gbc_valueData);
 		valueData.setColumns(10);
-		valueData.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				try {
-					double value = Double.parseDouble(valueData.getText());
-					to.setValue(value);
-					updatePrice(to);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "The value must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
+
 
 		JLabel medianLabel = new JLabel("Median");
 		GridBagConstraints gbc_medianLabel = new GridBagConstraints();
@@ -332,23 +262,7 @@ public class ObjectPanel extends JFrame {
 		gbc_medianData.gridy = 5;
 		settingsPanel.add(medianData, gbc_medianData);
 		medianData.setColumns(10);
-		medianData.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				try {
-					double value = Double.parseDouble(medianData.getText());
-					to.setMedian(value);
-					updatePrice(to);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "The median must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
+
 		
 		JLabel staticPriceLabel = new JLabel("Static Price");
 		GridBagConstraints gbc_staticPriceLabel = new GridBagConstraints();
@@ -367,23 +281,7 @@ public class ObjectPanel extends JFrame {
 		gbc_staticPriceData.gridy = 6;
 		settingsPanel.add(staticPriceData, gbc_staticPriceData);
 		staticPriceData.setColumns(10);
-		staticPriceData.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				try {
-					double value = Double.parseDouble(staticPriceData.getText());
-					to.setStaticPrice(value);
-					updatePrice(to);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "The static price must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
+
 		
 		JLabel startPriceLabel = new JLabel("Start Price");
 		GridBagConstraints gbc_startPriceLabel = new GridBagConstraints();
@@ -402,23 +300,6 @@ public class ObjectPanel extends JFrame {
 		gbc_startPriceData.gridy = 7;
 		settingsPanel.add(startPriceData, gbc_startPriceData);
 		startPriceData.setColumns(10);
-		startPriceData.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				try {
-					double value = Double.parseDouble(startPriceData.getText());
-					to.setStartPrice(value);
-					updatePrice(to);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "The start price must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
 		
 		JLabel ceilingLabel = new JLabel("Ceiling");
 		GridBagConstraints gbc_ceilingLabel = new GridBagConstraints();
@@ -437,23 +318,6 @@ public class ObjectPanel extends JFrame {
 		gbc_ceilingData.gridy = 8;
 		settingsPanel.add(ceilingData, gbc_ceilingData);
 		ceilingData.setColumns(10);
-		ceilingData.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				try {
-					double value = Double.parseDouble(ceilingData.getText());
-					to.setCeiling(value);
-					updatePrice(to);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "The ceiling value must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
 		
 		JLabel floorLabel = new JLabel("Floor");
 		GridBagConstraints gbc_floorLabel = new GridBagConstraints();
@@ -472,34 +336,9 @@ public class ObjectPanel extends JFrame {
 		gbc_floorData.gridy = 9;
 		settingsPanel.add(floorData, gbc_floorData);
 		floorData.setColumns(10);
-		floorData.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {handleChange();}
-			public void removeUpdate(DocumentEvent e) {handleChange();}
-			public void insertUpdate(DocumentEvent e) {handleChange();}
-			public void handleChange() {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				try {
-					double value = Double.parseDouble(floorData.getText());
-					to.setFloor(value);
-					updatePrice(to);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "The floor value must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
 		
 		initialPricingToggle = new JToggleButton("Initial Pricing");
-		initialPricingToggle.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				to.setUseInitialPricing(initialPricingToggle.isSelected());
-				updatePrice(to);
-			}
-		});
+
 		GridBagConstraints gbc_initialPricingToggle = new GridBagConstraints();
 		gbc_initialPricingToggle.fill = GridBagConstraints.BOTH;
 		gbc_initialPricingToggle.insets = new Insets(0, 0, 5, 0);
@@ -508,15 +347,7 @@ public class ObjectPanel extends JFrame {
 		settingsPanel.add(initialPricingToggle, gbc_initialPricingToggle);
 		
 		staticPricingToggle = new JToggleButton("Static Pricing");
-		staticPricingToggle.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (fieldsUpdating) return;
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				to.setStatic(staticPricingToggle.isSelected());
-				updatePrice(to);
-			}
-		});
+
 		GridBagConstraints gbc_staticPricingToggle = new GridBagConstraints();
 		gbc_staticPricingToggle.fill = GridBagConstraints.BOTH;
 		gbc_staticPricingToggle.insets = new Insets(0, 0, 5, 0);
@@ -548,14 +379,14 @@ public class ObjectPanel extends JFrame {
 		settingsPanel.add(btnEditObjectData, gbc_btnEditObjectData);
 		
 		JPanel pricePanel = new JPanel();
-		pricePanel.setBackground(Color.WHITE);
-		pricePanel.setBounds(290, 398, 328, 43);
+		pricePanel.setBackground(new Color(248, 248, 255));
+		pricePanel.setBounds(12, 398, 600, 73);
 		getContentPane().add(pricePanel);
 		GridBagLayout gbl_pricePanel = new GridBagLayout();
-		gbl_pricePanel.columnWidths = new int[]{129, 70, 0};
-		gbl_pricePanel.rowHeights = new int[]{15, 0, 0};
+		gbl_pricePanel.columnWidths = new int[]{300, 300, 0};
+		gbl_pricePanel.rowHeights = new int[]{15, 0, 0, 0};
 		gbl_pricePanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_pricePanel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_pricePanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		pricePanel.setLayout(gbl_pricePanel);
 		
 		JLabel purchasePriceLabel = new JLabel("Purchase Price");
@@ -566,7 +397,7 @@ public class ObjectPanel extends JFrame {
 		pricePanel.add(purchasePriceLabel, gbc_purchasePriceLabel);
 		
 		purchasePriceField = new JTextField();
-		purchasePriceField.setBackground(Color.YELLOW);
+		purchasePriceField.setBackground(new Color(250, 250, 210));
 		purchasePriceField.setEditable(false);
 		GridBagConstraints gbc_purchasePriceField = new GridBagConstraints();
 		gbc_purchasePriceField.insets = new Insets(0, 0, 5, 0);
@@ -578,20 +409,108 @@ public class ObjectPanel extends JFrame {
 		
 		JLabel sellPriceLabel = new JLabel("Sell Price");
 		GridBagConstraints gbc_sellPriceLabel = new GridBagConstraints();
-		gbc_sellPriceLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_sellPriceLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_sellPriceLabel.gridx = 0;
 		gbc_sellPriceLabel.gridy = 1;
 		pricePanel.add(sellPriceLabel, gbc_sellPriceLabel);
 		
 		sellPriceField = new JTextField();
-		sellPriceField.setBackground(Color.YELLOW);
+		sellPriceField.setBackground(new Color(250, 250, 210));
 		sellPriceField.setEditable(false);
 		GridBagConstraints gbc_sellPriceField = new GridBagConstraints();
+		gbc_sellPriceField.insets = new Insets(0, 0, 5, 0);
 		gbc_sellPriceField.fill = GridBagConstraints.BOTH;
 		gbc_sellPriceField.gridx = 1;
 		gbc_sellPriceField.gridy = 1;
 		pricePanel.add(sellPriceField, gbc_sellPriceField);
 		sellPriceField.setColumns(10);
+		
+		JButton saveButton = new JButton("Save Changes");
+		GridBagConstraints gbc_saveButton = new GridBagConstraints();
+		gbc_saveButton.fill = GridBagConstraints.BOTH;
+		gbc_saveButton.insets = new Insets(0, 0, 0, 5);
+		gbc_saveButton.gridx = 0;
+		gbc_saveButton.gridy = 2;
+		pricePanel.add(saveButton, gbc_saveButton);
+		saveButton.setBackground(new Color(152, 251, 152));
+		saveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				if (fieldsUpdating) return;
+				TradeObject to = getSelectedObject();
+				if (to == null) return;
+				to.setName(nameData.getText());
+				to.setName(nameData.getText());
+				to.setDisplayName(displayNameData.getText());
+				try {
+					to.setAliases(CommonFunctions.explode(aliasesData.getText(), ","));
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "The aliases must be a comma separated string.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				try {
+					double value = Double.parseDouble(stockData.getText());
+					to.setStock(value);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "The stock must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				try {
+					double value = Double.parseDouble(valueData.getText());
+					to.setValue(value);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "The value must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				try {
+					double value = Double.parseDouble(medianData.getText());
+					to.setMedian(value);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "The median must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				try {
+					double value = Double.parseDouble(staticPriceData.getText());
+					to.setStaticPrice(value);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "The static price must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				try {
+					double value = Double.parseDouble(startPriceData.getText());
+					to.setStartPrice(value);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "The start price must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				try {
+					double value = Double.parseDouble(ceilingData.getText());
+					to.setCeiling(value);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "The ceiling value must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				try {
+					double value = Double.parseDouble(floorData.getText());
+					to.setFloor(value);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "The floor value must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				to.setUseInitialPricing(initialPricingToggle.isSelected());
+				to.setStatic(staticPricingToggle.isSelected());
+				updatePrice(to);
+				loadObjects();
+			}
+		});
+		
+		JButton deleteButton = new JButton("Delete Object");
+		GridBagConstraints gbc_deleteButton = new GridBagConstraints();
+		gbc_deleteButton.fill = GridBagConstraints.BOTH;
+		gbc_deleteButton.gridx = 1;
+		gbc_deleteButton.gridy = 2;
+		pricePanel.add(deleteButton, gbc_deleteButton);
+		deleteButton.setBackground(new Color(245, 222, 179));
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				if (fieldsUpdating) return;
+				TradeObject to = getSelectedObject();
+				if (to == null) return;
+				to.delete();
+				loadObjects();
+			}
+		});
 		btnEditObjectData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				TradeObject to = getSelectedObject();
