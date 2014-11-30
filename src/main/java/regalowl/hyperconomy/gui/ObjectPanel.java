@@ -92,7 +92,7 @@ public class ObjectPanel extends JFrame {
 	private void initialize() {
 		fieldsUpdating = false;
 		loadingCategories = false;
-		setBounds(100, 100, 629, 544);
+		setBounds(100, 100, 629, 515);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
@@ -507,6 +507,9 @@ public class ObjectPanel extends JFrame {
 				if (fieldsUpdating) return;
 				TradeObject to = getSelectedObject();
 				if (to == null) return;
+		        if (JOptionPane.showConfirmDialog(getContentPane(), "Are you sure you want to delete this object?", "Object Deletion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+		        	return;
+		        }
 				to.delete();
 				loadObjects();
 			}
