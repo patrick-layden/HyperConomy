@@ -161,11 +161,15 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 
 	@Override
 	public double getSellPriceWithTax(double amount, HyperPlayer hp) {
-		return getSellPrice(amount);//PlayerShop objects aren't taxed.
+		return getSellPrice(amount, hp);//PlayerShop objects aren't taxed.
 	}
 	@Override
 	public double getSellPrice(double amount, HyperPlayer hp) {
-		return getSellPrice(amount);//PlayerShop objects aren't taxed.
+		if (getShopObjectSellPrice() != 0.0) {
+			return getShopObjectSellPrice() * amount;
+		} else {
+			return getParentTradeObject().getSellPrice(amount, hp);
+		}
 	}
 	@Override
 	public double getBuyPriceWithTax(double amount) {
