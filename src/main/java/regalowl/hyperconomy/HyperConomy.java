@@ -117,7 +117,7 @@ public class HyperConomy {
 	@EventHandler
 	public void onLogMessage(LogEvent event) {
 		if (event.getException() != null) event.getException().printStackTrace();
-		if (event.getLevel() == LogLevel.SEVERE) mc.logSevere(event.getMessage());
+		if (event.getLevel() == LogLevel.SEVERE || event.getLevel() == LogLevel.ERROR) mc.logSevere(event.getMessage());
 		if (event.getLevel() == LogLevel.INFO) mc.logInfo(event.getMessage());
 	}
 	
