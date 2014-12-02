@@ -90,11 +90,11 @@ public class TransactionSignHandler {
 				String line3 = hc.getMC().removeColor(sign.getLine(2)).trim();
 				if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
 					String line4 = hc.getMC().removeColor(sign.getLine(3)).trim();
-					int amount = 0;
+					int amount = 1;
 					try {
 						amount = Integer.parseInt(line4);
 					} catch (Exception e) {
-						amount = 0;
+						amount = 1;
 					}
 					String line12 = hc.getMC().removeColor(sign.getLine(0)).trim() + hc.getMC().removeColor(sign.getLine(1)).trim();
 					if (em.getEconomy("default").objectTest(line12)) {
