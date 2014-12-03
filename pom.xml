@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>regalowl.simpledatalib</groupId>
 			<artifactId>simpledatalib</artifactId>
-			<version>0.1.048-SNAPSHOT</version>
+			<version>0.1.050-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>

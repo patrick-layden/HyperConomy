@@ -156,8 +156,8 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteractEntityEvent(PlayerInteractEntityEvent event) {
 		if (event.isCancelled()) return;
-		//System.out.println(event.getEventName());
-		//System.out.println(event.getPlayer().getName());
+		System.out.println(event.getEventName());
+		System.out.println(event.getPlayer().getName());
 		Entity entity = event.getRightClicked();
 		LanguageFile L = hc.getLanguageFile();
 		if (entity instanceof ItemFrame) {
