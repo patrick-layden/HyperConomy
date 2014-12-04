@@ -42,6 +42,7 @@ public class Hv extends BaseCommand implements HyperCommand {
 					} else {
 						String displayName = ho.getDisplayName();
 						double val = ho.getSellPrice(amount, hp);
+						/*
 						if (ho.isDurable() && amount > 1) {
 							int numberofitem = ho.count(hp.getInventory());
 							if (amount - numberofitem > 0) {
@@ -49,6 +50,7 @@ public class Hv extends BaseCommand implements HyperCommand {
 								val = val + ho.getSellPrice(addamount);
 							}
 						}
+						*/
 						double salestax = hp.getSalesTax(val);
 						val = CommonFunctions.twoDecimals(val - salestax);
 						data.addResponse(L.get("LINE_BREAK"));

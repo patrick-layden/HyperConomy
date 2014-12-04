@@ -178,9 +178,10 @@ public class BasicTradeObject implements TradeObject {
 		for (Shop s:hc.getHyperShopManager().getShops()) {
 			if (!(s instanceof PlayerShop)) {continue;}
 			PlayerShop ps = (PlayerShop)s;
+			if (ps.getUseEconomyStock()) continue;
 			if (!ps.hasPlayerShopObject(this)) {continue;}
 			if (!ps.getEconomy().equalsIgnoreCase(economy)) {continue;}
-			totalStock += ((PlayerShop) s).getPlayerShopObject(this).getStock();
+			totalStock += ps.getPlayerShopObject(this).getStock();
 		}
 		totalStock += stock;
 		return totalStock;
@@ -430,7 +431,7 @@ public class BasicTradeObject implements TradeObject {
 				}
 			}
 		}
-		return CommonFunctions.twoDecimals(cost * tax);
+		return cost * tax;
 	}
 	@Override
 	public double getSalesTaxEstimate(double value) {
@@ -441,7 +442,7 @@ public class BasicTradeObject implements TradeObject {
 			double salestaxpercent = hc.getConf().getDouble("tax.sales");
 			salestax = (salestaxpercent / 100) * value;
 		}
-		return CommonFunctions.twoDecimals(salestax);
+		return salestax;
 	}
 	
 	@Override

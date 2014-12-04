@@ -10,7 +10,6 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
-import regalowl.simpledatalib.CommonFunctions;
 
 
 public class ComponentTradeItem extends BasicTradeObject implements TradeObject {
@@ -47,7 +46,7 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 
 	@Override
 	public double getSellPrice(double amount, HyperPlayer hp) {
-		return CommonFunctions.twoDecimals(super.getSellPrice(amount) * getDamageMultiplier((int)Math.ceil(amount), hp.getInventory()));
+		return super.getSellPrice(amount) * getDamageMultiplier((int)Math.ceil(amount), hp.getInventory());
 	}
 
 	@Override

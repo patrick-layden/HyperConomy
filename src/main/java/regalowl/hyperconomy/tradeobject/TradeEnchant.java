@@ -5,7 +5,6 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
@@ -64,32 +63,32 @@ public class TradeEnchant extends BasicTradeObject implements TradeObject {
 	
 	@Override
 	public double getBuyPrice(EnchantmentClass eclass) {
-		return CommonFunctions.twoDecimals(super.getBuyPrice(1) * EnchantmentClass.getclassValue(hc, eclass));
+		return super.getBuyPrice(1) * EnchantmentClass.getclassValue(hc, eclass);
 	}
 	
 
 	@Override
 	public double getSellPrice(EnchantmentClass eclass) {
-		return CommonFunctions.twoDecimals(super.getSellPrice(1) * EnchantmentClass.getclassValue(hc, eclass));
+		return super.getSellPrice(1) * EnchantmentClass.getclassValue(hc, eclass);
 	}
 	
 	@Override
 	public double getSellPrice(EnchantmentClass eclass, HyperPlayer hp) {
 		HInventory inv = hc.getMC().getInventory(hp);
-		return CommonFunctions.twoDecimals(inv.getHeldItem().getDurabilityPercent() * getSellPrice(eclass));
+		return inv.getHeldItem().getDurabilityPercent() * getSellPrice(eclass);
 	}
 
 	@Override
 	public double getBuyPrice(double amount) {
-		return CommonFunctions.twoDecimals(getBuyPrice(EnchantmentClass.DIAMOND) * amount);
+		return getBuyPrice(EnchantmentClass.DIAMOND) * amount;
 	}
 	@Override
 	public double getSellPrice(double amount) {
-		return CommonFunctions.twoDecimals(getSellPrice(EnchantmentClass.DIAMOND) * amount);
+		return getSellPrice(EnchantmentClass.DIAMOND) * amount;
 	}
 	@Override
 	public double getSellPrice(double amount, HyperPlayer hp) {
-		return CommonFunctions.twoDecimals(getSellPrice(EnchantmentClass.DIAMOND, hp) * amount);
+		return getSellPrice(EnchantmentClass.DIAMOND, hp) * amount;
 	}
 	@Override
 	public HEnchantment getEnchantment() {
@@ -124,7 +123,7 @@ public class TradeEnchant extends BasicTradeObject implements TradeObject {
 	public double getSellPriceWithTax(EnchantmentClass eclass, HyperPlayer hp) {
 		double price = getSellPrice(eclass, hp);
 		price -= hp.getSalesTax(price);
-		return CommonFunctions.twoDecimals(price);
+		return price;
 	}
 	
 	@Override

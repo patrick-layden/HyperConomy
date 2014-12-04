@@ -93,7 +93,7 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	@Override
 	public double getTotalStock() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
-		double stock = 999999999.99;
+		double stock = 1000000000000.0;
 		for (Map.Entry<String,Double> entry : components.entrySet()) {
 		    TradeObject ho = he.getTradeObject(entry.getKey());
 		    Double qty = entry.getValue();
