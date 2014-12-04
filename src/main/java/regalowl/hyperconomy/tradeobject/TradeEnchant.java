@@ -63,13 +63,13 @@ public class TradeEnchant extends BasicTradeObject implements TradeObject {
 	
 	@Override
 	public double getBuyPrice(EnchantmentClass eclass) {
-		return super.getBuyPrice(1) * EnchantmentClass.getclassValue(hc, eclass);
+		return super.getBuyPrice(1) * EnchantmentClass.getClassValue(hc, eclass);
 	}
 	
 
 	@Override
 	public double getSellPrice(EnchantmentClass eclass) {
-		return super.getSellPrice(1) * EnchantmentClass.getclassValue(hc, eclass);
+		return super.getSellPrice(1) * EnchantmentClass.getClassValue(hc, eclass);
 	}
 	
 	@Override

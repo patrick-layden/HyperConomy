@@ -68,23 +68,18 @@ public class Hv extends BaseCommand implements HyperCommand {
 					Iterator<HEnchantment> ite = iinhand.getItemMeta().getEnchantments().iterator();
 					data.addResponse(L.get("LINE_BREAK"));
 					while (ite.hasNext()) {
-						HEnchantment ench = ite.next();
-						int lvl = ench.getLvl();
-						String enam = ench.getEnchantmentName();
-						String fnam = enam + lvl;
-						String mater = hp.getItemInHand().getMaterial();
-						TradeObject ho = he.getTradeObject(fnam, dm.getHyperShopManager().getShop(hp));
-						double value = ho.getSellPrice(EnchantmentClass.fromString(mater), hp);
-						double cost = ho.getBuyPrice(EnchantmentClass.fromString(mater));
+						TradeObject ho = he.getTradeObject(ite.next(), dm.getHyperShopManager().getShop(hp));
+						double value = ho.getSellPrice(EnchantmentClass.fromItem(iinhand), hp);
+						double cost = ho.getBuyPrice(EnchantmentClass.fromItem(iinhand));
 						cost = cost + ho.getPurchaseTax(cost);
 						value = CommonFunctions.twoDecimals(value);
 						cost = CommonFunctions.twoDecimals(cost);
 						double salestax = 0;
 						salestax = hp.getSalesTax(value);
 						value = CommonFunctions.twoDecimals(value - salestax);
-						data.addResponse(L.f(L.get("EVALUE_SALE"), value, fnam));
-						data.addResponse(L.f(L.get("EVALUE_PURCHASE"), cost, fnam));
-						data.addResponse(L.f(L.get("EVALUE_STOCK"), CommonFunctions.twoDecimals(he.getTradeObject(fnam, dm.getHyperShopManager().getShop(hp)).getStock()), fnam));
+						data.addResponse(L.f(L.get("EVALUE_SALE"), value, ho.getDisplayName()));
+						data.addResponse(L.f(L.get("EVALUE_PURCHASE"), cost, ho.getDisplayName()));
+						data.addResponse(L.f(L.get("EVALUE_STOCK"), CommonFunctions.twoDecimals(ho.getStock()), ho.getDisplayName()));
 					}
 					data.addResponse(L.get("LINE_BREAK"));
 				}
