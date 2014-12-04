@@ -51,11 +51,6 @@ public class HItemMeta {
 	}
 
 	
-	public HItemMetaType getType() {
-		return HItemMetaType.ITEM;
-	}
-
-	
 	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
 		ArrayList<String> info = new ArrayList<String>();
 		info.add(color1 + "Display Name: " + color2 + displayName);
@@ -77,10 +72,17 @@ public class HItemMeta {
 		info.add(color1 + "Enchantments: " + color2 + enchantString);
 		return info;
 	}
-	
 
+	public HItemMetaType getType() {
+		return HItemMetaType.ITEM;
+	}
+
+	
 	public String getDisplayName() {
 		return displayName;
+	}
+	public void setDisplayName(String name) {
+		this.displayName = name;
 	}
 
 	public List<String> getLore() {

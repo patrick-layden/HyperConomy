@@ -199,7 +199,13 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return data;
 				}
-				double removed = ho2.removeEnchantment(hp.getItemInHand());
+				HItemStack heldItem = hp.getItemInHand();
+				double removed = ho2.removeEnchantment(heldItem);
+				if (heldItem.getMaterial().equalsIgnoreCase("ENCHANTED_BOOK") && heldItem.getItemMeta().getEnchantments().size() == 0) {
+					TradeObject book = hp.getHyperEconomy().getTradeObject("book");
+					if (book != null) heldItem = book.getItem();
+				}
+				hp.setItem(heldItem, hp.getHeldItemSlot());
 				if (removed > 0) {
 					ho2.setStock(ho2.getStock() + removed);
 					data.addResponse(L.get("STOCK_ADDED"));
@@ -281,6 +287,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				double amountAdded = ho.addEnchantment(hp.getItemInHand());
 				if (amountAdded > 0) {
 					ho.setStock(ho.getStock() - amountAdded);
+					data.addResponse(L.get("STOCK_REMOVED"));
 				} else {
 					data.addResponse(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}
@@ -295,6 +302,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				boolean success = hp.addXp(amount);
 				if (success) {
 					ho.setStock(ho.getStock() - amount);
+					data.addResponse(L.get("STOCK_REMOVED"));
 				} else {
 					data.addResponse(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 				}

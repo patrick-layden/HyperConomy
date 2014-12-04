@@ -471,6 +471,10 @@ public class TransactionProcessor {
 			}
 			double shopstock = hyperObject.getStock();
 			double amountRemoved = hyperObject.removeEnchantment(heldItem);
+			if (heldItem.getMaterial().equalsIgnoreCase("ENCHANTED_BOOK") && heldItem.getItemMeta().getEnchantments().size() == 0) {
+				TradeObject book = hp.getHyperEconomy().getTradeObject("book");
+				if (book != null) inv.setItem(inv.getHeldSlot(), book.getItem());
+			}
 			inv.updateInventory();
 			hyperObject.setStock(shopstock + amountRemoved);
 			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));

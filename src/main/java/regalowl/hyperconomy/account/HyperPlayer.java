@@ -493,6 +493,10 @@ public class HyperPlayer implements HyperAccount {
 		return hc.getMC().getItem(this, getHeldItemSlot());
 	}
 	
+	public void setItem(HItemStack stack, int slot) {
+		hc.getMC().setItem(this, stack, slot);
+	}
+	
 	public void teleport(HLocation newLocation) {
 		hc.getMC().teleport(this, newLocation);
 	}
