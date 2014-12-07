@@ -20,9 +20,6 @@ import regalowl.hyperconomy.shop.ChestShop;
 public interface MineCraftConnector {
 	
 	public HyperConomy getHC();
-	public FrameShopHandler getFrameShopHandler();
-	
-	
 	public boolean isEnabled();
 	public void disablePlugin();
 	
@@ -115,4 +112,7 @@ public interface MineCraftConnector {
 	public void zeroVelocity(HItem item);
 	public HBlock getFirstNonAirBlockInColumn(HLocation location);
 	public boolean canFall(HBlock block);
+	
+	
+	public FrameShopHandler getFrameShopHandler();
 }

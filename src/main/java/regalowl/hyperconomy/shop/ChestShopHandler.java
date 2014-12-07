@@ -16,13 +16,11 @@ import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
 import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
 import regalowl.hyperconomy.event.minecraft.HSignChangeEvent;
-import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
-import regalowl.hyperconomy.tradeobject.EnchantmentClass;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TempTradeItem;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
@@ -56,11 +54,6 @@ public class ChestShopHandler {
 			bbevent.cancel();
 		}
 	}
-
-
-
-
-	
 	@EventHandler
 	public void onEntityExplodeEvent(HEntityExplodeEvent eeevent) {
 		for (HBlock b : eeevent.getBrokenBlocks()) {
@@ -69,7 +62,6 @@ public class ChestShopHandler {
 			}
 		}
 	}
-
 	@EventHandler
 	public void onBlockPistonExtendEvent(HBlockPistonExtendEvent bpeevent) {
 		for (HBlock b : bpeevent.getBlocks()) {
@@ -78,14 +70,12 @@ public class ChestShopHandler {
 			}
 		}
 	}
-
 	@EventHandler
 	public void onBlockPistonRetractEvent(HBlockPistonRetractEvent bprevent) {
 		if (new ChestShop(hc, bprevent.getRetractedBlock().getLocation()).isValid()) {
 			bprevent.cancel();
 		}
 	}
-
 	@EventHandler
 	public void onBlockPlaceEvent(HBlockPlaceEvent bpevent) {
 		HBlock block = bpevent.getBlock();
@@ -253,39 +243,33 @@ public class ChestShopHandler {
 				HyperPlayer hPlayer = (HyperPlayer)owner;
 				chestOwnerEconomy = hPlayer.getHyperEconomy();
 			}
-			TradeObject hyperObject = null;
-			if (!clickedItem.hasEnchantments()) {
-				hyperObject = chestOwnerEconomy.getTradeObject(clickedItem);
-				if (hyperObject == null) {
-					if (hasStaticPrice) {
-						hyperObject = TempTradeItem.generate(hc, clickedItem);
-					} else {
-						event.cancel();
-						return;
-					}
-				}
-			}
-			if (event.isShiftClick()) {
-				if (clickedItem.hasEnchantments()) {
+			TradeObject tradeObject = chestOwnerEconomy.getTradeObject(clickedItem);
+			if (tradeObject == null) {
+				if (hasStaticPrice) {
+					tradeObject = TempTradeItem.generate(hc, clickedItem);
+				} else {
 					event.cancel();
 					return;
 				}
-				int camount = clickedItem.getAmount();
+			}
+			
+			if (event.isShiftClick()) {
+				int stackQuantity = clickedItem.getAmount();
 				if (slot < 27) {
 					if (cs.isBuyChest()) {
 						PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
-						pt.setHyperObject(hyperObject);
+						pt.setHyperObject(tradeObject);
 						pt.setTradePartner(owner);
-						pt.setAmount(camount);
+						pt.setAmount(stackQuantity);
 						pt.setGiveInventory(shopInventory);
 						if (hasStaticPrice) {
-							pt.setMoney(CommonFunctions.twoDecimals((camount * staticPrice)));
+							pt.setMoney(CommonFunctions.twoDecimals((stackQuantity * staticPrice)));
 							pt.setSetPrice(true);
 						}
 						TransactionResponse response = clicker.processTransaction(pt);
 						response.sendMessages();
 					} else {
-						clicker.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
+						clicker.sendMessage(L.get("CANNOT_PURCHASE_ITEMS_FROM_CHEST"));
 					}
 				} else if (slot >= 27) {
 					if (cs.isSellChest()) {
@@ -294,20 +278,20 @@ public class ChestShopHandler {
 							event.cancel();
 							return;
 						}
-						int itemamount = hyperObject.count(shopInventory);
+						int itemamount = shopInventory.count(tradeObject.getItem());
 						if (itemamount > 0) {
-							int space = hyperObject.getAvailableSpace(shopInventory);
-							if (space >= camount) {
+							int space = shopInventory.getAvailableSpace(tradeObject.getItem());
+							if (space >= stackQuantity) {
 								double bal = owner.getBalance();
-								double cost = hyperObject.getSellPrice(camount);
+								double cost = tradeObject.getSellPrice(stackQuantity);
 								if (hasStaticPrice) {
-									cost = staticPrice * camount;
+									cost = staticPrice * stackQuantity;
 								}
 								if (bal >= cost) {
 									PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
-									pt.setHyperObject(hyperObject);
+									pt.setHyperObject(tradeObject);
 									pt.setTradePartner(owner);
-									pt.setAmount(camount);
+									pt.setAmount(stackQuantity);
 									pt.setReceiveInventory(shopInventory);
 									if (hasStaticPrice) {
 										pt.setMoney(CommonFunctions.twoDecimals(cost));
@@ -334,153 +318,100 @@ public class ChestShopHandler {
 				event.cancel();
 				return;
 			} else if (event.isLeftClick()) {
-				if (!clickedItem.hasEnchantments()) {
-					if (slot < 27 && hyperObject != null) {
-						String name = hyperObject.getDisplayName();
-						if (cs.isBuyChest()) {
-							double price = hyperObject.getSellPrice(1);
+				if (slot < 27 && tradeObject != null) {
+					String name = tradeObject.getDisplayName();
+					if (cs.isBuyChest()) {
+						double price = tradeObject.getSellPrice(1);
+						if (hasStaticPrice) {
+							price = staticPrice;
+						}
+						clicker.sendMessage(L.get("LINE_BREAK"));
+						clicker.sendMessage(L.f(L.get("CHEST_SHOP_BUY_VALUE"), 1, CommonFunctions.twoDecimals(price), name, owner.getName()));
+						clicker.sendMessage(L.get("LINE_BREAK"));
+					} else {
+						clicker.sendMessage(L.get("CANNOT_PURCHASE_ITEMS_FROM_CHEST"));
+					}
+				} else if (slot >= 27 && tradeObject != null) {
+					String name = tradeObject.getDisplayName();
+					if (cs.isSellChest()) {
+						int itemamount = shopInventory.count(tradeObject.getItem());
+						if (itemamount > 0) {
+							double price = tradeObject.getSellPrice(1, clicker);
 							if (hasStaticPrice) {
 								price = staticPrice;
 							}
 							clicker.sendMessage(L.get("LINE_BREAK"));
-							clicker.sendMessage(L.f(L.get("CHEST_SHOP_BUY_VALUE"), 1, CommonFunctions.twoDecimals(price), name, owner.getName()));
+							clicker.sendMessage(L.f(L.get("CHEST_SHOP_SELL_VALUE"), 1, CommonFunctions.twoDecimals(price), name, owner.getName()));
 							clicker.sendMessage(L.get("LINE_BREAK"));
 						} else {
-							clicker.sendMessage(L.get("CANNOT_PURCHASE_ITEMS_FROM_CHEST"));
-						}
-					} else if (slot >= 27 && hyperObject != null) {
-						String name = hyperObject.getDisplayName();
-						if (cs.isSellChest()) {
-							int itemamount = hyperObject.count(shopInventory);
-							if (itemamount > 0) {
-								double price = hyperObject.getSellPrice(1, clicker);
-								if (hasStaticPrice) {
-									price = staticPrice;
-								}
-								clicker.sendMessage(L.get("LINE_BREAK"));
-								clicker.sendMessage(L.f(L.get("CHEST_SHOP_SELL_VALUE"), 1, CommonFunctions.twoDecimals(price), name, owner.getName()));
-								clicker.sendMessage(L.get("LINE_BREAK"));
-							} else {
-								clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
-							}
-						} else {
-							clicker.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
-						}
-					}
-				} else {
-					if (slot < 27) {
-						if (cs.isBuyChest()) {
-							double price = 0;
-							for (HEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
-								String fnam = enchantment.getEnchantmentName() + enchantment.getLvl();
-								TradeObject ho = chestOwnerEconomy.getTradeObject(fnam);
-								price += ho.getSellPrice(EnchantmentClass.fromString(clicker.getItemInHand().getMaterial()), clicker);
-								if (hasStaticPrice) {
-									price = staticPrice;
-								}
-							}
-							price = CommonFunctions.twoDecimals(price);
-							if (clicker.getItemInHand().canEnchantItem()) {
-								clicker.sendMessage(L.get("LINE_BREAK"));
-								clicker.sendMessage(L.f(L.get("CHEST_SHOP_ENCHANTMENT_VALUE"), price, owner.getName()));
-								clicker.sendMessage(L.get("LINE_BREAK"));
-							} else {
-								clicker.sendMessage(L.get("ITEM_CANNOT_ACCEPT_ENCHANTMENTS"));
-							}
-						} else {
-							clicker.sendMessage(L.get("CANNOT_PURCHASE_ENCHANTMENTS_FROM_CHEST"));
+							clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
 						}
 					} else {
-						clicker.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
+						clicker.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
 					}
 				}
 				event.cancel();
 				return;
 			} else if (event.isRightClick()) {
-				if (!clickedItem.hasEnchantments()) {
-					if (slot < 27 && hyperObject != null) {
-						if (cs.isBuyChest()) {
-							PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
-							pt.setHyperObject(hyperObject);
-							pt.setTradePartner(owner);
-							pt.setAmount(1);
-							pt.setGiveInventory(shopInventory);
-							if (hasStaticPrice) {
-								pt.setMoney(staticPrice);
-								pt.setSetPrice(true);
-							}
-							TransactionResponse response = clicker.processTransaction(pt);
-							response.sendMessages();
-
-						} else {
-							clicker.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
+				if (slot < 27 && tradeObject != null) {
+					if (cs.isBuyChest()) {
+						PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
+						pt.setHyperObject(tradeObject);
+						pt.setTradePartner(owner);
+						pt.setAmount(1);
+						pt.setGiveInventory(shopInventory);
+						if (hasStaticPrice) {
+							pt.setMoney(staticPrice);
+							pt.setSetPrice(true);
 						}
+						TransactionResponse response = clicker.processTransaction(pt);
+						response.sendMessages();
 
-					} else if (slot >= 27 && hyperObject != null) {
-						if (cs.isSellChest()) {
-							if (clicker.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
-								clicker.sendMessage(L.get("CANT_SELL_CREATIVE"));
-								event.cancel();
-								return;
-							}
-							int itemamount = hyperObject.count(shopInventory);
-
-							if (itemamount > 0) {
-								int space = hyperObject.getAvailableSpace(shopInventory);
-								if (space >= 1) {
-									double bal = owner.getBalance();
-									double cost = hyperObject.getSellPrice(1);
-									if (hasStaticPrice) {
-										cost = staticPrice;
-									}
-									if (bal >= cost) {
-										PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
-										pt.setHyperObject(hyperObject);
-										pt.setTradePartner(owner);
-										pt.setAmount(1);
-										pt.setReceiveInventory(shopInventory);
-										if (hasStaticPrice) {
-											pt.setMoney(cost);
-											pt.setSetPrice(true);
-										}
-										TransactionResponse response = clicker.processTransaction(pt);
-										response.sendMessages();
-									} else {
-										clicker.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), owner.getName()));
-									}
-
-								} else {
-									clicker.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
-								}
-							} else {
-								clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
-							}
-						} else {
-							clicker.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
-						}
+					} else {
+						clicker.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
 					}
-				} else {
-					if (slot < 27) {
-						if (cs.isBuyChest()) {
-							for (HEnchantment enchantment : clickedItem.getItemMeta().getEnchantments()) {
-								String fnam = enchantment.getEnchantmentName() + enchantment.getLvl();
-								TradeObject ho = chestOwnerEconomy.getTradeObject(fnam);
-								PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_ITEM);
-								pt.setHyperObject(ho);
-								pt.setTradePartner(owner);
-								pt.setGiveItem(clickedItem);
+
+				} else if (slot >= 27 && tradeObject != null) {
+					if (cs.isSellChest()) {
+						if (clicker.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
+							clicker.sendMessage(L.get("CANT_SELL_CREATIVE"));
+							event.cancel();
+							return;
+						}
+						int itemamount = shopInventory.count(tradeObject.getItem());
+
+						if (itemamount > 0) {
+							int space = shopInventory.getAvailableSpace(tradeObject.getItem());
+							if (space >= 1) {
+								double bal = owner.getBalance();
+								double cost = tradeObject.getSellPrice(1);
 								if (hasStaticPrice) {
-									pt.setMoney(staticPrice);
-									pt.setSetPrice(true);
+									cost = staticPrice;
 								}
-								TransactionResponse response = clicker.processTransaction(pt);
-								response.sendMessages();
+								if (bal >= cost) {
+									PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
+									pt.setHyperObject(tradeObject);
+									pt.setTradePartner(owner);
+									pt.setAmount(1);
+									pt.setReceiveInventory(shopInventory);
+									if (hasStaticPrice) {
+										pt.setMoney(cost);
+										pt.setSetPrice(true);
+									}
+									TransactionResponse response = clicker.processTransaction(pt);
+									response.sendMessages();
+								} else {
+									clicker.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), owner.getName()));
+								}
+
+							} else {
+								clicker.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
 							}
 						} else {
-							clicker.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
+							clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
 						}
-					} else if (slot >= 27) {
-						clicker.sendMessage(L.get("CANNOT_SELL_ENCHANTMENTS_HERE"));
+					} else {
+						clicker.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
 					}
 				}
 				event.cancel();

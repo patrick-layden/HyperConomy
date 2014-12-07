@@ -11,7 +11,6 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HEnchantment;
-import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
@@ -583,14 +582,6 @@ public class BasicTradeObject implements TradeObject {
 
 	//ITEM METHODS
 	@Override
-	public void add(int amount, HInventory i) {}
-	@Override
-	public double remove(int amount, HInventory i) {return 0;}
-	@Override
-	public int count(HInventory inventory) {return 0;}
-	@Override
-	public int getAvailableSpace(HInventory inventory) {return 0;}
-	@Override
 	public HItemStack getItem() {return null;}
 	@Override
 	public HItemStack getItemStack(int amount) {return null;}
@@ -598,14 +589,6 @@ public class BasicTradeObject implements TradeObject {
 	public void setItemStack(HItemStack stack) {}
 	@Override
 	public boolean matchesItemStack(HItemStack stack) {return false;}
-	@Override
-	public boolean isDurable() {return false;}
-	@Override
-	public double getDamageMultiplier(int amount, HInventory inventory) {return 1;}
-	@Override
-	public boolean isDamaged() {return false;}
-	@Override
-	public double getDurabilityPercent() {return 1;}
 	
 	
 	//COMPOSITE ITEM METHODS
@@ -631,10 +614,6 @@ public class BasicTradeObject implements TradeObject {
 	public HEnchantment getEnchantment() {return null;}
 	@Override
 	public int getEnchantmentLevel() {return 0;}
-	@Override
-	public double addEnchantment(HItemStack stack) {return 0;}
-	@Override
-	public double removeEnchantment(HItemStack stack) {return 0;}
 	@Override
 	public String getEnchantmentName() {return null;}
 	@Override

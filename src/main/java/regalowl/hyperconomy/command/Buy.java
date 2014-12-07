@@ -32,7 +32,7 @@ public class Buy extends BaseCommand implements HyperCommand {
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("max")) {
 					if (ho.getType() == TradeObjectType.ITEM) {
-						amount = ho.getAvailableSpace(hp.getInventory());
+						amount = hp.getInventory().getAvailableSpace(ho.getItem());
 						if (amount > ho.getStock()) amount = (int)Math.floor(ho.getStock());
 					} else if (ho.getType() == TradeObjectType.EXPERIENCE) {
 						amount = (int) ho.getStock();

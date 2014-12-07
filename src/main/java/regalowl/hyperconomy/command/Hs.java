@@ -22,7 +22,7 @@ public class Hs extends BaseCommand implements HyperCommand {
 			HyperEconomy he = getEconomy();
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("max")) {
-					amount = he.getTradeObject(hp.getItemInHand()).count(hp.getInventory());
+					amount = hp.getInventory().count(hp.getItemInHand());
 				} else {
 					try {
 						amount = Integer.parseInt(args[0]);

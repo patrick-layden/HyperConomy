@@ -88,7 +88,6 @@ public class DatabaseUpdater {
 					String name = result.getString("NAME");
 					String type = result.getString("TYPE");
 					String data = result.getString("DATA");
-					//System.out.println("data:"+name);
 					if (type.equalsIgnoreCase("ITEM")) {
 						SerializableItemStack sis = new SerializableItemStack(data);
 						HItemStack n = bc.getBukkitCommon().getSerializableItemStack(sis.getItem());
@@ -119,7 +118,6 @@ public class DatabaseUpdater {
 					}
 				}
 				for (Map.Entry<String,String> entry : data.entrySet()) {
-					//System.out.println("cat:"+entry.getKey());
 					sw.addToQueue("UPDATE hyperconomy_objects SET CATEGORIES = '"+entry.getValue()+"'"
 							+ " WHERE (NAME = '"+entry.getKey()+"' OR DISPLAY_NAME = '"+entry.getKey()+"' OR ALIASES LIKE '%"+entry.getKey()+",%')");
 				}

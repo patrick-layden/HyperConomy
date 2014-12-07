@@ -10,7 +10,6 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HInventory;
-import regalowl.hyperconomy.inventory.HItemStack;
 
 public class TradeEnchant extends BasicTradeObject implements TradeObject {
 
@@ -97,26 +96,6 @@ public class TradeEnchant extends BasicTradeObject implements TradeObject {
 	@Override
 	public int getEnchantmentLevel() {
 		return getSE().getLvl();
-	}
-	@Override
-	public double addEnchantment(HItemStack stack) {
-		if (stack == null) {return 0;}
-		HEnchantment e = getEnchantment();
-		if (stack.canAcceptEnchantment(e) && !stack.containsEnchantment(e)) {
-			stack.addEnchantment(e);
-			return 1;
-		}
-		return 0;
-	}
-	@Override
-	public double removeEnchantment(HItemStack stack) {
-		if (stack == null) {return 0;}
-		HEnchantment e = getEnchantment();
-		if (stack.containsEnchantment(e)) {
-			stack.removeEnchantment(e);
-			return stack.getDurabilityPercent();
-		}
-		return 0;
 	}
 
 	@Override

@@ -339,8 +339,11 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public HLocation getLocation(HyperPlayer hp) {
+		if (hp == null) return null;
 		@SuppressWarnings("deprecation")
-		Location l = Bukkit.getPlayer(hp.getName()).getLocation();
+		Player p = Bukkit.getPlayer(hp.getName());
+		if (p == null) return null;
+		Location l = p.getLocation();
 		return new HLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
 	}
 	

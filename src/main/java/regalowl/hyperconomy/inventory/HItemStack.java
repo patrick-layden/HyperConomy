@@ -171,14 +171,18 @@ public class HItemStack {
 		return itemMeta.containsEnchantment(e);
 	}
 	
-	public void addEnchantment(HEnchantment e) {
+	public double addEnchantment(HEnchantment e) {
 		if (itemMeta == null) itemMeta = new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>());
+		if (itemMeta.containsEnchantment(e)) return 0;
 		itemMeta.addEnchantment(e);
+		return 1;
 	}
 	
-	public void removeEnchantment(HEnchantment e) {
-		if (itemMeta == null) return;
+	public double removeEnchantment(HEnchantment e) {
+		if (itemMeta == null) return 0;
+		if (!itemMeta.containsEnchantment(e)) return 0;
 		itemMeta.removeEnchantment(e);
+		return getDurabilityPercent();
 	}
 	
 	public boolean hasEnchantments() {

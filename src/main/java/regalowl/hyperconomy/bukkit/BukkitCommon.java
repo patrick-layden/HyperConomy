@@ -372,7 +372,7 @@ public class BukkitCommon {
     				int lvl = stored.get(e);
     				storedEnchantments.add(new HEnchantment(e.getName(), lvl));
     			}
-        		itemMeta = new HEnchantmentStorageMeta(displayName, lore, enchantments, storedEnchantments);
+        		itemMeta = new HEnchantmentStorageMeta(displayName, lore, storedEnchantments);
         	} else if (im instanceof BookMeta) {
         		BookMeta sItemMeta = (BookMeta)im;
         		ArrayList<String> pages = new ArrayList<String>();

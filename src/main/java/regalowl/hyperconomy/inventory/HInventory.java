@@ -26,6 +26,10 @@ public class HInventory {
 		return items;
 	}
 	
+	public void setHeldSlot(int heldSlot) {
+		this.heldSlot = heldSlot;
+	}
+
 	public int getHeldSlot() {
 		return heldSlot;
 	}
@@ -67,10 +71,6 @@ public class HInventory {
 
 	public void setItem(int slot, HItemStack item) {
 		items.set(slot, item);
-	}
-
-	public void setHeldSlot(int heldSlot) {
-		this.heldSlot = heldSlot;
 	}
 
 	public void setOwner(String owner) {

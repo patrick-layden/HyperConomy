@@ -3,7 +3,6 @@ package regalowl.hyperconomy.transaction;
 
 
 
-
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
@@ -12,7 +11,9 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperEventHandler;
 import regalowl.hyperconomy.event.TransactionEvent;
 import regalowl.hyperconomy.inventory.HEnchantment;
+import regalowl.hyperconomy.inventory.HEnchantmentStorageMeta;
 import regalowl.hyperconomy.inventory.HInventory;
+import regalowl.hyperconomy.inventory.HItemMeta;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
@@ -36,14 +37,14 @@ public class TransactionProcessor {
 	
 	private TransactionType transactionType;
 	private HyperAccount tradePartner;
-	private TradeObject hyperObject;
+	private TradeObject tradeObject;
 	private int amount;
 	private HInventory giveInventory;
 	private HInventory receiveInventory;
 	private double money;
 	//private boolean chargeTax;
 	private boolean setPrice;
-	private HItemStack giveItem;
+	//private HItemStack giveItem;
 	private TradeObjectStatus status;
 	private boolean overMaxStock;
 	private boolean obeyShops;
@@ -66,14 +67,14 @@ public class TransactionProcessor {
 	
 	public TransactionResponse processTransaction(PlayerTransaction pt) {
 		transactionType = pt.getTransactionType();
-		hyperObject = pt.getHyperObject();
+		tradeObject = pt.getHyperObject();
 		amount = pt.getAmount();
 		overMaxStock = false;
-		if (hyperObject.isShopObject()) {
-			status = hyperObject.getShopObjectStatus();
-			int maxStock = hyperObject.getShopObjectMaxStock();
+		if (tradeObject.isShopObject()) {
+			status = tradeObject.getShopObjectStatus();
+			int maxStock = tradeObject.getShopObjectMaxStock();
 			int globalMaxStock = hc.getConf().getInt("shop.max-stock-per-item-in-playershops");
-			if ((hyperObject.getStock() + amount) > maxStock || (hyperObject.getStock() + amount) > globalMaxStock) {
+			if ((tradeObject.getStock() + amount) > maxStock || (tradeObject.getStock() + amount) > globalMaxStock) {
 				overMaxStock = true;
 			}
 		} else {
@@ -94,7 +95,7 @@ public class TransactionProcessor {
 		money = pt.getMoney();
 		//chargeTax = pt.isChargeTax();
 		setPrice = pt.isSetPrice();
-		giveItem = pt.getGiveItem();
+		//giveItem = pt.getGiveItem();
 		obeyShops = pt.obeyShops();
 		
 		shopUnlimitedMoney = hc.getConf().getBoolean("shop.server-shops-have-unlimited-money");
@@ -105,26 +106,26 @@ public class TransactionProcessor {
 			case BUY:
 				checkShopBuy();
 				if (response.getFailedObjects().size() > 0) {break;}
-				if (hyperObject.getType() == TradeObjectType.ITEM) {
+				if (tradeObject.getType() == TradeObjectType.ITEM) {
 					buy();
 					break;
-				} else if (hyperObject.getType() == TradeObjectType.EXPERIENCE) {
+				} else if (tradeObject.getType() == TradeObjectType.EXPERIENCE) {
 					buyXP();
 					break;
-				} else if (hyperObject.getType() == TradeObjectType.ENCHANTMENT) {
+				} else if (tradeObject.getType() == TradeObjectType.ENCHANTMENT) {
 					buyEnchant();
 					break;
 				}
 			case SELL:
 				checkShopSell();
 				if (response.getFailedObjects().size() > 0) {break;}
-				if (hyperObject.getType() == TradeObjectType.ITEM) {
+				if (tradeObject.getType() == TradeObjectType.ITEM) {
 					sell();
 					break;
-				} else if (hyperObject.getType() == TradeObjectType.EXPERIENCE) {
+				} else if (tradeObject.getType() == TradeObjectType.EXPERIENCE) {
 					sellXP();
 					break;
-				} else if (hyperObject.getType() == TradeObjectType.ENCHANTMENT) {
+				} else if (tradeObject.getType() == TradeObjectType.ENCHANTMENT) {
 					sellEnchant();
 					break;
 				}
@@ -134,9 +135,9 @@ public class TransactionProcessor {
 			case BUY_FROM_INVENTORY:
 				buyFromInventory();
 				break;
-			case BUY_FROM_ITEM:
-				buyEnchantFromItem();
-				break;
+			//case BUY_FROM_ITEM:
+			//	buyEnchantFromItem();
+			//	break;
 		}
 		heh.fireEvent(new TransactionEvent(pt, response));
 		return response;
@@ -162,39 +163,39 @@ public class TransactionProcessor {
 	
 	
 	private void checkShopBuy() {
-		if (hp == null || hyperObject == null) {
-			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+		if (hp == null || tradeObject == null) {
+			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
 		}
 		if (obeyShops) {
 			if (!dm.getHyperShopManager().inAnyShop(hp)) {
-				response.addFailed(L.get("MUST_BE_IN_SHOP"), hyperObject);
+				response.addFailed(L.get("MUST_BE_IN_SHOP"), tradeObject);
 				return;
 			} else {
 				Shop shop = dm.getHyperShopManager().getShop(hp);
 				if (!hp.hasBuyPermission(shop)) {
-					response.addFailed(L.get("NO_TRADE_PERMISSION"), hyperObject);
+					response.addFailed(L.get("NO_TRADE_PERMISSION"), tradeObject);
 					return;
 				}
-				if (shop.isBanned(hyperObject)) {
-					response.addFailed(L.get("CANT_BE_TRADED"), hyperObject);
+				if (shop.isBanned(tradeObject)) {
+					response.addFailed(L.get("CANT_BE_TRADED"), tradeObject);
 					return;
 				}
 			}
 		}
 		if (status == TradeObjectStatus.NONE) {
-			response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getDisplayName()), hyperObject);
+			response.addFailed(L.f(L.get("NO_TRADE_ITEM"), tradeObject.getDisplayName()), tradeObject);
 			return;
 		} else if (status == TradeObjectStatus.SELL) {
-			response.addFailed(L.f(L.get("SELL_ONLY_ITEM"), hyperObject.getDisplayName()), hyperObject);
+			response.addFailed(L.f(L.get("SELL_ONLY_ITEM"), tradeObject.getDisplayName()), tradeObject);
 			return;
 		}
 		if (amount <= 0) {
-			response.addFailed(L.f(L.get("CANT_BUY_LESS_THAN_ONE"), hyperObject.getDisplayName()), hyperObject);
+			response.addFailed(L.f(L.get("CANT_BUY_LESS_THAN_ONE"), tradeObject.getDisplayName()), tradeObject);
 			return;
 		}
-		if (hyperObject.getStock() < amount) {
-			response.addFailed(L.f(L.get("THE_SHOP_DOESNT_HAVE_ENOUGH"), hyperObject.getDisplayName()), hyperObject);
+		if (tradeObject.getStock() < amount) {
+			response.addFailed(L.f(L.get("THE_SHOP_DOESNT_HAVE_ENOUGH"), tradeObject.getDisplayName()), tradeObject);
 			return;
 		}
 	}
@@ -202,31 +203,31 @@ public class TransactionProcessor {
 
 	public void buy() {
 		try {
-			double price = hyperObject.getBuyPrice(amount);
-			double taxpaid = hyperObject.getPurchaseTax(price);
+			double price = tradeObject.getBuyPrice(amount);
+			double taxpaid = tradeObject.getPurchaseTax(price);
 			price = CommonFunctions.twoDecimals(price + taxpaid);
 			if (!hp.hasBalance(price)) {
-				response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
+				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
 			}
-			int space = hyperObject.getAvailableSpace(receiveInventory);
+			int space = receiveInventory.getAvailableSpace(tradeObject.getItem());
 			if (space < amount) {
-				response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, hyperObject.getDisplayName()), hyperObject);
+				response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, tradeObject.getDisplayName()), tradeObject);
 				return;
 			}
-			hyperObject.add(amount, receiveInventory);
-			if (!hyperObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
-				hyperObject.setStock(hyperObject.getStock() - amount);
+			receiveInventory.add(amount, tradeObject.getItem());
+			if (!tradeObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || tradeObject.isShopObject()) {
+				tradeObject.setStock(tradeObject.getStock() - amount);
 			}
 			hp.withdraw(price);
 			tradePartner.deposit(price);
 			resetBalanceIfUnlimited();
-			hyperObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, hyperObject.getDisplayName(), CommonFunctions.twoDecimals(taxpaid)), price, hyperObject);
+			tradeObject.checkInitiationStatus();
+			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, tradeObject.getDisplayName(), CommonFunctions.twoDecimals(taxpaid)), price, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), (double) amount, CommonFunctions.twoDecimals(price - taxpaid), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
+			log.writeSQLLog(hp.getName(), "purchase", tradeObject.getDisplayName(), (double) amount, CommonFunctions.twoDecimals(price - taxpaid), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "Transaction buy() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
+			String info = "Transaction buy() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 			return;
 		}
@@ -235,26 +236,26 @@ public class TransactionProcessor {
 	
 	public void buyXP() {
 		try {
-			double price = hyperObject.getBuyPrice(amount);
-			double taxpaid = hyperObject.getPurchaseTax(price);
+			double price = tradeObject.getBuyPrice(amount);
+			double taxpaid = tradeObject.getPurchaseTax(price);
 			price = CommonFunctions.twoDecimals(price + taxpaid);
 			if (!hp.hasBalance(price)) {
-				response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
+				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
 			}
-			hyperObject.add(amount, hp);
-			if (!hyperObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
-				hyperObject.setStock(hyperObject.getStock() - amount);
+			tradeObject.add(amount, hp);
+			if (!tradeObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || tradeObject.isShopObject()) {
+				tradeObject.setStock(tradeObject.getStock() - amount);
 			}
 			hp.withdraw(price);
 			tradePartner.deposit(price);
 			resetBalanceIfUnlimited();
-			hyperObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, CommonFunctions.twoDecimals(price), hyperObject.getDisplayName(), CommonFunctions.twoDecimals(taxpaid)), CommonFunctions.twoDecimals(price), hyperObject);
+			tradeObject.checkInitiationStatus();
+			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, CommonFunctions.twoDecimals(price), tradeObject.getDisplayName(), CommonFunctions.twoDecimals(taxpaid)), CommonFunctions.twoDecimals(price), tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, CommonFunctions.twoDecimals(price), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
+			log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, CommonFunctions.twoDecimals(price), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "Transaction buyXP() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
+			String info = "Transaction buyXP() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -270,34 +271,42 @@ public class TransactionProcessor {
 		try {
 			HInventory inv = hp.getInventory();
 			HItemStack heldItem = inv.getHeldItem();
-			HEnchantment ench = hyperObject.getEnchantment();
-			double price = hyperObject.getBuyPrice(EnchantmentClass.fromString(heldItem.getMaterial()));
-			double taxpaid = hyperObject.getPurchaseTax(price);
+			HEnchantment ench = tradeObject.getEnchantment();
+			double price = tradeObject.getBuyPrice(EnchantmentClass.fromString(heldItem.getMaterial()));
+			double taxpaid = tradeObject.getPurchaseTax(price);
 			price = CommonFunctions.twoDecimals(taxpaid + price);
 			if (heldItem.containsEnchantment(ench)) {
-				response.addFailed(L.get("ITEM_ALREADY_HAS_ENCHANTMENT"), hyperObject);
+				response.addFailed(L.get("ITEM_ALREADY_HAS_ENCHANTMENT"), tradeObject);
 				return;
 			}
 			if (!heldItem.canAcceptEnchantment(ench)) {
-				response.addFailed(L.get("ITEM_CANT_ACCEPT_ENCHANTMENT"), hyperObject);
+				response.addFailed(L.get("ITEM_CANT_ACCEPT_ENCHANTMENT"), tradeObject);
 				return;
 			}
 			if (!hp.hasBalance(price)) {
-				response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
+				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
 			}
-			hyperObject.setStock(hyperObject.getStock() - amount);
+			tradeObject.setStock(tradeObject.getStock() - amount);
 			hp.withdraw(price);
 			tradePartner.deposit(price);
 			resetBalanceIfUnlimited();
-			heldItem.addEnchantment(ench);
+			
+			if (heldItem.getMaterial().equalsIgnoreCase("BOOK")) {
+				HItemMeta cMeta = heldItem.getItemMeta();
+				cMeta.addEnchantment(ench);
+				heldItem.setMaterial("ENCHANTED_BOOK");
+				heldItem.setHItemMeta(new HEnchantmentStorageMeta(cMeta));
+			} else {
+				heldItem.addEnchantment(ench);
+			}
 			inv.updateInventory();
-			hyperObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("ENCHANTMENT_PURCHASE_MESSAGE"), 1, price, hyperObject.getDisplayName(), CommonFunctions.twoDecimals(taxpaid)), CommonFunctions.twoDecimals(price), hyperObject);
+			tradeObject.checkInitiationStatus();
+			response.addSuccess(L.f(L.get("ENCHANTMENT_PURCHASE_MESSAGE"), 1, price, tradeObject.getDisplayName(), CommonFunctions.twoDecimals(taxpaid)), CommonFunctions.twoDecimals(price), tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), 1.0, CommonFunctions.twoDecimals(price), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), hyperObject.getStatusString());
+			log.writeSQLLog(hp.getName(), "purchase", tradeObject.getDisplayName(), 1.0, CommonFunctions.twoDecimals(price), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "ETransaction buyEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "'";
+			String info = "ETransaction buyEnchant() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -316,43 +325,43 @@ public class TransactionProcessor {
 	
 	
 	private void checkShopSell() {
-		if (hp == null || hyperObject == null) {
-			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+		if (hp == null || tradeObject == null) {
+			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
 		}
 		if (hp.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
-			response.addFailed(L.get("CANT_SELL_CREATIVE"), hyperObject);
+			response.addFailed(L.get("CANT_SELL_CREATIVE"), tradeObject);
 			return;
 		}
 		if (obeyShops) {
 			if (!dm.getHyperShopManager().inAnyShop(hp)) {
-				response.addFailed(L.get("MUST_BE_IN_SHOP"), hyperObject);
+				response.addFailed(L.get("MUST_BE_IN_SHOP"), tradeObject);
 				return;
 			} else {
 				Shop shop = dm.getHyperShopManager().getShop(hp);
 				if (!hp.hasSellPermission(shop)) {
-					response.addFailed(L.get("NO_TRADE_PERMISSION"), hyperObject);
+					response.addFailed(L.get("NO_TRADE_PERMISSION"), tradeObject);
 					return;
 				}
-				if (shop.isBanned(hyperObject)) {
-					response.addFailed(L.get("CANT_BE_TRADED"), hyperObject);
+				if (shop.isBanned(tradeObject)) {
+					response.addFailed(L.get("CANT_BE_TRADED"), tradeObject);
 					return;
 				}
 			}
 		}
 		if (status == TradeObjectStatus.NONE) {
-			response.addFailed(L.f(L.get("NO_TRADE_ITEM"), hyperObject.getDisplayName()), hyperObject);
+			response.addFailed(L.f(L.get("NO_TRADE_ITEM"), tradeObject.getDisplayName()), tradeObject);
 			return;
 		} else if (status == TradeObjectStatus.BUY) {
-			response.addFailed(L.f(L.get("BUY_ONLY_ITEM"), hyperObject.getDisplayName()), hyperObject);
+			response.addFailed(L.f(L.get("BUY_ONLY_ITEM"), tradeObject.getDisplayName()), tradeObject);
 			return;
 		}
 		if (amount <= 0) {
-			response.addFailed(L.f(L.get("CANT_SELL_LESS_THAN_ONE"), hyperObject.getDisplayName()), hyperObject);
+			response.addFailed(L.f(L.get("CANT_SELL_LESS_THAN_ONE"), tradeObject.getDisplayName()), tradeObject);
 			return;
 		}
 		if (overMaxStock) {
-			response.addFailed(L.f(L.get("OVER_MAX_STOCK"), hyperObject.getDisplayName()), hyperObject);
+			response.addFailed(L.f(L.get("OVER_MAX_STOCK"), tradeObject.getDisplayName()), tradeObject);
 			return;
 		}
 	}
@@ -368,41 +377,41 @@ public class TransactionProcessor {
 	
 	public void sell() {
 		try {
-			String name = hyperObject.getDisplayName();
-			if (hyperObject.getItem() == null) {
-				response.addFailed(L.f(L.get("CANNOT_BE_SOLD_WITH"), name), hyperObject);
+			String name = tradeObject.getDisplayName();
+			if (tradeObject.getItem() == null) {
+				response.addFailed(L.f(L.get("CANNOT_BE_SOLD_WITH"), name), tradeObject);
 				return;
 			}
-			int totalitems = hyperObject.count(giveInventory);
+			int totalitems = giveInventory.count(tradeObject.getItem());
 			if (totalitems < amount) {
 				boolean sellRemaining = hc.getConf().getBoolean("shop.sell-remaining-if-less-than-requested-amount");
 				if (sellRemaining) {
 					amount = totalitems;
 				} else {
-					response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), hyperObject);
+					response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), tradeObject);
 					return;
 				}
 			}
 			if (amount <= 0) {
-				response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), hyperObject);
+				response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), tradeObject);
 				return;
 			}
-			double price = CommonFunctions.twoDecimals(hyperObject.getSellPrice(amount, hp));
-			double amountRemoved = hyperObject.remove(amount, giveInventory);
-			double shopstock = hyperObject.getStock();
-			if (!hyperObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
-				hyperObject.setStock(shopstock + amountRemoved);
+			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount, hp));
+			double amountRemoved = giveInventory.remove(amount, tradeObject.getItem());
+			double shopstock = tradeObject.getStock();
+			if (!tradeObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || tradeObject.isShopObject()) {
+				tradeObject.setStock(shopstock + amountRemoved);
 			}
 			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
 			hp.deposit(price - salestax);
 			tradePartner.withdraw(price - salestax);
 			resetBalanceIfUnlimited();
-			hyperObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, price, name, salestax), price - salestax, hyperObject);
+			tradeObject.checkInitiationStatus();
+			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, price, name, salestax), price - salestax, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "sale", name, (double)amount, price - salestax, salestax, tradePartner.getName(), hyperObject.getStatusString());
+			log.writeSQLLog(hp.getName(), "sale", name, (double)amount, price - salestax, salestax, tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "Transaction sell() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + ", amount='" + amount + "'";
+			String info = "Transaction sell() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + ", amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -415,28 +424,28 @@ public class TransactionProcessor {
 	public void sellXP() {
 		try {
 			if (hp.getTotalXpPoints() < amount) {
-				response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), hyperObject.getDisplayName()), hyperObject);
+				response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), tradeObject.getDisplayName()), tradeObject);
 				return;
 			}
-			double price = CommonFunctions.twoDecimals(hyperObject.getSellPrice(amount));
+			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount));
 			if (!hasBalance(price)) {
-				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
+				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), tradeObject);
 				return;
 			}
-			hyperObject.remove(amount, hp);
-			if (!hyperObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || hyperObject.isShopObject()) {
-				hyperObject.setStock(amount + hyperObject.getStock());
+			tradeObject.remove(amount, hp);
+			if (!tradeObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || tradeObject.isShopObject()) {
+				tradeObject.setStock(amount + tradeObject.getStock());
 			}
 			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
 			hp.deposit(price - salestax);
 			tradePartner.withdraw(price - salestax);
 			resetBalanceIfUnlimited();
-			hyperObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, price, hyperObject.getDisplayName(), salestax), price, hyperObject);
+			tradeObject.checkInitiationStatus();
+			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, price, tradeObject.getDisplayName(), salestax), price, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), (double) amount, price - salestax, salestax, tradePartner.getName(), hyperObject.getStatusString());
+			log.writeSQLLog(hp.getName(), "sale", tradeObject.getDisplayName(), (double) amount, price - salestax, salestax, tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "Transaction sellXP() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
+			String info = "Transaction sellXP() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -459,34 +468,35 @@ public class TransactionProcessor {
 		try {
 			HInventory inv = hp.getInventory();
 			HItemStack heldItem = inv.getHeldItem();
-			if (!(heldItem.containsEnchantment(hyperObject.getEnchantment()))) {
-				response.addFailed(L.f(L.get("ITEM_DOESNT_HAVE_ENCHANTMENT"), hyperObject.getDisplayName()), hyperObject);
+			if (!(heldItem.containsEnchantment(tradeObject.getEnchantment()))) {
+				response.addFailed(L.f(L.get("ITEM_DOESNT_HAVE_ENCHANTMENT"), tradeObject.getDisplayName()), tradeObject);
 				return;
 			}
 			String mater = heldItem.getMaterial().toString();
-			double price = CommonFunctions.twoDecimals(hyperObject.getSellPrice(EnchantmentClass.fromString(mater), hp));
+			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(EnchantmentClass.fromString(mater), hp));
 			if (!hasBalance(price)) {
-				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), hyperObject);
+				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), tradeObject);
 				return;
 			}
-			double shopstock = hyperObject.getStock();
-			double amountRemoved = hyperObject.removeEnchantment(heldItem);
-			if (heldItem.getMaterial().equalsIgnoreCase("ENCHANTED_BOOK") && heldItem.getItemMeta().getEnchantments().size() == 0) {
-				TradeObject book = hp.getHyperEconomy().getTradeObject("book");
-				if (book != null) inv.setItem(inv.getHeldSlot(), book.getItem());
+			double shopstock = tradeObject.getStock();
+			double amountRemoved = heldItem.removeEnchantment(tradeObject.getEnchantment());
+			if (heldItem.getMaterial().equalsIgnoreCase("ENCHANTED_BOOK") && !heldItem.hasEnchantments()) {
+				heldItem.setMaterial("BOOK");
+				heldItem.setHItemMeta(new HItemMeta(heldItem.getItemMeta()));
 			}
+			
 			inv.updateInventory();
-			hyperObject.setStock(shopstock + amountRemoved);
+			tradeObject.setStock(shopstock + amountRemoved);
 			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
 			hp.deposit(price - salestax);
 			tradePartner.withdraw(price - salestax);
 			resetBalanceIfUnlimited();
-			hyperObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, price, hyperObject.getDisplayName(), salestax), price - salestax, hyperObject);
+			tradeObject.checkInitiationStatus();
+			response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, price, tradeObject.getDisplayName(), salestax), price - salestax, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), 1.0, price - salestax, salestax, tradePartner.getName(), hyperObject.getStatusString());
+			log.writeSQLLog(hp.getName(), "sale", tradeObject.getDisplayName(), 1.0, price - salestax, salestax, tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "ETransaction sellEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "'";
+			String info = "ETransaction sellEnchant() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -511,8 +521,8 @@ public class TransactionProcessor {
 	
 	
 	public void buyFromInventory() {
-		if (hp == null || tradePartner == null || hyperObject == null) {
-			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+		if (hp == null || tradePartner == null || tradeObject == null) {
+			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
 		}
 		try {
@@ -520,33 +530,33 @@ public class TransactionProcessor {
 			if (setPrice) {
 				price = money;
 			} else {
-				price = CommonFunctions.twoDecimals(hyperObject.getSellPrice(amount));
+				price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount));
 			}
 			if (!hp.hasBalance(price)) {
-				response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
+				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
 			}
-			int space = hyperObject.getAvailableSpace(hp.getInventory());
+			int space = hp.getInventory().getAvailableSpace(tradeObject.getItem());
 			if (space < amount) {
-				response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, hyperObject.getDisplayName()), hyperObject);
+				response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, tradeObject.getDisplayName()), tradeObject);
 				return;
 			}
-			hyperObject.add(amount, hp.getInventory());
-			hyperObject.remove(amount, giveInventory);
+			hp.getInventory().add(amount, tradeObject.getItem());
+			giveInventory.remove(amount, tradeObject.getItem());
 			hp.withdraw(price);
 			tradePartner.deposit(price);
-			response.addSuccess(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, price, hyperObject.getDisplayName(), tradePartner.getName()), price, hyperObject);
+			response.addSuccess(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, price, tradeObject.getDisplayName(), tradePartner.getName()), price, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
+			log.writeSQLLog(hp.getName(), "purchase", tradeObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
 			
 			MessageBuilder mb = new MessageBuilder(hc, "CHEST_BUY_NOTIFICATION");
 			mb.setAmount(amount);
-			mb.setObjectName(hyperObject.getDisplayName());
+			mb.setObjectName(tradeObject.getDisplayName());
 			mb.setPrice(price);
 			mb.setPlayerName(hp.getName());
 			tradePartner.sendMessage(mb.build());
 		} catch (Exception e) {
-			String info = "Transaction buyChest() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
+			String info = "Transaction buyChest() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -560,8 +570,8 @@ public class TransactionProcessor {
 	 * 
 	 */
 	public void sellToInventory() {
-		if (hp == null || tradePartner == null || hyperObject == null) {
-			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+		if (hp == null || tradePartner == null || tradeObject == null) {
+			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
 		}
 		try {
@@ -569,24 +579,24 @@ public class TransactionProcessor {
 			if (setPrice) {
 				price = money;
 			} else {
-				price = CommonFunctions.twoDecimals(hyperObject.getSellPrice(amount, hp));
+				price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount, hp));
 			}
-			hyperObject.remove(amount, hp.getInventory());
-			hyperObject.add(amount, receiveInventory);
+			hp.getInventory().remove(amount, tradeObject.getItem());
+			receiveInventory.add(amount, tradeObject.getItem());
 			hp.deposit(price);
 			tradePartner.withdraw(price);
-			response.addSuccess(L.f(L.get("SELL_CHEST_MESSAGE"), amount, price, hyperObject.getDisplayName(), tradePartner.getName()), price, hyperObject);
+			response.addSuccess(L.f(L.get("SELL_CHEST_MESSAGE"), amount, price, tradeObject.getDisplayName(), tradePartner.getName()), price, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "sale", hyperObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
+			log.writeSQLLog(hp.getName(), "sale", tradeObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
 			
 			MessageBuilder mb = new MessageBuilder(hc, "CHEST_SELL_NOTIFICATION");
 			mb.setAmount(amount);
-			mb.setObjectName(hyperObject.getDisplayName());
+			mb.setObjectName(tradeObject.getDisplayName());
 			mb.setPrice(price);
 			mb.setPlayerName(hp.getName());
 			tradePartner.sendMessage(mb.build());
 		} catch (Exception e) {
-			String info = "Transaction sellChest() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
+			String info = "Transaction sellChest() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -600,9 +610,10 @@ public class TransactionProcessor {
 	 * This function handles the purchase of chestshop enchantments.
 	 * 
 	 */
+	/*
 	public void buyEnchantFromItem() {
-		if (hp == null || hyperObject == null || tradePartner == null || giveItem == null) {
-			response.addFailed(L.get("TRANSACTION_FAILED"), hyperObject);
+		if (hp == null || tradeObject == null || tradePartner == null || giveItem == null) {
+			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
 		}
 		try {
@@ -610,44 +621,58 @@ public class TransactionProcessor {
 			if (setPrice) {
 				price = money;
 			} else {
-				price = CommonFunctions.twoDecimals(hyperObject.getSellPrice(EnchantmentClass.fromString(hp.getItemInHand().getMaterial()), hp));
+				price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(EnchantmentClass.fromString(hp.getItemInHand().getMaterial()), hp));
 			}
 			HInventory inv = hp.getInventory();
 			HItemStack heldItem = inv.getHeldItem();
-			if (heldItem.containsEnchantment(hyperObject.getEnchantment())) {
-				response.addFailed(L.get("ITEM_ALREADY_HAS_ENCHANTMENT"), hyperObject);
+			if (heldItem.containsEnchantment(tradeObject.getEnchantment())) {
+				response.addFailed(L.get("ITEM_ALREADY_HAS_ENCHANTMENT"), tradeObject);
 				return;
 			}
-			if (!heldItem.canAcceptEnchantment(hyperObject.getEnchantment()) || hp.getItemInHand().getAmount() != 1) {
-				response.addFailed(L.get("ITEM_CANT_ACCEPT_ENCHANTMENT"), hyperObject);
+			if (!heldItem.canAcceptEnchantment(tradeObject.getEnchantment()) || hp.getItemInHand().getAmount() != 1) {
+				response.addFailed(L.get("ITEM_CANT_ACCEPT_ENCHANTMENT"), tradeObject);
 				return;
 			}
 			if (!hp.hasBalance(price)) {
-				response.addFailed(L.get("INSUFFICIENT_FUNDS"), hyperObject);
+				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
 			}
 			hp.withdraw(price);
 			tradePartner.deposit(price);
-			hyperObject.addEnchantment(heldItem);
-			hyperObject.removeEnchantment(giveItem);
+			giveItem.removeEnchantment(tradeObject.getEnchantment());
+			if (giveItem.getMaterial().equalsIgnoreCase("ENCHANTED_BOOK") && !giveItem.hasEnchantments()) {
+				giveItem.setMaterial("BOOK");
+				giveItem.setHItemMeta(new HItemMeta(giveItem.getItemMeta()));
+			}
+			
+			if (heldItem.getMaterial().equalsIgnoreCase("BOOK")) {
+				HItemMeta cMeta = heldItem.getItemMeta();
+				cMeta.addEnchantment(tradeObject.getEnchantment());
+				heldItem.setMaterial("ENCHANTED_BOOK");
+				heldItem.setHItemMeta(new HEnchantmentStorageMeta(cMeta));
+			} else {
+				heldItem.addEnchantment(tradeObject.getEnchantment());
+			}
+
 			inv.updateInventory();
+			giveInventory.updateInventory();
 			price = CommonFunctions.twoDecimals(price);
-			response.addSuccess(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, price, hyperObject.getDisplayName(), tradePartner.getName()), CommonFunctions.twoDecimals(price), hyperObject);
+			response.addSuccess(L.f(L.get("PURCHASE_ENCHANTMENT_CHEST_MESSAGE"), 1, price, tradeObject.getDisplayName(), tradePartner.getName()), CommonFunctions.twoDecimals(price), tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "purchase", hyperObject.getDisplayName(), 1.0, price, 0.0, tradePartner.getName(), "chestshop");
+			log.writeSQLLog(hp.getName(), "purchase", tradeObject.getDisplayName(), 1.0, price, 0.0, tradePartner.getName(), "chestshop");
 			MessageBuilder mb = new MessageBuilder(hc, "CHEST_ENCHANTMENT_BUY_NOTIFICATION");
 			mb.setAmount(1);
-			mb.setObjectName(hyperObject.getDisplayName());
+			mb.setObjectName(tradeObject.getDisplayName());
 			mb.setPrice(price);
 			mb.setPlayerName(hp.getName());
 			tradePartner.sendMessage(mb.build());
 			//tradePartner.sendMessage(L.f(L.get("CHEST_ENCHANTMENT_BUY_NOTIFICATION"), 1, price, hyperObject.getDisplayName(), hp));
 		} catch (Exception e) {
-			String info = "ETransaction buyChestEnchant() passed values name='" + hyperObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "'";
+			String info = "ETransaction buyChestEnchant() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
-
+	 */
 
 	
 	

@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
@@ -220,11 +219,7 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 		}
 		return value;
 	}
-	@Override
-	public double getSellPrice(double amount, HyperPlayer hp) {
-		return getSellPrice(amount) * getDamageMultiplier((int)Math.ceil(amount), hp.getInventory());
-	}
-	
+
 
 	
 	

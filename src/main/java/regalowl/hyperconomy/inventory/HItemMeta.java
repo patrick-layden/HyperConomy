@@ -15,13 +15,19 @@ public class HItemMeta {
 	protected String displayName;
 	protected ArrayList<String> lore = new ArrayList<String>();
 	protected ArrayList<HEnchantment> enchantments = new ArrayList<HEnchantment>();
-	protected HItemMetaType type;
+	//protected HItemMetaType type;
  
 
 	public HItemMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments) {
         this.displayName = displayName;
         this.lore = lore;
         this.enchantments = enchantments;
+    }
+	
+	public HItemMeta(HItemMeta meta) {
+        this.displayName = meta.displayName;
+        this.lore = meta.lore;
+        this.enchantments = meta.enchantments;
     }
 	
 	public HItemMeta(String serialized) {
@@ -92,21 +98,16 @@ public class HItemMeta {
 	public List<HEnchantment> getEnchantments() {
 		return enchantments;
 	}
-	
 	public boolean hasEnchantments() {
 		if (enchantments.size() > 0) return true;
 		return false;
 	}
-	
 	public void addEnchantment(HEnchantment e) {
-		enchantments.add(e);
+		if (!containsEnchantment(e)) enchantments.add(e);
 	}
-	
 	public void removeEnchantment(HEnchantment e) {
 		if (containsEnchantment(e)) enchantments.remove(e);
 	}
-
-	
 	public boolean containsEnchantment(HEnchantment e) {
 		for (HEnchantment se:enchantments) {
 			if (se.equals(e)) return true;

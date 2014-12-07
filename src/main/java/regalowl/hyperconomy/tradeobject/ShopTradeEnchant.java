@@ -4,8 +4,6 @@ package regalowl.hyperconomy.tradeobject;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.inventory.HEnchantment;
-import regalowl.hyperconomy.inventory.HItemStack;
-
 
 
 public class ShopTradeEnchant extends BasicShopTradeObject implements TradeObject {
@@ -67,16 +65,6 @@ public class ShopTradeEnchant extends BasicShopTradeObject implements TradeObjec
 	@Override
 	public int getEnchantmentLevel() {
 		return getParentTradeObject().getEnchantmentLevel();
-	}
-
-	@Override
-	public double addEnchantment(HItemStack stack) {
-		return getParentTradeObject().addEnchantment(stack);
-	}
-
-	@Override
-	public double removeEnchantment(HItemStack stack) {
-		return getParentTradeObject().removeEnchantment(stack);
 	}
 
 	@Override

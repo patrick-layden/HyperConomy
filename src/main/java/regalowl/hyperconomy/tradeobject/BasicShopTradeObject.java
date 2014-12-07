@@ -7,7 +7,6 @@ import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
-import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
 
@@ -341,19 +340,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		return getParentTradeObject().nameContains(part);
 	}
 	
-	
-	@Override
-	public boolean isDurable() {
-		return getParentTradeObject().isDurable();
-	}
-	@Override
-	public int count(HInventory inventory) {
-		return getParentTradeObject().count(inventory);
-	}
-	@Override
-	public int getAvailableSpace(HInventory inventory) {
-		return getParentTradeObject().getAvailableSpace(inventory);
-	}
+
 	@Override
 	public void add(int amount, HyperPlayer hp) {
 		getParentTradeObject().add(amount, hp);
@@ -371,32 +358,9 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		return getParentTradeObject().getItemStack(amount);
 	}
 	@Override
-	public void add(int amount, HInventory inventory) {
-		getParentTradeObject().add(amount, inventory);
-	}
-	@Override
-	public double remove(int amount, HInventory inventory) {
-		return getParentTradeObject().remove(amount, inventory);
-	}
-	@Override
-	public double getDamageMultiplier(int amount, HInventory inventory) {
-		return getParentTradeObject().getDamageMultiplier(amount, inventory);
-	}
-	@Override
 	public boolean matchesItemStack(HItemStack stack) {
 		return getParentTradeObject().matchesItemStack(stack);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 
 }

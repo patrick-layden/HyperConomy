@@ -32,7 +32,7 @@ public class Sell extends BaseCommand implements HyperCommand {
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("max")) {
 					if (ho.getType() == TradeObjectType.ITEM) {
-						amount = ho.count(hp.getInventory());
+						amount = hp.getInventory().count(ho.getItem());
 					} else if (ho.getType() == TradeObjectType.EXPERIENCE) {
 						amount = hp.getTotalXpPoints();
 					} else if (ho.getType() == TradeObjectType.ENCHANTMENT) {

@@ -28,7 +28,7 @@ public class Hb extends BaseCommand implements HyperCommand{
 			}
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("max")) {
-					amount = ho.getAvailableSpace(hp.getInventory());
+					amount = hp.getInventory().getAvailableSpace(ho.getItem());
 					if (amount > ho.getStock())
 						amount = (int) Math.floor(ho.getStock());
 				} else {

@@ -7,7 +7,7 @@ public class HItemMetaFactory {
 		switch (type) {
 			case ITEM: return new HItemMeta(data);
 			case BOOK: return new HBookMeta(data);
-			case ENCHANTMENT_STORAGE: new HEnchantmentStorageMeta(data);
+			case ENCHANTMENT_STORAGE: return new HEnchantmentStorageMeta(data);
 			case FIREWORK_EFFECT: return new HFireworkEffectMeta(data);
 			case FIREWORK: return new HFireworkMeta(data);
 			case LEATHER_ARMOR: return new HLeatherArmorMeta(data);

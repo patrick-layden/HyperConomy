@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 
 
+
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
@@ -19,6 +20,8 @@ import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.ShopCreationEvent;
+import regalowl.hyperconomy.inventory.HEnchantmentStorageMeta;
+import regalowl.hyperconomy.inventory.HItemMeta;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.HyperShopManager;
@@ -182,7 +185,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			if (ho2.getType() == TradeObjectType.ITEM) {
-				int count = ho2.count(hp.getInventory());
+				int count = hp.getInventory().count(ho2.getItem());
 				if (amount > count) {
 					amount = count;
 				}
@@ -190,7 +193,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return data;
 				}
-				double amountRemoved = ho2.remove(amount, hp.getInventory());
+				double amountRemoved = hp.getInventory().remove(amount, ho2.getItem());
 				ho2.setStock(ho2.getStock() + amountRemoved);
 				data.addResponse(L.get("STOCK_ADDED"));
 				return data;
@@ -200,10 +203,11 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 					return data;
 				}
 				HItemStack heldItem = hp.getItemInHand();
-				double removed = ho2.removeEnchantment(heldItem);
-				if (heldItem.getMaterial().equalsIgnoreCase("ENCHANTED_BOOK") && heldItem.getItemMeta().getEnchantments().size() == 0) {
-					TradeObject book = hp.getHyperEconomy().getTradeObject("book");
-					if (book != null) heldItem = book.getItem();
+
+				double removed = heldItem.removeEnchantment(ho2.getEnchantment());
+				if (heldItem.getMaterial().equalsIgnoreCase("ENCHANTED_BOOK") && !heldItem.hasEnchantments()) {
+					heldItem.setMaterial("BOOK");
+					heldItem.setHItemMeta(new HItemMeta(heldItem.getItemMeta()));
 				}
 				hp.setItem(heldItem, hp.getHeldItemSlot());
 				if (removed > 0) {
@@ -267,12 +271,12 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return data;
 				}
-				int space = ho.getAvailableSpace(hp.getInventory());
+				int space = hp.getInventory().getAvailableSpace(ho.getItem());
 				if (space < amount) {
 					data.addResponse(L.get("NOT_ENOUGH_SPACE"));
 					return data;
 				}
-				ho.add(amount, hp.getInventory());
+				hp.getInventory().add(amount, ho.getItem());
 				ho.setStock(ho.getStock() - amount);
 				data.addResponse(L.get("STOCK_REMOVED"));
 				return data;
@@ -284,7 +288,18 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("MUST_TRANSFER_MORE_THAN_ZERO"));
 					return data;
 				}
-				double amountAdded = ho.addEnchantment(hp.getItemInHand());
+				HItemStack heldItem = hp.getItemInHand();
+				double amountAdded = 0;
+				if (heldItem.getMaterial().equalsIgnoreCase("BOOK")) {
+					HItemMeta cMeta = heldItem.getItemMeta();
+					cMeta.addEnchantment(ho.getEnchantment());
+					heldItem.setMaterial("ENCHANTED_BOOK");
+					heldItem.setHItemMeta(new HEnchantmentStorageMeta(cMeta));
+					amountAdded = 1;
+				} else {
+					amountAdded = heldItem.addEnchantment(ho.getEnchantment());
+				}
+				hp.setItem(heldItem, hp.getHeldItemSlot());
 				if (amountAdded > 0) {
 					ho.setStock(ho.getStock() - amountAdded);
 					data.addResponse(L.get("STOCK_REMOVED"));

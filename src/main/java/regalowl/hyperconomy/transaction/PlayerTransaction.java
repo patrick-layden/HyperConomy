@@ -2,7 +2,6 @@ package regalowl.hyperconomy.transaction;
 
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.inventory.HInventory;
-import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public class PlayerTransaction {
@@ -16,7 +15,7 @@ public class PlayerTransaction {
 	private double money;
 	private boolean setPrice;
 	private boolean chargeTax;
-	private HItemStack giveItem;
+	//private HItemStack giveItem;
 	private boolean obeyShops;
 	
 	
@@ -52,9 +51,9 @@ public class PlayerTransaction {
 	public boolean isChargeTax() {
 		return chargeTax;
 	}
-	public HItemStack getGiveItem() {
-		return giveItem;
-	}
+	//public HItemStack getGiveItem() {
+	//	return giveItem;
+	//}
 	public boolean obeyShops() {
 		return obeyShops;
 	}
@@ -87,9 +86,9 @@ public class PlayerTransaction {
 	public void setChargeTax(boolean chargeTax) {
 		this.chargeTax = chargeTax;
 	}
-	public void setGiveItem(HItemStack giveItem) {
-		this.giveItem = giveItem;
-	}
+	//public void setGiveItem(HItemStack giveItem) {
+	//	this.giveItem = giveItem;
+	//}
 	public void setObeyShops(boolean obeyShops) {
 		this.obeyShops = obeyShops;
 	}

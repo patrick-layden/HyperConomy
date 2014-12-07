@@ -8,7 +8,6 @@ import javax.imageio.ImageIO;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
-import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
 
 
@@ -46,18 +45,8 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 
 	@Override
 	public double getSellPrice(double amount, HyperPlayer hp) {
-		return super.getSellPrice(amount) * getDamageMultiplier((int)Math.ceil(amount), hp.getInventory());
+		return super.getSellPrice(amount) * hp.getInventory().getPercentDamaged((int)Math.ceil(amount), getItem());
 	}
-
-	@Override
-	public int count(HInventory inventory) {
-		return inventory.count(getItem());
-	}
-	@Override
-	public int getAvailableSpace(HInventory inventory) {
-		return inventory.getAvailableSpace(getItem());
-	}
-	
 	@Override
 	public HItemStack getItemStack(int amount) {
 		HItemStack sis = getItem();
@@ -88,22 +77,6 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
-	}
-
-
-	@Override
-	public void add(int amount, HInventory inventory) {
-		inventory.add(amount, getItem());
-	}
-	@Override
-	public double remove(int amount, HInventory inventory) {
-		return inventory.remove(amount, getItem());
-	}
-	
-
-	@Override
-	public double getDamageMultiplier(int amount, HInventory inventory) {
-		return inventory.getPercentDamaged(amount, getItem());
 	}
 
 

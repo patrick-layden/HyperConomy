@@ -72,7 +72,7 @@ public class Sellall extends BaseCommand implements HyperCommand {
 			HItemStack stack = inventory.getItem(slot);
 			TradeObject ho = he.getTradeObject(stack, dm.getHyperShopManager().getShop(trader));
 			if (ho == null) {continue;}
-			int amount = ho.count(inventory);
+			int amount = inventory.count(ho.getItem());
 			PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 			pt.setObeyShops(true);
 			pt.setTradePartner(tradePartner);

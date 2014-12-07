@@ -7,12 +7,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-
-
-
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.inventory.HEnchantment;
-import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.tradeobject.TradeObjectType;
@@ -320,26 +316,6 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	
 	//ITEM METHODS
 	
-	/**Adds the given quantity of the TradeObject to the given inventory.  (Can only be used with items.)
-	 * @param amount
-	 * @param i
-	 */
-	public void add(int amount, HInventory i);
-	/**Removes the given quantity of the TradeObject from the given inventory.  (Can only be used with items.)
-	 * @param amount
-	 * @param i
-	 */
-	public double remove(int amount, HInventory i);
-	/**Counts how many of this TradeObject are in the given inventory.  (Can only be used with items.)
-	 * @param inventory
-	 * @return
-	 */
-	public int count(HInventory inventory);
-	/**Counts how many of this TradeObject can be placed in the given inventory. (Can only be used with items.)
-	 * @param inventory
-	 * @return
-	 */
-	public int getAvailableSpace(HInventory inventory);
 	/**Returns the ItemStack representation of this TradeObject. (Can only be used with items.)
 	 * @return
 	 */
@@ -358,26 +334,6 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 * @return True if this TradeObject represents the given SerializableItemStack, false if not.
 	 */
 	public boolean matchesItemStack(HItemStack stack);
-	/**
-	 * @return True if this TradeObject is damaged, false if not. (Can only be used with items.)
-	 */
-	public boolean isDamaged();
-	/**
-	 * @return A number between 1 and 0 representing the TradeObject's durability remaining percentage.  (Can only be used with items.)
-	 */
-	public double getDurabilityPercent();
-	/**
-	 * @return True if this TradeObject has durability, false if not. (Can only be used with items.)
-	 */
-	public boolean isDurable();
-	/** Returns a number between 0 and 1 based on the percent that the selected number of this TradeObject is damaged in the given inventory. 1 would mean 
-	 * no damage, and 0 would mean completely destroyed.  This number can be used to determine the price for damaged items when multiplied by the 
-	 * undamaged price. (Can only be used with items.)
-	 * @param amount
-	 * @param inventory
-	 * @return
-	 */
-	public double getDamageMultiplier(int amount, HInventory inventory);
 	
 	
 	//COMPOSITE ITEM METHODS
@@ -426,16 +382,6 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 * @return The TradeObject's enchantment level. (Can only be used with Enchantments.)
 	 */
 	public int getEnchantmentLevel();
-	/** Adds this TradeObject's enchantment to the given ItemStack. (Can only be used with Enchantments.)
-	 * @param stack
-	 * @return 1 if successful, 0 if not.
-	 */
-	public double addEnchantment(HItemStack stack);
-	/** Removes this TradeObject's enchantment from the given ItemStack. (Can only be used with Enchantments.)
-	 * @param stack
-	 * @return 1 if successful, 0 if not.
-	 */
-	public double removeEnchantment(HItemStack stack);
 	/**
 	 * @return The TradeObject's Enchantment name. (Can only be used with Enchantments.)
 	 */
