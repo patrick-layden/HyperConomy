@@ -81,7 +81,7 @@ Thanks as well to all of the other donors that haven't requested a listing here.
 
 Links
 ---------
-[Tickets] (http://dev.bukkit.org/server-mods/hyperconomy/tickets/)
+[Tickets] (https://github.com/RegalOwl/HyperConomy/issues)
 
 [Documentation Wiki] (https://github.com/RegalOwl/HyperConomy-Documentation)
 
