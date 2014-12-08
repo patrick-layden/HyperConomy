@@ -50,9 +50,11 @@ Add-ons
 ---------
 
 [HyperMerchant](http://dev.bukkit.org/bukkit-plugins/hypermerchant/)
+
 HyperMerchant is a graphical user interface for your players to use to interact with HyperConomy shops.  It is also includes the ability to easily create Citizens npc shopkeepers for your HyperConomy shops.
 
 [HyperConomy Web](http://dev.bukkit.org/bukkit-plugins/hyperconomy-web/)
+
 HyperConomy Web creates a web page for HyperConomy, displaying information about all shops, items, and price history. The web page appearance can be customized to fit your server.
 
 Feature Requests, Bugs, Problems, etc.
