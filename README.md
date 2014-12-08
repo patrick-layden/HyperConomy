@@ -50,11 +50,10 @@ Add-ons
 ---------
 
 [HyperMerchant](http://dev.bukkit.org/bukkit-plugins/hypermerchant/)
-
-* HyperMerchant is a graphical user interface for your players to use to interact with HyperConomy shops.  It is also includes the ability to easily create Citizens npc shopkeepers for your HyperConomy shops.
+HyperMerchant is a graphical user interface for your players to use to interact with HyperConomy shops.  It is also includes the ability to easily create Citizens npc shopkeepers for your HyperConomy shops.
 
 [HyperConomy Web](http://dev.bukkit.org/bukkit-plugins/hyperconomy-web/)
-* HyperConomy Web creates a web page for HyperConomy, displaying information about all shops, items, and price history. The web page appearance can be customized to fit your server.
+HyperConomy Web creates a web page for HyperConomy, displaying information about all shops, items, and price history. The web page appearance can be customized to fit your server.
 
 Feature Requests, Bugs, Problems, etc.
 ---------
@@ -81,6 +80,9 @@ Thanks as well to all of the other donors that haven't requested a listing here.
 Links
 ---------
 [Tickets] (http://dev.bukkit.org/server-mods/hyperconomy/tickets/)
+
 [Documentation Wiki] (https://github.com/RegalOwl/HyperConomy-Documentation)
+
 [BukkitDev Page] (http://dev.bukkit.org/bukkit-plugins/hyperconomy/)
+
 [Latest Development Build] (https://buildhive.cloudbees.com/job/RegalOwl/job/HyperConomy/lastSuccessfulBuild/regalowl.hyperconomy$hyperconomy/)
