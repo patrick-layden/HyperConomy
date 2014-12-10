@@ -41,6 +41,22 @@
               </filters>
               <relocations>
                 <relocation>
+                  <pattern>net.sf.opencsv</pattern>
+                  <shadedPattern>regalowl.hyperconomy.net.sf.opencsv</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.yaml</pattern>
+                  <shadedPattern>regalowl.hyperconomy.org.yaml</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>mysql</pattern>
+                  <shadedPattern>regalowl.hyperconomy.mysql</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.xerial</pattern>
+                  <shadedPattern>regalowl.hyperconomy.org.xerial</shadedPattern>
+                </relocation>
+                <relocation>
                   <pattern>regalowl.simpledatalib</pattern>
                   <shadedPattern>regalowl.hyperconomy.simpledatalib</shadedPattern>
                 </relocation>
