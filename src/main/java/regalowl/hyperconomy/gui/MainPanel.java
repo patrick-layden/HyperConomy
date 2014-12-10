@@ -93,7 +93,7 @@ public class MainPanel {
 		
 		frmEconomyEditor = new JFrame();
 		frmEconomyEditor.setTitle("Economy Editor");
-		frmEconomyEditor.setBounds(100, 100, 576, 210);
+		frmEconomyEditor.setBounds(100, 100, 576, 233);
 		frmEconomyEditor.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		frmEconomyEditor.addWindowListener(new java.awt.event.WindowAdapter() {
 		    @Override
@@ -108,7 +108,7 @@ public class MainPanel {
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(248, 248, 255));
-		panel.setBounds(207, 12, 351, 159);
+		panel.setBounds(207, 12, 351, 172);
 		frmEconomyEditor.getContentPane().add(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{175, 175, 0};
@@ -127,6 +127,7 @@ public class MainPanel {
 		
 		JLabel lblNewValue = new JLabel("New Value");
 		GridBagConstraints gbc_lblNewValue = new GridBagConstraints();
+		gbc_lblNewValue.fill = GridBagConstraints.VERTICAL;
 		gbc_lblNewValue.insets = new Insets(0, 0, 5, 0);
 		gbc_lblNewValue.gridx = 1;
 		gbc_lblNewValue.gridy = 0;
@@ -154,7 +155,7 @@ public class MainPanel {
 		
 		addEconomyButton = new JButton("Add");
 		GridBagConstraints gbc_addEconomyButton = new GridBagConstraints();
-		gbc_addEconomyButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_addEconomyButton.fill = GridBagConstraints.BOTH;
 		gbc_addEconomyButton.insets = new Insets(0, 0, 5, 5);
 		gbc_addEconomyButton.gridx = 0;
 		gbc_addEconomyButton.gridy = 2;
@@ -182,7 +183,7 @@ public class MainPanel {
 		
 		btnCloneSelected = new JButton("Clone");
 		GridBagConstraints gbc_btnCloneSelected = new GridBagConstraints();
-		gbc_btnCloneSelected.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnCloneSelected.fill = GridBagConstraints.BOTH;
 		gbc_btnCloneSelected.insets = new Insets(0, 0, 5, 5);
 		gbc_btnCloneSelected.gridx = 0;
 		gbc_btnCloneSelected.gridy = 3;
@@ -311,7 +312,7 @@ public class MainPanel {
 		
 		JButton btnEditEconomy = new JButton("Edit");
 		GridBagConstraints gbc_btnEditEconomy = new GridBagConstraints();
-		gbc_btnEditEconomy.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnEditEconomy.fill = GridBagConstraints.BOTH;
 		gbc_btnEditEconomy.insets = new Insets(0, 0, 5, 5);
 		gbc_btnEditEconomy.gridx = 0;
 		gbc_btnEditEconomy.gridy = 4;
@@ -342,20 +343,21 @@ public class MainPanel {
 		btnDeleteEconomy = new JButton("Delete");
 		GridBagConstraints gbc_btnDeleteEconomy = new GridBagConstraints();
 		gbc_btnDeleteEconomy.insets = new Insets(0, 0, 0, 5);
-		gbc_btnDeleteEconomy.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnDeleteEconomy.fill = GridBagConstraints.BOTH;
 		gbc_btnDeleteEconomy.gridx = 0;
 		gbc_btnDeleteEconomy.gridy = 5;
 		panel.add(btnDeleteEconomy, gbc_btnDeleteEconomy);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(9, 12, 186, 159);
+		scrollPane.setBounds(9, 12, 186, 172);
 		frmEconomyEditor.getContentPane().add(scrollPane);
 		
 		economyList = new QuickListModel<String>();
 		economySelectList = new JList<String>(economyList);
+		economySelectList.setBounds(9, 12, 184, 157);
+		frmEconomyEditor.getContentPane().add(economySelectList);
 		economySelectList.setBackground(new Color(248, 248, 255));
 		economySelectList.setToolTipText("Select an economy.");
-		scrollPane.setViewportView(economySelectList);
 		btnDeleteEconomy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				HyperEconomy he = getSelectedEconomy();
