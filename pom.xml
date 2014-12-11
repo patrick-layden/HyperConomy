@@ -11,6 +11,11 @@
 			<id>regalowl-repo</id>
 			<url>http://www.regalowl.net:8080/repository/snapshots/</url>
 		</repository>
+		<repository>
+			<id>Sonatype-public</id>
+			<name>SnakeYAML repository</name>
+			<url>http://oss.sonatype.org/content/groups/public/</url>
+		</repository>
 	</repositories>
 	<scm>
 		<developerConnection>scm:git:git@github.com:RegalOwl/HyperConomy.git</developerConnection>
