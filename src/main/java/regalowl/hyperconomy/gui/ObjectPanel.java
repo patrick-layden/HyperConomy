@@ -112,6 +112,34 @@ public class ObjectPanel extends JFrame {
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(12, 35, 266, 352);
 		getContentPane().add(scrollPane_1);
+		listObjectSelector = new JList<String>(tradeObjectList);
+		listObjectSelector.setBackground(new Color(248, 248, 255));
+		scrollPane_1.setViewportView(listObjectSelector);
+		listObjectSelector.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listObjectSelector.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent event) {
+				TradeObject to = getSelectedObject();
+				if (to == null) return;
+				fieldsUpdating = true;
+				nameData.setText(to.getName());
+				stockData.setText(to.getStock() + "");
+				aliasesData.setText(to.getAliasesString());
+				displayNameData.setText(to.getDisplayName());
+				staticPricingToggle.setSelected(to.isStatic());
+				initialPricingToggle.setSelected(to.useInitialPricing());
+				valueData.setText(to.getValue() + "");
+				staticPriceData.setText(to.getStaticPrice() + "");
+				medianData.setText(to.getMedian() + "");
+				startPriceData.setText(to.getStartPrice() + "");
+				ceilingData.setText(to.getCeiling() + "");
+				floorData.setText(to.getFloor() + "");
+				updatePrice(to);
+				fieldsUpdating = false;
+			}
+		});
+
+		listObjectSelector.setSelectedIndex(0);
+		listObjectSelector.setVisibleRowCount(10);
 		
 		settingsPanel = new JPanel();
 		settingsPanel.setBackground(new Color(248, 248, 255));
@@ -474,35 +502,6 @@ public class ObjectPanel extends JFrame {
 		gbc_deleteButton.gridy = 2;
 		pricePanel.add(deleteButton, gbc_deleteButton);
 		deleteButton.setBackground(new Color(245, 222, 179));
-		listObjectSelector = new JList<String>(tradeObjectList);
-		listObjectSelector.setBounds(12, 35, 264, 352);
-		getContentPane().add(listObjectSelector);
-		listObjectSelector.setBackground(new Color(248, 248, 255));
-		listObjectSelector.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listObjectSelector.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent event) {
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				fieldsUpdating = true;
-				nameData.setText(to.getName());
-				stockData.setText(to.getStock()+"");
-				aliasesData.setText(to.getAliasesString());
-				displayNameData.setText(to.getDisplayName());
-				staticPricingToggle.setSelected(to.isStatic());
-				initialPricingToggle.setSelected(to.useInitialPricing());
-				valueData.setText(to.getValue()+"");
-				staticPriceData.setText(to.getStaticPrice()+"");
-				medianData.setText(to.getMedian()+"");
-				startPriceData.setText(to.getStartPrice()+"");
-				ceilingData.setText(to.getCeiling()+"");
-				floorData.setText(to.getFloor()+"");
-				updatePrice(to);
-				fieldsUpdating = false;
-			}
-		});
-		
-				listObjectSelector.setSelectedIndex(0);
-				listObjectSelector.setVisibleRowCount(10);
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (fieldsUpdating) return;
