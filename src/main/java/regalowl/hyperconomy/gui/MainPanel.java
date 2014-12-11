@@ -358,6 +358,7 @@ public class MainPanel {
 		frmEconomyEditor.getContentPane().add(economySelectList);
 		economySelectList.setBackground(new Color(248, 248, 255));
 		economySelectList.setToolTipText("Select an economy.");
+		scrollPane.setViewportView(economySelectList);
 		btnDeleteEconomy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				HyperEconomy he = getSelectedEconomy();
