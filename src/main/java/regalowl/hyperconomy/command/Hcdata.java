@@ -179,6 +179,12 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 			statement = "DELETE FROM hyperconomy_log";
 			hc.getSQLWrite().addToQueue(statement);
 			data.addResponse(L.get("LOGS_CLEARED"));
+		} else if (args[0].equalsIgnoreCase("compactdb")) {
+			if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {
+				new Backup(hc);
+			}
+			hc.getSimpleDataLib().getSQLManager().shrinkDatabase();
+			data.addResponse(L.get("DB_COMPACTED"));
 		} else if (args[0].equalsIgnoreCase("repairnames")) {
 			try {
 				if (hc.getConf().getBoolean("enable-feature.composite-items")) {

@@ -515,3 +515,4 @@ EVALUE_SALE: &b%n &9can be sold for: &a%c%p
 EVALUE_PURCHASE: &b%n &9can be purchased for: &a%c%p
 OBJECT_NOT_FOUND: &4Object not found.
 MUST_BE_PLAYER: &4You must be a player to call this command.
+DB_COMPACTED: &6The database has been compacted.
