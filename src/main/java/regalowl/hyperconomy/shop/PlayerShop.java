@@ -257,6 +257,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	
 	@Override
 	public boolean inShop(int x, int y, int z, String world) {
+		if (world == null) return false;
 		if (world.equalsIgnoreCase(this.world)) {
 			int rangex = Math.abs(p1x - p2x);
 			if (Math.abs(x - p1x) <= rangex && Math.abs(x - p2x) <= rangex) {
@@ -274,10 +275,12 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 
 	@Override
 	public boolean inShop(HLocation l) {
+		if (l == null) return false;
 		return inShop(l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getWorld());
 	}
 	@Override
 	public boolean inShop(HyperPlayer hp) {
+		if (hp == null) return false;
 		return inShop(hp.getLocation());
 	}
 	
