@@ -489,7 +489,7 @@ CSV_CREATED: &6CSV file created.
 CSVS_CREATED: &6The HyperConomy database has been exported to CSV files.
 CSV_IMPORTED: &6CSV file imported.
 CSVS_IMPORTED: &6The HyperConomy database has been imported from CSV files.
-HCDATA_INVALID: &4Invalid parameters. Use /hcdata ['exportcsv','importcsv','importmissing','setdefaultprices','clearhistory','clearlogs','repairnames','updateitemstack', or 'backup']
+HCDATA_INVALID: &4Invalid parameters. Use /hcdata ['exportcsv','importcsv','importmissing','setdefaultprices','clearhistory','clearlogs','compactdb','repairnames','updateitemstack', or 'backup']
 HCDATA_EXPORTCSV_INVALID: &4Invalid parameters. Use /hcdata exportcsv [name of table or 'all']
 HCDATA_IMPORTCSV_INVALID: &4Invalid parameters. Use /hcdata importcsv [name of table or 'all']
 HCDATA_IMPORTMISSING_INVALID: &4Invalid parameters. Use /hcdata importmissing (economy)

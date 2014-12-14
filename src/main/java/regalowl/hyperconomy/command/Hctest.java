@@ -3,9 +3,6 @@ package regalowl.hyperconomy.command;
 
 import regalowl.hyperconomy.HyperConomy;
 
-
-
-
 public class Hctest extends BaseCommand implements HyperCommand {
 	
 	public Hctest(HyperConomy hc) {
@@ -14,39 +11,28 @@ public class Hctest extends BaseCommand implements HyperCommand {
 
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
-		
 		/*
-		FileConfiguration cat = hc.getYamlHandler().getFileConfiguration("categories");
-		if (cat != null) {
-			for (String key:cat.getTopLevelKeys()) {
-				ArrayList<String> names = CommonFunctions.explode(cat.getString(key), ",");
-				for (String name:names) {
-					for (HyperEconomy he:hc.getDataManager().getEconomies()) {
-						TradeObject to = he.getTradeObject(name);
-						if (to == null) continue;
-						to.addCategory(key);
-					}
-				}
-			}
+		for (TradeObject to:hc.getDataManager().getTradeObjects()) {
+			to.setCeiling(123456);
+			to.setMaxStock(123456);
+			to.setMedian(123456);
+			to.setStatic(true);
+			to.setMedian(123456);
+			to.setStock(123456);
+			to.setStaticPrice(123456);
+			to.setFloor(123456);
+			to.setValue(123456);
+			to.setCeiling(123456);
+			to.setMaxStock(123456);
+			to.setMedian(123456);
+			to.setStatic(true);
+			to.setMedian(123456);
+			to.setStock(123456);
+			to.setStaticPrice(123456);
+			to.setFloor(123456);
+			to.setValue(123456);
 		}
 		*/
-		/*
-		BukkitConnector bc = (BukkitConnector)hc.getMC();
-		for (TradeObject ho:hc.getDataManager().getTradeObjects()) {
-			if (ho.getType() == TradeObjectType.ITEM) {
-				SerializableItemStack sis = new SerializableItemStack(ho.getData());
-				ItemStack stack = sis.getItem();
-				if (stack == null) continue;
-				HItemStack his = bc.getBukkitCommon().getSerializableItemStack(stack);
-				ho.setData(his.serialize());
-			} else if (ho.getType() == TradeObjectType.ENCHANTMENT) {
-				SerializableEnchantment sis = new SerializableEnchantment(ho.getData());
-				HEnchantment he = new HEnchantment(sis.getEnchantmentName(), sis.getLvl());
-				ho.setData(he.serialize());
-			}
-		}
-		*/
-		
 		return data;
 	}
 

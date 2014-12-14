@@ -90,13 +90,10 @@ public class HyperConomy {
 	private transient HEconomyProvider economyApi;
 	private transient DataManager dm;
 	private transient SimpleDataLib sdl;
-	private transient YamlHandler yh;
 	private transient Log l;
 	private transient InfoSignHandler isign;
 	private transient History hist;
 	private transient ItemDisplayHandler itdi;
-	private transient SQLWrite sw;
-	private transient SQLRead sr;
 	private transient ChestShopHandler cs;
 	private transient FrameShopHandler fsh;
 	private transient HyperLock hl;
@@ -148,7 +145,7 @@ public class HyperConomy {
 		sdl.initialize();
 		sdl.registerListener(this);
 		ft = sdl.getFileTools();
-		yh = sdl.getYamlHandler();
+		YamlHandler yh = sdl.getYamlHandler();
 		yh.copyFromJar("config");
 		yh.registerFileConfiguration("config");
 		new UpdateYML(this);
@@ -178,9 +175,7 @@ public class HyperConomy {
 		dMode.syncDebugConsoleMessage("Expected plugin folder path: [" + sdl.getStoragePath() + "]");
 		sdl.getSQLManager().createDatabase();
 		dMode.syncDebugConsoleMessage("Database created.");
-		sw = sdl.getSQLManager().getSQLWrite();
-		sr = sdl.getSQLManager().getSQLRead();
-		sw.setLogSQL(hConfig.getBoolean("sql.log-sql-statements"));
+		sdl.getSQLManager().getSQLWrite().setLogSQL(hConfig.getBoolean("sql.log-sql-statements"));
 		mc.setupExternalEconomy();
 		if (mc.useExternalEconomy()) {
 			mc.logInfo("[HyperConomy]Using external economy plugin ("+mc.getEconomyName()+") via Vault.");
@@ -190,7 +185,7 @@ public class HyperConomy {
 		l = new Log(this);
 		dm = new DataManager(this);
 		new TransactionSignHandler(this);
-		yh.startSaveTask(saveInterval);
+		sdl.getYamlHandler().startSaveTask(saveInterval);
 		cs = new ChestShopHandler(this);
 		new HyperModificationServer(this);
 		api = new HyperAPI(this);
@@ -285,10 +280,10 @@ public class HyperConomy {
 		return hl;
 	}
 	public YamlHandler getYamlHandler() {
-		return yh;
+		return sdl.getYamlHandler();
 	}
 	public YamlHandler gYH() {
-		return yh;
+		return sdl.getYamlHandler();
 	}
 	public FileConfiguration getConf() {
 		return hConfig;
@@ -312,10 +307,10 @@ public class HyperConomy {
 		return isign;
 	}
 	public SQLWrite getSQLWrite() {
-		return sw;
+		return sdl.getSQLManager().getSQLWrite();
 	}
 	public SQLRead getSQLRead() {
-		return sr;
+		return sdl.getSQLManager().getSQLRead();
 	}
 	public ItemDisplayHandler getItemDisplay() {
 		return itdi;
