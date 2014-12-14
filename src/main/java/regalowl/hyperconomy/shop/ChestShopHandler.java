@@ -49,6 +49,9 @@ public class ChestShopHandler {
 			bbevent.cancel();
 		} else if (hc.getMC().isChestShopSign(bbevent.getBlock().getLocation())) {
 			if (bbevent.getPlayer().hasPermission("hyperconomy.admin") && bbevent.getPlayer().isSneaking()) return;
+			HSign sign = hc.getMC().getSign(bbevent.getBlock().getLocation());
+			String line34 = hc.getMC().removeColor(sign.getLine(2)).trim() + hc.getMC().removeColor(sign.getLine(3)).trim();
+			if (bbevent.getPlayer().getName().equalsIgnoreCase(line34) && bbevent.getPlayer().isSneaking()) return;
 			bbevent.cancel();
 		} else if (hc.getMC().isChestShopSignBlock(bbevent.getBlock().getLocation())) {
 			bbevent.cancel();
