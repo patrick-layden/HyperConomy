@@ -79,10 +79,7 @@ public class HyperPlayerManager {
 		for (HyperPlayer p : getOnlinePlayers()) {
 			if (p.getName().equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) {
 				p.kickPlayer(hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
-				continue;
-			}
-			if (!playerAccountExists(p.getName())) {
-				addPlayer(p.getName());
+				break;
 			}
 		}
 	}

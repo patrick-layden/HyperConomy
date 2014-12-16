@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>regalowl.simpledatalib</groupId>
 			<artifactId>simpledatalib</artifactId>
-			<version>0.1.069-SNAPSHOT</version>
+			<version>0.1.070-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xerial</groupId>
@@ -58,7 +58,7 @@
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>1.15-SNAPSHOT</version>
+			<version>1.9</version>
 		</dependency>
 	</dependencies>
 	<build>
