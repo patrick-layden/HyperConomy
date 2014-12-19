@@ -38,6 +38,7 @@ public class History {
 	private boolean useHistory;
 	
 	private final int millisecondsInHour = 3600000;
+	//private final int millisecondsInHour = 600;
 	
 	public History(HyperConomy hc) {
 		this.hc = hc;
@@ -90,7 +91,6 @@ public class History {
 				timeCounter += (currentTime - lastTime);
 				lastTime = currentTime;
 				if (timeCounter >= millisecondsInHour) {
-					// if (timeCounter >= 600) {
 					timeCounter = 0;
 					writeHistoryThread();
 					hc.getMC().runTaskLater(new Runnable() {

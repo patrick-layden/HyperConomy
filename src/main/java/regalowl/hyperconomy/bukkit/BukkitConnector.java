@@ -12,7 +12,6 @@ import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -79,7 +78,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		useExternalEconomy = false;	
 	}
 	
-	//TODO make protected
 	public BukkitCommon getBukkitCommon() {
 		return common;
 	}
@@ -602,7 +600,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public String removeColor(String text) {
-		return ChatColor.stripColor(text);
+		return common.removeColor(text);
 	}
 
 
