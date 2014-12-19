@@ -55,6 +55,11 @@ commands:
       permission: hyperconomy.top
       permission-message: You don't have permission to do this.
       aliases: [ti]
+   lowstock:
+      description: Lists the items with the least stock.
+      permission: hyperconomy.top
+      permission-message: You don't have permission to do this.
+      aliases: [low]
    topenchants:
       description: Lists the enchantments with the most stock
       permission: hyperconomy.top

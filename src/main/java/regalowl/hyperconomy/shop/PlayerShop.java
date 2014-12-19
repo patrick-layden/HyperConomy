@@ -601,6 +601,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		saveAllowed();
 	}
 	public boolean isAllowed(HyperAccount ha) {
+		if (ha == null) return false;
 		if (allowed.contains(ha.getName())) {
 			return true;
 		}

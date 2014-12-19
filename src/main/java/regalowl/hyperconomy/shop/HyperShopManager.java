@@ -86,13 +86,9 @@ public class HyperShopManager {
 	
 	
 	public Shop getShop(HyperPlayer hp) {
-		if (hp == null) {
-			return null;
-		}
+		if (hp == null) return null;
 		for (Shop shop : shops.values()) {
-			if (shop.inShop(hp)) {
-				return shop;
-			}
+			if (shop.inShop(hp)) return shop;
 		}
 		return null;
 	}

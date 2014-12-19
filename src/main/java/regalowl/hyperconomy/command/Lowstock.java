@@ -11,11 +11,11 @@ import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
 
-public class Topitems extends BaseCommand implements HyperCommand {
+public class Lowstock extends BaseCommand implements HyperCommand {
 
 	private final int numberPerPage = 10;
 	
-	public Topitems(HyperConomy hc) {
+	public Lowstock(HyperConomy hc) {
 		super(hc, false);
 	}
 
@@ -40,14 +40,11 @@ public class Topitems extends BaseCommand implements HyperCommand {
 		    public int compare(TradeObject to1, TradeObject to2) {
 		    	Double s1 = to1.getStock();
 		    	Double s2 = to2.getStock();
-		    	if (s1 < s2) return 1;
-		    	if (s1 > s2) return -1;
-		    	return 0;
+		    	return s1.compareTo(s2);
 		    }
 		});
 		ArrayList<TradeObject> displayObjects = new ArrayList<TradeObject>();
 		for (TradeObject to:allObjects) {
-		    if (to.getStock() == 0.0) continue;
 		    if (hasShop && s.isBanned(to)) continue;
 		    if (hasShop && to.isShopObject() && !((PlayerShop)s).isAllowed(hp)) continue;
 		    displayObjects.add(to);

@@ -42,6 +42,7 @@ import regalowl.hyperconomy.command.Intervals;
 import regalowl.hyperconomy.command.Iteminfo;
 import regalowl.hyperconomy.command.Listcategories;
 import regalowl.hyperconomy.command.Lockshop;
+import regalowl.hyperconomy.command.Lowstock;
 import regalowl.hyperconomy.command.Makeaccount;
 import regalowl.hyperconomy.command.Makedisplay;
 import regalowl.hyperconomy.command.Manageshop;
@@ -250,6 +251,7 @@ public class HyperConomy {
 		mc.registerCommand("iteminfo", new Iteminfo(this));
 		mc.registerCommand("listcategories", new Listcategories(this));
 		mc.registerCommand("lockshop", new Lockshop(this));
+		mc.registerCommand("lowstock", new Lowstock(this));
 		mc.registerCommand("makeaccount", new Makeaccount(this));
 		mc.registerCommand("makedisplay", new Makedisplay(this));
 		mc.registerCommand("manageshop", new Manageshop(this));
