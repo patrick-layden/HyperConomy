@@ -1,17 +1,9 @@
 package regalowl.hyperconomy.display;
 
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
-
-
-
-
-
-
-
 
 
 import regalowl.simpledatalib.event.EventHandler;
@@ -23,7 +15,6 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HSignChangeEvent;
-import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
@@ -32,13 +23,14 @@ import regalowl.hyperconomy.tradeobject.TradeObject;
 public class InfoSignHandler {
 
 	private HyperConomy hc;
-	private ConcurrentHashMap<Integer, InfoSign> infoSigns = new ConcurrentHashMap<Integer, InfoSign>();
+	private CopyOnWriteArrayList<InfoSign> infoSigns = new CopyOnWriteArrayList<InfoSign>();
 	private AtomicInteger signCounter = new AtomicInteger();
-	private final long signUpdateInterval = 1L;
-	private QueryResult dbData;
 	private AtomicBoolean updateActive = new AtomicBoolean();
 	private AtomicBoolean repeatUpdate = new AtomicBoolean();
 
+	private QueryResult dbData;
+	
+	private final long signUpdateInterval = 1L;
 
 	public InfoSignHandler(HyperConomy hc) {
 		this.hc = hc;
@@ -61,7 +53,7 @@ public class InfoSignHandler {
 					public void run() {
 						while (dbData.next()) {
 							HLocation l = new HLocation(dbData.getString("WORLD"), dbData.getInt("X"),dbData.getInt("Y"),dbData.getInt("Z"));
-							infoSigns.put(signCounter.getAndIncrement(), new InfoSign(hc, l, SignType.fromString(dbData.getString("TYPE")), dbData.getString("HYPEROBJECT"), 
+							infoSigns.add(new InfoSign(hc, l, SignType.fromString(dbData.getString("TYPE")), dbData.getString("HYPEROBJECT"), 
 									dbData.getDouble("MULTIPLIER"), dbData.getString("ECONOMY"), EnchantmentClass.fromString(dbData.getString("ECLASS"))));
 						}
 						dbData.close();
@@ -77,16 +69,10 @@ public class InfoSignHandler {
 
 	@EventHandler
 	public void onSignRemoval(HBlockBreakEvent bbevent) {
-		HBlock b = bbevent.getBlock();
-		if (!b.isInfoSign()) {return;}
-		try {
-			InfoSign is = getInfoSign(b.getLocation());
-			if (is != null) {
-				is.deleteSign();
-			}
-		} catch (Exception e) {
-			hc.gSDL().getErrorWriter().writeError(e);
-		}
+		HLocation l = bbevent.getBlock().getLocation();
+		InfoSign iSign = getInfoSign(l);
+		if (iSign == null) {return;}
+		iSign.deleteSign();
 	}
 	
 	public void removeSign(InfoSign is) {
@@ -132,7 +118,7 @@ public class InfoSignHandler {
 				if (em.getEconomy(hp.getEconomy()).objectTest(objectName)) {
 					SignType type = SignType.fromString(lines[2]);
 					if (type != null) {
-						infoSigns.put(signCounter.getAndIncrement(), new InfoSign(hc, s.getLocation(), type, objectName, multiplier, economy, enchantClass, lines));
+						infoSigns.add(new InfoSign(hc, s.getLocation(), type, objectName, multiplier, economy, enchantClass, lines));
 						updateSigns();
 					}
 				}
@@ -153,34 +139,34 @@ public class InfoSignHandler {
 	}
 	
 	private class SignUpdater {
-		private ArrayList<InfoSign> signs;
 		private long updateTaskId;
+		private int currentSign;
 		SignUpdater() {
-			this.signs = getInfoSigns();
+			currentSign = 0;
 			updateTaskId = hc.getMC().runRepeatingTask(new Runnable() {
 				public void run() {
-					if (signs.isEmpty()) {
+					if (currentSign >= infoSigns.size()) {
 						if (repeatUpdate.get()) {
-							signs = getInfoSigns();
-							if (signs.isEmpty()) {
+							currentSign = 0;
+							repeatUpdate.set(false);
+							if (infoSigns.isEmpty()) {
 								hc.getMC().cancelTask(updateTaskId);
 								updateActive.set(false);
 								return;
 							}
-							repeatUpdate.set(false);
 						} else {
 							hc.getMC().cancelTask(updateTaskId);
 							updateActive.set(false);
 							return;
 						}
 					}
-					InfoSign cs = signs.get(0);
+					InfoSign cs = infoSigns.get(currentSign);
 					if (cs.getSign() != null) {
 						cs.update();
 					} else {
 						cs.deleteSign();
 					}
-					signs.remove(0);
+					currentSign++;
 				}
 			}, signUpdateInterval, signUpdateInterval);
 		}
@@ -193,20 +179,17 @@ public class InfoSignHandler {
 
 
 	public ArrayList<InfoSign> getInfoSigns() {
-		ArrayList<InfoSign> isigns = new ArrayList<InfoSign>();
-		for (InfoSign is : infoSigns.values()) {
-			isigns.add(is);
+		ArrayList<InfoSign> iSigns = new ArrayList<InfoSign>();
+		for (InfoSign is : infoSigns) {
+			iSigns.add(is);
 		}
-		return isigns;
+		return iSigns;
 	}
 
 	public InfoSign getInfoSign(HLocation l) {
-		for (InfoSign isign : infoSigns.values()) {
+		for (InfoSign isign : infoSigns) {
 			if (isign == null) {continue;}
-			if (l.getWorld().equalsIgnoreCase(isign.getWorld()) && isign.getX() == l.getBlockX() && 
-					isign.getY() == l.getBlockY() && isign.getZ() == l.getBlockZ()) {
-				return isign;
-			}
+			if (l.equals(isign.getLocation())) return isign;
 		}
 		return null;
 	}

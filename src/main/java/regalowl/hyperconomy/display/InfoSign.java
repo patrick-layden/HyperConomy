@@ -252,29 +252,24 @@ public class InfoSign {
 					line4 = "&a" + "" + ho.getMedian();
 					break;
 				case HISTORY:
-					String increment = hc.getMC().removeColor(line4.replace(" ", "")).toUpperCase().replaceAll("[0-9]", "");
-					if (increment.contains("(")) {
-						increment = increment.substring(0, increment.indexOf("("));
+					String timeIncrement = hc.getMC().removeColor(line4);
+					if (timeIncrement.contains("(")) timeIncrement = timeIncrement.substring(0, timeIncrement.indexOf("("));
+					timeIncrement = timeIncrement.toUpperCase().replaceAll("[^A-Z]", "");
+					String timeValueString = hc.getMC().removeColor(line4);
+					if (timeValueString.contains("(")) timeValueString = timeValueString.substring(0, timeValueString.indexOf("("));
+					timeValueString = timeValueString.toUpperCase().replaceAll("[^0-9]", "");
+					int timeValue = Integer.parseInt(timeValueString);
+					int timeValueHours = timeValue;
+					if (timeIncrement.equals("H")) {
+						timeValueHours *= 1;
+					} else if (timeIncrement.equals("D")) {
+						timeValueHours *= 24;
+					} else if (timeIncrement.equals("W")) {
+						timeValueHours *= 168;
+					} else if (timeIncrement.equals("M")) {
+						timeValueHours *= 672;
 					}
-					String timev = hc.getMC().removeColor(line4.replace(" ", "")).toUpperCase().replaceAll("[A-Z]", "");
-					int timevalue;
-					int timevalueHours;
-					if (timev.contains("(")) {
-						timevalue = Integer.parseInt(timev.substring(0, timev.indexOf("(")));
-					} else {
-						timevalue = Integer.parseInt(timev);
-					}
-					timevalueHours = timevalue;
-					if (increment.equalsIgnoreCase("h")) {
-						timevalueHours *= 1;
-					} else if (increment.equalsIgnoreCase("d")) {
-						timevalueHours *= 24;
-					} else if (increment.equalsIgnoreCase("w")) {
-						timevalueHours *= 168;
-					} else if (increment.equalsIgnoreCase("m")) {
-						timevalueHours *= 672;
-					}
-					updateHistorySign(timevalueHours, timevalue, increment);
+					updateHistorySign(timeValueHours, timeValue, timeIncrement);
 					break;
 				case TAX:
 					if (ho.getType() == TradeObjectType.ENCHANTMENT) {
