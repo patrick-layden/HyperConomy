@@ -45,7 +45,7 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 
 	@Override
 	public double getSellPrice(double amount, HyperPlayer hp) {
-		return super.getSellPrice(amount) * hp.getInventory().getPercentDamaged((int)Math.ceil(amount), getItem());
+		return getSellPrice(amount) * hp.getInventory().getPercentDamaged((int)Math.ceil(amount), getItem());
 	}
 	@Override
 	public HItemStack getItemStack(int amount) {
