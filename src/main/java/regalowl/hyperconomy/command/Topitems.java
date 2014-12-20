@@ -3,12 +3,14 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.hyperconomy.tradeobject.TradeObjectStatus;
 
 
 public class Topitems extends BaseCommand implements HyperCommand {
@@ -49,7 +51,12 @@ public class Topitems extends BaseCommand implements HyperCommand {
 		for (TradeObject to:allObjects) {
 		    if (to.getStock() == 0.0) continue;
 		    if (hasShop && s.isBanned(to)) continue;
-		    if (hasShop && to.isShopObject() && !((PlayerShop)s).isAllowed(hp)) continue;
+		    if (hasShop && to.isShopObject()) {
+		    	PlayerShop ps = (PlayerShop)s;
+		    	if (!ps.isAllowed(hp) && !hp.hasPermission("hyperconomy.admin")) {
+		    		if (to.getShopObjectStatus() == TradeObjectStatus.NONE) continue;
+		    	}
+		    }
 		    displayObjects.add(to);
 		}
 		int selectedPage = (args.length == 0) ? 1 : Integer.parseInt(args[0]);
