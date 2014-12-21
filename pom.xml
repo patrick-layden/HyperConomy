@@ -16,6 +16,10 @@
 			<name>SnakeYAML repository</name>
 			<url>http://oss.sonatype.org/content/groups/public/</url>
 		</repository>
+		<repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+		</repository>
 	</repositories>
 	<scm>
 		<developerConnection>scm:git:git@github.com:RegalOwl/HyperConomy.git</developerConnection>
@@ -24,9 +28,9 @@
 	</scm>
 	<dependencies>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.7.9-R0.2-SNAPSHOT</version>
+          	<groupId>org.spigotmc</groupId>
+         	<artifactId>spigot-api</artifactId>
+         	<version>1.8-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

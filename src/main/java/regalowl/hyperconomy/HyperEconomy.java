@@ -168,7 +168,7 @@ public class HyperEconomy implements Serializable {
 		    String oname = entry.getKey();
 		    TradeObject ho = getTradeObject(oname);
 		    if (ho == null) {
-		    	//hc.getLogger().severe("Not loaded: " + oname);
+		    	//System.out.println("Not loaded: " + oname);
 		    	return false;
 		    }
 		}

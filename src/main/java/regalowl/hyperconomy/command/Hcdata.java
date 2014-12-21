@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 
 
+
 import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.HyperConomy;
@@ -229,6 +230,15 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 			try {
 				new Backup(hc);
 				data.addResponse(L.get("ALL_BACKED_UP"));
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
+			}
+		} else if (args[0].equalsIgnoreCase("updatecomposites")) {
+			try {
+				new Backup(hc);
+				hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_composites");
+				dm.populateComposites();
+				data.addResponse(L.get("COMPOSITES_UPDATED"));
 			} catch (Exception e) {
 				hc.gSDL().getErrorWriter().writeError(e);
 			}

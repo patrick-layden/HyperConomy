@@ -168,24 +168,27 @@ public class DataManager {
 			sw.performInsert("hyperconomy_objects", values);
 		}
 		ft.deleteFile(defaultObjectsPath);
-
-		//set up default hyperconomy_composites if they don't exist
-		defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultComposites.csv";
+		populateComposites();
+		sw.writeSyncQueue();
+		sw.writeSync(writeState);
+		hc.getDebugMode().ayncDebugConsoleMessage("Default economy created.");
+	}
+	
+	public void populateComposites() {
+		FileTools ft = hc.getFileTools();
+		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultComposites.csv";
 		if (ft.fileExists(defaultObjectsPath)) {ft.deleteFile(defaultObjectsPath);}
 		ft.copyFileFromJar("defaultComposites.csv", defaultObjectsPath);
-		data = hc.getFileTools().readCSV(defaultObjectsPath);
-		columns = data.getColumnNames();
+		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
+		ArrayList<String> columns = data.getColumnNames();
 		while (data.next()) {
-			values = new HashMap<String, String>();
+			HashMap<String,String> values = new HashMap<String, String>();
 			for (String column : columns) {
 				values.put(column, data.getString(column));
 			}
 			sw.performInsert("hyperconomy_composites", values);
 		}
 		ft.deleteFile(defaultObjectsPath);
-		sw.writeSyncQueue();
-		sw.writeSync(writeState);
-		hc.getDebugMode().ayncDebugConsoleMessage("Default economy created.");
 	}
 
 	
