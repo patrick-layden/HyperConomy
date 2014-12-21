@@ -77,7 +77,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			if (cps != null) {
 				data.addResponse(L.f(L.get("MANAGESHOP_HELP2"), cps.getName()));
 				data.addResponse(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " &b" + cps.getOwner().getName());
-				data.addResponse(L.get("MANAGESHOP_HELP4") + " &b" +  CommonFunctions.implode(cps.getAllowed(), ","));
+				data.addResponse(L.get("MANAGESHOP_HELP4") + " &b" +  CommonFunctions.implode(cps.getAllowed()));
 			} else {
 				data.addResponse(L.get("NO_SHOP_SELECTED"));
 			}
@@ -706,7 +706,7 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 			if (cps != null) {
 				data.addResponse(L.f(L.get("MANAGESHOP_HELP2"), cps.getName()));
 				data.addResponse(L.f(L.get("MANAGESHOP_HELP3"), cps.getName()) + " &b" + cps.getOwner().getName());
-				data.addResponse(L.get("MANAGESHOP_HELP4") + " &b" + CommonFunctions.implode(cps.getAllowed(), ","));
+				data.addResponse(L.get("MANAGESHOP_HELP4") + " &b" + CommonFunctions.implode(cps.getAllowed()));
 			} else {
 				data.addResponse(L.get("NO_SHOP_SELECTED"));
 			}

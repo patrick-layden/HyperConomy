@@ -525,4 +525,8 @@ public class HyperPlayer implements HyperAccount {
 		hc.getMC().setExp(this, exp);
 	}
 	
+	public boolean isOnline() {
+		return hc.getMC().isOnline(this);
+	}
+	
 }

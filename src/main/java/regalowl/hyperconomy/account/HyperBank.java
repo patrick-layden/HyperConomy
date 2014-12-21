@@ -47,8 +47,8 @@ public class HyperBank implements HyperAccount {
 		deleted = false;
 		this.name = name;
 		this.balance = balance;
-		this.owners = CommonFunctions.explode(owners, ",");
-		this.members = CommonFunctions.explode(members, ",");
+		this.owners = CommonFunctions.explode(owners);
+		this.members = CommonFunctions.explode(members);
 	}
 	
 	public void delete() {
@@ -225,13 +225,13 @@ public class HyperBank implements HyperAccount {
 
 	private void saveOwners() {
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET OWNERS=? WHERE NAME=?",hc.getSimpleDataLib());
-		ws.addParameter(CommonFunctions.implode(owners, ","));
+		ws.addParameter(CommonFunctions.implode(owners));
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);
 	}
 	private void saveMembers() {
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_banks SET MEMBERS=? WHERE NAME=?",hc.getSimpleDataLib());
-		ws.addParameter(CommonFunctions.implode(members, ","));
+		ws.addParameter(CommonFunctions.implode(members));
 		ws.addParameter(this.name);
 		hc.getSQLWrite().addToQueue(ws);
 	}

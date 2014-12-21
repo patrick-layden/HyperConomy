@@ -107,7 +107,7 @@ public class DatabaseUpdater {
 				HashMap<String,String> data = new HashMap<String,String>();
 				if (cat != null) {
 					for (String key:cat.getTopLevelKeys()) {
-						ArrayList<String> names = CommonFunctions.explode(cat.getString(key), ",");
+						ArrayList<String> names = CommonFunctions.explode(cat.getString(key));
 						for (String name:names) {
 							String cString = "";
 							if (data.containsKey(name)) {

@@ -48,7 +48,7 @@ public class HyperModificationServer {
 	public HyperModificationServer(HyperConomy hc) {
 		this.hc = hc;
 		if (hc.getConf().getBoolean("multi-server.enable")) {
-			ipAddresses = CommonFunctions.explode(hc.getConf().getString("multi-server.remote-server-ip-addresses"), ",");
+			ipAddresses = CommonFunctions.explode(hc.getConf().getString("multi-server.remote-server-ip-addresses"));
 			port = hc.getConf().getInt("multi-server.port");
 			timeout = hc.getConf().getInt("multi-server.connection-timeout-ms");
 			updateInterval = hc.getConf().getInt("multi-server.update-interval");

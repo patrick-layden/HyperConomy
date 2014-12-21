@@ -64,14 +64,14 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		this.p2x = p2.getBlockX();
 		this.p2y = p2.getBlockY();
 		this.p2z = p2.getBlockZ();
-		this.allowed = CommonFunctions.explode(allowed_players, ",");
+		this.allowed = CommonFunctions.explode(allowed_players);
 		this.useEconomyStock = useEconomyStock;
 		HyperEconomy he = getHyperEconomy();
 		availableObjects.clear();
 		for (TradeObject ho:he.getTradeObjects()) {
 			availableObjects.add(ho.getName());
 		}
-		ArrayList<String> unavailable = CommonFunctions.explode(banned_objects,",");
+		ArrayList<String> unavailable = CommonFunctions.explode(banned_objects);
 		for (String objectName : unavailable) {
 			TradeObject ho = hc.getDataManager().getEconomy(economy).getTradeObject(objectName);
 			if (ho == null) continue;
@@ -319,7 +319,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
-		values.put("BANNED_OBJECTS", CommonFunctions.implode(unavailable,","));
+		values.put("BANNED_OBJECTS", CommonFunctions.implode(unavailable));
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
@@ -620,7 +620,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
-		values.put("ALLOWED_PLAYERS", CommonFunctions.implode(allowed, ","));
+		values.put("ALLOWED_PLAYERS", CommonFunctions.implode(allowed));
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}

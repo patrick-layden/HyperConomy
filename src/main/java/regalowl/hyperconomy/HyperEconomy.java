@@ -403,14 +403,14 @@ public class HyperEconomy implements Serializable {
 		while (data.next()) {
 			String objectName = data.getString("NAME");
 			String aliasString = data.getString("ALIASES");
-			ArrayList<String> names = CommonFunctions.explode(aliasString, ",");
+			ArrayList<String> names = CommonFunctions.explode(aliasString);
 			String displayName = data.getString("DISPLAY_NAME");
 			names.add(displayName);
 			names.add(objectName);
 			for (String cname:names) {
 				TradeObject ho = getTradeObject(cname);
 				if (ho == null) {continue;}
-				ho.setAliases(CommonFunctions.explode(aliasString, ","));
+				ho.setAliases(CommonFunctions.explode(aliasString));
 				ho.setDisplayName(displayName);
 				ho.setName(objectName);
 			}

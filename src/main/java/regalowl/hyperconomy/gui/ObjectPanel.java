@@ -442,7 +442,7 @@ public class ObjectPanel extends JFrame {
 				to.setName(nameData.getText());
 				to.setDisplayName(displayNameData.getText());
 				try {
-					to.setAliases(CommonFunctions.explode(aliasesData.getText(), ","));
+					to.setAliases(CommonFunctions.explode(aliasesData.getText()));
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "The aliases must be a comma separated string.", "Error", JOptionPane.ERROR_MESSAGE);
 				}

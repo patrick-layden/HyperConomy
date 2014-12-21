@@ -22,7 +22,7 @@ public class Notify extends BaseCommand implements HyperCommand {
 	public Notify(HyperConomy hc) {
 		super(hc, false);
 		enabled = hc.getConf().getBoolean("enable-feature.price-change-notifications");
-		notifyNames = CommonFunctions.explode(hc.getConf().getString("shop.send-price-change-notifications-for"), ",");
+		notifyNames = CommonFunctions.explode(hc.getConf().getString("shop.send-price-change-notifications-for"));
 		hc.getHyperEventHandler().registerListener(this);
 	}
 
@@ -32,7 +32,7 @@ public class Notify extends BaseCommand implements HyperCommand {
 
 	
 	public String getNotifyString() {
-		return CommonFunctions.implode(notifyNames, ",");
+		return CommonFunctions.implode(notifyNames);
 	}
 	
 	public void saveNotifyNames() {

@@ -7,7 +7,7 @@ public class MessageBuilder {
 	private transient LanguageFile L;
 	private String message;
 	
-	private int amount;
+	private double amount;
 	private double price;
 	private String objectName;
 	private String playerName;
@@ -32,7 +32,7 @@ public class MessageBuilder {
 		this.message = message;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

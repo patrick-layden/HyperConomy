@@ -56,8 +56,8 @@ public class BasicTradeObject implements TradeObject {
 		this.name = name;
 		this.economy = economy;
 		this.displayName = displayName;
-		this.aliases = CommonFunctions.explode(aliases, ",");
-		this.categories = CommonFunctions.explode(categories, ",");
+		this.aliases = CommonFunctions.explode(aliases);
+		this.categories = CommonFunctions.explode(categories);
 		this.type = TradeObjectType.fromString(type);
 		this.value = value;
 		this.isstatic = Boolean.parseBoolean(isstatic);
@@ -111,7 +111,7 @@ public class BasicTradeObject implements TradeObject {
 	}
 	@Override
 	public String getAliasesString() {
-		return CommonFunctions.implode(aliases, ",");
+		return CommonFunctions.implode(aliases);
 	}
 	@Override
 	public ArrayList<String> getCategories() {
@@ -129,7 +129,7 @@ public class BasicTradeObject implements TradeObject {
 	}
 	@Override
 	public String getCategoriesString() {
-		return CommonFunctions.implode(categories, ",");
+		return CommonFunctions.implode(categories);
 	}
 	@Override
 	public boolean hasName(String testName) {

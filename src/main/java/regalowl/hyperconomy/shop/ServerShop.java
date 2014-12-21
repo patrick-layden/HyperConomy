@@ -54,7 +54,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		for (TradeObject ho:he.getTradeObjects()) {
 			availableObjects.add(ho.getName());
 		}
-		ArrayList<String> unavailable = CommonFunctions.explode(banned_objects,",");
+		ArrayList<String> unavailable = CommonFunctions.explode(banned_objects);
 		for (String objectName : unavailable) {
 			TradeObject ho = hc.getDataManager().getEconomy(economy).getTradeObject(objectName);
 			if (ho == null) continue;
@@ -263,7 +263,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
-		values.put("BANNED_OBJECTS", CommonFunctions.implode(unavailable,","));
+		values.put("BANNED_OBJECTS", CommonFunctions.implode(unavailable));
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 	
