@@ -1,7 +1,7 @@
 package regalowl.hyperconomy.inventory;
 
 public enum HItemMetaType {
-	BOOK,ENCHANTMENT_STORAGE,FIREWORK,FIREWORK_EFFECT,ITEM,LEATHER_ARMOR,MAP,POTION,SKULL;
+	BOOK,ENCHANTMENT_STORAGE,FIREWORK,FIREWORK_EFFECT,ITEM,LEATHER_ARMOR,MAP,POTION,SKULL,BANNER;
 	
 	
 	
@@ -26,6 +26,8 @@ public enum HItemMetaType {
 			return POTION;
 		} else if (type.equals("SKULL")) {
 			return SKULL;
+		} else if (type.equals("BANNER")) {
+			return BANNER;
 		} else {
 			return null;
 		}

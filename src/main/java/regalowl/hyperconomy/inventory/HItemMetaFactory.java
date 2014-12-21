@@ -14,6 +14,7 @@ public class HItemMetaFactory {
 			case MAP: return new HMapMeta(data);
 			case POTION: return new HPotionMeta(data);
 			case SKULL: return new HSkullMeta(data);
+			case BANNER: return new HBannerMeta(data);
 			default: return null;
 		}
 	}

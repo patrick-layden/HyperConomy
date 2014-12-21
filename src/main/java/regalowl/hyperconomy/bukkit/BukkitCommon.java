@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,6 +18,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.block.banner.Pattern;
+import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -24,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
@@ -39,6 +43,7 @@ import org.bukkit.potion.PotionEffectType;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.display.SignType;
+import regalowl.hyperconomy.inventory.HBannerMeta;
 import regalowl.hyperconomy.inventory.HBookMeta;
 import regalowl.hyperconomy.inventory.HColor;
 import regalowl.hyperconomy.inventory.HEnchantment;
@@ -52,6 +57,7 @@ import regalowl.hyperconomy.inventory.HItemMeta;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.inventory.HLeatherArmorMeta;
 import regalowl.hyperconomy.inventory.HMapMeta;
+import regalowl.hyperconomy.inventory.HPattern;
 import regalowl.hyperconomy.inventory.HPotionEffect;
 import regalowl.hyperconomy.inventory.HPotionMeta;
 import regalowl.hyperconomy.inventory.HSkullMeta;
@@ -228,8 +234,7 @@ public class BukkitCommon {
 		if (p == null) return null;
 		return hc.getHyperPlayerManager().getHyperPlayer(p.getName());
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	protected Player getPlayer(HyperPlayer hp) {
 		if (hp.getName() == null) return null;
 		return Bukkit.getPlayer(hp.getName());
@@ -238,9 +243,6 @@ public class BukkitCommon {
 	
 	
 	
-	
-	
-	@SuppressWarnings("deprecation")
 	protected HInventory getInventory(HyperPlayer hp) {
 		ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 		Player p = Bukkit.getPlayer(hp.getName());
@@ -301,9 +303,7 @@ public class BukkitCommon {
 		}
 		return null;
 	}
-	
-	
-	@SuppressWarnings("deprecation")
+
 	protected void setInventory(HInventory inventory) {
 		ArrayList<HItemStack> newInventory = inventory.getItems();
 		ArrayList<HItemStack> currentInventory = null;
@@ -428,6 +428,14 @@ public class BukkitCommon {
         	} else if (im instanceof MapMeta) {
         		MapMeta sItemMeta = (MapMeta)im;
         		itemMeta = new HMapMeta(displayName, lore, enchantments, sItemMeta.isScaling());
+        	} else if (im instanceof BannerMeta) {
+        		BannerMeta sItemMeta = (BannerMeta)im;
+        		String baseColor = sItemMeta.getBaseColor().toString();
+        		ArrayList<HPattern> patterns = new ArrayList<HPattern>();
+        		for (Pattern p:sItemMeta.getPatterns()) {
+        			patterns.add(new HPattern(p.getColor().toString(), p.getPattern().toString()));
+        		}
+        		itemMeta = new HBannerMeta(displayName, lore, enchantments, baseColor, patterns);
         	} else {
         		itemMeta = new HItemMeta(displayName, lore, enchantments);
         	}
@@ -515,8 +523,15 @@ public class BukkitCommon {
         		HMapMeta sItemMeta = (HMapMeta)sim;
         		MapMeta mm = (MapMeta)itemMeta;
         		mm.setScaling(sItemMeta.isScaling());
+        	} else if (sim instanceof HBannerMeta) {
+        		HBannerMeta sItemMeta = (HBannerMeta)sim;
+        		BannerMeta bm = (BannerMeta)itemMeta;
+        		for (HPattern hp:sItemMeta.getPatterns()) {
+        			bm.addPattern(new Pattern(DyeColor.valueOf(hp.getDyeColor()), PatternType.valueOf(hp.getPatternType())));
+        		}
+        		bm.setBaseColor(DyeColor.valueOf(sItemMeta.getBaseColor()));
+        		item.setItemMeta(itemMeta);
         	}
-        	item.setItemMeta(itemMeta);
         }
         return item;
 	}

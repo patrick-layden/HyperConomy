@@ -259,7 +259,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void kickPlayer(HyperPlayer hp, String message) {
 		Player p = Bukkit.getPlayer(hp.getName());
@@ -270,7 +269,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean hasPermission(HyperPlayer hp, String permission) {
 		Player p = Bukkit.getPlayer(hp.getName());
@@ -325,7 +323,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public HLocation getLocation(HyperPlayer hp) {
 		if (hp == null) return null;
-		@SuppressWarnings("deprecation")
 		Player p = Bukkit.getPlayer(hp.getName());
 		if (p == null) return null;
 		Location l = p.getLocation();
@@ -368,21 +365,21 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		common.setInventory(inventory);
 	}
 	
-	@SuppressWarnings("deprecation")
+
 	@Override
 	public int getHeldItemSlot(HyperPlayer hp) {
 		Player p = Bukkit.getPlayer(hp.getName());
 		return p.getInventory().getHeldItemSlot();
 	}
 
-	@SuppressWarnings("deprecation")
+
 	@Override
 	public HItemStack getItem(HyperPlayer hp, int slot) {
 		Player p = Bukkit.getPlayer(hp.getName());
 		return common.getSerializableItemStack(p.getInventory().getItem(slot));
 	}
 
-	@SuppressWarnings("deprecation")
+
 	@Override
 	public void setItem(HyperPlayer hp, HItemStack item, int slot) {
 		Player p = Bukkit.getPlayer(hp.getName());
@@ -485,7 +482,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void sendMessage(HyperPlayer hp, String message) {
 		Player p = Bukkit.getPlayer(hp.getName());

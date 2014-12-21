@@ -24,7 +24,7 @@ public class HBookMeta extends HItemMeta {
 		super(serialized);
 		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
 		this.author = data.get("author");
-		this.pages = CommonFunctions.explode(data.get("pages"));;
+		this.pages = CommonFunctions.explode(data.get("pages"));
 		this.title = data.get("title");
     }
 	
