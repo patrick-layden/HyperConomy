@@ -77,7 +77,6 @@ public class BukkitEconomy implements HEconomyProvider {
 
 	@Override
 	public double getBankBalance(String bankName) {
-		
 		EconomyResponse response = e.bankBalance(bankName);
 		if (response.type.equals(ResponseType.SUCCESS)) {
 			return response.balance;

@@ -40,9 +40,9 @@ public interface MineCraftConnector {
 
 	public boolean useExternalEconomy();
 	public String getEconomyName();
-	public void hookExternalEconomy();
-	public void unhookExternalEconomy();
-	public void setupExternalEconomy();
+	public void checkExternalEconomyRegistration();
+	public void unRegisterAsExternalEconomy();
+	public void setupHEconomyProvider();
 	public HEconomyProvider getEconomyProvider();
 	
 	

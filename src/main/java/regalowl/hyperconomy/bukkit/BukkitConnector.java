@@ -129,55 +129,42 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	}
 	
 	@Override
-	public void hookExternalEconomy() {
+	public void checkExternalEconomyRegistration() {
 		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
-		if (vault != null & vault instanceof Vault) {
-			vaultInstalled = true;
-		} else {
-			vaultInstalled = false;
-		}
+		vaultInstalled = (vault != null & vault instanceof Vault) ? true:false;
 		useExternalEconomy = hc.gYH().getFileConfiguration("config").getBoolean("economy-plugin.use-external");
-		if (!vaultInstalled) {
-			useExternalEconomy = false;
-		}
+		if (!vaultInstalled) useExternalEconomy = false;
 		if (vaultInstalled && hc.gYH().gFC("config").getBoolean("economy-plugin.hook-internal-economy-into-vault")) {
 			getServer().getServicesManager().register(Economy.class, new Economy_HyperConomy(hc), this, ServicePriority.Highest);
-			this.getLogger().info("[HyperConomy]Internal economy hooked into Vault.");
+			this.getLogger().info("[HyperConomy]Internal economy registered with Vault.");
+			useExternalEconomy = false;
 		}
 	}
 	@Override
-	public void unhookExternalEconomy() {
+	public void unRegisterAsExternalEconomy() {
 		if (!vaultInstalled) return;
 	    RegisteredServiceProvider<Economy> eco = getServer().getServicesManager().getRegistration(Economy.class);
-	    if (eco != null) {
-	    	Economy registeredEconomy = eco.getProvider();
-	    	if (registeredEconomy != null && registeredEconomy.getName().equalsIgnoreCase("HyperConomy")) {
-		        getServer().getServicesManager().unregister(eco.getProvider());
-		        this.getLogger().info("[HyperConomy]Internal economy unhooked from Vault.");
-	    	}
-	    }
+	    if (eco == null) return;
+    	Economy registeredEconomy = eco.getProvider();
+    	if (registeredEconomy != null && registeredEconomy.getName().equalsIgnoreCase("HyperConomy")) {
+	        getServer().getServicesManager().unregister(eco.getProvider());
+	        this.getLogger().info("[HyperConomy]Internal economy unregistered from Vault.");
+    	}
 	}
 	@Override
-	public void setupExternalEconomy() {
-		if (!useExternalEconomy || !vaultInstalled) {return;}
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider == null) {
-			useExternalEconomy = false;
-			return;
-		}
-		vaultEconomy = economyProvider.getProvider();
-		if (vaultEconomy == null) {
-			useExternalEconomy = false;
-			return;
-		}
-		if (vaultEconomy.getName().equalsIgnoreCase("HyperConomy")) {
-			useExternalEconomy = false;
-			return;
+	public void setupHEconomyProvider() {
+		if (useExternalEconomy && vaultInstalled) {
+			RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+			if (economyProvider != null) vaultEconomy = economyProvider.getProvider();
+			if (vaultEconomy == null) useExternalEconomy = false;
+			if (vaultEconomy != null && vaultEconomy.getName().equalsIgnoreCase("HyperConomy")) useExternalEconomy = false;
 		}
 		if (useExternalEconomy) {
 			this.economyProvider = new BukkitEconomy(vaultEconomy);
+			logInfo("[HyperConomy]Using external economy plugin ("+getEconomyName()+") via Vault.");
 		} else {
 			this.economyProvider = new InternalEconomy(hc);
+			logInfo("[HyperConomy]Using internal economy plugin.");
 		}
 	}
 	@Override

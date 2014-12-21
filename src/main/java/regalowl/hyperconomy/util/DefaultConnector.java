@@ -97,13 +97,13 @@ public class DefaultConnector implements MineCraftConnector {
 	}
 
 	@Override
-	public void hookExternalEconomy() {}
+	public void checkExternalEconomyRegistration() {}
 
 	@Override
-	public void unhookExternalEconomy() {}
+	public void unRegisterAsExternalEconomy() {}
 
 	@Override
-	public void setupExternalEconomy() {}
+	public void setupHEconomyProvider() {}
 
 	@Override
 	public HEconomyProvider getEconomyProvider() {

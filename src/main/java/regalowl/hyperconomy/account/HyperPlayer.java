@@ -101,7 +101,7 @@ public class HyperPlayer implements HyperAccount {
 		if (name == null) {return;}
 		if (!hc.getMC().getEconomyProvider().hasAccount(name)) {
 			hc.getMC().getEconomyProvider().createAccount(name);
-			setBalance(balance);
+			hc.getMC().getEconomyProvider().depositAccount(name, balance);
 		}
 		checkForNameChange();
 	}
@@ -152,8 +152,8 @@ public class HyperPlayer implements HyperAccount {
 	}
 
 	public double getBalance() {
-		checkExternalAccount();
 		if (hc.getMC().useExternalEconomy()) {
+			checkExternalAccount();
 			return hc.getMC().getEconomyProvider().getAccountBalance(name);
 		} else {
 			return balance;
@@ -357,13 +357,9 @@ public class HyperPlayer implements HyperAccount {
 
 
 	public void setBalance(double balance) {
-		checkExternalAccount();
 		if (hc.getMC().useExternalEconomy()) {
-			if (hc.getMC().getEconomyProvider().hasAccount(name)) {
-				hc.getMC().getEconomyProvider().withdrawAccount(name, hc.getMC().getEconomyProvider().getAccountBalance(name));
-			} else {
-				hc.getMC().getEconomyProvider().createAccount(name);
-			}
+			checkExternalAccount();
+			hc.getMC().getEconomyProvider().withdrawAccount(name, hc.getMC().getEconomyProvider().getAccountBalance(name));
 			hc.getMC().getEconomyProvider().depositAccount(name, balance);
 			hc.getLog().writeAuditLog(name, "setbalance", balance, hc.getMC().getEconomyProvider().getEconomyName());
 		} else {
@@ -382,8 +378,8 @@ public class HyperPlayer implements HyperAccount {
 	}
 
 	public void deposit(double amount) {
-		checkExternalAccount();
 		if (hc.getMC().useExternalEconomy()) {
+			checkExternalAccount();
 			hc.getMC().getEconomyProvider().depositAccount(name, amount);
 			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getMC().getEconomyProvider().getEconomyName());
 		} else {
@@ -399,8 +395,8 @@ public class HyperPlayer implements HyperAccount {
 	
 
 	public void withdraw(double amount) {
-		checkExternalAccount();
 		if (hc.getMC().useExternalEconomy()) {
+			checkExternalAccount();
 			hc.getMC().getEconomyProvider().withdrawAccount(name, amount);
 			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getMC().getEconomyProvider().getEconomyName());
 		} else {

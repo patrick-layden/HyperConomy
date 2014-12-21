@@ -88,7 +88,6 @@ public class HyperConomy {
 
 	private transient MineCraftConnector mc;
 	private transient API api;
-	private transient HEconomyProvider economyApi;
 	private transient DataManager dm;
 	private transient SimpleDataLib sdl;
 	private transient Log l;
@@ -160,7 +159,7 @@ public class HyperConomy {
 		}
 		heh = new HyperEventHandler(this);
 		heh.registerListener(this);
-		mc.hookExternalEconomy();
+		mc.checkExternalEconomyRegistration();
 	}
 	
 	public void enable() {
@@ -177,12 +176,7 @@ public class HyperConomy {
 		sdl.getSQLManager().createDatabase();
 		dMode.syncDebugConsoleMessage("Database created.");
 		sdl.getSQLManager().getSQLWrite().setLogSQL(hConfig.getBoolean("sql.log-sql-statements"));
-		mc.setupExternalEconomy();
-		if (mc.useExternalEconomy()) {
-			mc.logInfo("[HyperConomy]Using external economy plugin ("+mc.getEconomyName()+") via Vault.");
-		} else {
-			mc.logInfo("[HyperConomy]Using internal economy plugin.");
-		}
+		mc.setupHEconomyProvider();
 		l = new Log(this);
 		dm = new DataManager(this);
 		new TransactionSignHandler(this);
@@ -190,14 +184,13 @@ public class HyperConomy {
 		cs = new ChestShopHandler(this);
 		new HyperModificationServer(this);
 		api = new HyperAPI(this);
-		economyApi = mc.getEconomyProvider();
 		dMode.syncDebugConsoleMessage("Data loading started.");
 		heh.fireEvent(new DataLoadEvent(DataLoadType.START));
 	}
 
 	public void disable(boolean protect) {
 		heh.fireEvent(new DisableEvent());
-		mc.unhookExternalEconomy();
+		mc.unRegisterAsExternalEconomy();
 		enabled = false;
 		mc.unregisterAllListeners();
 		if (itdi != null) {
@@ -363,7 +356,7 @@ public class HyperConomy {
 		return api;
 	}
 	public HEconomyProvider getEconomyAPI() {
-		return economyApi;
+		return mc.getEconomyProvider();
 	}
 	public MineCraftConnector getMC() {
 		return mc;
