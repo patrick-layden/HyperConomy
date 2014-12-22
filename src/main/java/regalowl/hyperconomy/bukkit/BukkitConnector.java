@@ -12,6 +12,7 @@ import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -477,6 +478,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public void teleport(HyperPlayer hp, HLocation sl) {
 		Player p = common.getPlayer(hp);
 		Location l = common.getLocation(sl);
+		Chunk c = l.getChunk();
+		if (c == null) return;
+		if (!c.isLoaded()) c.load(true);
 		p.teleport(l);
 	}
 

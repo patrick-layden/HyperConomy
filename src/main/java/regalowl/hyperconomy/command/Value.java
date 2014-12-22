@@ -19,7 +19,7 @@ public class Value extends BaseCommand implements HyperCommand {
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		try {
-			HyperEconomy he = super.getEconomy();
+			HyperEconomy he = getEconomy();
 			boolean requireShop = hc.getConf().getBoolean("shop.limit-info-commands-to-shops");
 			if (hp != null && requireShop && !dm.getHyperShopManager().inAnyShop(hp) && !hp.hasPermission("hyperconomy.admin")) {
 				data.addResponse(L.get("REQUIRE_SHOP_FOR_INFO"));
@@ -51,11 +51,21 @@ public class Value extends BaseCommand implements HyperCommand {
 			double cost = 0;
 			if (hp != null) {
 				if (ho.getType() == TradeObjectType.ITEM) {
-					val = ho.getSellPriceWithTax(amount, hp);
+					if (hp.getInventory().count(ho.getItem()) == 0) {
+						val = ho.getSellPrice(amount);
+						val -= hp.getSalesTax(val);
+					} else {
+						val = ho.getSellPriceWithTax(amount, hp);
+					}
 					cost = ho.getBuyPriceWithTax(amount);
 				} else if (ho.getType() == TradeObjectType.ENCHANTMENT) {
-					val = ho.getSellPrice(eClass, hp);
-					val -= hp.getSalesTax(val);
+					if (hp.getItemInHand().containsEnchantment(ho.getEnchantment())) {
+						val = ho.getSellPrice(eClass, hp);
+						val -= hp.getSalesTax(val);
+					} else {
+						val = ho.getSellPrice(eClass);
+						val -= hp.getSalesTax(val);
+					}
 					cost = ho.getBuyPrice(eClass);
 					cost += ho.getPurchaseTax(cost);
 				} else if (ho.getType() == TradeObjectType.EXPERIENCE) {
