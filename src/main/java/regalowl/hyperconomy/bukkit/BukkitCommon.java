@@ -530,8 +530,8 @@ public class BukkitCommon {
         			bm.addPattern(new Pattern(DyeColor.valueOf(hp.getDyeColor()), PatternType.valueOf(hp.getPatternType())));
         		}
         		bm.setBaseColor(DyeColor.valueOf(sItemMeta.getBaseColor()));
-        		item.setItemMeta(itemMeta);
         	}
+    		item.setItemMeta(itemMeta);
         }
         return item;
 	}
