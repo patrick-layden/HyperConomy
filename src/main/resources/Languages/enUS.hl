@@ -516,5 +516,5 @@ EVALUE_PURCHASE: &b%n &9can be purchased for: &a%c%p
 OBJECT_NOT_FOUND: &4Object not found.
 MUST_BE_PLAYER: &4You must be a player to call this command.
 DB_COMPACTED: &6The database has been compacted.
-HCPAY_PAYED: &9&o{playerName} payed you &a&o{amount}&9&o.
+HCPAY_PAYED: &9&o{playerName} paid you &a&o{currencySymbol}{amount}&9&o.
 COMPOSITES_UPDATED: &6Composite items updated.
