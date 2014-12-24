@@ -5,12 +5,12 @@ import regalowl.hyperconomy.HyperConomy;
 public class MessageBuilder {
 	
 	private transient LanguageFile L;
-	private String message;
 	
-	private double amount;
-	private double price;
-	private String objectName;
-	private String playerName;
+	private String message = "";
+	private double amount = 0.0;
+	private double price = 0.0;
+	private String objectName = "";
+	private String playerName = "";
 	
 	
 	public MessageBuilder(HyperConomy hc, String message) {
