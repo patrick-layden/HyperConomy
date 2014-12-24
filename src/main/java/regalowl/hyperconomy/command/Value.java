@@ -25,6 +25,10 @@ public class Value extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("REQUIRE_SHOP_FOR_INFO"));
 				return data;
 			}
+			if (args.length == 0) {
+				data.addResponse(L.get("VALUE_INVALID"));
+				return data;
+			}
 			TradeObject ho = he.getTradeObject(args[0], dm.getHyperShopManager().getShop(hp));
 			if (ho == null) {
 				data.addResponse(L.get("INVALID_ITEM_NAME"));

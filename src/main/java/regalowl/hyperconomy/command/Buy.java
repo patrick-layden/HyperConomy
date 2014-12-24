@@ -22,6 +22,10 @@ public class Buy extends BaseCommand implements HyperCommand {
 		if (!validate(data)) return data;
 		HyperEconomy he = hp.getHyperEconomy();
 		try {
+			if (args.length == 0) {
+				data.addResponse(L.get("BUY_INVALID"));
+				return data;
+			}
 			Shop s = hc.getHyperShopManager().getShop(hp);
 			TradeObject ho = he.getTradeObject(args[0], hc.getHyperShopManager().getShop(hp));
 			if (ho == null) {

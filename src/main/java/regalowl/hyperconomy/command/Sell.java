@@ -21,6 +21,10 @@ public class Sell extends BaseCommand implements HyperCommand {
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		try {
+			if (args.length == 0) {
+				data.addResponse(L.get("SELL_INVALID"));
+				return data;
+			}
 			HyperEconomy he = hp.getHyperEconomy();
 			Shop s = dm.getHyperShopManager().getShop(hp);
 			TradeObject ho = he.getTradeObject(args[0], dm.getHyperShopManager().getShop(hp));
