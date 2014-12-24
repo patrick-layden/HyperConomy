@@ -135,10 +135,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		vaultInstalled = (vault != null & vault instanceof Vault) ? true:false;
 		useExternalEconomy = hc.gYH().getFileConfiguration("config").getBoolean("economy-plugin.use-external");
 		if (!vaultInstalled) useExternalEconomy = false;
-		if (vaultInstalled && hc.gYH().gFC("config").getBoolean("economy-plugin.hook-internal-economy-into-vault")) {
+		if (!useExternalEconomy && vaultInstalled && hc.gYH().gFC("config").getBoolean("economy-plugin.hook-internal-economy-into-vault")) {
 			getServer().getServicesManager().register(Economy.class, new Economy_HyperConomy(hc), this, ServicePriority.Highest);
 			this.getLogger().info("[HyperConomy]Internal economy registered with Vault.");
-			useExternalEconomy = false;
 		}
 	}
 	@Override
