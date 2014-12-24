@@ -29,6 +29,7 @@ public class MessageBuilder {
 	}
 
 	public void setMessage(String message) {
+		if (message == null) return;
 		this.message = message;
 	}
 
@@ -41,10 +42,12 @@ public class MessageBuilder {
 	}
 
 	public void setObjectName(String objectName) {
+		if (objectName == null) return;
 		this.objectName = objectName;
 	}
 
 	public void setPlayerName(String playerName) {
+		if (playerName == null) return;
 		this.playerName = playerName;
 	}
 	
