@@ -102,7 +102,10 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		}
 	}
 
-	
+	@Override
+	public void setHyperConomy(HyperConomy hc) {
+		this.hc = hc;
+	}
 	
 	public int compareTo(Shop s) {
 		return name.compareTo(s.getName());

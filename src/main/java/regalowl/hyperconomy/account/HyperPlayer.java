@@ -94,6 +94,10 @@ public class HyperPlayer implements HyperAccount {
 			}
 		});
 	}
+	
+	public void setHyperConomy(HyperConomy hc) {
+		this.hc = hc;
+	}
 
 	
 	private void checkExternalAccount() {

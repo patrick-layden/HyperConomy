@@ -1,5 +1,6 @@
 package regalowl.hyperconomy.minecraft;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -9,10 +10,11 @@ import regalowl.simpledatalib.CommonFunctions;
 
 
 
-public class HLocation {
+public class HLocation implements Serializable {
 
 
-	
+
+	private static final long serialVersionUID = -1750045947840867723L;
 	private double x;
 	private double y;
 	private double z;

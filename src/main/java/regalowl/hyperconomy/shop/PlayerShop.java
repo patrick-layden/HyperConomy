@@ -120,6 +120,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 			availableObjects.add(ho.getName());
 		}
 	}
+	
+	@Override
+	public void setHyperConomy(HyperConomy hc) {
+		this.hc = hc;
+	}
 
 	private void loadPlayerShopObjects() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);

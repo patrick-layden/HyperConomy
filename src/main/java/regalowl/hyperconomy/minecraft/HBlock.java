@@ -1,11 +1,14 @@
 package regalowl.hyperconomy.minecraft;
 
+import java.io.Serializable;
+
 import regalowl.hyperconomy.HyperConomy;
 
 
 
-public class HBlock {
+public class HBlock implements Serializable {
 
+	private static final long serialVersionUID = 6789704788932270058L;
 	private transient HyperConomy hc;
 	private HLocation location;
 	

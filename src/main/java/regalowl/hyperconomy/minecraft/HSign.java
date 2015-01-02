@@ -1,10 +1,13 @@
 package regalowl.hyperconomy.minecraft;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import regalowl.hyperconomy.HyperConomy;
 
-public class HSign {
+public class HSign implements Serializable {
+
+	private static final long serialVersionUID = 7389491795296647203L;
 
 	private transient HyperConomy hc;
 	

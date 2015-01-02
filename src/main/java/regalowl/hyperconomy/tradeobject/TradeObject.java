@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 
+
+import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -29,6 +31,11 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 * Deletes the TradeObject.
 	 */
 	public void delete();
+	
+	/**
+	 * Links this TradeObject with a new HyperConomy object.
+	 */
+	public void setHyperConomy(HyperConomy hc);
 	
 	/**
 	 * @return The name of the TradeObject.

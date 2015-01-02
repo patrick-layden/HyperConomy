@@ -71,7 +71,11 @@ public class BasicTradeObject implements TradeObject {
 		this.maxstock = maxstock;
 	}
 	
-	
+	@Override
+	public void setHyperConomy(HyperConomy hc) {
+		this.hc = hc;
+		this.sw = hc.getSQLWrite();
+	}
 	
 	@Override
 	public void delete() {

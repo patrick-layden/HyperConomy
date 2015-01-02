@@ -72,7 +72,11 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		}
 	}
 	
-
+	@Override
+	public void setHyperConomy(HyperConomy hc) {
+		this.hc = hc;
+	}
+	
 	@Override
 	public int compareTo(Shop s) {
 		return name.compareTo(s.getName());

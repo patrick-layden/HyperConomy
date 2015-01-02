@@ -1,8 +1,11 @@
 package regalowl.hyperconomy.minecraft;
 
+import java.io.Serializable;
 
-public class HMob {
 
+public class HMob implements Serializable {
+
+	private static final long serialVersionUID = -8536395776719431112L;
 	private boolean canPickupItems;
 	private HLocation location;
 	

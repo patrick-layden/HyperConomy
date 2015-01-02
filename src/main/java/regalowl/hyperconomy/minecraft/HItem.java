@@ -1,9 +1,13 @@
 package regalowl.hyperconomy.minecraft;
 
+import java.io.Serializable;
+
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.inventory.HItemStack;
 
-public class HItem {
+public class HItem implements Serializable {
+
+	private static final long serialVersionUID = -160805124445571936L;
 
 	private transient HyperConomy hc;
 	

@@ -51,6 +51,10 @@ public class HyperBank implements HyperAccount {
 		this.members = CommonFunctions.explode(members);
 	}
 	
+	public void setHyperConomy(HyperConomy hc) {
+		this.hc = hc;
+	}
+	
 	public void delete() {
 		WriteStatement ws = new WriteStatement("DELETE FROM hyperconomy_banks WHERE NAME=?",hc.getSimpleDataLib());
 		ws.addParameter(name);

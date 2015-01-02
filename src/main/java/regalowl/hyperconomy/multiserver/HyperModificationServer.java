@@ -7,6 +7,8 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,10 +34,11 @@ import regalowl.hyperconomy.tradeobject.TradeObject;
 public class HyperModificationServer {
 
 	private HyperConomy hc;
-	private int port;
-	private ArrayList<String> ipAddresses = new ArrayList<String>();
+	private int listenPort;
+	private ArrayList<RemoteAddress> addresses = new ArrayList<RemoteAddress>();
 	private int timeout;
 	private boolean runServer;
+	private boolean syncShops;
 	private long updateInterval;
 	private HyperTransferObject sendObject;
 	
@@ -48,16 +51,37 @@ public class HyperModificationServer {
 	public HyperModificationServer(HyperConomy hc) {
 		this.hc = hc;
 		if (hc.getConf().getBoolean("multi-server.enable")) {
-			ipAddresses = CommonFunctions.explode(hc.getConf().getString("multi-server.remote-server-ip-addresses"));
-			port = hc.getConf().getInt("multi-server.port");
+			HashMap<String,Integer> ips = null;
+			try {
+				ips = CommonFunctions.convertToIntMap(CommonFunctions.explodeMap(hc.getConf().getString("multi-server.remote-server-ip-addresses")));
+			} catch (Exception e) {
+				hc.getMC().logSevere("[HyperConomy]'remote-server-ip-addresses' entry in config.yml is invalid.  Regenerate the config or check the wiki for more info.");
+				return;
+			}
+			for (Map.Entry<String,Integer> entry : ips.entrySet()) {
+			    String ip = entry.getKey();
+			    Integer port = entry.getValue();
+			    addresses.add(new RemoteAddress(ip,port));
+			}
+			listenPort = hc.getConf().getInt("multi-server.port");
 			timeout = hc.getConf().getInt("multi-server.connection-timeout-ms");
 			updateInterval = hc.getConf().getInt("multi-server.update-interval");
+			syncShops = hc.getConf().getBoolean("multi-server.sync-shops");
 			runServer = true;
 			sendObject = new HyperTransferObject(HyperTransferType.REQUEST_UPDATE);
 			hc.getHyperEventHandler().registerListener(this);
 			receiveUpdate();
 			remoteUpdater = new RemoteUpdater();
 			t.schedule(remoteUpdater, updateInterval, updateInterval);
+		}
+	}
+	
+	private class RemoteAddress {
+		private String ip;
+		private int port;
+		public RemoteAddress(String ip, int port) {
+			this.ip = ip;
+			this.port = port;
 		}
 	}
 
@@ -71,7 +95,7 @@ public class HyperModificationServer {
 				while (runServer) {
 					HyperTransferObject transferObject = null;
 					try {
-						serverSocket = new ServerSocket(port);
+						serverSocket = new ServerSocket(listenPort);
 						sClientSocket = serverSocket.accept();
 						ObjectInputStream input = new ObjectInputStream(sClientSocket.getInputStream());
 						transferObject = (HyperTransferObject) input.readObject();
@@ -100,39 +124,38 @@ public class HyperModificationServer {
 
 	private void processHyperObjects(ArrayList<TradeObject> objects) {
 		for (TradeObject ho:objects) {
-			if (ho != null && ho.getEconomy() != null && !ho.getEconomy().equalsIgnoreCase("")) {
-				HyperEconomy he = hc.getDataManager().getEconomy(ho.getEconomy());
-				if (he != null) {
-					if (ho.isShopObject()) {
-						PlayerShop ps = ho.getShopObjectShop();
-						if (ps != null) ps.updateHyperObject(ho);
-					} else {
-						he.removeObject(ho.getName());
-						he.addObject(ho);
-					}
-				}
+			if (ho == null || ho.getEconomy() == null || ho.getEconomy().equalsIgnoreCase("")) continue;
+			HyperEconomy he = hc.getDataManager().getEconomy(ho.getEconomy());
+			if (he == null) continue;
+			ho.setHyperConomy(hc);
+			if (ho.isShopObject()) {
+				PlayerShop ps = ho.getShopObjectShop();
+				if (ps != null) ps.updateHyperObject(ho);
+			} else {
+				he.removeObject(ho.getName());
+				he.addObject(ho);
 			}
-		}
-	}
-	private void processHyperPlayers(ArrayList<HyperPlayer> objects) {
-		HyperPlayerManager hpm = hc.getHyperPlayerManager();
-		for (HyperPlayer hp:objects) {
-			if (hp == null || hp.getName() == null || hp.getName().equalsIgnoreCase("")) continue;
-			if (hpm.playerAccountExists(hp.getName())) {
-				hpm.removeHyperPlayer(hpm.getHyperPlayer(hp.getName()));
-			}
-			hpm.addHyperPlayer(hp);
 		}
 	}
 	
 	private void processShops(ArrayList<Shop> objects) {
+		if (!syncShops) return;
 		HyperShopManager hsm = hc.getHyperShopManager();
 		for (Shop s:objects) {
 			if (s == null || s.getName() == null || s.getName().equalsIgnoreCase("")) continue;
-			if (hsm.shopExists(s.getName())) {
-				hsm.removeShop(s.getName());
-			}
+			if (hsm.shopExists(s.getName())) hsm.removeShop(s.getName());
+			s.setHyperConomy(hc);
 			hsm.addShop(s);
+		}
+	}
+	
+	private void processHyperPlayers(ArrayList<HyperPlayer> objects) {
+		HyperPlayerManager hpm = hc.getHyperPlayerManager();
+		for (HyperPlayer hp:objects) {
+			if (hp == null || hp.getName() == null || hp.getName().equalsIgnoreCase("")) continue;
+			if (hpm.playerAccountExists(hp.getName())) hpm.removeHyperPlayer(hpm.getHyperPlayer(hp.getName()));
+			hp.setHyperConomy(hc);
+			hpm.addHyperPlayer(hp);
 		}
 	}
 	
@@ -140,7 +163,8 @@ public class HyperModificationServer {
 		HyperBankManager hbm = hc.getHyperBankManager();
 		for (HyperBank hb:objects) {
 			if (hb == null || hb.getName() == null || hb.getName().equalsIgnoreCase("")) continue;
-			hbm.removeHyperBank(hb.getName());
+			if (hbm.hasBank(hb.getName())) hbm.removeHyperBank(hb.getName());
+			hb.setHyperConomy(hc);
 			hbm.addHyperBank(hb);
 		}
 	}
@@ -184,10 +208,10 @@ public class HyperModificationServer {
 		@Override
 		public void run() {
 			if (sendObject.isEmpty()) return;
-			for (String ip:ipAddresses) {
+			for (RemoteAddress ra:addresses) {
 				try {
 					clientSocket = new Socket();
-					clientSocket.connect(new InetSocketAddress(ip, port), timeout);
+					clientSocket.connect(new InetSocketAddress(ra.ip, ra.port), timeout);
 					ObjectOutputStream out;
 					out = new ObjectOutputStream(clientSocket.getOutputStream());
 					out.writeObject(sendObject);
@@ -201,6 +225,7 @@ public class HyperModificationServer {
 					clientSocket.close();
 					sendObject.clear();
 				} catch (Exception e) {
+					hc.getDebugMode().debugWriteMessage("The error below occurred when connecting to ip: " + ra.ip + " and port: " + ra.port);
 					hc.getDebugMode().debugWriteError(e);
 					continue;
 				}
