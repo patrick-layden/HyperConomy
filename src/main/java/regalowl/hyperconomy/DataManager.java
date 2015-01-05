@@ -134,7 +134,11 @@ public class DataManager {
 		hc.getSQLRead().setErrorLogging(false);
 		QueryResult qr = sr.select("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'version'");
 		hc.getSQLRead().setErrorLogging(true);
-		du.updateTables(qr);
+		boolean success = du.updateTables(qr);
+		if (!success) {
+			hc.disable(false);
+			return;
+		}
 		qr = sr.select("SELECT * FROM hyperconomy_objects WHERE economy = 'default'");
 		if (!qr.next()) {setupDefaultEconomy();}
 		economies.clear();

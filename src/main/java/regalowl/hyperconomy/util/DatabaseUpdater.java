@@ -25,7 +25,8 @@ public class DatabaseUpdater {
 	private transient HyperConomy hc;
 	private transient SQLWrite sw;
 	private transient SQLRead sr;
-	public final double version = 1.36;
+	public final double requiredDbVersion = 1.36;
+	private double currentDbVersion;
 	ArrayList<String> tables = new ArrayList<String>();
 	
 	public DatabaseUpdater(HyperConomy hc) {
@@ -51,10 +52,11 @@ public class DatabaseUpdater {
 		return tables;
 	}
 	
-	public double getVersion() {
-		return version;
+	/*
+	public double getCurrentDatabaseVersion() {
+		return currentDbVersion;
 	}
-
+	*/
 
 	private void loadTables() {
 		for (String table:tables) {
@@ -64,24 +66,22 @@ public class DatabaseUpdater {
 	}
 	
 
-	public void updateTables(QueryResult qr) {
+	public boolean updateTables(QueryResult qr) {
 		sw = hc.getSQLManager().getSQLWrite();
 		sr = hc.getSQLManager().getSQLRead();
 		boolean writeState = sw.writeSync();
 		sw.writeSync(true);
 		if (qr.next()) {
-			double version = Double.parseDouble(qr.getString("VALUE"));
-			//new LegacyDatabaseUpdates().applyLegacyUpdates(version, sw);
+			currentDbVersion = Double.parseDouble(qr.getString("VALUE"));
 			loadTables();
-			if (version < 1.35) {
-				//adds ability for player shops to behave like server shops
+			if (currentDbVersion == 1.34) {//adds ability for player shops to behave like server shops
 				Table t = hc.getSQLManager().getTable("hyperconomy_shops");
 				Field f = t.generateField("USE_ECONOMY_STOCK", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setDefault("1");
 				t.addFieldToDatabase(f, t.getField("WORLD"));
 				sw.addToQueue("UPDATE hyperconomy_shops SET USE_ECONOMY_STOCK = '0' WHERE TYPE = 'player'");
 				setDBVersion(1.35);
 			}
-			if (version < 1.36) {
+			if (currentDbVersion == 1.35) {//converts to new object data storage format and moves categories to database
 				BukkitConnector bc = (BukkitConnector)hc.getMC();
 				QueryResult result = sr.select("SELECT NAME, TYPE, DATA FROM hyperconomy_objects WHERE ECONOMY = 'default'");
 				while (result.next()) {
@@ -131,9 +131,17 @@ public class DatabaseUpdater {
 		}
 		sw.writeSyncQueue();
 		sw.writeSync(writeState);
+		if (requiredDbVersion != currentDbVersion) {
+			hc.getMC().logSevere("[HyperConomy]Your current database version ("+currentDbVersion+") is less than the required version ("+requiredDbVersion+") for this build.");
+			hc.getMC().logSevere("[HyperConomy]Please read the upgrading page in the HyperConomy wiki for more information.");
+			hc.getMC().logSevere("[HyperConomy]Shutting down...");
+			return false;
+		}
+		return true;
 	}
 	
 	private void setDBVersion(double version) {
+		this.currentDbVersion = version;
 		sw.addToQueue("UPDATE hyperconomy_settings SET VALUE = '"+version+"' WHERE SETTING = 'version'");
 	}
 
@@ -313,7 +321,7 @@ public class DatabaseUpdater {
 		
 
 		sw.addToQueue("DELETE FROM hyperconomy_settings");
-		sw.addToQueue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+hc.getDataManager().getDatabaseUpdater().getVersion()+"', NOW() )");
+		sw.addToQueue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+requiredDbVersion+"', NOW() )");
 		
 		sw.writeSyncQueue();
 		sw.writeSync(writeState);
