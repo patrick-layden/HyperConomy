@@ -129,16 +129,6 @@ public class HyperPlayerManager {
 	public boolean uuidSupport() {
 		return uuidSupport;
 	}
-	/*
-	public boolean playerAccountExists(OfflinePlayer player) {
-		if (player == null) {return false;}
-		if (hc.getMC().useExternalEconomy()) {
-			return hc.getMC().getEconomy().hasAccount(player);
-		} else {
-			return hyperPlayers.containsKey(player.getName());
-		}
-	}
-	*/
 
 	public boolean playerAccountExists(String name) {
 		if (name == null || name == "") {return false;}
@@ -159,6 +149,7 @@ public class HyperPlayerManager {
 		}
 	}
 	
+	//TODO remove this method (only use specific getBank and getHyperPlayer methods, store account names with type prefix such as bank:bank1 or player:player1 when referenced from shop tables)
 	public boolean accountExists(String name) {
 		if (playerAccountExists(name) || hc.getDataManager().getHyperBankManager().hasBank(name)) {
 			return true;
@@ -168,9 +159,10 @@ public class HyperPlayerManager {
 	/**
 	 * 
 	 * @param name of account
-	 * @return the HyperBank or HyperPlayer with the specified name.  This method will not create an account if it does not already exists.  Returns null if the account
+	 * @return the HyperBank or HyperPlayer with the specified name.  This method will not create an account if it already exists.  Returns null if the account
 	 * does not exist.
 	 */
+	//TODO remove this method
 	public HyperAccount getAccount(String name) {
 		if (playerAccountExists(name)) {
 			return getHyperPlayer(name);
@@ -228,16 +220,6 @@ public class HyperPlayerManager {
 			names.add(player);
 		}
 		return names;
-	}
-	
-
-	public String fixpN(String player) {
-		for (String name:hyperPlayers.keySet()) {
-			if (name.equalsIgnoreCase(player)) {
-				return name;
-			}
-		}
-		return player;
 	}
 	
 	public void removeHyperPlayer(HyperPlayer hp) {

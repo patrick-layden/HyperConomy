@@ -55,14 +55,14 @@ public class HyperBankManager {
 
 	public void addHyperBank(HyperBank hb) {
 		if (hb == null) {return;}
-		if (!hyperBanks.contains(hb)) {
+		if (!hyperBanks.containsKey(hb.getName().toLowerCase())) {
 			hyperBanks.put(hb.getName().toLowerCase(), hb);
 		}
 	}
 	
 	public void removeHyperBank(HyperBank hb) {
 		if (hb == null) {return;}
-		if (hyperBanks.contains(hb)) {
+		if (hyperBanks.contains(hb.getName().toLowerCase())) {
 			hyperBanks.remove(hb.getName().toLowerCase());
 		}
 	}
@@ -93,17 +93,7 @@ public class HyperBankManager {
 		}
 		return hbs;
 	}
-	/*
-	public void renameBanksWithThisName(String name) {
-		if (hasBank(name)) {
-			HyperBank hb = getHyperBank(name);
-			int c = 0;
-			while (hasBank(name + c)) {c++;}
-			hb.setName(name + c);
-		}
-	}
-	*/
-	
+
 }
 
 
