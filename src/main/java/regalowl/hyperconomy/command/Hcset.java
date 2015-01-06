@@ -226,6 +226,25 @@ public class Hcset extends BaseCommand implements HyperCommand {
 				} catch (Exception e) {
 					data.addResponse(L.get("HCSET_FLOOR_INVALID"));
 				}
+			} else if (args[0].equalsIgnoreCase("category") || args[0].equalsIgnoreCase("cat")) {
+				try {
+					String name = args[1];
+					TradeObject ho = he.getTradeObject(name);
+					if (ho == null) {
+						data.addResponse(L.get("INVALID_NAME"));
+						return data;
+					}
+					String category = args[2];
+					if (ho.inCategory(category)) {
+						ho.removeCategory(category);
+						data.addResponse(L.get("CATEGORY_REMOVED"));
+					} else {
+						ho.addCategory(category);
+						data.addResponse(L.get("CATEGORY_ADDED"));
+					}
+				} catch (Exception e) {
+					data.addResponse(L.get("HCSET_CATEGORY_INVALID"));
+				}
 			} else if (args[0].equalsIgnoreCase("balance") || args[0].equalsIgnoreCase("b")) {
 				try {
 					String accountName = args[1];

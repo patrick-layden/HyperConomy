@@ -437,6 +437,7 @@ HCSET_STOCK_INVALID: &4Invalid parameters. Use /hcset stock [object or ('all', o
 HCSET_STARTPRICE_INVALID: &4Invalid parameters. Use /hcset startprice [object] [price]
 HCSET_STATICPRICE_INVALID: &4Invalid parameters. Use /hcset staticprice [object] [price]
 HCSET_VALUE_INVALID: &4Invalid parameters. Use /hcset value [object] [value]
+HCSET_CATEGORY_INVALID: &4Invalid parameters. Use /hcset category [object] [category]
 HCSET_MEDIAN_INVALID: &4Invalid parameters. Use /hcset median [object] [median]
 HCSET_FLOOR_INVALID: &4Invalid parameters. Use /hcset floor [object] [floor]
 HCSET_BALANCE_INVALID: &4Invalid parameters. Use /hcset balance [account] [balance]
@@ -518,3 +519,5 @@ MUST_BE_PLAYER: &4You must be a player to call this command.
 DB_COMPACTED: &6The database has been compacted.
 HCPAY_PAYED: &9&o{playerName} paid you &a&o{currencySymbol}{amount}&9&o.
 COMPOSITES_UPDATED: &6Composite items updated.
+CATEGORY_ADDED: &6Category added!
+CATEGORY_REMOVED: &6Category removed!
