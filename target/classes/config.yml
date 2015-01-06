@@ -77,6 +77,8 @@ multi-server:
   enable: false
   remote-server-ip-addresses: 192.168.1.1,3313;192.168.1.1,3314;192.168.1.2,3313;
   port: 3313
-  update-interval: 3000
+  update-interval: 500
   connection-timeout-ms: 2000
   sync-shops: true
+  sync-trade-objects: true
+  sync-accounts: true

@@ -97,8 +97,10 @@ public class UpdateYML {
 		cfg.setDefault("multi-server.enable", false);
 		cfg.setDefault("multi-server.remote-server-ip-addresses", "192.168.1.1,3313;192.168.1.1,3314;192.168.1.2,3313;");
 		cfg.setDefault("multi-server.port", 3313);
-		cfg.setDefault("multi-server.update-interval", 3000);	
+		cfg.setDefault("multi-server.update-interval", 500);	
 		cfg.setDefault("multi-server.connection-timeout-ms", 2000);
 		cfg.setDefault("multi-server.sync-shops", true);
+		cfg.setDefault("multi-server.sync-trade-objects", true);
+		cfg.setDefault("multi-server.sync-accounts", true);
 	}
 }

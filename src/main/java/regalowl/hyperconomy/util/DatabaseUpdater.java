@@ -132,7 +132,7 @@ public class DatabaseUpdater {
 		sw.writeSyncQueue();
 		sw.writeSync(writeState);
 		if (requiredDbVersion != currentDbVersion) {
-			hc.getMC().logSevere("[HyperConomy]Your current database version ("+currentDbVersion+") is less than the required version ("+requiredDbVersion+") for this build.");
+			hc.getMC().logSevere("[HyperConomy]Your current database version ("+currentDbVersion+") is not compatible with this build.");
 			hc.getMC().logSevere("[HyperConomy]Please read the upgrading page in the HyperConomy wiki for more information.");
 			hc.getMC().logSevere("[HyperConomy]Shutting down...");
 			return false;
