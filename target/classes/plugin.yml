@@ -181,6 +181,11 @@ commands:
       permission: hyperconomy.pay
       permission-message: You do not have permission.
       aliases: [hcp]
+   hcgive:
+      description: Gives the specified player the specified amount of the specified type.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
+      aliases: [hcg]
    toggleeconomy:
       description: Switches between an external economy plugin and the internal HyperConomy economy plugin.
       permission: hyperconomy.admin

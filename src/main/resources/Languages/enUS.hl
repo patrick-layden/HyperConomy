@@ -328,7 +328,8 @@ PLAYER_NOT_FOUND: &4Player not found!
 HCBALANCE_INVALID: &4Invalid parameters. Use /hcbalance (account)
 HCTOP_INVALID: &4Invalid parameters. Use /hctop (page)
 HCPAY_INVALID: &4Invalid parameters. Use /hcpay [account] [amount]
-MONEY_PAYED: &9You payed &b%n &a%c%a.
+HCGIVE_INVALID: &4Invalid parameters. Use /hcgive [player] [type] [amount]
+MONEY_PAID: &9You paid &b%n &a%c%a.
 ONLY_AVAILABLE_INTERNAL: &4This command is disabled.  To enable it set HyperConomy as your economy plugin.
 TOGGLEECONOMY_INVALID: &4Invalid parameters.  Use /toggleeconomy
 TOGGLEECONOMY_ENABLED: &6HyperConomy will try to use an external economy plugin via Vault after the next server restart.
@@ -517,7 +518,9 @@ EVALUE_PURCHASE: &b%n &9can be purchased for: &a%c%p
 OBJECT_NOT_FOUND: &4Object not found.
 MUST_BE_PLAYER: &4You must be a player to call this command.
 DB_COMPACTED: &6The database has been compacted.
-HCPAY_PAYED: &9&o{playerName} paid you &a&o{currencySymbol}{amount}&9&o.
+HCPAY_PAID: &9&o{playerName} paid you &a&o{currencySymbol}{amount}&9&o.
 COMPOSITES_UPDATED: &6Composite items updated.
 CATEGORY_ADDED: &6Category added!
 CATEGORY_REMOVED: &6Category removed!
+MONEY_GIVEN: &9&o{playerName} was given &a&o{currencySymbol}{amount}&9&o.
+MONEY_RECEIVED: &9&oYou received &a&o{currencySymbol}{amount}&9&o.

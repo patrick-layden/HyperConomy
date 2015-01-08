@@ -30,6 +30,7 @@ import regalowl.hyperconomy.command.Hcbank;
 import regalowl.hyperconomy.command.Hcdata;
 import regalowl.hyperconomy.command.Hcdelete;
 import regalowl.hyperconomy.command.Hceconomy;
+import regalowl.hyperconomy.command.Hcgive;
 import regalowl.hyperconomy.command.Hcpay;
 import regalowl.hyperconomy.command.Hcset;
 import regalowl.hyperconomy.command.Hctest;
@@ -233,6 +234,7 @@ public class HyperConomy {
 		mc.registerCommand("hcdelete", new Hcdelete(this));
 		mc.registerCommand("hceconomy", new Hceconomy(this));
 		mc.registerCommand("hcpay", new Hcpay(this));
+		mc.registerCommand("hcgive", new Hcgive(this));
 		mc.registerCommand("hcset", new Hcset(this));
 		mc.registerCommand("hctest", new Hctest(this));
 		mc.registerCommand("hctop", new Hctop(this));

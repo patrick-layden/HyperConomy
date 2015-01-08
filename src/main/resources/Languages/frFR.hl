@@ -228,7 +228,7 @@ MAKEDISPLAY_INVALID: &4Paramètres invalides. Utiliser /makedisplay [nom]
 MEDIAN_SET: &6Stock moyen de %n réglé !
 MESSAGE1_SET: &6Message 1 configuré !
 MESSAGE2_SET: &6Message 2 configuré !
-MONEY_PAYED: &9Vous avez payé &a%c%a à &b%n.
+MONEY_PAID: &9Vous avez payé &a%c%a à &b%n.
 MUST_BE_IN_SHOP: &4Vous devez être dans un magasin pour acheter ou vendre !
 MUST_USE_EXTERNAL_ECONOMY: &4Vous devez utiliser un plugin d'économie externe pour cette commande.
 NEW_ECONOMY_CREATED: &6Nouvelle économie créée !

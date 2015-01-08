@@ -18,7 +18,10 @@ public class Hcpay extends BaseCommand implements HyperCommand{
 		try {
 			if (args.length == 2) {
 				String recipient = args[0];
-				Double amount = Double.parseDouble(args[1]);
+				Double amount = 0.0;
+				try {
+					amount = Double.parseDouble(args[1]);
+				} catch (Exception e) {}
 				if (amount <= 0) {
 					data.addResponse(L.get("CANNOT_PAY_NEGATIVE"));
 					return data;
@@ -29,13 +32,13 @@ public class Hcpay extends BaseCommand implements HyperCommand{
 						HyperAccount rAccount = dm.getAccount(recipient);
 						if (rAccount instanceof HyperPlayer) {
 							HyperPlayer rPlayer = (HyperPlayer)rAccount;
-							MessageBuilder mb = new MessageBuilder(hc, "HCPAY_PAYED");
+							MessageBuilder mb = new MessageBuilder(hc, "HCPAY_PAID");
 							mb.setAmount(amount);
 							mb.setPlayerName(hp.getName());
 							if (rPlayer.isOnline()) rPlayer.sendMessage(mb.build());
 						}
 						dm.getAccount(recipient).deposit(amount);
-						data.addResponse(L.f(L.get("MONEY_PAYED"), amount, recipient));
+						data.addResponse(L.f(L.get("MONEY_PAID"), amount, recipient));
 					} else {
 						data.addResponse(L.get("INSUFFICIENT_FUNDS"));
 					}
