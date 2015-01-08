@@ -90,7 +90,7 @@ public class DatabaseUpdater {
 					String data = result.getString("DATA");
 					if (type.equalsIgnoreCase("ITEM")) {
 						SerializableItemStack sis = new SerializableItemStack(data);
-						HItemStack n = bc.getBukkitCommon().getSerializableItemStack(sis.getItem());
+						HItemStack n = bc.getBukkitCommon().getHItemStack(sis.getItem());
 						sw.addToQueue("UPDATE hyperconomy_objects SET DATA = '"+n.serialize()+"' WHERE NAME = '"+name+"'");
 					} else if (type.equalsIgnoreCase("ENCHANTMENT")) {
 						SerializableEnchantment sis = new SerializableEnchantment(data);

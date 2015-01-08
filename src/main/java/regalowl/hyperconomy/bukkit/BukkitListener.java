@@ -205,7 +205,7 @@ public class BukkitListener implements Listener {
 		ChestShop cs = new ChestShop(hc, bc.getBukkitCommon().getLocation(c.getBlock().getLocation()));
 		HyperPlayer clicker = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
 		int slot = icevent.getRawSlot();
-		HItemStack clickedStack = bc.getBukkitCommon().getSerializableItemStack(icevent.getCurrentItem());
+		HItemStack clickedStack = bc.getBukkitCommon().getHItemStack(icevent.getCurrentItem());
 		ChestShopClickEvent event = new ChestShopClickEvent(clicker, cs, slot, clickedStack);
 		if (icevent.isShiftClick()) {
 			event.setShiftClick();

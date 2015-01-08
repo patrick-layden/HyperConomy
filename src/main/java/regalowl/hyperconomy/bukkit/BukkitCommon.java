@@ -80,24 +80,29 @@ public class BukkitCommon {
 	
 	
 	protected Location getLocation(HLocation l) {
+		if (l == null) return null;
 		return new Location(Bukkit.getWorld(l.getWorld()), l.getX(), l.getY(), l.getZ());
 	}
 
 	protected HLocation getLocation(Location l) {
+		if (l == null) return null;
 		return new HLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
 	}
 	
 	protected Block getBlock(HLocation location) {
+		if (location == null) return null;
 		Location l = getLocation(location);
 		return l.getBlock();
 	}
 	
 	protected HBlock getBlock(Block b) {
+		if (b == null) return null;
 		HLocation l = getLocation(b.getLocation());
 		return new HBlock(hc, l);
 	}
 	
 	protected Sign getSign(HLocation l) {
+		if (l == null) return null;
 		BlockState bs = getBlock(l).getState();
 		if (bs instanceof Sign) {
 			return (Sign)bs;
@@ -244,13 +249,14 @@ public class BukkitCommon {
 	
 	
 	protected HInventory getInventory(HyperPlayer hp) {
+		if (hp == null) return null;
 		ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 		Player p = Bukkit.getPlayer(hp.getName());
 		Inventory i = p.getInventory();
 		int size = i.getSize();
 		int heldSlot = p.getInventory().getHeldItemSlot();
 		for (int c = 0; c < size; c++) {
-	        items.add(getSerializableItemStack(i.getItem(c)));
+	        items.add(getHItemStack(i.getItem(c)));
 		}
 		HInventory si = new HInventory(hc, items, HInventoryType.PLAYER);
 		si.setOwner(hp.getName());
@@ -259,6 +265,7 @@ public class BukkitCommon {
 	}
 
 	protected HInventory getInventory(Inventory i) {
+		if (i == null) return null;
 		ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 		HInventoryType type = null;
 		if (i.getType() == InventoryType.PLAYER) {
@@ -268,7 +275,7 @@ public class BukkitCommon {
 		}
 		int size = i.getSize();
 		for (int c = 0; c < size; c++) {
-	        items.add(getSerializableItemStack(i.getItem(c)));
+	        items.add(getHItemStack(i.getItem(c)));
 		}
 		HInventory si = new HInventory(hc, items, type);
 		if (i.getType() == InventoryType.PLAYER) {
@@ -288,6 +295,7 @@ public class BukkitCommon {
 	
 
 	protected HInventory getChestInventory(HLocation l) {
+		if (l == null) return null;
 		Location loc = getLocation(l);
 		if (loc.getBlock().getState() instanceof Chest) {
 			Chest chest = (Chest)loc.getBlock().getState();
@@ -295,7 +303,7 @@ public class BukkitCommon {
 			ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 			int size = i.getSize();
 			for (int c = 0; c < size; c++) {
-		        items.add(getSerializableItemStack(i.getItem(c)));
+		        items.add(getHItemStack(i.getItem(c)));
 			}
 			HInventory si = new HInventory(hc, items, HInventoryType.CHEST);
 			si.setLocation(l);
@@ -305,6 +313,7 @@ public class BukkitCommon {
 	}
 
 	protected void setInventory(HInventory inventory) {
+		if (inventory == null) return;
 		ArrayList<HItemStack> newInventory = inventory.getItems();
 		ArrayList<HItemStack> currentInventory = null;
 		Inventory bukkitInv = null;
@@ -336,7 +345,7 @@ public class BukkitCommon {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public HItemStack getSerializableItemStack(ItemStack s) {
+	public HItemStack getHItemStack(ItemStack s) {
 		if (s == null) return new HItemStack(hc);
 		boolean isBlank = (s.getType() == Material.AIR) ? true:false;
         String material = s.getType().toString();
@@ -594,7 +603,9 @@ public class BukkitCommon {
 	
 	
 	protected Item getItem(HItem i) {
+		if (i == null) return null;
 		Location l = getLocation(i.getLocation());
+		if (l == null) return null;
 		for (Entity e:l.getWorld().getEntities()) {
 			if (e instanceof Item) {
 				Item item = (Item)e;
@@ -607,12 +618,14 @@ public class BukkitCommon {
 	}
 	
 	protected HItem getItem(Item i) {
+		if (i == null) return null;
 		HLocation l = getLocation(i.getLocation());
-		HItemStack stack = getSerializableItemStack(i.getItemStack());
+		HItemStack stack = getHItemStack(i.getItemStack());
 		return new HItem(hc, l, i.getEntityId(), stack);
 	}
 	
 	protected boolean chunkContainsLocation(HLocation l, Chunk c) {
+		if (l == null || c == null) return false;
 		Location loc = getLocation(l);
 		if (loc.getChunk().equals(c)) return true;
 		return false;

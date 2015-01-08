@@ -376,7 +376,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public HItemStack getItem(HyperPlayer hp, int slot) {
 		Player p = Bukkit.getPlayer(hp.getName());
-		return common.getSerializableItemStack(p.getInventory().getItem(slot));
+		return common.getHItemStack(p.getInventory().getItem(slot));
 	}
 
 
@@ -699,6 +699,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public void clearNearbyNonDisplayItems(HItem item, double radius) {
 		Item i = common.getItem(item);
+		if (i == null) return;
 		ItemStack tStack = new ItemStack(Material.ROTTEN_FLESH);
 		Location l = common.getLocation(item.getLocation());
 		Item tempItem = l.getWorld().dropItem(l, tStack);
@@ -712,7 +713,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 			}
 			if (nearbyItem.equals(tempItem)) continue;
 			if (nearbyItem.equals(i)) continue;
-			if (!common.getSerializableItemStack(tStack).equals(common.getSerializableItemStack(nearbyItem.getItemStack()))) continue;
+			if (!common.getHItemStack(tStack).equals(common.getHItemStack(nearbyItem.getItemStack()))) continue;
 			if (nearbyItem.getItemStack().getType() != tempItem.getItemStack().getType()) continue;
 			entity.remove();
 		}
