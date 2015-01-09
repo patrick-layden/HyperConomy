@@ -256,7 +256,7 @@ public class BukkitCommon {
 		int size = i.getSize();
 		int heldSlot = p.getInventory().getHeldItemSlot();
 		for (int c = 0; c < size; c++) {
-	        items.add(getHItemStack(i.getItem(c)));
+	        items.add(getSerializableItemStack(i.getItem(c)));
 		}
 		HInventory si = new HInventory(hc, items, HInventoryType.PLAYER);
 		si.setOwner(hp.getName());
@@ -275,7 +275,7 @@ public class BukkitCommon {
 		}
 		int size = i.getSize();
 		for (int c = 0; c < size; c++) {
-	        items.add(getHItemStack(i.getItem(c)));
+	        items.add(getSerializableItemStack(i.getItem(c)));
 		}
 		HInventory si = new HInventory(hc, items, type);
 		if (i.getType() == InventoryType.PLAYER) {
@@ -303,7 +303,7 @@ public class BukkitCommon {
 			ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 			int size = i.getSize();
 			for (int c = 0; c < size; c++) {
-		        items.add(getHItemStack(i.getItem(c)));
+		        items.add(getSerializableItemStack(i.getItem(c)));
 			}
 			HInventory si = new HInventory(hc, items, HInventoryType.CHEST);
 			si.setLocation(l);
@@ -345,7 +345,7 @@ public class BukkitCommon {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public HItemStack getHItemStack(ItemStack s) {
+	public HItemStack getSerializableItemStack(ItemStack s) {
 		if (s == null) return new HItemStack(hc);
 		boolean isBlank = (s.getType() == Material.AIR) ? true:false;
         String material = s.getType().toString();
@@ -620,7 +620,7 @@ public class BukkitCommon {
 	protected HItem getItem(Item i) {
 		if (i == null) return null;
 		HLocation l = getLocation(i.getLocation());
-		HItemStack stack = getHItemStack(i.getItemStack());
+		HItemStack stack = getSerializableItemStack(i.getItemStack());
 		return new HItem(hc, l, i.getEntityId(), stack);
 	}
 	
