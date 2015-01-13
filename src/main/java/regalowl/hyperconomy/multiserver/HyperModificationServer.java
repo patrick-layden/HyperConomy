@@ -110,7 +110,7 @@ public class HyperModificationServer {
 						serverSocket.close();
 					} catch (Exception e) {
 						try {
-							hc.getDebugMode().debugWriteError(e);
+							//hc.getDebugMode().debugWriteError(e);
 							if (sClientSocket != null) sClientSocket.close();
 							if (serverSocket != null) serverSocket.close();
 						} catch (IOException e1) {}
@@ -220,8 +220,8 @@ public class HyperModificationServer {
 					}
 					clientSocket.close();
 				} catch (Exception e) {
-					hc.getDebugMode().debugWriteMessage("The error below occurred when connecting to ip: " + ra.ip + " and port: " + ra.port);
-					hc.getDebugMode().debugWriteError(e);
+					//hc.getDebugMode().debugWriteMessage("The error below occurred when connecting to ip: " + ra.ip + " and port: " + ra.port);
+					//hc.getDebugMode().debugWriteError(e);
 					continue;
 				}
 			}
