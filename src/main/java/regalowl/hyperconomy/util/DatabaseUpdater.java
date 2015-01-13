@@ -322,7 +322,7 @@ public class DatabaseUpdater {
 
 		sw.addToQueue("DELETE FROM hyperconomy_settings");
 		sw.addToQueue("INSERT INTO hyperconomy_settings (SETTING, VALUE, TIME) VALUES ('version', '"+requiredDbVersion+"', NOW() )");
-		
+		currentDbVersion = requiredDbVersion;
 		sw.writeSyncQueue();
 		sw.writeSync(writeState);
 	}
