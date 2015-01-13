@@ -8,7 +8,7 @@ import regalowl.hyperconomy.util.MessageBuilder;
 public class Hcgive extends BaseCommand implements HyperCommand{
 	
 	public Hcgive(HyperConomy hc) {
-		super(hc, true);
+		super(hc, false);
 	}
 
 	@Override
