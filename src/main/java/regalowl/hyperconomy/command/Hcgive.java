@@ -43,7 +43,7 @@ public class Hcgive extends BaseCommand implements HyperCommand{
 				mb = new MessageBuilder(hc, "MONEY_GIVEN");
 				mb.setAmount(amount);
 				mb.setPlayerName(recipient.getName());
-				hp.sendMessage(mb.build());
+				data.addResponse(mb.build());
 			} else {
 				data.addResponse(L.get("HCGIVE_INVALID"));
 			}
