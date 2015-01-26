@@ -439,7 +439,9 @@ public class BukkitCommon {
         		itemMeta = new HMapMeta(displayName, lore, enchantments, sItemMeta.isScaling());
         	} else if (im instanceof BannerMeta) {
         		BannerMeta sItemMeta = (BannerMeta)im;
-        		String baseColor = sItemMeta.getBaseColor().toString();
+        		DyeColor dyeColor = sItemMeta.getBaseColor();
+        		String baseColor = "WHITE";
+        		if (dyeColor != null) baseColor = sItemMeta.getBaseColor().toString();
         		ArrayList<HPattern> patterns = new ArrayList<HPattern>();
         		for (Pattern p:sItemMeta.getPatterns()) {
         			patterns.add(new HPattern(p.getColor().toString(), p.getPattern().toString()));
