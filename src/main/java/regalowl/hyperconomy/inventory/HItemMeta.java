@@ -59,6 +59,7 @@ public class HItemMeta {
 	
 	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
 		ArrayList<String> info = new ArrayList<String>();
+		info.add(color1 + "Meta Type: " + color2 + getType().toString());
 		info.add(color1 + "Display Name: " + color2 + displayName);
 		String loreString = "";
 		if (lore != null && lore.size() > 0) {

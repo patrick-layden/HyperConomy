@@ -3,6 +3,7 @@ package regalowl.hyperconomy.inventory;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.simpledatalib.CommonFunctions;
  
 
@@ -35,6 +36,15 @@ public class HBookMeta extends HItemMeta {
 		data.put("pages", CommonFunctions.implode(pages));
 		data.put("title", title);
 		return CommonFunctions.implodeMap(data);
+	}
+	
+	@Override
+	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
+		ArrayList<String> info = super.displayInfo(p, color1, color2);
+		info.add(color1 + "Author: " + color2 + author);
+		info.add(color1 + "Title: " + color2 + title);
+		info.add(color1 + "Page Count: " + color2 + pages.size());
+		return info;
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ package regalowl.hyperconomy.inventory;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.simpledatalib.CommonFunctions;
  
 
@@ -33,6 +34,21 @@ public class HPotionMeta extends HItemMeta {
 		}
 		data.put("potionEffects", CommonFunctions.implode(sEffects));
 		return CommonFunctions.implodeMap(data);
+	}
+	
+	@Override
+	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
+		ArrayList<String> info = super.displayInfo(p, color1, color2);
+		String potionEffectString = "";
+		if (potionEffects != null && potionEffects.size() > 0) {
+			for(HPotionEffect pe:potionEffects) {
+				potionEffectString += "Type:"+pe.getType()+","+"Amplifier:"+pe.getAmplifier()+
+						","+"Duration:"+pe.getDuration()+","+"Ambient:"+pe.isAmbient()+";";
+			}
+			potionEffectString = potionEffectString.substring(0, potionEffectString.length() - 1);
+		}
+		info.add(color1 + "Potion Effects: " + color2 + potionEffectString);
+		return info;
 	}
 	
 	@Override

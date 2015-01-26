@@ -427,7 +427,7 @@ public class BukkitCommon {
         		ArrayList<HPotionEffect> potionEffects = new ArrayList<HPotionEffect>();
         		if (sItemMeta.getCustomEffects() != null) {
 	        		for (PotionEffect pe:sItemMeta.getCustomEffects()) {
-	        			potionEffects.add(new HPotionEffect(pe.getType().toString(), pe.getAmplifier(), pe.getDuration(), pe.isAmbient()));
+	        			potionEffects.add(new HPotionEffect(pe.getType().getName(), pe.getAmplifier(), pe.getDuration(), pe.isAmbient()));
 	        		}
         		}
         		itemMeta = new HPotionMeta(displayName, lore, enchantments, potionEffects);

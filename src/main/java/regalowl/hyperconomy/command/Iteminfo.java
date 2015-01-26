@@ -25,6 +25,10 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 				stack = hp.getItemInHand();
 				data.addResponse(stack.serialize());
 				return data;
+			} else if (args[0].equalsIgnoreCase("pdr")) {
+					HItemStack newStack = new HItemStack(hp.getItemInHand().serialize());
+					data.addResponses(newStack.displayInfo(hp, "&9", "&b"));
+					return data;
 			} else if (args[0].equalsIgnoreCase("comp")) {
 				if (args.length == 2) {
 					TradeObject to = hc.getDataManager().getDefaultEconomy().getTradeObject(args[1]);

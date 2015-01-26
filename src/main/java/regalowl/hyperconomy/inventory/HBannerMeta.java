@@ -3,6 +3,7 @@ package regalowl.hyperconomy.inventory;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.simpledatalib.CommonFunctions;
 
 public class HBannerMeta extends HItemMeta {
@@ -36,6 +37,21 @@ public class HBannerMeta extends HItemMeta {
 		}
 		data.put("patterns", CommonFunctions.implode(stringPatterns));
 		return CommonFunctions.implodeMap(data);
+	}
+	
+	@Override
+	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
+		ArrayList<String> info = super.displayInfo(p, color1, color2);
+		info.add(color1 + "Base Color: " + color2 + displayName);
+		String patternString = "";
+		if (patterns != null && patterns.size() > 0) {
+			for(HPattern pat:patterns) {
+				patternString += pat.getDyeColor() + "," + pat.getPatternType() + ";";
+			}
+			patternString = patternString.substring(0, patternString.length() - 1);
+		}
+		info.add(color1 + "Patterns: " + color2 + patternString);
+		return info;
 	}
 	
 	@Override
