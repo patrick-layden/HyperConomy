@@ -45,6 +45,7 @@ public class HyperEconomy implements Serializable {
 	private boolean useComposites;
 	private String economyName;
 	private String xpName = null;
+	private String lastFailedToLoadComposite = "";
 	
 
 	public HyperEconomy(HyperConomy hc, String economy) {
@@ -141,6 +142,7 @@ public class HyperEconomy implements Serializable {
 			if (counter > 100) {
 				if (hc != null) {
 					hc.getSimpleDataLib().getErrorWriter().writeError("Infinite loop when loading composites.yml.  You likely have an error in your composites.yml file.  Your items will not work properly until this is fixed.");
+					hc.getSimpleDataLib().getErrorWriter().writeError("The last missing object is: ["+lastFailedToLoadComposite+"]  Make sure this object is available or remove it from the composites table.");
 				}
 				return;
 			}
@@ -168,6 +170,7 @@ public class HyperEconomy implements Serializable {
 		    String oname = entry.getKey();
 		    TradeObject ho = getTradeObject(oname);
 		    if (ho == null) {
+		    	lastFailedToLoadComposite = oname;
 		    	//System.out.println("Not loaded: " + oname);
 		    	return false;
 		    }
