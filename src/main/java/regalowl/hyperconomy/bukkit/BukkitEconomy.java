@@ -18,18 +18,21 @@ public class BukkitEconomy implements HEconomyProvider {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void createAccount(String name) {
+		if (name == null || name.equals("")) return;
 		e.createPlayerAccount(name);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean hasAccount(String name) {
+		if (name == null || name.equals("")) return false;
 		return e.hasAccount(name);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public double getAccountBalance(String accountName) {
+		if (accountName == null || accountName.equals("")) return 0;
 		return e.getBalance(accountName);
 	}
 
@@ -42,6 +45,7 @@ public class BukkitEconomy implements HEconomyProvider {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void setAccountBalance(String accountName, double balance) {
+		if (accountName == null || accountName.equals("")) return;
 		e.withdrawPlayer(accountName, e.getBalance(accountName));
 		e.depositPlayer(accountName, balance);
 	}
@@ -49,12 +53,14 @@ public class BukkitEconomy implements HEconomyProvider {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void withdrawAccount(String accountName, double amount) {
+		if (accountName == null || accountName.equals("")) return;
 		e.withdrawPlayer(accountName, amount);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void depositAccount(String accountName, double amount) {
+		if (accountName == null || accountName.equals("")) return;
 		e.depositPlayer(accountName, amount);
 	}
 
@@ -66,17 +72,21 @@ public class BukkitEconomy implements HEconomyProvider {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void createBank(String bankName, String ownerName) {
+		if (bankName == null || bankName.equals("")) return;
+		if (ownerName == null || ownerName.equals("")) return;
 		e.createBank(bankName, ownerName);
 	}
 
 	@Override
 	public boolean hasBank(String bankName) {
+		if (bankName == null || bankName.equals("")) return false;
 		EconomyResponse response = e.bankBalance(bankName);
 		return (response.type.equals(ResponseType.SUCCESS)) ? true:false;
 	}
 
 	@Override
 	public double getBankBalance(String bankName) {
+		if (bankName == null || bankName.equals("")) return 0;
 		EconomyResponse response = e.bankBalance(bankName);
 		if (response.type.equals(ResponseType.SUCCESS)) {
 			return response.balance;
@@ -87,6 +97,7 @@ public class BukkitEconomy implements HEconomyProvider {
 
 	@Override
 	public boolean bankHasBalance(String bankName, double amount) {
+		if (bankName == null || bankName.equals("")) return false;
 		return (getBankBalance(bankName) >= amount) ? true:false;
 	}
 
@@ -111,11 +122,14 @@ public class BukkitEconomy implements HEconomyProvider {
 
 	@Override
 	public void deleteBank(String name) {
+		if (name == null || name.equals("")) return;
 		e.deleteBank(name);
 	}
 
 	@Override
 	public boolean isBankOwner(String bankName, String playerName) {
+		if (bankName == null || bankName.equals("")) return false;
+		if (playerName == null || playerName.equals("")) return false;
 		@SuppressWarnings("deprecation")
 		EconomyResponse response = e.isBankOwner(bankName, playerName);
 		return (ResponseType.SUCCESS == response.type) ? true:false;
@@ -123,6 +137,8 @@ public class BukkitEconomy implements HEconomyProvider {
 
 	@Override
 	public boolean isBankMember(String bankName, String playerName) {
+		if (bankName == null || bankName.equals("")) return false;
+		if (playerName == null || playerName.equals("")) return false;
 		@SuppressWarnings("deprecation")
 		EconomyResponse response = e.isBankMember(bankName, playerName);
 		return (ResponseType.SUCCESS == response.type) ? true:false;
