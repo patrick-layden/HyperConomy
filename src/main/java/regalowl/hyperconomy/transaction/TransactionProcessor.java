@@ -283,6 +283,10 @@ public class TransactionProcessor {
 				response.addFailed(L.get("ITEM_CANT_ACCEPT_ENCHANTMENT"), tradeObject);
 				return;
 			}
+			if (heldItem.getAmount() > 1) {
+				response.addFailed(L.get("ENCHANTMENT_ONLY_SINGLE_ITEM"), tradeObject);
+				return;
+			}
 			if (!hp.hasBalance(price)) {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;

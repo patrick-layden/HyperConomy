@@ -242,6 +242,7 @@ public class HyperPlayerManager {
 	 
 
 	public HyperPlayer addPlayer(String player) {
+		if (player == null || player.equalsIgnoreCase("")) return null;
 		if (!playersLoaded) {
 			hc.getDebugMode().ayncDebugConsoleMessage("addPlayer() called before players loaded for: " + player);
 			return null;
