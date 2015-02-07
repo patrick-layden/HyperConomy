@@ -1,5 +1,7 @@
 package regalowl.hyperconomy.command;
 
+import java.io.File;
+
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -21,15 +23,21 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 			stack = hp.getItemInHand();
 			ho = he.getTradeObject(stack);
 		} else {
-			if (args[0].equalsIgnoreCase("pd")) {
+			if (args[0].equalsIgnoreCase("pd")) {//prints HC serialized version of ItemStack in hand
 				stack = hp.getItemInHand();
 				data.addResponse(stack.serialize());
 				return data;
-			} else if (args[0].equalsIgnoreCase("pdr")) {
+			} else if (args[0].equalsIgnoreCase("pdf")) {//prints HC serialized version of ItemStack in hand to file named serialized_item.txt
+					stack = hp.getItemInHand();
+					String filePath = hc.getSimpleDataLib().getStoragePath() + File.separator + "serialized_item.txt";
+					hc.getSimpleDataLib().getFileTools().writeStringToFile(stack.serialize(), filePath);
+					data.addResponse("Item saved to file.");
+					return data;
+			} else if (args[0].equalsIgnoreCase("pdr")) {//displays info
 					HItemStack newStack = new HItemStack(hp.getItemInHand().serialize());
 					data.addResponses(newStack.displayInfo(hp, "&9", "&b"));
 					return data;
-			} else if (args[0].equalsIgnoreCase("comp")) {
+			} else if (args[0].equalsIgnoreCase("comp")) {//compares specified HyperObject ItemStack with held item and displays data
 				if (args.length == 2) {
 					TradeObject to = hc.getDataManager().getDefaultEconomy().getTradeObject(args[1]);
 					stack = hp.getItemInHand();

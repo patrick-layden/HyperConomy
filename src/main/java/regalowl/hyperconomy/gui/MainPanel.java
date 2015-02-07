@@ -355,7 +355,7 @@ public class MainPanel {
 		economyList = new QuickListModel<String>();
 		economySelectList = new JList<String>(economyList);
 		economySelectList.setBounds(9, 12, 184, 157);
-		frmEconomyEditor.getContentPane().add(economySelectList);
+		//frmEconomyEditor.getContentPane().add(economySelectList);
 		economySelectList.setBackground(new Color(248, 248, 255));
 		economySelectList.setToolTipText("Select an economy.");
 		scrollPane.setViewportView(economySelectList);
