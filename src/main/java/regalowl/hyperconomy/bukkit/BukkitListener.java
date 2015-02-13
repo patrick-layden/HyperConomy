@@ -106,14 +106,18 @@ public class BukkitListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
+		if (hc.getHyperLock().loadLock()) return;
+		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getUniqueId());
+		if (hp == null) hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
 		hc.getHyperEventHandler().fireEvent(new HPlayerJoinEvent(hp));
 	}
 	
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
+		if (hc.getHyperLock().loadLock()) return;
+		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getUniqueId());
+		if (hp == null) hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
 		hc.getHyperEventHandler().fireEvent(new HPlayerQuitEvent(hp));
 	}
 	

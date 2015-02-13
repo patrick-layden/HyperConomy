@@ -143,6 +143,10 @@ public class DefaultConnector implements MineCraftConnector {
 	public ArrayList<HyperPlayer> getOnlinePlayers() {
 		return new ArrayList<HyperPlayer>();
 	}
+	@Override
+	public ArrayList<String> getOnlinePlayerNames() {
+		return new ArrayList<String>();
+	}
 
 	@Override
 	public boolean worldExists(String world) {
@@ -348,5 +352,8 @@ public class DefaultConnector implements MineCraftConnector {
 	public FrameShopHandler getFrameShopHandler() {
 		return null;
 	}
+
+
+
 
 }

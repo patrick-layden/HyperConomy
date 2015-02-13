@@ -79,6 +79,7 @@ public interface MineCraftConnector {
 	
 	
 	public ArrayList<HyperPlayer> getOnlinePlayers();
+	public ArrayList<String> getOnlinePlayerNames();
 	public boolean worldExists(String world);
 	
 	

@@ -451,14 +451,24 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return onlinePlayers;
 	}
 
+	@Override
+	public ArrayList<String> getOnlinePlayerNames() {
+		ArrayList<String> onlinePlayers = new ArrayList<String>();
+		for (World world : Bukkit.getWorlds()) {
+			for (Player p:world.getPlayers()) {
+				onlinePlayers.add(p.getName());
+			}
+		}
+		return onlinePlayers;
+	}
 
 
 	@Override
 	public HyperPlayer getPlayer(UUID uuid) {
-		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
 		if (!playerExists(uuid)) return null;
-		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(op.getName());
-		hp.setUUID(uuid.toString());
+		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(uuid);
+		if (hp == null) hp = hc.getHyperPlayerManager().getHyperPlayer(op.getName());
 		return hp;
 	}
 
@@ -774,23 +784,26 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 	@Override
 	public void checkForNameChange(HyperPlayer hp) {
-		if (hp.getUUID() == null || hp.getUUIDString() == "") {return;}
+		if (hp.getUUID() == null || hp.getUUIDString() == "") return;
 		Player p = null;
 		try {
 			p = Bukkit.getPlayer(hp.getUUID());
 		} catch (IllegalArgumentException e) {
 			return;
 		}
-		if (p == null) {return;}
-		if (p.getName().equals(hp.getName())) {return;}
+		if (p == null) return;
+		if (p.getName().equals(hp.getName())) return;
+		hp.setName(p.getName());
+		/*
 		if (hc.getMC().useExternalEconomy()) {
 			double oldBalance = hp.getBalance();
 			hp.setBalance(0.0);
 			hp.setName(p.getName());
-			hp.setBalance(oldBalance);
+			if (oldBalance != 0.0) hp.setBalance(oldBalance);
 		} else {
 			hp.setName(p.getName());
 		}
+		*/
 	}
 
 

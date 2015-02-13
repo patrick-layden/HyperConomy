@@ -42,9 +42,7 @@ public class HyperPlayer implements HyperAccount {
 		balance = hc.getConf().getDouble("economy-plugin.starting-player-account-balance");
 		economy = "default";
 		if (hc.getMC().isOnline(this)) {
-			if (hc.getHyperPlayerManager().uuidSupport()) {
-				uuid = hc.getMC().getUUID(this).toString();
-			}
+			if (hc.getHyperPlayerManager().uuidSupport()) uuid = hc.getMC().getUUID(this).toString();
 			this.location = hc.getMC().getLocation(this);
 			HashMap<String,String> values = new HashMap<String,String>();
 			values.put("NAME", name);
@@ -72,8 +70,7 @@ public class HyperPlayer implements HyperAccount {
 			values.put("SALT", "");
 			sw.performInsert("hyperconomy_players", values);
 		}
-		checkUUID();
-		//checkExternalAccount();
+		validate();
 	}
 	
 	
@@ -86,38 +83,45 @@ public class HyperPlayer implements HyperAccount {
 		this.location = location;
 		this.hash = hash;
 		this.salt = salt;
+		/*
 		hc.getMC().runTask(new Runnable() {
 			public void run() {
-				checkUUID();
-				//checkExternalAccount();
-				//checkForNameChange();
+				validate();
 			}
 		});
+		*/
 	}
+	
+	
 	
 	public void setHyperConomy(HyperConomy hc) {
 		this.hc = hc;
 	}
 
 	
+	public void validate() {
+		checkUUID();
+		checkExternalAccount();
+		checkForNameChange();
+	}
+	
 	private void checkExternalAccount() {
-		if (!hc.getMC().useExternalEconomy()) {return;}
-		if (name == null) {return;}
+		if (!hc.getMC().useExternalEconomy()) return;
+		if (name == null) return;
 		if (!hc.getMC().getEconomyProvider().hasAccount(name)) {
 			hc.getMC().getEconomyProvider().createAccount(name);
 			hc.getMC().getEconomyProvider().depositAccount(name, balance);
 		}
-		checkForNameChange();
 	}
 	
-	public void checkUUID() {
+	private void checkUUID() {
 		this.validUUID = false;
-		if (!hc.getHyperPlayerManager().uuidSupport()) {return;}
-		if (name == null) {return;}
+		if (!hc.getHyperPlayerManager().uuidSupport()) return;
+		if (name == null) return;
 		if (uuid == null || uuid == "") {
-			if (!hc.getMC().isOnline(this)) {return;}
+			if (!hc.getMC().isOnline(this)) return;
 			setUUID(hc.getMC().getUUID(this).toString());
-			if (uuid == null || uuid == "") {return;}
+			if (uuid == null || uuid == "") return;
 		}
 		this.validUUID = true;
 	}
@@ -219,12 +223,14 @@ public class HyperPlayer implements HyperAccount {
 		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	public void setUUID(String uuid) {
+		hc.getHyperPlayerManager().removeHyperPlayer(this);
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", this.name);
 		values.put("UUID", uuid);
 		hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 		this.uuid = uuid;
+		hc.getHyperPlayerManager().addHyperPlayer(this);
 		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	
