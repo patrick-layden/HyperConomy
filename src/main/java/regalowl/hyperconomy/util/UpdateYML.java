@@ -9,7 +9,7 @@ public class UpdateYML {
 	
 	
 	public UpdateYML(HyperConomy hc) {
-		FileConfiguration cfg = hc.getYamlHandler().gFC("config");
+		FileConfiguration cfg = hc.getConf();
 
 
 		cfg.setDefault("shop.default-server-shop-account", cfg.getString("config.global-shop-account"));
@@ -102,5 +102,12 @@ public class UpdateYML {
 		cfg.setDefault("multi-server.sync-shops", true);
 		cfg.setDefault("multi-server.sync-trade-objects", true);
 		cfg.setDefault("multi-server.sync-accounts", true);
+		
+		
+		cfg.setDefault("updater.enabled", true);
+		cfg.setDefault("updater.notify-in-game", true);
+		cfg.setDefault("updater.notify-for.dev-builds", true);
+		cfg.setDefault("updater.notify-for.beta-builds", true);
+		cfg.setDefault("updater.notify-for.recommended-builds", true);
 	}
 }

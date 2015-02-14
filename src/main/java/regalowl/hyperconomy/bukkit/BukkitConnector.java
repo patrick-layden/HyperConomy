@@ -826,6 +826,11 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return new BukkitFrameShopHandler(this);
 	}
 
+	@Override
+	public String getVersion() {
+		return this.getDescription().getVersion();
+	}
+
 
 
 

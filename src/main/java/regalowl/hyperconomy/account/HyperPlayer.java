@@ -36,6 +36,7 @@ public class HyperPlayer implements HyperAccount {
 	
 	public HyperPlayer(HyperConomy hc, String player) {
 		this.hc = hc;
+		if (player == null) return;
 		name = player;
 		name = hc.getMC().getName(this);
 		SQLWrite sw = hc.getSQLWrite();
@@ -83,13 +84,6 @@ public class HyperPlayer implements HyperAccount {
 		this.location = location;
 		this.hash = hash;
 		this.salt = salt;
-		/*
-		hc.getMC().runTask(new Runnable() {
-			public void run() {
-				validate();
-			}
-		});
-		*/
 	}
 	
 	

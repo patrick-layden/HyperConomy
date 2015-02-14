@@ -82,3 +82,10 @@ multi-server:
   sync-shops: true
   sync-trade-objects: true
   sync-accounts: true
+updater:
+  enabled: true
+  notify-in-game: true
+  notify-for:
+    dev-builds: true
+    beta-builds: true
+    recommended-builds: true

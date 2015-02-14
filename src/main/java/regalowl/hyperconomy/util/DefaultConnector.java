@@ -354,6 +354,12 @@ public class DefaultConnector implements MineCraftConnector {
 	}
 
 
+	@Override
+	public String getVersion() {
+		return "";
+	}
+
+
 
 
 }

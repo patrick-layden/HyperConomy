@@ -9,7 +9,9 @@ public class MessageBuilder {
 	private String message = "";
 	private double amount = 0.0;
 	private double price = 0.0;
+	private String value = "";
 	private String objectName = "";
+	private String type = "";
 	private String playerName = "";
 	
 	
@@ -24,6 +26,8 @@ public class MessageBuilder {
 		newMessage = newMessage.replace("{playerName}",playerName);
 		newMessage = newMessage.replace("{objectName}",objectName);
 		newMessage = newMessage.replace("{price}",price+"");
+		newMessage = newMessage.replace("{value}",value);
+		newMessage = newMessage.replace("{type}",type);
 		newMessage = newMessage.replace("{currencySymbol}",L.get("CURRENCY"));
 		return newMessage;
 	}
@@ -40,10 +44,19 @@ public class MessageBuilder {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	
+	public void setValue(String value) {
+		this.value = value;
+	}
 
 	public void setObjectName(String objectName) {
 		if (objectName == null) return;
 		this.objectName = objectName;
+	}
+	
+	public void setType(String type) {
+		if (type == null) return;
+		this.type = type;
 	}
 
 	public void setPlayerName(String playerName) {

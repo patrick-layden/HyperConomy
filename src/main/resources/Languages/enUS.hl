@@ -525,3 +525,4 @@ CATEGORY_REMOVED: &6Category removed!
 MONEY_GIVEN: &9&o{playerName} was given &a&o{currencySymbol}{amount}&9&o.
 MONEY_RECEIVED: &9&oYou received &a&o{currencySymbol}{amount}&9&o.
 ENCHANTMENT_ONLY_SINGLE_ITEM: &4You can't purchase an enchantment for a stack of items.
+NEW_VERSION_AVAILABLE: &e[HyperConomy]&a{type} &ebuild &a{value} &eis available.  Your HyperConomy plugin is outdated.

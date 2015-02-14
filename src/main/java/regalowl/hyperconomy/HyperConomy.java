@@ -83,6 +83,7 @@ import regalowl.hyperconomy.util.History;
 import regalowl.hyperconomy.util.HyperLock;
 import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
+import regalowl.hyperconomy.util.UpdateChecker;
 import regalowl.hyperconomy.util.UpdateYML;
 
 public class HyperConomy {
@@ -136,6 +137,8 @@ public class HyperConomy {
 		hl.setLoadLock(false);
 		mc.registerListeners();
 		dMode.syncDebugConsoleMessage("Data loading completed.");
+		UpdateChecker uc = new UpdateChecker(this);
+		uc.runCheck();
 	}
 
 
@@ -149,8 +152,8 @@ public class HyperConomy {
 		YamlHandler yh = sdl.getYamlHandler();
 		yh.copyFromJar("config");
 		yh.registerFileConfiguration("config");
-		new UpdateYML(this);
 		hConfig = yh.gFC("config");
+		new UpdateYML(this);
 		dMode = new DebugMode(this);
 		dMode.syncDebugConsoleMessage("HyperConomy loaded with Debug Mode enabled.  Configuration files created and loaded.");
 		L = new LanguageFile(this);

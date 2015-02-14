@@ -22,7 +22,7 @@ public interface MineCraftConnector {
 	public HyperConomy getHC();
 	public boolean isEnabled();
 	public void disablePlugin();
-	
+	public String getVersion();
 	
 	public void registerCommand(String command, HyperCommand hCommand);
 	
