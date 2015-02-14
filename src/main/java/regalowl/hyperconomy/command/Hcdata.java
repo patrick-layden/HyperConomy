@@ -141,23 +141,21 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 		} else if (args[0].equalsIgnoreCase("setdefaultprices")) { 
 			try {
 				String economy = "default";
-				if (args.length > 1) {
-					economy = args[1];
-				}
+				if (args.length > 1) economy = args[1];
 				if (dm.economyExists(economy)) {
 					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
 					String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
 					FileTools ft = hc.getFileTools();
-					if (!ft.fileExists(defaultObjectsPath)) {
-						ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
-					}
+					ft.deleteFile(defaultObjectsPath);
+					ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
 					QueryResult qr = hc.getFileTools().readCSV(defaultObjectsPath);
 					while (qr.next()) {
 						String objectName = qr.getString("NAME");
-						TradeObject ho = dm.getEconomy(economy).getTradeObject(objectName);
-						ho.setStartPrice(qr.getDouble("STARTPRICE"));
-						ho.setStaticPrice(qr.getDouble("STATICPRICE"));
-						ho.setValue(qr.getDouble("VALUE"));
+						TradeObject to = dm.getEconomy(economy).getTradeObject(objectName);
+						if (to == null) continue;
+						to.setStartPrice(qr.getDouble("STARTPRICE"));
+						to.setStaticPrice(qr.getDouble("STATICPRICE"));
+						to.setValue(qr.getDouble("VALUE"));
 					}
 					ft.deleteFile(defaultObjectsPath);
 					data.addResponse(L.get("PRICES_IMPORTED"));
@@ -165,6 +163,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
 				}
 			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
 				data.addResponse(L.get("HCDATA_SETDEFAULTPRICES_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("clearhistory")) {
