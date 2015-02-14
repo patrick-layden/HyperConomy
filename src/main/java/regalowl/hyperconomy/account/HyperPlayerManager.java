@@ -128,11 +128,7 @@ public class HyperPlayerManager {
 
 	public boolean playerAccountExists(String name) {
 		if (name == null || name == "") {return false;}
-		if (hc.getMC().useExternalEconomy()) {
-			return hc.getMC().getEconomyProvider().hasAccount(name);
-		} else {
-			return hyperPlayers.containsKey(name.toLowerCase());
-		}
+		return hyperPlayers.containsKey(name.toLowerCase());
 	}
 	
 

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 
 
+import java.util.UUID;
+
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -38,6 +40,10 @@ public interface API {
 	public ArrayList<String> getPlayerShopList();
 	
 	public HyperPlayer getHyperPlayer(String name);
+	public HyperPlayer getHyperPlayer(UUID uuid);
+	public boolean hyperPlayerExists(String name);
+	public boolean hyperPlayerExists(UUID uuid);
+	public HyperPlayer createHyperPlayer(String name);
 	/**
 	 * @param player (name of player)
 	 * @return true if the hash matches the player's hash and false if it doesn't

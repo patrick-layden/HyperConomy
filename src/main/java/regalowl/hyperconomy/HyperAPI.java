@@ -11,7 +11,10 @@ import java.util.ArrayList;
 
 
 
+import java.util.UUID;
+
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.api.API;
 import regalowl.hyperconomy.command.Additem;
 import regalowl.hyperconomy.command.Sellall;
@@ -168,14 +171,41 @@ public class HyperAPI implements API {
 
 	
 	public HyperPlayer getHyperPlayer(String name) {
-		DataManager dm = hc.getDataManager();
-		if (dm.hyperPlayerExists(name)) {
-			return dm.getHyperPlayer(name);
+		HyperPlayerManager hpm = hc.getHyperPlayerManager();
+		if (hpm.playerAccountExists(name)) {
+			return hpm.getHyperPlayer(name);
 		} else {
 			return null;
 		}
 	}
-		
+	public HyperPlayer getHyperPlayer(UUID uuid) {
+		HyperPlayerManager hpm = hc.getHyperPlayerManager();
+		if (hpm.playerAccountExists(uuid)) {
+			return hpm.getHyperPlayer(uuid);
+		} else {
+			return null;
+		}
+	}
+	@Override
+	public boolean hyperPlayerExists(String name) {
+		HyperPlayerManager hpm = hc.getHyperPlayerManager();
+		return hpm.playerAccountExists(name);
+	}
+	@Override
+	public boolean hyperPlayerExists(UUID uuid) {
+		HyperPlayerManager hpm = hc.getHyperPlayerManager();
+		return hpm.playerAccountExists(uuid);
+	}
+
+	@Override
+	public HyperPlayer createHyperPlayer(String name) {
+		HyperPlayerManager hpm = hc.getHyperPlayerManager();
+		return hpm.getHyperPlayer(name);
+	}
+
+
+
+	
 	
 	public ArrayList<TradeObject> getEnchantmentHyperObjects(HItemStack stack, String player) {
 		DataManager dm = hc.getDataManager();
@@ -292,7 +322,6 @@ public class HyperAPI implements API {
 		TradeObject hobj = ai.generateNewHyperObject(stack, economyName, requestedName, 0);
 		return ai.addItem(hobj, economyName);
 	}
-
 
 
 	
