@@ -90,9 +90,7 @@ public class BasicTradeObject implements TradeObject {
 		String statement = "DELETE FROM hyperconomy_objects WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
 		sw.addToQueue(statement);
 		fireModificationEvent();
-		if (compositesRemoved > 0) {
-			hc.restart();
-		}
+		if (compositesRemoved > 0) hc.restart();
 	}
 	
 	@Override

@@ -139,8 +139,9 @@ public class HyperEconomy implements Serializable {
 			counter++;
 			if (counter > 100) {
 				if (hc != null) {
-					hc.getSimpleDataLib().getErrorWriter().writeError("Infinite loop when loading composites.yml.  You likely have an error in your composites.yml file.  Your items will not work properly until this is fixed.");
-					hc.getSimpleDataLib().getErrorWriter().writeError("The last missing object is: ["+lastFailedToLoadComposite+"]  Make sure this object is available or remove it from the composites table.");
+					hc.getMC().logSevere("[HyperConomy]Composite item dependency missing: ["+lastFailedToLoadComposite+"]  Please use /hcdelete or the GUI to delete objects; do not directly edit the database.");
+					hc.getMC().logSevere("[HyperConomy]Attempting to repair the database...");
+					repairComposites(sr);
 				}
 				return;
 			}
@@ -158,6 +159,27 @@ public class HyperEconomy implements Serializable {
 				addObject(to);
 			}
 		}
+	}
+	
+	
+	private void repairComposites(SQLRead sr) {
+		QueryResult result = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES, COMPONENTS FROM hyperconomy_objects WHERE COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
+		while (result.next()) {
+			String name = result.getString("NAME");
+			String components = result.getString("COMPONENTS");
+			HashMap<String,String> tempComponents = CommonFunctions.explodeMap(components);
+			for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
+			    String oname = entry.getKey();
+			    QueryResult result2 = sr.select("SELECT * FROM hyperconomy_objects WHERE "
+			    		+ "(NAME = '"+oname+"' || DISPLAY_NAME = '"+oname+"' || ALIASES LIKE '%"+oname+",%') AND ECONOMY = '"+economyName+"'");
+			    if (result2.recordCount() == 0) {
+			    	hc.getMC().logSevere("[HyperConomy]Composite removed: " + name);
+					String statement = "UPDATE hyperconomy_objects SET COMPONENTS = '' WHERE NAME = '"+name+"' AND ECONOMY = '"+economyName+"'";
+					hc.getSQLWrite().addToQueue(statement);
+			    }
+			}
+		}
+		hc.restart();
 	}
 	
 	
