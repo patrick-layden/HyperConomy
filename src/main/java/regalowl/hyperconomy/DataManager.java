@@ -172,29 +172,11 @@ public class DataManager {
 			sw.performInsert("hyperconomy_objects", values);
 		}
 		ft.deleteFile(defaultObjectsPath);
-		populateComposites();
 		sw.writeSyncQueue();
 		sw.writeSync(writeState);
 		hc.getDebugMode().ayncDebugConsoleMessage("Default economy created.");
 	}
 	
-	public void populateComposites() {
-		FileTools ft = hc.getFileTools();
-		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultComposites.csv";
-		if (ft.fileExists(defaultObjectsPath)) {ft.deleteFile(defaultObjectsPath);}
-		ft.copyFileFromJar("defaultComposites.csv", defaultObjectsPath);
-		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
-		ArrayList<String> columns = data.getColumnNames();
-		while (data.next()) {
-			HashMap<String,String> values = new HashMap<String, String>();
-			for (String column : columns) {
-				values.put(column, data.getString(column));
-			}
-			sw.performInsert("hyperconomy_composites", values);
-		}
-		ft.deleteFile(defaultObjectsPath);
-	}
-
 	
 	
 	public HyperEconomy getEconomy(String name) {

@@ -15,8 +15,6 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	private static final long serialVersionUID = -8506945265990355676L;
 	protected String playerShop;
 	protected String hyperObject;
-	protected String economy;
-	protected double stock;
 	protected double buyPrice;
 	protected double sellPrice;
 	protected TradeObjectStatus status;

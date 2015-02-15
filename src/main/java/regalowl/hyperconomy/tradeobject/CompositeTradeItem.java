@@ -37,6 +37,16 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 		    this.components.put(ho.getName(), amount);
 		}
 	}
+	
+	@Override
+	public void removeCompositeNature() {
+		//hc.getMC().logSevere("Composite removed for: " + displayName);
+		for (TradeObject to:getDependentObjects()) {
+			to.removeCompositeNature();
+		}
+		String statement = "UPDATE hyperconomy_objects SET COMPONENTS = '' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + this.economy + "'";
+		hc.getSQLWrite().addToQueue(statement);
+	}
 
 	
 	//The following methods calculate the HyperObject's values based on the CompositeItem's component items.
@@ -260,7 +270,7 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 	
 	@Override
 	public void setComponents(String components) {
-		String statement = "UPDATE hyperconomy_composites SET COMPONENTS='" + components + "' WHERE NAME = '" + this.name + "'";
+		String statement = "UPDATE hyperconomy_objects SET COMPONENTS='" + components + "' WHERE NAME = '"+this.name+"' AND ECONOMY = '"+this.economy+"' ";
 		hc.getSQLWrite().addToQueue(statement);
 		this.components.clear();
 		HashMap<String,String> tempComponents = CommonFunctions.explodeMap(components);
@@ -282,29 +292,7 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 	}
 	
-	@Override
-	public void setName(String name) {
-		String statement = "UPDATE hyperconomy_composites SET NAME='" + name + "' WHERE NAME = '" + this.name + "'";
-		hc.getSQLWrite().addToQueue(statement);
-		this.name = name;
-		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
-	}
-	@Override
-	public void setEconomy(String economy) {
-		this.economy = economy;
-		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
-	}
-	@Override
-	public void setDisplayName(String displayName) {
-		super.setDisplayName(displayName);
-		String statement = "UPDATE hyperconomy_composites SET DISPLAY_NAME='" + displayName + "' WHERE NAME = '" + this.name + "'";
-		hc.getSQLWrite().addToQueue(statement);
-	}
 
-
-
-	
-	
 	
 	
 	//Override the following methods to prevent database changes.

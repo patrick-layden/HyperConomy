@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HEnchantment;
@@ -79,10 +80,33 @@ public class BasicTradeObject implements TradeObject {
 	
 	@Override
 	public void delete() {
-		hc.getDataManager().getEconomy(economy).removeObject(name);
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
+		int compositesRemoved = 0;
+		for (TradeObject to:getDependentObjects()) {
+			to.removeCompositeNature();
+			compositesRemoved++;
+		}
+		he.removeObject(name);
 		String statement = "DELETE FROM hyperconomy_objects WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
 		sw.addToQueue(statement);
 		fireModificationEvent();
+		if (compositesRemoved > 0) {
+			hc.restart();
+		}
+	}
+	
+	@Override
+	public ArrayList<TradeObject> getDependentObjects() {
+		ArrayList<TradeObject> dependencies = new ArrayList<TradeObject>();
+		HyperEconomy he = hc.getDataManager().getEconomy(economy);
+		if (!he.useComposites()) return dependencies;
+		for (TradeObject to:he.getTradeObjects()) {
+			if (!to.isCompositeObject()) continue;
+			for (String dString: to.getComponents().keySet()) {
+				if (dString.equalsIgnoreCase(name)) dependencies.add(to);
+			}
+		}
+		return dependencies;
 	}
 	
 	@Override
@@ -600,7 +624,8 @@ public class BasicTradeObject implements TradeObject {
 	public ConcurrentHashMap<String, Double> getComponents() {return null;}
 	@Override
 	public void setComponents(String components) {}
-	
+	@Override
+	public void removeCompositeNature() {}
 	
 	
 	
@@ -662,6 +687,10 @@ public class BasicTradeObject implements TradeObject {
 			hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 		}
 	}
+
+
+
+
 
 
 

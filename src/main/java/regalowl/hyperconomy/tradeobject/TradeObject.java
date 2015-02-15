@@ -261,6 +261,11 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 */
 	public Image getImage(int width, int height);
 	
+	/**
+	 * @return A list of objects that depend on this object.  List will be empty if composite items are disabled.
+	 */
+	public ArrayList<TradeObject> getDependentObjects();
+	
 	
 	//GENERAL PRICING METHODS
 	
@@ -354,7 +359,10 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 * @param components
 	 */
 	public void setComponents(String components);
-	
+	/**Makes this composite object a component object.  (Doesn't delete the main tradeobject, only clears the COMPONENTS field.)
+	 * 
+	 */
+	public void removeCompositeNature();
 	
 	//ENCHANTMENT METHODS
 	

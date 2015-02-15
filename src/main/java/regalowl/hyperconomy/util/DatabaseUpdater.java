@@ -25,7 +25,7 @@ public class DatabaseUpdater {
 	private transient HyperConomy hc;
 	private transient SQLWrite sw;
 	private transient SQLRead sr;
-	public final double requiredDbVersion = 1.36;
+	public final double requiredDbVersion = 1.37;
 	private double currentDbVersion;
 	ArrayList<String> tables = new ArrayList<String>();
 	
@@ -44,7 +44,6 @@ public class DatabaseUpdater {
 		tables.add("info_signs");
 		tables.add("item_displays");
 		tables.add("economies");
-		tables.add("composites");
 	}
 	
 	
@@ -80,6 +79,7 @@ public class DatabaseUpdater {
 				t.addFieldToDatabase(f, t.getField("WORLD"));
 				sw.addToQueue("UPDATE hyperconomy_shops SET USE_ECONOMY_STOCK = '0' WHERE TYPE = 'player'");
 				setDBVersion(1.35);
+				sw.writeSyncQueue();
 			}
 			if (currentDbVersion == 1.35) {//converts to new object data storage format and moves categories to database
 				BukkitConnector bc = (BukkitConnector)hc.getMC();
@@ -125,6 +125,27 @@ public class DatabaseUpdater {
 				hc.getYamlHandler().unRegisterFileConfiguration("categories");
 				hc.getFileTools().deleteFile(hc.getSimpleDataLib().getStoragePath() + File.separator + "categories.yml");
 				setDBVersion(1.36);
+				sw.writeSyncQueue();
+			}
+			if (currentDbVersion == 1.36) {//moves composites to objects table 
+				Table compositesTable = hc.getSQLManager().addTable("hyperconomy_composites");
+				compositesTable.loadTable();
+				Table t = hc.getSQLManager().getTable("hyperconomy_objects");
+				Field f = t.generateField("COMPONENTS", FieldType.VARCHAR);f.setFieldSize(1000);f.setNotNull();f.setDefault("");
+				t.addFieldToDatabase(f, t.getField("MAXSTOCK"));
+				QueryResult result = sr.select("SELECT NAME, ECONOMY FROM hyperconomy_objects");
+				while (result.next()) {
+					String name = result.getString("NAME");
+					String economy = result.getString("ECONOMY");
+					QueryResult result2 = sr.select("SELECT COMPONENTS FROM hyperconomy_composites WHERE NAME = '"+name+"'");
+					while (result2.next()) {
+						String components = result2.getString("COMPONENTS");
+						sw.addToQueue("UPDATE hyperconomy_objects SET COMPONENTS = '"+components+"' WHERE NAME = '"+name+"' AND ECONOMY = '"+economy+"'");
+					}
+				}
+				sw.addToQueue("DROP TABLE hyperconomy_composites");
+				setDBVersion(1.37);
+				sw.writeSyncQueue();
 			}
 		} else {
 			createTables();
@@ -177,6 +198,7 @@ public class DatabaseUpdater {
 		f = t.addField("CEILING", FieldType.DOUBLE);
 		f = t.addField("FLOOR", FieldType.DOUBLE);
 		f = t.addField("MAXSTOCK", FieldType.DOUBLE);f.setNotNull();f.setDefault("1000000");
+		f = t.addField("COMPONENTS", FieldType.VARCHAR);f.setFieldSize(1000);f.setNotNull();f.setDefault("");
 		f = t.addField("DATA", FieldType.TEXT);
 		t.setCompositeKey(compositeKey);
 		
@@ -310,12 +332,6 @@ public class DatabaseUpdater {
 		t = hc.getSQLManager().addTable("hyperconomy_economies");
 		f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
 		f = t.addField("HYPERACCOUNT", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
-		
-
-		t = hc.getSQLManager().addTable("hyperconomy_composites");
-		f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
-		f = t.addField("DISPLAY_NAME", FieldType.VARCHAR);f.setFieldSize(255);
-		f = t.addField("COMPONENTS", FieldType.VARCHAR);f.setFieldSize(1000);
 		
 		hc.getSQLManager().saveTables();
 		

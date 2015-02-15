@@ -65,7 +65,7 @@ public class HyperEconomy implements Serializable {
 	
 	private void loadData(SQLRead sr) {
 		composites.clear();
-		QueryResult result = sr.select("SELECT * FROM hyperconomy_composites");
+		QueryResult result = sr.select("SELECT NAME, COMPONENTS FROM hyperconomy_objects WHERE COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
 		while (result.next()) {
 			composites.put(result.getString("NAME").toLowerCase(), result.getString("COMPONENTS"));
 		}
@@ -133,10 +133,8 @@ public class HyperEconomy implements Serializable {
 	private void loadComposites(SQLRead sr) {
 		boolean loaded = false;
 		int counter = 0;
-		QueryResult result = sr.select("SELECT hyperconomy_objects.NAME, hyperconomy_objects.DISPLAY_NAME, "
-				+ "hyperconomy_objects.ALIASES, hyperconomy_objects.CATEGORIES, hyperconomy_objects.TYPE, hyperconomy_composites.COMPONENTS,"
-				+ " hyperconomy_objects.DATA FROM hyperconomy_composites, hyperconomy_objects WHERE "
-				+ "hyperconomy_composites.NAME = hyperconomy_objects.NAME");
+		QueryResult result = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES, CATEGORIES, TYPE, COMPONENTS, DATA FROM hyperconomy_objects WHERE "
+				+ "COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
 		while (!loaded) {
 			counter++;
 			if (counter > 100) {
@@ -433,5 +431,8 @@ public class HyperEconomy implements Serializable {
 		return xpName;
 	}
 
+	public boolean useComposites() {
+		return useComposites;
+	}
 
 }
