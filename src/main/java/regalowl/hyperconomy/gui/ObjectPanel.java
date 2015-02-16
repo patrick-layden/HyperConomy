@@ -75,6 +75,7 @@ public class ObjectPanel extends JFrame {
 	private JTextField purchasePriceField;
 	private JTextField sellPriceField;
 	private JTextField newItemNameField;
+	private JButton editCompositesButton;
 
 
 	/**
@@ -152,9 +153,9 @@ public class ObjectPanel extends JFrame {
 		getContentPane().add(settingsPanel);
 		GridBagLayout gbl_settingsPanel = new GridBagLayout();
 		gbl_settingsPanel.columnWidths = new int[]{38, 32, 12, 0};
-		gbl_settingsPanel.rowHeights = new int[]{0, 19, 19, 19, 19, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_settingsPanel.rowHeights = new int[]{0, 19, 19, 19, 19, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_settingsPanel.columnWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_settingsPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_settingsPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		settingsPanel.setLayout(gbl_settingsPanel);
 		
 		nameLabel = new JLabel("Name");
@@ -400,11 +401,27 @@ public class ObjectPanel extends JFrame {
 		gbc_editCategoriesButton.gridy = 13;
 		settingsPanel.add(editCategoriesButton, gbc_editCategoriesButton);
 		
+		editCompositesButton = new JButton("Edit Composites Data");
+		GridBagConstraints gbc_editCompositesButton = new GridBagConstraints();
+		gbc_editCompositesButton.fill = GridBagConstraints.BOTH;
+		gbc_editCompositesButton.insets = new Insets(0, 0, 5, 0);
+		gbc_editCompositesButton.gridx = 2;
+		gbc_editCompositesButton.gridy = 14;
+		settingsPanel.add(editCompositesButton, gbc_editCompositesButton);
+		editCompositesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				TradeObject to = getSelectedObject();
+				if (to == null) return;
+				CompositeDataEditor frame = new CompositeDataEditor(to);
+				frame.setVisible(true);
+			}
+		});
+		
 		btnEditObjectData = new JButton("Edit Object Data");
 		GridBagConstraints gbc_btnEditObjectData = new GridBagConstraints();
 		gbc_btnEditObjectData.fill = GridBagConstraints.BOTH;
 		gbc_btnEditObjectData.gridx = 2;
-		gbc_btnEditObjectData.gridy = 14;
+		gbc_btnEditObjectData.gridy = 15;
 		settingsPanel.add(btnEditObjectData, gbc_btnEditObjectData);
 		btnEditObjectData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
@@ -567,8 +584,8 @@ public class ObjectPanel extends JFrame {
 					return;
 				}
 				String aliases = newName.replace("_", "");
-				TradeObject to = new ComponentTradeItem(hc, newName, he.getName(), newName, aliases, "", "item", 1, "false", 2,
-						0, 10000, "true", 2, 1000000000,0, 1000000000, "");
+				TradeObject to = new ComponentTradeItem(hc, null, newName, he.getName(), newName, aliases, "", "item", 1, "false", 2,
+						0, 10000, "true", 2, 1000000000,0, 1000000000, "", "");
 				boolean success = new Additem(hc).addItem(to, he.getName());
 				if (!success) JOptionPane.showMessageDialog(null, "Adding item failed.  Try a different name.", "Error", JOptionPane.ERROR_MESSAGE);
 				loadObjects();

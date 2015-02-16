@@ -3,6 +3,8 @@ package regalowl.hyperconomy.tradeobject;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import regalowl.simpledatalib.CommonFunctions;
@@ -41,7 +43,9 @@ public class BasicTradeObject implements TradeObject {
 	protected double ceiling;
 	protected double floor;
 	protected double maxstock;
-	
+	protected String objectData;
+	protected String compositeData;
+	protected ConcurrentHashMap<String,Double> components = new ConcurrentHashMap<String,Double>();
 
 	public BasicTradeObject(HyperConomy hc) {
 		this.hc = hc;
@@ -51,7 +55,7 @@ public class BasicTradeObject implements TradeObject {
 	/**
 	 * Standard Constructor
 	 */
-	public BasicTradeObject(HyperConomy hc, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock) {
+	public BasicTradeObject(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, String objectData) {
 		this.hc = hc;
 		this.sw = hc.getSQLWrite();
 		this.name = name;
@@ -70,6 +74,24 @@ public class BasicTradeObject implements TradeObject {
 		this.ceiling = ceiling;
 		this.floor = floor;
 		this.maxstock = maxstock;
+		this.objectData = objectData;
+		this.compositeData = compositeData;
+		HashMap<String,String> tempComponents = CommonFunctions.explodeMap(compositeData);
+		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
+		    String oname = entry.getKey();
+		    String amountString = entry.getValue();
+		    double amount = 0.0;
+		    if (amountString.contains("/")) {
+				int top = Integer.parseInt(amountString.substring(0, amountString.indexOf("/")));
+				int bottom = Integer.parseInt(amountString.substring(amountString.indexOf("/") + 1, amountString.length()));
+				amount = ((double)top/(double)bottom);
+		    } else {
+		    	int number = Integer.parseInt(amountString);
+		    	amount = (double)number;
+		    }
+		    TradeObject ho = he.getTradeObject(oname);
+		    this.components.put(ho.getName(), amount);
+		}
 	}
 	
 	@Override
@@ -241,8 +263,20 @@ public class BasicTradeObject implements TradeObject {
 	public double getMaxStock() {
 		return maxstock;
 	}
+	@Override
+	public ConcurrentHashMap<String,Double> getComponents() {
+		return components;
+	}
+	@Override
+	public String getCompositeData() {
+		return compositeData;
+	}
+	@Override
+	public String getData() {
+		return objectData;
+	}
 	
-
+	
 	
 	@Override
 	public void setName(String name) {
@@ -407,6 +441,37 @@ public class BasicTradeObject implements TradeObject {
 		String statement = "UPDATE hyperconomy_objects SET MAXSTOCK='" + maxstock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.maxstock = maxstock;
+		fireModificationEvent();
+	}
+	@Override
+	public void setCompositeData(String compositeData) {
+		this.compositeData = compositeData;
+		String statement = "UPDATE hyperconomy_objects SET COMPONENTS='" + components + "' WHERE NAME = '"+this.name+"' AND ECONOMY = '"+this.economy+"' ";
+		hc.getSQLWrite().addToQueue(statement);
+		this.components.clear();
+		HashMap<String,String> tempComponents = CommonFunctions.explodeMap(compositeData);
+		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
+		    String oname = entry.getKey();
+		    String amountString = entry.getValue();
+		    double amount = 0.0;
+		    if (amountString.contains("/")) {
+				int top = Integer.parseInt(amountString.substring(0, amountString.indexOf("/")));
+				int bottom = Integer.parseInt(amountString.substring(amountString.indexOf("/") + 1, amountString.length()));
+				amount = ((double)top/(double)bottom);
+		    } else {
+		    	int number = Integer.parseInt(amountString);
+		    	amount = (double)number;
+		    }
+		    TradeObject ho = hc.getDataManager().getEconomy(economy).getTradeObject(oname);
+		    this.components.put(ho.getName(), amount);
+		}
+		fireModificationEvent();
+	}
+	@Override
+	public void setData(String data) {
+		this.objectData = data;
+		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		sw.addToQueue(statement);
 		fireModificationEvent();
 	}
 	
@@ -599,31 +664,41 @@ public class BasicTradeObject implements TradeObject {
 	public void add(int amount, HyperPlayer hp) {}
 	@Override
 	public double remove(int amount, HyperPlayer hp) {return 0;}
-	
-	//GENERAL SERIALIZED DATA METHODS
-	@Override
-	public String getData() {return "";}
-	@Override
-	public void setData(String data) {}
 
+	
 	//ITEM METHODS
 	@Override
-	public HItemStack getItem() {return null;}
+	public HItemStack getItem() {
+		return new HItemStack(objectData);
+	}
 	@Override
-	public HItemStack getItemStack(int amount) {return null;}
+	public HItemStack getItemStack(int amount) {
+		HItemStack sis = getItem();
+		sis.setAmount(amount);
+		return sis;
+	}
 	@Override
-	public void setItemStack(HItemStack stack) {}
+	public void setItemStack(HItemStack stack) {
+		setData(stack.serialize());
+	}
 	@Override
-	public boolean matchesItemStack(HItemStack stack) {return false;}
+	public boolean matchesItemStack(HItemStack stack) {
+		if (stack == null) {return false;}
+		return stack.isSimilarTo(getItem());
+	}
 	
 	
 	//COMPOSITE ITEM METHODS
+
 	@Override
-	public ConcurrentHashMap<String, Double> getComponents() {return null;}
-	@Override
-	public void setComponents(String components) {}
-	@Override
-	public void removeCompositeNature() {}
+	public void removeCompositeNature() {
+		//hc.getMC().logSevere("Composite removed for: " + displayName);
+		for (TradeObject to:getDependentObjects()) {
+			to.removeCompositeNature();
+		}
+		String statement = "UPDATE hyperconomy_objects SET COMPONENTS = '' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + this.economy + "'";
+		hc.getSQLWrite().addToQueue(statement);
+	}
 	
 	
 	
@@ -681,10 +756,9 @@ public class BasicTradeObject implements TradeObject {
 
 
 	protected void fireModificationEvent() {
-		if (hc != null) {
-			hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
-		}
+		if (hc != null) hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
 	}
+
 
 
 

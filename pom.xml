@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>regalowl.simpledatalib</groupId>
 			<artifactId>simpledatalib</artifactId>
-			<version>0.1.077-SNAPSHOT</version>
+			<version>0.1.078-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xerial</groupId>

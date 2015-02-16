@@ -76,22 +76,22 @@ public class HyperEconomy implements Serializable {
 			TradeObjectType type = TradeObjectType.fromString(result.getString("TYPE"));
 			TradeObject to = null;
 			if (type == TradeObjectType.ITEM) {
-				to = new ComponentTradeItem(hc, result.getString("NAME"), result.getString("ECONOMY"), 
+				to = new ComponentTradeItem(hc, this, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"));
 			} else if (type == TradeObjectType.ENCHANTMENT) {
-				to = new TradeEnchant(hc, result.getString("NAME"), result.getString("ECONOMY"), 
+				to = new TradeEnchant(hc, this, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), 
 						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("DATA"));
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"));
 			} else if (type == TradeObjectType.EXPERIENCE) {
-				to = new TradeXp(hc, result.getString("NAME"), result.getString("ECONOMY"), 
+				to = new TradeXp(hc, this, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), 
 						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"));
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"));
 				xpName = result.getString("NAME");
 			}
 			if (to != null) addObject(to);

@@ -6,21 +6,17 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HItemStack;
 
 
 public class ComponentTradeItem extends BasicTradeObject implements TradeObject {
 
 	private static final long serialVersionUID = -845888542311735442L;
-	private String itemData;
-
 	
-
-	public ComponentTradeItem(HyperConomy hc, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String itemData) {
-		super(hc, name, economy, displayName, aliases, categories, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock);
-		this.itemData = itemData;
+	public ComponentTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, String objectData) {
+		super(hc, he, name, economy, displayName, aliases, categories, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, compositeData, objectData);
 	}
 	
 	@Override
@@ -47,37 +43,6 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 	public double getSellPrice(double amount, HyperPlayer hp) {
 		return getSellPrice(amount) * hp.getInventory().getPercentDamaged((int)Math.ceil(amount), getItem());
 	}
-	@Override
-	public HItemStack getItemStack(int amount) {
-		HItemStack sis = getItem();
-		sis.setAmount(amount);
-		return sis;
-	}
-	@Override
-	public HItemStack getItem() {
-		return new HItemStack(itemData);
-	}
-	@Override
-	public boolean matchesItemStack(HItemStack stack) {
-		if (stack == null) {return false;}
-		return stack.isSimilarTo(getItem());
-	}
-	@Override
-	public String getData() {
-		return itemData;
-	}
+
 	
-	@Override
-	public void setItemStack(HItemStack stack) {
-		setData(stack.serialize());
-	}
-	@Override
-	public void setData(String data) {
-		this.itemData = data;
-		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
-		sw.addToQueue(statement);
-		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
-	}
-
-
 }

@@ -4,9 +4,11 @@ package regalowl.hyperconomy.tradeobject;
 import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
 
 
+
+
+import java.util.Map;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -354,11 +356,15 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 * @return A Map of this composite item's components with the TradeObject as the key and the recipe ratio as the value.  (Can only be used with
 	 * composite items.)
 	 */
-	public ConcurrentHashMap<String,Double> getComponents();
+	public Map<String,Double> getComponents();
+	/**
+	 * @return The components in serialized string format.
+	 */
+	public String getCompositeData();
 	/**Sets this object's component list string.  (Can only be used with composite items.)
 	 * @param components
 	 */
-	public void setComponents(String components);
+	public void setCompositeData(String components);
 	/**Makes this composite object a component object.  (Doesn't delete the main tradeobject, only clears the COMPONENTS field.)
 	 * 
 	 */

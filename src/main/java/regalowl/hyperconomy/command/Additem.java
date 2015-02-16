@@ -147,8 +147,8 @@ public class Additem extends BaseCommand implements HyperCommand {
 		} else {
 			median = 25000;
 		}
-		TradeObject hobj = new ComponentTradeItem(hc, name, economy, displayName, aliases, "", "item", value, "false", value*2,
-				0, median, "true", value*2, 1000000,0, 1000000, sis.serialize());
+		TradeObject hobj = new ComponentTradeItem(hc, null, name, economy, displayName, aliases, "", "item", value, "false", value*2,
+				0, median, "true", value*2, 1000000,0, 1000000, "", sis.serialize());
 		return hobj;
 	}
 	
