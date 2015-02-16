@@ -76,22 +76,6 @@ public class BasicTradeObject implements TradeObject {
 		this.maxstock = maxstock;
 		this.objectData = objectData;
 		this.compositeData = compositeData;
-		HashMap<String,String> tempComponents = CommonFunctions.explodeMap(compositeData);
-		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
-		    String oname = entry.getKey();
-		    String amountString = entry.getValue();
-		    double amount = 0.0;
-		    if (amountString.contains("/")) {
-				int top = Integer.parseInt(amountString.substring(0, amountString.indexOf("/")));
-				int bottom = Integer.parseInt(amountString.substring(amountString.indexOf("/") + 1, amountString.length()));
-				amount = ((double)top/(double)bottom);
-		    } else {
-		    	int number = Integer.parseInt(amountString);
-		    	amount = (double)number;
-		    }
-		    TradeObject ho = he.getTradeObject(oname);
-		    this.components.put(ho.getName(), amount);
-		}
 	}
 	
 	@Override
@@ -137,8 +121,10 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public int compareTo(TradeObject ho) {
 		if (ho == null) return 1;
-		String d1 = (displayName == null) ? name:displayName;
+		String d1 = (getDisplayName() == null) ? getName():getDisplayName();
 		String d2 = (ho.getDisplayName() == null) ? ho.getName():ho.getDisplayName();
+		if (d1 == null) return -1;
+		if (d2 == null) return 1;
 		return d1.compareTo(d2);
 	}
 	@Override

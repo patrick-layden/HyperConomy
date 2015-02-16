@@ -1,10 +1,12 @@
 package regalowl.hyperconomy.tradeobject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.simpledatalib.CommonFunctions;
 
 public class CompositeTradeItem extends ComponentTradeItem implements TradeObject {
 
@@ -12,6 +14,25 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 
 	public CompositeTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, String compositeData, String objectData) {
 		super(hc,he,name,economy,displayName,aliases,categories,type,0,"",0,0,0,"",0,0,0,0,compositeData,objectData);
+		HashMap<String,String> tempComponents = CommonFunctions.explodeMap(this.compositeData);
+		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
+		    String oname = entry.getKey();
+		    String amountString = entry.getValue();
+		    double amount = 0.0;
+		    if (amountString.contains("/")) {
+				int top = Integer.parseInt(amountString.substring(0, amountString.indexOf("/")));
+				int bottom = Integer.parseInt(amountString.substring(amountString.indexOf("/") + 1, amountString.length()));
+				amount = ((double)top/(double)bottom);
+		    } else {
+		    	int number = Integer.parseInt(amountString);
+		    	amount = (double)number;
+		    }
+		    TradeObject ho = he.getTradeObject(oname);
+		    if (ho == null) {
+		    	hc.getMC().logSevere("Null["+name+"]["+oname+"]");
+		    }
+		    this.components.put(ho.getName(), amount);
+		}
 	}
 	
 	
