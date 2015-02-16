@@ -2,6 +2,7 @@ package regalowl.hyperconomy.bukkit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -278,26 +279,27 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return false;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public HLocation getTargetLocation(HyperPlayer hp) {
 		try {
 			Player p = Bukkit.getPlayer(hp.getName());
 			if (p == null) return null;
-			Location l = p.getTargetBlock(null, 500).getLocation();
+			HashSet<Material> nullSet = null;
+			Location l = p.getTargetBlock(nullSet, 500).getLocation();
 			HLocation sl = new HLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
 			return sl;
 		} catch (Exception e) {
 			return null;
 		}
 	}
-	@SuppressWarnings("deprecation")
+
 	@Override
 	public HLocation getLocationBeforeTargetLocation(HyperPlayer hp) {
 		try {
 			Player p = Bukkit.getPlayer(hp.getName());
 			if (p == null) return null;
-			List<Block> ltb = p.getLastTwoTargetBlocks(null, 500);
+			HashSet<Material> nullSet = null;
+			List<Block> ltb = p.getLastTwoTargetBlocks(nullSet, 500);
 			Block b = ltb.get(0);
 			Location l = b.getLocation();
 			HLocation sl = new HLocation(l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
