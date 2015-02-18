@@ -52,7 +52,7 @@ public class HyperBankManager {
 		}
 		return null;
 	}
-
+	
 	public void addHyperBank(HyperBank hb) {
 		if (hb == null) {return;}
 		if (!hyperBanks.containsKey(hb.getName().toLowerCase())) {

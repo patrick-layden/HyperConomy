@@ -50,8 +50,8 @@ public class HyperAPI implements API {
 	}
 
 	public boolean checkHash(String player, String SHA256Hash) {
-		if (hc.getDataManager().hyperPlayerExists(player)) {
-			if (hc.getDataManager().getHyperPlayer(player).getHash().equals(SHA256Hash)) {
+		if (hc.getHyperPlayerManager().hyperPlayerExists(player)) {
+			if (hc.getHyperPlayerManager().getHyperPlayer(player).getHash().equals(SHA256Hash)) {
 				return true;
 			} else {
 				return false;
@@ -63,8 +63,8 @@ public class HyperAPI implements API {
 	
 	
 	public String getSalt(String player) {
-		if (hc.getDataManager().hyperPlayerExists(player)) {
-			return hc.getDataManager().getHyperPlayer(player).getSalt();
+		if (hc.getHyperPlayerManager().hyperPlayerExists(player)) {
+			return hc.getHyperPlayerManager().getHyperPlayer(player).getSalt();
 		} else {
 			return "";
 		}
@@ -135,10 +135,6 @@ public class HyperAPI implements API {
 		return playerShops;
 	}
 	
-	public String getDefaultServerShopAccount() {
-		return hc.getConf().getString("shop.default-server-shop-account");
-	}
-	
 
 	public EnchantmentClass getEnchantmentClass(HItemStack stack) {
 		return EnchantmentClass.fromString(stack.getMaterial());
@@ -172,7 +168,7 @@ public class HyperAPI implements API {
 	
 	public HyperPlayer getHyperPlayer(String name) {
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
-		if (hpm.playerAccountExists(name)) {
+		if (hpm.hyperPlayerExists(name)) {
 			return hpm.getHyperPlayer(name);
 		} else {
 			return null;
@@ -180,7 +176,7 @@ public class HyperAPI implements API {
 	}
 	public HyperPlayer getHyperPlayer(UUID uuid) {
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
-		if (hpm.playerAccountExists(uuid)) {
+		if (hpm.hyperPlayerExistsWithUUID(uuid)) {
 			return hpm.getHyperPlayer(uuid);
 		} else {
 			return null;
@@ -189,12 +185,12 @@ public class HyperAPI implements API {
 	@Override
 	public boolean hyperPlayerExists(String name) {
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
-		return hpm.playerAccountExists(name);
+		return hpm.hyperPlayerExists(name);
 	}
 	@Override
 	public boolean hyperPlayerExists(UUID uuid) {
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
-		return hpm.playerAccountExists(uuid);
+		return hpm.hyperPlayerExistsWithUUID(uuid);
 	}
 
 	@Override
@@ -211,7 +207,7 @@ public class HyperAPI implements API {
 		DataManager dm = hc.getDataManager();
 		ArrayList<TradeObject> objects = new ArrayList<TradeObject>();
 		HyperEconomy he = dm.getDefaultEconomy();
-		if (dm.hyperPlayerExists(player)) he = hc.getDataManager().getHyperPlayer(player).getHyperEconomy();
+		if (hc.getHyperPlayerManager().hyperPlayerExists(player)) he = hc.getHyperPlayerManager().getHyperPlayer(player).getHyperEconomy();
 		for (HEnchantment se:stack.getItemMeta().getEnchantments()) {
 			TradeObject ho = he.getTradeObject(se);
 			if (ho != null) objects.add(ho);

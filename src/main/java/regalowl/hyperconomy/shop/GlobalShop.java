@@ -7,6 +7,7 @@ import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
+import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.ShopModificationEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -20,6 +21,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	private String name;
 	private String economy;
 	private String owner;
+	private boolean ownerIsBank;
 	private ArrayList<String> availableObjects = new ArrayList<String>();
 	private boolean deleted;
 
@@ -29,6 +31,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		this.deleted = false;
 		this.name = name;
 		this.economy = economy;
+		if (owner instanceof HyperBank) ownerIsBank = true;
 		this.owner = owner.getName();
 		HyperEconomy he = getHyperEconomy();
 		availableObjects.clear();
@@ -48,11 +51,16 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		this.deleted = false;
 		this.name = shopName;
 		this.economy = economy;
+		if (owner instanceof HyperBank) ownerIsBank = true;
 		this.owner = owner.getName();
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("NAME", name);
 		values.put("ECONOMY", economy);
-		values.put("OWNER", owner.getName());
+		if (ownerIsBank) {
+			values.put("OWNER", "BANK:"+owner.getName());
+		} else {
+			values.put("OWNER", "PLAYER:"+owner.getName());
+		}
 		values.put("WORLD", "none");
 		values.put("P1X", "0");
 		values.put("P1Y", "0");
@@ -224,7 +232,11 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 
 	@Override
 	public HyperAccount getOwner() {
-		return hc.getHyperPlayerManager().getAccount(owner);
+		if (ownerIsBank) {
+			return hc.getHyperBankManager().getHyperBank(owner);
+		} else {
+			return hc.getHyperPlayerManager().getHyperPlayer(owner);
+		}
 	}
 
 	@Override
@@ -239,10 +251,15 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	@Override
 	public void setOwner(HyperAccount owner) {
 		this.owner = owner.getName();
+		if (owner instanceof HyperBank) ownerIsBank = true;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
-		values.put("OWNER", owner.getName());
+		if (ownerIsBank) {
+			values.put("OWNER", "BANK:"+owner.getName());
+		} else {
+			values.put("OWNER", "PLAYER:"+owner.getName());
+		}
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}

@@ -39,8 +39,8 @@ public class Hcdelete extends BaseCommand implements HyperCommand {
 		} else if (args[0].equalsIgnoreCase("account")) {
 			try {
 				String name = args[1];
-				if (dm.hyperPlayerExists(name)) {
-					HyperPlayer hp = dm.getHyperPlayer(name);
+				if (hc.getHyperPlayerManager().hyperPlayerExists(name)) {
+					HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(name);
 					hp.delete();
 					data.addResponse(L.get("HCDELETE_SUCCESS"));
 				} else {

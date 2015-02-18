@@ -35,7 +35,7 @@ public class HyperShopManager {
 	
 	@EventHandler
 	public void onDataLoad(DataLoadEvent event) {
-		if (!(event.loadType == DataLoadType.BANK)) return;
+		if (!(event.loadType == DataLoadType.DEFAULT_ACCOUNT)) return;
 		new Thread(new Runnable() {
 			public void run() {
 				loadData();
@@ -48,7 +48,7 @@ public class HyperShopManager {
 		QueryResult shopData = hc.getSQLRead().select("SELECT * FROM hyperconomy_shops");
 		while (shopData.next()) {
 			String type = shopData.getString("TYPE");
-			HyperAccount owner = hc.getHyperPlayerManager().getAccount(shopData.getString("OWNER"));
+			HyperAccount owner = hc.getDataManager().getAccount(shopData.getString("OWNER"));
 			if (owner == null) continue;
 			if (type.equalsIgnoreCase("server")) {
 				if (!useShops) {continue;}

@@ -132,8 +132,8 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 		} else if (args[0].equalsIgnoreCase("owner") || args[0].equalsIgnoreCase("o")) {
 			try {
 				HyperAccount owner = null;
-				if (dm.hyperPlayerExists(args[1])) {
-					owner = dm.getHyperPlayer(args[1]);
+				if (dm.accountExists(args[1])) {
+					owner = dm.getAccount(args[1]);
 				} else {
 					if (dm.getHyperBankManager().hasBank(args[1])) {
 						owner = dm.getHyperBankManager().getHyperBank(args[1]);

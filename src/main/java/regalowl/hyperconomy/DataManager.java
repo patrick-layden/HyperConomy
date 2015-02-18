@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Pattern;
 
 import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.file.FileConfiguration;
@@ -16,7 +17,6 @@ import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperBankManager;
-import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
@@ -151,7 +151,6 @@ public class DataManager {
 	}
 	
 	private void setupDefaultEconomy() {
-		//set up default hyperconomy_objects and economies if they don't exist
 		boolean writeState = sw.writeSync();
 		sw.writeSync(true);
 		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
@@ -288,6 +287,7 @@ public class DataManager {
 				values.put("CEILING", ho.getCeiling()+"");
 				values.put("FLOOR", ho.getFloor()+"");
 				values.put("MAXSTOCK", ho.getMaxStock()+"");
+				values.put("COMPONENTS", ho.getCompositeData());
 				values.put("DATA", ho.getData());
 				if (cloneAll) {
 					values.put("INITIATION", ho.useInitialPricing()+"");
@@ -315,7 +315,7 @@ public class DataManager {
 		economies.remove(economy);
 	}
 
-	
+	//TODO add restore default economy command.  (Replace with csv data)
 	/*
 	public void createEconomyFromDefaultCSV(String econ, boolean restart) {
 		if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {
@@ -351,21 +351,43 @@ public class DataManager {
 
 
 
-	
-	//TODO
-	//remove these methods eventually
 	public boolean accountExists(String name) {
-		return hpm.accountExists(name);
+		if (name.contains(":")) {
+			String[] accountData = name.split(Pattern.quote(":"));
+			String accountName = accountData[1];
+			if (accountData[0].equalsIgnoreCase("PLAYER")) {
+				return hc.getHyperPlayerManager().hyperPlayerExists(accountName);
+			} else if (accountData[0].equalsIgnoreCase("BANK")) {
+				return hc.getHyperBankManager().hasBank(accountName);
+			} else {
+				return false;
+			}
+		} else {
+			if (hc.getHyperPlayerManager().hyperPlayerExists(name) || hc.getHyperBankManager().hasBank(name)) return true;
+			return false;
+		}
 	}
 	public HyperAccount getAccount(String name) {
-		return hpm.getAccount(name);
+		if (name.contains(":")) {
+			String[] accountData = name.split(Pattern.quote(":"));
+			String accountName = accountData[1];
+			if (accountData[0].equalsIgnoreCase("PLAYER")) {
+				return hc.getHyperPlayerManager().getHyperPlayer(accountName);
+			} else if (accountData[0].equalsIgnoreCase("BANK")) {
+				return hc.getHyperBankManager().getHyperBank(accountName);
+			} else {
+				return null;
+			}
+		} else {
+			String accountName = name;
+			if (hc.getHyperPlayerManager().hyperPlayerExists(accountName)) {
+				return hc.getHyperPlayerManager().getHyperPlayer(accountName);
+			} else if (hc.getHyperBankManager().hasBank(accountName)) {
+				return hc.getHyperBankManager().getHyperBank(accountName);
+			}
+			return null;
+		}
 	}
-	public boolean hyperPlayerExists(String name) {
-		return hpm.playerAccountExists(name);
-	}
-	public HyperPlayer getHyperPlayer(String player) {
-		return hpm.getHyperPlayer(player);
-	}
-	
+
 	
 }

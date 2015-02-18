@@ -69,7 +69,8 @@ public class ChestShop {
 			} catch (Exception e) {}
 		}
 		String chestOwnerName = hc.getMC().removeColor(sign.getLine(2)).trim() + hc.getMC().removeColor(sign.getLine(3)).trim();
-		this.owner = hc.getHyperPlayerManager().getAccount(chestOwnerName);
+		this.owner = hc.getDataManager().getAccount(chestOwnerName);
+		
 		if (owner == null && !chestOwnerName.equals("")) {
 			this.owner = hc.getHyperPlayerManager().getHyperPlayer(chestOwnerName);
 		} else {

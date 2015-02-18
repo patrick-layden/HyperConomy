@@ -17,6 +17,7 @@ import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
+import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
@@ -39,6 +40,7 @@ public class HyperEconomy implements Serializable {
 	private transient HyperConomy hc;
 	
 	private HyperAccount defaultAccount;
+	private boolean defaultAccountIsBank;
 	private ConcurrentHashMap<String, TradeObject> tradeObjectsNameMap = new ConcurrentHashMap<String, TradeObject>();
 	private CopyOnWriteArrayList<TradeObject> tradeObjects = new CopyOnWriteArrayList<TradeObject>();
 	private HashMap<String,String> composites = new HashMap<String,String>();
@@ -209,6 +211,7 @@ public class HyperEconomy implements Serializable {
 				conditions.put("NAME", economyName);
 				String account = sr.getString("hyperconomy_economies", "hyperaccount", conditions);
 				defaultAccount = hc.getDataManager().getAccount(account);
+				if (defaultAccount instanceof HyperBank) defaultAccountIsBank = true;
 			}
 		}).start();
 	}
@@ -236,7 +239,11 @@ public class HyperEconomy implements Serializable {
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", economyName);
-		values.put("HYPERACCOUNT", account.getName());
+		if (defaultAccountIsBank) {
+			values.put("HYPERACCOUNT", "BANK:"+account.getName());
+		} else {
+			values.put("HYPERACCOUNT", "PLAYER:"+account.getName());
+		}
 		hc.getSQLWrite().performUpdate("hyperconomy_economies", values, conditions);
 		this.defaultAccount = account;
 	}

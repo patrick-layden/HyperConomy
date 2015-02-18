@@ -11,7 +11,7 @@ public class DataLoadEvent extends Event {
 	}
 	
 	public enum DataLoadType {
-		START,ECONOMY,COMPLETE,PLAYER,SHOP,BANK;
+		START,ECONOMY,COMPLETE,PLAYER,SHOP,BANK,DEFAULT_ACCOUNT;
 	}
 	
 }

@@ -36,12 +36,26 @@ public class HyperPlayerManager {
 	
 	@EventHandler
 	public void onDataLoad(DataLoadEvent event) {
-		if (!(event.loadType == DataLoadType.ECONOMY)) return;
-		new Thread(new Runnable() {
-			public void run() {
-				loadData();
-			}
-		}).start();
+		if (event.loadType == DataLoadType.ECONOMY) {
+			new Thread(new Runnable() {
+				public void run() {
+					loadData();
+				}
+			}).start();
+		} else if (event.loadType == DataLoadType.BANK) {
+			hc.getMC().runTask(new Runnable() {
+				public void run() {
+					if (!hc.getDataManager().accountExists(defaultServerShopAccount)) {
+						HyperPlayer defaultAccount = new HyperPlayer(hc, defaultServerShopAccount);
+						hyperPlayers.put(defaultServerShopAccount, defaultAccount);
+						defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
+						defaultAccount.setUUID(UUID.randomUUID().toString());
+					}
+					hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.DEFAULT_ACCOUNT));
+					hc.getDebugMode().ayncDebugConsoleMessage("Default account loaded.");
+				}
+			});
+		}
 	}
 	
 	private void loadData() {
@@ -60,12 +74,6 @@ public class HyperPlayerManager {
 		playerData.close();
 		hc.getMC().runTask(new Runnable() {
 			public void run() {
-				if (!accountExists(defaultServerShopAccount)) {
-					HyperPlayer defaultAccount = new HyperPlayer(hc, defaultServerShopAccount);
-					hyperPlayers.put(defaultServerShopAccount, defaultAccount);
-					defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
-					defaultAccount.setUUID(UUID.randomUUID().toString());
-				}
 				for (HyperPlayer hp:hyperPlayers.values()) {
 					hp.validate();
 				}
@@ -126,52 +134,28 @@ public class HyperPlayerManager {
 		return uuidSupport;
 	}
 
-	public boolean playerAccountExists(String name) {
-		if (name == null || name == "") {return false;}
-		return hyperPlayers.containsKey(name.toLowerCase());
+
+	
+	
+	public HyperAccount getDefaultServerShopAccount() {
+		return hc.getDataManager().getAccount(defaultServerShopAccount);
 	}
 	
 
-	public boolean playerAccountExists(UUID uuid) {
+	
+	public boolean hyperPlayerExists(String name) {
+		if (name == null || name == "") {return false;}
+		return hyperPlayers.containsKey(name.toLowerCase());
+	}
+	public boolean hyperPlayerExistsWithUUID(UUID uuid) {
 		if (uuid == null) {return false;}
 		return uuidIndex.containsKey(uuid.toString());
 	}
 	
-	//TODO remove this method (only use specific getBank and getHyperPlayer methods, store account names with type prefix such as bank:bank1 or player:player1 when referenced from shop tables)
-	public boolean accountExists(String name) {
-		if (playerAccountExists(name) || hc.getDataManager().getHyperBankManager().hasBank(name)) return true;
-		return false;
-	}
 	/**
-	 * 
-	 * @param name of account
-	 * @return the HyperBank or HyperPlayer with the specified name.  This method will not create an account if it already exists.  Returns null if the account
-	 * does not exist.
-	 */
-	//TODO remove this method
-	public HyperAccount getAccount(String name) {
-		if (playerAccountExists(name)) {
-			return getHyperPlayer(name);
-		}
-		if (hc.getDataManager().getHyperBankManager().hasBank(name)) {
-			return hc.getDataManager().getHyperBankManager().getHyperBank(name);
-		}
-		return null;
-	}
-	
-	public HyperAccount getDefaultServerShopAccount() {
-		return getAccount(defaultServerShopAccount);
-	}
-	
-	
-	
-
-	/**
-	 * 
 	 * @param player
 	 * @return The HyperPlayer with the specified name.  If the HyperPlayer doesn't exist it will be created.  This method should only return null if the given name is null.
 	 */
-	
 	public HyperPlayer getHyperPlayer(String player) {
 		if (player == null || player.equals("")) {return null;}
 		String playerName = player.toLowerCase();
@@ -181,7 +165,6 @@ public class HyperPlayerManager {
 			return addPlayer(player);
 		}
 	}
-
 	public HyperPlayer getHyperPlayer(UUID uuid) {
 		if (uuid == null) {return null;}
 		if (uuidIndex.containsKey(uuid.toString())) {

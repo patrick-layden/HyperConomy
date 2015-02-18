@@ -212,7 +212,7 @@ public class Economy_HyperConomy implements Economy {
 		if (hbm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_ALREADY_EXISTS"));
 		}
-		if (!hpm.playerAccountExists(player)) {
+		if (!hpm.hyperPlayerExists(player)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
 		HyperPlayer hp = hpm.getHyperPlayer(player);
@@ -287,7 +287,7 @@ public class Economy_HyperConomy implements Economy {
 		if (!hbm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
-		if (!hpm.playerAccountExists(name)) {
+		if (!hpm.hyperPlayerExists(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
 		HyperBank hb = hbm.getHyperBank(name);
@@ -311,7 +311,7 @@ public class Economy_HyperConomy implements Economy {
 		if (!hbm.hasBank(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("BANK_NOT_EXIST"));
 		}
-		if (!hpm.playerAccountExists(name)) {
+		if (!hpm.hyperPlayerExists(name)) {
 			return new EconomyResponse(0, 0, ResponseType.FAILURE, L.get("PLAYER_NOT_FOUND"));
 		}
 		HyperBank hb = hbm.getHyperBank(name);

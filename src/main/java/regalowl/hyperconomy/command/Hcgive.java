@@ -20,8 +20,8 @@ public class Hcgive extends BaseCommand implements HyperCommand{
 				return data;
 			}
 			HyperPlayer recipient = null;
-			if (dm.hyperPlayerExists(args[0])) {
-				recipient = dm.getHyperPlayer(args[0]);
+			if (hc.getHyperPlayerManager().hyperPlayerExists(args[0])) {
+				recipient = hc.getHyperPlayerManager().getHyperPlayer(args[0]);
 			} else {
 				data.addResponse(L.get("PLAYER_NOT_FOUND"));
 				return data;

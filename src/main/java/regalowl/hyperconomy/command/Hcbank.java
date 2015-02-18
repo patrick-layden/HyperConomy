@@ -35,11 +35,12 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("HCBANK_CREATE_HELP"));
 				return data;
 			}
-			if (hbm.hasBank(args[1])) {
+			String bankName = args[1].replaceAll("[^A-Za-z0-9 ]", "");
+			if (hbm.hasBank(bankName)) {
 				data.addResponse(L.get("BANK_ALREADY_EXISTS"));
 				return data;
 			}
-			if (dm.hyperPlayerExists(args[1])) {
+			if (hc.getDataManager().accountExists(bankName)) {
 				data.addResponse(L.get("ACCOUNT_ALREADY_EXISTS"));
 				return data;
 			}
@@ -54,7 +55,7 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("CANNOT_OWN_MORE_BANKS"));
 				return data;
 			}
-			HyperBank hb = new HyperBank(hc, args[1], hp);
+			HyperBank hb = new HyperBank(hc, bankName, hp);
 			hbm.addHyperBank(hb);
 			data.addResponse(L.get("BANK_CREATED"));
 		} else if (args[0].equalsIgnoreCase("delete")) {
@@ -104,7 +105,8 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("DONT_OWN_THIS_BANK"));
 				return data;
 			}
-			hb.setName(args[2]);
+			String bankName = args[2].replaceAll("[^A-Za-z0-9 ]", "");
+			hb.setName(bankName);
 			data.addResponse(L.get("BANK_RENAMED"));
 		} else if (args[0].equalsIgnoreCase("addmember") || args[0].equalsIgnoreCase("am")) {
 			if (args.length != 3) {
@@ -115,12 +117,12 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("BANK_NOT_EXIST"));
 				return data;
 			}
-			if (!dm.hyperPlayerExists(args[2])) {
+			if (!hc.getHyperPlayerManager().hyperPlayerExists(args[2])) {
 				data.addResponse(L.get("ACCOUNT_NOT_EXIST"));
 				return data;
 			}
 			HyperBank hb = hbm.getHyperBank(args[1]);
-			HyperPlayer account = dm.getHyperPlayer(args[2]);
+			HyperPlayer account = hc.getHyperPlayerManager().getHyperPlayer(args[2]);
 			if (!hb.isOwner(hp)) {
 				data.addResponse(L.get("DONT_OWN_THIS_BANK"));
 				return data;
@@ -140,12 +142,12 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("BANK_NOT_EXIST"));
 				return data;
 			}
-			if (!dm.hyperPlayerExists(args[2])) {
+			if (!hc.getHyperPlayerManager().hyperPlayerExists(args[2])) {
 				data.addResponse(L.get("ACCOUNT_NOT_EXIST"));
 				return data;
 			}
 			HyperBank hb = hbm.getHyperBank(args[1]);
-			HyperPlayer account = dm.getHyperPlayer(args[2]);
+			HyperPlayer account = hc.getHyperPlayerManager().getHyperPlayer(args[2]);
 			if (!hb.isOwner(hp)) {
 				data.addResponse(L.get("DONT_OWN_THIS_BANK"));
 				return data;
@@ -165,12 +167,12 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("BANK_NOT_EXIST"));
 				return data;
 			}
-			if (!dm.hyperPlayerExists(args[2])) {
+			if (!hc.getHyperPlayerManager().hyperPlayerExists(args[2])) {
 				data.addResponse(L.get("ACCOUNT_NOT_EXIST"));
 				return data;
 			}
 			HyperBank hb = hbm.getHyperBank(args[1]);
-			HyperPlayer account = dm.getHyperPlayer(args[2]);
+			HyperPlayer account = hc.getHyperPlayerManager().getHyperPlayer(args[2]);
 			if (!hb.isOwner(hp)) {
 				data.addResponse(L.get("DONT_OWN_THIS_BANK"));
 				return data;
@@ -190,12 +192,12 @@ public class Hcbank extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("BANK_NOT_EXIST"));
 				return data;
 			}
-			if (!dm.hyperPlayerExists(args[2])) {
+			if (!hc.getHyperPlayerManager().hyperPlayerExists(args[2])) {
 				data.addResponse(L.get("ACCOUNT_NOT_EXIST"));
 				return data;
 			}
 			HyperBank hb = hbm.getHyperBank(args[1]);
-			HyperPlayer account = dm.getHyperPlayer(args[2]);
+			HyperPlayer account = hc.getHyperPlayerManager().getHyperPlayer(args[2]);
 			if (!hb.isOwner(hp)) {
 				data.addResponse(L.get("DONT_OWN_THIS_BANK"));
 				return data;

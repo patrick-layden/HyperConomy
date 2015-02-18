@@ -11,6 +11,7 @@ import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
+import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.ShopModificationEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -31,6 +32,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	private String name;
 	private String world;
 	private String owner;
+	private boolean ownerIsBank;
 	private ArrayList<String> allowed = new ArrayList<String>();
 	private String economy;
 	private String message;
@@ -55,6 +57,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		this.deleted = false;
 		this.name = name;
 		this.economy = economy;
+		if (owner instanceof HyperBank) ownerIsBank = true;
 		this.owner = owner.getName();
 		this.message = message;
 		this.world = p1.getWorld();
@@ -87,6 +90,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		this.deleted = false;
 		this.name = shopName;
 		this.economy = economy;
+		if (owner instanceof HyperBank) ownerIsBank = true;
 		this.owner = owner.getName();
 		this.world = p1.getWorld();
 		this.message = "";
@@ -100,7 +104,11 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("NAME", name);
 		values.put("ECONOMY", economy);
-		values.put("OWNER", owner.getName());
+		if (ownerIsBank) {
+			values.put("OWNER", "BANK:"+owner.getName());
+		} else {
+			values.put("OWNER", "PLAYER:"+owner.getName());
+		}
 		values.put("WORLD", world);
 		values.put("USE_ECONOMY_STOCK", "0");
 		values.put("P1X", p1x+"");
@@ -470,15 +478,24 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	}
 	
 	public HyperAccount getOwner() {
-		return hc.getHyperPlayerManager().getAccount(owner);
+		if (ownerIsBank) {
+			return hc.getHyperBankManager().getHyperBank(owner);
+		} else {
+			return hc.getHyperPlayerManager().getHyperPlayer(owner);
+		}
 	}
 	
 	public void setOwner(HyperAccount owner) {
 		this.owner = owner.getName();
+		if (owner instanceof HyperBank) ownerIsBank = true;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", name);
-		values.put("OWNER", owner.getName());
+		if (ownerIsBank) {
+			values.put("OWNER", "BANK:"+owner.getName());
+		} else {
+			values.put("OWNER", "PLAYER:"+owner.getName());
+		}
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}

@@ -33,7 +33,6 @@ public interface API {
 	public Shop getShop(String name);
 	public ServerShop getServerShop(String name);
 	public PlayerShop getPlayerShop(String name);
-	public String getDefaultServerShopAccount();
 	
 	
 	public ArrayList<String> getServerShopList();

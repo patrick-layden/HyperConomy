@@ -156,7 +156,7 @@ public class HyperModificationServer {
 		for (HyperPlayer hp:objects) {
 			//System.out.println("Received: " + hp.getName());
 			if (hp == null || hp.getName() == null || hp.getName().equalsIgnoreCase("")) continue;
-			if (hpm.playerAccountExists(hp.getName())) hpm.removeHyperPlayer(hpm.getHyperPlayer(hp.getName()));
+			if (hpm.hyperPlayerExists(hp.getName())) hpm.removeHyperPlayer(hpm.getHyperPlayer(hp.getName()));
 			hp.setHyperConomy(hc);
 			hpm.addHyperPlayer(hp);
 		}
