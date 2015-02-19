@@ -142,9 +142,10 @@ public class DataManager {
 		qr = sr.select("SELECT * FROM hyperconomy_objects WHERE economy = 'default'");
 		if (!qr.next()) {setupDefaultEconomy();}
 		economies.clear();
-		ArrayList<String> econs = sr.getStringList("hyperconomy_economies", "NAME", null);
-		for (String e : econs) {
-			economies.put(e, new HyperEconomy(hc, e));
+		qr = sr.select("SELECT * FROM hyperconomy_economies");
+		while (qr.next()) {
+			String name = qr.getString("NAME");
+			economies.put(name, new HyperEconomy(hc, name, qr.getString("HYPERACCOUNT")));
 		}
 		hc.getDebugMode().ayncDebugConsoleMessage("Economies loaded.");
 		hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.ECONOMY));
@@ -300,7 +301,7 @@ public class DataManager {
 			}
 			sw.writeSyncQueue();
 			sw.writeSync(writeState);
-			economies.put(name, new HyperEconomy(hc, name));
+			economies.put(name, new HyperEconomy(hc, name, templateEconomy));
 			hc.getHyperEventHandler().fireEvent(new HyperEconomyCreationEvent());
 		}
 	}

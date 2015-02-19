@@ -8,10 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Pattern;
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.event.EventHandler;
-import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
@@ -19,8 +18,6 @@ import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.hyperconomy.event.DataLoadEvent;
-import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
@@ -39,7 +36,7 @@ public class HyperEconomy implements Serializable {
 	private static final long serialVersionUID = 4820082604724045149L;
 	private transient HyperConomy hc;
 	
-	private HyperAccount defaultAccount;
+	private String defaultAccount;
 	private boolean defaultAccountIsBank;
 	private ConcurrentHashMap<String, TradeObject> tradeObjectsNameMap = new ConcurrentHashMap<String, TradeObject>();
 	private CopyOnWriteArrayList<TradeObject> tradeObjects = new CopyOnWriteArrayList<TradeObject>();
@@ -50,21 +47,27 @@ public class HyperEconomy implements Serializable {
 	private String lastFailedToLoadComposite = "";
 	
 
-	public HyperEconomy(HyperConomy hc, String economy) {
+	public HyperEconomy(HyperConomy hc, String economy, String defaultAccount) {
 		this.hc = hc;	
 		SQLRead sr = hc.getSQLRead();
 		this.economyName = economy;
-		hc.getHyperEventHandler().registerListener(this);
+		if (defaultAccount.contains(":")) {
+			String[] accountData = defaultAccount.split(Pattern.quote(":"));
+			this.defaultAccount = accountData[1];
+			if (accountData[0].equalsIgnoreCase("BANK")) defaultAccountIsBank = true;
+		} else {
+			this.defaultAccount = defaultAccount;
+		}
 		useComposites = hc.getConf().getBoolean("enable-feature.composite-items");
 		loadData(sr);
 	}
-	
+	/*
 	public HyperEconomy(String economy, SQLRead sr, FileConfiguration config) {
 		this.economyName = economy;
 		useComposites = config.getBoolean("enable-feature.composite-items");
 		loadData(sr);
 	}
-	
+	*/
 	private void loadData(SQLRead sr) {
 		composites.clear();
 		QueryResult result = sr.select("SELECT NAME, COMPONENTS FROM hyperconomy_objects WHERE COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
@@ -102,8 +105,6 @@ public class HyperEconomy implements Serializable {
 		if (xpName == null) xpName = "xp";
 		if (useComposites) loadComposites(sr);
 	}
-
-	
 	
 	public void addObject(TradeObject to) {
 		if (to == null) return;
@@ -201,20 +202,7 @@ public class HyperEconomy implements Serializable {
 	}
 	
 	
-	@EventHandler
-	public void onDataLoadEvent(DataLoadEvent event) {
-		if (!(event.loadType == DataLoadType.COMPLETE)) return;
-		new Thread(new Runnable() {
-			public void run() {
-				SQLRead sr = hc.getSQLRead();
-				HashMap<String, String> conditions = new HashMap<String, String>();
-				conditions.put("NAME", economyName);
-				String account = sr.getString("hyperconomy_economies", "hyperaccount", conditions);
-				defaultAccount = hc.getDataManager().getAccount(account);
-				if (defaultAccount instanceof HyperBank) defaultAccountIsBank = true;
-			}
-		}).start();
-	}
+
 	
 	public void delete() {
 		for (Shop shop:hc.getDataManager().getHyperShopManager().getShops()) {
@@ -231,7 +219,11 @@ public class HyperEconomy implements Serializable {
 	}
 
 	public HyperAccount getDefaultAccount() {
-		return defaultAccount;
+		if (defaultAccountIsBank) {
+			return hc.getHyperBankManager().getHyperBank(defaultAccount);
+		} else {
+			return hc.getHyperPlayerManager().getHyperPlayer(defaultAccount);
+		}
 	}
 	
 	public void setDefaultAccount(HyperAccount account) {
@@ -239,13 +231,15 @@ public class HyperEconomy implements Serializable {
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
 		conditions.put("NAME", economyName);
+		defaultAccountIsBank = false;
+		if (account instanceof HyperBank) defaultAccountIsBank = true;
 		if (defaultAccountIsBank) {
 			values.put("HYPERACCOUNT", "BANK:"+account.getName());
 		} else {
 			values.put("HYPERACCOUNT", "PLAYER:"+account.getName());
 		}
 		hc.getSQLWrite().performUpdate("hyperconomy_economies", values, conditions);
-		this.defaultAccount = account;
+		this.defaultAccount = account.getName();
 	}
 	
 	public String getName() {
