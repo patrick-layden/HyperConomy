@@ -432,7 +432,7 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public void setCompositeData(String compositeData) {
 		this.compositeData = compositeData;
-		String statement = "UPDATE hyperconomy_objects SET COMPONENTS='" + components + "' WHERE NAME = '"+this.name+"' AND ECONOMY = '"+this.economy+"' ";
+		String statement = "UPDATE hyperconomy_objects SET COMPONENTS='" + compositeData + "' WHERE NAME = '"+this.name+"' AND ECONOMY = '"+this.economy+"' ";
 		hc.getSQLWrite().addToQueue(statement);
 		this.components.clear();
 		HashMap<String,String> tempComponents = CommonFunctions.explodeMap(compositeData);
