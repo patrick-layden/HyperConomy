@@ -311,6 +311,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	public ArrayList<TradeObject> getTradeableObjects() {
 		HyperEconomy he = getHyperEconomy();
 		ArrayList<TradeObject> available = new ArrayList<TradeObject>();
+		if (he == null) return available;
 		for (String name:availableObjects) {
 			available.add(he.getTradeObject(name));
 		}
