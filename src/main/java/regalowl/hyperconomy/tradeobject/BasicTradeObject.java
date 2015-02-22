@@ -12,6 +12,8 @@ import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.display.InfoSign;
+import regalowl.hyperconomy.display.ItemDisplay;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -87,6 +89,22 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public void delete() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
+		for (Shop s:hc.getHyperShopManager().getShops()) {
+			if (!s.getEconomy().equals(economy)) continue;
+			s.removeTradeObject(this);
+		}
+		for (InfoSign iSign:hc.getInfoSignHandler().getInfoSigns()) {
+			if (!iSign.getEconomy().equals(economy)) continue;
+			if (iSign.getTradeObject().equals(this)) {
+				iSign.deleteSign();
+			}
+		}
+		if (economy.equalsIgnoreCase("default")) {
+			for (ItemDisplay disp:hc.getItemDisplay().getDisplays()) {
+				if (disp.getHyperObject().equals(this)) disp.delete();
+			}
+		}
+		hc.getFrameShopHandler().removeFrameShops(this);
 		int compositesRemoved = 0;
 		for (TradeObject to:getDependentObjects()) {
 			to.removeCompositeNature();
@@ -678,7 +696,6 @@ public class BasicTradeObject implements TradeObject {
 
 	@Override
 	public void removeCompositeNature() {
-		//hc.getMC().logSevere("Composite removed for: " + displayName);
 		for (TradeObject to:getDependentObjects()) {
 			to.removeCompositeNature();
 		}

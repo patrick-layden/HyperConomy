@@ -80,6 +80,8 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		}
 	}
 	
+	
+	
 	@Override
 	public void setHyperConomy(HyperConomy hc) {
 		this.hc = hc;
@@ -330,4 +332,10 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 	public boolean deleted() {
 		return deleted;
 	}
+
+	@Override
+	public void removeTradeObject(TradeObject to) {
+		availableObjects.remove(to.getName());
+	}
+
 }

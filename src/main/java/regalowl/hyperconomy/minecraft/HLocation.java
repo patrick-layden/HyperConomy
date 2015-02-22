@@ -22,6 +22,7 @@ public class HLocation implements Serializable {
 
 	
 	public HLocation(HLocation l) {
+		if (l == null) return;
 		this.world = l.getWorld();
 		this.x = l.getX();
 		this.y = l.getY();

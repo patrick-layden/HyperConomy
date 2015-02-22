@@ -110,7 +110,10 @@ public class ItemDisplayHandler {
 		hc.getMC().cancelTask(refreshthreadid);
 	}
 	
-
+	public void removeDisplay(ItemDisplay disp) {
+		displays.remove(disp);
+	}
+	
 	public boolean removeDisplay(HLocation sl) {
 		sl.convertToBlockLocation();
 		for (ItemDisplay display:displays) {

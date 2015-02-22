@@ -202,6 +202,13 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 			}
 		}
 	}
+
+	@Override
+	public void removeFrameShops(TradeObject to) {
+		for (BukkitFrameShop fs:frameShops.values()) {
+			if (fs.getTradeObject().equals(to)) fs.delete();
+		}
+	}
 	
 
 }

@@ -295,12 +295,14 @@ public class HyperEconomy implements Serializable {
 			if (tradeObjectsNameMap.containsKey(sname)) {
 				return (TradeObject) ((PlayerShop) s).getPlayerShopObject(tradeObjectsNameMap.get(sname));
 			} else {
+				hc.getDebugMode().debugWriteMessage("getTradeObject() returning null for given name: ["+name+"], shop: ["+s.getName()+"]");
 				return null;
 			}
 		} else {
 			if (tradeObjectsNameMap.containsKey(sname)) {
 				return tradeObjectsNameMap.get(sname);
 			} else {
+				hc.getDebugMode().debugWriteMessage("getTradeObject() returning null for given name: ["+name+"]");
 				return null;
 			}
 		}

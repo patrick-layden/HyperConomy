@@ -488,7 +488,10 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return deleted;
 	}
 
-
+	@Override
+	public void removeTradeObject(TradeObject to) {
+		availableObjects.remove(to.getName());
+	}
 
 
 }

@@ -102,4 +102,5 @@ public interface Shop extends Comparable<Shop>, Serializable{
 	 *  Returns true if the shop has been deleted.
 	 */
 	public boolean deleted();
+	public void removeTradeObject(TradeObject to);
 }

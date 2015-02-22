@@ -28,9 +28,6 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 		    	amount = (double)number;
 		    }
 		    TradeObject ho = he.getTradeObject(oname);
-		    if (ho == null) {
-		    	hc.getMC().logSevere("Null["+name+"]["+oname+"]");
-		    }
 		    this.components.put(ho.getName(), amount);
 		}
 	}

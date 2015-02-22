@@ -27,7 +27,7 @@ public class BukkitFrameShop implements FrameShop {
 	private transient HyperConomy hc;
 	
 	private short mapId;
-	private TradeObject ho;
+	private TradeObject to;
 	private int tradeAmount;
 	private BukkitFrameShopRenderer fsr;
 	private HLocation l;
@@ -45,7 +45,7 @@ public class BukkitFrameShop implements FrameShop {
 			return;
 		}
 		this.l = l;
-		this.ho = ho;
+		this.to = ho;
 		this.tradeAmount = amount;
 		this.s = s;
 		this.bc = (BukkitConnector)hc.getMC();
@@ -75,7 +75,7 @@ public class BukkitFrameShop implements FrameShop {
 		}
 		this.mapId = mapId;
 		this.l = l;
-		this.ho = ho;
+		this.to = ho;
 		this.tradeAmount = amount;
 		this.s = s;
 		if (ho != null) {
@@ -85,7 +85,7 @@ public class BukkitFrameShop implements FrameShop {
 	
 	@EventHandler
 	public void onHyperObjectModification(TradeObjectModificationEvent event) {
-		if (event.getTradeObject().equals(ho)) {
+		if (event.getTradeObject().equals(to)) {
 			render();
 		}
 	}
@@ -96,6 +96,10 @@ public class BukkitFrameShop implements FrameShop {
 
 	public Shop getShop() {
 		return s;
+	}
+	
+	public TradeObject getTradeObject() {
+		return to;
 	}
 
 	public int getTradeAmount() {
@@ -122,7 +126,7 @@ public class BukkitFrameShop implements FrameShop {
 		for (MapRenderer mr : mapView.getRenderers()) {
 			mapView.removeRenderer(mr);
 		}
-		fsr = new BukkitFrameShopRenderer(hc, ho);
+		fsr = new BukkitFrameShopRenderer(hc, to);
 		mapView.addRenderer(fsr);
 		ItemStack stack = new ItemStack(Material.MAP, 1);
 		stack.setDurability(mapId);
@@ -132,7 +136,7 @@ public class BukkitFrameShop implements FrameShop {
 	public void buy(HyperPlayer hp) {
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 		pt.setAmount(tradeAmount);
-		pt.setHyperObject(ho);
+		pt.setHyperObject(to);
 		TransactionResponse response = hp.processTransaction(pt);
 		response.sendMessages();
 		//render();
@@ -141,7 +145,7 @@ public class BukkitFrameShop implements FrameShop {
 	public void sell(HyperPlayer hp) {
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 		pt.setAmount(tradeAmount);
-		pt.setHyperObject(ho);
+		pt.setHyperObject(to);
 		TransactionResponse response = hp.processTransaction(pt);
 		response.sendMessages();
 		//render();

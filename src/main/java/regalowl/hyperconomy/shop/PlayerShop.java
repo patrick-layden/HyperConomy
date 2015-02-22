@@ -710,4 +710,10 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		if (!shopContents.containsKey(ho.getName())) return;
 		shopContents.put(ho.getName(), ho);
 	}
+	
+	@Override
+	public void removeTradeObject(TradeObject to) {
+		availableObjects.remove(to.getName());
+		removePlayerShopObject(to);
+	}
 }

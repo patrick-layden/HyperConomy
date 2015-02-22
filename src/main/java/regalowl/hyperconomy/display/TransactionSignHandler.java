@@ -118,14 +118,12 @@ public class TransactionSignHandler {
 								sign.setLine(2, "&f[Buy]");
 							}
 							sign.setLine(3, "&a" + amount);
-							hc.getMC().logSevere("1 lines set");
 						} else if (!scevent.getHyperPlayer().hasPermission("hyperconomy.createsign")) {
 							sign.setLine(0, "");
 							sign.setLine(1, "");
 							sign.setLine(2, "");
 							sign.setLine(3, "");
 						}
-						hc.getMC().logSevere("sign updated");
 						sign.update();
 					}
 				}

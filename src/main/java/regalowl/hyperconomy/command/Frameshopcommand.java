@@ -30,12 +30,14 @@ public class Frameshopcommand extends BaseCommand implements HyperCommand {
 						PlayerShop ps = (PlayerShop) s;
 						if (hp.hasPermission("hyperconomy.admin") || ps.isAllowed(hp)) {
 							fsh.createFrameShop(bl, ho, ps);
+							data.addResponse("Frameshop created.");
 						} else {
 							data.addResponse("You don't have permission to create a frameshop here.");
 						}
 					} else {
 						if (hp.hasPermission("hyperconomy.admin")) {
 							fsh.createFrameShop(bl, ho, s);
+							data.addResponse("Frameshop created.");
 						} else {
 							data.addResponse("You don't have permission to create a frameshop here.");
 						}
@@ -43,6 +45,7 @@ public class Frameshopcommand extends BaseCommand implements HyperCommand {
 				} else {
 					if (hp.hasPermission("hyperconomy.admin")) {
 						fsh.createFrameShop(bl, ho, null);
+						data.addResponse("Frameshop created.");
 					} else {
 						data.addResponse("You don't have permission to create a frameshop here.");
 					}

@@ -131,6 +131,7 @@ public class ItemDisplay {
 	}
 	
 	public void delete() {
+		hc.getItemDisplay().removeDisplay(this);
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		conditions.put("WORLD", l.getWorld());
 		conditions.put("X", l.getX()+"");
