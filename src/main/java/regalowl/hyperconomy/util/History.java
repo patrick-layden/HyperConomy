@@ -112,13 +112,8 @@ public class History {
 		ArrayList<TradeObject> objects = em.getTradeObjects();
 		ArrayList<String> statements = new ArrayList<String>();
 		for (TradeObject object : objects) {
-			if (object.getType() == TradeObjectType.ENCHANTMENT) {
-				statements.add(getWriteStatement(object.getName(), object.getEconomy(), object.getSellPrice(EnchantmentClass.DIAMOND)));
-			} else if (object.getType() == TradeObjectType.ITEM) {
-				statements.add(getWriteStatement(object.getName(), object.getEconomy(), object.getBuyPrice(1)));
-			} else {
-				statements.add(getWriteStatement(object.getName(), object.getEconomy(), object.getBuyPrice(1)));
-			}
+			statements.add("INSERT INTO hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE) "
+					+ "VALUES ('"+object.getName()+"','"+object.getEconomy()+"', NOW() ,'"+object.getBuyPrice(1)+"')");
 		}
 		if (hc.getSQLManager().useMySQL()) {
 			statements.add("DELETE FROM hyperconomy_history WHERE TIME < DATE_SUB(NOW(), INTERVAL " + daysToSaveHistory + " DAY)");
@@ -127,11 +122,7 @@ public class History {
 		}
 		sw.addToQueue(statements);
 	}
-	private String getWriteStatement(String object, String economy, double price) {
-		return "INSERT INTO hyperconomy_history (OBJECT, ECONOMY, TIME, PRICE) VALUES ('" + object + "','" + economy + "', NOW() ,'" + price + "')";
-	}
-  	
-  	
+
     
     public void stopHistoryLog() {
     	hc.getMC().cancelTask(historylogtaskid);
@@ -140,12 +131,10 @@ public class History {
 	public double getHistoricValue(String name, String economy, int count) {
 		try {
 			count -= 1;
-			QueryResult result = sr.select("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '" + name + "' AND ECONOMY = '" + economy + "' ORDER BY TIME DESC");
+			QueryResult result = sr.select("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '"+name+"' AND ECONOMY = '"+economy+"' ORDER BY TIME DESC");
 			int c = 0;
 			while (result.next()) {
-				if (c == count) {
-					return Double.parseDouble(result.getString("PRICE"));
-				}
+				if (c == count) return Double.parseDouble(result.getString("PRICE"));
 				c++;
 			}
 			result.close();
@@ -170,22 +159,8 @@ public class History {
 		}
 		double percentChange = 0.0;
 		double historicvalue = getHistoricValue(ho.getName(), ho.getEconomy(), timevalue);
-		if (historicvalue == -1.0) {
-			return "?";
-		}
-		if (historicvalue == 0.0) {
-			return "?";
-		}
-		double currentvalue = 0.0;
-		
-		if (ho.getType() == TradeObjectType.ENCHANTMENT) {
-			currentvalue = ho.getSellPrice(EnchantmentClass.DIAMOND);
-		} else if (ho.getType() == TradeObjectType.ITEM) {
-			currentvalue = ho.getSellPrice(1);
-		} else {
-			currentvalue = ho.getSellPrice(1);
-		}
-
+		if (historicvalue == -1.0 || historicvalue == 0.0) return "?";
+		double currentvalue = ho.getBuyPrice(1);
 		percentChange = ((currentvalue - historicvalue) / historicvalue) * 100.0;
 		percentChange = CommonFunctions.round(percentChange, 3);
 		return percentChange + "";
@@ -200,10 +175,7 @@ public class History {
 	 * @return The percentage change in theoretical price for the given object and timevalue in hours
 	 */
 	public synchronized HashMap<TradeObject, String> getPercentChange(String economy, int timevalue) {
-		if (sr == null) {
-			return null;
-		}
-
+		if (sr == null) return null;
 		HashMap<TradeObject, ArrayList<Double>> allValues = new HashMap<TradeObject, ArrayList<Double>>();
 		QueryResult result = sr.select("SELECT OBJECT, PRICE FROM hyperconomy_history WHERE ECONOMY = '" + economy + "' ORDER BY TIME DESC");
 		while (result.next()) {
@@ -232,9 +204,9 @@ public class History {
 					if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 						currentvalue = ho.getSellPrice(EnchantmentClass.DIAMOND);
 					} else if (ho.getType() == TradeObjectType.ITEM) {
-						currentvalue = ho.getSellPrice(1);
+						currentvalue = ho.getBuyPrice(1);
 					} else {
-						currentvalue = ho.getSellPrice(1);
+						currentvalue = ho.getBuyPrice(1);
 					}
 					if (historicValue == 0.0) {
 						relevantValues.put(ho, "?");
