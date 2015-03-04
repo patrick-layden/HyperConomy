@@ -45,6 +45,7 @@ public class HyperEconomy implements Serializable {
 	private String economyName;
 	private String xpName = null;
 	private String lastFailedToLoadComposite = "";
+	private boolean successfulLoad = true;
 	
 
 	public HyperEconomy(HyperConomy hc, String economy, String defaultAccount) {
@@ -59,7 +60,7 @@ public class HyperEconomy implements Serializable {
 			this.defaultAccount = defaultAccount;
 		}
 		useComposites = hc.getConf().getBoolean("enable-feature.composite-items");
-		loadData(sr);
+		successfulLoad = loadData(sr);
 	}
 	/*
 	public HyperEconomy(String economy, SQLRead sr, FileConfiguration config) {
@@ -68,7 +69,7 @@ public class HyperEconomy implements Serializable {
 		loadData(sr);
 	}
 	*/
-	private void loadData(SQLRead sr) {
+	private boolean loadData(SQLRead sr) {
 		composites.clear();
 		QueryResult result = sr.select("SELECT NAME, COMPONENTS FROM hyperconomy_objects WHERE COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
 		while (result.next()) {
@@ -103,7 +104,10 @@ public class HyperEconomy implements Serializable {
 		}
 		result.close();
 		if (xpName == null) xpName = "xp";
-		if (useComposites) loadComposites(sr);
+		if (useComposites) {
+			return loadComposites(sr);
+		}
+		return true;
 	}
 	
 	public void addObject(TradeObject to) {
@@ -133,7 +137,7 @@ public class HyperEconomy implements Serializable {
 	}
 
 	
-	private void loadComposites(SQLRead sr) {
+	private boolean loadComposites(SQLRead sr) {
 		boolean loaded = false;
 		int counter = 0;
 		QueryResult result = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES, CATEGORIES, TYPE, COMPONENTS, DATA FROM hyperconomy_objects WHERE "
@@ -146,7 +150,7 @@ public class HyperEconomy implements Serializable {
 					hc.getMC().logSevere("[HyperConomy]Attempting to repair the database...");
 					repairComposites(sr);
 				}
-				return;
+				return false;
 			}
 			loaded = true;
 			result.reset();
@@ -162,20 +166,33 @@ public class HyperEconomy implements Serializable {
 				addObject(to);
 			}
 		}
+		return true;
 	}
 	
 	
 	private void repairComposites(SQLRead sr) {
 		QueryResult result = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES, COMPONENTS FROM hyperconomy_objects WHERE COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
-		while (result.next()) {
-			String name = result.getString("NAME");
+		while (result.next()) {//iterate through all composite objects
+			String name = result.getString("NAME");//name of current composite
 			String components = result.getString("COMPONENTS");
-			HashMap<String,String> tempComponents = CommonFunctions.explodeMap(components);
-			for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
-			    String oname = entry.getKey();
-			    QueryResult result2 = sr.select("SELECT * FROM hyperconomy_objects WHERE "
-			    		+ "(NAME = '"+oname+"' || DISPLAY_NAME = '"+oname+"' || ALIASES LIKE '%"+oname+",%') AND ECONOMY = '"+economyName+"'");
-			    if (result2.recordCount() == 0) {
+			HashMap<String,String> tempComponents = CommonFunctions.explodeMap(components);//get current composite's components
+			for (Map.Entry<String,String> entry : tempComponents.entrySet()) {//iterate through current composite's components
+			    String oname = entry.getKey();//name of current component
+			    QueryResult result2 = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES FROM hyperconomy_objects WHERE ECONOMY = '"+economyName+"'");
+			    boolean removeCompositeNature = true;
+			    while (result2.next()) {//iterate through all objects in economy
+			    	if (result2.getString("NAME").equals(oname) || result2.getString("DISPLAY_NAME").equals(oname)) {
+			    		removeCompositeNature = false; //if name matches the current component continue since the component exists
+			    	} else {
+			    		ArrayList<String> aliases = CommonFunctions.explode(result2.getString("ALIASES"));
+			    		for (String alias:aliases) {
+			    			if (alias.equals(oname)) {
+			    				removeCompositeNature = false; //if an alias matches the current component continue since the component exists
+			    			}
+			    		}
+			    	}
+			    }
+			    if (removeCompositeNature) {//if composite's component doesn't exist convert the composite to component
 			    	hc.getMC().logSevere("[HyperConomy]Composite removed: " + name);
 					String statement = "UPDATE hyperconomy_objects SET COMPONENTS = '' WHERE NAME = '"+name+"' AND ECONOMY = '"+economyName+"'";
 					hc.getSQLWrite().addToQueue(statement);
@@ -460,4 +477,7 @@ public class HyperEconomy implements Serializable {
 		return useComposites;
 	}
 
+	public boolean successfulLoad() {
+		return successfulLoad;
+	}
 }

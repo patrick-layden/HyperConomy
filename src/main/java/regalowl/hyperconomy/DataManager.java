@@ -143,10 +143,14 @@ public class DataManager {
 		if (!qr.next()) {setupDefaultEconomy();}
 		economies.clear();
 		qr = sr.select("SELECT * FROM hyperconomy_economies");
+		boolean successfulLoad = true;
 		while (qr.next()) {
 			String name = qr.getString("NAME");
-			economies.put(name, new HyperEconomy(hc, name, qr.getString("HYPERACCOUNT")));
+			HyperEconomy econ = new HyperEconomy(hc, name, qr.getString("HYPERACCOUNT"));
+			if (!econ.successfulLoad()) successfulLoad = false;
+			economies.put(name, econ);
 		}
+		if (!successfulLoad) return;
 		hc.getDebugMode().ayncDebugConsoleMessage("Economies loaded.");
 		hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.ECONOMY));
 	}
