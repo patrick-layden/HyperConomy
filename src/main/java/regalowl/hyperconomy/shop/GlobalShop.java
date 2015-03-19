@@ -41,6 +41,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		ArrayList<String> unavailable = CommonFunctions.explode(banned_objects);
 		for (String objectName : unavailable) {
 			TradeObject ho = hc.getDataManager().getEconomy(economy).getTradeObject(objectName);
+			if (ho == null) continue;
 			availableObjects.remove(ho.getName());
 		}
 	}
@@ -76,6 +77,7 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		availableObjects.clear();
 		HyperEconomy he = getHyperEconomy();
 		for (TradeObject ho:he.getTradeObjects()) {
+			if (ho == null) continue;
 			availableObjects.add(ho.getName());
 		}
 	}
