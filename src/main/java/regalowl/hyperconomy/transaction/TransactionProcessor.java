@@ -401,12 +401,16 @@ public class TransactionProcessor {
 				return;
 			}
 			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount, hp));
-			double amountRemoved = giveInventory.remove(amount, tradeObject.getItem());
 			double shopstock = tradeObject.getStock();
+			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
+			if (!hasBalance(price - salestax)) {
+				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
+				return;
+			}
+			double amountRemoved = giveInventory.remove(amount, tradeObject.getItem());
 			if (!tradeObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || tradeObject.isShopObject()) {
 				tradeObject.setStock(shopstock + amountRemoved);
 			}
-			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
 			hp.deposit(price - salestax);
 			tradePartner.withdraw(price - salestax);
 			resetBalanceIfUnlimited();
@@ -432,15 +436,15 @@ public class TransactionProcessor {
 				return;
 			}
 			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount));
-			if (!hasBalance(price)) {
-				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), tradeObject);
+			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
+			if (!tradePartner.hasBalance(price - salestax)) {
+				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
 				return;
 			}
 			tradeObject.remove(amount, hp);
 			if (!tradeObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || tradeObject.isShopObject()) {
 				tradeObject.setStock(amount + tradeObject.getStock());
 			}
-			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
 			hp.deposit(price - salestax);
 			tradePartner.withdraw(price - salestax);
 			resetBalanceIfUnlimited();
@@ -478,8 +482,9 @@ public class TransactionProcessor {
 			}
 			String mater = heldItem.getMaterial().toString();
 			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(EnchantmentClass.fromString(mater), hp));
-			if (!hasBalance(price)) {
-				response.addFailed(L.get("SHOP_NOT_ENOUGH_MONEY"), tradeObject);
+			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
+			if (!tradePartner.hasBalance(price - salestax)) {
+				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
 				return;
 			}
 			double shopstock = tradeObject.getStock();
@@ -488,10 +493,8 @@ public class TransactionProcessor {
 				heldItem.setMaterial("BOOK");
 				heldItem.setHItemMeta(new HItemMeta(heldItem.getItemMeta()));
 			}
-			
 			inv.updateInventory();
 			tradeObject.setStock(shopstock + amountRemoved);
-			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
 			hp.deposit(price - salestax);
 			tradePartner.withdraw(price - salestax);
 			resetBalanceIfUnlimited();
@@ -584,6 +587,10 @@ public class TransactionProcessor {
 				price = money;
 			} else {
 				price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount, hp));
+			}
+			if (!tradePartner.hasBalance(price)) {
+				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
+				return;
 			}
 			hp.getInventory().remove(amount, tradeObject.getItem());
 			receiveInventory.add(amount, tradeObject.getItem());
