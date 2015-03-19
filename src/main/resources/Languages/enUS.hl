@@ -316,7 +316,7 @@ REPAIRSIGNS_INVALID: &4Invalid Parameters.  Use /repairsigns [x radius/radius] (
 NO_SIGNS_FOUND: &9No signs were found.
 X_SIGNS_REPAIRED: &a%v &9signs were detected and repaired!
 VOLUME_TOO_LARGE: &4You can't scan more than %v blocks at a time!
-HCWEB_INVALID: &4Invalid parameters.  Use /hcweb ['enable', 'disable', 'background'] [setting]
+HCWEB_INVALID: &4Invalid parameters.  Use /hcweb ['enable', 'disable', 'refresh', 'setdefault', 'status' ] [setting]
 WEB_PAGE_SET: &6Web page set!
 HCCLEARHISTORY_CLEARED: &6History table cleared!
 HCCLEARHISTORY_INVALID: &4Invalid parameters.  Use /hcclearhistory.
