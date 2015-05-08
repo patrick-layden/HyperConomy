@@ -52,6 +52,7 @@ public class UpdateYML {
 		cfg.setDefault("intervals.save", 24000);
 
 
+		cfg.setDefault("tax.account", "hyperconomy");
 		cfg.setDefault("tax.purchase", 3);
 		cfg.setDefault("tax.initial", 100);
 		cfg.setDefault("tax.static", 100);

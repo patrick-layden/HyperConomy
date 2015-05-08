@@ -32,6 +32,7 @@ intervals:
   shop-check: 6
   save: 24000
 tax:
+  account: hyperconomy
   purchase: 3
   initial: 100
   static: 100
