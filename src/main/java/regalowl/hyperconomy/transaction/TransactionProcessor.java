@@ -31,12 +31,13 @@ public class TransactionProcessor {
 	private HyperConomy hc;
 	private HyperEventHandler heh;
 	private LanguageFile L;
-	private HyperPlayer hp;
+	private HyperPlayer trader;
 	private DataManager dm;
 	private Log log;
 	
 	private TransactionType transactionType;
 	private HyperAccount tradePartner;
+	private HyperAccount taxAccount;
 	private TradeObject tradeObject;
 	private int amount;
 	private HInventory giveInventory;
@@ -57,7 +58,7 @@ public class TransactionProcessor {
 	
 	public TransactionProcessor(HyperConomy hc, HyperPlayer hp) {
 		this.hc = hc;
-		this.hp = hp;
+		this.trader = hp;
 		L = hc.getLanguageFile();
 		dm = hc.getDataManager();
 		log = hc.getLog();
@@ -80,17 +81,17 @@ public class TransactionProcessor {
 		} else {
 			status = TradeObjectStatus.TRADE;
 		}
+		taxAccount = hc.getDataManager().getAccount(hc.getConf().getString("tax.account"));
+		if (taxAccount == null) taxAccount = trader.getHyperEconomy().getDefaultAccount();
 		tradePartner = pt.getTradePartner();
-		if (tradePartner == null) {
-			tradePartner = hp.getHyperEconomy().getDefaultAccount();
-		}
+		if (tradePartner == null) tradePartner = trader.getHyperEconomy().getDefaultAccount();
 		giveInventory = pt.getGiveInventory();
 		if (giveInventory == null) {
-			giveInventory = hp.getInventory();
+			giveInventory = trader.getInventory();
 		}
 		receiveInventory = pt.getReceiveInventory();
 		if (receiveInventory == null) {
-			receiveInventory = hp.getInventory();
+			receiveInventory = trader.getInventory();
 		}
 		money = pt.getMoney();
 		//chargeTax = pt.isChargeTax();
@@ -100,7 +101,7 @@ public class TransactionProcessor {
 		
 		shopUnlimitedMoney = hc.getConf().getBoolean("shop.server-shops-have-unlimited-money");
 		
-		response = new TransactionResponse(hc, hp);
+		response = new TransactionResponse(hc, trader);
 
 		switch (this.transactionType) {
 			case BUY:
@@ -145,14 +146,14 @@ public class TransactionProcessor {
 	
 	
 	private void resetBalanceIfUnlimited() {
-		if (shopUnlimitedMoney && tradePartner.equals(hp.getHyperEconomy().getDefaultAccount())) {
+		if (shopUnlimitedMoney && tradePartner.equals(trader.getHyperEconomy().getDefaultAccount())) {
 			tradePartner.setBalance(0);
 		}
 	}
 	
-	private boolean hasBalance(double price) {
+	private boolean tradePartnerHasBalance(double price) {
 		if (!tradePartner.hasBalance(price)) {
-			if (shopUnlimitedMoney && tradePartner.equals(hp.getHyperEconomy().getDefaultAccount())) {
+			if (shopUnlimitedMoney && tradePartner.equals(trader.getHyperEconomy().getDefaultAccount())) {
 				return true;
 			} else {
 				return false;
@@ -163,17 +164,17 @@ public class TransactionProcessor {
 	
 	
 	private void checkShopBuy() {
-		if (hp == null || tradeObject == null) {
+		if (trader == null || tradeObject == null) {
 			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
 		}
 		if (obeyShops) {
-			if (!dm.getHyperShopManager().inAnyShop(hp)) {
+			if (!dm.getHyperShopManager().inAnyShop(trader)) {
 				response.addFailed(L.get("MUST_BE_IN_SHOP"), tradeObject);
 				return;
 			} else {
-				Shop shop = dm.getHyperShopManager().getShop(hp);
-				if (!hp.hasBuyPermission(shop)) {
+				Shop shop = dm.getHyperShopManager().getShop(trader);
+				if (!trader.hasBuyPermission(shop)) {
 					response.addFailed(L.get("NO_TRADE_PERMISSION"), tradeObject);
 					return;
 				}
@@ -203,10 +204,9 @@ public class TransactionProcessor {
 
 	public void buy() {
 		try {
-			double price = tradeObject.getBuyPrice(amount);
-			double taxpaid = tradeObject.getPurchaseTax(price);
-			price = CommonFunctions.twoDecimals(price + taxpaid);
-			if (!hp.hasBalance(price)) {
+			double price = CommonFunctions.twoDecimals(tradeObject.getBuyPrice(amount));
+			double tax = CommonFunctions.twoDecimals(tradeObject.getPurchaseTax(price));
+			if (!trader.hasBalance(price + tax)) {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
 			}
@@ -219,15 +219,16 @@ public class TransactionProcessor {
 			if (!tradeObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || tradeObject.isShopObject()) {
 				tradeObject.setStock(tradeObject.getStock() - amount);
 			}
-			hp.withdraw(price);
+			trader.withdraw(price + tax);
 			tradePartner.deposit(price);
+			taxAccount.deposit(tax);
 			resetBalanceIfUnlimited();
 			tradeObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price, tradeObject.getDisplayName(), CommonFunctions.twoDecimals(taxpaid)), price, tradeObject);
+			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price + tax, tradeObject.getDisplayName(), tax), price + tax, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "purchase", tradeObject.getDisplayName(), (double) amount, CommonFunctions.twoDecimals(price - taxpaid), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), tradeObject.getStatusString());
+			log.writeSQLLog(trader.getName(), "purchase", tradeObject.getDisplayName(), (double) amount, price, tax, tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "Transaction buy() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
+			String info = "Transaction buy() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 			return;
 		}
@@ -236,26 +237,26 @@ public class TransactionProcessor {
 	
 	public void buyXP() {
 		try {
-			double price = tradeObject.getBuyPrice(amount);
-			double taxpaid = tradeObject.getPurchaseTax(price);
-			price = CommonFunctions.twoDecimals(price + taxpaid);
-			if (!hp.hasBalance(price)) {
+			double price = CommonFunctions.twoDecimals(tradeObject.getBuyPrice(amount));
+			double tax = CommonFunctions.twoDecimals(tradeObject.getPurchaseTax(price));
+			if (!trader.hasBalance(price + tax)) {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
 			}
-			tradeObject.add(amount, hp);
+			tradeObject.add(amount, trader);
 			if (!tradeObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || tradeObject.isShopObject()) {
 				tradeObject.setStock(tradeObject.getStock() - amount);
 			}
-			hp.withdraw(price);
+			trader.withdraw(price + tax);
 			tradePartner.deposit(price);
+			taxAccount.deposit(tax);
 			resetBalanceIfUnlimited();
 			tradeObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, CommonFunctions.twoDecimals(price), tradeObject.getDisplayName(), CommonFunctions.twoDecimals(taxpaid)), CommonFunctions.twoDecimals(price), tradeObject);
+			response.addSuccess(L.f(L.get("PURCHASE_MESSAGE"), amount, price + tax, tradeObject.getDisplayName(), tax), price + tax, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "purchase", hp.getName(), (double) amount, CommonFunctions.twoDecimals(price), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), tradeObject.getStatusString());
+			log.writeSQLLog(trader.getName(), "purchase", trader.getName(), (double) amount, price, tax, tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "Transaction buyXP() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
+			String info = "Transaction buyXP() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -269,12 +270,11 @@ public class TransactionProcessor {
 	 */
 	public void buyEnchant() {
 		try {
-			HInventory inv = hp.getInventory();
+			HInventory inv = trader.getInventory();
 			HItemStack heldItem = inv.getHeldItem();
 			HEnchantment ench = tradeObject.getEnchantment();
-			double price = tradeObject.getBuyPrice(EnchantmentClass.fromString(heldItem.getMaterial()));
-			double taxpaid = tradeObject.getPurchaseTax(price);
-			price = CommonFunctions.twoDecimals(taxpaid + price);
+			double price = CommonFunctions.twoDecimals(tradeObject.getBuyPrice(EnchantmentClass.fromString(heldItem.getMaterial())));
+			double tax = CommonFunctions.twoDecimals(tradeObject.getPurchaseTax(price));
 			if (heldItem.containsEnchantment(ench)) {
 				response.addFailed(L.get("ITEM_ALREADY_HAS_ENCHANTMENT"), tradeObject);
 				return;
@@ -287,13 +287,14 @@ public class TransactionProcessor {
 				response.addFailed(L.get("ENCHANTMENT_ONLY_SINGLE_ITEM"), tradeObject);
 				return;
 			}
-			if (!hp.hasBalance(price)) {
+			if (!trader.hasBalance(price + tax)) {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
 			}
 			tradeObject.setStock(tradeObject.getStock() - amount);
-			hp.withdraw(price);
+			trader.withdraw(price + tax);
 			tradePartner.deposit(price);
+			taxAccount.deposit(tax);
 			resetBalanceIfUnlimited();
 			
 			if (heldItem.getMaterial().equalsIgnoreCase("BOOK")) {
@@ -306,11 +307,11 @@ public class TransactionProcessor {
 			}
 			inv.updateInventory();
 			tradeObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("ENCHANTMENT_PURCHASE_MESSAGE"), 1, price, tradeObject.getDisplayName(), CommonFunctions.twoDecimals(taxpaid)), CommonFunctions.twoDecimals(price), tradeObject);
+			response.addSuccess(L.f(L.get("ENCHANTMENT_PURCHASE_MESSAGE"), 1, price + tax, tradeObject.getDisplayName(), tax), price + tax, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "purchase", tradeObject.getDisplayName(), 1.0, CommonFunctions.twoDecimals(price), CommonFunctions.twoDecimals(taxpaid), tradePartner.getName(), tradeObject.getStatusString());
+			log.writeSQLLog(trader.getName(), "purchase", tradeObject.getDisplayName(), 1.0, price, tax, tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "ETransaction buyEnchant() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "'";
+			String info = "ETransaction buyEnchant() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -329,21 +330,21 @@ public class TransactionProcessor {
 	
 	
 	private void checkShopSell() {
-		if (hp == null || tradeObject == null) {
+		if (trader == null || tradeObject == null) {
 			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
 		}
-		if (hp.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
+		if (trader.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
 			response.addFailed(L.get("CANT_SELL_CREATIVE"), tradeObject);
 			return;
 		}
 		if (obeyShops) {
-			if (!dm.getHyperShopManager().inAnyShop(hp)) {
+			if (!dm.getHyperShopManager().inAnyShop(trader)) {
 				response.addFailed(L.get("MUST_BE_IN_SHOP"), tradeObject);
 				return;
 			} else {
-				Shop shop = dm.getHyperShopManager().getShop(hp);
-				if (!hp.hasSellPermission(shop)) {
+				Shop shop = dm.getHyperShopManager().getShop(trader);
+				if (!trader.hasSellPermission(shop)) {
 					response.addFailed(L.get("NO_TRADE_PERMISSION"), tradeObject);
 					return;
 				}
@@ -400,10 +401,10 @@ public class TransactionProcessor {
 				response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), name), tradeObject);
 				return;
 			}
-			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount, hp));
+			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount, trader));
+			double tax = CommonFunctions.twoDecimals(trader.getSalesTax(price));
 			double shopstock = tradeObject.getStock();
-			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
-			if (!hasBalance(price - salestax)) {
+			if (!tradePartnerHasBalance(price)) {
 				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
 				return;
 			}
@@ -411,15 +412,16 @@ public class TransactionProcessor {
 			if (!tradeObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || tradeObject.isShopObject()) {
 				tradeObject.setStock(shopstock + amountRemoved);
 			}
-			hp.deposit(price - salestax);
-			tradePartner.withdraw(price - salestax);
+			trader.deposit(price - tax);
+			taxAccount.deposit(tax);
+			tradePartner.withdraw(price);
 			resetBalanceIfUnlimited();
 			tradeObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, price, name, salestax), price - salestax, tradeObject);
+			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, price, name, tax), price - tax, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "sale", name, (double)amount, price - salestax, salestax, tradePartner.getName(), tradeObject.getStatusString());
+			log.writeSQLLog(trader.getName(), "sale", name, (double)amount, price - tax, tax, tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "Transaction sell() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + ", amount='" + amount + "'";
+			String info = "Transaction sell() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + ", amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -431,29 +433,30 @@ public class TransactionProcessor {
 
 	public void sellXP() {
 		try {
-			if (hp.getTotalXpPoints() < amount) {
+			if (trader.getTotalXpPoints() < amount) {
 				response.addFailed(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), tradeObject.getDisplayName()), tradeObject);
 				return;
 			}
 			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount));
-			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
-			if (!tradePartner.hasBalance(price - salestax)) {
+			double tax = CommonFunctions.twoDecimals(trader.getSalesTax(price));
+			if (!tradePartnerHasBalance(price)) {
 				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
 				return;
 			}
-			tradeObject.remove(amount, hp);
+			tradeObject.remove(amount, trader);
 			if (!tradeObject.isStatic() || !hc.getConf().getBoolean("shop.unlimited-stock-for-static-items") || tradeObject.isShopObject()) {
 				tradeObject.setStock(amount + tradeObject.getStock());
 			}
-			hp.deposit(price - salestax);
-			tradePartner.withdraw(price - salestax);
+			trader.deposit(price - tax);
+			taxAccount.deposit(tax);
+			tradePartner.withdraw(price);
 			resetBalanceIfUnlimited();
 			tradeObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, price, tradeObject.getDisplayName(), salestax), price, tradeObject);
+			response.addSuccess(L.f(L.get("SELL_MESSAGE"), amount, price, tradeObject.getDisplayName(), tax), price - tax, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "sale", tradeObject.getDisplayName(), (double) amount, price - salestax, salestax, tradePartner.getName(), tradeObject.getStatusString());
+			log.writeSQLLog(trader.getName(), "sale", tradeObject.getDisplayName(), (double) amount, price - tax, tax, tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "Transaction sellXP() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', amount='" + amount + "'";
+			String info = "Transaction sellXP() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -474,16 +477,16 @@ public class TransactionProcessor {
 	 */
 	public void sellEnchant() {
 		try {
-			HInventory inv = hp.getInventory();
+			HInventory inv = trader.getInventory();
 			HItemStack heldItem = inv.getHeldItem();
 			if (!(heldItem.containsEnchantment(tradeObject.getEnchantment()))) {
 				response.addFailed(L.f(L.get("ITEM_DOESNT_HAVE_ENCHANTMENT"), tradeObject.getDisplayName()), tradeObject);
 				return;
 			}
 			String mater = heldItem.getMaterial().toString();
-			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(EnchantmentClass.fromString(mater), hp));
-			double salestax = CommonFunctions.twoDecimals(hp.getSalesTax(price));
-			if (!tradePartner.hasBalance(price - salestax)) {
+			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(EnchantmentClass.fromString(mater), trader));
+			double tax = CommonFunctions.twoDecimals(trader.getSalesTax(price));
+			if (!tradePartnerHasBalance(price)) {
 				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
 				return;
 			}
@@ -495,15 +498,16 @@ public class TransactionProcessor {
 			}
 			inv.updateInventory();
 			tradeObject.setStock(shopstock + amountRemoved);
-			hp.deposit(price - salestax);
-			tradePartner.withdraw(price - salestax);
+			trader.deposit(price - tax);
+			taxAccount.deposit(tax);
+			tradePartner.withdraw(price);
 			resetBalanceIfUnlimited();
 			tradeObject.checkInitiationStatus();
-			response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, price, tradeObject.getDisplayName(), salestax), price - salestax, tradeObject);
+			response.addSuccess(L.f(L.get("ENCHANTMENT_SELL_MESSAGE"), 1, price, tradeObject.getDisplayName(), tax), price - tax, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "sale", tradeObject.getDisplayName(), 1.0, price - salestax, salestax, tradePartner.getName(), tradeObject.getStatusString());
+			log.writeSQLLog(trader.getName(), "sale", tradeObject.getDisplayName(), 1.0, price - tax, tax, tradePartner.getName(), tradeObject.getStatusString());
 		} catch (Exception e) {
-			String info = "ETransaction sellEnchant() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "'";
+			String info = "ETransaction sellEnchant() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -528,7 +532,7 @@ public class TransactionProcessor {
 	
 	
 	public void buyFromInventory() {
-		if (hp == null || tradePartner == null || tradeObject == null) {
+		if (trader == null || tradePartner == null || tradeObject == null) {
 			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
 		}
@@ -539,31 +543,31 @@ public class TransactionProcessor {
 			} else {
 				price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount));
 			}
-			if (!hp.hasBalance(price)) {
+			if (!trader.hasBalance(price)) {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
 			}
-			int space = hp.getInventory().getAvailableSpace(tradeObject.getItem());
+			int space = trader.getInventory().getAvailableSpace(tradeObject.getItem());
 			if (space < amount) {
 				response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, tradeObject.getDisplayName()), tradeObject);
 				return;
 			}
-			hp.getInventory().add(amount, tradeObject.getItem());
+			trader.getInventory().add(amount, tradeObject.getItem());
 			giveInventory.remove(amount, tradeObject.getItem());
-			hp.withdraw(price);
+			trader.withdraw(price);
 			tradePartner.deposit(price);
 			response.addSuccess(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, price, tradeObject.getDisplayName(), tradePartner.getName()), price, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "purchase", tradeObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
+			log.writeSQLLog(trader.getName(), "purchase", tradeObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
 			
 			MessageBuilder mb = new MessageBuilder(hc, "CHEST_BUY_NOTIFICATION");
 			mb.setAmount(amount);
 			mb.setObjectName(tradeObject.getDisplayName());
 			mb.setPrice(price);
-			mb.setPlayerName(hp.getName());
+			mb.setPlayerName(trader.getName());
 			tradePartner.sendMessage(mb.build());
 		} catch (Exception e) {
-			String info = "Transaction buyChest() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
+			String info = "Transaction buyChest() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -577,7 +581,7 @@ public class TransactionProcessor {
 	 * 
 	 */
 	public void sellToInventory() {
-		if (hp == null || tradePartner == null || tradeObject == null) {
+		if (trader == null || tradePartner == null || tradeObject == null) {
 			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
 		}
@@ -586,28 +590,28 @@ public class TransactionProcessor {
 			if (setPrice) {
 				price = money;
 			} else {
-				price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount, hp));
+				price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount, trader));
 			}
 			if (!tradePartner.hasBalance(price)) {
 				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
 				return;
 			}
-			hp.getInventory().remove(amount, tradeObject.getItem());
+			trader.getInventory().remove(amount, tradeObject.getItem());
 			receiveInventory.add(amount, tradeObject.getItem());
-			hp.deposit(price);
+			trader.deposit(price);
 			tradePartner.withdraw(price);
 			response.addSuccess(L.f(L.get("SELL_CHEST_MESSAGE"), amount, price, tradeObject.getDisplayName(), tradePartner.getName()), price, tradeObject);
 			response.setSuccessful();
-			log.writeSQLLog(hp.getName(), "sale", tradeObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
+			log.writeSQLLog(trader.getName(), "sale", tradeObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
 			
 			MessageBuilder mb = new MessageBuilder(hc, "CHEST_SELL_NOTIFICATION");
 			mb.setAmount(amount);
 			mb.setObjectName(tradeObject.getDisplayName());
 			mb.setPrice(price);
-			mb.setPlayerName(hp.getName());
+			mb.setPlayerName(trader.getName());
 			tradePartner.sendMessage(mb.build());
 		} catch (Exception e) {
-			String info = "Transaction sellChest() passed values name='" + tradeObject.getDisplayName() + "', player='" + hp.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
+			String info = "Transaction sellChest() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
