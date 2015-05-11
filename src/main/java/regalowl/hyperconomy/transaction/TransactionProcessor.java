@@ -403,6 +403,7 @@ public class TransactionProcessor {
 			}
 			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount, trader));
 			double tax = CommonFunctions.twoDecimals(trader.getSalesTax(price));
+			if (tradeObject.isShopObject()) tax = 0;
 			double shopstock = tradeObject.getStock();
 			if (!tradePartnerHasBalance(price)) {
 				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
@@ -439,6 +440,7 @@ public class TransactionProcessor {
 			}
 			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount));
 			double tax = CommonFunctions.twoDecimals(trader.getSalesTax(price));
+			if (tradeObject.isShopObject()) tax = 0;
 			if (!tradePartnerHasBalance(price)) {
 				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
 				return;
@@ -486,6 +488,7 @@ public class TransactionProcessor {
 			String mater = heldItem.getMaterial().toString();
 			double price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(EnchantmentClass.fromString(mater), trader));
 			double tax = CommonFunctions.twoDecimals(trader.getSalesTax(price));
+			if (tradeObject.isShopObject()) tax = 0;
 			if (!tradePartnerHasBalance(price)) {
 				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
 				return;
