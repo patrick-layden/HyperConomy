@@ -107,6 +107,7 @@ public class HyperConomy {
 	private final int saveInterval = 1200000;
 	private boolean enabled;
 	private String consoleEconomy;
+	public static final boolean isFullVersion = true;
 
 	public HyperConomy(MineCraftConnector mc) {
 		this.mc = mc;

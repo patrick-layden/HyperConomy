@@ -11,7 +11,7 @@ public class UpdateYML {
 	public UpdateYML(HyperConomy hc) {
 		FileConfiguration cfg = hc.getConf();
 
-
+		//remove when unnecessary for upgrades
 		cfg.setDefault("shop.default-server-shop-account", cfg.getString("config.global-shop-account"));
 		
 
@@ -110,5 +110,21 @@ public class UpdateYML {
 		cfg.setDefault("updater.notify-for.dev-builds", true);
 		cfg.setDefault("updater.notify-for.beta-builds", true);
 		cfg.setDefault("updater.notify-for.recommended-builds", true);
+		
+		
+		cfg.setDefault("web-page.enable", false);
+		cfg.setDefault("web-page.port", 7777);
+		cfg.setDefault("web-page.background-color", "8FA685");
+		cfg.setDefault("web-page.font-color", "F2F2F2");
+		cfg.setDefault("web-page.border-color", "091926");
+		cfg.setDefault("web-page.increase-value-color", "C8D9B0");
+		cfg.setDefault("web-page.decrease-value-color", "F2B2A8");
+		cfg.setDefault("web-page.highlight-row-color", "8FA685");
+		cfg.setDefault("web-page.header-color", "091926");
+		cfg.setDefault("web-page.table-data-color", "314A59");
+		cfg.setDefault("web-page.font-size", 12);
+		cfg.setDefault("web-page.font", "verdana");
+		cfg.setDefault("web-page.enable-web-api", false);
+		cfg.setDefault("web-page.web-api-path", "API");
 	}
 }

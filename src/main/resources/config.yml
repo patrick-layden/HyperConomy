@@ -90,3 +90,18 @@ updater:
     dev-builds: true
     beta-builds: true
     recommended-builds: true
+web-page:
+	enable: false
+	port: 7777
+	background-color: 8FA685
+	font-color: F2F2F2
+	border-color: "091926"
+	increase-value-color: C8D9B0
+	decrease-value-color: F2B2A8
+	highlight-row-color: 8FA685
+	header-color: "091926"
+	table-data-color: 314A59
+	font-size: 12
+	font: verdana
+	enable-web-api: false
+	web-api-path: API

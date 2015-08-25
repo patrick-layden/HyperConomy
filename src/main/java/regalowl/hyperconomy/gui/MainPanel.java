@@ -61,6 +61,10 @@ public class MainPanel {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					if (!HyperConomy.isFullVersion) {
+						JOptionPane.showMessageDialog(null, "You must download the full version of HyperConomy to use the GUI.  (Not the Lite version.)", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 					MainPanel window = new MainPanel();
 					window.frmEconomyEditor.setVisible(true);
 				} catch (Exception e) {
