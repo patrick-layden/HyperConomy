@@ -389,17 +389,18 @@ public class BukkitCommon {
         	} else if (im instanceof FireworkEffectMeta) {
         		FireworkEffectMeta sItemMeta = (FireworkEffectMeta)im;
         		FireworkEffect fe = sItemMeta.getEffect();
-        		ArrayList<HColor> colors = new ArrayList<HColor>();
-        		ArrayList<HColor> fadeColors = new ArrayList<HColor>();
+        		HFireworkEffect sfe = null;
         		if (fe != null) {
+        			ArrayList<HColor> colors = new ArrayList<HColor>();
 	        		for (Color color:fe.getColors()) {
 	        			colors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
 	        		}
+	        		ArrayList<HColor> fadeColors = new ArrayList<HColor>();
 	        		for (Color color:fe.getFadeColors()) {
 	        			fadeColors.add(new HColor(color.getRed(), color.getGreen(), color.getBlue()));
 	        		}
+	        		sfe = new HFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail());
         		}
-        		HFireworkEffect sfe = new HFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail());
         		itemMeta = new HFireworkEffectMeta(displayName, lore, enchantments, sfe);
         	} else if (im instanceof FireworkMeta) {
         		FireworkMeta sItemMeta = (FireworkMeta)im;
@@ -456,49 +457,51 @@ public class BukkitCommon {
 	}
 
 	@SuppressWarnings("deprecation")
-	public ItemStack getItemStack(HItemStack sis) {
-		if (sis == null || sis.isBlank()) return null;
-        ItemStack item = new ItemStack(Material.matchMaterial(sis.getMaterial()));
-        item.setAmount(sis.getAmount());
-        item.setDurability(sis.getDurability());
-        item.getData().setData(sis.getData());
-        if (sis.getItemMeta() != null) {
-        	HItemMeta sim = sis.getItemMeta();
-        	ItemMeta itemMeta = item.getItemMeta();
-        	itemMeta.setDisplayName(sim.getDisplayName());
-        	itemMeta.setLore(sim.getLore());
-    		for (HEnchantment se:sim.getEnchantments()) {
+	public ItemStack getItemStack(HItemStack hItemStack) {
+		if (hItemStack == null || hItemStack.isBlank()) return null;
+        ItemStack generatedItemStack = new ItemStack(Material.matchMaterial(hItemStack.getMaterial()));
+        generatedItemStack.setAmount(hItemStack.getAmount());
+        generatedItemStack.setDurability(hItemStack.getDurability());
+        generatedItemStack.getData().setData(hItemStack.getData());
+        if (hItemStack.getItemMeta() != null) {
+        	HItemMeta hItemMeta = hItemStack.getItemMeta();
+        	ItemMeta itemMeta = generatedItemStack.getItemMeta();
+        	itemMeta.setDisplayName(hItemMeta.getDisplayName());
+        	itemMeta.setLore(hItemMeta.getLore());
+    		for (HEnchantment se:hItemMeta.getEnchantments()) {
     			itemMeta.addEnchant(Enchantment.getByName(se.getEnchantmentName()), se.getLvl(), true);
     		}
-        	if (sim instanceof HEnchantmentStorageMeta) {
-        		HEnchantmentStorageMeta sItemMeta = (HEnchantmentStorageMeta)sim;
+        	if (hItemMeta instanceof HEnchantmentStorageMeta) {
+        		HEnchantmentStorageMeta sItemMeta = (HEnchantmentStorageMeta)hItemMeta;
         		EnchantmentStorageMeta esm = (EnchantmentStorageMeta)itemMeta;
         		for (HEnchantment se:sItemMeta.getEnchantments()) {
         			esm.addStoredEnchant(Enchantment.getByName(se.getEnchantmentName()), se.getLvl(), true);
         		}
-        	} else if (sim instanceof HBookMeta) {
-        		HBookMeta sItemMeta = (HBookMeta)sim;
+        	} else if (hItemMeta instanceof HBookMeta) {
+        		HBookMeta sItemMeta = (HBookMeta)hItemMeta;
         		BookMeta bm = (BookMeta)itemMeta;
         		bm.setPages(sItemMeta.getPages());
         		bm.setAuthor(sItemMeta.getAuthor());
         		bm.setTitle(sItemMeta.getTitle());
-        	} else if (sim instanceof HFireworkEffectMeta) {
-        		HFireworkEffectMeta sItemMeta = (HFireworkEffectMeta)sim;
+        	} else if (hItemMeta instanceof HFireworkEffectMeta) {
+        		HFireworkEffectMeta sItemMeta = (HFireworkEffectMeta)hItemMeta;
         		FireworkEffectMeta fem = (FireworkEffectMeta)itemMeta;
         		HFireworkEffect sfe = sItemMeta.getEffect();
-    			Builder fb = FireworkEffect.builder();
-    			for (HColor c:sfe.getColors()) {
-    				fb.withColor(Color.fromRGB(c.getRed(), c.getGreen(), c.getBlue()));
-    			}
-    			for (HColor c:sfe.getFadeColors()) {
-    				fb.withFade(Color.fromRGB(c.getRed(), c.getGreen(), c.getBlue()));
-    			}
-    			fb.with(FireworkEffect.Type.valueOf(sfe.getType()));
-    			fb.flicker(sfe.hasFlicker());
-    			fb.trail(sfe.hasTrail());
-    			fem.setEffect(fb.build());
-        	} else if (sim instanceof HFireworkMeta) {
-        		HFireworkMeta sItemMeta = (HFireworkMeta)sim;
+        		if (sfe != null) {
+	    			Builder fb = FireworkEffect.builder();
+	    			for (HColor c:sfe.getColors()) {
+	    				fb.withColor(Color.fromRGB(c.getRed(), c.getGreen(), c.getBlue()));
+	    			}
+	    			for (HColor c:sfe.getFadeColors()) {
+	    				fb.withFade(Color.fromRGB(c.getRed(), c.getGreen(), c.getBlue()));
+	    			}
+	    			fb.with(FireworkEffect.Type.valueOf(sfe.getType()));
+	    			fb.flicker(sfe.hasFlicker());
+	    			fb.trail(sfe.hasTrail());
+	    			fem.setEffect(fb.build());
+        		}
+        	} else if (hItemMeta instanceof HFireworkMeta) {
+        		HFireworkMeta sItemMeta = (HFireworkMeta)hItemMeta;
         		FireworkMeta fm = (FireworkMeta)itemMeta;
         		for (HFireworkEffect sfe:sItemMeta.getEffects()) {
         			Builder fb = FireworkEffect.builder();
@@ -514,37 +517,37 @@ public class BukkitCommon {
         			fm.addEffect(fb.build());
         		}
         		fm.setPower(sItemMeta.getPower());
-        	} else if (sim instanceof HLeatherArmorMeta) {
-        		HLeatherArmorMeta sItemMeta = (HLeatherArmorMeta)sim;
+        	} else if (hItemMeta instanceof HLeatherArmorMeta) {
+        		HLeatherArmorMeta sItemMeta = (HLeatherArmorMeta)hItemMeta;
         		LeatherArmorMeta lam = (LeatherArmorMeta)itemMeta;
         		HColor sc = sItemMeta.getColor();
         		lam.setColor(Color.fromRGB(sc.getRed(), sc.getGreen(), sc.getBlue()));
-        	} else if (sim instanceof HPotionMeta) {
-        		HPotionMeta sItemMeta = (HPotionMeta)sim;
+        	} else if (hItemMeta instanceof HPotionMeta) {
+        		HPotionMeta sItemMeta = (HPotionMeta)hItemMeta;
         		PotionMeta pm = (PotionMeta)itemMeta;
         		for (HPotionEffect spe:sItemMeta.getPotionEffects()) {
         			PotionEffect pe = new PotionEffect(PotionEffectType.getByName(spe.getType()), spe.getDuration(), spe.getAmplifier(), spe.isAmbient());
         			pm.addCustomEffect(pe, true);
         		}
-        	} else if (sim instanceof HSkullMeta) {
-        		HSkullMeta sItemMeta = (HSkullMeta)sim;
+        	} else if (hItemMeta instanceof HSkullMeta) {
+        		HSkullMeta sItemMeta = (HSkullMeta)hItemMeta;
         		SkullMeta sm = (SkullMeta)itemMeta;
         		sm.setOwner(sItemMeta.getOwner());
-        	} else if (sim instanceof HMapMeta) {
-        		HMapMeta sItemMeta = (HMapMeta)sim;
+        	} else if (hItemMeta instanceof HMapMeta) {
+        		HMapMeta sItemMeta = (HMapMeta)hItemMeta;
         		MapMeta mm = (MapMeta)itemMeta;
         		mm.setScaling(sItemMeta.isScaling());
-        	} else if (sim instanceof HBannerMeta) {
-        		HBannerMeta sItemMeta = (HBannerMeta)sim;
+        	} else if (hItemMeta instanceof HBannerMeta) {
+        		HBannerMeta sItemMeta = (HBannerMeta)hItemMeta;
         		BannerMeta bm = (BannerMeta)itemMeta;
         		for (HPattern hp:sItemMeta.getPatterns()) {
         			bm.addPattern(new Pattern(DyeColor.valueOf(hp.getDyeColor()), PatternType.valueOf(hp.getPatternType())));
         		}
         		bm.setBaseColor(DyeColor.valueOf(sItemMeta.getBaseColor()));
         	}
-    		item.setItemMeta(itemMeta);
+    		generatedItemStack.setItemMeta(itemMeta);
         }
-        return item;
+        return generatedItemStack;
 	}
 	
 	
