@@ -45,11 +45,11 @@ public class ShopPage extends HttpServlet {
 	}
 
 	public void updatePage() {
-		hcw.getServer().getScheduler().runTaskAsynchronously(hcw, new Runnable() {
+		new Thread(new Runnable() {
 			public void run() {
 				page = buildPage(s.getEconomy());
 			}
-		});
+		}).start();
 	}
 
 	private String buildPage(String economy) {

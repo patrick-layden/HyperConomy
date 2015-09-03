@@ -239,6 +239,10 @@ commands:
       permission: hyperconomy.bank
       permission-message: You do not have permission.
       aliases: [bank]      
+   hcweb:
+      description: Manages the web page.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

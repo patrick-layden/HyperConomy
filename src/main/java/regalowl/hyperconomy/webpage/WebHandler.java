@@ -2,9 +2,10 @@ package regalowl.hyperconomy.webpage;
 
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.bukkit.scheduler.BukkitTask;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -17,8 +18,9 @@ public class WebHandler {
 
 	private HyperConomy hc;
 	private HyperConomy_Web hcw;
-	private BukkitTask serverTask;
-	private BukkitTask updateTask;
+	//private BukkitTask updateTask;
+	private PageUpdater pageUpdater;
+	private Timer t = new Timer();
 	private Server server;
 	private ServletContextHandler context;
 	private ArrayList<ShopPage> shopPages = new ArrayList<ShopPage>();
@@ -38,11 +40,22 @@ public class WebHandler {
 	}
 	
 	
-	
+	private class PageUpdater extends TimerTask {
+		@Override
+		public void run() {
+			try {
+				for (ShopPage sp:shopPages) {
+					sp.updatePage();
+				}
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
+			}
+		}
+	}
 
 	public void startServer() {
 		try {
-			serverTask = hcw.getServer().getScheduler().runTaskAsynchronously(hcw, new Runnable() {
+			new Thread(new Runnable() {
 				public void run() {
 					System.setProperty("org.eclipse.jetty.LEVEL", "WARN");
 					server = new Server(hcw.getPort());
@@ -62,83 +75,72 @@ public class WebHandler {
 						server.start();
 						server.join();
 					} catch (Exception e) {
-						hcw.getSimpleDataLib().getErrorWriter().writeError(e);
+						hc.gSDL().getErrorWriter().writeError(e);
 					}
 					serverStarted.set(true);
 				}
-			});
-			updateTask = hcw.getServer().getScheduler().runTaskTimerAsynchronously(hcw, new Runnable() {
-				public void run() {
-					try {
-						for (ShopPage sp:shopPages) {
-							sp.updatePage();
-						}
-					} catch (Exception e) {
-						hcw.getSimpleDataLib().getErrorWriter().writeError(e);
-					}
-				}
-			}, 400L, 6000L);
-			hcw.getLog().info("[HyperConomy_Web]Web server enabled.  Running on port " + hcw.getPort() + ".");
+			}).start();
+			pageUpdater = new PageUpdater();
+			t.schedule(pageUpdater, 400L, 6000L);
+
+			hc.getMC().logInfo("[HyperConomy_Web]Web server enabled.  Running on port " + hcw.getPort() + ".");
 		} catch (Exception e) {
-			hcw.getSimpleDataLib().getErrorWriter().writeError(e);;
+			hc.gSDL().getErrorWriter().writeError(e);;
 		}
 	}
 	
 	
 	public void updatePages() {
-		hcw.getServer().getScheduler().runTaskAsynchronously(hcw, new Runnable() {
+		new Thread(new Runnable() {
 			public void run() {
 				try {
 					for (ShopPage sp:shopPages) {
 						sp.updatePage();
 					}
 				} catch (Exception e) {
-					hcw.getSimpleDataLib().getErrorWriter().writeError(e);
+					hc.gSDL().getErrorWriter().writeError(e);
 				}
 			}
-		});
+		}).start();
 	}
 
 	
 	public void addShop(Shop shop) {
 		s = shop;
-		hcw.getServer().getScheduler().runTaskAsynchronously(hcw, new Runnable() {
+		new Thread(new Runnable() {
 			public void run() {
 				ShopPage sp = new ShopPage(s, hcw);
 				shopPages.add(sp);
 				context.addServlet(new ServletHolder(sp), "/" + s.getName() + "/*");
 			}
-		});
+		}).start();
 	}
 	
 	
 
 	public void endServer() {
-		if (updateTask != null) {
-			updateTask.cancel();
+		if (pageUpdater != null) {
+			pageUpdater.cancel();
 		}
 		if (context != null) {
 			try {
 				context.stop();
 				if (!context.isStopped()) {
-					hcw.getSimpleDataLib().getErrorWriter().writeError("Context failed to stop.");
+					hc.gSDL().getErrorWriter().writeError("Context failed to stop.");
 				}
 			} catch (Exception e) {
-				hcw.getSimpleDataLib().getErrorWriter().writeError(e);
+				hc.gSDL().getErrorWriter().writeError(e);
 			}
 		}
 		if (server != null) {
 			try {
 				server.stop();
 				if (!server.isStopped()) {
-					hcw.getSimpleDataLib().getErrorWriter().writeError("Server failed to stop.");
+					hc.gSDL().getErrorWriter().writeError("Server failed to stop.");
 				}
 			} catch (Exception e) {
-				hcw.getSimpleDataLib().getErrorWriter().writeError(e);
+				hc.gSDL().getErrorWriter().writeError(e);
 			}
-		}
-		if (serverTask != null) {
-			serverTask.cancel();
 		}
 	}
 	

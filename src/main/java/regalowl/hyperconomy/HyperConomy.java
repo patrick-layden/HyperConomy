@@ -35,6 +35,7 @@ import regalowl.hyperconomy.command.Hcpay;
 import regalowl.hyperconomy.command.Hcset;
 import regalowl.hyperconomy.command.Hctest;
 import regalowl.hyperconomy.command.Hctop;
+import regalowl.hyperconomy.command.Hcweb;
 import regalowl.hyperconomy.command.Hs;
 import regalowl.hyperconomy.command.Hv;
 import regalowl.hyperconomy.command.Hyperlog;
@@ -85,6 +86,7 @@ import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
 import regalowl.hyperconomy.util.UpdateChecker;
 import regalowl.hyperconomy.util.UpdateYML;
+import regalowl.hyperconomy.webpage.HyperConomy_Web;
 
 public class HyperConomy {
 
@@ -104,6 +106,7 @@ public class HyperConomy {
 	private transient FileTools ft;
 	private transient FileConfiguration hConfig;
 	private transient DebugMode dMode;
+	private transient HyperConomy_Web hcweb;
 	private final int saveInterval = 1200000;
 	private boolean enabled;
 	private String consoleEconomy;
@@ -133,6 +136,7 @@ public class HyperConomy {
 		itdi = new ItemDisplayHandler(this);
 		isign = new InfoSignHandler(this);
 		fsh = mc.getFrameShopHandler();
+		hcweb = new HyperConomy_Web(this);
 		registerCommands();
 		enabled = true;
 		hl.setLoadLock(false);
@@ -198,6 +202,7 @@ public class HyperConomy {
 		mc.unRegisterAsExternalEconomy();
 		enabled = false;
 		mc.unregisterAllListeners();
+		hcweb.disable();
 		if (itdi != null) {
 			itdi.unloadDisplays();
 		}
@@ -242,6 +247,7 @@ public class HyperConomy {
 		mc.registerCommand("hcset", new Hcset(this));
 		mc.registerCommand("hctest", new Hctest(this));
 		mc.registerCommand("hctop", new Hctop(this));
+		mc.registerCommand("hcweb", new Hcweb(this));
 		mc.registerCommand("heldsell", new Hs(this));
 		mc.registerCommand("heldvalue", new Hv(this));
 		mc.registerCommand("hyperlog", new Hyperlog(this));
@@ -366,6 +372,9 @@ public class HyperConomy {
 	}
 	public MineCraftConnector getMC() {
 		return mc;
+	}
+	public HyperConomy_Web getHyperConomyWeb() {
+		return hcweb;
 	}
 
 

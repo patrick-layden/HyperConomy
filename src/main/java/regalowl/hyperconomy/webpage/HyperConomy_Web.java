@@ -1,32 +1,18 @@
 package regalowl.hyperconomy.webpage;
 
 
-import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import regalowl.simpledatalib.SimpleDataLib;
 import regalowl.simpledatalib.file.FileConfiguration;
-import regalowl.simpledatalib.file.YamlHandler;
 import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.api.MineCraftConnector;
-import regalowl.hyperconomy.event.HyperEventHandler;
 
 
-public class HyperConomy_Web extends JavaPlugin {
+public class HyperConomy_Web {
 
 	private HyperConomy hc;
-	private HyperEventHandler heh;
-	private SimpleDataLib db;
-	private YamlHandler yh;
 	private WebHandler wh;
-	private Logger log;
 	
 	
-	
-
+	private boolean enabled;
 	private String backgroundColor;
 	private String fontColor;
 	private String borderColor;
@@ -41,73 +27,39 @@ public class HyperConomy_Web extends JavaPlugin {
 	
 	private String webAPIPath;
 	private boolean useWebAPI;
+
 	
-	@Override
-	public void onEnable() {
-		System.out.println("HyperConomy_Web enabled.");
-		enable();
+	public HyperConomy_Web(HyperConomy hc) {
+		this.hc = hc;
+		buildData();
 	}
-	@Override
-	public void onDisable() {
-		disable();
-	}
-	
-	
 
 	public void restart() {
 		disable();
-		enable();
 		buildData();
 	}
-	
-	private void enable() {
-		Plugin hcPlugin = getServer().getPluginManager().getPlugin("HyperConomy");
-		MineCraftConnector mc = (MineCraftConnector)hcPlugin;
-		hc = mc.getHC();
-		log = Logger.getLogger("Minecraft");
-		heh = hc.getHyperEventHandler();
-		heh.registerListener(this);
-		registerCommands();
-		db = new SimpleDataLib("HyperConomy_Web");
-		db.initialize();
-		yh = db.getYamlHandler();
-		yh.copyFromJar("config");
-		yh.registerFileConfiguration("config");
-		FileConfiguration config = yh.getFileConfiguration("config");
-		config.setDefault("enable-web-api", false);
-		config.setDefault("web-api-path", "API");
-		waitForLoad();
-	}
 
-
-	private void waitForLoad() {
-		hc.getMC().runTaskLater(new Runnable() {
-			public void run() {
-				if (!hc.enabled()) {
-					waitForLoad();
-					return;
-				}
-				buildData();
-			}
-		}, 20L);
-	}
 	
 	private void buildData() {
-		FileConfiguration config = yh.gFC("config");
-		backgroundColor = "#" + config.getString("background-color");
-		fontColor = "#" + config.getString("font-color");
-		borderColor = "#" + config.getString("border-color");
-		backgroundColor = "#" + config.getString("background-color");
-		increaseColor = "#" + config.getString("increase-value-color");
-		decreaseColor = "#" + config.getString("decrease-value-color");
-		highlightColor = "#" + config.getString("highlight-row-color");
-		headerColor = "#" + config.getString("header-color");
-		tableDataColor = "#" + config.getString("table-data-color");
-		font = config.getString("font");
-		fontSize = config.getInt("font-size");
-		port = config.getInt("port");
-		webAPIPath = config.getString("web-api-path");
-		useWebAPI = config.getBoolean("enable-web-api");
+		this.enabled = false;
+		FileConfiguration config = hc.getConf();
+		boolean enable = config.getBoolean("web-page.enable");
+		if (!enable) return;
+		this.enabled = true;
+		backgroundColor = "#" + config.getString("web-page.background-color");
+		fontColor = "#" + config.getString("web-page.font-color");
+		borderColor = "#" + config.getString("web-page.border-color");
+		backgroundColor = "#" + config.getString("web-page.background-color");
+		increaseColor = "#" + config.getString("web-page.increase-value-color");
+		decreaseColor = "#" + config.getString("web-page.decrease-value-color");
+		highlightColor = "#" + config.getString("web-page.highlight-row-color");
+		headerColor = "#" + config.getString("web-page.header-color");
+		tableDataColor = "#" + config.getString("web-page.table-data-color");
+		font = config.getString("web-page.font");
+		fontSize = config.getInt("web-page.font-size");
+		port = config.getInt("web-page.port");
+		webAPIPath = config.getString("web-page.web-api-path");
+		useWebAPI = config.getBoolean("web-page.enable-web-api");
 		if (wh == null) wh = new WebHandler(this);
 		if (!wh.serverStarted()) wh.startServer();
 	}
@@ -117,34 +69,12 @@ public class HyperConomy_Web extends JavaPlugin {
 			wh.endServer();
 			wh = null;
 		}
-		if (db != null) {
-			db.shutDown();
-			db = null;
-		}
-		getServer().getScheduler().cancelTasks(this);
 	}
-	
 
 
-
-	private void registerCommands() {
-		Bukkit.getServer().getPluginCommand("hcweb").setExecutor(new Hcweb(this));
-	}
 
 	public WebHandler getWebHandler() {
 		return wh;
-	}
-	
-	public SimpleDataLib getSimpleDataLib() {
-		return db;
-	}
-	
-	public YamlHandler gYH() {
-		return yh;
-	}
-	
-	public Logger getLog() {
-		return log;
 	}
 
 	public String getBackgroundColor() {
@@ -201,6 +131,10 @@ public class HyperConomy_Web extends JavaPlugin {
 	
 	public HyperConomy getHC() {
 		return hc;
+	}
+	
+	public boolean enabled() {
+		return enabled;
 	}
 
 }

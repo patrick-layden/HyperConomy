@@ -4,13 +4,13 @@ package regalowl.hyperconomy.webpage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.bukkit.scheduler.BukkitTask;
 
 import regalowl.hyperconomy.shop.Shop;
 
@@ -19,25 +19,35 @@ public class MainPage extends HttpServlet {
 	private static final long serialVersionUID = 699465359999143309L;
 	private HyperConomy_Web hcw;
 	private String page = "Loading...";
-	private BukkitTask updateTask;
+	
+	
+	
+	private PageUpdater pageUpdater;
+	private Timer t = new Timer();
 
 	public MainPage(HyperConomy_Web hcweb) {
 		this.hcw = hcweb;
 		page = buildLoadPage();
 		
-		updateTask = hcw.getServer().getScheduler().runTaskTimerAsynchronously(hcw, new Runnable() {
-			public void run() {
-				try {
-					page = buildPage();
-				} catch (Exception e) {
-					hcw.getSimpleDataLib().getErrorWriter().writeError(e);
-				}
-			}
-		}, 40L, 6000L);
+		pageUpdater = new PageUpdater();
+		t.schedule(pageUpdater, 40L, 6000L);
 	}
 	
+	
+	private class PageUpdater extends TimerTask {
+		@Override
+		public void run() {
+			try {
+				page = buildPage();
+			} catch (Exception e) {
+				hcw.getHC().gSDL().getErrorWriter().writeError(e);
+			}
+		}
+	}
+	
+	
 	public void disable() {
-		updateTask.cancel();
+		pageUpdater.cancel();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
