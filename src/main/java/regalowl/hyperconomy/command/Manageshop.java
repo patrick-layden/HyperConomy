@@ -289,6 +289,10 @@ public class Manageshop extends BaseCommand implements HyperCommand {
 					return data;
 				}
 				HItemStack heldItem = hp.getItemInHand();
+				if (heldItem.getAmount() > 1) {
+					data.addResponse(L.get("CANT_ENCHANT_STACK"));
+					return data;
+				}
 				double amountAdded = 0;
 				if (heldItem.getMaterial().equalsIgnoreCase("BOOK")) {
 					HItemMeta cMeta = heldItem.getItemMeta();
