@@ -46,6 +46,7 @@ import regalowl.hyperconomy.InternalEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.HEconomyProvider;
 import regalowl.hyperconomy.api.MineCraftConnector;
+import regalowl.hyperconomy.api.ServerConnectionType;
 import regalowl.hyperconomy.command.CommandData;
 import regalowl.hyperconomy.command.HyperCommand;
 import regalowl.hyperconomy.display.FrameShopHandler;
@@ -831,6 +832,11 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public String getVersion() {
 		return this.getDescription().getVersion();
+	}
+
+	@Override
+	public ServerConnectionType getServerConnectionType() {
+		return ServerConnectionType.BUKKIT;
 	}
 
 

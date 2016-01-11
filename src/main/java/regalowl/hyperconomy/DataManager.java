@@ -21,6 +21,7 @@ import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
+import regalowl.hyperconomy.event.HyperEconomyDeletionEvent;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.tradeobject.TradeObject;
@@ -111,6 +112,7 @@ public class DataManager {
 	}
 	
 	private void loadAllCategories() {
+		categories.clear();
 		for (TradeObject to:getTradeObjects()) {
 			for (String cat:to.getCategories()) {
 				if (!categories.contains(cat)) {
@@ -250,7 +252,11 @@ public class DataManager {
 
 
 	
-
+	/*
+	public void addEconomy(HyperEconomy econ) {
+		new Thread(new EconomyBuilder(econ)).start();
+	}
+	 */
 	
 	public void createNewEconomy(String name, String templateEconomy, boolean cloneAll) {
 		new Thread(new EconomyBuilder(name, templateEconomy, cloneAll)).start();
@@ -258,17 +264,29 @@ public class DataManager {
 	
 	private class EconomyBuilder implements Runnable {
 		private String name;
-		private String templateEconomy;
-		private boolean cloneAll;
+		private String templateEconomyName = "";
+		private boolean cloneAll = false;
+		private HyperEconomy templateEconomy = null;
+		
+		//public EconomyBuilder(HyperEconomy templateEconomy) {
+		//	this.templateEconomy = templateEconomy;
+		//}
 		public EconomyBuilder(String name, String templateEconomy, boolean cloneAll) {
 			this.name = name;
-			this.templateEconomy = templateEconomy;
+			this.templateEconomyName = templateEconomy;
 			this.cloneAll = cloneAll;
 		}
+		
 		@Override
 		public void run() {
-			if (!economyExists(templateEconomy)) templateEconomy = "default";
-			HyperEconomy template = getEconomy(templateEconomy);
+			if (templateEconomy == null) {
+				if (!economyExists(templateEconomyName)) templateEconomyName = "default";
+				templateEconomy = getEconomy(templateEconomyName);
+			} else {
+				name = templateEconomy.getName();
+				cloneAll = true;
+			}
+			if (name == null) return;
 			SQLWrite sw = hc.getSQLWrite();
 			boolean writeState = sw.writeSync();
 			sw.writeSync(true);
@@ -276,7 +294,7 @@ public class DataManager {
 			values.put("NAME", name);
 			values.put("HYPERACCOUNT", defaultServerShopAccount);
 			sw.performInsert("hyperconomy_economies", values);
-			for (TradeObject ho:template.getTradeObjects()) {
+			for (TradeObject ho:templateEconomy.getTradeObjects()) {
 				values = new HashMap<String,String>();
 				values.put("NAME", ho.getName());
 				values.put("DISPLAY_NAME", ho.getDisplayName());
@@ -305,8 +323,9 @@ public class DataManager {
 			}
 			sw.writeSyncQueue();
 			sw.writeSync(writeState);
-			economies.put(name, new HyperEconomy(hc, name, templateEconomy));
-			hc.getHyperEventHandler().fireEvent(new HyperEconomyCreationEvent());
+			HyperEconomy newEconomy = new HyperEconomy(hc, name, templateEconomy.getAccountData());
+			economies.put(name, newEconomy);
+			hc.getHyperEventHandler().fireEvent(new HyperEconomyCreationEvent(newEconomy));
 		}
 	}
 	
@@ -318,6 +337,7 @@ public class DataManager {
 		conditions.put("NAME", economy);
 		hc.getSQLWrite().performDelete("hyperconomy_economies", conditions);
 		economies.remove(economy);
+		hc.getHyperEventHandler().fireEvent(new HyperEconomyDeletionEvent(economy));
 	}
 
 	//TODO add restore default economy command.  (Replace with csv data)
@@ -392,6 +412,24 @@ public class DataManager {
 			}
 			return null;
 		}
+	}
+	
+	/**
+	 * Replaces all economies with the given economy ArrayList.  Doesn't save the replacement economies to the database.
+	 * @param econArray
+	 */
+	public void setEconomies(ArrayList<HyperEconomy> econArray) {
+		economies.clear();
+		for(HyperEconomy he:econArray) {
+			he.setHyperConomy(hc);
+			economies.put(he.getName(), he);
+		}
+	}
+	
+	public void addEconomy(HyperEconomy econ) {
+		econ.setHyperConomy(hc);
+		economies.put(econ.getName(), econ);
+		loadAllCategories();
 	}
 
 	

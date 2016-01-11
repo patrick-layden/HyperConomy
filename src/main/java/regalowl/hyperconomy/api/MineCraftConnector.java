@@ -23,6 +23,7 @@ public interface MineCraftConnector {
 	public boolean isEnabled();
 	public void disablePlugin();
 	public String getVersion();
+	public ServerConnectionType getServerConnectionType();
 	
 	public void registerCommand(String command, HyperCommand hCommand);
 	
@@ -116,4 +117,5 @@ public interface MineCraftConnector {
 	
 	
 	public FrameShopHandler getFrameShopHandler();
+	
 }

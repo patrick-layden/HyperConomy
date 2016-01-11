@@ -448,6 +448,10 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 * @param playerShop
 	 */
 	public void setShopObjectShop(PlayerShop playerShop);
+	/**Sets this PlayerShop object's Shop.
+	 * @param playerShop
+	 */
+	public void setShopObjectShop(String playerShop);
 	/**Sets this PlayerShop object's buy price.
 	 * @param buyPrice
 	 */
@@ -467,9 +471,18 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	/**Sets this PlayerShop object's TradeObject.
 	 * @param ho
 	 */
-	public void setParentTradeObject(TradeObject ho);
+	public void setParentTradeObject(TradeObject to);
+	/**Sets this PlayerShop object's TradeObject.
+	 * @param ho
+	 */
+	public void setParentTradeObject(String to);
 	/**Sets this PlayerShop object to use or not use its economy's stock levels.
 	 * @param ho
 	 */
 	public void setUseEconomyStock(boolean state);
+	/**
+	 * Saves this tradeobject to the database, replacing all current data in the database with the data in RAM.  Does not trigger any events.  Should only be used under
+	 * special circumstances such as remote GUI updates.
+	 */
+	public void save();
 }

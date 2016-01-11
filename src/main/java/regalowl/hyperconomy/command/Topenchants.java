@@ -53,7 +53,7 @@ public class Topenchants extends BaseCommand implements HyperCommand {
 				boolean stocked = false;
 				boolean banned = false;
 				if (nameshop != "") {
-					banned = dm.getHyperShopManager().getShop(nameshop).isBanned(ho);
+					banned = dm.getHyperShopManager().getShop(nameshop).isBanned(ho.getName());
 				}
 				if (ho.getStock() > 0) {stocked = true;}
 				if (ho.isShopObject()) {

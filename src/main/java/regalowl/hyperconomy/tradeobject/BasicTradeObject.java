@@ -12,9 +12,11 @@ import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.display.FrameShopHandler;
 import regalowl.hyperconomy.display.InfoSign;
 import regalowl.hyperconomy.display.ItemDisplay;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationType;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
@@ -87,6 +89,32 @@ public class BasicTradeObject implements TradeObject {
 	}
 	
 	@Override
+	public void save() {
+		String statement = "DELETE FROM hyperconomy_objects WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
+		sw.addToQueue(statement);
+		HashMap<String,String> values = new HashMap<String,String>();
+		values.put("NAME", getName());
+		values.put("ECONOMY", getEconomy());
+		values.put("DISPLAY_NAME", getDisplayName());
+		values.put("ALIASES", getAliasesString());
+		values.put("CATEGORIES", getCategoriesString());
+		values.put("TYPE", getType().toString());
+		values.put("VALUE", getValue()+"");
+		values.put("STATIC", isStatic()+"");
+		values.put("STATICPRICE", getStaticPrice()+"");
+		values.put("STOCK", getStock()+"");
+		values.put("MEDIAN", getMedian()+"");
+		values.put("INITIATION", useInitialPricing()+"");
+		values.put("STARTPRICE",getStartPrice()+"");
+		values.put("CEILING", getCeiling()+"");
+		values.put("FLOOR", getFloor()+"");
+		values.put("MAXSTOCK", getMaxStock()+"");
+		values.put("COMPONENTS", getCompositeData());
+		values.put("DATA", getData());
+		hc.getSQLWrite().performInsert("hyperconomy_objects", values);
+	}
+	
+	@Override
 	public void delete() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		for (Shop s:hc.getHyperShopManager().getShops()) {
@@ -104,7 +132,8 @@ public class BasicTradeObject implements TradeObject {
 				if (disp.getHyperObject().equals(this)) disp.delete();
 			}
 		}
-		hc.getFrameShopHandler().removeFrameShops(this);
+		FrameShopHandler fsh = hc.getFrameShopHandler();
+		if (fsh != null) fsh.removeFrameShops(this); // null when using GUIConnector
 		int compositesRemoved = 0;
 		for (TradeObject to:getDependentObjects()) {
 			to.removeCompositeNature();
@@ -113,7 +142,7 @@ public class BasicTradeObject implements TradeObject {
 		he.removeObject(name);
 		String statement = "DELETE FROM hyperconomy_objects WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
 		sw.addToQueue(statement);
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.DELETED);
 		if (compositesRemoved > 0) hc.restart();
 	}
 	
@@ -289,7 +318,7 @@ public class BasicTradeObject implements TradeObject {
 		sw.addToQueue(statement);
 		this.name = name;
 		hc.getDataManager().getEconomy(economy).addObject(this);
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.NAME);
 	}
 	@Override
 	public void setDisplayName(String displayName) {
@@ -298,7 +327,7 @@ public class BasicTradeObject implements TradeObject {
 		sw.addToQueue(statement);
 		this.displayName = displayName;
 		hc.getDataManager().getEconomy(economy).addObject(this);
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.DISPLAY_NAME);
 	}
 	@Override
 	public void setAliases(ArrayList<String> newAliases) {
@@ -310,7 +339,7 @@ public class BasicTradeObject implements TradeObject {
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + getAliasesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		hc.getDataManager().getEconomy(economy).addObject(this);
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.ALIASES);
 	}
 	@Override
 	public void addAlias(String addAlias) {
@@ -320,7 +349,7 @@ public class BasicTradeObject implements TradeObject {
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + getAliasesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		hc.getDataManager().getEconomy(economy).addObject(this);
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.ALIASES);
 	}
 	@Override
 	public void removeAlias(String removeAlias) {
@@ -330,7 +359,7 @@ public class BasicTradeObject implements TradeObject {
 		String statement = "UPDATE hyperconomy_objects SET ALIASES='" + getAliasesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		hc.getDataManager().getEconomy(economy).addObject(this);
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.ALIASES);
 	}
 	@Override
 	public void setCategories(ArrayList<String> newCategories) {
@@ -340,7 +369,7 @@ public class BasicTradeObject implements TradeObject {
 		}
 		String statement = "UPDATE hyperconomy_objects SET CATEGORIES='" + getCategoriesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.CATEGORIES);
 	}
 	@Override
 	public void addCategory(String category) {
@@ -348,7 +377,7 @@ public class BasicTradeObject implements TradeObject {
 		categories.add(category);
 		String statement = "UPDATE hyperconomy_objects SET CATEGORIES='" + getCategoriesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.CATEGORIES);
 	}
 	@Override
 	public void removeCategory(String category) {
@@ -356,7 +385,7 @@ public class BasicTradeObject implements TradeObject {
 		categories.remove(category);
 		String statement = "UPDATE hyperconomy_objects SET CATEGORIES='" + getCategoriesString() + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.CATEGORIES);
 	}
 	@Override
 	public boolean inCategory(String category) {
@@ -367,35 +396,35 @@ public class BasicTradeObject implements TradeObject {
 		String statement = "UPDATE hyperconomy_objects SET ECONOMY='" + economy + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + this.economy + "'";
 		sw.addToQueue(statement);
 		this.economy = economy;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.ECONOMY);
 	}
 	@Override
 	public void setType(TradeObjectType type) {
 		String statement = "UPDATE hyperconomy_objects SET TYPE='" + type.toString() + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.type = type;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.TYPE);
 	}
 	@Override
 	public void setValue(double value) {
 		String statement = "UPDATE hyperconomy_objects SET VALUE='" + value + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.value = value;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.VALUE);
 	}
 	@Override
 	public void setStatic(boolean isStatic) {
 		String statement = "UPDATE hyperconomy_objects SET STATIC='" + isStatic + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.isstatic = isStatic;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.USE_STATIC_PRICE);
 	}
 	@Override
 	public void setStaticPrice(double staticprice) {
 		String statement = "UPDATE hyperconomy_objects SET STATICPRICE='" + staticprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.staticprice = staticprice;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.STATIC_PRICE);
 	}
 	@Override
 	public void setStock(double stock) {
@@ -403,49 +432,49 @@ public class BasicTradeObject implements TradeObject {
 		String statement = "UPDATE hyperconomy_objects SET STOCK='" + stock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.stock = stock;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.STOCK);
 	}
 	@Override
 	public void setMedian(double median) {
 		String statement = "UPDATE hyperconomy_objects SET MEDIAN='" + median + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.median = median;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.MEDIAN);
 	}
 	@Override
 	public void setUseInitialPricing(boolean initiation) {
 		String statement = "UPDATE hyperconomy_objects SET INITIATION='" + initiation + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.initiation = initiation;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.USE_INITIAL_PRICING);
 	}
 	@Override
 	public void setStartPrice(double startprice) {
 		String statement = "UPDATE hyperconomy_objects SET STARTPRICE='" + startprice + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.startprice = startprice;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.START_PRICE);
 	}
 	@Override
 	public void setCeiling(double ceiling) {
 		String statement = "UPDATE hyperconomy_objects SET CEILING='" + ceiling + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.ceiling = ceiling;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.CEILING);
 	}
 	@Override
 	public void setFloor(double floor) {
 		String statement = "UPDATE hyperconomy_objects SET FLOOR='" + floor + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.floor = floor;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.FLOOR);
 	}
 	@Override
 	public void setMaxStock(double maxstock) {
 		String statement = "UPDATE hyperconomy_objects SET MAXSTOCK='" + maxstock + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.maxstock = maxstock;
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.MAX_STOCK);
 	}
 	@Override
 	public void setCompositeData(String compositeData) {
@@ -469,14 +498,14 @@ public class BasicTradeObject implements TradeObject {
 		    TradeObject ho = hc.getDataManager().getEconomy(economy).getTradeObject(oname);
 		    this.components.put(ho.getName(), amount);
 		}
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.COMPOSITE_DATA);
 	}
 	@Override
 	public void setData(String data) {
 		this.objectData = data;
 		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
-		fireModificationEvent();
+		fireModificationEvent(TradeObjectModificationType.DATA);
 	}
 	
 
@@ -745,6 +774,8 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public void setShopObjectShop(PlayerShop playerShop) {}
 	@Override
+	public void setShopObjectShop(String playerShop) {}
+	@Override
 	public void setShopObjectBuyPrice(double buyPrice) {}
 	@Override
 	public void setShopObjectSellPrice(double sellPrice) {}
@@ -755,11 +786,13 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public void setParentTradeObject(TradeObject ho) {}
 	@Override
+	public void setParentTradeObject(String ho) {}
+	@Override
 	public void setUseEconomyStock(boolean state) {}
 
 
-	protected void fireModificationEvent() {
-		if (hc != null) hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
+	protected void fireModificationEvent(TradeObjectModificationType type) {
+		if (hc != null) hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this, type));
 	}
 
 

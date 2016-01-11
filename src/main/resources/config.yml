@@ -83,6 +83,15 @@ multi-server:
   sync-shops: true
   sync-trade-objects: true
   sync-accounts: true
+remote-gui:
+  enable: false
+  server: false
+  remote-server-ip: 192.168.1.1
+  remote-server-port: 3313
+  listen-port: 3313
+  connection-timeout-ms: 10000
+  refresh-rate-ms: 20000
+  auth-key: change-me
 updater:
   enabled: true
   notify-in-game: true
@@ -91,17 +100,17 @@ updater:
     beta-builds: true
     recommended-builds: true
 web-page:
-	enable: false
-	port: 7777
-	background-color: 8FA685
-	font-color: F2F2F2
-	border-color: "091926"
-	increase-value-color: C8D9B0
-	decrease-value-color: F2B2A8
-	highlight-row-color: 8FA685
-	header-color: "091926"
-	table-data-color: 314A59
-	font-size: 12
-	font: verdana
-	enable-web-api: false
-	web-api-path: API
+  enable: false
+  port: 7777
+  background-color: 8FA685
+  font-color: F2F2F2
+  border-color: "091926"
+  increase-value-color: C8D9B0
+  decrease-value-color: F2B2A8
+  highlight-row-color: 8FA685
+  header-color: "091926"
+  table-data-color: 314A59
+  font-size: 12
+  font: verdana
+  enable-web-api: false
+  web-api-path: API

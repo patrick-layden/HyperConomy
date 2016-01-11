@@ -29,7 +29,7 @@ import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
 
-public class HyperModificationServer {
+public class MultiServer {
 
 	private HyperConomy hc;
 	private int listenPort;
@@ -40,11 +40,11 @@ public class HyperModificationServer {
 	private boolean syncObjects;
 	private boolean syncAccounts;
 	private long updateInterval;
-	private HyperTransferObject sendObject;
+	private MultiServerTransferObject sendObject;
 	private RemoteUpdater remoteUpdater;
 	private Timer t = new Timer();
 	
-	public HyperModificationServer(HyperConomy hc) {
+	public MultiServer(HyperConomy hc) {
 		this.hc = hc;
 		if (hc.getConf().getBoolean("multi-server.enable")) {
 			try {
@@ -64,7 +64,7 @@ public class HyperModificationServer {
 			syncObjects = hc.getConf().getBoolean("multi-server.sync-trade-objects");
 			syncAccounts = hc.getConf().getBoolean("multi-server.sync-accounts");
 			runServer = true;
-			sendObject = new HyperTransferObject(HyperTransferType.REQUEST_UPDATE);
+			sendObject = new MultiServerTransferObject(MultiServerTransferType.MULTI_SERVER_REQUEST_UPDATE);
 			hc.getHyperEventHandler().registerListener(this);
 			receiveUpdate();
 			remoteUpdater = new RemoteUpdater();
@@ -89,22 +89,22 @@ public class HyperModificationServer {
 		new Thread(new Runnable() {
 			public void run() {
 				while (runServer) {
-					HyperTransferObject transferObject = null;
+					MultiServerTransferObject transferObject = null;
 					ServerSocket serverSocket = null;
 					Socket sClientSocket = null;
 					try {
 						serverSocket = new ServerSocket(listenPort);
 						sClientSocket = serverSocket.accept();
 						ObjectInputStream input = new ObjectInputStream(sClientSocket.getInputStream());
-						transferObject = (HyperTransferObject) input.readObject();
-						if (transferObject.getType() == HyperTransferType.REQUEST_UPDATE) {
+						transferObject = (MultiServerTransferObject) input.readObject();
+						if (transferObject.getType() == MultiServerTransferType.MULTI_SERVER_REQUEST_UPDATE) {
 							processHyperObjects(transferObject.getHyperObjects());
 							processHyperPlayers(transferObject.getHyperPlayers());
 							processShops(transferObject.getShops());
 							processBanks(transferObject.getBanks());
 						}
 						ObjectOutputStream out = new ObjectOutputStream(sClientSocket.getOutputStream());
-						out.writeObject(new HyperTransferObject(HyperTransferType.UPDATE_SUCCESSFUL));
+						out.writeObject(new MultiServerTransferObject(MultiServerTransferType.MULTI_SERVER_UPDATE_SUCCESSFUL));
 						out.flush();
 						sClientSocket.close();
 						serverSocket.close();
@@ -213,8 +213,8 @@ public class HyperModificationServer {
 					out.writeObject(sendObject);
 					out.flush();
 					ObjectInputStream input = new ObjectInputStream(clientSocket.getInputStream());
-					HyperTransferObject response = (HyperTransferObject) input.readObject();
-					if (!response.getType().equals(HyperTransferType.UPDATE_SUCCESSFUL)) {
+					MultiServerTransferObject response = (MultiServerTransferObject) input.readObject();
+					if (!response.getType().equals(MultiServerTransferType.MULTI_SERVER_UPDATE_SUCCESSFUL)) {
 						clientSocket.close();
 						continue;
 					}

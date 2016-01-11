@@ -9,10 +9,13 @@ import javax.swing.JOptionPane;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.command.Additem;
+import regalowl.hyperconomy.event.GUIChangeType;
+import regalowl.hyperconomy.event.RequestGUIChangeEvent;
 import regalowl.hyperconomy.tradeobject.ComponentTradeItem;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObjectType;
 import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.event.EventHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,6 +92,7 @@ public class ObjectPanel extends JFrame {
 		initialize();
 		loadCatgories();
 		loadObjects();
+		hc.getSimpleDataLib().getEventPublisher().registerListener(this);
 	}
 
 	/**
@@ -480,13 +484,14 @@ public class ObjectPanel extends JFrame {
 		sellPriceField.setColumns(10);
 		
 		JButton saveButton = new JButton("Save Changes");
+		saveButton.setForeground(Color.WHITE);
 		GridBagConstraints gbc_saveButton = new GridBagConstraints();
 		gbc_saveButton.fill = GridBagConstraints.BOTH;
 		gbc_saveButton.insets = new Insets(0, 0, 0, 5);
 		gbc_saveButton.gridx = 0;
 		gbc_saveButton.gridy = 2;
 		pricePanel.add(saveButton, gbc_saveButton);
-		saveButton.setBackground(new Color(152, 251, 152));
+		saveButton.setBackground(new Color(0, 51, 0));
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (fieldsUpdating) return;
@@ -547,6 +552,7 @@ public class ObjectPanel extends JFrame {
 				to.setStatic(staticPricingToggle.isSelected());
 				updatePrice(to);
 				loadObjects();
+				listObjectSelector.setSelectedValue(to, true);
 			}
 		});
 		
@@ -556,7 +562,8 @@ public class ObjectPanel extends JFrame {
 		gbc_deleteButton.gridx = 1;
 		gbc_deleteButton.gridy = 2;
 		pricePanel.add(deleteButton, gbc_deleteButton);
-		deleteButton.setBackground(new Color(245, 222, 179));
+		deleteButton.setForeground(new Color(255, 250, 250));
+		deleteButton.setBackground(new Color(220, 20, 60));
 		
 		JPanel addNewPanel = new JPanel();
 		addNewPanel.setBounds(12, 399, 266, 64);
@@ -671,5 +678,12 @@ public class ObjectPanel extends JFrame {
 	}
 	public void displayErrorBox(String title, String message) {
 		JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+	}
+	
+	@EventHandler
+	public void onGUIChangeRequest(RequestGUIChangeEvent event) {
+		if (event.getType() == GUIChangeType.SERVER_CHANGE_OBJECT) {
+			loadObjects();
+		}
 	}
 }

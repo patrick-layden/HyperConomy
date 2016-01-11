@@ -7,6 +7,7 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.HEconomyProvider;
 import regalowl.hyperconomy.api.MineCraftConnector;
+import regalowl.hyperconomy.api.ServerConnectionType;
 import regalowl.hyperconomy.command.HyperCommand;
 import regalowl.hyperconomy.display.FrameShopHandler;
 import regalowl.hyperconomy.inventory.HEnchantment;
@@ -357,6 +358,12 @@ public class DefaultConnector implements MineCraftConnector {
 	@Override
 	public String getVersion() {
 		return "";
+	}
+
+
+	@Override
+	public ServerConnectionType getServerConnectionType() {
+		return ServerConnectionType.NONE;
 	}
 
 

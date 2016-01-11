@@ -204,7 +204,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 					return data;
 				}
-				if (!css.isBanned(ho)) {
+				if (!css.isBanned(ho.getName())) {
 					data.addResponse(L.get("SHOP_ALREADY_HAS"));
 					return data;
 				}
@@ -232,7 +232,7 @@ public class Servershopcommand extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("OBJECT_NOT_IN_DATABASE"));
 					return data;
 				}
-				if (css.isBanned(ho)) {
+				if (css.isBanned(ho.getName())) {
 					data.addResponse(L.get("ALREADY_BEEN_REMOVED"));
 					return data;
 				}

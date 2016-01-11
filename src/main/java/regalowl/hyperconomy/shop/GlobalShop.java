@@ -164,19 +164,15 @@ public class GlobalShop implements Shop, Comparable<Shop>{
 		return false;
 	}
 	@Override
-	public boolean isBanned(TradeObject ho) {
-		if (availableObjects.contains(ho.getName())) {
+	public boolean isBanned(String name) {
+		if (availableObjects.contains(name)) {
 			return false;
 		}
 		return true;
 	}
 	@Override
-	public boolean isBanned(String name) {
-		return isBanned(getHyperEconomy().getTradeObject(name));
-	}
-	@Override
 	public boolean isTradeable(TradeObject ho) {
-		if (!isBanned(ho)) {
+		if (!isBanned(ho.getName())) {
 			return true;
 		}
 		return false;

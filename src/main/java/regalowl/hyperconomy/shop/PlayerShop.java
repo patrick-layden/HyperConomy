@@ -349,21 +349,14 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 	public boolean isStocked(String item) {
 		return isStocked(getHyperEconomy().getTradeObject(item));
 	}
-	public boolean isBanned(TradeObject ho) {
-		TradeObject co = ho;
-		if (ho.isShopObject()) {
-			co = ho.getParentTradeObject();
-		}
-		if (availableObjects.contains(co.getName())) {
+	public boolean isBanned(String to) {
+		if (availableObjects.contains(to)) {
 			return false;
 		}
 		return true;
 	}
-	public boolean isBanned(String name) {
-		return isBanned(getHyperEconomy().getTradeObject(name));
-	}
 	public boolean isTradeable(TradeObject ho) {
-		if (!isBanned(ho)) {
+		if (!isBanned(ho.getName())) {
 			if (ho.isShopObject()) {
 				if (ho.getShopObjectStatus() == TradeObjectStatus.NONE) {return false;}
 				return true;

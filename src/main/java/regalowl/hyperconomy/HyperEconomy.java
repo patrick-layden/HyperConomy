@@ -34,8 +34,12 @@ import regalowl.hyperconomy.tradeobject.TradeXp;
 public class HyperEconomy implements Serializable {
 
 	private static final long serialVersionUID = 4820082604724045149L;
-	private transient HyperConomy hc;
 	
+	private transient HyperConomy hc;
+	private transient String lastFailedToLoadComposite = "";
+	private transient boolean successfulLoad = true;
+	
+	private String accountData;
 	private String defaultAccount;
 	private boolean defaultAccountIsBank;
 	private ConcurrentHashMap<String, TradeObject> tradeObjectsNameMap = new ConcurrentHashMap<String, TradeObject>();
@@ -44,20 +48,20 @@ public class HyperEconomy implements Serializable {
 	private boolean useComposites;
 	private String economyName;
 	private String xpName = null;
-	private String lastFailedToLoadComposite = "";
-	private boolean successfulLoad = true;
+
 	
 
-	public HyperEconomy(HyperConomy hc, String economy, String defaultAccount) {
+	public HyperEconomy(HyperConomy hc, String economy, String accountData) {
 		this.hc = hc;	
+		this.accountData = accountData;
 		SQLRead sr = hc.getSQLRead();
 		this.economyName = economy;
-		if (defaultAccount.contains(":")) {
-			String[] accountData = defaultAccount.split(Pattern.quote(":"));
-			this.defaultAccount = accountData[1];
-			if (accountData[0].equalsIgnoreCase("BANK")) defaultAccountIsBank = true;
+		if (accountData.contains(":")) {
+			String[] accountDataArray = accountData.split(Pattern.quote(":"));
+			this.defaultAccount = accountDataArray[1];
+			if (accountDataArray[0].equalsIgnoreCase("BANK")) defaultAccountIsBank = true;
 		} else {
-			this.defaultAccount = defaultAccount;
+			this.defaultAccount = accountData;
 		}
 		useComposites = hc.getConf().getBoolean("enable-feature.composite-items");
 		successfulLoad = loadData(sr);
@@ -480,4 +484,107 @@ public class HyperEconomy implements Serializable {
 	public boolean successfulLoad() {
 		return successfulLoad;
 	}
+	
+	public void setHyperConomy(HyperConomy hc) {
+		this.hc = hc;
+		for (TradeObject to:tradeObjects) {
+			to.setHyperConomy(hc);
+		}
+		this.successfulLoad = true;
+	}
+	
+	public String getAccountData() {
+		return accountData;
+	}
+	
+	public void save() {
+		//remove from economies table
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		conditions.put("NAME", economyName);
+		hc.getSQLWrite().performDelete("hyperconomy_economies", conditions);
+		
+		//remove all tradeobjects associated with economy
+		conditions = new HashMap<String,String>();
+		conditions.put("ECONOMY", economyName);
+		hc.getSQLWrite().performDelete("hyperconomy_objects", conditions);
+		
+		//add to economies table
+		HashMap<String,String> values = new HashMap<String,String>();
+		values.put("NAME", economyName);
+		values.put("HYPERACCOUNT", accountData);
+		hc.getSQLWrite().performInsert("hyperconomy_economies", values);
+		
+		//add all tradeobjects
+		for (TradeObject to:tradeObjects) {
+			to.save();
+		}
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((composites == null) ? 0 : composites.hashCode());
+		result = prime * result
+				+ ((defaultAccount == null) ? 0 : defaultAccount.hashCode());
+		result = prime * result + (defaultAccountIsBank ? 1231 : 1237);
+		result = prime * result
+				+ ((economyName == null) ? 0 : economyName.hashCode());
+		result = prime * result
+				+ ((tradeObjects == null) ? 0 : tradeObjects.hashCode());
+		result = prime
+				* result
+				+ ((tradeObjectsNameMap == null) ? 0 : tradeObjectsNameMap
+						.hashCode());
+		result = prime * result + (useComposites ? 1231 : 1237);
+		result = prime * result + ((xpName == null) ? 0 : xpName.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HyperEconomy other = (HyperEconomy) obj;
+		if (composites == null) {
+			if (other.composites != null)
+				return false;
+		} else if (!composites.equals(other.composites))
+			return false;
+		if (defaultAccount == null) {
+			if (other.defaultAccount != null)
+				return false;
+		} else if (!defaultAccount.equals(other.defaultAccount))
+			return false;
+		if (defaultAccountIsBank != other.defaultAccountIsBank)
+			return false;
+		if (economyName == null) {
+			if (other.economyName != null)
+				return false;
+		} else if (!economyName.equals(other.economyName))
+			return false;
+		if (tradeObjects == null) {
+			if (other.tradeObjects != null)
+				return false;
+		} else if (!tradeObjects.equals(other.tradeObjects))
+			return false;
+		if (tradeObjectsNameMap == null) {
+			if (other.tradeObjectsNameMap != null)
+				return false;
+		} else if (!tradeObjectsNameMap.equals(other.tradeObjectsNameMap))
+			return false;
+		if (useComposites != other.useComposites)
+			return false;
+		if (xpName == null) {
+			if (other.xpName != null)
+				return false;
+		} else if (!xpName.equals(other.xpName))
+			return false;
+		return true;
+	}
+	
+
 }

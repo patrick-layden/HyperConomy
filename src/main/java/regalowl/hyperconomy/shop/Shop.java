@@ -55,10 +55,6 @@ public interface Shop extends Comparable<Shop>, Serializable{
 	 */
 	public boolean isTradeable(TradeObject ho);
 	/**
-	 * Returns true if a HyperObject is banned from the Shop.
-	 */
-	public boolean isBanned(TradeObject ho);
-	/**
 	 * Returns true if the HyperObject with the given name is banned from the Shop.
 	 */
 	public boolean isBanned(String name);

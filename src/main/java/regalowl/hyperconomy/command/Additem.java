@@ -10,10 +10,13 @@ import java.util.HashMap;
 
 
 
+
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationType;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.tradeobject.ComponentTradeItem;
@@ -100,6 +103,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 		values.put("DATA", hobj.getData());
 		hc.getSQLWrite().performInsert("hyperconomy_objects", values);
 		he.addObject(hobj);
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(hobj, TradeObjectModificationType.CREATED));
 		return true;
 	}
 	

@@ -93,7 +93,8 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 	}
 	@Override
 	public void checkInitiationStatus() {}
-	
+	@Override
+	public void save() {}
 	public static TradeObject generate(HyperConomy hc, HItemStack stack){
 		if (stack.isBlank()) {return null;}
 		String name = generateName(hc, stack);

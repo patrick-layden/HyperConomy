@@ -1,6 +1,9 @@
 package regalowl.hyperconomy.util;
 
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.hyperconomy.HyperConomy;
 
@@ -103,6 +106,20 @@ public class UpdateYML {
 		cfg.setDefault("multi-server.sync-shops", true);
 		cfg.setDefault("multi-server.sync-trade-objects", true);
 		cfg.setDefault("multi-server.sync-accounts", true);
+		
+		
+		cfg.setDefault("remote-gui.enable", false);
+		cfg.setDefault("remote-gui.server", false);
+		cfg.setDefault("remote-gui.remote-server-ip", "192.168.1.1");
+		cfg.setDefault("remote-gui.listen-port", 3313);
+		cfg.setDefault("remote-gui.remote-server-port", 3313);
+		cfg.setDefault("remote-gui.connection-timeout-ms", 10000);
+		cfg.setDefault("remote-gui.refresh-rate-ms", 20000);
+		if (!cfg.isSet("remote-gui.auth-key") || cfg.getString("remote-gui.auth-key").equals("change-me")) {
+			SecureRandom random = new SecureRandom();
+			String authKey = new BigInteger(130, random).toString(32);
+			cfg.set("remote-gui.auth-key", authKey);
+		}
 		
 		
 		cfg.setDefault("updater.enabled", true);

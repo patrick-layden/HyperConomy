@@ -74,8 +74,9 @@ import regalowl.hyperconomy.display.TransactionSignHandler;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.HyperEventHandler;
+import regalowl.hyperconomy.gui.RemoteGUIServer;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
-import regalowl.hyperconomy.multiserver.HyperModificationServer;
+import regalowl.hyperconomy.multiserver.MultiServer;
 import regalowl.hyperconomy.shop.ChestShopHandler;
 import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.util.DebugMode;
@@ -107,6 +108,7 @@ public class HyperConomy {
 	private transient FileConfiguration hConfig;
 	private transient DebugMode dMode;
 	private transient HyperConomy_Web hcweb;
+	private transient RemoteGUIServer rgs;
 	private final int saveInterval = 1200000;
 	private boolean enabled;
 	private String consoleEconomy;
@@ -191,7 +193,8 @@ public class HyperConomy {
 		new TransactionSignHandler(this);
 		sdl.getYamlHandler().startSaveTask(saveInterval);
 		cs = new ChestShopHandler(this);
-		new HyperModificationServer(this);
+		new MultiServer(this);
+		rgs = new RemoteGUIServer(this);
 		api = new HyperAPI(this);
 		dMode.syncDebugConsoleMessage("Data loading started.");
 		heh.fireEvent(new DataLoadEvent(DataLoadType.START));
@@ -375,6 +378,9 @@ public class HyperConomy {
 	}
 	public HyperConomy_Web getHyperConomyWeb() {
 		return hcweb;
+	}
+	public RemoteGUIServer getRemoteGUIServer() {
+		return rgs;
 	}
 
 

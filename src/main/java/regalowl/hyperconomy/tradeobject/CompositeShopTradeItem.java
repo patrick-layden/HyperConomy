@@ -20,7 +20,6 @@ public class CompositeShopTradeItem extends BasicShopTradeObject implements Trad
 		super(hc, playerShop, ho, stock, buyPrice, sellPrice, maxStock, status, useEconomyStock);
 	}
 
-
 	@Override
 	public double getStock() {
 		HyperEconomy he = hc.getDataManager().getEconomy(getParentTradeObject().getEconomy());

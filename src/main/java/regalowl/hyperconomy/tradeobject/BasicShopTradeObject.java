@@ -2,11 +2,13 @@ package regalowl.hyperconomy.tradeobject;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationType;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
 
@@ -35,6 +37,23 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	}
 	
 
+	@Override
+	public void save() {
+		HashMap<String,String> conditions = new HashMap<String,String>();
+		conditions.put("HYPEROBJECT", hyperObject);
+		conditions.put("SHOP", playerShop);
+		hc.getSQLWrite().performDelete("hyperconomy_shop_objects", conditions);
+		HashMap<String,String> values = new HashMap<String,String>();
+		values.put("SHOP", playerShop);
+		values.put("HYPEROBJECT", hyperObject);
+		values.put("QUANTITY", stock+"");
+		values.put("BUY_PRICE", getShopObjectBuyPrice()+"");
+		values.put("SELL_PRICE", getShopObjectSellPrice()+"");
+		values.put("MAX_STOCK", getShopObjectMaxStock()+"");
+		values.put("STATUS", getShopObjectStatus()+"");
+		hc.getSQLWrite().performInsert("hyperconomy_shop_objects", values);
+	}
+	
 	@Override
 	public PlayerShop getShopObjectShop() {
 		return (PlayerShop)hc.getHyperShopManager().getShop(playerShop);
@@ -73,23 +92,32 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		return useEconomyStock;
 	}
 	@Override
-	public void setParentTradeObject(TradeObject ho) {
+	public void setParentTradeObject(TradeObject to) {
+		setParentTradeObject(to.getName());
+	}
+	@Override
+	public void setParentTradeObject(String to) {
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET HYPEROBJECT=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
-		ws.addParameter(ho.getName());
+		ws.addParameter(to);
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
+		this.hyperObject = to;
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this, TradeObjectModificationType.PARENT));
 	}
 	@Override
 	public void setShopObjectShop(PlayerShop playerShop) {
-		this.playerShop = playerShop.getName();
+		setShopObjectShop(playerShop.getName());
+	}
+	@Override
+	public void setShopObjectShop(String playerShop) {
 		WriteStatement ws = new WriteStatement("UPDATE hyperconomy_shop_objects SET SHOP=? WHERE SHOP=? AND HYPEROBJECT=?", hc.getSimpleDataLib());
-		ws.addParameter(playerShop.getName());
-		ws.addParameter(playerShop.getName());
+		ws.addParameter(playerShop);
+		ws.addParameter(this.playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
+		this.playerShop = playerShop;
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this, TradeObjectModificationType.SHOP));
 	}
 	@Override
 	public void setStock(double stock) {
@@ -103,7 +131,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 			ws.addParameter(playerShop);
 			ws.addParameter(hyperObject);
 			sw.addToQueue(ws);
-			hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
+			hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this, TradeObjectModificationType.STOCK));
 		}
 	}
 	@Override
@@ -114,7 +142,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this, TradeObjectModificationType.BUY_PRICE));
 	}
 	@Override
 	public void setShopObjectSellPrice(double sellPrice) {
@@ -124,7 +152,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this, TradeObjectModificationType.SELL_PRICE));
 	}
 	@Override
 	public void setShopObjectMaxStock(int maxStock) {
@@ -134,7 +162,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this, TradeObjectModificationType.MAX_STOCK));
 	}
 	@Override
 	public void setShopObjectStatus(TradeObjectStatus status) {
@@ -144,7 +172,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 		ws.addParameter(playerShop);
 		ws.addParameter(hyperObject);
 		sw.addToQueue(ws);
-		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this));
+		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this, TradeObjectModificationType.STATUS));
 	}
 	@Override
 	public void setUseEconomyStock(boolean state) {

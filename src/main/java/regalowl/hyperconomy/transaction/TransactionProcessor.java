@@ -178,7 +178,7 @@ public class TransactionProcessor {
 					response.addFailed(L.get("NO_TRADE_PERMISSION"), tradeObject);
 					return;
 				}
-				if (shop.isBanned(tradeObject)) {
+				if (shop.isBanned(tradeObject.getName())) {
 					response.addFailed(L.get("CANT_BE_TRADED"), tradeObject);
 					return;
 				}
@@ -348,7 +348,7 @@ public class TransactionProcessor {
 					response.addFailed(L.get("NO_TRADE_PERMISSION"), tradeObject);
 					return;
 				}
-				if (shop.isBanned(tradeObject)) {
+				if (shop.isBanned(tradeObject.getName())) {
 					response.addFailed(L.get("CANT_BE_TRADED"), tradeObject);
 					return;
 				}

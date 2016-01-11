@@ -50,7 +50,7 @@ public class Topitems extends BaseCommand implements HyperCommand {
 		ArrayList<TradeObject> displayObjects = new ArrayList<TradeObject>();
 		for (TradeObject to:allObjects) {
 		    if (to.getStock() == 0.0) continue;
-		    if (hasShop && s.isBanned(to)) continue;
+		    if (hasShop && s.isBanned(to.getName())) continue;
 		    if (hasShop && to.isShopObject()) {
 		    	PlayerShop ps = (PlayerShop)s;
 		    	if (!ps.isAllowed(hp) && !hp.hasPermission("hyperconomy.admin")) {

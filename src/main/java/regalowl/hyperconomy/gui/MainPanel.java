@@ -18,6 +18,7 @@ import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
+import regalowl.hyperconomy.event.RequestGUIChangeEvent;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.simpledatalib.SimpleDataLib;
 import regalowl.simpledatalib.event.EventHandler;
@@ -36,12 +37,19 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import java.awt.Color;
+import javax.swing.JTextArea;
+import java.awt.SystemColor;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.UIManager;
 
 public class MainPanel {
 
 	private JFrame frmEconomyEditor;
 	private HyperConomy hc;
 	private SimpleDataLib sdl;
+	
+	
 	private JTextField addEconomyNameField;
 	private JLabel lblAddAnEconomy;
 	private JButton addEconomyButton;
@@ -53,6 +61,16 @@ public class MainPanel {
 	private JTextField newValueField;
 	private JComboBox<String> newValueType;
 	private JButton stockToMedianButton;
+	private JPanel panel;
+	private JLabel remoteGUIStatusTextField;
+	private JTextArea remoteGUIInfoTextArea;
+	private JScrollPane remoteGUIScrollPane;
+	private JPanel panel_1;
+	private JPanel panel_2;
+	private JLabel guiSyncStatusLabel;
+	private JPanel panel_3;
+	
+	
 
 	/**
 	 * Launch the application.
@@ -97,12 +115,15 @@ public class MainPanel {
 		
 		frmEconomyEditor = new JFrame();
 		frmEconomyEditor.setTitle("Economy Editor");
-		frmEconomyEditor.setBounds(100, 100, 576, 233);
+		frmEconomyEditor.setBounds(100, 100, 588, 554);
 		frmEconomyEditor.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		frmEconomyEditor.addWindowListener(new java.awt.event.WindowAdapter() {
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 		        if (JOptionPane.showConfirmDialog(frmEconomyEditor, "Exit?", "Exit Application", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+		    		if (hc.getRemoteGUIServer().enabled()) {
+		    			hc.getRemoteGUIServer().disconnect();
+		    		}
 		        	if (hc != null) hc.disable(false);
 		            System.exit(0);
 		        }
@@ -110,18 +131,19 @@ public class MainPanel {
 		});
 		frmEconomyEditor.getContentPane().setLayout(null);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBackground(new Color(248, 248, 255));
-		panel.setBounds(207, 12, 351, 172);
+		panel.setBounds(207, 12, 363, 502);
 		frmEconomyEditor.getContentPane().add(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{175, 175, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowHeights = new int[]{40, 40, 40, 40, 40, 40, 40, 32, 32, 0, 0};
+		gbl_panel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		lblAddAnEconomy = new JLabel("New Economy Name");
+		lblAddAnEconomy.setBackground(SystemColor.controlHighlight);
 		GridBagConstraints gbc_lblAddAnEconomy = new GridBagConstraints();
 		gbc_lblAddAnEconomy.fill = GridBagConstraints.VERTICAL;
 		gbc_lblAddAnEconomy.insets = new Insets(0, 0, 5, 5);
@@ -130,6 +152,7 @@ public class MainPanel {
 		panel.add(lblAddAnEconomy, gbc_lblAddAnEconomy);
 		
 		JLabel lblNewValue = new JLabel("New Value");
+		lblNewValue.setBackground(SystemColor.controlHighlight);
 		GridBagConstraints gbc_lblNewValue = new GridBagConstraints();
 		gbc_lblNewValue.fill = GridBagConstraints.VERTICAL;
 		gbc_lblNewValue.insets = new Insets(0, 0, 5, 0);
@@ -345,15 +368,114 @@ public class MainPanel {
 		panel.add(stockToMedianButton, gbc_stockToMedianButton);
 		
 		btnDeleteEconomy = new JButton("Delete");
+		btnDeleteEconomy.setForeground(new Color(255, 250, 250));
+		btnDeleteEconomy.setBackground(new Color(220, 20, 60));
 		GridBagConstraints gbc_btnDeleteEconomy = new GridBagConstraints();
-		gbc_btnDeleteEconomy.insets = new Insets(0, 0, 0, 5);
+		gbc_btnDeleteEconomy.insets = new Insets(0, 0, 5, 5);
 		gbc_btnDeleteEconomy.fill = GridBagConstraints.BOTH;
 		gbc_btnDeleteEconomy.gridx = 0;
 		gbc_btnDeleteEconomy.gridy = 5;
 		panel.add(btnDeleteEconomy, gbc_btnDeleteEconomy);
 		
+		panel_1 = new JPanel();
+		panel_1.setBackground(UIManager.getColor("MenuItem.selectionForeground"));
+		panel_1.setBorder(new BevelBorder(BevelBorder.LOWERED, SystemColor.control, null, null, null));
+		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+		gbc_panel_1.fill = GridBagConstraints.BOTH;
+		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_1.gridx = 0;
+		gbc_panel_1.gridy = 7;
+		panel.add(panel_1, gbc_panel_1);
+		GridBagLayout gbl_panel_1 = new GridBagLayout();
+		gbl_panel_1.columnWidths = new int[]{175, 0};
+		gbl_panel_1.rowHeights = new int[]{32, 0};
+		gbl_panel_1.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_1.setLayout(gbl_panel_1);
+		
+		JLabel lblRemoteGui = new JLabel("Remote GUI");
+		lblRemoteGui.setForeground(Color.WHITE);
+		lblRemoteGui.setBackground(UIManager.getColor("OptionPane.errorDialog.titlePane.foreground"));
+		GridBagConstraints gbc_lblRemoteGui = new GridBagConstraints();
+		gbc_lblRemoteGui.fill = GridBagConstraints.VERTICAL;
+		gbc_lblRemoteGui.gridx = 0;
+		gbc_lblRemoteGui.gridy = 0;
+		panel_1.add(lblRemoteGui, gbc_lblRemoteGui);
+		
+		panel_2 = new JPanel();
+		panel_2.setBackground(Color.LIGHT_GRAY);
+		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
+		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
+		gbc_panel_2.fill = GridBagConstraints.BOTH;
+		gbc_panel_2.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_2.gridx = 0;
+		gbc_panel_2.gridy = 8;
+		panel.add(panel_2, gbc_panel_2);
+		GridBagLayout gbl_panel_2 = new GridBagLayout();
+		gbl_panel_2.columnWidths = new int[]{175, 0};
+		gbl_panel_2.rowHeights = new int[]{32, 0};
+		gbl_panel_2.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_2.setLayout(gbl_panel_2);
+		
+		remoteGUIStatusTextField = new JLabel();
+		remoteGUIStatusTextField.setText("Disabled");
+		GridBagConstraints gbc_remoteGUIStatusTextField = new GridBagConstraints();
+		gbc_remoteGUIStatusTextField.fill = GridBagConstraints.VERTICAL;
+		gbc_remoteGUIStatusTextField.gridx = 0;
+		gbc_remoteGUIStatusTextField.gridy = 0;
+		panel_2.add(remoteGUIStatusTextField, gbc_remoteGUIStatusTextField);
+		//remoteGUIStatusTextField.setColumns(10);
+		if (hc.getRemoteGUIServer().enabled()) {
+			panel_2.setBackground(Color.YELLOW);
+			remoteGUIStatusTextField.setText("Connecting...");
+		} else {
+			remoteGUIStatusTextField.setText("Disabled");
+		}
+		
+		panel_3 = new JPanel();
+		panel_3.setBackground(Color.LIGHT_GRAY);
+		panel_3.setBorder(new LineBorder(new Color(0, 0, 0)));
+		GridBagConstraints gbc_panel_3 = new GridBagConstraints();
+		gbc_panel_3.fill = GridBagConstraints.BOTH;
+		gbc_panel_3.insets = new Insets(0, 0, 5, 0);
+		gbc_panel_3.gridx = 1;
+		gbc_panel_3.gridy = 8;
+		panel.add(panel_3, gbc_panel_3);
+		GridBagLayout gbl_panel_3 = new GridBagLayout();
+		gbl_panel_3.columnWidths = new int[]{175, 0};
+		gbl_panel_3.rowHeights = new int[]{32, 0};
+		gbl_panel_3.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel_3.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_3.setLayout(gbl_panel_3);
+		
+		guiSyncStatusLabel = new JLabel("N/A");
+		if (hc.getRemoteGUIServer().enabled()) {
+			guiSyncStatusLabel.setText("Synchronizing...");
+			panel_3.setBackground(Color.YELLOW);
+		}
+		GridBagConstraints gbc_guiSyncStatusLabel = new GridBagConstraints();
+		gbc_guiSyncStatusLabel.fill = GridBagConstraints.VERTICAL;
+		gbc_guiSyncStatusLabel.gridx = 0;
+		gbc_guiSyncStatusLabel.gridy = 0;
+		panel_3.add(guiSyncStatusLabel, gbc_guiSyncStatusLabel);
+		guiSyncStatusLabel.setToolTipText("Displays the remote GUI synchronization state.");
+		
+		
+		remoteGUIScrollPane = new JScrollPane();
+		GridBagConstraints gbc_remoteGUIScrollPane = new GridBagConstraints();
+		gbc_remoteGUIScrollPane.gridwidth = 2;
+		gbc_remoteGUIScrollPane.fill = GridBagConstraints.BOTH;
+		gbc_remoteGUIScrollPane.gridx = 0;
+		gbc_remoteGUIScrollPane.gridy = 9;
+		panel.add(remoteGUIScrollPane, gbc_remoteGUIScrollPane);
+		
+		remoteGUIInfoTextArea = new JTextArea();
+		remoteGUIScrollPane.setViewportView(remoteGUIInfoTextArea);
+		remoteGUIInfoTextArea.setEnabled(false);
+		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(9, 12, 186, 172);
+		scrollPane.setBounds(9, 12, 186, 502);
 		frmEconomyEditor.getContentPane().add(scrollPane);
 		
 		economyList = new QuickListModel<String>();
@@ -416,6 +538,58 @@ public class MainPanel {
 		if (event.loadType == DataLoadType.COMPLETE) {
 			refreshEconomyList();
 			economySelectList.setSelectedIndex(economyList.indexOf("default"));
+		}
+	}
+	
+	public void popupMessage(String message) {
+		JOptionPane.showMessageDialog(new JFrame(), message);
+	}
+	
+	@EventHandler
+	public void onGUIChangeRequest(RequestGUIChangeEvent event) {
+		switch (event.getType()) {
+			case CONNECTED:
+				remoteGUIStatusTextField.setText("Loading...");
+				panel_2.setBackground(Color.CYAN);
+				break;
+			case ERROR:
+				remoteGUIStatusTextField.setText("Error");
+				panel_2.setBackground(Color.RED);
+				remoteGUIInfoTextArea.append(event.getMessage() + "\n");
+				break;
+			case INFO:
+				break;
+			case INVALID_KEY:
+				remoteGUIStatusTextField.setText("Invalid Key");
+				panel_2.setBackground(Color.PINK);
+				remoteGUIInfoTextArea.append(event.getMessage() + "\n");
+				break;
+			case INVALID_RESPONSE:
+				remoteGUIStatusTextField.setText("Invalid Response");
+				panel_2.setBackground(Color.RED);
+				break;
+			case LOADED:
+				remoteGUIStatusTextField.setText("Loaded");
+				panel_2.setBackground(UIManager.getColor("OptionPane.questionDialog.titlePane.background"));
+				refreshEconomyList();
+				break;
+			case SYNCHRONIZED:
+				guiSyncStatusLabel.setText("Synchronized");
+				panel_3.setBackground(UIManager.getColor("OptionPane.questionDialog.titlePane.background"));
+				break;
+			case NOT_SYNCHRONIZED:
+				guiSyncStatusLabel.setText("Synchronizing...");
+				panel_3.setBackground(Color.YELLOW);
+				break;
+			case SERVER_CHANGE_ECONOMY:
+				refreshEconomyList();
+				remoteGUIInfoTextArea.append(event.getMessage() + "\n");
+				break;
+			case SERVER_CHANGE_OBJECT:
+				remoteGUIInfoTextArea.append(event.getMessage() + "\n");
+				break;
+			default:
+				break;
 		}
 	}
 	
