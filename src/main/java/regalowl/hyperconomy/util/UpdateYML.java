@@ -33,6 +33,7 @@ public class UpdateYML {
 		cfg.setDefault("enable-feature.treat-damaged-items-as-equals-to-undamaged-ones", true);
 		cfg.setDefault("enable-feature.debug-mode", false);
 		cfg.setDefault("enable-feature.uuid-support", true);
+		cfg.setDefault("enable-feature.time-effects", false);
 		
 		
 		cfg.setDefault("economy-plugin.use-external", true);

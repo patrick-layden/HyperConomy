@@ -25,7 +25,7 @@ public class DatabaseUpdater {
 	private transient HyperConomy hc;
 	private transient SQLWrite sw;
 	private transient SQLRead sr;
-	public final double requiredDbVersion = 1.37;
+	public final double requiredDbVersion = 1.38;
 	private double currentDbVersion;
 	ArrayList<String> tables = new ArrayList<String>();
 	
@@ -44,6 +44,7 @@ public class DatabaseUpdater {
 		tables.add("info_signs");
 		tables.add("item_displays");
 		tables.add("economies");
+		tables.add("time_effects");
 	}
 	
 	
@@ -145,6 +146,24 @@ public class DatabaseUpdater {
 				}
 				sw.addToQueue("DROP TABLE hyperconomy_composites");
 				setDBVersion(1.37);
+				sw.writeSyncQueue();
+			}
+			if (currentDbVersion == 1.37) {//adds time effects table
+				Table t = hc.getSQLManager().addTable("hyperconomy_time_effects");
+				ArrayList<Field> compositeKey = new ArrayList<Field>();
+				Field f = t.addField("TYPE", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				compositeKey.add(f);
+				f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				compositeKey.add(f);
+				f = t.addField("ECONOMY", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				compositeKey.add(f);
+				f = t.addField("VALUE", FieldType.DOUBLE);f.setNotNull();f.setDefault("0");
+				f = t.addField("SECONDS", FieldType.INTEGER);f.setNotNull();f.setDefault("0");
+				f = t.addField("INCREMENT", FieldType.DOUBLE);f.setNotNull();f.setDefault("0");
+				f = t.addField("TIME_REMAINING", FieldType.INTEGER);f.setNotNull();f.setDefault("0");
+				t.setCompositeKey(compositeKey);
+				t.save();
+				setDBVersion(1.38);
 				sw.writeSyncQueue();
 			}
 		} else {
@@ -332,6 +351,21 @@ public class DatabaseUpdater {
 		t = hc.getSQLManager().addTable("hyperconomy_economies");
 		f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();f.setPrimaryKey();
 		f = t.addField("HYPERACCOUNT", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+		
+		
+		t = hc.getSQLManager().addTable("hyperconomy_time_effects");
+		compositeKey = new ArrayList<Field>();
+		f = t.addField("TYPE", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+		compositeKey.add(f);
+		f = t.addField("NAME", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+		compositeKey.add(f);
+		f = t.addField("ECONOMY", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+		compositeKey.add(f);
+		f = t.addField("VALUE", FieldType.DOUBLE);f.setNotNull();f.setDefault("0");
+		f = t.addField("SECONDS", FieldType.INTEGER);f.setNotNull();f.setDefault("0");
+		f = t.addField("INCREMENT", FieldType.DOUBLE);f.setNotNull();f.setDefault("0");
+		f = t.addField("TIME_REMAINING", FieldType.INTEGER);f.setNotNull();f.setDefault("0");
+		t.setCompositeKey(compositeKey);
 		
 		hc.getSQLManager().saveTables();
 		

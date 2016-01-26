@@ -62,6 +62,7 @@ import regalowl.hyperconomy.command.Setlanguage;
 import regalowl.hyperconomy.command.Setpassword;
 import regalowl.hyperconomy.command.Settax;
 import regalowl.hyperconomy.command.Taxsettings;
+import regalowl.hyperconomy.command.Timeeffect;
 import regalowl.hyperconomy.command.Toggleeconomy;
 import regalowl.hyperconomy.command.Topenchants;
 import regalowl.hyperconomy.command.Topitems;
@@ -79,6 +80,7 @@ import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.multiserver.MultiServer;
 import regalowl.hyperconomy.shop.ChestShopHandler;
 import regalowl.hyperconomy.shop.HyperShopManager;
+import regalowl.hyperconomy.timeeffects.TimeEffectsManager;
 import regalowl.hyperconomy.util.DebugMode;
 import regalowl.hyperconomy.util.DisabledProtection;
 import regalowl.hyperconomy.util.History;
@@ -109,6 +111,7 @@ public class HyperConomy {
 	private transient DebugMode dMode;
 	private transient HyperConomy_Web hcweb;
 	private transient RemoteGUIServer rgs;
+	private transient TimeEffectsManager tem;
 	private final int saveInterval = 1200000;
 	private boolean enabled;
 	private String consoleEconomy;
@@ -138,6 +141,7 @@ public class HyperConomy {
 		itdi = new ItemDisplayHandler(this);
 		isign = new InfoSignHandler(this);
 		fsh = mc.getFrameShopHandler();
+		tem = new TimeEffectsManager(this);
 		hcweb = new HyperConomy_Web(this);
 		registerCommands();
 		enabled = true;
@@ -212,6 +216,9 @@ public class HyperConomy {
 		if (hist != null) {
 			hist.stopHistoryLog();
 		}
+		if (tem != null) {
+			tem.disable();
+		}
 		if (dm != null) {
 			dm.shutDown();
 		}
@@ -277,6 +284,7 @@ public class HyperConomy {
 		mc.registerCommand("setpassword", new Setpassword(this));
 		mc.registerCommand("settax", new Settax(this));
 		mc.registerCommand("taxsettings", new Taxsettings(this));
+		mc.registerCommand("timeeffect", new Timeeffect(this));
 		mc.registerCommand("toggleeconomy", new Toggleeconomy(this));
 		mc.registerCommand("topenchants", new Topenchants(this));
 		mc.registerCommand("topitems", new Topitems(this));
@@ -381,6 +389,9 @@ public class HyperConomy {
 	}
 	public RemoteGUIServer getRemoteGUIServer() {
 		return rgs;
+	}
+	public TimeEffectsManager getTimeEffectsManager() {
+		return tem;
 	}
 
 
