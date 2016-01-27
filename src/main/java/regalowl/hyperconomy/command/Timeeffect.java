@@ -46,10 +46,10 @@ public class Timeeffect extends BaseCommand implements HyperCommand {
 				//TODO add section to new format LanguageFile once completed
 				data.addResponse("Time Effects");
 				ArrayList<TimeEffect> effects = tem.getTimeEffects();
-				data.addResponse(L.f(L.get("TOP_BALANCE_PAGE"), pageEnd, (int)Math.ceil(effects.size()/10.0)));
+				data.addResponse(L.f(L.get("TOP_BALANCE_PAGE"), pageEnd, (int)Math.ceil(effects.size()/8.0)));
 				int pageStart = pageEnd - 1;
-				pageStart *= 10;
-				pageEnd *= 10;
+				pageStart *= 8;
+				pageEnd *= 8;
 
 
 				for (int i = pageStart; i < pageEnd; i++) {
