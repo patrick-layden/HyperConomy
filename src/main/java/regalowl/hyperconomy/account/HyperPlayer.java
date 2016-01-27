@@ -95,8 +95,8 @@ public class HyperPlayer implements HyperAccount {
 	
 	public void validate() {
 		checkUUID();
-		checkExternalAccount();
 		checkForNameChange();
+		checkExternalAccount();
 	}
 	
 	private void checkExternalAccount() {
