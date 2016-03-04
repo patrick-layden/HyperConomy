@@ -528,3 +528,12 @@ MONEY_RECEIVED: &9&oYou received &a&o{currencySymbol}{amount}&9&o.
 ENCHANTMENT_ONLY_SINGLE_ITEM: &4You can't purchase an enchantment for a stack of items.
 NEW_VERSION_AVAILABLE: &eHyperConomy&a{type} &ebuild &a{value} &eis available.  Your HyperConomy plugin is outdated.
 CANT_ENCHANT_STACK: &4You can't enchant a stack of items.
+TIMEEFFECT_INVALID: &4Invalid parameters. Use /timeeffect [add/remove/list] [object/account/category] [effect] (frequency) (increment) (value) 
+TIMEEFFECT_INVALID_INCREMENT: &4The time frequency must be formatted like: [number][type] where type is s (seconds), m (minutes), h (hours), d (days), or w (weeks)
+TIMEEFFECT_DISABLED: &4Time effects are currently disabled.
+TIMEEFFECT_ADDED: &6Time effect(s) added!
+TIMEEFFECT_REMOVED: &6Time effect(s) removed!
+TIMEEFFECT_ALREADY_EXISTS: &4Time effect of that type already exists for this account or object.
+TIMEEFFECT_NOT_EXIST: &4That time effect does not exist.
+TIMEEFFECT_INCOMPATIBLE_TYPE: &4The selected effect type is not compatible with the selected object or account.
+TIMEEFFECT_INVALID_TYPE: &4The specified time effect type doesn't exist.

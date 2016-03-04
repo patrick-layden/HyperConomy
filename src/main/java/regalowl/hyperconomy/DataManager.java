@@ -414,6 +414,13 @@ public class DataManager {
 		}
 	}
 	
+	public ArrayList<HyperAccount> getAccounts() {
+		ArrayList<HyperAccount> accts = new ArrayList<HyperAccount>();
+		accts.addAll(hc.getHyperPlayerManager().getHyperPlayers());
+		accts.addAll(hc.getHyperBankManager().getHyperBanks());
+		return accts;
+	}
+	
 	/**
 	 * Replaces all economies with the given economy ArrayList.  Doesn't save the replacement economies to the database.
 	 * @param econArray

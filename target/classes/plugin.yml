@@ -243,6 +243,11 @@ commands:
       description: Manages the web page.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+   timeeffect:
+      description: Adds and removes TimeEffects from HyperConomy.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
+      aliases: [hcte]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.
