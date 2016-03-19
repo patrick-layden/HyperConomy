@@ -12,8 +12,8 @@ public class CompositeTradeItem extends ComponentTradeItem implements TradeObjec
 
 	private static final long serialVersionUID = -2104610162054897073L;
 
-	public CompositeTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, String compositeData, String objectData) {
-		super(hc,he,name,economy,displayName,aliases,categories,type,0,"",0,0,0,"",0,0,0,0,compositeData,objectData);
+	public CompositeTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, String compositeData, String objectData, double version) {
+		super(hc,he,name,economy,displayName,aliases,categories,type,0,"",0,0,0,"",0,0,0,0,compositeData,objectData, version);
 		HashMap<String,String> tempComponents = CommonFunctions.explodeMap(this.compositeData);
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
 		    String oname = entry.getKey();

@@ -125,6 +125,10 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 */
 	public double getMaxStock();
 	/**
+	 * @return The TradeObject's version number.
+	 */
+	public double getVersion();
+	/**
 	 * @return The TradeObject's serialized data String.
 	 */
 	public String getData();
@@ -217,6 +221,10 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 * @param maxstock
 	 */
 	public void setMaxStock(double maxstock);
+	/**Sets the TradeObject's version number.
+	 * @param version
+	 */
+	public void setVersion(double version);
 
 	
 	/**Returns true if this TradeObject is a composite object, false if not.

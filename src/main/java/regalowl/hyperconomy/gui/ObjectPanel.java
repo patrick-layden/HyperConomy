@@ -79,6 +79,7 @@ public class ObjectPanel extends JFrame {
 	private JTextField sellPriceField;
 	private JTextField newItemNameField;
 	private JButton editCompositesButton;
+	private JTextField versionData;
 
 
 	/**
@@ -142,6 +143,7 @@ public class ObjectPanel extends JFrame {
 				startPriceData.setText(to.getStartPrice() + "");
 				ceilingData.setText(to.getCeiling() + "");
 				floorData.setText(to.getFloor() + "");
+				versionData.setText(to.getVersion() + "");
 				objectTypeComboBox.setSelectedItem(to.getType().toString());
 				updatePrice(to);
 				fieldsUpdating = false;
@@ -157,9 +159,9 @@ public class ObjectPanel extends JFrame {
 		getContentPane().add(settingsPanel);
 		GridBagLayout gbl_settingsPanel = new GridBagLayout();
 		gbl_settingsPanel.columnWidths = new int[]{38, 32, 12, 0};
-		gbl_settingsPanel.rowHeights = new int[]{0, 19, 19, 19, 19, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_settingsPanel.rowHeights = new int[]{0, 19, 19, 19, 19, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_settingsPanel.columnWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_settingsPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_settingsPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		settingsPanel.setLayout(gbl_settingsPanel);
 		
 		nameLabel = new JLabel("Name");
@@ -348,16 +350,6 @@ public class ObjectPanel extends JFrame {
 		settingsPanel.add(floorData, gbc_floorData);
 		floorData.setColumns(10);
 		
-		editCategoriesButton = new JButton("Edit Categories");
-		editCategoriesButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TradeObject to = getSelectedObject();
-				if (to == null) return;
-				CategoryEditor frame = new CategoryEditor(to, economyPanel);
-				frame.setVisible(true);
-			}
-		});
-		
 		JLabel objectTypeLabel = new JLabel("Object Type");
 		GridBagConstraints gbc_objectTypeLabel = new GridBagConstraints();
 		gbc_objectTypeLabel.gridwidth = 2;
@@ -380,6 +372,35 @@ public class ObjectPanel extends JFrame {
 			objectTypeComboBox.addItem(type.toString());
 		}
 		
+		editCategoriesButton = new JButton("Edit Categories");
+		editCategoriesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TradeObject to = getSelectedObject();
+				if (to == null) return;
+				CategoryEditor frame = new CategoryEditor(to, economyPanel);
+				frame.setVisible(true);
+			}
+		});
+		
+		JLabel versionLabel = new JLabel("Version");
+		GridBagConstraints gbc_versionLabel = new GridBagConstraints();
+		gbc_versionLabel.gridwidth = 2;
+		gbc_versionLabel.anchor = GridBagConstraints.EAST;
+		gbc_versionLabel.fill = GridBagConstraints.VERTICAL;
+		gbc_versionLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_versionLabel.gridx = 0;
+		gbc_versionLabel.gridy = 11;
+		settingsPanel.add(versionLabel, gbc_versionLabel);
+		
+		versionData = new JTextField();
+		GridBagConstraints gbc_objectVersion = new GridBagConstraints();
+		gbc_objectVersion.insets = new Insets(0, 0, 5, 0);
+		gbc_objectVersion.fill = GridBagConstraints.BOTH;
+		gbc_objectVersion.gridx = 2;
+		gbc_objectVersion.gridy = 11;
+		settingsPanel.add(versionData, gbc_objectVersion);
+		versionData.setColumns(10);
+		
 		
 		initialPricingToggle = new JToggleButton("Initial Pricing");
 		
@@ -387,7 +408,7 @@ public class ObjectPanel extends JFrame {
 				gbc_initialPricingToggle.fill = GridBagConstraints.BOTH;
 				gbc_initialPricingToggle.insets = new Insets(0, 0, 5, 0);
 				gbc_initialPricingToggle.gridx = 2;
-				gbc_initialPricingToggle.gridy = 11;
+				gbc_initialPricingToggle.gridy = 12;
 				settingsPanel.add(initialPricingToggle, gbc_initialPricingToggle);
 		
 		staticPricingToggle = new JToggleButton("Static Pricing");
@@ -396,13 +417,13 @@ public class ObjectPanel extends JFrame {
 				gbc_staticPricingToggle.fill = GridBagConstraints.BOTH;
 				gbc_staticPricingToggle.insets = new Insets(0, 0, 5, 0);
 				gbc_staticPricingToggle.gridx = 2;
-				gbc_staticPricingToggle.gridy = 12;
+				gbc_staticPricingToggle.gridy = 13;
 				settingsPanel.add(staticPricingToggle, gbc_staticPricingToggle);
 		GridBagConstraints gbc_editCategoriesButton = new GridBagConstraints();
 		gbc_editCategoriesButton.insets = new Insets(0, 0, 5, 0);
 		gbc_editCategoriesButton.fill = GridBagConstraints.BOTH;
 		gbc_editCategoriesButton.gridx = 2;
-		gbc_editCategoriesButton.gridy = 13;
+		gbc_editCategoriesButton.gridy = 14;
 		settingsPanel.add(editCategoriesButton, gbc_editCategoriesButton);
 		
 		editCompositesButton = new JButton("Edit Composites Data");
@@ -410,7 +431,7 @@ public class ObjectPanel extends JFrame {
 		gbc_editCompositesButton.fill = GridBagConstraints.BOTH;
 		gbc_editCompositesButton.insets = new Insets(0, 0, 5, 0);
 		gbc_editCompositesButton.gridx = 2;
-		gbc_editCompositesButton.gridy = 14;
+		gbc_editCompositesButton.gridy = 15;
 		settingsPanel.add(editCompositesButton, gbc_editCompositesButton);
 		editCompositesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
@@ -425,7 +446,7 @@ public class ObjectPanel extends JFrame {
 		GridBagConstraints gbc_btnEditObjectData = new GridBagConstraints();
 		gbc_btnEditObjectData.fill = GridBagConstraints.BOTH;
 		gbc_btnEditObjectData.gridx = 2;
-		gbc_btnEditObjectData.gridy = 15;
+		gbc_btnEditObjectData.gridy = 16;
 		settingsPanel.add(btnEditObjectData, gbc_btnEditObjectData);
 		btnEditObjectData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
@@ -547,6 +568,12 @@ public class ObjectPanel extends JFrame {
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "The floor value must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
+				try {
+					double value = Double.parseDouble(versionData.getText());
+					to.setVersion(value);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "The version must be numeric.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 				to.setType(TradeObjectType.fromString(objectTypeComboBox.getSelectedItem().toString()));
 				to.setUseInitialPricing(initialPricingToggle.isSelected());
 				to.setStatic(staticPricingToggle.isSelected());
@@ -592,7 +619,7 @@ public class ObjectPanel extends JFrame {
 				}
 				String aliases = newName.replace("_", "");
 				TradeObject to = new ComponentTradeItem(hc, null, newName, he.getName(), newName, aliases, "", "item", 1, "false", 2,
-						0, 10000, "true", 2, 1000000000,0, 1000000000, "", "");
+						0, 10000, "true", 2, 1000000000,0, 1000000000, "", "", 1);
 				boolean success = new Additem(hc).addItem(to, he.getName());
 				if (!success) JOptionPane.showMessageDialog(null, "Adding item failed.  Try a different name.", "Error", JOptionPane.ERROR_MESSAGE);
 				loadObjects();

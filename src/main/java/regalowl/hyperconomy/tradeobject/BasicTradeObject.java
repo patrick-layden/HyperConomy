@@ -47,6 +47,7 @@ public class BasicTradeObject implements TradeObject {
 	protected double ceiling;
 	protected double floor;
 	protected double maxstock;
+	protected double version;
 	protected String objectData;
 	protected String compositeData;
 	protected ConcurrentHashMap<String,Double> components = new ConcurrentHashMap<String,Double>();
@@ -59,7 +60,7 @@ public class BasicTradeObject implements TradeObject {
 	/**
 	 * Standard Constructor
 	 */
-	public BasicTradeObject(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, String objectData) {
+	public BasicTradeObject(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, String objectData, double version) {
 		this.hc = hc;
 		this.sw = hc.getSQLWrite();
 		this.name = name;
@@ -80,6 +81,7 @@ public class BasicTradeObject implements TradeObject {
 		this.maxstock = maxstock;
 		this.objectData = objectData;
 		this.compositeData = compositeData;
+		this.version = version;
 	}
 	
 	@Override
@@ -111,6 +113,7 @@ public class BasicTradeObject implements TradeObject {
 		values.put("MAXSTOCK", getMaxStock()+"");
 		values.put("COMPONENTS", getCompositeData());
 		values.put("DATA", getData());
+		values.put("VERSION", getVersion()+"");
 		hc.getSQLWrite().performInsert("hyperconomy_objects", values);
 	}
 	
@@ -308,7 +311,10 @@ public class BasicTradeObject implements TradeObject {
 	public String getData() {
 		return objectData;
 	}
-	
+	@Override
+	public double getVersion() {
+		return version;
+	}
 	
 	
 	@Override
@@ -475,6 +481,13 @@ public class BasicTradeObject implements TradeObject {
 		sw.addToQueue(statement);
 		this.maxstock = maxstock;
 		fireModificationEvent(TradeObjectModificationType.MAX_STOCK);
+	}
+	@Override
+	public void setVersion(double version) {
+		String statement = "UPDATE hyperconomy_objects SET VERSION='" + version + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+		sw.addToQueue(statement);
+		this.version = version;
+		fireModificationEvent(TradeObjectModificationType.VERSION);
 	}
 	@Override
 	public void setCompositeData(String compositeData) {

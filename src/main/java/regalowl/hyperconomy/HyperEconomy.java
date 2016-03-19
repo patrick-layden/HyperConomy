@@ -89,19 +89,19 @@ public class HyperEconomy implements Serializable {
 				to = new ComponentTradeItem(hc, this, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"));
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"), result.getDouble("VERSION"));
 			} else if (type == TradeObjectType.ENCHANTMENT) {
 				to = new TradeEnchant(hc, this, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), 
 						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"));
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"), result.getDouble("VERSION"));
 			} else if (type == TradeObjectType.EXPERIENCE) {
 				to = new TradeXp(hc, this, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), 
 						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"));
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"), result.getDouble("VERSION"));
 				xpName = result.getString("NAME");
 			}
 			if (to != null) addObject(to);
@@ -144,7 +144,7 @@ public class HyperEconomy implements Serializable {
 	private boolean loadComposites(SQLRead sr) {
 		boolean loaded = false;
 		int counter = 0;
-		QueryResult result = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES, CATEGORIES, TYPE, COMPONENTS, DATA FROM hyperconomy_objects WHERE "
+		QueryResult result = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES, CATEGORIES, TYPE, COMPONENTS, DATA, VERSION FROM hyperconomy_objects WHERE "
 				+ "COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
 		while (!loaded) {
 			counter++;
@@ -166,7 +166,7 @@ public class HyperEconomy implements Serializable {
 					continue;
 				}
 				TradeObject to = new CompositeTradeItem(hc, this, name, economyName, result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), 
-						result.getString("TYPE"), result.getString("COMPONENTS"), result.getString("DATA"));
+						result.getString("TYPE"), result.getString("COMPONENTS"), result.getString("DATA"), result.getDouble("VERSION"));
 				addObject(to);
 			}
 		}

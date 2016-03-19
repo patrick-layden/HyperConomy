@@ -15,8 +15,8 @@ public class ComponentTradeItem extends BasicTradeObject implements TradeObject 
 
 	private static final long serialVersionUID = -845888542311735442L;
 	
-	public ComponentTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, String objectData) {
-		super(hc, he, name, economy, displayName, aliases, categories, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, compositeData, objectData);
+	public ComponentTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, String objectData, double version) {
+		super(hc, he, name, economy, displayName, aliases, categories, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, compositeData, objectData, version);
 	}
 	
 	@Override

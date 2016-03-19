@@ -12,8 +12,8 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 
 
 	private static final long serialVersionUID = 4228578172340543286L;
-	public TempTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, String objectData) {
-		super(hc, he, name, economy, displayName, aliases, categories, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, compositeData, objectData);
+	public TempTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, String objectData, double version) {
+		super(hc, he, name, economy, displayName, aliases, categories, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, compositeData, objectData, version);
 	}
 	
 	//Override all set methods to prevent database changes.
@@ -101,7 +101,7 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 		double value = 10.0;
 		double median = 10000;
 		double startprice = 20.0;
-		return new TempTradeItem(hc, null, name, "default", name, "", "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, "", stack.serialize());
+		return new TempTradeItem(hc, null, name, "default", name, "", "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, "", stack.serialize(), 1);
 	}
 	
 	public static String generateName(HyperConomy hc, HItemStack stack) {

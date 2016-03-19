@@ -25,7 +25,7 @@ public class DatabaseUpdater {
 	private transient HyperConomy hc;
 	private transient SQLWrite sw;
 	private transient SQLRead sr;
-	public final double requiredDbVersion = 1.38;
+	public final double requiredDbVersion = 1.39;
 	private double currentDbVersion;
 	ArrayList<String> tables = new ArrayList<String>();
 	
@@ -166,6 +166,13 @@ public class DatabaseUpdater {
 				setDBVersion(1.38);
 				sw.writeSyncQueue();
 			}
+			if (currentDbVersion == 1.38) {//adds object versioning
+				Table t = hc.getSQLManager().getTable("hyperconomy_objects");
+				Field f = t.generateField("VERSION", FieldType.DOUBLE);f.setNotNull();f.setDefault("1");
+				t.addFieldToDatabase(f, t.getField("DATA"));
+				setDBVersion(1.39);
+				sw.writeSyncQueue();
+			}
 		} else {
 			createTables();
 		}
@@ -219,6 +226,7 @@ public class DatabaseUpdater {
 		f = t.addField("MAXSTOCK", FieldType.DOUBLE);f.setNotNull();f.setDefault("1000000");
 		f = t.addField("COMPONENTS", FieldType.VARCHAR);f.setFieldSize(1000);f.setNotNull();f.setDefault("");
 		f = t.addField("DATA", FieldType.TEXT);
+		f = t.addField("VERSION", FieldType.DOUBLE);f.setNotNull();f.setDefault("1");
 		t.setCompositeKey(compositeKey);
 		
 		
