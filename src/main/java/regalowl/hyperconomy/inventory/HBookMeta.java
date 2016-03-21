@@ -13,8 +13,8 @@ public class HBookMeta extends HItemMeta {
 	private ArrayList<String> pages;
 	private String title;
 
-	public HBookMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, String author, ArrayList<String> pages, String title) {
-		super(displayName, lore, enchantments);
+	public HBookMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, String author, ArrayList<String> pages, String title) {
+		super(displayName, lore, enchantments, itemFlags);
 		this.author = author;
 		this.pages = pages;
 		this.title = title;

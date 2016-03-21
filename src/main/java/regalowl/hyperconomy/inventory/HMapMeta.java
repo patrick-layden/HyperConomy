@@ -12,8 +12,8 @@ public class HMapMeta extends HItemMeta {
 
 	private boolean isScaling;
 
-	public HMapMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, boolean isScaling) {
-		super(displayName, lore, enchantments);
+	public HMapMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, boolean isScaling) {
+		super(displayName, lore, enchantments, itemFlags);
 		this.isScaling = isScaling;
 	}
 

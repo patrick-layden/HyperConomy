@@ -172,7 +172,7 @@ public class HItemStack {
 	}
 	
 	public double addEnchantment(HEnchantment e) {
-		if (itemMeta == null) itemMeta = new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>());
+		if (itemMeta == null) itemMeta = new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>(), new ArrayList<HItemFlag>());
 		if (itemMeta.containsEnchantment(e)) return 0;
 		itemMeta.addEnchantment(e);
 		return 1;

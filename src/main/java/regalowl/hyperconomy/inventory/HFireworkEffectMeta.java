@@ -12,8 +12,8 @@ public class HFireworkEffectMeta extends HItemMeta {
 	private HFireworkEffect effect;
 
 	
-	public HFireworkEffectMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, HFireworkEffect effect) {
-		super(displayName, lore, enchantments);
+	public HFireworkEffectMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, HFireworkEffect effect) {
+		super(displayName, lore, enchantments, itemFlags);
 		this.effect = effect;
 	}
 	

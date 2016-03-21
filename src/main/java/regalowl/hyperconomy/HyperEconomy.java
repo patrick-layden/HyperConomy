@@ -28,6 +28,7 @@ import regalowl.hyperconomy.tradeobject.TradeEnchant;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObjectType;
 import regalowl.hyperconomy.tradeobject.TradeXp;
+import regalowl.hyperconomy.util.Backup;
 
 
 
@@ -175,6 +176,7 @@ public class HyperEconomy implements Serializable {
 	
 	
 	private void repairComposites(SQLRead sr) {
+		if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
 		QueryResult result = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES, COMPONENTS FROM hyperconomy_objects WHERE COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
 		while (result.next()) {//iterate through all composite objects
 			String name = result.getString("NAME");//name of current composite
@@ -197,7 +199,7 @@ public class HyperEconomy implements Serializable {
 			    	}
 			    }
 			    if (removeCompositeNature) {//if composite's component doesn't exist convert the composite to component
-			    	hc.getMC().logSevere("[HyperConomy]Composite removed: " + name);
+			    	hc.getMC().logSevere("[HyperConomy]Composite removed: " + name + " ("+result.getString("DISPLAY_NAME")+")");
 					String statement = "UPDATE hyperconomy_objects SET COMPONENTS = '' WHERE NAME = '"+name+"' AND ECONOMY = '"+economyName+"'";
 					hc.getSQLWrite().addToQueue(statement);
 			    }

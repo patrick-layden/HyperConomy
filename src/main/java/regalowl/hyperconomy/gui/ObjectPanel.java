@@ -41,6 +41,7 @@ import java.awt.Insets;
 import javax.swing.JComboBox;
 
 import java.awt.Color;
+import javax.swing.SwingConstants;
 
 
 public class ObjectPanel extends JFrame {
@@ -102,7 +103,7 @@ public class ObjectPanel extends JFrame {
 	private void initialize() {
 		fieldsUpdating = false;
 		loadingCategories = false;
-		setBounds(100, 100, 642, 592);
+		setBounds(100, 100, 968, 592);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
@@ -114,13 +115,13 @@ public class ObjectPanel extends JFrame {
 			}
 		});
 		categoryComboBox.setToolTipText("Select a category.");
-		categoryComboBox.setBounds(12, 12, 266, 24);
+		categoryComboBox.setBounds(12, 12, 405, 24);
 		getContentPane().add(categoryComboBox);
 
 
 		tradeObjectList = new QuickListModel<String>();
 		objectListScrollPane = new JScrollPane();
-		objectListScrollPane.setBounds(12, 35, 266, 352);
+		objectListScrollPane.setBounds(12, 35, 405, 352);
 		getContentPane().add(objectListScrollPane);
 		listObjectSelector = new JList<String>(tradeObjectList);
 		listObjectSelector.setBackground(new Color(248, 248, 255));
@@ -155,7 +156,7 @@ public class ObjectPanel extends JFrame {
 		
 		settingsPanel = new JPanel();
 		settingsPanel.setBackground(new Color(248, 248, 255));
-		settingsPanel.setBounds(288, 12, 328, 451);
+		settingsPanel.setBounds(429, 12, 521, 451);
 		getContentPane().add(settingsPanel);
 		GridBagLayout gbl_settingsPanel = new GridBagLayout();
 		gbl_settingsPanel.columnWidths = new int[]{38, 32, 12, 0};
@@ -459,19 +460,21 @@ public class ObjectPanel extends JFrame {
 		
 		JPanel pricePanel = new JPanel();
 		pricePanel.setBackground(new Color(248, 248, 255));
-		pricePanel.setBounds(12, 475, 600, 80);
+		pricePanel.setBounds(12, 475, 938, 80);
 		getContentPane().add(pricePanel);
 		GridBagLayout gbl_pricePanel = new GridBagLayout();
-		gbl_pricePanel.columnWidths = new int[]{300, 300, 0};
+		gbl_pricePanel.columnWidths = new int[]{415, 121, -328, 0};
 		gbl_pricePanel.rowHeights = new int[]{15, 0, 0, 0};
-		gbl_pricePanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gbl_pricePanel.columnWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gbl_pricePanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		pricePanel.setLayout(gbl_pricePanel);
 		
 		JLabel purchasePriceLabel = new JLabel("Purchase Price");
+		purchasePriceLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_purchasePriceLabel = new GridBagConstraints();
+		gbc_purchasePriceLabel.anchor = GridBagConstraints.EAST;
 		gbc_purchasePriceLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_purchasePriceLabel.gridx = 0;
+		gbc_purchasePriceLabel.gridx = 1;
 		gbc_purchasePriceLabel.gridy = 0;
 		pricePanel.add(purchasePriceLabel, gbc_purchasePriceLabel);
 		
@@ -481,15 +484,16 @@ public class ObjectPanel extends JFrame {
 		GridBagConstraints gbc_purchasePriceField = new GridBagConstraints();
 		gbc_purchasePriceField.insets = new Insets(0, 0, 5, 0);
 		gbc_purchasePriceField.fill = GridBagConstraints.BOTH;
-		gbc_purchasePriceField.gridx = 1;
+		gbc_purchasePriceField.gridx = 2;
 		gbc_purchasePriceField.gridy = 0;
 		pricePanel.add(purchasePriceField, gbc_purchasePriceField);
 		purchasePriceField.setColumns(10);
 		
 		JLabel sellPriceLabel = new JLabel("Sell Price");
 		GridBagConstraints gbc_sellPriceLabel = new GridBagConstraints();
+		gbc_sellPriceLabel.anchor = GridBagConstraints.EAST;
 		gbc_sellPriceLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_sellPriceLabel.gridx = 0;
+		gbc_sellPriceLabel.gridx = 1;
 		gbc_sellPriceLabel.gridy = 1;
 		pricePanel.add(sellPriceLabel, gbc_sellPriceLabel);
 		
@@ -499,7 +503,7 @@ public class ObjectPanel extends JFrame {
 		GridBagConstraints gbc_sellPriceField = new GridBagConstraints();
 		gbc_sellPriceField.insets = new Insets(0, 0, 5, 0);
 		gbc_sellPriceField.fill = GridBagConstraints.BOTH;
-		gbc_sellPriceField.gridx = 1;
+		gbc_sellPriceField.gridx = 2;
 		gbc_sellPriceField.gridy = 1;
 		pricePanel.add(sellPriceField, gbc_sellPriceField);
 		sellPriceField.setColumns(10);
@@ -507,10 +511,11 @@ public class ObjectPanel extends JFrame {
 		JButton saveButton = new JButton("Save Changes");
 		saveButton.setForeground(Color.WHITE);
 		GridBagConstraints gbc_saveButton = new GridBagConstraints();
+		gbc_saveButton.gridheight = 3;
 		gbc_saveButton.fill = GridBagConstraints.BOTH;
 		gbc_saveButton.insets = new Insets(0, 0, 0, 5);
 		gbc_saveButton.gridx = 0;
-		gbc_saveButton.gridy = 2;
+		gbc_saveButton.gridy = 0;
 		pricePanel.add(saveButton, gbc_saveButton);
 		saveButton.setBackground(new Color(0, 51, 0));
 		saveButton.addActionListener(new ActionListener() {
@@ -586,14 +591,14 @@ public class ObjectPanel extends JFrame {
 		JButton deleteButton = new JButton("Delete Object");
 		GridBagConstraints gbc_deleteButton = new GridBagConstraints();
 		gbc_deleteButton.fill = GridBagConstraints.BOTH;
-		gbc_deleteButton.gridx = 1;
+		gbc_deleteButton.gridx = 2;
 		gbc_deleteButton.gridy = 2;
 		pricePanel.add(deleteButton, gbc_deleteButton);
 		deleteButton.setForeground(new Color(255, 250, 250));
 		deleteButton.setBackground(new Color(220, 20, 60));
 		
 		JPanel addNewPanel = new JPanel();
-		addNewPanel.setBounds(12, 399, 266, 64);
+		addNewPanel.setBounds(12, 399, 405, 64);
 		getContentPane().add(addNewPanel);
 		GridBagLayout gbl_addNewPanel = new GridBagLayout();
 		gbl_addNewPanel.columnWidths = new int[]{0, 0};
@@ -659,6 +664,8 @@ public class ObjectPanel extends JFrame {
 		Collections.sort(categories);
 		categoryComboBox.addItem("all");
 		categoryComboBox.addItem("uncategorized");
+		categoryComboBox.addItem("composite items");
+		categoryComboBox.addItem("component items");
 		for (String cat:categories) {
 			categoryComboBox.addItem(cat);
 		}
@@ -679,6 +686,14 @@ public class ObjectPanel extends JFrame {
 		} else if (category.equals("uncategorized")) {
 			for (TradeObject t:tObjects) {
 				if (t.getCategories().size() == 0) names.add(t.getDisplayName());
+			}
+		} else if (category.equals("composite items")) {
+			for (TradeObject t:tObjects) {
+				if (t.isCompositeObject()) names.add(t.getDisplayName());
+			}
+		} else if (category.equals("component items")) {
+			for (TradeObject t:tObjects) {
+				if (!t.isCompositeObject()) names.add(t.getDisplayName());
 			}
 		} else {
 			for (TradeObject t:tObjects) {

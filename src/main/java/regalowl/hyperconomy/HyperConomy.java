@@ -209,7 +209,7 @@ public class HyperConomy {
 		mc.unRegisterAsExternalEconomy();
 		enabled = false;
 		mc.unregisterAllListeners();
-		hcweb.disable();
+		if (hcweb != null) hcweb.disable();
 		if (itdi != null) {
 			itdi.unloadDisplays();
 		}

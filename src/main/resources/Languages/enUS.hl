@@ -310,6 +310,8 @@ SQL_BACKUP_NOT_FOUND: &4SQL backup not found.  Place your backup in the HyperCon
 ENCHANTSETTINGS_INVALID: &4Invalid parameters. Use /enchantsettings [enchantment] or /es [enchantment]
 IMPORTPRICES_INVALID: &4Invalid parameters. Use /importprices [economy]
 PRICES_IMPORTED: &6Prices have been imported from YML.
+ITEMS_UPDATED: &6All default items in the selected economy have been updated to the latest version.
+COMPOSITE_PRICING_SET: &6All composite items have had their price settings updated to be consistent with their component items.
 HC_HYPERCONOMY_ENABLED: &6HyperConomy Enabled!
 HC_HYPERCONOMY_DISABLED: &6HyperConomy Disabled!
 REPAIRSIGNS_INVALID: &4Invalid Parameters.  Use /repairsigns [x radius/radius] (y radius) (z radius)
@@ -497,6 +499,7 @@ HCDATA_EXPORTCSV_INVALID: &4Invalid parameters. Use /hcdata exportcsv [name of t
 HCDATA_IMPORTCSV_INVALID: &4Invalid parameters. Use /hcdata importcsv [name of table or 'all']
 HCDATA_IMPORTMISSING_INVALID: &4Invalid parameters. Use /hcdata importmissing (economy)
 HCDATA_SETDEFAULTPRICES_INVALID: &4Invalid parameters. Use /hcdata setdefaultprices (economy)
+HCDATA_UPDATEITEMS_INVALID: &4Invalid parameters. Use /hcdata updateitems (economy)
 HCDATA_IMPORTYML_INVALID: &4Invalid parameters. Use /hcdata importyml [economy]
 HCDATA_EXPORTYML_INVALID: &4Invalid parameters. Use /hcdata exportyml [economy]
 HCDATA_UPDATEITEMSTACK_INVALID: &4Invalid parameters. Use /hcdata updateitemstack [object]

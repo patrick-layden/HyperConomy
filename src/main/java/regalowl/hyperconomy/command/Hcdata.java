@@ -4,12 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-
-
-
-
-
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.HyperConomy;
@@ -165,6 +160,57 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 			} catch (Exception e) {
 				hc.gSDL().getErrorWriter().writeError(e);
 				data.addResponse(L.get("HCDATA_SETDEFAULTPRICES_INVALID"));
+			}
+		} else if (args[0].equalsIgnoreCase("updateitems")) { 
+			try {
+				String economy = "default";
+				if (args.length > 1) economy = args[1];
+				if (dm.economyExists(economy)) {
+					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
+					String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
+					FileTools ft = hc.getFileTools();
+					ft.deleteFile(defaultObjectsPath);
+					ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
+					QueryResult qr = hc.getFileTools().readCSV(defaultObjectsPath);
+					while (qr.next()) {
+						String objectName = qr.getString("NAME");
+						TradeObject to = dm.getEconomy(economy).getTradeObject(objectName);
+						if (to == null) continue;
+						if (to.getVersion() == qr.getDouble("VERSION")) continue;
+						to.setDisplayName(qr.getString("DISPLAY_NAME"));
+						to.setAliases(CommonFunctions.explode(qr.getString("ALIASES")));
+						to.setCategories(CommonFunctions.explode(qr.getString("CATEGORIES")));
+						to.setData(qr.getString("DATA"));
+						to.setCompositeData(qr.getString("COMPONENTS"));
+						to.setVersion(qr.getDouble("VERSION"));
+						to.setName(qr.getString("NAME"));
+					}
+					ft.deleteFile(defaultObjectsPath);
+					data.addResponse(L.get("ITEMS_UPDATED"));
+				} else {
+					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
+				}
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
+				data.addResponse(L.get("HCDATA_UPDATEITEMS_INVALID"));
+			}
+		} else if (args[0].equalsIgnoreCase("autosetcompositeprices")) { 
+			try {
+				String economy = "default";
+				if (args.length > 1) economy = args[1];
+				if (dm.economyExists(economy)) {
+					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
+					for (TradeObject to:dm.getEconomy(economy).getTradeObjects()) {
+						if (!to.isCompositeObject()) continue;
+						to.save();
+					}
+					data.addResponse(L.get("COMPOSITE_PRICING_SET"));
+				} else {
+					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
+				}
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
+				data.addResponse(L.get("HCDATA_UPDATEITEMS_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("clearhistory")) {
 			String statement = "DELETE FROM hyperconomy_history";

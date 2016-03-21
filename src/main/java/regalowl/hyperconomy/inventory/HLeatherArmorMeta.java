@@ -13,8 +13,8 @@ public class HLeatherArmorMeta extends HItemMeta {
 	private HColor color;
 
 	
-	public HLeatherArmorMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, HColor color) {
-		super(displayName, lore, enchantments);
+	public HLeatherArmorMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, HColor color) {
+		super(displayName, lore, enchantments, itemFlags);
 		this.color = color;
 	}
 

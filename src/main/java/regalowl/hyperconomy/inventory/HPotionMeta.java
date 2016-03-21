@@ -11,10 +11,12 @@ import regalowl.simpledatalib.CommonFunctions;
 public class HPotionMeta extends HItemMeta {
 
 	private ArrayList<HPotionEffect> potionEffects = new ArrayList<HPotionEffect>();
+	private HPotionData potionData;
 
-	public HPotionMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HPotionEffect> potionEffects) {
-		super(displayName, lore, enchantments);
+	public HPotionMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, ArrayList<HPotionEffect> potionEffects, HPotionData potionData) {
+		super(displayName, lore, enchantments, itemFlags);
 		this.potionEffects = potionEffects;
+		this.potionData = potionData;
 	}
 
 	public HPotionMeta(String serialized) {
@@ -24,6 +26,7 @@ public class HPotionMeta extends HItemMeta {
 		for (String e:sEffects) {
 			potionEffects.add(new HPotionEffect(e));
 		}
+		this.potionData = new HPotionData(data.get("potionData"));
     }
 
 	public String serialize() {
@@ -33,6 +36,7 @@ public class HPotionMeta extends HItemMeta {
 			sEffects.add(e.serialize());
 		}
 		data.put("potionEffects", CommonFunctions.implode(sEffects));
+		data.put("potionData", potionData.serialize());
 		return CommonFunctions.implodeMap(data);
 	}
 	
@@ -48,6 +52,7 @@ public class HPotionMeta extends HItemMeta {
 			potionEffectString = potionEffectString.substring(0, potionEffectString.length() - 1);
 		}
 		info.add(color1 + "Potion Effects: " + color2 + potionEffectString);
+		info.add(color1 + "Potion Data: " + color2 + "Type:"+potionData.getPotionType()+",Extended:"+potionData.isExtended()+",Upgraded:"+potionData.isUpgraded());
 		return info;
 	}
 	
@@ -59,11 +64,16 @@ public class HPotionMeta extends HItemMeta {
 	public ArrayList<HPotionEffect> getPotionEffects() {
 		return potionEffects;
 	}
+	
+	public HPotionData getPotionData() {
+		return potionData;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
+		result = prime * result + ((potionData == null) ? 0 : potionData.hashCode());
 		result = prime * result + ((potionEffects == null) ? 0 : potionEffects.hashCode());
 		return result;
 	}
@@ -77,6 +87,11 @@ public class HPotionMeta extends HItemMeta {
 		if (getClass() != obj.getClass())
 			return false;
 		HPotionMeta other = (HPotionMeta) obj;
+		if (potionData == null) {
+			if (other.potionData != null)
+				return false;
+		} else if (!potionData.equals(other.potionData))
+			return false;
 		if (potionEffects == null) {
 			if (other.potionEffects != null)
 				return false;
@@ -84,6 +99,7 @@ public class HPotionMeta extends HItemMeta {
 			return false;
 		return true;
 	}
+
 
 	
 	

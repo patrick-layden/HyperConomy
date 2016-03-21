@@ -509,7 +509,7 @@ public class BasicTradeObject implements TradeObject {
 		    	amount = (double)number;
 		    }
 		    TradeObject ho = hc.getDataManager().getEconomy(economy).getTradeObject(oname);
-		    this.components.put(ho.getName(), amount);
+		    if (this.components != null && ho != null) this.components.put(ho.getName(), amount);
 		}
 		fireModificationEvent(TradeObjectModificationType.COMPOSITE_DATA);
 	}
