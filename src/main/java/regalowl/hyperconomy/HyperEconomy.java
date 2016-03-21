@@ -432,7 +432,11 @@ public class HyperEconomy implements Serializable {
 			objectsAdded.add(objectName);
 			HashMap<String, String> values = new HashMap<String, String>();
 			for (String column : columns) {
-				values.put(column, data.getString(column));
+				if (column.equalsIgnoreCase("ECONOMY")) {
+					values.put(column, economyName);
+				} else {
+					values.put(column, data.getString(column));
+				}
 			}
 			sw.performInsert("hyperconomy_objects", values);
 		}
