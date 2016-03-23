@@ -21,13 +21,14 @@ public class HFireworkEffectMeta extends HItemMeta {
 	public HFireworkEffectMeta(String serialized) {
 		super(serialized);
 		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
-		effect = new HFireworkEffect(data.get("effect"));
+		String serializedFireworkEffect = data.get("effect");
+		if (serializedFireworkEffect != null) effect = new HFireworkEffect(serializedFireworkEffect);
     }
 
 	@Override
 	public String serialize() {
 		HashMap<String,String> data = super.getMap();
-		data.put("effect", effect.serialize());
+		if (effect != null) data.put("effect", effect.serialize());
 		return CommonFunctions.implodeMap(data);
 	}
 
