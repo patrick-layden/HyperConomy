@@ -217,7 +217,9 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		heh.fireEvent(new DisableEvent());
 		mc.unRegisterAsExternalEconomy();
 		enabled = false;
-		mc.unregisterAllListeners();
+		if (!protect) {
+			mc.unregisterAllListeners();
+		}
 		if (hcweb != null) hcweb.disable();
 		if (itdi != null) {
 			itdi.unloadDisplays();
