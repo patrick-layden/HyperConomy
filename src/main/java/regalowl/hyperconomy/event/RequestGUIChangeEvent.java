@@ -1,8 +1,7 @@
 package regalowl.hyperconomy.event;
 
-import regalowl.simpledatalib.event.Event;
 
-public class RequestGUIChangeEvent extends Event {
+public class RequestGUIChangeEvent extends HyperEvent {
 	
 	private GUIChangeType type;
 	private String message;

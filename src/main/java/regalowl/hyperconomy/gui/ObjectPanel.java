@@ -10,12 +10,13 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.command.Additem;
 import regalowl.hyperconomy.event.GUIChangeType;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.event.RequestGUIChangeEvent;
 import regalowl.hyperconomy.tradeobject.ComponentTradeItem;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObjectType;
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.event.EventHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +45,7 @@ import java.awt.Color;
 import javax.swing.SwingConstants;
 
 
-public class ObjectPanel extends JFrame {
+public class ObjectPanel extends JFrame implements HyperEventListener {
 
 
 	private static final long serialVersionUID = 6133250795371176846L;
@@ -94,7 +95,7 @@ public class ObjectPanel extends JFrame {
 		initialize();
 		loadCatgories();
 		loadObjects();
-		hc.getSimpleDataLib().getEventPublisher().registerListener(this);
+		hc.getHyperEventHandler().registerListener(this);
 	}
 
 	/**
@@ -722,10 +723,15 @@ public class ObjectPanel extends JFrame {
 		JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
 	}
 	
-	@EventHandler
-	public void onGUIChangeRequest(RequestGUIChangeEvent event) {
-		if (event.getType() == GUIChangeType.SERVER_CHANGE_OBJECT) {
-			loadObjects();
+
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof RequestGUIChangeEvent) {
+			RequestGUIChangeEvent hevent = (RequestGUIChangeEvent)event;
+			if (hevent.getType() == GUIChangeType.SERVER_CHANGE_OBJECT) {
+				loadObjects();
+			}
 		}
+		
 	}
 }

@@ -2,10 +2,10 @@ package regalowl.hyperconomy.event.minecraft;
 
 import java.util.ArrayList;
 
-import regalowl.simpledatalib.event.Event;
+import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.minecraft.HBlock;
 
-public class HEntityExplodeEvent extends Event {
+public class HEntityExplodeEvent extends HyperEvent {
 
 	private ArrayList<HBlock> blocks;
 	

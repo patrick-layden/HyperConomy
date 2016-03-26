@@ -1,9 +1,8 @@
 package regalowl.hyperconomy.event;
 
 import regalowl.hyperconomy.account.HyperBank;
-import regalowl.simpledatalib.event.Event;
 
-public class HyperBankModificationEvent extends Event {
+public class HyperBankModificationEvent extends HyperEvent {
 	private HyperBank hb;
 	
 	public HyperBankModificationEvent(HyperBank hb) {

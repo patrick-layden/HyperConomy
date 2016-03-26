@@ -8,16 +8,17 @@ import java.util.ArrayList;
 
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.event.TransactionEvent;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionType;
 
-public class Notify extends BaseCommand implements HyperCommand {
+public class Notify extends BaseCommand implements HyperCommand, HyperEventListener {
 
 	public Notify(HyperConomy hc) {
 		super(hc, false);
@@ -40,24 +41,27 @@ public class Notify extends BaseCommand implements HyperCommand {
 	}
 
 	
-	@EventHandler
-	public void onTransactionEvent(TransactionEvent event) {
-		TransactionEvent te = (TransactionEvent) event;
-		if (te.getTransactionResponse().successful()) {
-			PlayerTransaction pt = te.getTransaction();
-			TransactionType tt = pt.getTransactionType();
-			if (tt == TransactionType.BUY || tt == TransactionType.SELL) {
-				if (pt.getHyperObject() != null) {
-					TradeObject ho = pt.getHyperObject();
-					if (notifyNames.contains(ho.getName())) {
-						String message = L.f(L.get("SQL_NOTIFICATION"), ho.getStock(), ho.getBuyPriceWithTax(1), ho.getDisplayName(), ho.getEconomy());
-						sendNotification(message);
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof TransactionEvent) {
+			TransactionEvent te = (TransactionEvent)event;
+			if (te.getTransactionResponse().successful()) {
+				PlayerTransaction pt = te.getTransaction();
+				TransactionType tt = pt.getTransactionType();
+				if (tt == TransactionType.BUY || tt == TransactionType.SELL) {
+					if (pt.getHyperObject() != null) {
+						TradeObject ho = pt.getHyperObject();
+						if (notifyNames.contains(ho.getName())) {
+							String message = L.f(L.get("SQL_NOTIFICATION"), ho.getStock(), ho.getBuyPriceWithTax(1), ho.getDisplayName(), ho.getEconomy());
+							sendNotification(message);
+						}
 					}
 				}
 			}
 		}
+		
 	}
-	
+
 
 	private void sendNotification(String message) {
 		for (HyperPlayer p:hc.getHyperPlayerManager().getOnlinePlayers()) {
@@ -110,6 +114,8 @@ public class Notify extends BaseCommand implements HyperCommand {
 		}
 		return data;
 	}
+
+
 
 
 	

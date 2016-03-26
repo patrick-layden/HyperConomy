@@ -1,11 +1,11 @@
 package regalowl.hyperconomy.event.minecraft;
 
-import regalowl.simpledatalib.event.Event;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.ChestShop;
 
-public class ChestShopClickEvent extends Event {
+public class ChestShopClickEvent extends HyperEvent {
 
 	private HyperPlayer clicker;
 	private ChestShop chestShop;

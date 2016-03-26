@@ -11,10 +11,12 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
+import regalowl.hyperconomy.event.ShopCreationEvent;
 import regalowl.hyperconomy.shop.Shop;
-import regalowl.simpledatalib.event.EventHandler;
 
-public class WebHandler {
+public class WebHandler implements HyperEventListener {
 
 	private HyperConomy hc;
 	private HyperConomy_Web hcw;
@@ -34,11 +36,15 @@ public class WebHandler {
 		serverStarted.set(false);
 	}
 	
-	@EventHandler
-	public void onShopCreation(Shop s) {
-		addShop(s);
+
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof ShopCreationEvent) {
+			ShopCreationEvent hevent = (ShopCreationEvent)event;
+			addShop(hevent.getShop());
+		}
+		
 	}
-	
 	
 	private class PageUpdater extends TimerTask {
 		@Override
@@ -151,6 +157,7 @@ public class WebHandler {
 	public boolean serverStarted() {
 		return serverStarted.get();
 	}
+
 
 
 

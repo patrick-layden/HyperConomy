@@ -10,10 +10,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
-import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.display.FrameShop;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.shop.Shop;
@@ -22,7 +23,7 @@ import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 
-public class BukkitFrameShop implements FrameShop {
+public class BukkitFrameShop implements FrameShop, HyperEventListener {
 
 	private transient HyperConomy hc;
 	
@@ -83,11 +84,15 @@ public class BukkitFrameShop implements FrameShop {
 		}
 	}
 	
-	@EventHandler
-	public void onHyperObjectModification(TradeObjectModificationEvent event) {
-		if (event.getTradeObject().equals(to)) {
-			render();
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof TradeObjectModificationEvent) {
+			TradeObjectModificationEvent tevent = (TradeObjectModificationEvent)event;
+			if (tevent.getTradeObject().equals(to)) {
+				render();
+			}
 		}
+		
 	}
 
 	public short getMapId() {
@@ -179,5 +184,7 @@ public class BukkitFrameShop implements FrameShop {
 		hc.getFrameShopHandler().removeFrameShop(l);
 		hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_frame_shops WHERE ID = '" + mapId + "'");
 	}
+
+
 
 }

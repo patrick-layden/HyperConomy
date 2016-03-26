@@ -11,10 +11,11 @@ import java.util.Collection;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
@@ -25,7 +26,7 @@ import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HItem;
 import regalowl.hyperconomy.minecraft.HLocation;
 
-public class ItemDisplayHandler {
+public class ItemDisplayHandler implements HyperEventListener {
 	
 	private HyperConomy hc; 
 	private long refreshthreadid;
@@ -159,118 +160,110 @@ public class ItemDisplayHandler {
 		}
 		return true;
 	}
-
-	
-
-	@EventHandler
-	public void onPlayerDropItemEvent(HPlayerDropItemEvent event) {
-		HItem i = event.getItem();
-		for (ItemDisplay display : hc.getItemDisplay().getDisplays()) {
-			if (!display.isActive()) continue;
-			if (display.blockItemDrop(i)) {
-				event.cancel();
-				return;
-			}
-		}
-	}
 	
 	
-	@EventHandler
-	public void onBlockBreakEvent(HBlockBreakEvent event) {
-		try {
-		HBlock b = event.getBlock();
-		for (ItemDisplay display:displays) {
-			if (!display.isActive()) {continue;}
-			if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
-				event.cancel();
-				display.removeItem();
-				display.makeDisplay();
-			}
-		}
-		} catch (Exception e) {
-			hc.gSDL().getErrorWriter().writeError(e);
-		}
-	}
-
-	@EventHandler
-	public void onBlockPlaceEvent(HBlockPlaceEvent event) {
-		try {
-			HBlock b = event.getBlock();
-			for (ItemDisplay display : displays) {
-				if (!display.isActive()) {continue;}
-				if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof HPlayerDropItemEvent) {
+			HPlayerDropItemEvent hevent = (HPlayerDropItemEvent)event;
+			HItem i = hevent.getItem();
+			for (ItemDisplay display : hc.getItemDisplay().getDisplays()) {
+				if (!display.isActive()) continue;
+				if (display.blockItemDrop(i)) {
 					event.cancel();
-					display.refresh();
+					return;
 				}
 			}
-			if (b.canFall()) {
-				HBlock below = b.getFirstNonAirBlockBelow();
+		} else if (event instanceof HBlockBreakEvent) {
+			HBlockBreakEvent hevent = (HBlockBreakEvent)event;
+			try {
+				HBlock b = hevent.getBlock();
+				for (ItemDisplay display:displays) {
+					if (!display.isActive()) {continue;}
+					if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
+						event.cancel();
+						display.removeItem();
+						display.makeDisplay();
+					}
+				}
+				} catch (Exception e) {
+					hc.gSDL().getErrorWriter().writeError(e);
+				}
+		} else if (event instanceof HBlockPlaceEvent) {
+			HBlockPlaceEvent hevent = (HBlockPlaceEvent)event;
+			try {
+				HBlock b = hevent.getBlock();
 				for (ItemDisplay display : displays) {
 					if (!display.isActive()) {continue;}
-					if (display.getBaseBlock().equals(below) || display.getItemBlock().equals(below)) {
+					if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
 						event.cancel();
 						display.refresh();
 					}
 				}
-			}
-		} catch (Exception e) {
-			hc.gSDL().getErrorWriter().writeError(e);
-		}
-	}
-
-	@EventHandler
-	public void onBlockPistonRetractEvent(HBlockPistonRetractEvent event) {
-		try {
-			HBlock b = event.getRetractedBlock();
-			for (ItemDisplay display : displays) {
-				if (!display.isActive()) {
-					continue;
-				}
-				if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
-					event.cancel();
-					display.refresh();
-				}
-			}
-		} catch (Exception e) {
-			hc.gSDL().getErrorWriter().writeError(e);
-		}
-	}
-
-	@EventHandler
-	public void onBlockPistonExtendEvent(HBlockPistonExtendEvent event) {
-		try {
-			for (HBlock cblock : event.getBlocks()) {
-				for (ItemDisplay display : displays) {
-					if (!display.isActive()) {continue;}
-					if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
-						event.cancel();
-						display.refresh();
+				if (b.canFall()) {
+					HBlock below = b.getFirstNonAirBlockBelow();
+					for (ItemDisplay display : displays) {
+						if (!display.isActive()) {continue;}
+						if (display.getBaseBlock().equals(below) || display.getItemBlock().equals(below)) {
+							event.cancel();
+							display.refresh();
+						}
 					}
 				}
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
 			}
-		} catch (Exception e) {
-			hc.gSDL().getErrorWriter().writeError(e);
-		}
-	}
-
-	@EventHandler
-	public void onEntityExplodeEvent(HEntityExplodeEvent event) {
-		try {
-			for (HBlock cblock : event.getBrokenBlocks()) {
+		} else if (event instanceof HBlockPistonRetractEvent) {
+			HBlockPistonRetractEvent hevent = (HBlockPistonRetractEvent)event;
+			try {
+				HBlock b = hevent.getRetractedBlock();
 				for (ItemDisplay display : displays) {
 					if (!display.isActive()) {
 						continue;
 					}
-					if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
+					if (display.getBaseBlock().equals(b) || display.getItemBlock().equals(b)) {
 						event.cancel();
 						display.refresh();
 					}
 				}
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
 			}
-		} catch (Exception e) {
-			hc.gSDL().getErrorWriter().writeError(e);
+		} else if (event instanceof HBlockPistonExtendEvent) {
+			HBlockPistonExtendEvent hevent = (HBlockPistonExtendEvent)event;
+			try {
+				for (HBlock cblock : hevent.getBlocks()) {
+					for (ItemDisplay display : displays) {
+						if (!display.isActive()) {continue;}
+						if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
+							event.cancel();
+							display.refresh();
+						}
+					}
+				}
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
+			}
+		} else if (event instanceof HEntityExplodeEvent) {
+			HEntityExplodeEvent hevent = (HEntityExplodeEvent)event;
+			try {
+				for (HBlock cblock : hevent.getBrokenBlocks()) {
+					for (ItemDisplay display : displays) {
+						if (!display.isActive()) {
+							continue;
+						}
+						if (display.getBaseBlock().equals(cblock) || display.getItemBlock().equals(cblock)) {
+							event.cancel();
+							display.refresh();
+						}
+					}
+				}
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
+			}
 		}
 	}
+
 
 
 
@@ -287,5 +280,8 @@ public class ItemDisplayHandler {
 			return false;
 		}
 	}
+
+
+
 
 }

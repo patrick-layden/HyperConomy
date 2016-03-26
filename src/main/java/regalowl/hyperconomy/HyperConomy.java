@@ -2,7 +2,8 @@ package regalowl.hyperconomy;
 
 
 import regalowl.simpledatalib.SimpleDataLib;
-import regalowl.simpledatalib.event.EventHandler;
+import regalowl.simpledatalib.event.SDLEvent;
+import regalowl.simpledatalib.event.SDLEventListener;
 import regalowl.simpledatalib.events.LogEvent;
 import regalowl.simpledatalib.events.LogLevel;
 import regalowl.simpledatalib.events.ShutdownEvent;
@@ -74,7 +75,9 @@ import regalowl.hyperconomy.display.ItemDisplayHandler;
 import regalowl.hyperconomy.display.TransactionSignHandler;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DisableEvent;
+import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.HyperEventHandler;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.gui.RemoteGUIServer;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.multiserver.MultiServer;
@@ -91,7 +94,7 @@ import regalowl.hyperconomy.util.UpdateChecker;
 import regalowl.hyperconomy.util.UpdateYML;
 import regalowl.hyperconomy.webpage.HyperConomy_Web;
 
-public class HyperConomy {
+public class HyperConomy implements HyperEventListener, SDLEventListener {
 
 	private transient MineCraftConnector mc;
 	private transient API api;
@@ -122,35 +125,40 @@ public class HyperConomy {
 		this.consoleEconomy = "default";
 	}
 	
-	@EventHandler
-	public void onLogMessage(LogEvent event) {
-		if (event.getException() != null) event.getException().printStackTrace();
-		if (event.getLevel() == LogLevel.SEVERE || event.getLevel() == LogLevel.ERROR) mc.logSevere(event.getMessage());
-		if (event.getLevel() == LogLevel.INFO) mc.logInfo(event.getMessage());
+	
+	@Override
+	public void handleSDLEvent(SDLEvent event) {
+		if (event instanceof LogEvent) {
+			LogEvent levent = (LogEvent)event;
+			if (levent.getException() != null) levent.getException().printStackTrace();
+			if (levent.getLevel() == LogLevel.SEVERE || levent.getLevel() == LogLevel.ERROR) mc.logSevere(levent.getMessage());
+			if (levent.getLevel() == LogLevel.INFO) mc.logInfo(levent.getMessage());
+		} else if (event instanceof ShutdownEvent) {
+			disable(false);
+		} 
 	}
 	
-	@EventHandler
-	public void onSimpleDataLibShutdownRequest(ShutdownEvent event) {
-		disable(false);
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof DataLoadEvent) {
+			DataLoadEvent devent = (DataLoadEvent)event;
+			if (!(devent.loadType == DataLoadType.COMPLETE)) return;
+			hist = new History(this);
+			itdi = new ItemDisplayHandler(this);
+			isign = new InfoSignHandler(this);
+			fsh = mc.getFrameShopHandler();
+			tem = new TimeEffectsManager(this);
+			hcweb = new HyperConomy_Web(this);
+			registerCommands();
+			enabled = true;
+			hl.setLoadLock(false);
+			mc.registerListeners();
+			dMode.syncDebugConsoleMessage("Data loading completed.");
+			UpdateChecker uc = new UpdateChecker(this);
+			uc.runCheck();
+		}
 	}
-	
-	@EventHandler
-	public void onDataLoad(DataLoadEvent event) {
-		if (!(event.loadType == DataLoadType.COMPLETE)) return;
-		hist = new History(this);
-		itdi = new ItemDisplayHandler(this);
-		isign = new InfoSignHandler(this);
-		fsh = mc.getFrameShopHandler();
-		tem = new TimeEffectsManager(this);
-		hcweb = new HyperConomy_Web(this);
-		registerCommands();
-		enabled = true;
-		hl.setLoadLock(false);
-		mc.registerListeners();
-		dMode.syncDebugConsoleMessage("Data loading completed.");
-		UpdateChecker uc = new UpdateChecker(this);
-		uc.runCheck();
-	}
+
 
 
 	public void load() {
@@ -174,6 +182,7 @@ public class HyperConomy {
 		}
 		heh = new HyperEventHandler(this);
 		heh.registerListener(this);
+		sdl.getEventPublisher().registerListener(this);
 		mc.checkExternalEconomyRegistration();
 	}
 	
@@ -203,7 +212,7 @@ public class HyperConomy {
 		dMode.syncDebugConsoleMessage("Data loading started.");
 		heh.fireEvent(new DataLoadEvent(DataLoadType.START));
 	}
-
+	
 	public void disable(boolean protect) {
 		heh.fireEvent(new DisableEvent());
 		mc.unRegisterAsExternalEconomy();
@@ -393,6 +402,8 @@ public class HyperConomy {
 	public TimeEffectsManager getTimeEffectsManager() {
 		return tem;
 	}
+
+
 
 
 }

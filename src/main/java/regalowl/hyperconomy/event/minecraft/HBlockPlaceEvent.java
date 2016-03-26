@@ -1,9 +1,9 @@
 package regalowl.hyperconomy.event.minecraft;
 
-import regalowl.simpledatalib.event.Event;
+import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.minecraft.HBlock;
 
-public class HBlockPlaceEvent extends Event {
+public class HBlockPlaceEvent extends HyperEvent {
 
 	private HBlock block;
 	

@@ -9,11 +9,12 @@ import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.minecraft.HLocation;
-import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.file.FileConfiguration;
 
-public class HyperShopManager {
+public class HyperShopManager implements HyperEventListener {
 	
 	private transient FileConfiguration config;
 	private transient HyperConomy hc;
@@ -32,16 +33,21 @@ public class HyperShopManager {
 		hc.getHyperEventHandler().registerListener(this);
 	}
 	
-	
-	@EventHandler
-	public void onDataLoad(DataLoadEvent event) {
-		if (!(event.loadType == DataLoadType.DEFAULT_ACCOUNT)) return;
-		new Thread(new Runnable() {
-			public void run() {
-				loadData();
-			}
-		}).start();
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof DataLoadEvent) {
+			DataLoadEvent devent = (DataLoadEvent) event;
+			if (!(devent.loadType == DataLoadType.DEFAULT_ACCOUNT)) return;
+			new Thread(new Runnable() {
+				public void run() {
+					loadData();
+				}
+			}).start();
+		}
+		
 	}
+	
+
 	
 	private void loadData() {
 		shops.clear();
@@ -180,4 +186,7 @@ public class HyperShopManager {
 		}
 		return names;
 	}
+
+
+
 }

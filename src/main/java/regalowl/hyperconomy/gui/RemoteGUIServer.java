@@ -12,7 +12,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.api.ServerConnectionType;
@@ -22,6 +21,8 @@ import regalowl.hyperconomy.event.GUIChangeType;
 import regalowl.hyperconomy.event.HyperBankModificationEvent;
 import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
 import regalowl.hyperconomy.event.HyperEconomyDeletionEvent;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.event.TradeObjectModificationType;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
@@ -32,7 +33,7 @@ import regalowl.hyperconomy.event.RequestGUIChangeEvent;
 import regalowl.hyperconomy.event.ShopModificationEvent;
 
 
-public class RemoteGUIServer {
+public class RemoteGUIServer implements HyperEventListener {
 
 	private HyperConomy hc;
 	private boolean remoteGUIEnabled;
@@ -70,78 +71,141 @@ public class RemoteGUIServer {
 		startServer();
 	}
 	
-	
-	@EventHandler
-	public void onDataLoad(DataLoadEvent event) {
-		if (!(event.loadType == DataLoadType.COMPLETE)) return;
-		if (hc.getMC().getServerConnectionType() != ServerConnectionType.GUI) return;
-		if (isServer) return;
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof DataLoadEvent) {
+			DataLoadEvent devent = (DataLoadEvent) event;
+			if (!(devent.loadType == DataLoadType.COMPLETE)) return;
+			if (hc.getMC().getServerConnectionType() != ServerConnectionType.GUI) return;
+			if (isServer) return;
 
-		
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					Socket socket = new Socket();
-					socket.connect(new InetSocketAddress(remoteServerAddress.ip, remoteServerAddress.port), remoteGUITimeout);
-					//test connection
-					ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-					out.writeObject(new GUITransferObject(GUITransferType.CONNECTION_TEST, authKey));
-					out.flush();
-					ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-					GUITransferObject response = (GUITransferObject) input.readObject();
-					if (response.getType().equals(GUITransferType.SUCCESS)) {
-						hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.CONNECTED));
-						socket.close();
-					} else if (response.getType().equals(GUITransferType.NOT_AUTHORIZED)) {
-						String message = "Your auth-key in your config.yml file is incorrect.  Make sure it matches your server's auth-key.";
-						hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.INVALID_KEY, message));
-						hc.getDebugMode().debugWriteMessage(message);
-						socket.close();
-						return;
-					} else {
-						hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.INVALID_RESPONSE));
-						socket.close();
-						return;
-					}
-					socket = new Socket();
-					socket.connect(new InetSocketAddress(remoteServerAddress.ip, remoteServerAddress.port), remoteGUITimeout);
-					out = new ObjectOutputStream(socket.getOutputStream());
-					out.writeObject(new GUITransferObject(GUITransferType.REQUEST_GUI_INITIALIZATION, authKey));
-					out.flush();
-					input = new ObjectInputStream(socket.getInputStream());
-					response = (GUITransferObject) input.readObject();
-					if (response.getType().equals(GUITransferType.GUI_INITIALIZATION)) {
-						connected = true;
-						currentlyUpdating = true;
-						hc.getDataManager().setEconomies(response.getHyperEconomies());
-						currentlyUpdating = false;
-						guiSynchronized = true;
-						hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.SYNCHRONIZED));
-						response = new GUITransferObject(GUITransferType.SUCCESS, authKey);
-						out = new ObjectOutputStream(socket.getOutputStream());
-						out.writeObject(response);
+			
+			new Thread(new Runnable() {
+				public void run() {
+					try {
+						Socket socket = new Socket();
+						socket.connect(new InetSocketAddress(remoteServerAddress.ip, remoteServerAddress.port), remoteGUITimeout);
+						//test connection
+						ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+						out.writeObject(new GUITransferObject(GUITransferType.CONNECTION_TEST, authKey));
 						out.flush();
-						socket.close();
-						periodicUpdater = new PeriodicGUIUpdater();
-						t.schedule(periodicUpdater, refreshRate, refreshRate);
-						hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.LOADED));
-						hc.getDebugMode().debugWriteMessage("GUI Initialization Succeeded");
-					} else {
-						hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.INVALID_RESPONSE));
-						hc.getDebugMode().debugWriteMessage("GUI Initialization Failed: Server returned invalid response.");
-						socket.close();
+						ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+						GUITransferObject response = (GUITransferObject) input.readObject();
+						if (response.getType().equals(GUITransferType.SUCCESS)) {
+							hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.CONNECTED));
+							socket.close();
+						} else if (response.getType().equals(GUITransferType.NOT_AUTHORIZED)) {
+							String message = "Your auth-key in your config.yml file is incorrect.  Make sure it matches your server's auth-key.";
+							hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.INVALID_KEY, message));
+							hc.getDebugMode().debugWriteMessage(message);
+							socket.close();
+							return;
+						} else {
+							hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.INVALID_RESPONSE));
+							socket.close();
+							return;
+						}
+						socket = new Socket();
+						socket.connect(new InetSocketAddress(remoteServerAddress.ip, remoteServerAddress.port), remoteGUITimeout);
+						out = new ObjectOutputStream(socket.getOutputStream());
+						out.writeObject(new GUITransferObject(GUITransferType.REQUEST_GUI_INITIALIZATION, authKey));
+						out.flush();
+						input = new ObjectInputStream(socket.getInputStream());
+						response = (GUITransferObject) input.readObject();
+						if (response.getType().equals(GUITransferType.GUI_INITIALIZATION)) {
+							connected = true;
+							currentlyUpdating = true;
+							hc.getDataManager().setEconomies(response.getHyperEconomies());
+							currentlyUpdating = false;
+							guiSynchronized = true;
+							hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.SYNCHRONIZED));
+							response = new GUITransferObject(GUITransferType.SUCCESS, authKey);
+							out = new ObjectOutputStream(socket.getOutputStream());
+							out.writeObject(response);
+							out.flush();
+							socket.close();
+							periodicUpdater = new PeriodicGUIUpdater();
+							t.schedule(periodicUpdater, refreshRate, refreshRate);
+							hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.LOADED));
+							hc.getDebugMode().debugWriteMessage("GUI Initialization Succeeded");
+						} else {
+							hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.INVALID_RESPONSE));
+							hc.getDebugMode().debugWriteMessage("GUI Initialization Failed: Server returned invalid response.");
+							socket.close();
+						}
+						
+					} catch (Exception e) {
+						String error = CommonFunctions.getErrorString(e);
+						hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.ERROR, error));
+						hc.getDebugMode().debugWriteMessage("GUI initialization error occurred when connecting to ip: " + remoteServerAddress.ip + " and port: " + remoteServerAddress.port);
+						hc.getDebugMode().debugWriteError(e);
 					}
-					
-				} catch (Exception e) {
-					String error = CommonFunctions.getErrorString(e);
-					hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.ERROR, error));
-					hc.getDebugMode().debugWriteMessage("GUI initialization error occurred when connecting to ip: " + remoteServerAddress.ip + " and port: " + remoteServerAddress.port);
-					hc.getDebugMode().debugWriteError(e);
+				}
+			}).start();
+		} else if (event instanceof TradeObjectModificationEvent) {
+			TradeObjectModificationEvent hevent = (TradeObjectModificationEvent) event;
+			if (!connected || currentlyUpdating) return;
+			if (hevent.getTradeObjectModificationType() == TradeObjectModificationType.DELETED) {
+				if (isServer) {
+					serverSideChanges.addDeletedTradeObject(hevent.getTradeObject());
+				} else {
+					clientSideChanges.addDeletedTradeObject(hevent.getTradeObject());
+				}
+			} else {
+				if (isServer) {
+					serverSideChanges.addHyperObject(hevent.getTradeObject());
+				} else {
+					clientSideChanges.addHyperObject(hevent.getTradeObject());
 				}
 			}
-		}).start();
+			if (guiSynchronized) {
+				guiSynchronized = false;
+				hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.NOT_SYNCHRONIZED));
+			}
+		} else if (event instanceof HyperEconomyCreationEvent) {
+			HyperEconomyCreationEvent hevent = (HyperEconomyCreationEvent) event;
+			if (!connected || currentlyUpdating) return;
+			if (isServer) {
+				serverSideChanges.addEconomy(hevent.getHyperEconomy());
+			} else {
+				clientSideChanges.addEconomy(hevent.getHyperEconomy());
+			}
+			if (guiSynchronized) {
+				guiSynchronized = false;
+				hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.NOT_SYNCHRONIZED));
+			}
+		} else if (event instanceof HyperEconomyDeletionEvent) {
+			HyperEconomyDeletionEvent hevent = (HyperEconomyDeletionEvent) event;
+			if (!connected || currentlyUpdating) return;
+			if (isServer) {
+				serverSideChanges.addDeletedEconomy(hevent.getHyperEconomyName());
+			} else {
+				clientSideChanges.addDeletedEconomy(hevent.getHyperEconomyName());
+			}
+			if (guiSynchronized) {
+				guiSynchronized = false;
+				hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.NOT_SYNCHRONIZED));
+			}
+		} else if (event instanceof HyperPlayerModificationEvent) {
+			//HyperPlayerModificationEvent hevent = (HyperPlayerModificationEvent) event;
+			if (!connected || !isServer) return;
+		} else if (event instanceof HyperBankModificationEvent) {
+			//HyperBankModificationEvent hevent = (HyperBankModificationEvent) event;
+			if (!connected || !isServer) return;
+		} else if (event instanceof ShopModificationEvent) {
+			//ShopModificationEvent hevent = (ShopModificationEvent) event;
+			if (!connected || !isServer) return;
+		} else if (event instanceof DisableEvent) {
+			//DisableEvent hevent = (DisableEvent) event;
+			runServer = false;
+			//remoteUpdater.cancel();
+		}
 	}
+
 	
+	
+	
+
 	//updates the GUI with changes that occurred on the remote server, and sends changes to remote server made by the GUI
 	private class PeriodicGUIUpdater extends TimerTask {
 		@Override
@@ -463,71 +527,7 @@ public class RemoteGUIServer {
 		}, disconnectTimerMilliseconds);
 	}
 
-	@EventHandler
-	public void onHyperObjectModification(TradeObjectModificationEvent event) {
-		if (!connected || currentlyUpdating) return;
-		if (event.getTradeObjectModificationType() == TradeObjectModificationType.DELETED) {
-			if (isServer) {
-				serverSideChanges.addDeletedTradeObject(event.getTradeObject());
-			} else {
-				clientSideChanges.addDeletedTradeObject(event.getTradeObject());
-			}
-		} else {
-			if (isServer) {
-				serverSideChanges.addHyperObject(event.getTradeObject());
-			} else {
-				clientSideChanges.addHyperObject(event.getTradeObject());
-			}
-		}
-		if (guiSynchronized) {
-			guiSynchronized = false;
-			hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.NOT_SYNCHRONIZED));
-		}
-	}
-	@EventHandler
-	public void onEconomyCreation(HyperEconomyCreationEvent event) {
-		if (!connected || currentlyUpdating) return;
-		if (isServer) {
-			serverSideChanges.addEconomy(event.getHyperEconomy());
-		} else {
-			clientSideChanges.addEconomy(event.getHyperEconomy());
-		}
-		if (guiSynchronized) {
-			guiSynchronized = false;
-			hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.NOT_SYNCHRONIZED));
-		}
-	}
-	@EventHandler
-	public void onEconomyDeletion(HyperEconomyDeletionEvent event) {
-		if (!connected || currentlyUpdating) return;
-		if (isServer) {
-			serverSideChanges.addDeletedEconomy(event.getHyperEconomyName());
-		} else {
-			clientSideChanges.addDeletedEconomy(event.getHyperEconomyName());
-		}
-		if (guiSynchronized) {
-			guiSynchronized = false;
-			hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.NOT_SYNCHRONIZED));
-		}
-	}
-	@EventHandler
-	public void onHyperPlayerModification(HyperPlayerModificationEvent event) {
-		if (!connected || !isServer) return;
-	}
-	@EventHandler
-	public void onHyperBankModification(HyperBankModificationEvent event) {
-		if (!connected || !isServer) return;
-	}
-	@EventHandler
-	public void onShopModification(ShopModificationEvent event) {
-		if (!connected || !isServer) return;
-	}
-	
-	@EventHandler
-	public void onDisableEvent(DisableEvent event) {
-		runServer = false;
-		//remoteUpdater.cancel();
-	}
+
 
 	public boolean connected() {
 		return connected;
@@ -559,6 +559,9 @@ public class RemoteGUIServer {
 			hc.getDebugMode().debugWriteError(e);
 		}
 	}
+
+
+
 
 
 	

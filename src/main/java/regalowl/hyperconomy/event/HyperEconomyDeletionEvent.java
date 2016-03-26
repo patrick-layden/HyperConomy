@@ -2,9 +2,7 @@ package regalowl.hyperconomy.event;
 
 import java.io.Serializable;
 
-import regalowl.simpledatalib.event.Event;
-
-public class HyperEconomyDeletionEvent extends Event implements Serializable {
+public class HyperEconomyDeletionEvent extends HyperEvent implements Serializable {
 	
 
 

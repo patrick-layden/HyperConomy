@@ -11,7 +11,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperBank;
@@ -20,6 +19,8 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.HyperBankModificationEvent;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
 import regalowl.hyperconomy.event.ShopModificationEvent;
@@ -29,7 +30,7 @@ import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
 
-public class MultiServer {
+public class MultiServer implements HyperEventListener {
 
 	private HyperConomy hc;
 	private int listenPort;
@@ -173,32 +174,29 @@ public class MultiServer {
 		}
 	}
 	
-	
-	@EventHandler
-	public void onHyperObjectModification(TradeObjectModificationEvent event) {
-		sendObject.addHyperObject(event.getTradeObject());
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof TradeObjectModificationEvent) {
+			TradeObjectModificationEvent hevent = (TradeObjectModificationEvent) event;
+			sendObject.addHyperObject(hevent.getTradeObject());
+		} else if (event instanceof HyperPlayerModificationEvent) {
+			HyperPlayerModificationEvent hevent = (HyperPlayerModificationEvent) event;
+			sendObject.addHyperPlayer(hevent.getHyperPlayer());
+		} else if (event instanceof HyperBankModificationEvent) {
+			HyperBankModificationEvent hevent = (HyperBankModificationEvent) event;
+			sendObject.addBank(hevent.getHyperBank());
+		} else if (event instanceof ShopModificationEvent) {
+			ShopModificationEvent hevent = (ShopModificationEvent) event;
+			sendObject.addShop(hevent.getShop());
+		} else if (event instanceof DisableEvent) {
+			//DisableEvent hevent = (DisableEvent) event;
+			runServer = false;
+			remoteUpdater.cancel();
+		}
+		
 	}
 	
-	@EventHandler
-	public void onHyperPlayerModification(HyperPlayerModificationEvent event) {
-		sendObject.addHyperPlayer(event.getHyperPlayer());
-	}
 	
-	@EventHandler
-	public void onHyperBankModification(HyperBankModificationEvent event) {
-		sendObject.addBank(event.getHyperBank());
-	}
-	
-	@EventHandler
-	public void onShopModification(ShopModificationEvent event) {
-		sendObject.addShop(event.getShop());
-	}
-	
-	@EventHandler
-	public void onDisableEvent(DisableEvent event) {
-		runServer = false;
-		remoteUpdater.cancel();
-	}
 	
 
 	private class RemoteUpdater extends TimerTask {
@@ -228,6 +226,8 @@ public class MultiServer {
 			sendObject.clear();
 		}
 	}
+
+
 
 
 

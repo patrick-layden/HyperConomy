@@ -7,14 +7,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.event.DataLoadEvent;
+import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.event.minecraft.HPlayerJoinEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerQuitEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
-import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.file.FileConfiguration;
 
-public class HyperPlayerManager {
+public class HyperPlayerManager implements HyperEventListener {
 
 	private transient HyperConomy hc;
 	private transient FileConfiguration config;
@@ -34,30 +35,57 @@ public class HyperPlayerManager {
 	}
 	
 	
-	@EventHandler
-	public void onDataLoad(DataLoadEvent event) {
-		if (event.loadType == DataLoadType.ECONOMY) {
-			new Thread(new Runnable() {
-				public void run() {
-					loadData();
-				}
-			}).start();
-		} else if (event.loadType == DataLoadType.BANK) {
-			hc.getMC().runTask(new Runnable() {
-				public void run() {
-					if (!hc.getDataManager().accountExists(defaultServerShopAccount)) {
-						HyperPlayer defaultAccount = new HyperPlayer(hc, defaultServerShopAccount);
-						hyperPlayers.put(defaultServerShopAccount, defaultAccount);
-						defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
-						defaultAccount.setUUID(UUID.randomUUID().toString());
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof DataLoadEvent) {
+			DataLoadEvent devent = (DataLoadEvent)event;
+			if (devent.loadType == DataLoadType.ECONOMY) {
+				new Thread(new Runnable() {
+					public void run() {
+						loadData();
 					}
-					hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.DEFAULT_ACCOUNT));
-					hc.getDebugMode().ayncDebugConsoleMessage("Default account loaded.");
+				}).start();
+			} else if (devent.loadType == DataLoadType.BANK) {
+				hc.getMC().runTask(new Runnable() {
+					public void run() {
+						if (!hc.getDataManager().accountExists(defaultServerShopAccount)) {
+							HyperPlayer defaultAccount = new HyperPlayer(hc, defaultServerShopAccount);
+							hyperPlayers.put(defaultServerShopAccount, defaultAccount);
+							defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
+							defaultAccount.setUUID(UUID.randomUUID().toString());
+						}
+						hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.DEFAULT_ACCOUNT));
+						hc.getDebugMode().ayncDebugConsoleMessage("Default account loaded.");
+					}
+				});
+			}
+		} else if (event instanceof HPlayerJoinEvent) {
+			HPlayerJoinEvent hevent = (HPlayerJoinEvent)event;
+			try {
+				HyperPlayer hp = hevent.getHyperPlayer();
+				hp.validate();
+				if (hp.getName().equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) hc.getMC().kickPlayer(hevent.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
+			}
+		} else if (event instanceof HPlayerQuitEvent) {
+			HPlayerQuitEvent hevent = (HPlayerQuitEvent)event;
+			try {
+				if (hc.getHyperLock().loadLock()) {return;}
+				HLocation l = hevent.getHyperPlayer().getLocation();
+				String name = hevent.getHyperPlayer().getName();
+				if (hyperPlayers.containsKey(name.toLowerCase())) {
+					HyperPlayer hp = hyperPlayers.get(name.toLowerCase());
+					if (hp == null) {return;}
+					hp.setLocation(l);
 				}
-			});
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
+			}
 		}
 	}
 	
+
 	private void loadData() {
 		hyperPlayers.clear();
 		uuidIndex.clear();
@@ -100,35 +128,7 @@ public class HyperPlayerManager {
 	public ArrayList<HyperPlayer> getOnlinePlayers() {
 		return hc.getMC().getOnlinePlayers();
 	}
-	
-	
-	@EventHandler
-	public void onHyperPlayerJoinEvent(HPlayerJoinEvent event) {
-		HPlayerJoinEvent ev = (HPlayerJoinEvent) event;
-		try {
-			HyperPlayer hp = ev.getHyperPlayer();
-			hp.validate();
-			if (hp.getName().equalsIgnoreCase(config.getString("shop.default-server-shop-account"))) hc.getMC().kickPlayer(ev.getHyperPlayer(), hc.getLanguageFile().get("CANT_USE_ACCOUNT"));
-		} catch (Exception e) {
-			hc.gSDL().getErrorWriter().writeError(e);
-		}
-	}
 
-	@EventHandler
-	public void onPlayerQuit(HPlayerQuitEvent event) {
-		try {
-			if (hc.getHyperLock().loadLock()) {return;}
-			HLocation l = event.getHyperPlayer().getLocation();
-			String name = event.getHyperPlayer().getName();
-			if (hyperPlayers.containsKey(name.toLowerCase())) {
-				HyperPlayer hp = hyperPlayers.get(name.toLowerCase());
-				if (hp == null) {return;}
-				hp.setLocation(l);
-			}
-		} catch (Exception e) {
-			hc.gSDL().getErrorWriter().writeError(e);
-		}
-	}
 
 	public boolean uuidSupport() {
 		return uuidSupport;

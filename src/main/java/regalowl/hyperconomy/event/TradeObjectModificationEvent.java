@@ -3,9 +3,8 @@ package regalowl.hyperconomy.event;
 import java.io.Serializable;
 
 import regalowl.hyperconomy.tradeobject.TradeObject;
-import regalowl.simpledatalib.event.Event;
 
-public class TradeObjectModificationEvent extends Event implements Serializable {
+public class TradeObjectModificationEvent extends HyperEvent implements Serializable {
 
 	private static final long serialVersionUID = 7592641160642604842L;
 	private TradeObject to;

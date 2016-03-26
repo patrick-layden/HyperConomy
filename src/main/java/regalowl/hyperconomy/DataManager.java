@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
-import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
@@ -22,12 +21,14 @@ import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
 import regalowl.hyperconomy.event.HyperEconomyDeletionEvent;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.util.DatabaseUpdater;
 
-public class DataManager {
+public class DataManager implements HyperEventListener {
 
 	private transient HyperConomy hc;
 	private transient SQLRead sr;
@@ -80,36 +81,38 @@ public class DataManager {
 	}
 	
 
-	@EventHandler
-	public void onDataLoad(DataLoadEvent event) {
-		if (event.loadType == DataLoadType.START) {
-			if (loadActive) {return;}
-			loadActive = true;
-			new Thread(new Runnable() {
-				public void run() {
-					loadEconomies();
-				}
-			}).start();
-		} else if (event.loadType == DataLoadType.SHOP) {
-			loadAllCategories();
-			hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.COMPLETE));
-		} else if (event.loadType == DataLoadType.COMPLETE) {
-			hc.getHyperLock().setLoadLock(false);
-			loadActive = false;
-		}
-	}
-	
-	@EventHandler
-	public void onHyperObjectModification(TradeObjectModificationEvent event) {
-		TradeObject to = event.getTradeObject();
-		if (to != null) {
-			for (String cat:to.getCategories()) {
-				if (!categories.contains(cat)) {
-					categories.add(cat);
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof DataLoadEvent) {
+			DataLoadEvent devent = (DataLoadEvent)event;
+			if (devent.loadType == DataLoadType.START) {
+				if (loadActive) {return;}
+				loadActive = true;
+				new Thread(new Runnable() {
+					public void run() {
+						loadEconomies();
+					}
+				}).start();
+			} else if (devent.loadType == DataLoadType.SHOP) {
+				loadAllCategories();
+				hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.COMPLETE));
+			} else if (devent.loadType == DataLoadType.COMPLETE) {
+				hc.getHyperLock().setLoadLock(false);
+				loadActive = false;
+			}
+		} else if (event instanceof TradeObjectModificationEvent) {
+			TradeObjectModificationEvent tevent = (TradeObjectModificationEvent)event;
+			TradeObject to = tevent.getTradeObject();
+			if (to != null) {
+				for (String cat:to.getCategories()) {
+					if (!categories.contains(cat)) {
+						categories.add(cat);
+					}
 				}
 			}
 		}
 	}
+
 	
 	private void loadAllCategories() {
 		categories.clear();
@@ -438,6 +441,9 @@ public class DataManager {
 		economies.put(econ.getName(), econ);
 		loadAllCategories();
 	}
+
+
+
 
 	
 }

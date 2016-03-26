@@ -1,8 +1,9 @@
 package regalowl.hyperconomy.util;
 
 
-import regalowl.simpledatalib.event.EventHandler;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.event.minecraft.ChestShopClickEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
@@ -13,7 +14,7 @@ import regalowl.hyperconomy.event.minecraft.HPlayerInteractEvent;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.shop.ChestShop;
 
-public class DisabledProtection {
+public class DisabledProtection implements HyperEventListener {
 
 	private transient HyperConomy hc;
 	
@@ -23,56 +24,47 @@ public class DisabledProtection {
 	}
 
 
-	@EventHandler
-	public void onPlayerInteractEvent(HPlayerInteractEvent ievent) {
-		if (hc.getMC().isTransactionSign(ievent.getBlock().getLocation())) {
-			ievent.cancel();
-		}
-	}
-
-	@EventHandler
-	public void onInventoryClickEvent(ChestShopClickEvent event) {
-		event.cancel();
-	}
-
-	@EventHandler
-	public void onBlockBreakEvent(HBlockBreakEvent bbevent) {
-		if (new ChestShop(hc, bbevent.getBlock().getLocation()).isValid()) {
-			bbevent.cancel();
-		}
-	}
-
-	@EventHandler
-	public void onEntityExplodeEvent(HEntityExplodeEvent eeevent) {
-		for (HBlock b : eeevent.getBrokenBlocks()) {
-			if (new ChestShop(hc, b.getLocation()).isValid()) {
-				eeevent.cancel();
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof HPlayerInteractEvent) {
+			HPlayerInteractEvent hevent = (HPlayerInteractEvent)event;
+			if (hc.getMC().isTransactionSign(hevent.getBlock().getLocation())) {
+				hevent.cancel();
 			}
-		}
-	}
-
-	@EventHandler
-	public void onBlockPistonExtendEvent(HBlockPistonExtendEvent bpeevent) {
-		for (HBlock b : bpeevent.getBlocks()) {
-			if (new ChestShop(hc, b.getLocation()).isValid()) {
-				bpeevent.cancel();
+		} else if (event instanceof ChestShopClickEvent) {
+			ChestShopClickEvent hevent = (ChestShopClickEvent)event;
+			hevent.cancel();
+		} else if (event instanceof HBlockBreakEvent) {
+			HBlockBreakEvent hevent = (HBlockBreakEvent) event;
+			if (new ChestShop(hc, hevent.getBlock().getLocation()).isValid()) {
+				hevent.cancel();
 			}
-		}
-	}
-
-	@EventHandler
-	public void onBlockPistonRetractEvent(HBlockPistonRetractEvent bprevent) {
-		if (new ChestShop(hc, bprevent.getRetractedBlock().getLocation()).isValid()) {
-			bprevent.cancel();
-		}
-	}
-
-	@EventHandler
-	public void onBlockPlaceEvent(HBlockPlaceEvent bpevent) {
-		HBlock block = bpevent.getBlock();
-		for (HBlock b : block.getSurroundingBlocks()) {
-			if (new ChestShop(hc, b.getLocation()).isValid()) {
-				bpevent.cancel();
+		} else if (event instanceof HEntityExplodeEvent) {
+			HEntityExplodeEvent hevent = (HEntityExplodeEvent)event;
+			for (HBlock b : hevent.getBrokenBlocks()) {
+				if (new ChestShop(hc, b.getLocation()).isValid()) {
+					hevent.cancel();
+				}
+			}
+		} else if (event instanceof HBlockPistonExtendEvent) {
+			HBlockPistonExtendEvent hevent = (HBlockPistonExtendEvent)event;
+			for (HBlock b : hevent.getBlocks()) {
+				if (new ChestShop(hc, b.getLocation()).isValid()) {
+					hevent.cancel();
+				}
+			}
+		} else if (event instanceof HBlockPistonRetractEvent) {
+			HBlockPistonRetractEvent hevent = (HBlockPistonRetractEvent)event;
+			if (new ChestShop(hc, hevent.getRetractedBlock().getLocation()).isValid()) {
+				hevent.cancel();
+			}
+		} else if (event instanceof HBlockPlaceEvent) {
+			HBlockPlaceEvent hevent = (HBlockPlaceEvent)event;
+			HBlock block = hevent.getBlock();
+			for (HBlock b : block.getSurroundingBlocks()) {
+				if (new ChestShop(hc, b.getLocation()).isValid()) {
+					hevent.cancel();
+				}
 			}
 		}
 	}

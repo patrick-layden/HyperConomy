@@ -18,10 +18,13 @@ import regalowl.hyperconomy.api.MineCraftConnector;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.event.RequestGUIChangeEvent;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.simpledatalib.SimpleDataLib;
-import regalowl.simpledatalib.event.EventHandler;
+import regalowl.simpledatalib.event.SDLEvent;
+import regalowl.simpledatalib.event.SDLEventListener;
 import regalowl.simpledatalib.events.LogEvent;
 
 import javax.swing.JButton;
@@ -43,7 +46,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.UIManager;
 
-public class MainPanel {
+public class MainPanel implements SDLEventListener, HyperEventListener {
 
 	private JFrame frmEconomyEditor;
 	private HyperConomy hc;
@@ -532,75 +535,78 @@ public class MainPanel {
 		economyList.addData(economies);
 		economySelectList.setSelectedIndex(selected);
 	}
-	
-	@EventHandler
-	public void onDataLoad(DataLoadEvent event) {
-		if (event.loadType == DataLoadType.COMPLETE) {
-			refreshEconomyList();
-			economySelectList.setSelectedIndex(economyList.indexOf("default"));
-		}
-	}
-	
+
 	public void popupMessage(String message) {
 		JOptionPane.showMessageDialog(new JFrame(), message);
 	}
+
 	
-	@EventHandler
-	public void onGUIChangeRequest(RequestGUIChangeEvent event) {
-		switch (event.getType()) {
-			case CONNECTED:
-				remoteGUIStatusTextField.setText("Loading...");
-				panel_2.setBackground(Color.CYAN);
-				break;
-			case ERROR:
-				remoteGUIStatusTextField.setText("Error");
-				panel_2.setBackground(Color.RED);
-				remoteGUIInfoTextArea.append(event.getMessage() + "\n");
-				break;
-			case INFO:
-				break;
-			case INVALID_KEY:
-				remoteGUIStatusTextField.setText("Invalid Key");
-				panel_2.setBackground(Color.PINK);
-				remoteGUIInfoTextArea.append(event.getMessage() + "\n");
-				break;
-			case INVALID_RESPONSE:
-				remoteGUIStatusTextField.setText("Invalid Response");
-				panel_2.setBackground(Color.RED);
-				break;
-			case LOADED:
-				remoteGUIStatusTextField.setText("Loaded");
-				panel_2.setBackground(UIManager.getColor("OptionPane.questionDialog.titlePane.background"));
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof HyperEconomyCreationEvent) {
+			refreshEconomyList();
+		} else if (event instanceof RequestGUIChangeEvent) {
+			RequestGUIChangeEvent hevent = (RequestGUIChangeEvent)event;
+			switch (hevent.getType()) {
+				case CONNECTED:
+					remoteGUIStatusTextField.setText("Loading...");
+					panel_2.setBackground(Color.CYAN);
+					break;
+				case ERROR:
+					remoteGUIStatusTextField.setText("Error");
+					panel_2.setBackground(Color.RED);
+					remoteGUIInfoTextArea.append(hevent.getMessage() + "\n");
+					break;
+				case INFO:
+					break;
+				case INVALID_KEY:
+					remoteGUIStatusTextField.setText("Invalid Key");
+					panel_2.setBackground(Color.PINK);
+					remoteGUIInfoTextArea.append(hevent.getMessage() + "\n");
+					break;
+				case INVALID_RESPONSE:
+					remoteGUIStatusTextField.setText("Invalid Response");
+					panel_2.setBackground(Color.RED);
+					break;
+				case LOADED:
+					remoteGUIStatusTextField.setText("Loaded");
+					panel_2.setBackground(UIManager.getColor("OptionPane.questionDialog.titlePane.background"));
+					refreshEconomyList();
+					break;
+				case SYNCHRONIZED:
+					guiSyncStatusLabel.setText("Synchronized");
+					panel_3.setBackground(UIManager.getColor("OptionPane.questionDialog.titlePane.background"));
+					break;
+				case NOT_SYNCHRONIZED:
+					guiSyncStatusLabel.setText("Synchronizing...");
+					panel_3.setBackground(Color.YELLOW);
+					break;
+				case SERVER_CHANGE_ECONOMY:
+					refreshEconomyList();
+					remoteGUIInfoTextArea.append(hevent.getMessage() + "\n");
+					break;
+				case SERVER_CHANGE_OBJECT:
+					remoteGUIInfoTextArea.append(hevent.getMessage() + "\n");
+					break;
+				default:
+					break;
+			}
+		} else if (event instanceof DataLoadEvent) {
+			DataLoadEvent hevent = (DataLoadEvent)event;
+			if (hevent.loadType == DataLoadType.COMPLETE) {
 				refreshEconomyList();
-				break;
-			case SYNCHRONIZED:
-				guiSyncStatusLabel.setText("Synchronized");
-				panel_3.setBackground(UIManager.getColor("OptionPane.questionDialog.titlePane.background"));
-				break;
-			case NOT_SYNCHRONIZED:
-				guiSyncStatusLabel.setText("Synchronizing...");
-				panel_3.setBackground(Color.YELLOW);
-				break;
-			case SERVER_CHANGE_ECONOMY:
-				refreshEconomyList();
-				remoteGUIInfoTextArea.append(event.getMessage() + "\n");
-				break;
-			case SERVER_CHANGE_OBJECT:
-				remoteGUIInfoTextArea.append(event.getMessage() + "\n");
-				break;
-			default:
-				break;
+				economySelectList.setSelectedIndex(economyList.indexOf("default"));
+			}
 		}
+		
 	}
-	
-	@EventHandler
-	public void onEconomyCreation(HyperEconomyCreationEvent event) {
-		refreshEconomyList();
-	}
-	
-	
-	@EventHandler
-	public void onLogMessage(LogEvent event) {
-		if (event.getException() != null) event.getException().printStackTrace();
+
+	@Override
+	public void handleSDLEvent(SDLEvent event) {
+		if (event instanceof LogEvent) {
+			LogEvent levent = (LogEvent)event;
+			if (levent.getException() != null) levent.getException().printStackTrace();
+		}
+		
 	}
 }

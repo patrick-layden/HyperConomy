@@ -3,13 +3,14 @@ package regalowl.hyperconomy.account;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.simpledatalib.event.EventHandler;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
 
-public class HyperBankManager {
+public class HyperBankManager implements HyperEventListener {
 	
 	private transient HyperConomy hc;
 	private ConcurrentHashMap<String, HyperBank> hyperBanks = new ConcurrentHashMap<String, HyperBank>();
@@ -20,15 +21,19 @@ public class HyperBankManager {
 		hc.getHyperEventHandler().registerListener(this);
 	}
 	
-	@EventHandler
-	public void onDataLoad(DataLoadEvent event) {
-		if (!(event.loadType == DataLoadType.PLAYER)) return;
-		new Thread(new Runnable() {
-			public void run() {
-				loadData();
-			}
-		}).start();
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof DataLoadEvent) {
+			DataLoadEvent devent = (DataLoadEvent)event;
+			if (!(devent.loadType == DataLoadType.PLAYER)) return;
+			new Thread(new Runnable() {
+				public void run() {
+					loadData();
+				}
+			}).start();
+		}
 	}
+	
 	
 	private void loadData() {
 		hyperBanks.clear();
@@ -93,6 +98,8 @@ public class HyperBankManager {
 		}
 		return hbs;
 	}
+
+
 
 }
 

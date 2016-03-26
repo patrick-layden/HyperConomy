@@ -1,9 +1,8 @@
 package regalowl.hyperconomy.event;
 
 import regalowl.hyperconomy.account.HyperPlayer;
-import regalowl.simpledatalib.event.Event;
 
-public class HyperPlayerModificationEvent extends Event {
+public class HyperPlayerModificationEvent extends HyperEvent {
 	private HyperPlayer hp;
 	
 	public HyperPlayerModificationEvent(HyperPlayer hp) {

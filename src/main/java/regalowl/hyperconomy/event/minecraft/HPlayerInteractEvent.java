@@ -2,10 +2,10 @@ package regalowl.hyperconomy.event.minecraft;
 
 
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.minecraft.HBlock;
-import regalowl.simpledatalib.event.Event;
 
-public class HPlayerInteractEvent extends Event {
+public class HPlayerInteractEvent extends HyperEvent {
 
 		private HyperPlayer hp;
 		private HBlock block;
