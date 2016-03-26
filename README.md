@@ -11,7 +11,7 @@ Installation
 
 Links
 ---------
-* [Documentation Wiki] (https://github.com/RegalOwl/HyperConomy/wiki)
+* [Documentation Wiki] (https://github.com/RegalOwl/HyperConomy-Documentation)
 * [BukkitDev Page] (http://dev.bukkit.org/bukkit-plugins/hyperconomy/)
 * [Spigot Page] (https://www.spigotmc.org/resources/hyperconomy.4602/)
 * [Latest Development Build] (http://regalowl.net:8081/job/HyperConomy/)
