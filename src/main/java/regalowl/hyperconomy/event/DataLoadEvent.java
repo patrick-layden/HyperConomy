@@ -10,7 +10,7 @@ public class DataLoadEvent extends HyperEvent {
 	}
 	
 	public enum DataLoadType {
-		START,ECONOMY,COMPLETE,PLAYER,SHOP,BANK,DEFAULT_ACCOUNT;
+		START,ECONOMY,COMPLETE,PLAYER,SHOP,BANK,DEFAULT_ACCOUNT,LIBRARIES;
 	}
 	
 }

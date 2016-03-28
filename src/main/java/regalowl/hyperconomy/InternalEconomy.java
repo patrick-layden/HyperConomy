@@ -162,7 +162,7 @@ public class InternalEconomy implements HEconomyProvider {
 
 	@Override
 	public boolean isEnabled() {
-		return hc.enabled();
+		return hc.loaded();
 	}
 
 	@Override

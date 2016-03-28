@@ -705,7 +705,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 	}
 	
 	private TradeObject getSelectedObject() {
-		if (hc != null && hc.enabled()) {
+		if (hc != null && hc.loaded()) {
 			return he.getTradeObject(listObjectSelector.getSelectedValue());
 		}
 		return null;

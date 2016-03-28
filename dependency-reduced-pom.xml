@@ -4,7 +4,7 @@
   <groupId>regalowl.hyperconomy</groupId>
   <artifactId>hyperconomy</artifactId>
   <name>HyperConomy</name>
-  <version>0.975.6-SNAPSHOT</version>
+  <version>0.975.7-SNAPSHOT</version>
   <description>HyperConomy creates a global market that can be accessed via designated shops. Prices follow a hyperbolic curve, and vary based on the stock of the item or enchantment. Everything in the market can be customized, from the items themselves to the names of the shops. HyperConomy supports every item in Minecraft, even the normally impossible to obtain ones. It allows a great deal of control over the economy, allowing you to edit any setting without a server restart.</description>
   <url>http://dev.bukkit.org/server-mods/hyperconomy/</url>
   <scm>
@@ -39,28 +39,6 @@
                   </excludes>
                 </filter>
               </filters>
-              <relocations>
-                <relocation>
-                  <pattern>net.sf.opencsv</pattern>
-                  <shadedPattern>regalowl.hyperconomy.net.sf.opencsv</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>org.yaml</pattern>
-                  <shadedPattern>regalowl.hyperconomy.org.yaml</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>mysql</pattern>
-                  <shadedPattern>regalowl.hyperconomy.mysql</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>org.xerial</pattern>
-                  <shadedPattern>regalowl.hyperconomy.org.xerial</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>regalowl.simpledatalib</pattern>
-                  <shadedPattern>regalowl.hyperconomy.simpledatalib</shadedPattern>
-                </relocation>
-              </relocations>
             </configuration>
           </execution>
         </executions>
@@ -102,10 +80,6 @@
           <groupId>commons-lang</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>json-simple</artifactId>
-          <groupId>com.googlecode.json-simple</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>guava</artifactId>
           <groupId>com.google.guava</groupId>
         </exclusion>
@@ -128,6 +102,90 @@
       <artifactId>Vault</artifactId>
       <version>1.5.6</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <version>3.7.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.37</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>2.3</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>1.15</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-continuation</artifactId>
+      <version>8.1.9.v20130131</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-http</artifactId>
+      <version>8.1.9.v20130131</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-io</artifactId>
+      <version>8.1.9.v20130131</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <version>8.1.9.v20130131</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>javax.servlet</artifactId>
+          <groupId>org.eclipse.jetty.orbit</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-util</artifactId>
+      <version>8.1.9.v20130131</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-servlet</artifactId>
+      <version>8.1.9.v20130131</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>jetty-security</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.json-simple</groupId>
+      <artifactId>json-simple</artifactId>
+      <version>1.1.1</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   <properties>

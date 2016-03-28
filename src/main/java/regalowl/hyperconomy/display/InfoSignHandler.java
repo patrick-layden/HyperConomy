@@ -130,7 +130,7 @@ public class InfoSignHandler implements HyperEventListener {
 	
 
 	public void updateSigns() {
-		if (hc.getHyperLock().fullLock() || !hc.enabled()) {return;}
+		if (hc.getHyperLock().fullLock() || !hc.loaded()) {return;}
 		if (updateActive.get()) {
 			repeatUpdate.set(true);
 			return;

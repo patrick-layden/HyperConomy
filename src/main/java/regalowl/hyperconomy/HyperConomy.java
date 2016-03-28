@@ -90,6 +90,7 @@ import regalowl.hyperconomy.util.History;
 import regalowl.hyperconomy.util.HyperLock;
 import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
+import regalowl.hyperconomy.util.LibraryManager;
 import regalowl.hyperconomy.util.UpdateChecker;
 import regalowl.hyperconomy.util.UpdateYML;
 import regalowl.hyperconomy.webpage.HyperConomy_Web;
@@ -117,8 +118,11 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	private transient TimeEffectsManager tem;
 	private final int saveInterval = 1200000;
 	private boolean enabled;
+	private boolean loaded;
+	private boolean loadingStarted;
+	private boolean waitingForLibraries;
 	private String consoleEconomy;
-	public static final boolean isFullVersion = true;
+	private LibraryManager lm;
 
 	public HyperConomy(MineCraftConnector mc) {
 		this.mc = mc;
@@ -142,51 +146,66 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	public void handleHyperEvent(HyperEvent event) {
 		if (event instanceof DataLoadEvent) {
 			DataLoadEvent devent = (DataLoadEvent)event;
-			if (!(devent.loadType == DataLoadType.COMPLETE)) return;
-			hist = new History(this);
-			itdi = new ItemDisplayHandler(this);
-			isign = new InfoSignHandler(this);
-			fsh = mc.getFrameShopHandler();
-			tem = new TimeEffectsManager(this);
-			hcweb = new HyperConomy_Web(this);
-			registerCommands();
-			enabled = true;
-			hl.setLoadLock(false);
-			mc.registerListeners();
-			dMode.syncDebugConsoleMessage("Data loading completed.");
-			UpdateChecker uc = new UpdateChecker(this);
-			uc.runCheck();
+			if (devent.loadType == DataLoadType.COMPLETE) {
+				hist = new History(this);
+				itdi = new ItemDisplayHandler(this);
+				isign = new InfoSignHandler(this);
+				fsh = mc.getFrameShopHandler();
+				tem = new TimeEffectsManager(this);
+				hcweb = new HyperConomy_Web(this);
+				registerCommands();
+				loaded = true;
+				hl.setLoadLock(false);
+				mc.registerListeners();
+				dMode.syncDebugConsoleMessage("Data loading completed.");
+				UpdateChecker uc = new UpdateChecker(this);
+				uc.runCheck();
+			} else if (devent.loadType == DataLoadType.LIBRARIES) {
+				if (lm.dependencyError()) {
+					disable(true);
+					return;
+				}
+				YamlHandler yh = sdl.getYamlHandler();
+				yh.copyFromJar("config");
+				yh.registerFileConfiguration("config");
+				hConfig = yh.gFC("config");
+				new UpdateYML(this);
+				dMode = new DebugMode(this);
+				dMode.syncDebugConsoleMessage("HyperConomy loaded with Debug Mode enabled.  Configuration files created and loaded.");
+				L = new LanguageFile(this);
+				hl = new HyperLock(this, true, false, false);
+				mc.checkExternalEconomyRegistration();
+				waitingForLibraries = false;
+				if (enabled && !loadingStarted) enable();
+			}
 		}
 	}
 
 
 
 	public void load() {
+		loaded = false;
 		enabled = false;
+		loadingStarted = false;
 		if (sdl != null) sdl.shutDown();
 		sdl = new SimpleDataLib("HyperConomy");
 		sdl.initialize();
-		sdl.registerListener(this);
+		sdl.getEventPublisher().registerListener(this);
 		ft = sdl.getFileTools();
-		YamlHandler yh = sdl.getYamlHandler();
-		yh.copyFromJar("config");
-		yh.registerFileConfiguration("config");
-		hConfig = yh.gFC("config");
-		new UpdateYML(this);
-		dMode = new DebugMode(this);
-		dMode.syncDebugConsoleMessage("HyperConomy loaded with Debug Mode enabled.  Configuration files created and loaded.");
-		L = new LanguageFile(this);
-		hl = new HyperLock(this, true, false, false);
 		if (heh != null) {
 			heh.clearListeners();
 		}
 		heh = new HyperEventHandler(this);
 		heh.registerListener(this);
-		sdl.getEventPublisher().registerListener(this);
-		mc.checkExternalEconomyRegistration();
+		waitingForLibraries = true;
+		lm = new LibraryManager(this,heh);
 	}
 	
 	public void enable() {
+		if (lm.dependencyError()) return;
+		enabled = true;
+		if (waitingForLibraries) return;
+		loadingStarted = true;
 		mc.unregisterAllListeners();
 		if (hConfig.getBoolean("sql.use-mysql")) {
 			String username = hConfig.getString("sql.mysql-connection.username");
@@ -217,30 +236,18 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		heh.fireEvent(new DisableEvent());
 		mc.unRegisterAsExternalEconomy();
 		enabled = false;
-		if (!protect) {
-			mc.unregisterAllListeners();
-		}
+		loadingStarted = false;
+		loaded = false;
+		if (!protect) mc.unregisterAllListeners();
 		if (hcweb != null) hcweb.disable();
-		if (itdi != null) {
-			itdi.unloadDisplays();
-		}
-		if (hist != null) {
-			hist.stopHistoryLog();
-		}
-		if (tem != null) {
-			tem.disable();
-		}
-		if (dm != null) {
-			dm.shutDown();
-		}
+		if (itdi != null) itdi.unloadDisplays();
+		if (hist != null) hist.stopHistoryLog();
+		if (tem != null) tem.disable();
+		if (dm != null) dm.shutDown();
 		mc.cancelAllTasks();
-		if (heh != null && !protect) {
-			heh.clearListeners();
-		}
+		if (heh != null && !protect) heh.clearListeners();
 		if (sdl != null) sdl.shutDown();
-		if (protect) {
-			new DisabledProtection(this);
-		}
+		if (protect) new DisabledProtection(this);
 	}
 	
 	public void restart() {
@@ -350,8 +357,13 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	public LanguageFile getLanguageFile() {
 		return L;
 	}
+	
 	public boolean enabled() {
 		return enabled;
+	}
+	
+	public boolean loaded() {
+		return loaded;
 	}
 	public ChestShopHandler getChestShop() {
 		return cs;
@@ -404,7 +416,9 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	public TimeEffectsManager getTimeEffectsManager() {
 		return tem;
 	}
-
+	public LibraryManager getLibraryManager() {
+		return lm;
+	}
 
 
 

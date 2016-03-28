@@ -27,6 +27,7 @@ import regalowl.simpledatalib.event.SDLEvent;
 import regalowl.simpledatalib.event.SDLEventListener;
 import regalowl.simpledatalib.events.LogEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
@@ -35,10 +36,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.JPanel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+
 import java.awt.Color;
 import javax.swing.JTextArea;
 import java.awt.SystemColor;
@@ -73,8 +77,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 	private JLabel guiSyncStatusLabel;
 	private JPanel panel_3;
 	
-	
-
+	private JDialog waitMessage;
 	/**
 	 * Launch the application.
 	 */
@@ -82,12 +85,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					if (!HyperConomy.isFullVersion) {
-						JOptionPane.showMessageDialog(null, "You must download the full version of HyperConomy to use the GUI.  (Not the Lite version.)", "Error", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					MainPanel window = new MainPanel();
-					window.frmEconomyEditor.setVisible(true);
+					new MainPanel();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -99,22 +97,37 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 	 * Create the application.
 	 */
 	public MainPanel() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
+		
 		MineCraftConnector mc = new GUIConnector();
 		this.hc = mc.getHC();
 		hc.load();
+		hc.getHyperEventHandler().registerListener(this);
 		hc.getSimpleDataLib().getEventPublisher().registerListener(this);
 		this.sdl = hc.gSDL();
 		sdl.setDebug(true);
 		hc.enable();
 		
 		
+		JOptionPane optionPane = new JOptionPane("Loading and downloading dependencies...please wait.", JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+		waitMessage = new JDialog();
+		waitMessage.setTitle("Loading....");
+		waitMessage.setModal(true);
+		waitMessage.setContentPane(optionPane);
+		waitMessage.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		waitMessage.pack();
+		waitMessage.setVisible(true);
+		
+		
+		
+		
+
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+
 		
 		frmEconomyEditor = new JFrame();
 		frmEconomyEditor.setTitle("Economy Editor");
@@ -521,7 +534,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 	}
 	
 	private HyperEconomy getSelectedEconomy() {
-		if (hc != null && hc.enabled()) {
+		if (hc != null && hc.loaded()) {
 			return hc.getDataManager().getEconomy(economySelectList.getSelectedValue());
 		}
 		return null;
@@ -594,8 +607,38 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 		} else if (event instanceof DataLoadEvent) {
 			DataLoadEvent hevent = (DataLoadEvent)event;
 			if (hevent.loadType == DataLoadType.COMPLETE) {
-				refreshEconomyList();
+				initialize();
+				waitMessage.dispose();
+				
 				economySelectList.setSelectedIndex(economyList.indexOf("default"));
+				frmEconomyEditor.setVisible(true);
+				refreshEconomyList();
+			} else if (hevent.loadType == DataLoadType.LIBRARIES) {
+				if (hc.getLibraryManager().dependencyError()) {
+					waitMessage.dispose();
+
+					final JOptionPane optionPane = new JOptionPane("There was a problem downloading libraries.  Please check your internet connection or manually install the libraries.  Shutting down...", 
+							JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+					final JDialog dialog = new JDialog();
+					dialog.setTitle("Error");
+					dialog.setModal(true);
+					dialog.setContentPane(optionPane);
+					dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+					dialog.pack();
+					//remove error message after 8 seconds
+					Timer timer = new Timer(8000, new AbstractAction() {
+						private static final long serialVersionUID = 1820275341492338555L;
+						@Override
+					    public void actionPerformed(ActionEvent ae) {
+					        dialog.dispose();
+				        	if (hc != null) hc.disable(false);
+				            System.exit(0);
+					    }
+					});
+					timer.setRepeats(false);
+					timer.start();
+					dialog.setVisible(true);
+				}
 			}
 		}
 		
