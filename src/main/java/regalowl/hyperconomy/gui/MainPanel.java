@@ -131,7 +131,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 		
 		frmEconomyEditor = new JFrame();
 		frmEconomyEditor.setTitle("Economy Editor");
-		frmEconomyEditor.setBounds(100, 100, 588, 554);
+		frmEconomyEditor.setBounds(100, 100, 600, 580);
 		frmEconomyEditor.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		frmEconomyEditor.addWindowListener(new java.awt.event.WindowAdapter() {
 		    @Override

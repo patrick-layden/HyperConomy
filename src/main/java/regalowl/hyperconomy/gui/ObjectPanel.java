@@ -104,7 +104,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 	private void initialize() {
 		fieldsUpdating = false;
 		loadingCategories = false;
-		setBounds(100, 100, 968, 592);
+		setBounds(100, 100, 1036, 656);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
