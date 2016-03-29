@@ -263,10 +263,10 @@ SERVERSHOP_SELECT_INVALID: &4Invalid Parameters. Use /servershop select [name]
 SERVERSHOP_REMOVE_INVALID: &4Invalid Parameters. Use /servershop removeshop
 SERVERSHOP_RENAME_INVALID: &4Invalid Parameters. Use /servershop rename [name]
 SERVERSHOP_MESSAGE_INVALID: &4Invalid Parameters. Use /servershop message [message]
-SERVERSHOP_BAN_INVALID: &4Invalid Parameters. Use /servershop ban [object or "all"]
+SERVERSHOP_BAN_INVALID: &4Invalid Parameters. Use /servershop ban [object or 'all']
 SERVERSHOP_ADDCATEGORY_INVALID: &4Invalid Parameters. Use /servershop addcategory [category]
 SERVERSHOP_REMOVECATEGORY_INVALID: &4Invalid Parameters. Use /servershop removecategory [category]
-SERVERSHOP_ALLOW_INVALID: &4Invalid Parameters. Use /servershop allow [object or "all"]
+SERVERSHOP_ALLOW_INVALID: &4Invalid Parameters. Use /servershop allow [object or 'all']
 SERVERSHOP_ECONOMY_INVALID: &4Invalid Parameters. Use /servershop economy [name of economy]
 SERVERSHOP_P1_INVALID: &4Invalid Parameters. Use /servershop p1 [name of shop]
 SERVERSHOP_P2_INVALID: &4Invalid Parameters. Use /servershop p2 [name of shop]
@@ -479,7 +479,7 @@ BANK_OWNER_OF: &9You are an owner of: &a%n
 BANK_MEMBER_OF: &9You are a member of: &a%n
 BANK_BALANCE: &9Bank balance: &a%v
 BANK_OWNERS: &9Bank owners: &b%n
-BANK_MEMBERS:&9Bank members: &b%n
+BANK_MEMBERS: &9Bank members: &b%n
 BANK_DELETED_DISTRIBUTED: &6The bank has been deleted and the remaining funds have been distributed between the owners.
 BANK_ALREADY_MEMBER: &4The specified account is already a member of this bank.
 BANK_NOT_MEMBER: &4The specified account is not a member of this bank.
