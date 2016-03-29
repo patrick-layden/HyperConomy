@@ -72,6 +72,7 @@ public class HyperPlayer implements HyperAccount {
 			sw.performInsert("hyperconomy_players", values);
 		}
 		validate();
+		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 	
 	
@@ -394,6 +395,7 @@ public class HyperPlayer implements HyperAccount {
 			values.put("BALANCE", balance+"");
 			hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 			hc.getLog().writeAuditLog(name, "deposit", amount, "HyperConomy");
+			hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 		}
 	}
 	
@@ -411,6 +413,7 @@ public class HyperPlayer implements HyperAccount {
 			values.put("BALANCE", balance+"");
 			hc.getSQLWrite().performUpdate("hyperconomy_players", values, conditions);
 			hc.getLog().writeAuditLog(name, "withdrawal", amount, "HyperConomy");
+			hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 		}
 	}
 	
