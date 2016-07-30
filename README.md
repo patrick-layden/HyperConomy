@@ -6,7 +6,7 @@ HyperConomy is the all in one economy and shop plugin.  It can be a simple chest
 
 Installation
 ---------
-* Download HyperConomy releases from [BukkitDev] (http://dev.bukkit.org/bukkit-plugins/hyperconomy/files/) or get the latest [development build] (https://buildhive.cloudbees.com/job/RegalOwl/job/HyperConomy/lastSuccessfulBuild/regalowl.hyperconomy$hyperconomy/).
+* Download HyperConomy releases from [BukkitDev] (http://dev.bukkit.org/bukkit-plugins/hyperconomy/files/) or get the latest [development build] (http://regalowl.net:8081/job/HyperConomy/).
 * Place the HyperConomy jar file your plugins folder.
 * Restart your server.
 
@@ -53,9 +53,6 @@ Add-ons
 
 HyperMerchant is a graphical user interface for your players to use to interact with HyperConomy shops.  It is also includes the ability to easily create Citizens npc shopkeepers for your HyperConomy shops.
 
-[HyperConomy Web](http://dev.bukkit.org/bukkit-plugins/hyperconomy-web/)
-
-HyperConomy Web creates a web page for HyperConomy, displaying information about all shops, items, and price history. The web page appearance can be customized to fit your server.
 
 Feature Requests, Bugs, Problems, etc.
 ---------
@@ -87,4 +84,6 @@ Links
 
 [BukkitDev Page] (http://dev.bukkit.org/bukkit-plugins/hyperconomy/)
 
-[Latest Development Build] (https://buildhive.cloudbees.com/job/RegalOwl/job/HyperConomy/lastSuccessfulBuild/regalowl.hyperconomy$hyperconomy/)
+[Spigot Page] (https://www.spigotmc.org/resources/hyperconomy.4602/)
+
+[Latest Development Build] (http://regalowl.net:8081/job/HyperConomy/)
