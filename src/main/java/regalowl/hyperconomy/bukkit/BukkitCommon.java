@@ -256,18 +256,8 @@ public class BukkitCommon {
 	
 	protected HInventory getInventory(HyperPlayer hp) {
 		if (hp == null) return null;
-		ArrayList<HItemStack> items = new ArrayList<HItemStack>();
 		Player p = Bukkit.getPlayer(hp.getName());
-		Inventory i = p.getInventory();
-		int size = i.getSize();
-		int heldSlot = p.getInventory().getHeldItemSlot();
-		for (int c = 0; c < size; c++) {
-	        items.add(getSerializableItemStack(i.getItem(c)));
-		}
-		HInventory si = new HInventory(hc, items, HInventoryType.PLAYER);
-		si.setOwner(hp.getName());
-		si.setHeldSlot(heldSlot);
-		return si;
+		return getInventory(p.getInventory());
 	}
 
 	protected HInventory getInventory(Inventory i) {
@@ -279,7 +269,7 @@ public class BukkitCommon {
 		} else if (i.getType() == InventoryType.CHEST) {
 			type = HInventoryType.CHEST;
 		}
-		int size = i.getSize();
+		int size = i.getStorageContents().length;
 		for (int c = 0; c < size; c++) {
 	        items.add(getSerializableItemStack(i.getItem(c)));
 		}
