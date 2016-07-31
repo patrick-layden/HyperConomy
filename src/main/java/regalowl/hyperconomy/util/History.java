@@ -92,12 +92,10 @@ public class History {
 				lastTime = currentTime;
 				if (timeCounter >= millisecondsInHour) {
 					timeCounter = 0;
-					writeHistoryThread();
+					writeHistoryValues();
 					hc.getMC().runTaskLater(new Runnable() {
 						public void run() {
-							if (isign != null) {
-								isign.updateSigns();
-							}
+							if (isign != null) isign.updateSigns();
 						}
 					}, 1200L);
 				}
@@ -108,7 +106,7 @@ public class History {
 	
 
 	
-	private void writeHistoryThread() {
+	private void writeHistoryValues() {
 		ArrayList<TradeObject> objects = em.getTradeObjects();
 		ArrayList<String> statements = new ArrayList<String>();
 		for (TradeObject object : objects) {
@@ -131,11 +129,9 @@ public class History {
 	public double getHistoricValue(String name, String economy, int count) {
 		try {
 			count -= 1;
-			QueryResult result = sr.select("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '"+name+"' AND ECONOMY = '"+economy+"' ORDER BY TIME DESC");
-			int c = 0;
-			while (result.next()) {
-				if (c == count) return Double.parseDouble(result.getString("PRICE"));
-				c++;
+			QueryResult result = sr.select("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '"+name+"' AND ECONOMY = '"+economy+"' ORDER BY TIME DESC LIMIT '"+count+"',1");
+			if (result.next()) {
+				return Double.parseDouble(result.getString("PRICE"));
 			}
 			result.close();
 			return -1.0;
@@ -144,7 +140,7 @@ public class History {
 			return -1.0;
 		}
 	}
-	
+
 	/**
 	 * This function must be called from an asynchronous thread!
 	 * @param object
@@ -152,6 +148,7 @@ public class History {
 	 * @param economy
 	 * @return The percentage change in theoretical price for the given object and timevalue in hours
 	 */
+    
 	public synchronized String getPercentChange(TradeObject ho, int timevalue) {
 		if (ho == null || sr == null) {
 			hc.gSDL().getErrorWriter().writeError("getPercentChange passed null HyperObject or SQLRead");
@@ -166,7 +163,7 @@ public class History {
 		return percentChange + "";
 	}
 	
-	
+	//TODO improve performance
 	/**
 	 * This function must be called from an asynchronous thread!
 	 * @param object
@@ -225,7 +222,9 @@ public class History {
 		}
 		return relevantValues;
 	}
-
+	 
+	
+	
 	public String formatSQLiteTime(int time) {
 		if (time < 0) {
 			return "-" + Math.abs(time);

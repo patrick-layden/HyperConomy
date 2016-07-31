@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.event.HyperEvent;
+import regalowl.hyperconomy.event.HyperEventListener;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
@@ -21,30 +24,55 @@ import regalowl.hyperconomy.tradeobject.TradeObjectType;
 import regalowl.hyperconomy.util.History;
 
 
-public class ShopPage extends HttpServlet {
+public class ShopPage extends HttpServlet implements HyperEventListener {
 
 	private static final long serialVersionUID = 699465359999143309L;
 	private HyperConomy_Web hcw;
 	private HyperConomy hc;
 	private History hist;
 	private Shop s;
-	private String page = "Loading...";
+	private String page = "Loading...  Please wait.  The page will refresh automatically.";
+	private ArrayList<TradeObject> modifiedSinceLastUpdate = new ArrayList<TradeObject>();
+	
+	
+	private HashMap<TradeObject, String> hour = null;
+	private HashMap<TradeObject, String> sixHours = null;
+	private HashMap<TradeObject, String> day = null;
+	private HashMap<TradeObject, String> threeDay = null;
+	private HashMap<TradeObject, String> week = null;
+	private boolean initialLoad = true;
 
 	public ShopPage(Shop shop, HyperConomy_Web hcw) {
 		this.hcw = hcw;
 		hc = hcw.getHC();
 		hist = hc.getHistory();
 		s = shop;
+		hc.getHyperEventHandler().registerListener(this);
 		page = buildLoadPage();
 	}
+	
+	
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=utf-8");
 		response.setStatus(HttpServletResponse.SC_OK);
+		response.setIntHeader("Refresh", 10);
 		response.getWriter().println(page);
+		updatePage();
 	}
 
+	
+	@Override
+	public void handleHyperEvent(HyperEvent event) {
+		if (event instanceof TradeObjectModificationEvent) {
+			TradeObjectModificationEvent toe = (TradeObjectModificationEvent)event;
+			modifiedSinceLastUpdate.add(toe.getTradeObject());
+		}
+	}
+	
 	public void updatePage() {
+		if (!initialLoad && modifiedSinceLastUpdate.size() == 0) return;
+		
 		new Thread(new Runnable() {
 			public void run() {
 				page = buildPage(s.getEconomy());
@@ -56,9 +84,7 @@ public class ShopPage extends HttpServlet {
 		try {
 			String page = "";
 			if (!hc.loaded()) return page;
-			if (s == null) {
-				return "";
-			}
+			if (s == null) return "";
 			PlayerShop ps = null;
 			if (s instanceof PlayerShop) {
 				ps = (PlayerShop) s;
@@ -70,17 +96,25 @@ public class ShopPage extends HttpServlet {
 			ArrayList<TradeObject> objects = s.getTradeableObjects();
 			Collections.sort(objects);
 
-			HashMap<TradeObject, String> hour = null;
-			HashMap<TradeObject, String> sixHours = null;
-			HashMap<TradeObject, String> day = null;
-			HashMap<TradeObject, String> threeDay = null;
-			HashMap<TradeObject, String> week = null;
+
 			if (useHistory) {
-				hour = hist.getPercentChange(economy, 1);
-				sixHours = hist.getPercentChange(economy, 6);
-				day = hist.getPercentChange(economy, 24);
-				threeDay = hist.getPercentChange(economy, 72);
-				week = hist.getPercentChange(economy, 168);
+				if (initialLoad) {
+					hour = hist.getPercentChange(economy, 1);
+					sixHours = hist.getPercentChange(economy, 6);
+					day = hist.getPercentChange(economy, 24);
+					threeDay = hist.getPercentChange(economy, 72);
+					week = hist.getPercentChange(economy, 168);
+					initialLoad = false;
+				} else {
+					for (TradeObject to:modifiedSinceLastUpdate) {
+						hour.put(to, hist.getPercentChange(to, 1));
+						sixHours.put(to, hist.getPercentChange(to, 6));
+						day.put(to, hist.getPercentChange(to, 24));
+						threeDay.put(to, hist.getPercentChange(to, 72));
+						week.put(to, hist.getPercentChange(to, 168));
+					}
+					modifiedSinceLastUpdate.clear();
+				}
 			}
 			page += "<html>\n";
 			page += "<head>\n";
@@ -310,7 +344,7 @@ public class ShopPage extends HttpServlet {
 		page += "<TABLE BORDER='0'>\n";
 		page += "<TR>\n";
 		page += "<TH class='header'>\n";
-		page += "...HyperConomy Loading...\n";
+		page += "Loading...  Please wait.  The page will refresh automatically.\n";
 		page += "</TH>\n";
 		page += "</TR>\n";
 		page += "</TABLE>\n";

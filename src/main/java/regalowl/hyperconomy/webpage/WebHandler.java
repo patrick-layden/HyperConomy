@@ -2,8 +2,6 @@ package regalowl.hyperconomy.webpage;
 
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.jetty.server.Server;
@@ -20,9 +18,6 @@ public class WebHandler implements HyperEventListener {
 
 	private HyperConomy hc;
 	private HyperConomy_Web hcw;
-	//private BukkitTask updateTask;
-	private PageUpdater pageUpdater;
-	private Timer t = new Timer();
 	private Server server;
 	private ServletContextHandler context;
 	private ArrayList<ShopPage> shopPages = new ArrayList<ShopPage>();
@@ -44,19 +39,6 @@ public class WebHandler implements HyperEventListener {
 			addShop(hevent.getShop());
 		}
 		
-	}
-	
-	private class PageUpdater extends TimerTask {
-		@Override
-		public void run() {
-			try {
-				for (ShopPage sp:shopPages) {
-					sp.updatePage();
-				}
-			} catch (Exception e) {
-				hc.gSDL().getErrorWriter().writeError(e);
-			}
-		}
 	}
 
 	public void startServer() {
@@ -86,30 +68,12 @@ public class WebHandler implements HyperEventListener {
 					serverStarted.set(true);
 				}
 			}).start();
-			pageUpdater = new PageUpdater();
-			t.schedule(pageUpdater, 400L, 6000L);
-
 			hc.getMC().logInfo("[HyperConomy_Web]Web server enabled.  Running on port " + hcw.getPort() + ".");
 		} catch (Exception e) {
 			hc.gSDL().getErrorWriter().writeError(e);;
 		}
 	}
 	
-	
-	public void updatePages() {
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					for (ShopPage sp:shopPages) {
-						sp.updatePage();
-					}
-				} catch (Exception e) {
-					hc.gSDL().getErrorWriter().writeError(e);
-				}
-			}
-		}).start();
-	}
-
 	
 	public void addShop(Shop shop) {
 		s = shop;
@@ -125,9 +89,6 @@ public class WebHandler implements HyperEventListener {
 	
 
 	public void endServer() {
-		if (pageUpdater != null) {
-			pageUpdater.cancel();
-		}
 		if (context != null) {
 			try {
 				context.stop();
