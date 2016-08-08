@@ -119,11 +119,11 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	private transient RemoteGUIServer rgs;
 	private transient TimeEffectsManager tem;
 	private final int saveInterval = 1200000;
-	private AtomicBoolean enabled;
-	private AtomicBoolean loaded;
-	private AtomicBoolean loadingStarted;
-	private AtomicBoolean waitingForLibraries;
-	private AtomicBoolean preEnabled;
+	private AtomicBoolean enabled = new AtomicBoolean();
+	private AtomicBoolean loaded = new AtomicBoolean();
+	private AtomicBoolean loadingStarted = new AtomicBoolean();
+	private AtomicBoolean waitingForLibraries = new AtomicBoolean();
+	private AtomicBoolean preEnabled = new AtomicBoolean();
 	private String consoleEconomy;
 	private LibraryManager lm;
 
