@@ -20,8 +20,10 @@ public class HItemStack {
     private int amount;
     private int maxStackSize;
     private int maxDurability;
+    private int repairCost;
+    private boolean unbreakable;
     private boolean isBlank;
-  
+    private ArrayList<String> nbtTags = new ArrayList<String>();
  
     public HItemStack(HyperConomy hc) {
     	this.hc = hc;
@@ -29,7 +31,7 @@ public class HItemStack {
     	this.material = "AIR";
     }
     
-    public HItemStack(HyperConomy hc, HItemMeta itemMeta, String material, short durability, byte data, int amount, int maxStackSize, int maxDurability) {
+    public HItemStack(HyperConomy hc, HItemMeta itemMeta, String material, short durability, byte data, int amount, int maxStackSize, int maxDurability, int repairCost, boolean unbreakable, ArrayList<String> nbtTags) {
     	this.hc = hc;
     	this.itemMeta = itemMeta;
     	this.material = material;
@@ -39,6 +41,9 @@ public class HItemStack {
     	this.maxStackSize = maxStackSize;
     	this.maxDurability = maxDurability;
     	this.isBlank = false;
+    	this.repairCost = repairCost;
+    	this.unbreakable = unbreakable;
+    	this.nbtTags = nbtTags;
     }
     
     
@@ -52,6 +57,8 @@ public class HItemStack {
     	this.maxStackSize = Integer.parseInt(data.get("maxStackSize"));
     	this.maxDurability = Integer.parseInt(data.get("maxDurability"));
     	this.isBlank = Boolean.parseBoolean(data.get("isBlank"));
+    	this.unbreakable = (data.get("unbreakable") == null) ? false : Boolean.parseBoolean(data.get("unbreakable"));
+    	this.repairCost = (data.get("repairCost") == null) ? 0 : Integer.parseInt(data.get("repairCost"));
     }
 	
 	public String serialize() {
@@ -65,6 +72,8 @@ public class HItemStack {
 		data.put("maxStackSize", maxStackSize+"");
 		data.put("maxDurability", maxDurability+"");
 		data.put("isBlank", isBlank+"");
+		data.put("repairCost", repairCost+"");
+		data.put("unbreakable", unbreakable+"");
 		return CommonFunctions.implodeMap(data);
 	}
 
@@ -77,6 +86,8 @@ public class HItemStack {
 		info.add(color1 + "Amount: " + color2 + amount);
 		info.add(color1 + "Max Stack Size: " + color2 + maxStackSize);
 		info.add(color1 + "Max Durability: " + color2 + maxDurability);
+		info.add(color1 + "Repair Cost: " + color2 + repairCost);
+		info.add(color1 + "Unbreakable: " + color2 + unbreakable);
 		if (itemMeta != null) {
 			info.addAll(itemMeta.displayInfo(p, color1, color2));
 		}
@@ -118,6 +129,14 @@ public class HItemStack {
 		return maxDurability;
 	}
 	
+	public int getRepairCost() {
+		return repairCost;
+	}
+	
+	public boolean unbreakable() {
+		return unbreakable;
+	}
+	
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
@@ -126,6 +145,9 @@ public class HItemStack {
 		this.itemMeta = itemMeta;
 	}
 	
+	public ArrayList<String> getNBTTags() {
+		return nbtTags;
+	}
 	
 	public boolean considerDamage() {
 		boolean ignoreDamage = hc.getConf().getBoolean("enable-feature.treat-damaged-items-as-equals-to-undamaged-ones");
@@ -193,43 +215,6 @@ public class HItemStack {
 
 
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + amount;
-		result = prime * result + data;
-		result = prime * result + durability;
-		result = prime * result + (isBlank ? 1231 : 1237);
-		result = prime * result + ((itemMeta == null) ? 0 : itemMeta.hashCode());
-		result = prime * result + ((material == null) ? 0 : material.hashCode());
-		result = prime * result + maxDurability;
-		result = prime * result + maxStackSize;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		HItemStack other = (HItemStack) obj;
-		if (amount != other.getAmount()) return false;
-		if (data != other.getData()) return false;
-		if (durability != other.getDurability()) return false;
-		if (isBlank != other.isBlank()) return false;
-		if (itemMeta == null) {
-			if (other.getItemMeta() != null) return false;
-		} else if (!itemMeta.equals(other.getItemMeta()))
-			return false;
-		if (material == null) {
-			if (other.getMaterial() != null) return false;
-		} else if (!material.equals(other.getMaterial()))
-			return false;
-		if (maxDurability != other.getMaxDurability()) return false;
-		if (maxStackSize != other.getMaxStackSize()) return false;
-		return true;
-	}
 	
 	public boolean isSimilarTo(Object obj) {
 		if (this == obj) return true;
@@ -249,8 +234,55 @@ public class HItemStack {
 			return false;
 		if (maxDurability != other.getMaxDurability()) return false;
 		if (maxStackSize != other.getMaxStackSize()) return false;
+		if (repairCost != other.repairCost) return false;
+		if (unbreakable != other.unbreakable) return false;
 		return true;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + amount;
+		result = prime * result + data;
+		result = prime * result + durability;
+		result = prime * result + (isBlank ? 1231 : 1237);
+		result = prime * result + ((itemMeta == null) ? 0 : itemMeta.hashCode());
+		result = prime * result + ((material == null) ? 0 : material.hashCode());
+		result = prime * result + maxDurability;
+		result = prime * result + maxStackSize;
+		result = prime * result + ((nbtTags == null) ? 0 : nbtTags.hashCode());
+		result = prime * result + repairCost;
+		result = prime * result + (unbreakable ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		HItemStack other = (HItemStack) obj;
+		if (amount != other.amount) return false;
+		if (data != other.data) return false;
+		if (durability != other.durability) return false;
+		if (isBlank != other.isBlank) return false;
+		if (itemMeta == null) {
+			if (other.itemMeta != null) return false;
+		} else if (!itemMeta.equals(other.itemMeta)) return false;
+		if (material == null) {
+			if (other.material != null) return false;
+		} else if (!material.equals(other.material)) return false;
+		if (maxDurability != other.maxDurability) return false;
+		if (maxStackSize != other.maxStackSize) return false;
+		if (nbtTags == null) {
+			if (other.nbtTags != null) return false;
+		} else if (!nbtTags.equals(other.nbtTags)) return false;
+		if (repairCost != other.repairCost) return false;
+		if (unbreakable != other.unbreakable) return false;
+		return true;
+	}
+
 
 
 

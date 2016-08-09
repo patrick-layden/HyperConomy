@@ -69,6 +69,7 @@ public class Iteminfo extends BaseCommand implements HyperCommand{
 			data.addResponse("&9Aliases: " + "&b" + ho.getAliasesString());
 		}
 		data.addResponses(stack.displayInfo(hp, "&9", "&b"));
+		data.addResponse("&9NBT: " + "&b" + stack.getNBTTags().toString());
 		data.addResponse(L.get("LINE_BREAK"));
 		return data;
 	}

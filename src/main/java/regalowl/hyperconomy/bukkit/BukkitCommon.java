@@ -78,9 +78,11 @@ public class BukkitCommon {
 	protected static final BlockFace[] planeFaces = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
 	protected static final BlockFace[] allFaces = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.DOWN, BlockFace.UP};
 	private HyperConomy hc;
+	private NBTTools nbtTools;
 	
 	protected BukkitCommon(HyperConomy hc) {
 		this.hc = hc;
+		this.nbtTools = new NBTTools();
 	}
 	
 	
@@ -350,7 +352,13 @@ public class BukkitCommon {
         int amount = s.getAmount();
         int maxStackSize = s.getType().getMaxStackSize();
         int maxDurability = s.getType().getMaxDurability();
-        HItemStack sis = new HItemStack(hc, new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>(), new ArrayList<HItemFlag>()), material, durability, data, amount, maxStackSize, maxDurability);
+        Integer rc = nbtTools.getInt(s, "RepairCost");
+        int repairCost = (rc == null) ? 0 : rc;
+        Boolean un = nbtTools.getBoolean(s, "Unbreakable");
+        boolean unbreakable = (un == null) ? false : un;
+        Object et = nbtTools.getCompound(s, "EntityTag");
+
+        HItemStack sis = new HItemStack(hc, new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>(), new ArrayList<HItemFlag>()), material, durability, data, amount, maxStackSize, maxDurability, repairCost, unbreakable, nbtTools.getNMSKeys(s));
         if (isBlank) sis.setBlank();
         if (s.hasItemMeta()) {
         	ItemMeta im = s.getItemMeta();
@@ -557,6 +565,11 @@ public class BukkitCommon {
         	}
     		generatedItemStack.setItemMeta(itemMeta);
         }
+        ItemStack nbtModified = nbtTools.setInt(generatedItemStack, "RepairCost", hItemStack.getRepairCost());
+        if (nbtModified != null) generatedItemStack = nbtModified;
+        nbtModified = nbtTools.setBoolean(generatedItemStack, "Unbreakable", hItemStack.unbreakable());
+        if (nbtModified != null) generatedItemStack = nbtModified;
+        //System.out.println(getSerializableItemStack(nbtModified).serialize());
         return generatedItemStack;
 	}
 	
