@@ -50,7 +50,6 @@ public class NBTTools {
 			craftItemStackAsCraftMirrorMethod = craftItemStackClass.getMethod("asCraftMirror", nmsItemStack.getClass());
 			nmsItemStackGetTagMethod = nmsItemStack.getClass().getMethod("getTag");
 			nmsItemStackSetTagMethod = nmsItemStack.getClass().getMethod("setTag", nbtTag.getClass());
-
 			nbtTagCompoundHasKeyMethod = nbtTag.getClass().getMethod("hasKey", String.class);
 			nbtTagCompoundCMethod = nbtTag.getClass().getMethod("c");
 			nbtTagCompoundSetMethod = nbtTag.getClass().getMethod("set", String.class, nbtBase);
@@ -74,21 +73,20 @@ public class NBTTools {
 	}
 
 	public boolean hasKey(ItemStack itemStack, String key) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
-		Object nmsItemStack = craftItemStackAsNMSCopyMethod.invoke(craftItemStackClass, itemStack);
+		Object nmsItemStack = getNMSItemStack(itemStack);
 		if (nmsItemStack == null) return false;
-		Object nbtTag = nmsItemStackGetTagMethod.invoke(nmsItemStack);
+		Object nbtTag = getNBTTag(nmsItemStack);
 		if (nbtTag == null) return false;
 		return (Boolean) nbtTagCompoundHasKeyMethod.invoke(nbtTag, key);
 	}
-
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> getNMSKeys(ItemStack itemStack) {
 		try {
-			Object nmsItemStack = craftItemStackAsNMSCopyMethod.invoke(craftItemStackClass, itemStack);
+			Object nmsItemStack = getNMSItemStack(itemStack);
 			if (nmsItemStack == null) return new ArrayList<String>();
-			Object nbtTagCompound = nmsItemStackGetTagMethod.invoke(nmsItemStack);
-			if (nbtTagCompound == null) return new ArrayList<String>();
-			Set<String> tags = (Set<String>) nbtTagCompoundCMethod.invoke(nbtTagCompound);
+			Object nbtTag = getNBTTag(nmsItemStack);
+			if (nbtTag == null) return new ArrayList<String>();
+			Set<String> tags = (Set<String>) nbtTagCompoundCMethod.invoke(nbtTag);
 			ArrayList<String> tagArray = new ArrayList<String>(tags);
 			return tagArray;
 		} catch (Exception e) {
@@ -97,23 +95,6 @@ public class NBTTools {
 		}
 
 	}
-	
-	/*
-	public String getMobEggType(ItemStack itemStack) {
-		try {
-			Object nmsItemStack = craftItemStackAsNMSCopyMethod.invoke(craftItemStackClass, itemStack);
-			if (nmsItemStack == null) return null;
-			Object nbtTag = nmsItemStackGetTagMethod.invoke(nmsItemStack);
-			if (nbtTag == null) return null;
-			Object entityTag = nbtTagCompoundGetCompoundMethod.invoke(nbtTag, "EntityTag");
-			if (entityTag == null) return null;
-			return (String) nbtTagCompoundGetStringMethod.invoke(entityTag, "id");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	*/
 	
 	
 	public Object getNMSItemStack(ItemStack itemStack) {
@@ -157,21 +138,11 @@ public class NBTTools {
 		}
 	}
 	
-	public String getNBTTagCompoundString(Object nbtTag, String key) {
-		try {
-			return (String) nbtTagCompoundGetStringMethod.invoke(nbtTag, key);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	public void setNBTTagCompoundString(Object nbtTag, String key, String s) {
-		try {
-			nbtTagCompoundSetStringMethod.invoke(nbtTag, key, s);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
+	
+	
+	
+	
 	
 	public Object getNBTTagCompoundCompound(Object nbtTag, String key) {
 		try {
@@ -189,26 +160,69 @@ public class NBTTools {
 		}
 	}
 	
-	
-	
-	
-	
-	public String getString(ItemStack itemStack, String key) {
-		Object nmsItemStack = getNMSItemStack(itemStack);
-		if (nmsItemStack == null) return null;
-		Object nbtTag = getNBTTag(nmsItemStack);
-		if (nbtTag == null) return null;
-		return getNBTTagCompoundString(nbtTag, key);
+	public String getNBTTagCompoundString(Object nbtTag, String key) {
+		try {
+			return (String) nbtTagCompoundGetStringMethod.invoke(nbtTag, key);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
-
-	public ItemStack setString(ItemStack itemStack, String key, String s) {
-		Object nmsItemStack = getNMSItemStack(itemStack);
-		if (nmsItemStack == null) return null;
-		Object nbtTag = getNBTTag(nmsItemStack);
-		if (nbtTag == null) nbtTag = generateNBTTag();
-		setNBTTagCompoundString(nbtTag, key, s);
-		setNBTTag(nmsItemStack, nbtTag);
-		return getBukkitItemStack(nmsItemStack);
+	public void setNBTTagCompoundString(Object nbtTag, String key, String s) {
+		try {
+			nbtTagCompoundSetStringMethod.invoke(nbtTag, key, s);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Integer getNBTTagCompoundInt(Object nbtTag, String key) {
+		try {
+			return (Integer) nbtTagCompoundGetIntMethod.invoke(nbtTag, key);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public void setNBTTagCompoundInt(Object nbtTag, String key, Integer i) {
+		try {
+			nbtTagCompoundSetIntMethod.invoke(nbtTag, key, i);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public Double getNBTTagCompoundDouble(Object nbtTag, String key) {
+		try {
+			return (Double) nbtTagCompoundGetDoubleMethod.invoke(nbtTag, key);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public void setNBTTagCompoundDouble(Object nbtTag, String key, Double d) {
+		try {
+			nbtTagCompoundSetDoubleMethod.invoke(nbtTag, key, d);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Boolean getNBTTagCompoundBoolean(Object nbtTag, String key) {
+		try {
+			return (Boolean) nbtTagCompoundGetBooleanMethod.invoke(nbtTag, key);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public void setNBTTagCompoundBoolean(Object nbtTag, String key, Boolean b) {
+		try {
+			nbtTagCompoundSetBooleanMethod.invoke(nbtTag, key, b);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -220,7 +234,6 @@ public class NBTTools {
 		if (nbtTag == null) return null;
 		return getNBTTagCompoundCompound(nbtTag, key);
 	}
-
 	public ItemStack setCompound(ItemStack itemStack, String key, Object c) {
 		Object nmsItemStack = getNMSItemStack(itemStack);
 		if (nmsItemStack == null) return null;
@@ -231,81 +244,98 @@ public class NBTTools {
 		return getBukkitItemStack(nmsItemStack);
 	}
 	
+	public String getString(ItemStack itemStack, String key) {
+		Object nmsItemStack = getNMSItemStack(itemStack);
+		if (nmsItemStack == null) return null;
+		Object nbtTag = getNBTTag(nmsItemStack);
+		if (nbtTag == null) return null;
+		return getNBTTagCompoundString(nbtTag, key);
+	}
+	public ItemStack setString(ItemStack itemStack, String key, String s) {
+		Object nmsItemStack = getNMSItemStack(itemStack);
+		if (nmsItemStack == null) return null;
+		Object nbtTag = getNBTTag(nmsItemStack);
+		if (nbtTag == null) nbtTag = generateNBTTag();
+		setNBTTagCompoundString(nbtTag, key, s);
+		setNBTTag(nmsItemStack, nbtTag);
+		return getBukkitItemStack(nmsItemStack);
+	}
 	
 	public Integer getInt(ItemStack itemStack, String key) {
-		try {
-			Object nmsItemStack = getNMSItemStack(itemStack);
-			if (nmsItemStack == null) return null;
-			Object nbtTag = nmsItemStackGetTagMethod.invoke(nmsItemStack);
-			if (nbtTag == null) return null;
-			return (Integer) nbtTagCompoundGetIntMethod.invoke(nbtTag, key);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public ItemStack setInt(ItemStack itemStack, String key, Integer i) {
-		try {
-			Object nmsItemStack = getNMSItemStack(itemStack);
-			if (nmsItemStack == null) return null;
-			Object nbtTag = nmsItemStackGetTagMethod.invoke(nmsItemStack);
-			if (nbtTag == null) nbtTag = nbtTagCompound.newInstance();
-			nbtTagCompoundSetIntMethod.invoke(nbtTag, key, i);
-			nmsItemStackSetTagMethod.invoke(nmsItemStack, nbtTag);
-			return getBukkitItemStack(nmsItemStack);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public Double getDouble(ItemStack itemStack, String key) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Object nmsItemStack = craftItemStackAsNMSCopyMethod.invoke(craftItemStackClass, itemStack);
+		Object nmsItemStack = getNMSItemStack(itemStack);
 		if (nmsItemStack == null) return null;
-		Object nbtTag = nmsItemStackGetTagMethod.invoke(nmsItemStack);
+		Object nbtTag = getNBTTag(nmsItemStack);
 		if (nbtTag == null) return null;
-		return (Double) nbtTagCompoundGetDoubleMethod.invoke(nbtTag, key);
+		return getNBTTagCompoundInt(nbtTag, key);
+	}
+	public ItemStack setInt(ItemStack itemStack, String key, Integer i) {
+		Object nmsItemStack = getNMSItemStack(itemStack);
+		if (nmsItemStack == null) return null;
+		Object nbtTag = getNBTTag(nmsItemStack);
+		if (nbtTag == null) nbtTag = generateNBTTag();
+		setNBTTagCompoundInt(nbtTag, key, i);
+		setNBTTag(nmsItemStack, nbtTag);
+		return getBukkitItemStack(nmsItemStack);
 	}
 
-	public ItemStack setDouble(ItemStack itemStack, String key, Double d) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
-		Object nmsItemStack = craftItemStackAsNMSCopyMethod.invoke(craftItemStackClass, itemStack);
+	public Double getDouble(ItemStack itemStack, String key) {
+		Object nmsItemStack = getNMSItemStack(itemStack);
 		if (nmsItemStack == null) return null;
-		Object nbtTag = nmsItemStackGetTagMethod.invoke(nmsItemStack);
-		if (nbtTag == null) nbtTag = nbtTagCompound.newInstance();
-		nbtTagCompoundSetDoubleMethod.invoke(nbtTag, key, d);
-		nmsItemStackSetTagMethod.invoke(nmsItemStack, nbtTag);
+		Object nbtTag = getNBTTag(nmsItemStack);
+		if (nbtTag == null) return null;
+		return getNBTTagCompoundDouble(nbtTag, key);
+	}
+	public ItemStack setDouble(ItemStack itemStack, String key, Double d) {
+		Object nmsItemStack = getNMSItemStack(itemStack);
+		if (nmsItemStack == null) return null;
+		Object nbtTag = getNBTTag(nmsItemStack);
+		if (nbtTag == null) nbtTag = generateNBTTag();
+		setNBTTagCompoundDouble(nbtTag, key, d);
+		setNBTTag(nmsItemStack, nbtTag);
 		return getBukkitItemStack(nmsItemStack);
 	}
 
 	public Boolean getBoolean(ItemStack itemStack, String key) {
-		try {
-			Object nmsItemStack = getNMSItemStack(itemStack);
-			if (nmsItemStack == null) return null;
-			Object nbtTag = nmsItemStackGetTagMethod.invoke(nmsItemStack);
-			if (nbtTag == null) return null;
-			return (Boolean) nbtTagCompoundGetBooleanMethod.invoke(nbtTag, key);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		Object nmsItemStack = getNMSItemStack(itemStack);
+		if (nmsItemStack == null) return null;
+		Object nbtTag = getNBTTag(nmsItemStack);
+		if (nbtTag == null) return null;
+		return getNBTTagCompoundBoolean(nbtTag, key);
 	}
-
 	public ItemStack setBoolean(ItemStack itemStack, String key, Boolean b) {
-		try {
-			Object nmsItemStack = getNMSItemStack(itemStack);
-			if (nmsItemStack == null) return null;
-			Object nbtTag = nmsItemStackGetTagMethod.invoke(nmsItemStack);
-			if (nbtTag == null) nbtTag = nbtTagCompound.newInstance();
-			nbtTagCompoundSetBooleanMethod.invoke(nbtTag, key, b);
-			nmsItemStackSetTagMethod.invoke(nmsItemStack, nbtTag);
-			return getBukkitItemStack(nmsItemStack);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		Object nmsItemStack = getNMSItemStack(itemStack);
+		if (nmsItemStack == null) return null;
+		Object nbtTag = getNBTTag(nmsItemStack);
+		if (nbtTag == null) nbtTag = generateNBTTag();
+		setNBTTagCompoundBoolean(nbtTag, key, b);
+		setNBTTag(nmsItemStack, nbtTag);
+		return getBukkitItemStack(nmsItemStack);
 	}
 
 
+	
+	
+	public String getMobEggType(ItemStack itemStack) {
+		Object nmsItemStack = getNMSItemStack(itemStack);
+		if (nmsItemStack == null) return null;
+		Object nbtTag = getNBTTag(nmsItemStack);
+		if (nbtTag == null) return null;
+		Object entityTag = getNBTTagCompoundCompound(nbtTag, "EntityTag");
+		if (entityTag == null) return null;
+		return getNBTTagCompoundString(entityTag, "id");
+	}
+	public ItemStack setMobEggType(ItemStack itemStack, String type) {
+		Object nmsItemStack = getNMSItemStack(itemStack);
+		if (nmsItemStack == null) return null;
+		Object nbtTag = getNBTTag(nmsItemStack);
+		if (nbtTag == null) nbtTag = generateNBTTag();
+		Object entityTag = getNBTTagCompoundCompound(nbtTag, "EntityTag");
+		if (entityTag == null) entityTag = generateNBTTag();
+		setNBTTagCompoundString(entityTag, "id", type);
+		setNBTTagCompoundCompound(nbtTag, "EntityTag", entityTag);
+		setNBTTag(nmsItemStack, nbtTag);
+		return getBukkitItemStack(nmsItemStack);
+	}
+	
 
 }

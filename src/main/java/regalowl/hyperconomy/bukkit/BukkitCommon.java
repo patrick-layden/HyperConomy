@@ -356,9 +356,12 @@ public class BukkitCommon {
         int repairCost = (rc == null) ? 0 : rc;
         Boolean un = nbtTools.getBoolean(s, "Unbreakable");
         boolean unbreakable = (un == null) ? false : un;
-        Object et = nbtTools.getCompound(s, "EntityTag");
-
-        HItemStack sis = new HItemStack(hc, new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>(), new ArrayList<HItemFlag>()), material, durability, data, amount, maxStackSize, maxDurability, repairCost, unbreakable, nbtTools.getNMSKeys(s));
+        String mobEggType = "";
+        if (s.getType() == Material.MONSTER_EGG) {
+        	String mtype = nbtTools.getMobEggType(s);
+        	if (mtype != null) mobEggType = mtype;
+        }
+        HItemStack sis = new HItemStack(hc, new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>(), new ArrayList<HItemFlag>()), material, durability, data, amount, maxStackSize, maxDurability, repairCost, unbreakable, mobEggType, nbtTools.getNMSKeys(s));
         if (isBlank) sis.setBlank();
         if (s.hasItemMeta()) {
         	ItemMeta im = s.getItemMeta();
@@ -565,10 +568,18 @@ public class BukkitCommon {
         	}
     		generatedItemStack.setItemMeta(itemMeta);
         }
-        ItemStack nbtModified = nbtTools.setInt(generatedItemStack, "RepairCost", hItemStack.getRepairCost());
-        if (nbtModified != null) generatedItemStack = nbtModified;
-        nbtModified = nbtTools.setBoolean(generatedItemStack, "Unbreakable", hItemStack.unbreakable());
-        if (nbtModified != null) generatedItemStack = nbtModified;
+        if (hItemStack.getRepairCost() != 0) {
+	        ItemStack nbtModified = nbtTools.setInt(generatedItemStack, "RepairCost", hItemStack.getRepairCost());
+	        if (nbtModified != null) generatedItemStack = nbtModified;
+        }
+        if (hItemStack.unbreakable()) {
+	        ItemStack nbtModified = nbtTools.setBoolean(generatedItemStack, "Unbreakable", hItemStack.unbreakable());
+	        if (nbtModified != null) generatedItemStack = nbtModified;
+        }
+        if (hItemStack.getMobEggType() != "") {
+	        ItemStack nbtModified = nbtTools.setMobEggType(generatedItemStack, hItemStack.getMobEggType());
+	        if (nbtModified != null) generatedItemStack = nbtModified;
+        }
         //System.out.println(getSerializableItemStack(nbtModified).serialize());
         return generatedItemStack;
 	}

@@ -23,6 +23,7 @@ public class HItemStack {
     private int repairCost;
     private boolean unbreakable;
     private boolean isBlank;
+    private String mobEggType;
     private ArrayList<String> nbtTags = new ArrayList<String>();
  
     public HItemStack(HyperConomy hc) {
@@ -31,7 +32,7 @@ public class HItemStack {
     	this.material = "AIR";
     }
     
-    public HItemStack(HyperConomy hc, HItemMeta itemMeta, String material, short durability, byte data, int amount, int maxStackSize, int maxDurability, int repairCost, boolean unbreakable, ArrayList<String> nbtTags) {
+    public HItemStack(HyperConomy hc, HItemMeta itemMeta, String material, short durability, byte data, int amount, int maxStackSize, int maxDurability, int repairCost, boolean unbreakable, String mobEggType, ArrayList<String> nbtTags) {
     	this.hc = hc;
     	this.itemMeta = itemMeta;
     	this.material = material;
@@ -43,6 +44,7 @@ public class HItemStack {
     	this.isBlank = false;
     	this.repairCost = repairCost;
     	this.unbreakable = unbreakable;
+    	this.mobEggType = mobEggType;
     	this.nbtTags = nbtTags;
     }
     
@@ -59,6 +61,7 @@ public class HItemStack {
     	this.isBlank = Boolean.parseBoolean(data.get("isBlank"));
     	this.unbreakable = (data.get("unbreakable") == null) ? false : Boolean.parseBoolean(data.get("unbreakable"));
     	this.repairCost = (data.get("repairCost") == null) ? 0 : Integer.parseInt(data.get("repairCost"));
+    	this.mobEggType = (data.get("mobEggType") == null) ? "" : data.get("mobEggType");
     }
 	
 	public String serialize() {
@@ -74,6 +77,7 @@ public class HItemStack {
 		data.put("isBlank", isBlank+"");
 		data.put("repairCost", repairCost+"");
 		data.put("unbreakable", unbreakable+"");
+		data.put("mobEggType", mobEggType);
 		return CommonFunctions.implodeMap(data);
 	}
 
@@ -86,8 +90,9 @@ public class HItemStack {
 		info.add(color1 + "Amount: " + color2 + amount);
 		info.add(color1 + "Max Stack Size: " + color2 + maxStackSize);
 		info.add(color1 + "Max Durability: " + color2 + maxDurability);
-		info.add(color1 + "Repair Cost: " + color2 + repairCost);
-		info.add(color1 + "Unbreakable: " + color2 + unbreakable);
+		if (repairCost != 0) info.add(color1 + "Repair Cost: " + color2 + repairCost);
+		if (unbreakable) info.add(color1 + "Unbreakable: " + color2 + unbreakable);
+		if (mobEggType != "") info.add(color1 + "Mob Egg Type: " + color2 + mobEggType);
 		if (itemMeta != null) {
 			info.addAll(itemMeta.displayInfo(p, color1, color2));
 		}
@@ -135,6 +140,10 @@ public class HItemStack {
 	
 	public boolean unbreakable() {
 		return unbreakable;
+	}
+	
+	public String getMobEggType() {
+		return mobEggType;
 	}
 	
 	public void setAmount(int amount) {
@@ -236,6 +245,7 @@ public class HItemStack {
 		if (maxStackSize != other.getMaxStackSize()) return false;
 		if (repairCost != other.repairCost) return false;
 		if (unbreakable != other.unbreakable) return false;
+		if (mobEggType != other.mobEggType) return false;
 		return true;
 	}
 
@@ -254,6 +264,7 @@ public class HItemStack {
 		result = prime * result + ((nbtTags == null) ? 0 : nbtTags.hashCode());
 		result = prime * result + repairCost;
 		result = prime * result + (unbreakable ? 1231 : 1237);
+		result = prime * result + ((mobEggType == null) ? 0 : mobEggType.hashCode());
 		return result;
 	}
 
@@ -280,6 +291,7 @@ public class HItemStack {
 		} else if (!nbtTags.equals(other.nbtTags)) return false;
 		if (repairCost != other.repairCost) return false;
 		if (unbreakable != other.unbreakable) return false;
+		if (mobEggType != other.mobEggType) return false;
 		return true;
 	}
 
