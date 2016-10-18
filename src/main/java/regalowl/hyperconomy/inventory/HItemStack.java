@@ -261,10 +261,10 @@ public class HItemStack {
 		result = prime * result + ((material == null) ? 0 : material.hashCode());
 		result = prime * result + maxDurability;
 		result = prime * result + maxStackSize;
+		result = prime * result + ((mobEggType == null) ? 0 : mobEggType.hashCode());
 		result = prime * result + ((nbtTags == null) ? 0 : nbtTags.hashCode());
 		result = prime * result + repairCost;
 		result = prime * result + (unbreakable ? 1231 : 1237);
-		result = prime * result + ((mobEggType == null) ? 0 : mobEggType.hashCode());
 		return result;
 	}
 
@@ -286,14 +286,17 @@ public class HItemStack {
 		} else if (!material.equals(other.material)) return false;
 		if (maxDurability != other.maxDurability) return false;
 		if (maxStackSize != other.maxStackSize) return false;
+		if (mobEggType == null) {
+			if (other.mobEggType != null) return false;
+		} else if (!mobEggType.equals(other.mobEggType)) return false;
 		if (nbtTags == null) {
 			if (other.nbtTags != null) return false;
 		} else if (!nbtTags.equals(other.nbtTags)) return false;
 		if (repairCost != other.repairCost) return false;
 		if (unbreakable != other.unbreakable) return false;
-		if (mobEggType != other.mobEggType) return false;
 		return true;
 	}
+
 
 
 
