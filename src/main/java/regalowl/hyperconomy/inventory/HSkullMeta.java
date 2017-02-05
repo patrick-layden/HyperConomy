@@ -12,8 +12,8 @@ public class HSkullMeta extends HItemMeta {
 
 	private String owner;
 
-	public HSkullMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, String owner) {
-		super(displayName, lore, enchantments, itemFlags);
+	public HSkullMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, boolean unbreakable, int repairCost, String owner) {
+		super(displayName, lore, enchantments, itemFlags, unbreakable, repairCost);
 		this.owner = owner;
 	}
 

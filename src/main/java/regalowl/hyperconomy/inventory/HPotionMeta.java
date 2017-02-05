@@ -13,8 +13,8 @@ public class HPotionMeta extends HItemMeta {
 	private ArrayList<HPotionEffect> potionEffects = new ArrayList<HPotionEffect>();
 	private HPotionData potionData;
 
-	public HPotionMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, ArrayList<HPotionEffect> potionEffects, HPotionData potionData) {
-		super(displayName, lore, enchantments, itemFlags);
+	public HPotionMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, boolean unbreakable, int repairCost, ArrayList<HPotionEffect> potionEffects, HPotionData potionData) {
+		super(displayName, lore, enchantments, itemFlags, unbreakable, repairCost);
 		this.potionEffects = potionEffects;
 		this.potionData = potionData;
 	}

@@ -14,8 +14,8 @@ public class HFireworkMeta extends HItemMeta {
 	private int power;
 
 	
-	public HFireworkMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, ArrayList<HFireworkEffect> effects, int power) {
-		super(displayName, lore, enchantments, itemFlags);
+	public HFireworkMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, boolean unbreakable, int repairCost, ArrayList<HFireworkEffect> effects, int power) {
+		super(displayName, lore, enchantments, itemFlags, unbreakable, repairCost);
 		this.effects = effects;
 		this.power = power;
 	}

@@ -11,8 +11,8 @@ public class HBannerMeta extends HItemMeta {
 	private String baseColor;
 	private ArrayList<HPattern> patterns = new ArrayList<HPattern>();
 
-	public HBannerMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, String baseColor, ArrayList<HPattern> patterns) {
-		super(displayName, lore, enchantments, itemFlags);
+	public HBannerMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, boolean unbreakable, int repairCost, String baseColor, ArrayList<HPattern> patterns) {
+		super(displayName, lore, enchantments, itemFlags, unbreakable, repairCost);
 		this.patterns = patterns;
 		this.baseColor = baseColor;
 	}

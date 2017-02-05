@@ -15,6 +15,7 @@ public class HItemMetaFactory {
 			case POTION: return new HPotionMeta(data);
 			case SKULL: return new HSkullMeta(data);
 			case BANNER: return new HBannerMeta(data);
+			case SPAWN_EGG: return new HSpawnEggMeta(data);
 			default: return null;
 		}
 	}

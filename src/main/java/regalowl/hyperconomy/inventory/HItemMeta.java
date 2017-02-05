@@ -16,13 +16,17 @@ public class HItemMeta {
 	protected ArrayList<String> lore = new ArrayList<String>();
 	protected ArrayList<HEnchantment> enchantments = new ArrayList<HEnchantment>();
 	protected ArrayList<HItemFlag> itemFlags = new ArrayList<HItemFlag>();
+	protected boolean unbreakable;
+	protected int repairCost;
  
 
-	public HItemMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags) {
+	public HItemMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, boolean unbreakable, int repairCost) {
         this.displayName = displayName;
         this.lore = lore;
         this.enchantments = enchantments;
         this.itemFlags = itemFlags;
+        this.unbreakable = unbreakable;
+        this.repairCost = repairCost;
     }
 	
 	public HItemMeta(HItemMeta meta) {
@@ -30,11 +34,13 @@ public class HItemMeta {
         this.lore = meta.lore;
         this.enchantments = meta.enchantments;
         this.itemFlags = meta.itemFlags;
+        this.unbreakable = meta.unbreakable;
+        this.repairCost = meta.repairCost;
     }
 	
 	public HItemMeta(String serialized) {
 		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
-		this.displayName = data.get("displayName");
+		this.displayName = (data.get("displayName") != null) ? data.get("displayName") : "";
 		this.lore = CommonFunctions.explode(data.get("lore"));
 		ArrayList<String> sEnchants = CommonFunctions.explode(data.get("enchantments"));
 		for (String e:sEnchants) {
@@ -44,6 +50,8 @@ public class HItemMeta {
 		for (String f:sItemFlags) {
 			itemFlags.add(HItemFlag.deserialize(f));
 		}
+		this.unbreakable = (data.get("unbreakable") != null) ? Boolean.parseBoolean(data.get("unbreakable")) : false;
+		this.repairCost = (data.get("repairCost") != null) ? Integer.parseInt(data.get("repairCost")) : 0;
     }
 
 	public String serialize() {
@@ -64,6 +72,8 @@ public class HItemMeta {
 			sItemFlags.add(f.serialize());
 		}
 		data.put("itemFlags", CommonFunctions.implode(sItemFlags));
+		data.put("unbreakable", unbreakable+"");
+		data.put("repairCost", repairCost+"");
 		return data;
 	}
 
@@ -96,6 +106,8 @@ public class HItemMeta {
 			itemFlagString = itemFlagString.substring(0, itemFlagString.length() - 1);
 		}
 		info.add(color1 + "Item flags: " + color2 + itemFlagString);
+		info.add(color1 + "Unbreakable: " + color2 + unbreakable);
+		info.add(color1 + "Repair Cost: " + color2 + repairCost);
 		return info;
 	}
 
@@ -155,6 +167,20 @@ public class HItemMeta {
 		}
 		return false;
 	}
+	
+	public boolean unbreakable() {
+		return unbreakable;
+	}
+	public void setUnbreakable(boolean unbreakable) {
+		this.unbreakable = unbreakable;
+	}
+	
+	public int getRepairCost() {
+		return repairCost;
+	}
+	public void setRepairCost(int repairCost) {
+		this.repairCost = repairCost;
+	}
 
 	@Override
 	public int hashCode() {
@@ -164,42 +190,35 @@ public class HItemMeta {
 		result = prime * result + ((enchantments == null) ? 0 : enchantments.hashCode());
 		result = prime * result + ((itemFlags == null) ? 0 : itemFlags.hashCode());
 		result = prime * result + ((lore == null) ? 0 : lore.hashCode());
+		result = prime * result + repairCost;
+		result = prime * result + (unbreakable ? 1231 : 1237);
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
 		HItemMeta other = (HItemMeta) obj;
 		if (displayName == null) {
-			if (other.displayName != null)
-				return false;
-		} else if (!displayName.equals(other.displayName))
-			return false;
+			if (other.displayName != null) return false;
+		} else if (!displayName.equals(other.displayName)) return false;
 		if (enchantments == null) {
-			if (other.enchantments != null)
-				return false;
-		} else if (!enchantments.equals(other.enchantments))
-			return false;
+			if (other.enchantments != null) return false;
+		} else if (!enchantments.equals(other.enchantments)) return false;
 		if (itemFlags == null) {
-			if (other.itemFlags != null)
-				return false;
-		} else if (!itemFlags.equals(other.itemFlags))
-			return false;
+			if (other.itemFlags != null) return false;
+		} else if (!itemFlags.equals(other.itemFlags)) return false;
 		if (lore == null) {
-			if (other.lore != null)
-				return false;
-		} else if (!lore.equals(other.lore))
-			return false;
+			if (other.lore != null) return false;
+		} else if (!lore.equals(other.lore)) return false;
+		if (repairCost != other.repairCost) return false;
+		if (unbreakable != other.unbreakable) return false;
 		return true;
 	}
-	
-	
+
+
 
 
 

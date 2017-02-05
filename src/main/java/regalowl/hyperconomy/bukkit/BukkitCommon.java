@@ -23,6 +23,7 @@ import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -38,7 +39,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -67,6 +70,7 @@ import regalowl.hyperconomy.inventory.HPotionData;
 import regalowl.hyperconomy.inventory.HPotionEffect;
 import regalowl.hyperconomy.inventory.HPotionMeta;
 import regalowl.hyperconomy.inventory.HSkullMeta;
+import regalowl.hyperconomy.inventory.HSpawnEggMeta;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HItem;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -350,7 +354,7 @@ public class BukkitCommon {
         int amount = s.getAmount();
         int maxStackSize = s.getType().getMaxStackSize();
         int maxDurability = s.getType().getMaxDurability();
-        HItemStack sis = new HItemStack(hc, new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>(), new ArrayList<HItemFlag>()), material, durability, data, amount, maxStackSize, maxDurability);
+        HItemStack sis = new HItemStack(hc, new HItemMeta("", new ArrayList<String>(), new ArrayList<HEnchantment>(), new ArrayList<HItemFlag>(), false, 0), material, durability, data, amount, maxStackSize, maxDurability);
         if (isBlank) sis.setBlank();
         if (s.hasItemMeta()) {
         	ItemMeta im = s.getItemMeta();
@@ -372,6 +376,12 @@ public class BukkitCommon {
     			ItemFlag f = it2.next();
     			itemFlags.add(new HItemFlag(f.toString()));
     		}
+    		boolean unbreakable = im.isUnbreakable();
+    		int repairCost = 0;
+    		if (im instanceof Repairable) {
+    			Repairable rp = (Repairable)im;
+    			repairCost = rp.getRepairCost();
+    		}
     		HItemMeta itemMeta = null;
         	if (im instanceof EnchantmentStorageMeta) {
         		EnchantmentStorageMeta sItemMeta = (EnchantmentStorageMeta)im;
@@ -383,12 +393,12 @@ public class BukkitCommon {
     				int lvl = stored.get(e);
     				storedEnchantments.add(new HEnchantment(e.getName(), lvl));
     			}
-        		itemMeta = new HEnchantmentStorageMeta(displayName, lore, itemFlags, storedEnchantments);
+        		itemMeta = new HEnchantmentStorageMeta(displayName, lore, itemFlags, unbreakable, repairCost, storedEnchantments);
         	} else if (im instanceof BookMeta) {
         		BookMeta sItemMeta = (BookMeta)im;
         		ArrayList<String> pages = new ArrayList<String>();
         		if (sItemMeta.getPages() != null) pages.addAll(sItemMeta.getPages());
-        		itemMeta = new HBookMeta(displayName, lore, enchantments, itemFlags, sItemMeta.getAuthor(), pages, sItemMeta.getTitle());
+        		itemMeta = new HBookMeta(displayName, lore, enchantments, itemFlags, unbreakable, repairCost, sItemMeta.getAuthor(), pages, sItemMeta.getTitle());
         	} else if (im instanceof FireworkEffectMeta) {
         		FireworkEffectMeta sItemMeta = (FireworkEffectMeta)im;
         		FireworkEffect fe = sItemMeta.getEffect();
@@ -404,7 +414,7 @@ public class BukkitCommon {
 	        		}
 	        		sfe = new HFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail());
         		}
-        		itemMeta = new HFireworkEffectMeta(displayName, lore, enchantments, itemFlags, sfe);
+        		itemMeta = new HFireworkEffectMeta(displayName, lore, enchantments, itemFlags, unbreakable, repairCost, sfe);
         	} else if (im instanceof FireworkMeta) {
         		FireworkMeta sItemMeta = (FireworkMeta)im;
         		ArrayList<HFireworkEffect> fireworkEffects = new ArrayList<HFireworkEffect>();
@@ -421,11 +431,11 @@ public class BukkitCommon {
 		        		fireworkEffects.add(new HFireworkEffect(colors, fadeColors, fe.getType().toString(), fe.hasFlicker(), fe.hasTrail()));
 	    			}
         		}
-        		itemMeta = new HFireworkMeta(displayName, lore, enchantments, itemFlags, fireworkEffects, sItemMeta.getPower());
+        		itemMeta = new HFireworkMeta(displayName, lore, enchantments, itemFlags, unbreakable, repairCost, fireworkEffects, sItemMeta.getPower());
         	} else if (im instanceof LeatherArmorMeta) {
         		LeatherArmorMeta sItemMeta = (LeatherArmorMeta)im;
         		Color color = sItemMeta.getColor();
-        		itemMeta = new HLeatherArmorMeta(displayName, lore, enchantments, itemFlags, new HColor(color.getRed(), color.getGreen(), color.getBlue()));
+        		itemMeta = new HLeatherArmorMeta(displayName, lore, enchantments, itemFlags, unbreakable, repairCost, new HColor(color.getRed(), color.getGreen(), color.getBlue()));
         	} else if (im instanceof PotionMeta) {
         		PotionMeta sItemMeta = (PotionMeta)im;
         		PotionData pd = sItemMeta.getBasePotionData();
@@ -436,13 +446,13 @@ public class BukkitCommon {
 	        			potionEffects.add(new HPotionEffect(pe.getType().getName(), pe.getAmplifier(), pe.getDuration(), pe.isAmbient()));
 	        		}
         		}
-        		itemMeta = new HPotionMeta(displayName, lore, enchantments, itemFlags, potionEffects, potionData);
+        		itemMeta = new HPotionMeta(displayName, lore, enchantments, itemFlags, unbreakable, repairCost, potionEffects, potionData);
         	} else if (im instanceof SkullMeta) {
         		SkullMeta sItemMeta = (SkullMeta)im;
-        		itemMeta = new HSkullMeta(displayName, lore, enchantments, itemFlags, sItemMeta.getOwner());
+        		itemMeta = new HSkullMeta(displayName, lore, enchantments, itemFlags, unbreakable, repairCost, sItemMeta.getOwner());
         	} else if (im instanceof MapMeta) {
         		MapMeta sItemMeta = (MapMeta)im;
-        		itemMeta = new HMapMeta(displayName, lore, enchantments, itemFlags, sItemMeta.isScaling());
+        		itemMeta = new HMapMeta(displayName, lore, enchantments, itemFlags, unbreakable, repairCost, sItemMeta.isScaling());
         	} else if (im instanceof BannerMeta) {
         		BannerMeta sItemMeta = (BannerMeta)im;
         		DyeColor dyeColor = sItemMeta.getBaseColor();
@@ -452,9 +462,12 @@ public class BukkitCommon {
         		for (Pattern p:sItemMeta.getPatterns()) {
         			patterns.add(new HPattern(p.getColor().toString(), p.getPattern().toString()));
         		}
-        		itemMeta = new HBannerMeta(displayName, lore, enchantments, itemFlags, baseColor, patterns);
+        		itemMeta = new HBannerMeta(displayName, lore, enchantments, itemFlags, unbreakable, repairCost, baseColor, patterns);
+        	} else if (im instanceof SpawnEggMeta) {
+        		SpawnEggMeta sItemMeta = (SpawnEggMeta)im;
+        		itemMeta = new HSpawnEggMeta(displayName, lore, enchantments, itemFlags, unbreakable, repairCost, sItemMeta.getSpawnedType().name());
         	} else {
-        		itemMeta = new HItemMeta(displayName, lore, enchantments, itemFlags);
+        		itemMeta = new HItemMeta(displayName, lore, enchantments, itemFlags, unbreakable, repairCost);
         	}
         	sis.setHItemMeta(itemMeta);
         }   
@@ -478,6 +491,11 @@ public class BukkitCommon {
     		}
     		for (HItemFlag f:hItemMeta.getItemFlags()) {
     			itemMeta.addItemFlags(ItemFlag.valueOf(f.getItemFlag()));
+    		}
+    		itemMeta.setUnbreakable(hItemMeta.unbreakable());
+    		if (itemMeta instanceof Repairable) {
+    			Repairable rp = (Repairable)itemMeta;
+    			rp.setRepairCost(hItemMeta.getRepairCost());
     		}
         	if (hItemMeta instanceof HEnchantmentStorageMeta) {
         		HEnchantmentStorageMeta sItemMeta = (HEnchantmentStorageMeta)hItemMeta;
@@ -554,6 +572,10 @@ public class BukkitCommon {
         			bm.addPattern(new Pattern(DyeColor.valueOf(hp.getDyeColor()), PatternType.valueOf(hp.getPatternType())));
         		}
         		bm.setBaseColor(DyeColor.valueOf(sItemMeta.getBaseColor()));
+        	} else if (hItemMeta instanceof HSpawnEggMeta) {
+        		HSpawnEggMeta sItemMeta = (HSpawnEggMeta)hItemMeta;
+        		SpawnEggMeta sem = (SpawnEggMeta)itemMeta;
+        		sem.setSpawnedType(EntityType.valueOf(sItemMeta.getEntityType()));
         	}
     		generatedItemStack.setItemMeta(itemMeta);
         }
