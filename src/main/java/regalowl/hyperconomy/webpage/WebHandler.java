@@ -51,7 +51,7 @@ public class WebHandler implements HyperEventListener {
 					context.setContextPath("/");
 					server.setHandler(context);
 					if (hcw.useWebAPI()) {
-						context.addServlet(new ServletHolder(new HyperWebAPI(hcw.getWebAPIPath())), "/"+hcw.getWebAPIPath()+"/*");
+						context.addServlet(new ServletHolder(new HyperWebAPI(hc, hcw.getWebAPIPath())), "/"+hcw.getWebAPIPath()+"/*");
 					}
 					context.addServlet(new ServletHolder(new MainPage(hcw)), "/");
 					for (Shop s : hc.getHyperShopManager().getShops()) {

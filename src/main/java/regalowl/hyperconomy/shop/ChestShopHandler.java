@@ -577,12 +577,13 @@ public class ChestShopHandler implements HyperEventListener {
 		if (hc.getMC().isChestShopChest(loc)) {
 			event.cancel();
 		} else if (hc.getMC().isChestShopSign(loc)) {
+			HLocation chestLoc = loc.down();
 			boolean delete = false;
 			if (event.getPlayer().hasPermission("hyperconomy.admin") && event.getPlayer().isSneaking()) delete = true;
-			ChestShop cs = chestShops.get(loc);
+			ChestShop cs = chestShops.get(chestLoc);
 			if (cs != null && cs.getOwner().equals(event.getPlayer()) && event.getPlayer().isSneaking()) delete = true;
 			if (delete) {
-				chestShops.remove(loc);
+				chestShops.remove(chestLoc);
 				if (cs != null) cs.delete();
 				return;
 			}

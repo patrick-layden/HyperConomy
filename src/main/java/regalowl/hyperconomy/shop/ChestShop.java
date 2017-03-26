@@ -10,8 +10,6 @@ import java.util.List;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
-
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -393,7 +391,6 @@ public class ChestShop {
 		for (int i = 0; i < shopMenuInventory.getSize(); i++) {
 			HItemStack his = shopMenuInventory.getItem(i);
 			if (his.isBlank()) continue;
-			TradeObject to = getTradeObject(i);
 			List<String> originalLore = his.getItemMeta().getLore();
 			his.getItemMeta().setLore(new ArrayList<String>());
 			if (isBuySlot(i)) {
