@@ -22,6 +22,11 @@ public class HSkullMeta extends HItemMeta {
 		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
 		this.owner = data.get("owner");
     }
+	
+	public HSkullMeta(HSkullMeta meta) {
+		super(meta);
+		this.owner = meta.owner;
+    }
 
 	@Override
 	public String serialize() {

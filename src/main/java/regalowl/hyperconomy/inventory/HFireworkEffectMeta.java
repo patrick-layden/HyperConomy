@@ -24,6 +24,11 @@ public class HFireworkEffectMeta extends HItemMeta {
 		String serializedFireworkEffect = data.get("effect");
 		if (serializedFireworkEffect != null) effect = new HFireworkEffect(serializedFireworkEffect);
     }
+	
+	public HFireworkEffectMeta(HFireworkEffectMeta meta) {
+		super(meta);
+		this.effect = new HFireworkEffect(meta.effect);
+    }
 
 	@Override
 	public String serialize() {

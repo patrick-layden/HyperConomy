@@ -11,6 +11,10 @@ public class HItemFlag {
 	public HItemFlag(String itemFlag) {
 		this.itemFlag = itemFlag;
 	}
+	
+	public HItemFlag(HItemFlag hItemFlag) {
+		this.itemFlag = hItemFlag.itemFlag;
+	}
 
 	public String serialize() {
 		HashMap<String,String> data = new HashMap<String,String>();

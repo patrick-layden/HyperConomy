@@ -81,6 +81,7 @@ import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.HyperEventHandler;
 import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.gui.RemoteGUIServer;
+import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.multiserver.MultiServer;
 import regalowl.hyperconomy.shop.ChestShopHandler;
@@ -118,6 +119,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	private transient HyperConomy_Web hcweb;
 	private transient RemoteGUIServer rgs;
 	private transient TimeEffectsManager tem;
+	private transient HItemStack blankStack;
 	private final int saveInterval = 1200000;
 	private AtomicBoolean enabled = new AtomicBoolean();
 	private AtomicBoolean loaded = new AtomicBoolean();
@@ -130,6 +132,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	public HyperConomy(MineCraftConnector mc) {
 		this.mc = mc;
 		this.consoleEconomy = "default";
+		this.blankStack = new HItemStack(this);
 	}
 	
 	
@@ -427,7 +430,9 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	public LibraryManager getLibraryManager() {
 		return lm;
 	}
-
+	public HItemStack getBlankStack() {
+		return blankStack;
+	}
 
 
 }

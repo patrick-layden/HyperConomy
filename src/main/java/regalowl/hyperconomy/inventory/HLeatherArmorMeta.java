@@ -23,6 +23,11 @@ public class HLeatherArmorMeta extends HItemMeta {
 		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
 		color = new HColor(data.get("color"));
     }
+	
+	public HLeatherArmorMeta(HLeatherArmorMeta meta) {
+		super(meta);
+		this.color = new HColor(meta.color);
+    }
 
 	public String serialize() {
 		HashMap<String,String> data = super.getMap();

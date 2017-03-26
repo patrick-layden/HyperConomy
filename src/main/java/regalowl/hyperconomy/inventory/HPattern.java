@@ -27,6 +27,11 @@ public class HPattern {
 		this.patternType = data.get("patternType");
     }
 	
+	public HPattern(HPattern hp) {
+		this.dyeColor = hp.dyeColor;
+		this.patternType = hp.patternType;
+    }
+	
 	public String getDyeColor() {
 		return dyeColor;
 	}

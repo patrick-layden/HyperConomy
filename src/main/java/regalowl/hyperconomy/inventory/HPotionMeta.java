@@ -28,6 +28,14 @@ public class HPotionMeta extends HItemMeta {
 		}
 		this.potionData = new HPotionData(data.get("potionData"));
     }
+	
+	public HPotionMeta(HPotionMeta meta) {
+		super(meta);
+		for (HPotionEffect pe:meta.potionEffects) {
+			potionEffects.add(new HPotionEffect(pe));
+		}
+		this.potionData = new HPotionData(meta.potionData);
+    }
 
 	public String serialize() {
 		HashMap<String,String> data = super.getMap();

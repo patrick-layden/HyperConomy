@@ -38,6 +38,18 @@ public class HFireworkEffect {
 		hasFlicker = Boolean.parseBoolean(data.get("hasFlicker"));
 		hasTrail = Boolean.parseBoolean(data.get("hasTrail"));
     }
+	
+	public HFireworkEffect(HFireworkEffect fe) {
+		for (HColor c:fe.colors) {
+			this.colors.add(new HColor(c));
+		}
+		for (HColor c:fe.colors) {
+			this.fadeColors.add(new HColor(c));
+		}
+		type = fe.type;
+		hasFlicker = fe.hasFlicker;
+		hasTrail = fe.hasTrail;
+    }
 
 	public String serialize() {
 		ArrayList<String> c = new ArrayList<String>();

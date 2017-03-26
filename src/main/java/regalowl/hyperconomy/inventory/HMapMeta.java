@@ -22,6 +22,11 @@ public class HMapMeta extends HItemMeta {
 		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
 		isScaling = Boolean.parseBoolean(data.get("isScaling"));
     }
+	
+	public HMapMeta(HMapMeta meta) {
+		super(meta);
+		isScaling = meta.isScaling;
+    }
 
 	public String serialize() {
 		HashMap<String,String> data = super.getMap();

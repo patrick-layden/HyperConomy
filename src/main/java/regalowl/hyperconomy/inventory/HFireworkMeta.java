@@ -29,6 +29,14 @@ public class HFireworkMeta extends HItemMeta {
 		}
 		this.power = Integer.parseInt(data.get("power"));
     }
+	
+	public HFireworkMeta(HFireworkMeta meta) {
+		super(meta);
+		for (HFireworkEffect fe:meta.effects) {
+			this.effects.add(new HFireworkEffect(fe));
+		}
+		this.power = meta.power;
+    }
 
 	@Override
 	public String serialize() {

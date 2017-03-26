@@ -75,7 +75,6 @@ import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HItem;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
-import regalowl.hyperconomy.shop.ChestShop;
 
 public class BukkitCommon {
 
@@ -145,18 +144,12 @@ public class BukkitCommon {
 	
 	protected boolean isChestShopChest(HLocation l) {
 		Block b = getBlock(l);
-		if (b == null) {
-			return false;
-		}
-		if (!(b.getState() instanceof Chest)) {
-			return false;
-		}
+		if (b == null) return false;
+		if (!(b.getState() instanceof Chest)) return false;
 		Chest chest = (Chest) b.getState();
 		HLocation sl = getLocation(chest.getLocation());
 		sl.setY(sl.getY() + 1);
-		if (!isChestShopSign(sl)) {
-			return false;
-		}
+		if (!isChestShopSign(sl)) return false;
 		return true;
 	}
 	
@@ -165,8 +158,8 @@ public class BukkitCommon {
 		if (b == null) return false;
 		if (!(b.getState() instanceof Sign)) return false;
 		Sign s = (Sign) b.getState();
-		String line2 = ChatColor.stripColor(s.getLine(1)).trim();
-		if (!(line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]"))) return false;
+		String line1 = ChatColor.stripColor(s.getLine(0)).trim();
+		if (!line1.equalsIgnoreCase("ChestShop")) return false;
 		HLocation sl = new HLocation(l);
 		sl.setY(sl.getY() - 1);
 		Block cb = getBlock(sl);
@@ -209,24 +202,6 @@ public class BukkitCommon {
 		if (isChestShopSign(l)) return true;
 		if (isChestShopSignBlock(l)) return true;
 		return false;
-	}
-
-	protected ChestShop getChestShop(HLocation l) {
-		Block b = getBlock(l);
-		if (b == null) return null;
-		if (isChestShopChest(l)) {
-			return new ChestShop(hc, l);
-		} else if (isChestShopSign(l)) {
-			HLocation cl = new HLocation(l);
-			cl.setY(cl.getY() - 1);
-			return new ChestShop(hc, cl);
-		} else if (isChestShopSignBlock(l)) {
-			HSign s = getAttachedSign(l);
-			HLocation cl = s.getLocation();
-			cl.setY(cl.getY() - 1);
-			return new ChestShop(hc, cl);
-		}
-		return null;
 	}
 
 
@@ -344,9 +319,78 @@ public class BukkitCommon {
 		if (inventory.getInventoryType() == HInventoryType.PLAYER) p.updateInventory();
 	}
 	
+	
+	protected void setItem(HyperPlayer hp, HItemStack item, int slot) {
+		Player p = Bukkit.getPlayer(hp.getName());
+		if (p == null) return;
+		Inventory bukkitInv = p.getInventory();
+		if (item.isBlank()) {
+			bukkitInv.clear(slot);
+		} else {
+			bukkitInv.setItem(slot, getItemStack(item));
+		}
+	}
+	protected void setItem(HLocation location, HItemStack item, int slot) {
+		Location loc = getLocation(location);
+		if (!(loc.getBlock().getState() instanceof Chest)) return;
+		Chest chest = (Chest)loc.getBlock().getState();
+		Inventory bukkitInv = chest.getInventory();
+		if (item.isBlank()) {
+			bukkitInv.clear(slot);
+		} else {
+			bukkitInv.setItem(slot, getItemStack(item));
+		}
+	}
+	
+	
+	protected void setItemQuantity(HLocation location, int amount, int slot) {
+		Location loc = getLocation(location);
+		if (!(loc.getBlock().getState() instanceof Chest)) return;
+		Chest chest = (Chest)loc.getBlock().getState();
+		Inventory bukkitInv = chest.getInventory();
+		if (amount <= 0) {
+			bukkitInv.clear(slot);
+		} else {
+			bukkitInv.getItem(slot).setAmount(amount);
+		}
+	}
+	protected void setItemQuantity(HyperPlayer hp, int amount, int slot) {
+		if (hp == null) return;
+		Player p = Bukkit.getPlayer(hp.getName());
+		Inventory bukkitInv = p.getInventory();
+		if (amount <= 0) {
+			bukkitInv.clear(slot);
+		} else {
+			bukkitInv.getItem(slot).setAmount(amount);
+		}
+	}	
+	
+	
+	
+	protected void setBukkitInventory(Inventory bukkitInventory, HInventory inventory) {
+		if (inventory == null || bukkitInventory == null) return;
+		if (bukkitInventory.getSize()!= inventory.getSize()) return;
+		for (int i = 0; i < inventory.getSize(); i++) {
+			if (inventory.getItem(i).isBlank()) continue;
+			ItemStack is = getItemStack(inventory.getItem(i));
+			if (is == null) {
+				bukkitInventory.clear(i);
+			} else {
+				bukkitInventory.setItem(i, is);
+			}
+		}
+		if (inventory.getInventoryType() == HInventoryType.PLAYER) {
+			if (bukkitInventory.getHolder() instanceof Player) {
+				Player p = (Player)bukkitInventory.getHolder();
+				p.updateInventory();
+			}
+		}
+	}
+	
+	
 	@SuppressWarnings("deprecation")
 	public HItemStack getSerializableItemStack(ItemStack s) {
-		if (s == null) return new HItemStack(hc);
+		if (s == null) return hc.getBlankStack();
 		boolean isBlank = (s.getType() == Material.AIR) ? true:false;
         String material = s.getType().toString();
         short durability = s.getDurability();

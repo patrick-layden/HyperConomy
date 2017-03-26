@@ -21,6 +21,20 @@ public class HInventory {
 		this.items.addAll(items);
 		this.inventoryType = inventoryType;
 	}
+	/***
+	 * Provides a deep clone of the given inventory
+	 * @param inv
+	 */
+	public HInventory(HInventory inv) {
+		this.hc = inv.hc;
+		for (HItemStack stack:inv.items) {
+			this.items.add(new HItemStack(stack));
+		}
+		this.heldSlot = inv.heldSlot;
+		this.inventoryType = inv.inventoryType;
+		this.owner = inv.owner;
+		this.location = new HLocation(inv.location);
+	}
 	
 	public ArrayList<HItemStack> getItems() {
 		return items;
@@ -41,6 +55,10 @@ public class HInventory {
 	public HItemStack getItem(int slot) {
 		if (slot > items.size() - 1) return null;
 		return items.get(slot);
+	}
+	
+	public void addItem(HItemStack is) {
+		items.add(is);
 	}
 	
 	public HInventoryType getInventoryType() {
@@ -64,15 +82,35 @@ public class HInventory {
 	public HLocation getLocation() {
 		return location;
 	}
+
 	
-	public void clearSlot(int slot) {
-		items.set(slot, new HItemStack(hc));
+	public void setQuantity(int slot, int quantity, boolean update) {
+		if (quantity <= 0) quantity = 0;
+		if (quantity == 0) {
+			items.set(slot, hc.getBlankStack());
+		} else {
+			items.get(slot).setAmount(quantity);
+		}
+		if (update) {
+			if (inventoryType == HInventoryType.PLAYER) {
+				hc.getMC().setItemQuantity(getHyperPlayer(), quantity, slot);
+			} else if (inventoryType == HInventoryType.CHEST) {
+				hc.getMC().setItemQuantity(location, quantity, slot);
+			}
+		}
 	}
-
-	public void setItem(int slot, HItemStack item) {
+	public void setItem(int slot, HItemStack item, boolean update) {
 		items.set(slot, item);
+		if (update) {
+			if (inventoryType == HInventoryType.PLAYER) {
+				hc.getMC().setItem(getHyperPlayer(), item, slot);
+			} else if (inventoryType == HInventoryType.CHEST) {
+				hc.getMC().setItem(location, item, slot);
+			}
+		}
 	}
 
+	
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
@@ -80,24 +118,60 @@ public class HInventory {
 	public void setLocation(HLocation location) {
 		this.location = location;
 	}
+
 	
 	public void updateInventory() {
 		hc.getMC().setInventory(this);
 	}
 	
+	public void updateLore(int slot) {
+		HItemStack is = getItem(slot);
+		if (is.isBlank() || is.getItemMeta() == null) return;
+		hc.getMC().setItemLore(this, is.getItemMeta().getLore(), slot);
+	}
+	
 	public void add(int addAmount, HItemStack addStack) {
 		int maxStackSize = addStack.getMaxStackSize();
+		if (inventoryType == HInventoryType.PLAYER) {
+			HItemStack heldStack = getHeldItem();
+			if (heldStack.isBlank() || addStack.isSimilarTo(heldStack)) {
+				if (heldStack.isBlank()) {
+					HItemStack newStack = new HItemStack(addStack);
+					if (addAmount > maxStackSize) {
+						newStack.setAmount(maxStackSize);
+						setItem(heldSlot, newStack, true);
+						addAmount -= maxStackSize;
+					} else {
+						newStack.setAmount(addAmount);
+						setItem(heldSlot, newStack, true);
+						addAmount = 0;
+					}
+				} else if (addStack.isSimilarTo(heldStack)) {
+					int spaceInStack = maxStackSize - heldStack.getAmount();
+					if (spaceInStack > 0) {
+						if (spaceInStack < addAmount) {
+							addAmount -= spaceInStack;
+							setQuantity(heldSlot, maxStackSize, true);
+						} else {
+							setQuantity(heldSlot, addAmount + heldStack.getAmount(), true);
+							addAmount = 0;
+						}
+					}
+				}
+				if (addAmount <= 0) return;
+			}
+		}
 		for (int slot = 0; slot < getSize(); slot++) {
 			HItemStack currentItem = getItem(slot);
-			if (getItem(slot).isBlank()) {
-				HItemStack newStack = new HItemStack(addStack.serialize());
+			if (currentItem.isBlank()) {
+				HItemStack newStack = new HItemStack(addStack);
 				if (addAmount > maxStackSize) {
 					newStack.setAmount(maxStackSize);
-					setItem(slot, newStack);
+					setItem(slot, newStack, true);
 					addAmount -= maxStackSize;
 				} else {
 					newStack.setAmount(addAmount);
-					setItem(slot, newStack);
+					setItem(slot, newStack, true);
 					addAmount = 0;
 				}
 			} else if (addStack.isSimilarTo(currentItem)) {
@@ -105,16 +179,16 @@ public class HInventory {
 				if (spaceInStack == 0) continue;
 				if (spaceInStack < addAmount) {
 					addAmount -= spaceInStack;
-					currentItem.setAmount(maxStackSize);
+					setQuantity(slot, maxStackSize, true);
 				} else {
-					currentItem.setAmount(addAmount + currentItem.getAmount());
+					setQuantity(slot, addAmount + currentItem.getAmount(), true);
 					addAmount = 0;
 				}
 			}
 			if (addAmount <= 0) break;
 		}
 		if (addAmount != 0) hc.gSDL().getErrorWriter().writeError("HInventory add() failure; " + addAmount + " remaining.");
-		updateInventory();
+		//updateInventory();
 	}
 	
 	
@@ -125,11 +199,11 @@ public class HInventory {
 			if (removeStack.isSimilarTo(heldStack)) {
 				if (removeAmount >= heldStack.getAmount()) {
 					actuallyRemoved += heldStack.getTrueAmount();
-					clearSlot(heldSlot);
+					setQuantity(heldSlot, 0, true);
 					removeAmount -= heldStack.getAmount();
 				} else {
 					actuallyRemoved += removeAmount * heldStack.getDurabilityPercent();
-					heldStack.setAmount(heldStack.getAmount() - removeAmount);
+					setQuantity(heldSlot, heldStack.getAmount() - removeAmount, true);
 					removeAmount = 0;
 				}
 			}
@@ -140,11 +214,11 @@ public class HInventory {
 			if (removeStack.isSimilarTo(currentItem)) {
 				if (removeAmount >= currentItem.getAmount()) {
 					actuallyRemoved += currentItem.getTrueAmount();
-					clearSlot(slot);
+					setQuantity(slot, 0, true);
 					removeAmount -= currentItem.getAmount();
 				} else {
 					actuallyRemoved += removeAmount * currentItem.getDurabilityPercent();
-					currentItem.setAmount(currentItem.getAmount() - removeAmount);
+					setQuantity(slot, currentItem.getAmount() - removeAmount, true);
 					removeAmount = 0;
 				}
 			}
@@ -152,7 +226,7 @@ public class HInventory {
 			if (slot >= getSize()) break;
 		}
 		if (removeAmount != 0) hc.gSDL().getErrorWriter().writeError("HInventory remove() failure.  Items not successfully removed; amount = '" + removeAmount + "'");
-		updateInventory();
+		//updateInventory();
 		return actuallyRemoved;
 	}
 
@@ -208,31 +282,5 @@ public class HInventory {
 	}
 	
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + heldSlot;
-		result = prime * result + ((items == null) ? 0 : items.hashCode());
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		HInventory other = (HInventory) obj;
-		if (heldSlot != other.heldSlot)
-			return false;
-		if (items == null) {
-			if (other.items != null)
-				return false;
-		} else if (!items.equals(other.items))
-			return false;
-		return true;
-	}
 }

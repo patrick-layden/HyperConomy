@@ -22,6 +22,11 @@ public class HSpawnEggMeta extends HItemMeta {
 		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
 		this.entityType = data.get("entityType");
     }
+	
+	public HSpawnEggMeta(HSpawnEggMeta meta) {
+		super(meta);
+		this.entityType = meta.entityType;
+    }
 
 	@Override
 	public String serialize() {

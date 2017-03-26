@@ -29,11 +29,19 @@ public class HItemMeta {
         this.repairCost = repairCost;
     }
 	
+	/**
+	 * Provides deep clone of given HItemMeta
+	 * @param meta
+	 */
 	public HItemMeta(HItemMeta meta) {
         this.displayName = meta.displayName;
-        this.lore = meta.lore;
-        this.enchantments = meta.enchantments;
-        this.itemFlags = meta.itemFlags;
+        this.lore = new ArrayList<String>(meta.lore);
+        for (HEnchantment he:meta.enchantments) {
+        	this.enchantments.add(new HEnchantment(he));
+        }
+        for (HItemFlag hif:meta.itemFlags) {
+        	this.itemFlags.add(new HItemFlag(hif));
+        }
         this.unbreakable = meta.unbreakable;
         this.repairCost = meta.repairCost;
     }
@@ -125,6 +133,14 @@ public class HItemMeta {
 
 	public List<String> getLore() {
 		return lore;
+	}
+	
+	public void setLore(ArrayList<String> lore) {
+		this.lore = lore;
+	}
+	
+	public void addLore(String string) {
+		lore.add(string);
 	}
 	
 	public List<HEnchantment> getEnchantments() {

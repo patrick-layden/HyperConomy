@@ -7,6 +7,7 @@ import java.util.HashMap;
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
+import regalowl.hyperconomy.tradeobject.StackComparisonData;
  
 
 public class HItemStack {
@@ -40,8 +41,7 @@ public class HItemStack {
     	this.maxDurability = maxDurability;
     	this.isBlank = false;
     }
-    
-    
+   
 	public HItemStack(String serialized) {
 		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
     	this.itemMeta = HItemMetaFactory.generate(HItemMetaType.fromString(data.get("metaType")), data.get("itemMetaData"));
@@ -53,6 +53,7 @@ public class HItemStack {
     	this.maxDurability = Integer.parseInt(data.get("maxDurability"));
     	this.isBlank = Boolean.parseBoolean(data.get("isBlank"));
     }
+	
 	
 	public String serialize() {
 		HashMap<String,String> data = new HashMap<String,String>();
@@ -68,6 +69,21 @@ public class HItemStack {
 		return CommonFunctions.implodeMap(data);
 	}
 
+	/**
+	 * Makes a deep clone of the given HItemStack
+	 * @param serialized
+	 */
+	public HItemStack(HItemStack stack) {
+    	this.itemMeta = HItemMetaFactory.generate(stack.itemMeta);
+    	this.material = stack.material;
+    	this.durability = stack.durability;
+    	this.data = stack.data;
+    	this.amount = stack.amount;
+    	this.maxStackSize = stack.maxStackSize;
+    	this.maxDurability = stack.maxDurability;
+    	this.isBlank = stack.isBlank;
+    }
+	
 
 	public ArrayList<String> displayInfo(HyperPlayer p, String color1, String color2) {
 		ArrayList<String> info = new ArrayList<String>();
@@ -137,8 +153,8 @@ public class HItemStack {
 	public double getDurabilityPercent() {return (isDurable()) ? (1.0 - ((double)durability / (double)maxDurability)) : 1.0;}
 	public boolean isDurable() {return (maxDurability > 0) ? true : false;}
 	public boolean isDamaged() {return (isDurable() && durability > 0) ? true : false;}
-	public int getComparisonData() {return (isDamaged()) ? 0:data;}
-	public int getComparisonDurability() {return (isDamaged()) ? 0:durability;}
+	public byte getComparisonData() {return (isDamaged()) ? 0:data;}
+	public short getComparisonDurability() {return (isDamaged()) ? 0:durability;}
 	
 	public void setBlank() {
 		this.isBlank = true;
@@ -206,6 +222,18 @@ public class HItemStack {
 		result = prime * result + maxDurability;
 		result = prime * result + maxStackSize;
 		return result;
+	}
+	
+	public StackComparisonData getStackComparisonData() {
+		StackComparisonData data = new StackComparisonData();
+		data.data = getComparisonData();
+		data.durability = getComparisonDurability();
+		data.material = material;
+		data.itemMeta = itemMeta;
+		data.maxStackSize = maxStackSize;
+		data.maxDurability = maxDurability;
+		data.isBlank = isBlank;
+		return data;
 	}
 
 	@Override

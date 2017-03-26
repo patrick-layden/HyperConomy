@@ -6,8 +6,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import regalowl.simpledatalib.CommonFunctions;
@@ -24,6 +22,7 @@ import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.ComponentTradeItem;
 import regalowl.hyperconomy.tradeobject.CompositeTradeItem;
+import regalowl.hyperconomy.tradeobject.StackComparisonData;
 import regalowl.hyperconomy.tradeobject.TradeEnchant;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObjectType;
@@ -43,8 +42,9 @@ public class HyperEconomy implements Serializable {
 	private String accountData;
 	private String defaultAccount;
 	private boolean defaultAccountIsBank;
-	private ConcurrentHashMap<String, TradeObject> tradeObjectsNameMap = new ConcurrentHashMap<String, TradeObject>();
-	private CopyOnWriteArrayList<TradeObject> tradeObjects = new CopyOnWriteArrayList<TradeObject>();
+	private HashMap<String, TradeObject> tradeObjectsNameMap = new HashMap<String, TradeObject>();
+	private HashMap<StackComparisonData, TradeObject> tradeObjectsStackMap = new HashMap<StackComparisonData, TradeObject>();
+	private ArrayList<TradeObject> tradeObjects = new ArrayList<TradeObject>();
 	private HashMap<String,String> composites = new HashMap<String,String>();
 	private boolean useComposites;
 	private String economyName;
@@ -74,13 +74,14 @@ public class HyperEconomy implements Serializable {
 		loadData(sr);
 	}
 	*/
-	private boolean loadData(SQLRead sr) {
+	private synchronized boolean loadData(SQLRead sr) {
 		composites.clear();
 		QueryResult result = sr.select("SELECT NAME, COMPONENTS FROM hyperconomy_objects WHERE COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
 		while (result.next()) {
 			composites.put(result.getString("NAME").toLowerCase(), result.getString("COMPONENTS"));
 		}
 		tradeObjectsNameMap.clear();
+		tradeObjectsStackMap.clear();
 		result = sr.select("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economyName+"'");
 		while (result.next()) {
 			if (useComposites && composites.containsKey(result.getString("NAME").toLowerCase())) {continue;}
@@ -115,34 +116,36 @@ public class HyperEconomy implements Serializable {
 		return true;
 	}
 	
-	public void addObject(TradeObject to) {
+	public synchronized void addObject(TradeObject to) {
 		if (to == null) return;
 		tradeObjectsNameMap.put(to.getName().toLowerCase(), to);
 		tradeObjectsNameMap.put(to.getDisplayName().toLowerCase(), to);
 		for (String alias:to.getAliases()) {
 			tradeObjectsNameMap.put(alias.toLowerCase(), to);
 		}
+		if (to.getType() == TradeObjectType.ITEM) tradeObjectsStackMap.put(to.getItem().getStackComparisonData(), to);
 		tradeObjects.add(to);
 	}
 	
-	public void removeObject(TradeObject to) {
+	public synchronized void removeObject(TradeObject to) {
 		if (to == null) return;
 		tradeObjectsNameMap.remove(to.getName().toLowerCase());
 		tradeObjectsNameMap.remove(to.getDisplayName().toLowerCase());
 		for (String alias:to.getAliases()) {
 			tradeObjectsNameMap.remove(alias.toLowerCase());
 		}
+		if (to.getType() == TradeObjectType.ITEM) tradeObjectsStackMap.remove(to.getItem().getStackComparisonData());
 		tradeObjects.remove(to);
 	}
 	
-	public void removeObject(String name) {
+	public synchronized void removeObject(String name) {
 		TradeObject to = getTradeObject(name);
 		if (to == null) return;
 		removeObject(to);
 	}
 
 	
-	private boolean loadComposites(SQLRead sr) {
+	private synchronized boolean loadComposites(SQLRead sr) {
 		boolean loaded = false;
 		int counter = 0;
 		QueryResult result = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES, CATEGORIES, TYPE, COMPONENTS, DATA, VERSION FROM hyperconomy_objects WHERE "
@@ -175,7 +178,7 @@ public class HyperEconomy implements Serializable {
 	}
 	
 	
-	private void repairComposites(SQLRead sr) {
+	private synchronized void repairComposites(SQLRead sr) {
 		if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
 		QueryResult result = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES, COMPONENTS FROM hyperconomy_objects WHERE COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
 		while (result.next()) {//iterate through all composite objects
@@ -210,7 +213,7 @@ public class HyperEconomy implements Serializable {
 	
 	
 	
-	private boolean componentsLoaded(String name) {
+	private synchronized boolean componentsLoaded(String name) {
 		HashMap<String,String> tempComponents = CommonFunctions.explodeMap(composites.get(name.toLowerCase()));
 		for (Map.Entry<String,String> entry : tempComponents.entrySet()) {
 		    String oname = entry.getKey();
@@ -227,7 +230,7 @@ public class HyperEconomy implements Serializable {
 	
 
 	
-	public void delete() {
+	public synchronized void delete() {
 		for (Shop shop:hc.getDataManager().getHyperShopManager().getShops()) {
 			if (shop.getEconomy().equalsIgnoreCase(economyName)) {
 				shop.setEconomy("default");
@@ -241,7 +244,7 @@ public class HyperEconomy implements Serializable {
 		hc.getDataManager().deleteEconomy(economyName);
 	}
 
-	public HyperAccount getDefaultAccount() {
+	public synchronized HyperAccount getDefaultAccount() {
 		if (defaultAccountIsBank) {
 			return hc.getHyperBankManager().getHyperBank(defaultAccount);
 		} else {
@@ -249,7 +252,7 @@ public class HyperEconomy implements Serializable {
 		}
 	}
 	
-	public void setDefaultAccount(HyperAccount account) {
+	public synchronized void setDefaultAccount(HyperAccount account) {
 		if (account == null) {return;}
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
@@ -265,16 +268,16 @@ public class HyperEconomy implements Serializable {
 		this.defaultAccount = account.getName();
 	}
 	
-	public String getName() {
+	public synchronized String getName() {
 		return economyName;
 	}
 	
 
 
-	public TradeObject getTradeObject(HEnchantment enchant) {
+	public synchronized TradeObject getTradeObject(HEnchantment enchant) {
 		return getTradeObject(enchant, null);
 	}
-	public TradeObject getTradeObject(HEnchantment enchant, Shop s) {
+	public synchronized TradeObject getTradeObject(HEnchantment enchant, Shop s) {
 		if (enchant == null) {return null;}
 		if (s != null && s instanceof PlayerShop) {
 			for (TradeObject ho:tradeObjects) {
@@ -292,26 +295,19 @@ public class HyperEconomy implements Serializable {
 	}
 	
 	
-	public TradeObject getTradeObject(HItemStack stack) {
+	public synchronized TradeObject getTradeObject(HItemStack stack) {
 		return getTradeObject(stack, null);
 	}
-	public TradeObject getTradeObject(HItemStack stack, Shop s) {
+	public synchronized TradeObject getTradeObject(HItemStack stack, Shop s) {
 		if (stack == null) {return null;}
+		TradeObject ho = tradeObjectsStackMap.get(stack.getStackComparisonData());
+		if (ho == null) return null;
 		if (s != null && s instanceof PlayerShop) {
-			for (TradeObject ho:tradeObjects) {
-				if (ho.getType() != TradeObjectType.ITEM) {continue;}
-				if (!ho.matchesItemStack(stack)) {continue;}
-				return (TradeObject) ((PlayerShop) s).getPlayerShopObject(ho);
-			}
-		} else {
-			for (TradeObject ho:tradeObjects) {
-				if (ho.getType() != TradeObjectType.ITEM) {continue;}
-				if (ho.matchesItemStack(stack)) {return ho;}
-			}
+			return (TradeObject) ((PlayerShop) s).getPlayerShopObject(ho);
 		}
-		return null;
+		return ho;
 	}
-	public TradeObject getTradeObject(String name, Shop s) {
+	public synchronized TradeObject getTradeObject(String name, Shop s) {
 		if (name == null) {return null;}
 		String sname = name.toLowerCase();
 		if (s != null && s instanceof PlayerShop) {
@@ -330,18 +326,18 @@ public class HyperEconomy implements Serializable {
 			}
 		}
 	}
-	public TradeObject getTradeObject(String name) {
+	public synchronized TradeObject getTradeObject(String name) {
 		return getTradeObject(name, null);
 	}
 	
-	public ArrayList<TradeObject> getCategory(String category) {
+	public synchronized ArrayList<TradeObject> getCategory(String category) {
 		ArrayList<TradeObject> objs = new ArrayList<TradeObject>();
 		for (TradeObject t:tradeObjects) {
 			if (t.inCategory(category)) objs.add(t);
 		}
 		return objs;
 	}
-	public ArrayList<TradeObject> getCategory(String category, Shop s) {
+	public synchronized ArrayList<TradeObject> getCategory(String category, Shop s) {
 		ArrayList<TradeObject> tos = new ArrayList<TradeObject>();
 		for (TradeObject to:getCategory(category)) {
 			tos.add(getTradeObject(to.getName(), s));
@@ -349,7 +345,7 @@ public class HyperEconomy implements Serializable {
 		return tos;
 	}
 
-	public ArrayList<TradeObject> getTradeObjects(Shop s) {
+	public synchronized ArrayList<TradeObject> getTradeObjects(Shop s) {
 		ArrayList<TradeObject> hos = new ArrayList<TradeObject>();
 		for (TradeObject ho:tradeObjects) {
 			hos.add(getTradeObject(ho.getName(), s));
@@ -358,13 +354,13 @@ public class HyperEconomy implements Serializable {
 	}
 	
 	
-	public ArrayList<TradeObject> getTradeObjects() {
+	public synchronized ArrayList<TradeObject> getTradeObjects() {
 		return new ArrayList<TradeObject>(tradeObjects);
 	}
 
 
 
-	public void clearData() {
+	public synchronized void clearData() {
 		tradeObjectsNameMap.clear();
 		tradeObjects.clear();
 	}
@@ -375,7 +371,7 @@ public class HyperEconomy implements Serializable {
 	
 	
 	
-	public ArrayList<String> getNames() {
+	public synchronized ArrayList<String> getNames() {
 		ArrayList<String> names = new ArrayList<String>();
 		for (TradeObject ho:tradeObjects) {
 			names.add(ho.getName());
@@ -385,7 +381,7 @@ public class HyperEconomy implements Serializable {
 	
 
 	
-	public String getEnchantNameWithoutLevel(String bukkitName) {
+	public synchronized String getEnchantNameWithoutLevel(String bukkitName) {
 		for (TradeObject ho:tradeObjectsNameMap.values()) {
 			if (ho.getType() == TradeObjectType.ENCHANTMENT) {
 				if (ho.getEnchantmentName().equalsIgnoreCase(bukkitName)) {
@@ -397,16 +393,16 @@ public class HyperEconomy implements Serializable {
 		return null;
 	}
 	
-	public boolean objectTest(String name) {
+	public synchronized boolean objectTest(String name) {
 		if (!tradeObjectsNameMap.containsKey(name.toLowerCase())) return false;
 		return true;
 	}
-	public boolean itemTest(String name) {
+	public synchronized boolean itemTest(String name) {
 		if (!objectTest(name)) return false;
 		if (tradeObjectsNameMap.get(name.toLowerCase()).getType() != TradeObjectType.ITEM) return false;
 		return true;
 	}
-	public boolean enchantTest(String name) {
+	public synchronized boolean enchantTest(String name) {
 		if (!objectTest(name)) return false;
 		if (tradeObjectsNameMap.get(name.toLowerCase()).getType() != TradeObjectType.ENCHANTMENT) return false;
 		return true;
@@ -416,7 +412,7 @@ public class HyperEconomy implements Serializable {
 
 	
 	
-	public ArrayList<String> loadNewItems() {
+	public synchronized ArrayList<String> loadNewItems() {
 		ArrayList<String> objectsAdded = new ArrayList<String>();
 		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
 		FileTools ft = hc.getFileTools();
@@ -446,7 +442,7 @@ public class HyperEconomy implements Serializable {
 	}
 	
 	
-	public void updateNamesFromYml() {
+	public synchronized void updateNamesFromYml() {
 		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
 		FileTools ft = hc.getFileTools();
 		if (!ft.fileExists(defaultObjectsPath)) {
@@ -479,19 +475,19 @@ public class HyperEconomy implements Serializable {
 		ft.deleteFile(defaultObjectsPath);
 	}
 
-	public String getXpName() {
+	public synchronized String getXpName() {
 		return xpName;
 	}
 
-	public boolean useComposites() {
+	public synchronized boolean useComposites() {
 		return useComposites;
 	}
 
-	public boolean successfulLoad() {
+	public synchronized boolean successfulLoad() {
 		return successfulLoad;
 	}
 	
-	public void setHyperConomy(HyperConomy hc) {
+	public synchronized void setHyperConomy(HyperConomy hc) {
 		this.hc = hc;
 		for (TradeObject to:tradeObjects) {
 			to.setHyperConomy(hc);
@@ -499,11 +495,11 @@ public class HyperEconomy implements Serializable {
 		this.successfulLoad = true;
 	}
 	
-	public String getAccountData() {
+	public synchronized String getAccountData() {
 		return accountData;
 	}
 	
-	public void save() {
+	public synchronized void save() {
 		//remove from economies table
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		conditions.put("NAME", economyName);
@@ -526,7 +522,7 @@ public class HyperEconomy implements Serializable {
 		}
 	}
 	@Override
-	public int hashCode() {
+	public synchronized int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
@@ -547,7 +543,7 @@ public class HyperEconomy implements Serializable {
 		return result;
 	}
 	@Override
-	public boolean equals(Object obj) {
+	public synchronized boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -576,11 +572,6 @@ public class HyperEconomy implements Serializable {
 			if (other.tradeObjects != null)
 				return false;
 		} else if (!tradeObjects.equals(other.tradeObjects))
-			return false;
-		if (tradeObjectsNameMap == null) {
-			if (other.tradeObjectsNameMap != null)
-				return false;
-		} else if (!tradeObjectsNameMap.equals(other.tradeObjectsNameMap))
 			return false;
 		if (useComposites != other.useComposites)
 			return false;

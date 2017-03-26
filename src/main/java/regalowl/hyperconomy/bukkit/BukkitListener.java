@@ -3,9 +3,12 @@ package regalowl.hyperconomy.bukkit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -22,6 +25,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -35,9 +40,12 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.display.ItemDisplay;
 import regalowl.hyperconomy.event.minecraft.ChestShopClickEvent;
+import regalowl.hyperconomy.event.minecraft.ChestShopCloseEvent;
+import regalowl.hyperconomy.event.minecraft.ChestShopOpenEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockBreakEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
@@ -49,12 +57,12 @@ import regalowl.hyperconomy.event.minecraft.HPlayerItemHeldEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerJoinEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerQuitEvent;
 import regalowl.hyperconomy.event.minecraft.HSignChangeEvent;
-import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HMob;
 import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.shop.ChestShop;
+import regalowl.hyperconomy.shop.ChestShopType;
 
 public class BukkitListener implements Listener {
 
@@ -192,10 +200,7 @@ public class BukkitListener implements Listener {
 	
 	
 	
-	
-	/**
-	 * Fires events for chest shop inventory clicks.
-	 */
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChestShopInventoryClickEvent(InventoryClickEvent icevent) {
 		if (icevent.isCancelled()) {return;}
@@ -203,17 +208,15 @@ public class BukkitListener implements Listener {
 		if (!(he instanceof Player)) return;
 		Player p = (Player)he;
 		InventoryHolder ih = icevent.getView().getTopInventory().getHolder();
-		if (!(ih instanceof Chest)) return;
-		Chest c = (Chest)ih;
-		if (!bc.getBukkitCommon().isChestShopChest(bc.getBukkitCommon().getLocation(c.getLocation()))) return;
-		ChestShop cs = new ChestShop(hc, bc.getBukkitCommon().getLocation(c.getBlock().getLocation()));
+		if (!(ih instanceof Player)) return;
 		HyperPlayer clicker = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
-		int slot = icevent.getRawSlot();
-		HItemStack clickedStack = bc.getBukkitCommon().getSerializableItemStack(icevent.getCurrentItem());
-		ChestShopClickEvent event = new ChestShopClickEvent(clicker, cs, slot, clickedStack);
+		ChestShop openShop = hc.getChestShop().getOpenShop(clicker);
+		if (openShop == null) return;
+		ChestShopClickEvent event = new ChestShopClickEvent(clicker, openShop, icevent.getRawSlot());
 		if (icevent.isShiftClick()) {
 			event.setShiftClick();
-		} else if (icevent.isLeftClick()) {
+		} 
+		if (icevent.isLeftClick()) {
 			event.setLeftClick();
 		} else if (icevent.isRightClick()) {
 			event.setRightClick();
@@ -221,6 +224,76 @@ public class BukkitListener implements Listener {
 		hc.getHyperEventHandler().fireEvent(event);
 		if (event.isCancelled()) icevent.setCancelled(true);
 	}
+	
+	
+	
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onChestShopInventoryOpenEvent(InventoryOpenEvent ioevent) {
+		if (ioevent.isCancelled()) {return;}
+		HumanEntity he = ioevent.getPlayer();
+		if (!(he instanceof Player)) return;
+		Player p = (Player)he;
+		InventoryHolder ih = ioevent.getView().getTopInventory().getHolder();
+		if (!(ih instanceof Chest)) return;
+		Chest c = (Chest)ih;
+		HLocation chestLoc = bc.getBukkitCommon().getLocation(c.getLocation());
+		ChestShop cs = hc.getChestShop().getChestShop(chestLoc);
+		
+		//add old format chest shops
+		if (cs == null) {
+			BukkitCommon common = bc.getBukkitCommon();
+			//if (!bc.getBukkitCommon().isChestShopChest(chestLoc)) return;
+			Block b = common.getBlock(chestLoc);
+			if (b == null) return;
+			if (!(b.getState() instanceof Chest)) return;
+			Chest chest = (Chest) b.getState();
+			HLocation sl = common.getLocation(chest.getLocation());
+			sl.setY(sl.getY() + 1);
+			Block sb = common.getBlock(sl);
+			if (sb == null) return;
+			if (!(sb.getState() instanceof Sign)) return;
+			Sign s = (Sign) sb.getState();
+			
+			String line1 = ChatColor.stripColor(s.getLine(0)).trim();
+			if (!hc.enabled() && line1.equalsIgnoreCase("ChestShop")) {
+				ioevent.setCancelled(true);
+				return;
+			}
+			String line2 = ChatColor.stripColor(s.getLine(1)).trim();
+			
+			if (!line2.equalsIgnoreCase("[Trade]") && !line2.equalsIgnoreCase("[Buy]") && !line2.equalsIgnoreCase("[Sell]")) return;
+			String line34 = hc.getMC().removeColor(s.getLine(2)).trim() + hc.getMC().removeColor(s.getLine(3)).trim();
+			if (!hc.getDataManager().accountExists(line34)) return;
+			HyperAccount owner = hc.getDataManager().getAccount(line34);
+			s.setLine(1, "");
+			s.setLine(2, "");
+			s.setLine(3, "");
+			s.update();
+			cs = hc.getChestShop().addNewChestShop(chestLoc, owner);
+		}
+
+		
+		ChestShopOpenEvent event = new ChestShopOpenEvent(hc.getHyperPlayerManager().getHyperPlayer(p.getName()), cs);
+		hc.getHyperEventHandler().fireEvent(event);
+		if (event.isCancelled()) ioevent.setCancelled(true);	
+	}
+	
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onChestShopInventoryCloseEvent(InventoryCloseEvent icevent) {
+		HumanEntity he = icevent.getPlayer();
+		if (!(he instanceof Player)) return;
+		Player p = (Player)he;
+		InventoryHolder ih = icevent.getView().getTopInventory().getHolder();
+		if (!(ih instanceof Player)) return;
+		HyperPlayer closer = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
+		ChestShop cs = hc.getChestShop().getOpenShop(closer);
+		if (cs == null || cs.updateMenuLock()) return;
+		ChestShopCloseEvent event = new ChestShopCloseEvent(closer, cs);
+		hc.getHyperEventHandler().fireEvent(event);
+	}
+	
 	
 	
 	@EventHandler(priority = EventPriority.MONITOR)

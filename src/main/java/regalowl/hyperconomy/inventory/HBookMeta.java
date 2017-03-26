@@ -29,6 +29,13 @@ public class HBookMeta extends HItemMeta {
 		this.title = data.get("title");
     }
 	
+	public HBookMeta(HBookMeta meta) {
+		super(meta);
+		this.author = meta.author;
+		this.pages = new ArrayList<String>(meta.pages);
+		this.title = meta.title;
+    }
+	
 	@Override
 	public String serialize() {
 		HashMap<String,String> data = super.getMap();

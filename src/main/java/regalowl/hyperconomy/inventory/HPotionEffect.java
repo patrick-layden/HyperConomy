@@ -28,6 +28,13 @@ public class HPotionEffect {
 		this.duration = Integer.parseInt(data.get("duration"));
 		this.isAmbient = Boolean.parseBoolean(data.get("isAmbient"));
     }
+	
+	public HPotionEffect(HPotionEffect pe) {
+		this.potionEffectType = pe.potionEffectType;
+		this.amplifier = pe.amplifier;
+		this.duration = pe.duration;
+		this.isAmbient = pe.isAmbient;
+    }
 
 	public String serialize() {
 		HashMap<String,String> data = new HashMap<String,String>();

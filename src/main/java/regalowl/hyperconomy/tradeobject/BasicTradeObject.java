@@ -29,6 +29,7 @@ public class BasicTradeObject implements TradeObject {
 	
 	protected transient HyperConomy hc;
 	protected transient SQLWrite sw;
+	protected transient HItemStack itemStack;
 	
 	private static final long serialVersionUID = 3220675400415233555L;
 	protected String name;
@@ -715,7 +716,8 @@ public class BasicTradeObject implements TradeObject {
 	//ITEM METHODS
 	@Override
 	public HItemStack getItem() {
-		return new HItemStack(objectData);
+		if (itemStack == null) itemStack = new HItemStack(objectData);
+		return new HItemStack(itemStack);
 	}
 	@Override
 	public HItemStack getItemStack(int amount) {

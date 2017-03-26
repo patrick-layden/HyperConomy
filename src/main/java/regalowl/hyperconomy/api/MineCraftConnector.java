@@ -2,6 +2,7 @@ package regalowl.hyperconomy.api;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -15,7 +16,6 @@ import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HItem;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
-import regalowl.hyperconomy.shop.ChestShop;
 
 public interface MineCraftConnector {
 	
@@ -70,11 +70,17 @@ public interface MineCraftConnector {
 	public HItemStack getItem(HyperPlayer hp, int slot);
 	public int getHeldItemSlot(HyperPlayer hp);
 	public HInventory getInventory(HyperPlayer hp);
-	public void setItem(HyperPlayer hp, HItemStack item, int slot);
-	
+	public void setItem(HyperPlayer player, HItemStack item, int slot);
+	public void setItem(HLocation location, HItemStack item, int slot);
+	public void setItemQuantity(HLocation location, int amount, int slot);
+	public void setItemQuantity(HyperPlayer hp, int amount, int slot);
+	public void setItemLore(HInventory inventory, List<String> lore, int slot);
+	public String getMinecraftItemName(HItemStack stack);
 	
 	public HInventory getChestInventory(HLocation l);
 	public void setInventory(HInventory inventory);
+	public void openInventory(HInventory inventory, HyperPlayer player, String name);
+	public void closeActiveInventory(HyperPlayer p);
 	public boolean conflictsWith(HEnchantment e1, HEnchantment e2);
 	public boolean canEnchantItem(HItemStack item);
 	
@@ -100,7 +106,7 @@ public interface MineCraftConnector {
 	public boolean isChestShopSignBlock(HLocation l);
 	public boolean isChestShopChest(HLocation l);
 	public boolean isPartOfChestShop(HLocation l);
-	public ChestShop getChestShop(HLocation location);
+	//public ChestShop getChestShop(HLocation location);
 	public HSign getSign(HLocation location);
 	public void setSign(HSign sign);
 	public HBlock getAttachedBlock(HSign sign);

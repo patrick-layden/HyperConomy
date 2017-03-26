@@ -27,6 +27,14 @@ public class HBannerMeta extends HItemMeta {
 		this.baseColor = data.get("baseColor");
     }
 	
+	public HBannerMeta(HBannerMeta meta) {
+		super(meta);
+		for (HPattern hp:meta.patterns) {
+			patterns.add(new HPattern(hp));
+		}
+		this.baseColor = meta.baseColor;
+    }
+	
 	@Override
 	public String serialize() {
 		HashMap<String,String> data = super.getMap();

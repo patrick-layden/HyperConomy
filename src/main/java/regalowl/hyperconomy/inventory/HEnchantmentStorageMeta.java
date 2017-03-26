@@ -10,9 +10,11 @@ public class HEnchantmentStorageMeta extends HItemMeta {
 	public HEnchantmentStorageMeta(String displayName, ArrayList<String> lore, ArrayList<HItemFlag> itemFlags, boolean unbreakable, int repairCost, ArrayList<HEnchantment> enchantments) {
 		super(displayName, lore, enchantments, itemFlags, unbreakable, repairCost);
 	}
+	
 	public HEnchantmentStorageMeta(HItemMeta meta) {
-		super(meta.displayName, meta.lore, meta.enchantments, meta.itemFlags, meta.unbreakable, meta.repairCost);
+		super(meta);
 	}
+	
 	public HEnchantmentStorageMeta(String serialized) {
 		super(serialized);
     }

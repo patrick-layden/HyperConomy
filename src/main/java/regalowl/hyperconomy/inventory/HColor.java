@@ -32,6 +32,12 @@ public class HColor {
 		this.blue = Integer.parseInt(data.get("blue"));
     }
 	
+	public HColor(HColor c) {
+		this.red = c.red;
+		this.green = c.green;
+		this.blue = c.blue;
+    }
+	
 
 	public int getRed() {
 		return red;

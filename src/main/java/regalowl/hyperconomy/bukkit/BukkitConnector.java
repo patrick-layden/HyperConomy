@@ -31,7 +31,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -52,12 +54,12 @@ import regalowl.hyperconomy.command.HyperCommand;
 import regalowl.hyperconomy.display.FrameShopHandler;
 import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HInventory;
+import regalowl.hyperconomy.inventory.HInventoryType;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HItem;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
-import regalowl.hyperconomy.shop.ChestShop;
 
 public class BukkitConnector extends JavaPlugin implements MineCraftConnector, Listener {
 
@@ -67,6 +69,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	private HyperConomy hc;
 	private BukkitListener bl;
 	private BukkitCommon common;
+	private NBTTools nbt;
 	
 	private boolean vaultInstalled;
 	private boolean useExternalEconomy;
@@ -78,6 +81,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		this.hc = new HyperConomy(this);
 		this.bl = new BukkitListener(this);
 		this.common = new BukkitCommon(hc);
+		this.nbt = new NBTTools();
 		useExternalEconomy = false;	
 	}
 	
@@ -382,17 +386,58 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return common.getSerializableItemStack(p.getInventory().getItem(slot));
 	}
 
+	@Override
+	public void setItem(HyperPlayer player, HItemStack item, int slot) {
+		common.setItem(player, item, slot);
+	}
 
 	@Override
-	public void setItem(HyperPlayer hp, HItemStack item, int slot) {
-		Player p = Bukkit.getPlayer(hp.getName());
-		p.getInventory().setItem(slot, common.getItemStack(item));
+	public void setItem(HLocation location, HItemStack item, int slot) {
+		common.setItem(location, item, slot);
 	}
 	
+	@Override
+	public void setItemQuantity(HLocation location, int amount, int slot) {
+		common.setItemQuantity(location, amount, slot);
+	}
+	@Override
+	public void setItemQuantity(HyperPlayer hp, int amount, int slot) {
+		common.setItemQuantity(hp, amount, slot);
+	}
 
-
-
-
+	@Override
+	public void setItemLore(HInventory inventory, List<String> lore, int slot) {
+		if (inventory == null || lore == null || slot < 0 || slot > inventory.getSize()) return;
+		ItemStack is = null;
+		if (inventory.getInventoryType() == HInventoryType.PLAYER) {
+			HyperPlayer hp = inventory.getHyperPlayer();
+			Player p = Bukkit.getPlayer(hp.getName());
+			is = p.getInventory().getItem(slot);
+		} else if (inventory.getInventoryType() == HInventoryType.CHEST) {
+			Location loc = common.getLocation(inventory.getLocation());
+			if (!(loc.getBlock().getState() instanceof Chest)) return;
+			Chest chest = (Chest)loc.getBlock().getState();
+			is = chest.getInventory().getItem(slot);
+		}
+		if (is == null) return;
+		ItemMeta meta = is.getItemMeta();
+		meta.setLore(lore);
+	}
+	
+	@Override
+	public void openInventory(HInventory inventory, HyperPlayer p, String name) {
+		Player player = common.getPlayer(p);
+		if (inventory == null || player == null) return;
+		Inventory i = Bukkit.createInventory(common.getPlayer(p), inventory.getSize(), name);
+		common.setBukkitInventory(i, inventory);
+		player.openInventory(i);
+	}
+	
+	@Override
+	public void closeActiveInventory(HyperPlayer p) {
+		Player player = common.getPlayer(p);
+		player.closeInventory();
+	}
 
 
 	@Override
@@ -575,11 +620,12 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public boolean isPartOfChestShop(HLocation l) {
 		return common.isPartOfChestShop(l);
 	}
+	/*
 	@Override
 	public ChestShop getChestShop(HLocation location) {
 		return common.getChestShop(location);
 	}
-
+	 */
 
 	@Override
 	public boolean canHoldChestShopSign(HLocation l) {
@@ -837,6 +883,13 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	@Override
 	public ServerConnectionType getServerConnectionType() {
 		return ServerConnectionType.BUKKIT;
+	}
+
+	@Override
+	public String getMinecraftItemName(HItemStack stack) {
+		ItemStack bukkitStack = common.getItemStack(stack);
+		if (bukkitStack == null) return null;
+		return nbt.getName(bukkitStack);
 	}
 
 

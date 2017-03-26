@@ -16,6 +16,11 @@ public class HEnchantment {
         this.lvl = lvl;
     }
 	
+	public HEnchantment(HEnchantment he) {
+        this.enchantment = he.enchantment;
+        this.lvl = he.lvl;
+    }
+	
 	public String serialize() {
 		HashMap<String,String> data = new HashMap<String,String>();
 		data.put("enchantment", enchantment);

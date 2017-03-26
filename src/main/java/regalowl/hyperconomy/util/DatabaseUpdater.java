@@ -25,7 +25,7 @@ public class DatabaseUpdater {
 	private transient HyperConomy hc;
 	private transient SQLWrite sw;
 	private transient SQLRead sr;
-	public final double requiredDbVersion = 1.39;
+	public final double requiredDbVersion = 1.4;
 	private double currentDbVersion;
 	ArrayList<String> tables = new ArrayList<String>();
 	
@@ -171,6 +171,31 @@ public class DatabaseUpdater {
 				Field f = t.generateField("VERSION", FieldType.DOUBLE);f.setNotNull();f.setDefault("1");
 				t.addFieldToDatabase(f, t.getField("DATA"));
 				setDBVersion(1.39);
+				sw.writeSyncQueue();
+			}
+			if (currentDbVersion == 1.39) {//adds chest shop
+				Table t = hc.getSQLManager().addTable("hyperconomy_chest_shops");
+				Field f = t.addField("ID", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();f.setPrimaryKey();
+				f = t.addField("WORLD", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();
+				f = t.addField("X", FieldType.INTEGER);f.setNotNull();
+				f = t.addField("Y", FieldType.INTEGER);f.setNotNull();
+				f = t.addField("Z", FieldType.INTEGER);f.setNotNull();
+				f = t.addField("OWNER", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				f = t.addField("PRICE_INCREMENT", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();
+				t.save();
+				t = hc.getSQLManager().addTable("hyperconomy_chest_shop_items");
+				ArrayList<Field> compositeKey = new ArrayList<Field>();
+				f = t.addField("CHEST_ID", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+				compositeKey.add(f);
+				f = t.addField("SLOT", FieldType.INTEGER);f.setNotNull();
+				compositeKey.add(f);
+				f = t.addField("DATA", FieldType.TEXT);f.setNotNull();
+				f = t.addField("BUY_PRICE", FieldType.DOUBLE);f.setNotNull();
+				f = t.addField("SELL_PRICE", FieldType.DOUBLE);f.setNotNull();
+				f = t.addField("TYPE", FieldType.VARCHAR);f.setFieldSize(40);f.setNotNull();
+				t.setCompositeKey(compositeKey);
+				t.save();
+				setDBVersion(1.4);
 				sw.writeSyncQueue();
 			}
 		} else {
@@ -375,6 +400,28 @@ public class DatabaseUpdater {
 		f = t.addField("TIME_REMAINING", FieldType.INTEGER);f.setNotNull();f.setDefault("0");
 		t.setCompositeKey(compositeKey);
 		
+		
+		t = hc.getSQLManager().addTable("hyperconomy_chest_shops");
+		f = t.addField("ID", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();f.setPrimaryKey();
+		f = t.addField("WORLD", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();
+		f = t.addField("X", FieldType.INTEGER);f.setNotNull();
+		f = t.addField("Y", FieldType.INTEGER);f.setNotNull();
+		f = t.addField("Z", FieldType.INTEGER);f.setNotNull();
+		f = t.addField("OWNER", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+		f = t.addField("PRICE_INCREMENT", FieldType.VARCHAR);f.setFieldSize(100);f.setNotNull();
+
+		
+		t = hc.getSQLManager().addTable("hyperconomy_chest_shop_items");
+		compositeKey = new ArrayList<Field>();
+		f = t.addField("CHEST_ID", FieldType.VARCHAR);f.setFieldSize(255);f.setNotNull();
+		compositeKey.add(f);
+		f = t.addField("SLOT", FieldType.INTEGER);f.setNotNull();
+		compositeKey.add(f);
+		f = t.addField("DATA", FieldType.TEXT);f.setNotNull();
+		f = t.addField("BUY_PRICE", FieldType.DOUBLE);f.setNotNull();
+		f = t.addField("SELL_PRICE", FieldType.DOUBLE);f.setNotNull();
+		f = t.addField("TYPE", FieldType.VARCHAR);f.setFieldSize(40);f.setNotNull();
+		t.setCompositeKey(compositeKey);
 		hc.getSQLManager().saveTables();
 		
 

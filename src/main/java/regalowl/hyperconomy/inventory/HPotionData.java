@@ -32,6 +32,12 @@ public class HPotionData {
 		this.isExtended = Boolean.parseBoolean(data.get("isExtended"));
 		this.isUpgraded = Boolean.parseBoolean(data.get("isUpgraded"));
     }
+	
+	public HPotionData(HPotionData hpd) {
+		this.potionType = hpd.potionType;
+		this.isExtended = hpd.isExtended;
+		this.isUpgraded = hpd.isUpgraded;
+    }
 
 
 	public String getPotionType() {

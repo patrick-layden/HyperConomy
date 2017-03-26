@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.minecraft;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -87,6 +88,7 @@ public class HLocation implements Serializable {
 	public HBlock getBlock(HyperConomy hc) {
 		return new HBlock(hc, this);
 	}
+
 	@Override
 	public String toString() {
 		HashMap<String,String> data = new HashMap<String,String>();
@@ -97,6 +99,13 @@ public class HLocation implements Serializable {
 		return CommonFunctions.implodeMap(data);
 	}
 
+	public String toBlockString() {
+		return getBlockX() + "|" + getBlockY() + "|" + getBlockZ() + "|" + getWorld();
+	}
+	public static HLocation fromBlockString(String blockString) {
+		ArrayList<String> parts = CommonFunctions.explode(blockString, "|");
+		return new HLocation(parts.get(3), Integer.parseInt(parts.get(0)), Integer.parseInt(parts.get(1)), Integer.parseInt(parts.get(2)));
+	}
 	
 
 	@Override

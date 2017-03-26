@@ -206,6 +206,7 @@ commands:
       description: Sets the owner of the chest shop you're looking at.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
+      aliases: [sco]
    setpassword:
       description: Sets your account password.
       permission: hyperconomy.use

@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.util;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -18,7 +19,6 @@ import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HItem;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
-import regalowl.hyperconomy.shop.ChestShop;
 
 public class DefaultConnector implements MineCraftConnector {
 
@@ -298,11 +298,6 @@ public class DefaultConnector implements MineCraftConnector {
 	}
 
 	@Override
-	public ChestShop getChestShop(HLocation location) {
-		return null;
-	}
-
-	@Override
 	public HSign getSign(HLocation location) {
 		return null;
 	}
@@ -365,6 +360,56 @@ public class DefaultConnector implements MineCraftConnector {
 	public ServerConnectionType getServerConnectionType() {
 		return ServerConnectionType.NONE;
 	}
+
+
+	@Override
+	public void setItemLore(HInventory inventory, List<String> lore, int slot) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void openInventory(HInventory inventory, HyperPlayer player, String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public String getMinecraftItemName(HItemStack stack) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void closeActiveInventory(HyperPlayer p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setItemQuantity(HyperPlayer hp, int amount, int slot) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setItem(HLocation location, HItemStack item, int slot) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setItemQuantity(HLocation location, int amount, int slot) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 
