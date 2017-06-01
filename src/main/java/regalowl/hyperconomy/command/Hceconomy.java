@@ -44,7 +44,7 @@ public class Hceconomy extends BaseCommand implements HyperCommand {
 		} else if (args[0].equalsIgnoreCase("delete")) {
 			try {
 				String economy = args[1];
-				if (economy.equalsIgnoreCase("default")) {
+				if (economy.equalsIgnoreCase("deafult")) {
 					data.addResponse(L.get("CANT_DELETE_DEFAULT_ECONOMY"));
 					return data;
 				}

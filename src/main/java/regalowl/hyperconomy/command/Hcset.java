@@ -58,7 +58,7 @@ public class Hcset extends BaseCommand implements HyperCommand {
 			} else if (args[0].equalsIgnoreCase("displayname") || args[0].equalsIgnoreCase("dn")) {
 				try {
 					String name = args[1];
-					String newName = args[2];
+					String newName = args[2].replace("_", " ");
 					if (he.objectTest(name)) {
 						TradeObject ho = he.getTradeObject(name);
 						TradeObject to = he.getTradeObject(newName);

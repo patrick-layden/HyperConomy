@@ -99,6 +99,9 @@ public class HLocation implements Serializable {
 		return CommonFunctions.implodeMap(data);
 	}
 
+	public String toReadableString() {
+		return getBlockX() + "," + getBlockY() + "," + getBlockZ() + "(" + getWorld() + ")";
+	}
 	public String toBlockString() {
 		return getBlockX() + "|" + getBlockY() + "|" + getBlockZ() + "|" + getWorld();
 	}

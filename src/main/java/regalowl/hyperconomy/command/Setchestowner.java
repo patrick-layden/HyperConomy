@@ -28,7 +28,7 @@ public class Setchestowner extends BaseCommand implements HyperCommand {
 		}
 		HyperAccount account = hc.getDataManager().getAccount(name);
 		HLocation l = hp.getTargetLocation();
-		ChestShop cs = hc.getChestShop().getChestShop(l);
+		ChestShop cs = hc.getChestShopHandler().getChestShop(l);
 		if (cs == null) {
 			data.addResponse(L.get("LOOK_AT_VALID_CHESTSHOP"));
 			return data;

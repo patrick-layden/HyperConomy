@@ -91,7 +91,7 @@ public class InfoSignHandler implements HyperEventListener {
 						economy = hp.getEconomy();
 					}
 					String objectName = lines[0].trim() + lines[1].trim();
-					TradeObject to = em.getEconomy(hp.getEconomy()).getTradeObject(objectName);
+					TradeObject to = em.getEconomy(economy).getTradeObject(objectName);
 					if (to != null) objectName = to.getDisplayName();
 					int multiplier = 1;
 					try {

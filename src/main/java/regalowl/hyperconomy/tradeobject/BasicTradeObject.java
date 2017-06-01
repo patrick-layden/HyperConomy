@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.sql.SQLWrite;
+import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -49,6 +50,7 @@ public class BasicTradeObject implements TradeObject {
 	protected double floor;
 	protected double maxstock;
 	protected double version;
+	protected int objectDataId;
 	protected String objectData;
 	protected String compositeData;
 	protected ConcurrentHashMap<String,Double> components = new ConcurrentHashMap<String,Double>();
@@ -61,7 +63,7 @@ public class BasicTradeObject implements TradeObject {
 	/**
 	 * Standard Constructor
 	 */
-	public BasicTradeObject(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, String objectData, double version) {
+	public BasicTradeObject(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, int objectDataId, String objectData, double version) {
 		this.hc = hc;
 		this.sw = hc.getSQLWrite();
 		this.name = name;
@@ -80,6 +82,7 @@ public class BasicTradeObject implements TradeObject {
 		this.ceiling = ceiling;
 		this.floor = floor;
 		this.maxstock = maxstock;
+		this.objectDataId = objectDataId;
 		this.objectData = objectData;
 		this.compositeData = compositeData;
 		this.version = version;
@@ -113,7 +116,7 @@ public class BasicTradeObject implements TradeObject {
 		values.put("FLOOR", getFloor()+"");
 		values.put("MAXSTOCK", getMaxStock()+"");
 		values.put("COMPONENTS", getCompositeData());
-		values.put("DATA", getData());
+		values.put("DATA", getDataId() + "");
 		values.put("VERSION", getVersion()+"");
 		hc.getSQLWrite().performInsert("hyperconomy_objects", values);
 	}
@@ -307,6 +310,10 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public String getCompositeData() {
 		return compositeData;
+	}
+	@Override
+	public int getDataId() {
+		return objectDataId;
 	}
 	@Override
 	public String getData() {
@@ -516,12 +523,30 @@ public class BasicTradeObject implements TradeObject {
 	}
 	@Override
 	public void setData(String data) {
+		Integer newDataId = hc.getDataManager().getItemDataId(data);
+		if (newDataId == null) {
+			newDataId = hc.getDataManager().incrementNextObjectDataId();
+			String statement = "INSERT INTO hyperconomy_object_data (ID, DATA) VALUES ('" + newDataId + "', ?)";
+			WriteStatement ws = new WriteStatement(statement, hc.getSimpleDataLib());
+			ws.addParameter(data);
+			sw.addToQueue(ws);
+		}
 		this.objectData = data;
-		String statement = "UPDATE hyperconomy_objects SET DATA='" + data + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
+		this.objectDataId = newDataId;
+		String statement = "UPDATE hyperconomy_objects SET DATA_ID='" + newDataId + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		fireModificationEvent(TradeObjectModificationType.DATA);
 	}
-	
+	@Override
+	public void setDataId(int id) {
+		String newData = hc.getDataManager().getItemDataString(id);
+		if (newData == null) return;
+		this.objectDataId = id;
+		this.objectData = newData;
+		String statement = "UPDATE hyperconomy_objects SET DATA_ID='" + id + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
+		sw.addToQueue(statement);
+		fireModificationEvent(TradeObjectModificationType.DATA);
+	}
 
 	@Override
 	public int getMaxInitial() {
@@ -732,7 +757,7 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public boolean matchesItemStack(HItemStack stack) {
 		if (stack == null) {return false;}
-		return stack.isSimilarTo(getItem());
+		return stack.equals(getItem());
 	}
 	
 	
@@ -809,6 +834,7 @@ public class BasicTradeObject implements TradeObject {
 	protected void fireModificationEvent(TradeObjectModificationType type) {
 		if (hc != null) hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(this, type));
 	}
+
 
 
 

@@ -4,11 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import regalowl.simpledatalib.CommonFunctions;
+
 import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
+import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.util.Backup;
@@ -125,7 +126,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				}
 				if (dm.economyExists(economy)) {
 					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
-					ArrayList<String> added = dm.getEconomy(economy).loadNewItems();
+					ArrayList<String> added = dm.loadNewItems(economy);
 					data.addResponse("&6" + added.toString() + " " + L.get("LOADED_INTO_ECONOMY"));
 				} else {
 					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
@@ -138,21 +139,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				String economy = "default";
 				if (args.length > 1) economy = args[1];
 				if (dm.economyExists(economy)) {
-					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
-					String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
-					FileTools ft = hc.getFileTools();
-					ft.deleteFile(defaultObjectsPath);
-					ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
-					QueryResult qr = hc.getFileTools().readCSV(defaultObjectsPath);
-					while (qr.next()) {
-						String objectName = qr.getString("NAME");
-						TradeObject to = dm.getEconomy(economy).getTradeObject(objectName);
-						if (to == null) continue;
-						to.setStartPrice(qr.getDouble("STARTPRICE"));
-						to.setStaticPrice(qr.getDouble("STATICPRICE"));
-						to.setValue(qr.getDouble("VALUE"));
-					}
-					ft.deleteFile(defaultObjectsPath);
+					hc.getDataManager().setDefaultPrices(economy);
 					data.addResponse(L.get("PRICES_IMPORTED"));
 				} else {
 					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
@@ -166,26 +153,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				String economy = "default";
 				if (args.length > 1) economy = args[1];
 				if (dm.economyExists(economy)) {
-					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
-					String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
-					FileTools ft = hc.getFileTools();
-					ft.deleteFile(defaultObjectsPath);
-					ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
-					QueryResult qr = hc.getFileTools().readCSV(defaultObjectsPath);
-					while (qr.next()) {
-						String objectName = qr.getString("NAME");
-						TradeObject to = dm.getEconomy(economy).getTradeObject(objectName);
-						if (to == null) continue;
-						if (to.getVersion() == qr.getDouble("VERSION")) continue;
-						to.setDisplayName(qr.getString("DISPLAY_NAME"));
-						to.setAliases(CommonFunctions.explode(qr.getString("ALIASES")));
-						to.setCategories(CommonFunctions.explode(qr.getString("CATEGORIES")));
-						to.setData(qr.getString("DATA"));
-						to.setCompositeData(qr.getString("COMPONENTS"));
-						to.setVersion(qr.getDouble("VERSION"));
-						to.setName(qr.getString("NAME"));
-					}
-					ft.deleteFile(defaultObjectsPath);
+					hc.getDataManager().updateItems(economy);
 					data.addResponse(L.get("ITEMS_UPDATED"));
 				} else {
 					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
@@ -239,7 +207,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				}
 				if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
 				for (HyperEconomy he : hc.getDataManager().getEconomies()) {
-					he.updateNamesFromYml();
+					hc.getDataManager().updateNamesFromCSV(he.getName());
 				}
 				data.addResponse(L.get("NAME_REPAIR_ATTEMPTED"));
 				hc.restart();
@@ -248,7 +216,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 			}
 		} else if (args[0].equalsIgnoreCase("updateitemstack") || args[0].equalsIgnoreCase("uis")) {
 			try {
-				if (args.length != 2) {
+				if (args.length < 1) {
 					data.addResponse(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
 					return data;
 				}
@@ -256,12 +224,26 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
 					return data;
 				}
-				TradeObject ho = hp.getHyperEconomy().getTradeObject(args[1]);
+				HItemStack stack = hp.getItemInHand();
+				TradeObject ho = hp.getHyperEconomy().getTradeObject(stack);
+				if (args.length > 1) {
+					if (args[1].equalsIgnoreCase("all")) {
+						HInventory inventory = hp.getInventory();
+						for (int slot = 0; slot < inventory.getSize(); slot++) {
+							HItemStack cStack = inventory.getItem(slot);
+							ho = hp.getHyperEconomy().getTradeObject(cStack);
+							if (ho == null) continue;
+							ho.setData(cStack.serialize());
+						}
+						data.addResponse(L.get("HCDATA_ITEMSTACK_UPDATED_ALL"));
+						return data;
+					}
+					ho = hp.getHyperEconomy().getTradeObject(args[1]);
+				}
 				if (ho == null) {
 					data.addResponse(L.get("OBJECT_NOT_FOUND"));
 					return data;
 				}
-				HItemStack stack = hp.getItemInHand();
 				if (stack.isBlank()) {
 					data.addResponse(L.get("AIR_CANT_BE_TRADED"));
 					return data;
@@ -270,6 +252,41 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				data.addResponse(L.get("HCDATA_ITEMSTACK_UPDATED"));
 			} catch (Exception e) {
 				data.addResponse(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
+			}
+		} else if (args[0].equalsIgnoreCase("updatedisplayname") || args[0].equalsIgnoreCase("uds")) {
+			try {
+				if (args.length < 1) {
+					data.addResponse(L.get("HCDATA_UPDATEDISPLAYNAME_INVALID"));
+					return data;
+				}
+				if (!data.isPlayer()) {
+					data.addResponse(L.get("HCDATA_UPDATEDISPLAYNAME_INVALID"));
+					return data;
+				}
+				HItemStack stack = hp.getItemInHand();
+				TradeObject ho = hp.getHyperEconomy().getTradeObject(stack);
+				if (args.length > 1) {
+					if (args[1].equalsIgnoreCase("all")) {
+						HInventory inventory = hp.getInventory();
+						for (int slot = 0; slot < inventory.getSize(); slot++) {
+							HItemStack cStack = inventory.getItem(slot);
+							ho =  hp.getHyperEconomy().getTradeObject(cStack);
+							if (ho == null) continue;
+							ho.setDisplayName(hc.getMC().getMinecraftItemName(ho.getItem()));
+						}
+						data.addResponse(L.get("DISPLAYNAME_SET_ALL"));
+						return data;
+					}
+					ho = hp.getHyperEconomy().getTradeObject(args[1]);
+				}
+				if (ho == null) {
+					data.addResponse(L.get("OBJECT_NOT_FOUND"));
+					return data;
+				}
+				ho.setDisplayName(hc.getMC().getMinecraftItemName(ho.getItem()));
+				data.addResponse(L.f(L.get("DISPLAYNAME_SET"), ho.getDisplayName()));
+			} catch (Exception e) {
+				data.addResponse(L.get("HCDATA_UPDATEDISPLAYNAME_INVALID"));
 			}
 		} else if (args[0].equalsIgnoreCase("backup")) {
 			try {

@@ -6,14 +6,15 @@ import java.util.ArrayList;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.simpledatalib.sql.WriteStatement;
 
 
 public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 
 
 	private static final long serialVersionUID = 4228578172340543286L;
-	public TempTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, String objectData, double version) {
-		super(hc, he, name, economy, displayName, aliases, categories, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, compositeData, objectData, version);
+	public TempTradeItem(HyperConomy hc, HyperEconomy he, String name, String economy, String displayName, String aliases, String categories, String type, double value, String isstatic, double staticprice, double stock, double median, String initiation, double startprice, double ceiling, double floor, double maxstock, String compositeData, int objectDataId, String objectData, double version) {
+		super(hc, he, name, economy, displayName, aliases, categories, type, value, isstatic, staticprice, stock, median, initiation, startprice, ceiling, floor, maxstock, compositeData, objectDataId, objectData, version);
 	}
 	
 	//Override all set methods to prevent database changes.
@@ -98,10 +99,24 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 	public static TradeObject generate(HyperConomy hc, HItemStack stack){
 		if (stack.isBlank()) {return null;}
 		String name = generateName(hc, stack);
+		String displayName = hc.getMC().getMinecraftItemName(stack).replace(" ", "_");
+		if (displayName == null) displayName = name;
 		double value = 10.0;
 		double median = 10000;
 		double startprice = 20.0;
-		return new TempTradeItem(hc, null, name, "default", name, "", "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, "", stack.serialize(), 1);
+		String data = stack.serialize();
+		Integer dataId = hc.getDataManager().getItemDataIdFromStack(stack);
+		if (dataId == null) {
+			int nextId = hc.getDataManager().incrementNextObjectDataId();
+			String statement = "INSERT INTO hyperconomy_object_data (ID, DATA) VALUES ('" + nextId + "', ?)";
+			WriteStatement ws = new WriteStatement(statement, hc.getSimpleDataLib());
+			ws.addParameter(data);
+			hc.getSQLWrite().addToQueue(ws);
+			hc.getDataManager().addItemDataString(nextId, data);
+			return new TempTradeItem(hc, null, name, "default", displayName, "", "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, "", nextId, data, 1);
+		} else {
+			return new TempTradeItem(hc, null, name, "default", displayName, "", "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, "", dataId, data, 1);
+		}
 	}
 	
 	public static String generateName(HyperConomy hc, HItemStack stack) {
@@ -117,6 +132,7 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 		}
 		return name;
 	}
+	
 
 
 }

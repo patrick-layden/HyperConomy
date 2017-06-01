@@ -21,6 +21,8 @@ import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.tradeobject.ComponentTradeItem;
 import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.sql.WriteStatement;
 
 public class Additem extends BaseCommand implements HyperCommand {
 	
@@ -100,7 +102,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 		values.put("CEILING", hobj.getCeiling()+"");
 		values.put("FLOOR", hobj.getFloor()+"");
 		values.put("MAXSTOCK", hobj.getMaxStock()+"");
-		values.put("DATA", hobj.getData());
+		values.put("DATA_ID", hobj.getDataId()+"");
 		hc.getSQLWrite().performInsert("hyperconomy_objects", values);
 		he.addObject(hobj);
 		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(hobj, TradeObjectModificationType.CREATED));
@@ -119,22 +121,24 @@ public class Additem extends BaseCommand implements HyperCommand {
 		if (econ == null) {return null;}
 		TradeObject ho =  econ.getTradeObject(sis);
 		if (ho != null) {return null;}
-		String name = sis.getMaterial() + "_" + sis.getDurability();
-		if (econ.objectTest(name) || name.equalsIgnoreCase("")) {
-			name = generateName(sis);
+		
+		String name = hc.getMC().getMinecraftItemName(sis).replace(" ", "_").toLowerCase();
+		if (name == null || econ.objectTest(name) || name.equalsIgnoreCase("")) name = sis.getMaterial() + "_" + sis.getDurability();
+		if (econ.objectTest(name) || name.equalsIgnoreCase("")) name = generateName(sis);
+		
+		
+		if (displayName.equals("")) {
+			displayName = hc.getMC().getMinecraftItemName(sis);
+			if (displayName == null) displayName = "";
 		}
-		if (econ.objectTest(displayName) || displayName.equalsIgnoreCase("")) {
-			displayName = name;
-		}
-		String aliases = displayName.replace("_", "");
-		if (econ.objectTest(aliases)) {
-			aliases = "";
-		} else {
-			aliases += ",";
-		}
-		if (value <= 0) {
-			value = 10.0;
-		}
+		if (econ.objectTest(displayName) || displayName.equalsIgnoreCase("")) displayName = name;
+		ArrayList<String> aliases = new ArrayList<String>();
+		String alias = displayName.replace(" ", "_").toLowerCase();
+		if (!econ.objectTest(alias) && !alias.equalsIgnoreCase("")) aliases.add(alias);
+		alias = displayName.replace(" ", "").replace("_", "").toLowerCase();
+		if (!econ.objectTest(alias) && !alias.equalsIgnoreCase("")) aliases.add(alias);		
+		
+		if (value <= 0) value = 10.0;
 		int median = 0;
 		if (value >= 100000) {
 			median = 10;
@@ -151,8 +155,13 @@ public class Additem extends BaseCommand implements HyperCommand {
 		} else {
 			median = 25000;
 		}
-		TradeObject hobj = new ComponentTradeItem(hc, null, name, economy, displayName, aliases, "", "item", value, "false", value*2,
-				0, median, "true", value*2, 1000000,0, 1000000, "", sis.serialize(), 1);
+		int nextId = hc.getDataManager().incrementNextObjectDataId();
+		String statement = "INSERT INTO hyperconomy_object_data (ID, DATA) VALUES ('" + nextId + "', ?)";
+		WriteStatement ws = new WriteStatement(statement, hc.getSimpleDataLib());
+		String data = sis.serialize();
+		ws.addParameter(data);
+		hc.getSQLWrite().addToQueue(ws);
+		TradeObject hobj = new ComponentTradeItem(hc, null, name, economy, displayName, CommonFunctions.implode(aliases), "", "item", value, "false", value*2, 0, median, "true", value*2, 1000000,0, 1000000, "", nextId, data, 1);
 		return hobj;
 	}
 	
@@ -192,6 +201,8 @@ public class Additem extends BaseCommand implements HyperCommand {
 		String economy = hp.getEconomy();
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
 			HItemStack stack = inventory.getItem(slot);
+			TradeObject ho =  super.getEconomy().getTradeObject(stack);
+			if (ho != null) continue;
 			TradeObject hobj = generateNewHyperObject(stack, economy);
 			addItem(hobj, economy);
 		}

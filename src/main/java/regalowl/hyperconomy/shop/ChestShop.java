@@ -27,11 +27,11 @@ public class ChestShop {
 
 	private transient HyperConomy hc;
 	private transient ArrayList<HyperPlayer> viewers = new ArrayList<HyperPlayer>();
-	//private transient HInventory shopMenuInventory;
+	private transient HashMap<HyperPlayer,String> viewerMenuTitles = new HashMap<HyperPlayer, String>();
 	private transient boolean openedByOwner;
 	private transient AtomicBoolean updateMenuLock = new AtomicBoolean();
 	private transient HashMap<Integer, CustomPriceChestShopItem> customPriceItems = new HashMap<Integer, CustomPriceChestShopItem>();
-	private transient int editSlot = -1;
+	private transient HItemStack editStack;
 	private transient boolean inEditItemMode = false;
 	private transient boolean editAllItems = false;
 	private transient boolean editingBuyPrice = true;
@@ -69,15 +69,15 @@ public class ChestShop {
 	
 	public class CustomPriceChestShopItem {
 		String chestId;
-		int slot;
+		int dataId;
 		String dataString;
 		double buyPrice;
 		double sellPrice;
 		ChestShopType type;
 		
-		CustomPriceChestShopItem(String chestId, int slot, String dataString, double buyPrice, double sellPrice, ChestShopType type) {
+		CustomPriceChestShopItem(String chestId, int dataId, String dataString, double buyPrice, double sellPrice, ChestShopType type) {
 			this.chestId = chestId;
-			this.slot = slot;
+			this.dataId = dataId;
 			this.dataString = dataString;
 			this.buyPrice = buyPrice;
 			this.sellPrice = sellPrice;
@@ -85,48 +85,56 @@ public class ChestShop {
 		}
 	}
 	
-	public CustomPriceChestShopItem setCustomPriceItem(String chestId, int slot, String dataString, double buyPrice, double sellPrice, ChestShopType type) {
-		CustomPriceChestShopItem i = new CustomPriceChestShopItem(chestId, slot, dataString, buyPrice, sellPrice, type);
-		customPriceItems.put(slot, i);
+	public CustomPriceChestShopItem setCustomPriceItem(String chestId, int dataId, String dataString, double buyPrice, double sellPrice, ChestShopType type) {
+		CustomPriceChestShopItem i = new CustomPriceChestShopItem(chestId, dataId, dataString, buyPrice, sellPrice, type);
+		customPriceItems.put(dataId, i);
 		return i;
 	}
 	
-	
-	public void saveCustomChestShopItem(int slot) {
-		CustomPriceChestShopItem i = customPriceItems.get(slot);
+	public void saveCustomChestShopItem(HItemStack stack) {
+		CustomPriceChestShopItem i = getCustomPriceItem(stack);
 		if (i == null) return;
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		conditions.put("CHEST_ID", i.chestId);
-		conditions.put("SLOT", i.slot+"");
+		conditions.put("DATA_ID", i.dataId+"");
 		hc.getSQLWrite().performDelete("hyperconomy_chest_shop_items", conditions);
 		
 		HashMap<String,String> values = new HashMap<String,String>();
 		values.put("CHEST_ID", i.chestId);
-		values.put("SLOT", i.slot+"");
-		values.put("DATA", i.dataString);
+		values.put("DATA_ID", i.dataId+"");
 		values.put("BUY_PRICE", i.buyPrice+"");
 		values.put("SELL_PRICE", i.sellPrice+"");
 		values.put("TYPE", i.type.name());
 		hc.getSQLWrite().performInsert("hyperconomy_chest_shop_items", values);
 	}
 	
-	/*
-	public ChestShop(HyperConomy hc, HBlock b) {
-		this.hc = hc;
-		this.location = b.getLocation();
-		this.isInitialized = false;
-		this.isValidChestShop = false;
-		initialize();
+	public TradeObject getTradeObject(HItemStack stack) {
+		if (stack == null || stack.isBlank()) return null;
+		TradeObject to = null;
+		if (owner instanceof HyperPlayer) {
+			HyperPlayer hp = (HyperPlayer)owner;
+			to = hp.getHyperEconomy().getTradeObject(stack);
+		} else {
+			to = hc.getDataManager().getDefaultEconomy().getTradeObject(stack);
+		}
+		if (to == null) to = TempTradeItem.generate(hc, stack);
+		return to;
 	}
 	
-	public ChestShop(HyperConomy hc, HLocation location) {
-		this.hc = hc;
-		this.location = location;
-		this.isInitialized = false;
-		this.isValidChestShop = false;
-		initialize();
+
+	public CustomPriceChestShopItem getCustomPriceItem(HItemStack stack) {
+		if (!isInitialized) return null;
+		if (stack == null || stack.isBlank()) return null;
+		Integer existingId = hc.getDataManager().getItemDataIdFromStack(stack);
+		if (existingId != null) {
+			CustomPriceChestShopItem i = customPriceItems.get(existingId);
+			if (i != null) return i;
+		} 
+		TradeObject to = getTradeObject(stack);
+		return setCustomPriceItem(getId(), to.getDataId(), stack.serialize(), to.getBuyPrice(1), to.getSellPrice(1), ChestShopType.TRADE);
 	}
-	*/
+
+	
 	public void initialize() {
 		if (isInitialized) return;
 		isInitialized = true;
@@ -173,9 +181,10 @@ public class ChestShop {
 			hc.getMC().openInventory(emptyInv, hp, "Deleted");
 			hc.getMC().closeActiveInventory(hp);
 		}
-
-		sign.setLine(0, hc.getMC().applyColor("&cDeleted"));
-		sign.update();
+		if (sign != null) {
+			sign.setLine(0, hc.getMC().applyColor("&cDeleted"));
+			sign.update();
+		}
 		deleteFromDatabase();
 	}
 	
@@ -233,104 +242,98 @@ public class ChestShop {
 	public HInventory getInventory() {
 		return inventory;
 	}
-	
-	
-	
-	public ChestShopType getType(int slot) {
-		CustomPriceChestShopItem i = customPriceItems.get(slot);
+
+	public ChestShopType getType(HItemStack stack) {
+		CustomPriceChestShopItem i = getCustomPriceItem(stack);
 		if (i == null) return ChestShopType.TRADE;
 		return i.type;
 	}
-	public void setType(ChestShopType type, int slot) {
+
+	public void setType(ChestShopType type, HItemStack stack) {
 		if (!isInitialized) return;
-		CustomPriceChestShopItem i = initializeCustomPriceItem(slot);
+		CustomPriceChestShopItem i = getCustomPriceItem(stack);
 		i.type = type;
-		saveCustomChestShopItem(slot);
+		saveCustomChestShopItem(stack);
 	}
-	public boolean isBuySlot(int slot) {
-		ChestShopType type = getType(slot);
+
+	public boolean isBuyStack(HItemStack stack) {
+		ChestShopType type = getType(stack);
 		if (type == ChestShopType.TRADE || type == ChestShopType.BUY) return true;
 		return false;
 	}
-	public boolean isSellSlot(int slot) {
-		ChestShopType type = getType(slot);
+
+	public boolean isSellStack(HItemStack stack) {
+		ChestShopType type = getType(stack);
 		if (type == ChestShopType.TRADE || type == ChestShopType.SELL) return true;
 		return false;
 	}
-	
-	
-	public void setBuyPrice(int slot, double price) {
+
+	public void setBuyPrice(HItemStack stack, double price) {
 		if (!isInitialized) return;
-		CustomPriceChestShopItem i = initializeCustomPriceItem(slot);
+		if (price < 0) price = 0;
+		CustomPriceChestShopItem i = getCustomPriceItem(stack);
 		i.buyPrice = price;
-		saveCustomChestShopItem(slot);
+		saveCustomChestShopItem(stack);
 	}
+	
 	public void setBuyPriceAll(double price) {
+		if (!isInitialized) return;
+		if (price < 0) price = 0;
 		for (int i = 0; i < inventory.getSize(); i++) {
-			if (inventory.getItem(i).isBlank()) continue;
-			setBuyPrice(i, price);
+			HItemStack stack = inventory.getItem(i);
+			if (stack.isBlank()) continue;
+			setBuyPrice(stack, price);
 		}
 	}
-	public double getBuyPrice(int slot) {
-		CustomPriceChestShopItem i = customPriceItems.get(slot);
+
+	public double getBuyPrice(HItemStack stack) {
+		CustomPriceChestShopItem i = getCustomPriceItem(stack);
 		if (i == null) {
-			TradeObject to = getTradeObject(slot);
-			if (to == null) to = TempTradeItem.generate(hc, inventory.getItem(slot));
-			return to.getBuyPrice(1);
+			return getTradeObject(stack).getBuyPrice(1);
 		} else {
 			return i.buyPrice;
 		}
 	}
-	public void setSellPrice(int slot, double price) {
+
+	public void setSellPrice(HItemStack stack, double price) {
 		if (!isInitialized) return;
-		CustomPriceChestShopItem i = initializeCustomPriceItem(slot);
+		if (price < 0) price = 0;
+		CustomPriceChestShopItem i = getCustomPriceItem(stack);
 		i.sellPrice = price;
-		saveCustomChestShopItem(slot);
+		saveCustomChestShopItem(stack);
 	}
+	
 	public void setSellPriceAll(double price) {
+		if (!isInitialized) return;
+		if (price < 0) price = 0;
 		for (int i = 0; i < inventory.getSize(); i++) {
-			if (inventory.getItem(i).isBlank()) continue;
-			setSellPrice(i, price);
+			HItemStack stack = inventory.getItem(i);
+			if (stack.isBlank()) continue;
+			setSellPrice(stack, price);
 		}
 	}
-	public double getSellPrice(int slot) {
-		CustomPriceChestShopItem i = customPriceItems.get(slot);
+
+	public double getSellPrice(HItemStack stack) {
+		CustomPriceChestShopItem i = getCustomPriceItem(stack);
 		if (i == null) {
-			TradeObject to = getTradeObject(slot);
-			if (to == null) to = TempTradeItem.generate(hc, inventory.getItem(slot));
-			return to.getSellPrice(1);
+			return getTradeObject(stack).getSellPrice(1);
 		} else {
 			return i.sellPrice;
 		}
 	}
-	
-	public CustomPriceChestShopItem initializeCustomPriceItem(int slot) {
-		if (!isInitialized) return null;
-		CustomPriceChestShopItem i = customPriceItems.get(slot);
-		if (i == null) {
-			HItemStack stack = inventory.getItem(slot);
-			if (stack == null || stack.isBlank()) return null;
-			TradeObject to = getTradeObject(slot);
-			if (to == null) to = TempTradeItem.generate(hc, stack);
-			return setCustomPriceItem(getId(), slot, stack.serialize(), to.getBuyPrice(1), to.getSellPrice(1), ChestShopType.TRADE);
-		} else {
-			return i;
-		}
-	}
-	
-	
-	public void toggleType(int slot) {
-		ChestShopType type = getType(slot);
+
+	public void toggleType(HItemStack stack) {
+		ChestShopType type = getType(stack);
 		if (type == ChestShopType.BUY) {
-			setType(ChestShopType.TRADE, slot);
+			setType(ChestShopType.TRADE, stack);
 		} else if (type == ChestShopType.SELL) {
-			setType(ChestShopType.BUY, slot);
+			setType(ChestShopType.BUY, stack);
 		} else if (type == ChestShopType.TRADE) {
-			setType(ChestShopType.SELL, slot);
+			setType(ChestShopType.SELL, stack);
 		}
 	}
 	public void toggleTypeAll() {
-		ChestShopType type = getType(getSlotOfFirstItem());
+		ChestShopType type = getType(getFirstItem());
 		ChestShopType newType = ChestShopType.TRADE;
 		if (type == ChestShopType.BUY) {
 			newType = ChestShopType.TRADE;
@@ -340,8 +343,9 @@ public class ChestShop {
 			newType = ChestShopType.SELL;
 		}
 		for (int i = 0; i < inventory.getSize(); i++) {
-			if (inventory.getItem(i).isBlank()) continue;
-			setType(newType, i);
+			HItemStack stack = inventory.getItem(i);
+			if (stack.isBlank()) continue;
+			setType(newType, stack);
 		}
 	}
 
@@ -356,55 +360,28 @@ public class ChestShop {
 	
 	
 
-	
-	
-	
-	/*
-	public boolean isBuyChest() {
-		if (type == ChestShopType.TRADE || type == ChestShopType.BUY) return true;
-		return false;
-	}
-	public boolean isSellChest() {
-		if (type == ChestShopType.TRADE || type == ChestShopType.SELL) return true;
-		return false;
-	}
-	*/
-	
-	public TradeObject getTradeObject(int slot) {
-		HItemStack i = inventory.getItem(slot);
-		if (i == null || i.isBlank()) return null;
-		TradeObject to = null;
-		if (owner instanceof HyperPlayer) {
-			HyperPlayer hp = (HyperPlayer)owner;
-			to = hp.getHyperEconomy().getTradeObject(i);
-		} else {
-			to = hc.getDataManager().getDefaultEconomy().getTradeObject(inventory.getItem(slot));
-		}
-		if (to == null) to = TempTradeItem.generate(hc, i);
-		return to;
-	}
-	
+
 	
 	public HInventory getShopMenu() {
-		//Bukkit.broadcastMessage(isInitialized + "|" + isValidChestShop);
 		HInventory shopMenuInventory = new HInventory(inventory);
 		for (int i = 0; i < shopMenuInventory.getSize(); i++) {
-			HItemStack his = shopMenuInventory.getItem(i);
-			if (his.isBlank()) continue;
-			List<String> originalLore = his.getItemMeta().getLore();
-			his.getItemMeta().setLore(new ArrayList<String>());
-			if (isBuySlot(i)) {
-				his.getItemMeta().addLore(hc.getMC().applyColor("&9Buy 1 from chest: " + "&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getBuyPrice(i)))));
-				his.getItemMeta().addLore(hc.getMC().applyColor("&e(Left Click)"));
+			HItemStack menuStack = shopMenuInventory.getItem(i);
+			HItemStack realStack = inventory.getItem(i);
+			if (menuStack.isBlank()) continue;
+			List<String> originalLore = menuStack.getItemMeta().getLore();
+			menuStack.getItemMeta().setLore(new ArrayList<String>());
+			if (isBuyStack(realStack)) {
+				menuStack.getItemMeta().addLore(hc.getMC().applyColor("&9Buy 1 from chest: " + "&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getBuyPrice(realStack)))));
+				menuStack.getItemMeta().addLore(hc.getMC().applyColor("&e(Any Click)"));
 			}
-			if (isSellSlot(i)) {
-				his.getItemMeta().addLore(hc.getMC().applyColor("&9Sell 1 to chest: " + "&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getSellPrice(i)))));
-				his.getItemMeta().addLore(hc.getMC().applyColor("&e(Right Click)"));
+			if (isSellStack(realStack)) {
+				menuStack.getItemMeta().addLore(hc.getMC().applyColor("&9Sell 1 to chest: " + "&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getSellPrice(realStack)))));
+				menuStack.getItemMeta().addLore(hc.getMC().applyColor("&e(Drag and Drop)"));
 			}
 			if (originalLore.size() > 0) {
-				his.getItemMeta().addLore(hc.getMC().applyColor("&5Item has lore: "));
+				menuStack.getItemMeta().addLore(hc.getMC().applyColor("&5Item has lore: "));
 				for (String entry:originalLore) {
-					his.getItemMeta().addLore(entry);
+					menuStack.getItemMeta().addLore(entry);
 				}
 			}
 			shopMenuInventory.updateLore(i);
@@ -497,24 +474,24 @@ public class ChestShop {
 			for (int i = 0; i < 9; i++) {
 				shopMenuInventory.addItem(blockedSlot);
 			}
-			if (editAllItems) editSlot = getSlotOfFirstItem();
 			for (int i = 0; i < shopMenuInventory.getSize(); i++) {
-				if (!(i == editSlot) || editAllItems) {
+				HItemStack menuStack = shopMenuInventory.getItem(i);
+				HItemStack realStack = inventory.getItem(i);
+				if (realStack == null || realStack.isBlank() || !(realStack.equals(editStack)) || editAllItems) {
 					shopMenuInventory.setItem(i, blockedSlot, false);
 				} else {
-					HItemStack his = shopMenuInventory.getItem(i);
-					his.getItemMeta().setLore(new ArrayList<String>());
-					his.getItemMeta().setDisplayName(hc.getMC().applyColor("&eEdit Mode"));
-					his.getItemMeta().addLore(hc.getMC().applyColor("&9Edit this item's settings "));
-					his.getItemMeta().addLore(hc.getMC().applyColor("&9using the bottom buttons."));
-					his.getItemMeta().addLore(hc.getMC().applyColor(" "));
-					if (isBuySlot(editSlot)) {
-						his.getItemMeta().addLore(hc.getMC().applyColor("&9Buy From Chest Price: "));
-						his.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getBuyPrice(editSlot)))));
+					menuStack.getItemMeta().setLore(new ArrayList<String>());
+					menuStack.getItemMeta().setDisplayName(hc.getMC().applyColor("&eEdit Mode"));
+					menuStack.getItemMeta().addLore(hc.getMC().applyColor("&9Edit this item's settings "));
+					menuStack.getItemMeta().addLore(hc.getMC().applyColor("&9using the bottom buttons."));
+					menuStack.getItemMeta().addLore(hc.getMC().applyColor(" "));
+					if (isBuyStack(realStack)) {
+						menuStack.getItemMeta().addLore(hc.getMC().applyColor("&9Buy From Chest Price: "));
+						menuStack.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getBuyPrice(realStack)))));
 					} 
-					if (isSellSlot(editSlot)){
-						his.getItemMeta().addLore(hc.getMC().applyColor("&9Sell To Chest Price: "));
-						his.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getSellPrice(editSlot)))));
+					if (isSellStack(realStack)){
+						menuStack.getItemMeta().addLore(hc.getMC().applyColor("&9Sell To Chest Price: "));
+						menuStack.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getSellPrice(realStack)))));
 					}
 				}
 			} 
@@ -529,12 +506,12 @@ public class ChestShop {
 			tradeMode.getItemMeta().setDisplayName(hc.getMC().applyColor("&eToggle Trade Mode"));
 			tradeMode.getItemMeta().addLore(hc.getMC().applyColor("&9Click here to toggle the trade mode."));
 			tradeMode.getItemMeta().addLore(hc.getMC().applyColor("&9Currently this item can be:"));
-			if (isBuySlot(editSlot) && isSellSlot(editSlot)) {
+			if (isBuyStack(editStack) && isSellStack(editStack)) {
 				tradeMode.getItemMeta().addLore(hc.getMC().applyColor("&bbought from the chest"));
 				tradeMode.getItemMeta().addLore(hc.getMC().applyColor("&band sold to the chest"));
-			} else if (isBuySlot(editSlot)) {
+			} else if (isBuyStack(editStack)) {
 				tradeMode.getItemMeta().addLore(hc.getMC().applyColor("&bbought from the chest"));
-			} else if (isSellSlot(editSlot)) {
+			} else if (isSellStack(editStack)) {
 				tradeMode.getItemMeta().addLore(hc.getMC().applyColor("&bsold to the chest"));
 			}
 			shopMenuInventory.setItem(34, tradeMode, false);
@@ -569,24 +546,24 @@ public class ChestShop {
 			
 			HItemStack decreasePrice = hc.getDataManager().getDefaultEconomy().getTradeObject("red_stained_glass_pane").getItem();
 			decreasePrice.getItemMeta().setDisplayName(hc.getMC().applyColor("&eDecrease Price"));
-			if (isBuySlot(editSlot)) {
+			if (isBuyStack(editStack)) {
 				decreasePrice.getItemMeta().addLore(hc.getMC().applyColor("&9Current Buy From Chest Price: "));
-				decreasePrice.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getBuyPrice(editSlot)))));
+				decreasePrice.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getBuyPrice(editStack)))));
 			} 
-			if (isSellSlot(editSlot)) {
+			if (isSellStack(editStack)) {
 				decreasePrice.getItemMeta().addLore(hc.getMC().applyColor("&9Current Sell To Chest Price: "));
-				decreasePrice.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getSellPrice(editSlot)))));
+				decreasePrice.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getSellPrice(editStack)))));
 			}
 			shopMenuInventory.setItem(30, decreasePrice, false);
 			HItemStack increasePrice = hc.getDataManager().getDefaultEconomy().getTradeObject("lime_stained_glass_pane").getItem();
 			increasePrice.getItemMeta().setDisplayName(hc.getMC().applyColor("&eIncrease Price"));
-			if (isBuySlot(editSlot)) {
+			if (isBuyStack(editStack)) {
 				increasePrice.getItemMeta().addLore(hc.getMC().applyColor("&9Current Buy From Chest Price: "));
-				increasePrice.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getBuyPrice(editSlot)))));
+				increasePrice.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getBuyPrice(editStack)))));
 			} 
-			if (isSellSlot(editSlot)) {
+			if (isSellStack(editStack)) {
 				increasePrice.getItemMeta().addLore(hc.getMC().applyColor("&9Current Sell To Chest Price: "));
-				increasePrice.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getSellPrice(editSlot)))));
+				increasePrice.getItemMeta().addLore(hc.getMC().applyColor("&a" + hc.getLanguageFile().fC(CommonFunctions.twoDecimals(getSellPrice(editStack)))));
 			}
 			shopMenuInventory.setItem(29, increasePrice, false);
 			
@@ -623,7 +600,7 @@ public class ChestShop {
 	
 	
 	
-	public String getMenuName() {
+	public String getMenuName(HyperPlayer viewer) {
 		if (openedByOwner) {
 			String menuName = "";
 			if (inEditItemMode) {
@@ -641,9 +618,12 @@ public class ChestShop {
 			return menuName;
 		} else {
 			String menuName = owner.getName() + "'s Chest Shop";
+			if (viewer != null) {
+				String title = viewerMenuTitles.get(viewer);
+				if (title != null && !title.equals("")) menuName = title;
+			}
 			return menuName;
 		}
-
 	}
 
 	
@@ -654,9 +634,9 @@ public class ChestShop {
 		while (it.hasNext()) {
 			HyperPlayer viewer = it.next();
 			if (viewer.equals(owner)) {
-				hc.getMC().openInventory(getOwnerShopMenu(), viewer, getMenuName());
+				hc.getMC().openInventory(getOwnerShopMenu(), viewer, getMenuName(viewer));
 			} else {
-				hc.getMC().openInventory(getShopMenu(), viewer, getMenuName());
+				hc.getMC().openInventory(getShopMenu(), viewer, getMenuName(viewer));
 			}
 		}
 		setUpdateMenuLock(false);
@@ -672,6 +652,7 @@ public class ChestShop {
 		if (deleted) return;
 		if (this.viewers == null) viewers = new ArrayList<HyperPlayer>();
 		viewers.remove(hp);
+		viewerMenuTitles.remove(hp);
 	}
 	public boolean hasViewers() {
 		if (deleted) return false;
@@ -686,6 +667,13 @@ public class ChestShop {
 		}
 		return false;
 	}
+	
+	public void setViewerMenuTitle(HyperPlayer viewer, String title) {
+		if (hasViewer(viewer)) {
+			viewerMenuTitles.put(viewer, title);
+		}
+	}
+	
 	public void setOpenedByOwner(boolean status) {
 		openedByOwner = status;
 	}
@@ -702,7 +690,7 @@ public class ChestShop {
 	
 	public void setEditMode(boolean editModeEnabled, boolean editAllItems) {
 		this.inEditItemMode = editModeEnabled;
-		if (getSlotOfFirstItem() != -1) {
+		if (getFirstItem() != null) {
 			this.editAllItems = editAllItems;
 		}
 	}
@@ -712,15 +700,25 @@ public class ChestShop {
 	public boolean editAllItems() {
 		return editAllItems;
 	}
-	public void setEditSlot(int slot) {
-		this.editSlot = slot;
+	public void setEditStack(HItemStack stack) {
+		this.editStack = stack;
 	}
-	public int getEditSlot() {
-		return editSlot;
+	public HItemStack getEditStack() {
+		return editStack;
 	}
-	public int getSlotOfFirstItem() {
+	public HItemStack getFirstItem() {
 		for (int i = 0; i < inventory.getSize(); i++) {
-			if (inventory.getItem(i).isBlank()) continue;
+			HItemStack stack = inventory.getItem(i);
+			if (stack.isBlank()) continue;
+			return stack;
+		}
+		return null;
+	}
+	public int getSlotOfMatchingItem(HItemStack stack) {
+		for (int i = 0; i < inventory.getSize(); i++) {
+			HItemStack cItem = inventory.getItem(i);
+			if (cItem.isBlank()) continue;
+			if (cItem.equals(stack)) return i;
 			return i;
 		}
 		return -1;

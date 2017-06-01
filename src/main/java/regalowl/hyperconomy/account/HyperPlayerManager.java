@@ -50,7 +50,7 @@ public class HyperPlayerManager implements HyperEventListener {
 					public void run() {
 						if (!hc.getDataManager().accountExists(defaultServerShopAccount)) {
 							HyperPlayer defaultAccount = new HyperPlayer(hc, defaultServerShopAccount);
-							hyperPlayers.put(defaultServerShopAccount, defaultAccount);
+							hyperPlayers.put(defaultServerShopAccount.toLowerCase(), defaultAccount);
 							defaultAccount.setBalance(hc.getConf().getDouble("shop.default-server-shop-account-initial-balance"));
 							defaultAccount.setUUID(UUID.randomUUID().toString());
 						}
@@ -109,8 +109,8 @@ public class HyperPlayerManager implements HyperEventListener {
 					HyperPlayer hp = null;
 					if (!hyperPlayers.containsKey(p.toLowerCase())) {
 						hp = new HyperPlayer(hc, p);
-						hyperPlayers.put(p, hp);
-						if (hp.getUUIDString() != null) uuidIndex.put(hp.getUUIDString(), p);
+						hyperPlayers.put(p.toLowerCase(), hp);
+						if (hp.getUUIDString() != null) uuidIndex.put(hp.getUUIDString(), p.toLowerCase());
 					} else {
 						hp = hyperPlayers.get(p.toLowerCase());
 					}
@@ -169,7 +169,7 @@ public class HyperPlayerManager implements HyperEventListener {
 		if (uuid == null) {return null;}
 		if (uuidIndex.containsKey(uuid.toString())) {
 			String pName = uuidIndex.get(uuid.toString());
-			return hyperPlayers.get(pName);
+			return hyperPlayers.get(pName.toLowerCase());
 		}
 		return null;
 	}

@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.inventory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -134,7 +135,7 @@ public class HInventory {
 		int maxStackSize = addStack.getMaxStackSize();
 		if (inventoryType == HInventoryType.PLAYER) {
 			HItemStack heldStack = getHeldItem();
-			if (heldStack.isBlank() || addStack.isSimilarTo(heldStack)) {
+			if (heldStack.isBlank() || addStack.equals(heldStack)) {
 				if (heldStack.isBlank()) {
 					HItemStack newStack = new HItemStack(addStack);
 					if (addAmount > maxStackSize) {
@@ -146,7 +147,7 @@ public class HInventory {
 						setItem(heldSlot, newStack, true);
 						addAmount = 0;
 					}
-				} else if (addStack.isSimilarTo(heldStack)) {
+				} else if (addStack.equals(heldStack)) {
 					int spaceInStack = maxStackSize - heldStack.getAmount();
 					if (spaceInStack > 0) {
 						if (spaceInStack < addAmount) {
@@ -174,7 +175,7 @@ public class HInventory {
 					setItem(slot, newStack, true);
 					addAmount = 0;
 				}
-			} else if (addStack.isSimilarTo(currentItem)) {
+			} else if (addStack.equals(currentItem)) {
 				int spaceInStack = maxStackSize - currentItem.getAmount();
 				if (spaceInStack == 0) continue;
 				if (spaceInStack < addAmount) {
@@ -196,7 +197,7 @@ public class HInventory {
 		double actuallyRemoved = 0.0;
 		if (inventoryType == HInventoryType.PLAYER) {
 			HItemStack heldStack = getHeldItem();
-			if (removeStack.isSimilarTo(heldStack)) {
+			if (removeStack.equals(heldStack)) {
 				if (removeAmount >= heldStack.getAmount()) {
 					actuallyRemoved += heldStack.getTrueAmount();
 					setQuantity(heldSlot, 0, true);
@@ -211,7 +212,7 @@ public class HInventory {
 		int slot = 0;
 		while (removeAmount > 0) {
 			HItemStack currentItem = getItem(slot);
-			if (removeStack.isSimilarTo(currentItem)) {
+			if (removeStack.equals(currentItem)) {
 				if (removeAmount >= currentItem.getAmount()) {
 					actuallyRemoved += currentItem.getTrueAmount();
 					setQuantity(slot, 0, true);
@@ -229,6 +230,17 @@ public class HInventory {
 		//updateInventory();
 		return actuallyRemoved;
 	}
+	
+	public int findSlot(HItemStack stack) {
+		Iterator<HItemStack> iterator = items.iterator();
+		int slot = 0;
+		while (iterator.hasNext()) {
+			HItemStack item = iterator.next();
+			if (item.equals(stack)) return slot;
+			slot++;
+		}
+		return -1;
+	}
 
 	
 	public int getAvailableSpace(HItemStack stack) {
@@ -237,7 +249,7 @@ public class HInventory {
 			HItemStack currentItem = getItem(slot);
 			if (currentItem == null || currentItem.isBlank()) {
 				availableSpace += stack.getMaxStackSize();
-			} else if (stack.isSimilarTo(currentItem)) {
+			} else if (stack.equals(currentItem)) {
 				availableSpace += (stack.getMaxStackSize() - currentItem.getAmount());
 			}
 		}
@@ -248,7 +260,7 @@ public class HInventory {
 		int itemCount = 0;
 		for (int slot = 0; slot < getSize(); slot++) {
 			HItemStack currentItem = getItem(slot);
-			if (currentItem.isSimilarTo(stack)) {
+			if (currentItem.equals(stack)) {
 				itemCount += currentItem.getAmount();
 			}
 		}
@@ -262,7 +274,7 @@ public class HInventory {
 		int heldslot = -1;
 		if (inventoryType == HInventoryType.PLAYER) {
 			HItemStack heldItem = getHeldItem();
-			if (heldItem.isSimilarTo(stack)) {
+			if (heldItem.equals(stack)) {
 				heldslot = getHeldSlot();
 				totalDamage += heldItem.getDurabilityPercent();
 				totalItems += heldItem.getAmount();
@@ -272,7 +284,7 @@ public class HInventory {
 		for (int slot = 0; slot < getSize(); slot++) {
 			if (slot == heldslot) continue;
 			HItemStack ci = getItem(slot);
-			if (!ci.isSimilarTo(stack)) continue;
+			if (!ci.equals(stack)) continue;
 			totalDamage += ci.getDurabilityPercent();
 			totalItems += ci.getAmount();
 			if (totalItems >= amount) break;

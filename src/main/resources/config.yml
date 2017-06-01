@@ -115,3 +115,6 @@ web-page:
   font: verdana
   enable-web-api: false
   web-api-path: API
+chest-shop:
+  limit-chest-shops: true
+  max-per-player: 5

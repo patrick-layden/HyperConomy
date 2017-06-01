@@ -496,6 +496,10 @@ public class HyperPlayer implements HyperAccount {
 		return hc.getMC().getItem(this, getHeldItemSlot());
 	}
 	
+	public void setItemOnCursor(HItemStack stack) {
+		hc.getMC().setItemOnCursor(this, stack);
+	}
+	
 	public void setItem(HItemStack stack, int slot) {
 		hc.getMC().setItem(this, stack, slot);
 	}

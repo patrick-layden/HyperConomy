@@ -129,6 +129,10 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 */
 	public double getVersion();
 	/**
+	 * @return The TradeObject's data id
+	 */
+	public int getDataId();
+	/**
 	 * @return The TradeObject's serialized data String.
 	 */
 	public String getData();
@@ -136,7 +140,10 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	 * @param data 
 	 */
 	public void setData(String data);
-
+	/**Sets the TradeObject's serialized data id.
+	 * @param data 
+	 */
+	public void setDataId(int id);
 	/**Sets the TradeObject's name to the given name.
 	 * @param name 
 	 */

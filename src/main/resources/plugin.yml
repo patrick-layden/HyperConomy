@@ -249,6 +249,11 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [hcte]
+   hcchestshop:
+      description: Manages chest shops.
+      permission: hyperconomy.chestshop
+      permission-message: You do not have permission.
+      aliases: [hccs]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

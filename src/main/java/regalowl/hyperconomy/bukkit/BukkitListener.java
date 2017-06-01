@@ -3,12 +3,9 @@ package regalowl.hyperconomy.bukkit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -26,6 +23,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -40,7 +38,6 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.display.ItemDisplay;
 import regalowl.hyperconomy.event.minecraft.ChestShopClickEvent;
@@ -57,21 +54,23 @@ import regalowl.hyperconomy.event.minecraft.HPlayerItemHeldEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerJoinEvent;
 import regalowl.hyperconomy.event.minecraft.HPlayerQuitEvent;
 import regalowl.hyperconomy.event.minecraft.HSignChangeEvent;
+import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HMob;
 import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.shop.ChestShop;
-import regalowl.hyperconomy.shop.ChestShopType;
 
 public class BukkitListener implements Listener {
 
 	private BukkitConnector bc;
 	private HyperConomy hc;
+	private boolean minimal;
 	
 	public BukkitListener(BukkitConnector bc) {
 		this.bc = bc;
 		this.hc = bc.getHC();
+		this.minimal = true;
 	}
 	
 
@@ -84,11 +83,18 @@ public class BukkitListener implements Listener {
 	}
 	
 	
+	public boolean isMinimal() {
+		return minimal;
+	}
+	public void setMinimal(boolean state) {
+		this.minimal = state;
+	}
 	
 	
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChangeEvent(SignChangeEvent event) {
+		if (minimal) return;
 		if (event.isCancelled()) return;
 		HyperPlayer hp = bc.getBukkitCommon().getPlayer(event.getPlayer());
 		HLocation sl = bc.getBukkitCommon().getLocation(event.getBlock().getLocation());
@@ -105,6 +111,7 @@ public class BukkitListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerItemHeldEvent(PlayerItemHeldEvent pihevent) {
+		if (minimal) return;
 		if (pihevent.isCancelled()) return;
 		HyperPlayer hp = bc.getBukkitCommon().getPlayer(pihevent.getPlayer());
 		HPlayerItemHeldEvent hpih = new HPlayerItemHeldEvent(hp, pihevent.getPreviousSlot(), pihevent.getNewSlot());
@@ -114,6 +121,7 @@ public class BukkitListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (minimal) return;
 		if (hc.getHyperLock().loadLock()) return;
 		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getUniqueId());
 		if (hp == null) hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
@@ -123,6 +131,7 @@ public class BukkitListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
+		if (minimal) return;
 		if (hc.getHyperLock().loadLock()) return;
 		HyperPlayer hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getUniqueId());
 		if (hp == null) hp = hc.getHyperPlayerManager().getHyperPlayer(event.getPlayer().getName());
@@ -185,7 +194,8 @@ public class BukkitListener implements Listener {
 	public void onPlayerInteractEvent(PlayerInteractEvent event) {
 		if (event.isCancelled()) return;
 		if (!event.hasBlock()) return;
-		HyperPlayer hp = bc.getBukkitCommon().getPlayer(event.getPlayer());
+		HyperPlayer hp = null;
+		if (!minimal) hp = bc.getBukkitCommon().getPlayer(event.getPlayer());
 		HBlock block = bc.getBukkitCommon().getBlock(event.getClickedBlock());
 		HPlayerInteractEvent hpie;
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
@@ -194,6 +204,7 @@ public class BukkitListener implements Listener {
 			hpie = new HPlayerInteractEvent(hp, block, false);
 		}
 		hc.getHyperEventHandler().fireEvent(hpie);
+		if (minimal) if (bc.isTransactionSign(block.getLocation())) event.setCancelled(true);
 		if (hpie.isCancelled()) event.setCancelled(true);
 	}
 	
@@ -203,6 +214,7 @@ public class BukkitListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChestShopInventoryClickEvent(InventoryClickEvent icevent) {
+		if (minimal) return;
 		if (icevent.isCancelled()) {return;}
 		HumanEntity he = icevent.getWhoClicked();
 		if (!(he instanceof Player)) return;
@@ -210,9 +222,12 @@ public class BukkitListener implements Listener {
 		InventoryHolder ih = icevent.getView().getTopInventory().getHolder();
 		if (!(ih instanceof Player)) return;
 		HyperPlayer clicker = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
-		ChestShop openShop = hc.getChestShop().getOpenShop(clicker);
+		ChestShop openShop = hc.getChestShopHandler().getOpenShop(clicker);
 		if (openShop == null) return;
-		ChestShopClickEvent event = new ChestShopClickEvent(clicker, openShop, icevent.getRawSlot());
+		
+		HItemStack cursorStack = bc.getBukkitCommon().getSerializableItemStack(icevent.getCursor());
+		HItemStack clickedStack = bc.getBukkitCommon().getSerializableItemStack(icevent.getCurrentItem());
+		ChestShopClickEvent event = new ChestShopClickEvent(clicker, openShop, icevent.getRawSlot(), icevent.getAction().toString().toUpperCase(), clickedStack.getAmount(), clickedStack, cursorStack.getAmount(), cursorStack);
 		if (icevent.isShiftClick()) {
 			event.setShiftClick();
 		} 
@@ -225,11 +240,27 @@ public class BukkitListener implements Listener {
 		if (event.isCancelled()) icevent.setCancelled(true);
 	}
 	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onChestShopInventoryDragEvent(InventoryDragEvent idEvent) {
+		if (minimal) return;
+		HumanEntity he = idEvent.getWhoClicked();
+		if (!(he instanceof Player)) return;
+		Player p = (Player)he;
+		InventoryHolder ih = idEvent.getView().getTopInventory().getHolder();
+		if (!(ih instanceof Player)) return;
+		HyperPlayer clicker = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
+		ChestShop openShop = hc.getChestShopHandler().getOpenShop(clicker);
+		if (openShop == null) return;
+		idEvent.setCancelled(true);
+		//TODO fire inventory click event with proper settings
+	}
+	
 	
 	
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChestShopInventoryOpenEvent(InventoryOpenEvent ioevent) {
+		if (minimal) return;
 		if (ioevent.isCancelled()) {return;}
 		HumanEntity he = ioevent.getPlayer();
 		if (!(he instanceof Player)) return;
@@ -238,9 +269,10 @@ public class BukkitListener implements Listener {
 		if (!(ih instanceof Chest)) return;
 		Chest c = (Chest)ih;
 		HLocation chestLoc = bc.getBukkitCommon().getLocation(c.getLocation());
-		ChestShop cs = hc.getChestShop().getChestShop(chestLoc);
+		ChestShop cs = hc.getChestShopHandler().getChestShop(chestLoc);
 		
 		//add old format chest shops
+		/*
 		if (cs == null) {
 			BukkitCommon common = bc.getBukkitCommon();
 			//if (!bc.getBukkitCommon().isChestShopChest(chestLoc)) return;
@@ -270,9 +302,9 @@ public class BukkitListener implements Listener {
 			s.setLine(2, "");
 			s.setLine(3, "");
 			s.update();
-			cs = hc.getChestShop().addNewChestShop(chestLoc, owner);
+			cs = hc.getChestShopHandler().addNewChestShop(chestLoc, owner);
 		}
-
+		 */
 		
 		ChestShopOpenEvent event = new ChestShopOpenEvent(hc.getHyperPlayerManager().getHyperPlayer(p.getName()), cs);
 		hc.getHyperEventHandler().fireEvent(event);
@@ -282,13 +314,14 @@ public class BukkitListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChestShopInventoryCloseEvent(InventoryCloseEvent icevent) {
+		if (minimal) return;
 		HumanEntity he = icevent.getPlayer();
 		if (!(he instanceof Player)) return;
 		Player p = (Player)he;
 		InventoryHolder ih = icevent.getView().getTopInventory().getHolder();
 		if (!(ih instanceof Player)) return;
 		HyperPlayer closer = hc.getHyperPlayerManager().getHyperPlayer(p.getName());
-		ChestShop cs = hc.getChestShop().getOpenShop(closer);
+		ChestShop cs = hc.getChestShopHandler().getOpenShop(closer);
 		if (cs == null || cs.updateMenuLock()) return;
 		ChestShopCloseEvent event = new ChestShopCloseEvent(closer, cs);
 		hc.getHyperEventHandler().fireEvent(event);
@@ -298,6 +331,7 @@ public class BukkitListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onItemDisplayLoad(ChunkLoadEvent event) {
+		if (minimal) return;
 		Chunk chunk = event.getChunk();
 		if (chunk == null) return;
 		for (ItemDisplay display : hc.getItemDisplay().getDisplays()) {
@@ -311,6 +345,7 @@ public class BukkitListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onItemDisplayUnload(ChunkUnloadEvent event) {
+		if (minimal) return;
 		Chunk chunk = event.getChunk();
 		if (chunk == null) {return;}
 		for (ItemDisplay display:hc.getItemDisplay().getDisplays()) {
@@ -324,6 +359,7 @@ public class BukkitListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPickupDisplayCreatureSpawn(CreatureSpawnEvent event) {
+		if (minimal) return;
 		HLocation l = bc.getBukkitCommon().getLocation(event.getLocation());
 		HMob mob = new HMob(l, event.getEntity().getCanPickupItems());
 		for (ItemDisplay display : hc.getItemDisplay().getDisplays()) {
@@ -346,6 +382,7 @@ public class BukkitListener implements Listener {
 				}
 			}
 		}
+		if (minimal) return;
 		for (ItemDisplay display : hc.getItemDisplay().getDisplays()) {
 			if (display.getEntityId() == item.getEntityId() || item.equals(display.getItem())) {
 				event.setCancelled(true);
@@ -356,6 +393,7 @@ public class BukkitListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerDropItemEvent(PlayerDropItemEvent devent) {
+		if (minimal) return;
 		if (devent.isCancelled()) return;
 		HPlayerDropItemEvent event = new HPlayerDropItemEvent(bc.getBukkitCommon().getItem(devent.getItemDrop()), bc.getBukkitCommon().getPlayer(devent.getPlayer()));
 		hc.getHyperEventHandler().fireEvent(event);

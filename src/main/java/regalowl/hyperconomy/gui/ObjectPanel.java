@@ -625,7 +625,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 				}
 				String aliases = newName.replace("_", "");
 				TradeObject to = new ComponentTradeItem(hc, null, newName, he.getName(), newName, aliases, "", "item", 1, "false", 2,
-						0, 10000, "true", 2, 1000000000,0, 1000000000, "", "", 1);
+						0, 10000, "true", 2, 1000000000,0, 1000000000, "", 0, "", 1);
 				boolean success = new Additem(hc).addItem(to, he.getName());
 				if (!success) JOptionPane.showMessageDialog(null, "Adding item failed.  Try a different name.", "Error", JOptionPane.ERROR_MESSAGE);
 				loadObjects();
