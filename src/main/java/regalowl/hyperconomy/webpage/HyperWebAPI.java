@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.api.API;
 
 
@@ -32,8 +32,10 @@ public class HyperWebAPI extends HttpServlet {
 	private static Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
 
 	private String apiKey;
+	private HyperConomy hc;
 
-	public HyperWebAPI(String apiKey) {
+	public HyperWebAPI(HyperConomy hc, String apiKey) {
+		this.hc = hc;
 		this.apiKey = apiKey;
 		classes.put("Main", API.class);
 	}
@@ -210,8 +212,8 @@ public class HyperWebAPI extends HttpServlet {
     		else if (lType.isAssignableFrom(char.class)) {
     			lArgs[lIndex] = new Character(pParams.get(lIndex).charAt(0));
     		} //It's a player -> find by name
-    		else if (lType.isAssignableFrom(Player.class)) {
-    			lArgs[lIndex] = Bukkit.getPlayer(pParams.get(lIndex));
+    		else if (lType.isAssignableFrom(HyperPlayer.class)) {
+    			lArgs[lIndex] = hc.getHyperPlayerManager().getHyperPlayer(pParams.get(lIndex));
     		} //The type isn't autorized (you must add a new type at this list
     		else {
     			throw new IllegalArgumentException(pClass + "." + pMethod + "() : arg(" + lIndex + ") isn't autorized! (" + lType.getCanonicalName() + ")");

@@ -126,7 +126,7 @@ public class MultiServer implements HyperEventListener {
 		for (TradeObject ho:objects) {
 			//System.out.println("Received: " + ho.getDisplayName());
 			if (ho == null || ho.getEconomy() == null || ho.getEconomy().equalsIgnoreCase("")) continue;
-			HyperEconomy he = hc.getDataManager().getEconomy(ho.getEconomy());
+			HyperEconomy he = hc.getDataManager().getEconomyIB(ho.getEconomy());
 			if (he == null) continue;
 			ho.setHyperConomy(hc);
 			if (ho.isShopObject()) {

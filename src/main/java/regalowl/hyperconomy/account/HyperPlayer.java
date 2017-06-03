@@ -185,16 +185,13 @@ public class HyperPlayer implements HyperAccount {
 		DataManager em = hc.getDataManager();
 		if (balance > 0) {return false;}
 		if (hc.getMC().isOnline(this)) {return false;}
-		if (em.getHyperShopManager().getShops(this).size() > 0) {return false;}
+		if (em.getHyperShopManager().getShops(this).size() > 0) return false;
+		if (hc.getDataManager().getChestShopHandler().getChestShops(this).size() > 0) return false;
 		for (HyperEconomy he:em.getEconomies()) {
-			if (he.getDefaultAccount().equals(this)) {
-				return false;
-			}
+			if (he.getDefaultAccount().equals(this)) return false;
 		}
 		for (HyperBank hb:em.getHyperBankManager().getHyperBanks()) {
-			if (hb.isOwner(this) || hb.isMember(this)) {
-				return false;
-			}
+			if (hb.isOwner(this) || hb.isMember(this)) return false;
 		}
 		return true;
 	}
@@ -494,6 +491,10 @@ public class HyperPlayer implements HyperAccount {
 	
 	public HItemStack getItemInHand() {
 		return hc.getMC().getItem(this, getHeldItemSlot());
+	}
+	
+	public void setItemOnCursor(HItemStack stack) {
+		hc.getMC().setItemOnCursor(this, stack);
 	}
 	
 	public void setItem(HItemStack stack, int slot) {

@@ -43,19 +43,28 @@ public class HItemStack {
     }
    
 	public HItemStack(String serialized) {
-		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
-    	this.itemMeta = HItemMetaFactory.generate(HItemMetaType.fromString(data.get("metaType")), data.get("itemMetaData"));
-    	this.material = data.get("material");
-    	this.durability = Short.parseShort(data.get("durability"));
-    	this.data = Byte.parseByte(data.get("data"));
-    	this.amount = Integer.parseInt(data.get("amount"));
-    	this.maxStackSize = Integer.parseInt(data.get("maxStackSize"));
-    	this.maxDurability = Integer.parseInt(data.get("maxDurability"));
-    	this.isBlank = Boolean.parseBoolean(data.get("isBlank"));
+		if (serialized == null || serialized.equals("")) {
+			isBlank = true;
+			return;
+		}
+		try {
+			HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
+	    	this.itemMeta = HItemMetaFactory.generate(HItemMetaType.fromString(data.get("metaType")), data.get("itemMetaData"));
+	    	this.material = data.get("material");
+	    	this.durability = Short.parseShort(data.get("durability"));
+	    	this.data = Byte.parseByte(data.get("data"));
+	    	this.amount = Integer.parseInt(data.get("amount"));
+	    	this.maxStackSize = Integer.parseInt(data.get("maxStackSize"));
+	    	this.maxDurability = Integer.parseInt(data.get("maxDurability"));
+	    	this.isBlank = Boolean.parseBoolean(data.get("isBlank"));
+		} catch (Exception e) {
+			isBlank = true;
+		}
     }
 	
 	
 	public String serialize() {
+		if (isBlank) return "";
 		HashMap<String,String> data = new HashMap<String,String>();
 		data.put("metaType", itemMeta.getType().toString());
 		data.put("itemMetaData", itemMeta.serialize());
@@ -209,20 +218,7 @@ public class HItemStack {
 
 
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + amount;
-		result = prime * result + data;
-		result = prime * result + durability;
-		result = prime * result + (isBlank ? 1231 : 1237);
-		result = prime * result + ((itemMeta == null) ? 0 : itemMeta.hashCode());
-		result = prime * result + ((material == null) ? 0 : material.hashCode());
-		result = prime * result + maxDurability;
-		result = prime * result + maxStackSize;
-		return result;
-	}
+
 	
 	public StackComparisonData getStackComparisonData() {
 		StackComparisonData data = new StackComparisonData();
@@ -235,7 +231,45 @@ public class HItemStack {
 		data.isBlank = isBlank;
 		return data;
 	}
-
+	
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + getComparisonData();
+		result = prime * result + getComparisonDurability();
+		result = prime * result + (isBlank ? 1231 : 1237);
+		result = prime * result + ((itemMeta == null) ? 0 : itemMeta.hashCode());
+		result = prime * result + ((material == null) ? 0 : material.hashCode());
+		result = prime * result + maxDurability;
+		result = prime * result + maxStackSize;
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		HItemStack other = (HItemStack) obj;
+		if (getComparisonData() != other.getComparisonData()) return false;
+		if (getComparisonDurability() != other.getComparisonDurability()) return false;
+		if (isBlank != other.isBlank()) return false;
+		if (itemMeta == null) {
+			if (other.getItemMeta() != null) return false;
+		} else if (!itemMeta.equals(other.getItemMeta()))
+			return false;
+		if (material == null) {
+			if (other.getMaterial() != null) return false;
+		} else if (!material.equals(other.getMaterial()))
+			return false;
+		if (maxDurability != other.getMaxDurability()) return false;
+		if (maxStackSize != other.getMaxStackSize()) return false;
+		return true;
+	}
+	
+	/*
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
@@ -258,7 +292,8 @@ public class HItemStack {
 		if (maxStackSize != other.getMaxStackSize()) return false;
 		return true;
 	}
-	
+	*/
+	/*
 	public boolean isSimilarTo(Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
@@ -279,7 +314,7 @@ public class HItemStack {
 		if (maxStackSize != other.getMaxStackSize()) return false;
 		return true;
 	}
-
+	*/
 
 
 

@@ -3,12 +3,12 @@ package regalowl.hyperconomy.shop;
 
 
 
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
 
-
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-
 
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
@@ -28,6 +28,7 @@ import regalowl.hyperconomy.event.minecraft.HBlockPistonExtendEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPistonRetractEvent;
 import regalowl.hyperconomy.event.minecraft.HBlockPlaceEvent;
 import regalowl.hyperconomy.event.minecraft.HEntityExplodeEvent;
+import regalowl.hyperconomy.event.minecraft.HPlayerInteractEvent;
 import regalowl.hyperconomy.event.minecraft.HSignChangeEvent;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
@@ -46,14 +47,19 @@ public class ChestShopHandler implements HyperEventListener {
 	private HyperConomy hc;
 	private LanguageFile L;
 	private DataManager em;
-	//private HashMap<HLocation, ChestShop> openShops = new HashMap<HLocation, ChestShop>();
 	private ConcurrentHashMap<HLocation, ChestShop> chestShops = new ConcurrentHashMap<HLocation, ChestShop>();
+	private int maxChestShopsPerPlayer;
+	private boolean limitChestShops;
 
 	public ChestShopHandler(HyperConomy hc) {
 		this.hc = hc;
 		em = hc.getDataManager();
 		L = hc.getLanguageFile();
-		if (hc.getConf().getBoolean("enable-feature.chest-shops")) hc.getHyperEventHandler().registerListener(this);
+		if (hc.getConf().getBoolean("enable-feature.chest-shops")) {
+			hc.getHyperEventHandler().registerListener(this);
+			maxChestShopsPerPlayer = hc.getConf().getInt("chest-shop.max-per-player");
+			limitChestShops = hc.getConf().getBoolean("chest-shop.limit-chest-shops");
+		}		
 	}
 	
 
@@ -76,10 +82,10 @@ public class ChestShopHandler implements HyperEventListener {
 						chestShops.put(l, new ChestShop(hc, l, owner, priceIncrement));
 					}
 					dbData.close();
-					dbData = sr.select("SELECT * FROM hyperconomy_chest_shop_items");
+					dbData = sr.select("SELECT * FROM hyperconomy_chest_shop_items csi INNER JOIN hyperconomy_object_data od ON csi.DATA_ID = od.ID");
 					while (dbData.next()) {
 						String chestId = dbData.getString("CHEST_ID");
-						int slot = dbData.getInt("SLOT");
+						int dataId = dbData.getInt("DATA_ID");
 						String data = dbData.getString("DATA");
 						double buyPrice = dbData.getDouble("BUY_PRICE");
 						double sellPrice = dbData.getDouble("SELL_PRICE");
@@ -87,10 +93,12 @@ public class ChestShopHandler implements HyperEventListener {
 						HLocation l = HLocation.fromBlockString(chestId);
 						ChestShop cs = chestShops.get(l);
 						if (cs == null) continue;
-						cs.setCustomPriceItem(chestId, slot, data, buyPrice, sellPrice, type);
+						cs.setCustomPriceItem(chestId, dataId, data, buyPrice, sellPrice, type);
 					}
 					dbData.close();
 					dbData = null;	
+					hc.getDebugMode().ayncDebugConsoleMessage("Chest shops loaded.");
+					hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.CHEST_SHOPS));
 				}
 			}).start();
 		} catch (Exception e) {
@@ -105,45 +113,80 @@ public class ChestShopHandler implements HyperEventListener {
 		ChestShop cs = chestShops.get(loc);
 		if (cs == null) return cs;
 		if (!cs.isInitialized()) cs.initialize();
+		if (!cs.isValid()) {
+			deleteChestShop(cs);
+			return null;
+		}
 		return cs;
 	}
 	
+	public ChestShop getChestShopFromAnyPart(HLocation loc) {
+		ChestShop returnShop = null;
+		for (ChestShop cs:chestShops.values()) {
+			if (cs.isPartOfChestShop(loc)) {
+				returnShop = cs;
+				break;
+			}
+		}
+		if (returnShop != null) {
+			if (!returnShop.isInitialized()) returnShop.initialize();
+			if (!returnShop.isValid()) {
+				deleteChestShop(returnShop);
+				return null;
+			}
+		}
+		return returnShop;
+	}
 	
 	private void handleClick(ChestShopClickEvent event) {
 		
 		//try {
-			event.cancel();
+			
+			//event.cancel();
+		
 			HyperPlayer clicker = event.getClicker();
 			if (hc.getHyperLock().isLocked(clicker)) {
 				hc.getHyperLock().sendLockMessage(clicker);
 				return;
 			}
-			ChestShop cs = event.getChestShop(); 
-
 			
-			HItemStack clickedItem = null;
-
-
-			int slot = event.getClickedSlot();
-			HInventory shopInventory = cs.getInventory();
+			//HANDLE OWNER CLICK
+			ChestShop cs = event.getChestShop();
 			HyperAccount owner = cs.getOwner();
 			if (clicker.getName().equals(owner.getName())) {
 				handleOwnerClick(event);
 				return;
 			}
+		
+			
+			
+			
+			
+			
+			
+			
+			
+			HItemStack clickedItem = event.getInvItem();
+			HItemStack cursorItem = event.getCursorItem();
+			HInventory shopInventory = cs.getInventory();
 			HInventory playerInventory = clicker.getInventory();
-
-
+			int slot = event.getClickedSlot();
+			String action = event.getAction();
 			boolean isChestInventory = false;
-			boolean isControlButton = false;
 			boolean isPlayerInventory = false;
-			if (slot < 27) isChestInventory = true;
-			if (slot >= 27 && slot < 36) isControlButton = true;
-			if (slot >= 36) {
-				isPlayerInventory = true;
+			if (slot < 0) {
+				event.cancel();
 				return;
 			}
-			if (isChestInventory) clickedItem = shopInventory.getItem(event.getClickedSlot());
+			if (slot < 27) {
+				isChestInventory = true;
+				event.cancel();
+			}
+			if (slot >= 27) {
+				isPlayerInventory = true;
+			}
+
+			/*
 			if (isPlayerInventory) {
 				int translatedSlot = slot - 36;
 				if (translatedSlot >= 27) {
@@ -151,164 +194,311 @@ public class ChestShopHandler implements HyperEventListener {
 				} else {
 					translatedSlot += 9;
 				}
-				clickedItem = playerInventory.getItem(translatedSlot);
-			}
-			if (clickedItem == null) return;
-			//if (isPlayerInventory) clickedItem = clicker.getInventory().getItem(slot);
-			
-			
-
-			/*
-			if (clickedItem.isDamaged()) {
-				clicker.sendMessage(L.get("CHESTSHOP_CANT_TRADE_DAMAGED"));
-				return;
 			}
 			*/
+
 			HyperEconomy chestOwnerEconomy = em.getDefaultEconomy();
 			if (owner instanceof HyperPlayer) {
 				HyperPlayer hPlayer = (HyperPlayer)owner;
 				chestOwnerEconomy = hPlayer.getHyperEconomy();
 			}
-			TradeObject tradeObject = chestOwnerEconomy.getTradeObject(clickedItem);
-			if (tradeObject == null) {
-				tradeObject = TempTradeItem.generate(hc, clickedItem);
-			}
-			
-			int stackQuantity = 1;
-			if (event.isShiftClick()) stackQuantity = clickedItem.getAmount();
 
-			
-			if (event.isRightClick()) {
-				if (!cs.isSellSlot(slot)) {
-					clicker.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
-					return;
-				}
-				if (clicker.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
-					clicker.sendMessage(L.get("CANT_SELL_CREATIVE"));
-					return;
-				}
-				int itemamount = shopInventory.count(tradeObject.getItem());
-				if (itemamount <= 0) {
-					clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
-					return;
-				}
-				
-				
-				int playerItemCount = clicker.getInventory().count(tradeObject.getItem());
-				if (playerItemCount < stackQuantity) {
-					clicker.sendMessage(L.f(L.get("YOU_DONT_HAVE_ENOUGH"), tradeObject.getDisplayName()));
-					return;
-				}
-				
-				int space = shopInventory.getAvailableSpace(tradeObject.getItem());
-				if (space < stackQuantity) {
-					clicker.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
-					return;
-				}
-				
-				
-							
-				double bal = owner.getBalance();
-				double cost = tradeObject.getSellPrice(stackQuantity);
-				//if (hasStaticPrice) cost = staticPrice;
-				if (bal < cost) {
-					clicker.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), owner.getName()));
-					return;
-				}
+			if (isChestInventory) {
+				if (action.equals("PICKUP_ALL") || action.equals("PICKUP_HALF")) {
+					HItemStack tradeItem = shopInventory.getItem(event.getClickedSlot());
+					TradeObject tradeObject = chestOwnerEconomy.getTradeObject(tradeItem);
+					if (tradeObject == null) tradeObject = TempTradeItem.generate(hc, tradeItem);
 					
-				PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_TO_INVENTORY);
-				pt.setHyperObject(tradeObject);
-				pt.setTradePartner(owner);
-				pt.setAmount(stackQuantity);
-				pt.setReceiveInventory(shopInventory);
-				pt.setMoney(cs.getSellPrice(slot));
-				pt.setSetPrice(true);
-				//if (hasStaticPrice) {
-				//	pt.setMoney(cost);
-				//	pt.setSetPrice(true);
-				//}
-				TransactionResponse response = clicker.processTransaction(pt);
-				response.sendMessages();
-				if (response.successful()) cs.refreshMenu();
+					if (!cs.isBuyStack(tradeItem)) {
+						clicker.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
+						cs.setViewerMenuTitle(clicker, "You can't buy that.");
+						cs.refreshMenu();
+						return;
+					}
+					int space = clicker.getInventory().getAvailableSpace(tradeObject.getItem());
+					if (space < 1) {
+						clicker.sendMessage(L.f(L.get("ONLY_ROOM_TO_BUY"), space, tradeObject.getDisplayName()));
+						cs.setViewerMenuTitle(clicker, "Your inventory is too full.");
+						cs.refreshMenu();
+						return;
+					}
+					
+					
+					PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_CUSTOM);
+					pt.setHyperObject(tradeObject);
+					pt.setTradePartner(owner);
+					pt.setAmount(1);
+					pt.setGiveInventory(shopInventory);
+					pt.setMoney(cs.getBuyPrice(tradeItem));
+					pt.setSetPrice(true);
+					TransactionResponse response = clicker.processTransaction(pt);
+					response.sendMessages();
+					if (response.successful()) {
+						shopInventory.remove(1, tradeItem);
+						playerInventory.add(1, tradeItem);
+						cs.setViewerMenuTitle(clicker, "Bought for: " + hc.getLanguageFile().gC(false) + CommonFunctions.twoDecimals(pt.getMoney()));
+						cs.refreshMenu();
+					}
+				} else if (action.equals("MOVE_TO_OTHER_INVENTORY")) {
+					HItemStack tradeItem = shopInventory.getItem(event.getClickedSlot());
+					TradeObject tradeObject = chestOwnerEconomy.getTradeObject(tradeItem);
+					if (tradeObject == null) tradeObject = TempTradeItem.generate(hc, tradeItem);
+					
+					
+					if (!cs.isBuyStack(tradeItem)) {
+						clicker.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
+						cs.setViewerMenuTitle(clicker, "You can't buy that.");
+						cs.refreshMenu();
+						return;
+					}
+					int space = clicker.getInventory().getAvailableSpace(tradeObject.getItem());
+					if (space < tradeItem.getAmount()) {
+						clicker.sendMessage(L.f(L.get("ONLY_ROOM_TO_BUY"), space, tradeObject.getDisplayName()));
+						cs.setViewerMenuTitle(clicker, "Your inventory is too full.");
+						cs.refreshMenu();
+						return;
+					}
+					
+					PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_CUSTOM);
+					pt.setHyperObject(tradeObject);
+					pt.setTradePartner(owner);
+					pt.setAmount(tradeItem.getAmount());
+					pt.setGiveInventory(shopInventory);
+					pt.setMoney(cs.getBuyPrice(tradeItem) * tradeItem.getAmount());
+					pt.setSetPrice(true);
+					TransactionResponse response = clicker.processTransaction(pt);
+					response.sendMessages();
+					if (response.successful()) {
+						shopInventory.remove(tradeItem.getAmount(), tradeItem);
+						playerInventory.add(tradeItem.getAmount(), tradeItem);
+						cs.setViewerMenuTitle(clicker, "Bought for: " + hc.getLanguageFile().gC(false) + CommonFunctions.twoDecimals(pt.getMoney()));
+						cs.refreshMenu();
+					}
+				} else if (action.equals("PLACE_ALL")) {
+					HItemStack tradeItem = cursorItem;
+					TradeObject tradeObject = chestOwnerEconomy.getTradeObject(tradeItem);
+					if (tradeObject == null) tradeObject = TempTradeItem.generate(hc, tradeItem);
+					
+					if (!cs.isSellStack(tradeItem)) {
+						clicker.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
+						cs.setViewerMenuTitle(clicker, "You can't sell that.");
+						clicker.setItemOnCursor(null);
+						playerInventory.add(tradeItem.getAmount(), tradeItem);
+						cs.refreshMenu();
+						return;
+					}
+					if (clicker.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
+						clicker.sendMessage(L.get("CANT_SELL_CREATIVE"));
+						cs.setViewerMenuTitle(clicker, "You cannot be in creative.");
+						clicker.setItemOnCursor(null);
+						playerInventory.add(tradeItem.getAmount(), tradeItem);
+						cs.refreshMenu();
+						return;
+					}
+					int itemamount = shopInventory.count(tradeObject.getItem());
+					if (itemamount <= 0) {
+						clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
+						cs.setViewerMenuTitle(clicker, "You can't sell that.");
+						clicker.setItemOnCursor(null);
+						playerInventory.add(tradeItem.getAmount(), tradeItem);
+						cs.refreshMenu();
+						return;
+					}
 
-			} else if (event.isLeftClick()) {
-				if (!cs.isBuySlot(slot)) {
-					clicker.sendMessage(L.get("CANNOT_BUY_ITEMS_FROM_CHEST"));
-					return;
+					
+					int space = shopInventory.getAvailableSpace(tradeObject.getItem());
+					if (space < tradeItem.getAmount()) {
+						clicker.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
+						cs.setViewerMenuTitle(clicker, "Not enough space.");
+						clicker.setItemOnCursor(null);
+						playerInventory.add(tradeItem.getAmount(), tradeItem);
+						cs.refreshMenu();
+						return;
+					}
+					
+					
+								
+					double bal = owner.getBalance();
+					double cost = tradeObject.getSellPrice(tradeItem.getAmount());
+					if (bal < cost) {
+						clicker.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), owner.getName()));
+						cs.setViewerMenuTitle(clicker, "Shop has insufficient funds.");
+						clicker.setItemOnCursor(null);
+						playerInventory.add(tradeItem.getAmount(), tradeItem);
+						cs.refreshMenu();
+						return;
+					}
+						
+					PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_CUSTOM);
+					pt.setHyperObject(tradeObject);
+					pt.setTradePartner(owner);
+					pt.setAmount(tradeItem.getAmount());
+					pt.setReceiveInventory(shopInventory);
+					pt.setMoney(cs.getSellPrice(tradeItem) * tradeItem.getAmount());
+					pt.setSetPrice(true);
+					TransactionResponse response = clicker.processTransaction(pt);
+					response.sendMessages();
+					if (response.successful()) {
+						shopInventory.add(tradeItem.getAmount(), tradeItem);
+						clicker.setItemOnCursor(null);
+						cs.setViewerMenuTitle(clicker, "Sold to chest for: " + hc.getLanguageFile().gC(false) + CommonFunctions.twoDecimals(pt.getMoney()));
+						cs.refreshMenu();
+					}
+
 				}
-				PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY_FROM_INVENTORY);
-				pt.setHyperObject(tradeObject);
-				pt.setTradePartner(owner);
-				pt.setAmount(stackQuantity);
-				pt.setGiveInventory(shopInventory);
-				pt.setMoney(cs.getBuyPrice(slot));
-				pt.setSetPrice(true);
-				//if (hasStaticPrice) {
-				//	pt.setMoney(staticPrice);
-				//	pt.setSetPrice(true);
-				//}
-				TransactionResponse response = clicker.processTransaction(pt);
-				response.sendMessages();
-				if (response.successful()) cs.refreshMenu();
+				
+			} else if (isPlayerInventory) {
 
+				if (action.equals("MOVE_TO_OTHER_INVENTORY")) {
+					HItemStack tradeItem = clickedItem;
+					TradeObject tradeObject = chestOwnerEconomy.getTradeObject(tradeItem);
+					if (tradeObject == null) tradeObject = TempTradeItem.generate(hc, tradeItem);
+
+					
+					if (!cs.isSellStack(tradeItem)) {
+						clicker.sendMessage(L.get("CANNOT_SELL_ITEMS_TO_CHEST"));
+						cs.setViewerMenuTitle(clicker, "You can't sell that.");
+						cs.refreshMenu();
+						event.cancel();
+						return;
+					}
+					if (clicker.isInCreativeMode() && hc.getConf().getBoolean("shop.block-selling-in-creative-mode")) {
+						clicker.sendMessage(L.get("CANT_SELL_CREATIVE"));
+						cs.setViewerMenuTitle(clicker, "You cannot be in creative.");
+						cs.refreshMenu();
+						event.cancel();
+						return;
+					}
+					int itemamount = shopInventory.count(tradeObject.getItem());
+					if (itemamount <= 0) {
+						clicker.sendMessage(L.get("CHEST_WILL_NOT_ACCEPT_ITEM"));
+						cs.setViewerMenuTitle(clicker, "You can't sell that.");
+						cs.refreshMenu();
+						event.cancel();
+						return;
+					}
+
+					
+					int space = shopInventory.getAvailableSpace(tradeObject.getItem());
+					if (space < tradeItem.getAmount()) {
+						clicker.sendMessage(L.get("CHEST_SHOP_NOT_ENOUGH_SPACE"));
+						cs.setViewerMenuTitle(clicker, "Not enough space.");
+						cs.refreshMenu();
+						event.cancel();
+						return;
+					}
+					
+					
+								
+					double bal = owner.getBalance();
+					double cost = tradeObject.getSellPrice(tradeItem.getAmount());
+					if (bal < cost) {
+						clicker.sendMessage(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), owner.getName()));
+						cs.setViewerMenuTitle(clicker, "Shop has insufficient funds.");
+						cs.refreshMenu();
+						event.cancel();
+						return;
+					}
+						
+					PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL_CUSTOM);
+					pt.setHyperObject(tradeObject);
+					pt.setTradePartner(owner);
+					pt.setAmount(tradeItem.getAmount());
+					pt.setReceiveInventory(shopInventory);
+					pt.setMoney(cs.getSellPrice(tradeItem) * tradeItem.getAmount());
+					pt.setSetPrice(true);
+					TransactionResponse response = clicker.processTransaction(pt);
+					response.sendMessages();
+					if (response.successful()) {
+						
+						playerInventory.remove(tradeItem.getAmount(), tradeItem);
+						shopInventory.add(tradeItem.getAmount(), tradeItem);
+						cs.setViewerMenuTitle(clicker, "Sold to chest for: " + hc.getLanguageFile().gC(false) + CommonFunctions.twoDecimals(pt.getMoney()));
+						cs.refreshMenu();
+					}
+
+					event.cancel();
+					cs.refreshMenu();
+				} else if (action.equals("PICKUP_ALL") || action.equals("PICKUP_HALF")) {
+					//allow
+				} else if (action.equals("PLACE_ALL") || action.equals("PLACE_ONE")) {
+					//allow
+				} else {
+					event.cancel();
+				}
+			
 			}
-		//} catch (Exception e) {
-		//	hc.gSDL().getErrorWriter().writeError(e);
-		//}
+		
 			
 	}
 	
 	private void handleOwnerClick(ChestShopClickEvent event) {
-		HItemStack clickedItem = null;
 		
+		HItemStack clickedItem = event.getInvItem();
+		HItemStack cursorItem = event.getCursorItem();
 		HyperPlayer clicker = event.getClicker();
 		ChestShop cs = event.getChestShop();
 		HInventory shopInventory = cs.getInventory();
 		HInventory playerInventory = clicker.getInventory();
 		int slot = event.getClickedSlot();
+		String action = event.getAction();
 		boolean isChestInventory = false;
 		boolean isControlButton = false;
 		boolean isPlayerInventory = false;
-		if (slot < 27) isChestInventory = true;
-		if (slot >= 27 && slot < 36) isControlButton = true;
-		if (slot >= 36) isPlayerInventory = true;
-		if (isChestInventory) clickedItem = shopInventory.getItem(slot);
-		if (isPlayerInventory) {
-			int translatedSlot = slot - 36;
-			if (translatedSlot >= 27) {
-				translatedSlot -= 27;
-			} else {
-				translatedSlot += 9;
-			}
-			clickedItem = playerInventory.getItem(translatedSlot);
+		if (slot < 0) {
+			event.cancel();
+			return;
 		}
-		if ((clickedItem == null || clickedItem.isBlank()) && !isControlButton) return;
-		
-		int stackQuantity = 1;
-		if (event.isShiftClick()) {
-			stackQuantity = clickedItem.getAmount();
-		} 
+		if (slot < 27) {
+			isChestInventory = true;
+			clickedItem = cs.getInventory().getItem(slot);
+			event.cancel();
+		}
+		if (slot >= 27 && slot < 36) {
+			isControlButton = true;
+			event.cancel();
+		}
+		if (slot >= 36) isPlayerInventory = true;
 
 		if (isChestInventory) {
 			if (cs.inSelectItemMode()) {
-				cs.setEditSlot(slot);
+				cs.setEditStack(clickedItem);
 				cs.setEditMode(true, false);
 				cs.setSelectItemMode(false);
+				cs.refreshMenu();
 			} else if (cs.inEditItemMode() || cs.inPreviewMode() || cs.inDeleteMode()) {
-				//do nothing, maybe add a notice
+				
 			} else {
-				if (playerInventory.getAvailableSpace(clickedItem) >= stackQuantity) {
-					playerInventory.add(1, clickedItem);
-					shopInventory.remove(1, clickedItem);
+				if (action.equals("PICKUP_ALL") || action.equals("PICKUP_HALF")) {
+					int quantity = (event.isRightClick()) ? clickedItem.getAmount() : 1;
+					shopInventory.remove(quantity, clickedItem);
+					playerInventory.add(quantity, clickedItem);
+					cs.refreshMenu();
+				} else if (action.equals("MOVE_TO_OTHER_INVENTORY")) {
+					shopInventory.remove(clickedItem.getAmount(), clickedItem);
+					playerInventory.add(clickedItem.getAmount(), clickedItem);
+					cs.refreshMenu();
+				} else if (action.equals("PLACE_ALL")) {
+					shopInventory.add(cursorItem.getAmount(), cursorItem);
+					clicker.setItemOnCursor(null);
+					cs.refreshMenu();
 				}
 			}
 		} else if (isPlayerInventory) {
 			if (cs.inSelectItemMode() || cs.inEditItemMode() || cs.inPreviewMode() || cs.inDeleteMode()) {
-				//do nothing, maybe add a notice
+				event.cancel();
 			} else {
-				if (shopInventory.getAvailableSpace(clickedItem) >= stackQuantity) {
-					playerInventory.remove(stackQuantity, clickedItem);
-					shopInventory.add(stackQuantity, clickedItem);
+				if (action.equals("MOVE_TO_OTHER_INVENTORY")) {
+					playerInventory.remove(clickedItem.getAmount(), clickedItem);
+					shopInventory.add(clickedItem.getAmount(), clickedItem);
+					event.cancel();
+					cs.refreshMenu();
+				} else if (action.equals("PICKUP_ALL") || action.equals("PICKUP_HALF")) {
+					//allow
+				} else if (action.equals("PLACE_ALL") || action.equals("PLACE_ONE")) {
+					//allow
+				} else {
+					event.cancel();
 				}
 			}
 		} else if (isControlButton) {
@@ -330,12 +520,12 @@ public class ChestShopHandler implements HyperEventListener {
 						if (cs.editAllItems()) {
 							cs.toggleTypeAll();
 						} else {
-							cs.toggleType(cs.getEditSlot());
+							cs.toggleType(cs.getEditStack());
 						}
 					} else if (cs.inSelectItemMode()) {
 						cs.setEditMode(true, true);
 						cs.setSelectItemMode(false);
-						cs.setEditSlot(1000);
+						cs.setEditStack(cs.getFirstItem());
 					} else {
 						cs.setInPreviewMode(true);
 					}
@@ -364,20 +554,20 @@ public class ChestShopHandler implements HyperEventListener {
 				case 30:
 					if (!cs.inEditItemMode()) return;
 					if (cs.editAllItems()) {
-						int firstItemSlot = cs.getSlotOfFirstItem();
-						if (firstItemSlot < 0) return;
+						HItemStack firstItem = cs.getFirstItem();
+						if (firstItem == null) return;
 						if (cs.editingBuyPrice()) {
-							cs.setBuyPriceAll(cs.getBuyPrice(firstItemSlot) - cs.getFractionalPriceIncrement());
+							cs.setBuyPriceAll(cs.getBuyPrice(firstItem) - cs.getFractionalPriceIncrement());
 						} 
 						if (cs.editingSellPrice()) {
-							cs.setSellPriceAll(cs.getSellPrice(firstItemSlot) - cs.getFractionalPriceIncrement());
+							cs.setSellPriceAll(cs.getSellPrice(firstItem) - cs.getFractionalPriceIncrement());
 						}
 					} else {
 						if (cs.editingBuyPrice()) {
-							cs.setBuyPrice(cs.getEditSlot(), cs.getBuyPrice(cs.getEditSlot()) - cs.getFractionalPriceIncrement());
+							cs.setBuyPrice(cs.getEditStack(), cs.getBuyPrice(cs.getEditStack()) - cs.getFractionalPriceIncrement());
 						} 
 						if (cs.editingSellPrice()) {
-							cs.setSellPrice(cs.getEditSlot(), cs.getSellPrice(cs.getEditSlot()) - cs.getFractionalPriceIncrement());
+							cs.setSellPrice(cs.getEditStack(), cs.getSellPrice(cs.getEditStack()) - cs.getFractionalPriceIncrement());
 						}
 					}
 
@@ -385,20 +575,20 @@ public class ChestShopHandler implements HyperEventListener {
 				case 29:
 					if (!cs.inEditItemMode()) return;
 					if (cs.editAllItems()) {
-						int firstItemSlot = cs.getSlotOfFirstItem();
-						if (firstItemSlot < 0) return;
+						HItemStack firstItem = cs.getFirstItem();
+						if (firstItem == null) return;
 						if (cs.editingBuyPrice()) {
-							cs.setBuyPriceAll(cs.getBuyPrice(firstItemSlot) + cs.getFractionalPriceIncrement());
+							cs.setBuyPriceAll(cs.getBuyPrice(firstItem) + cs.getFractionalPriceIncrement());
 						} 
 						if (cs.editingSellPrice()) {
-							cs.setSellPriceAll(cs.getSellPrice(firstItemSlot) + cs.getFractionalPriceIncrement());
+							cs.setSellPriceAll(cs.getSellPrice(firstItem) + cs.getFractionalPriceIncrement());
 						}
 					} else {
 						if (cs.editingBuyPrice()) {
-							cs.setBuyPrice(cs.getEditSlot(), cs.getBuyPrice(cs.getEditSlot()) + cs.getFractionalPriceIncrement());
+							cs.setBuyPrice(cs.getEditStack(), cs.getBuyPrice(cs.getEditStack()) + cs.getFractionalPriceIncrement());
 						} 
 						if (cs.editingSellPrice()) {
-							cs.setSellPrice(cs.getEditSlot(), cs.getSellPrice(cs.getEditSlot()) + cs.getFractionalPriceIncrement());
+							cs.setSellPrice(cs.getEditStack(), cs.getSellPrice(cs.getEditStack()) + cs.getFractionalPriceIncrement());
 						}
 					}
 
@@ -415,10 +605,8 @@ public class ChestShopHandler implements HyperEventListener {
 
 					break;
 			}
-			
-		}
-
-		cs.refreshMenu();
+			cs.refreshMenu();
+		}		
 	}
 	
 	
@@ -427,36 +615,21 @@ public class ChestShopHandler implements HyperEventListener {
 	private void handleOpen(ChestShopOpenEvent event) {
 		event.cancel();
 		ChestShop cs = event.getChestShop();
-		if (!cs.hasViewers()) {//no current viewers
-			cs.addViewer(event.getOpener());
-			if (event.getOpener().equals(cs.getOwner())) {//if the viewer is the owner, set the flag
-				cs.setOpenedByOwner(true);
-				hc.getMC().openInventory(cs.getOwnerShopMenu(), event.getOpener(), cs.getMenuName());
-				//Bukkit.broadcastMessage("new chest shop opened by owner");
-				
-			} else {//if the viewer isn't the owner, open the shop menu
-				hc.getMC().openInventory(cs.getShopMenu(), event.getOpener(), cs.getMenuName());
-				//Bukkit.broadcastMessage("new chest shop opened by shopper");
-				
+		if (cs == null) return;
+		HyperPlayer opener = event.getOpener();
+		if (!cs.hasViewers()) {//shop not opened by anyone
+			cs.addViewer(opener);
+			if (opener.equals(cs.getOwner())) {
+				cs.setOpenedByOwner(true);//if the viewer is the owner, set the flag
+				hc.getMC().openInventory(cs.getOwnerShopMenu(), opener, cs.getMenuName(opener));//shop opened by owner
+			} else {
+				hc.getMC().openInventory(cs.getShopMenu(), opener, cs.getMenuName(opener));//shop opened by shopper
 			}
-			
-
-		} else { //shop is already open
-			
-			if (event.getOpener().equals(cs.getOwner())) {//if shop is open already and owner tries to open it, cancel the event
-				//Bukkit.broadcastMessage("shop already opened by a shopper, owner can't open, canceling");
-				return;
-			}
-			if (cs.openedByOwner()) {
-				//Bukkit.broadcastMessage("shop already opened by owner, can't shop");
-				return;
-			}
-			//add the new viewer if not the owner
-			cs.addViewer(event.getOpener());
-			hc.getMC().openInventory(cs.getShopMenu(), event.getOpener(), cs.getMenuName());
-			//Bukkit.broadcastMessage("chest shop opened by second player");
-			
-			
+		} else { //shop is already open by someone
+			if (opener.equals(cs.getOwner())) return; //shop already opened by a shopper, owner can't open
+			if (cs.openedByOwner()) return; //shop already opened by owner, player can't shop	
+			cs.addViewer(opener);//add the new viewer if not the owner
+			hc.getMC().openInventory(cs.getShopMenu(), opener, cs.getMenuName(opener));//chest shop opened by second player
 		}
 	}
 	
@@ -468,23 +641,8 @@ public class ChestShopHandler implements HyperEventListener {
 			cs.setOpenedByOwner(false);
 			cs.setEditMode(false, false);
 			cs.setSelectItemMode(false);
-			//Bukkit.broadcastMessage("owner closed shop");
-			
 		} 
-
-
 	}
-
-	/*
-	private ChestShop getOpenChestShop(ChestShop eventShop) {
-		ChestShop cs = openShops.get(eventShop.getChestLocation());
-		if (cs == null) {
-			cs = eventShop;
-
-		}
-		return cs;
-	}
-	*/
 
 	public ChestShop addNewChestShop(HLocation loc, HyperAccount owner) {
 		if (!hc.enabled()) return null;
@@ -499,10 +657,7 @@ public class ChestShopHandler implements HyperEventListener {
 		chestShops.put(loc, cs);
 		return cs;
 	}
-	
 
-
-	
 	
 	public boolean isChestShopOpen(HLocation loc) {
 		if (!hc.enabled()) return false;
@@ -511,19 +666,95 @@ public class ChestShopHandler implements HyperEventListener {
 	
 	public ChestShop getOpenShop(HyperPlayer hp) {
 		if (!hc.enabled()) return null;
+		ChestShop returnShop = null;
 		for (ChestShop cs:chestShops.values()) {
 			if (cs.hasViewer(hp)) {
-				if (!cs.isInitialized()) cs.initialize();
-				return cs;
+				returnShop = cs;
+				break;
 			}
 		}
-		return null;
+		if (returnShop != null) {
+			if (!returnShop.isInitialized()) returnShop.initialize();
+			if (!returnShop.isValid()) {
+				deleteChestShop(returnShop);
+				return null;
+			}
+		}
+		return returnShop;
+	}
+	
+	public ArrayList<ChestShop> getChestShops(HyperPlayer hp) {
+		ArrayList<ChestShop> playerChestShops = new ArrayList<ChestShop>();
+		if (!hc.enabled()) return playerChestShops;
+		for (ChestShop cs:chestShops.values()) {
+			if (cs.getOwner().equals(hp)) {
+				playerChestShops.add(cs);
+			}
+		}
+		return playerChestShops;
+	}
+	
+	
+	
+	public void deleteChestShop(ChestShop cs) {
+		cs.delete();				
+		chestShops.remove(cs.getChestLocation());
 	}
 
 	
 	@Override
 	public void handleHyperEvent(HyperEvent event) {
-		if (!hc.enabled()) return;
+		if (event instanceof DataLoadEvent) {
+			DataLoadEvent dle = (DataLoadEvent) event;
+			if (dle.loadType == DataLoadType.SHOP) {
+				loadChestShops();
+			}
+		}
+		if (!hc.loaded()) {
+			if (event instanceof HPlayerInteractEvent) {
+				HPlayerInteractEvent hpie = (HPlayerInteractEvent)event;
+				HLocation l = hpie.getBlock().getLocation();
+				if (hc.getMC().isPartOfChestShop(l) ) {
+					event.cancel();
+				}
+			} else if (event instanceof HBlockBreakEvent) {
+				HBlockBreakEvent hevent = (HBlockBreakEvent) event;
+				if (hc.getMC().isPartOfChestShop(hevent.getBlock().getLocation())) {
+					hevent.cancel();
+				}
+			} else if (event instanceof HEntityExplodeEvent) {
+				HEntityExplodeEvent hevent = (HEntityExplodeEvent)event;
+				for (HBlock b : hevent.getBrokenBlocks()) {
+					if (hc.getMC().isPartOfChestShop(b.getLocation())) {
+						hevent.cancel();
+					}
+				}
+			} else if (event instanceof HBlockPistonExtendEvent) {
+				HBlockPistonExtendEvent hevent = (HBlockPistonExtendEvent)event;
+				for (HBlock b : hevent.getBlocks()) {
+					if (hc.getMC().isPartOfChestShop(b.getLocation())) {
+						hevent.cancel();
+					}
+				}
+			} else if (event instanceof HBlockPistonRetractEvent) {
+				HBlockPistonRetractEvent hevent = (HBlockPistonRetractEvent)event;
+				if (hc.getMC().isPartOfChestShop(hevent.getRetractedBlock().getLocation())) {
+					hevent.cancel();
+				}
+			} else if (event instanceof HBlockPlaceEvent) {
+				HBlockPlaceEvent hevent = (HBlockPlaceEvent)event;
+				HBlock block = hevent.getBlock();
+				for (HBlock b : block.getSurroundingBlocks()) {
+					if (hc.getMC().isPartOfChestShop(b.getLocation())) {
+						hevent.cancel();
+					}
+				}
+			} else if (event instanceof ChestShopOpenEvent) {
+				event.cancel();
+			}
+			return;
+		}
+		
 		if (event instanceof HBlockBreakEvent) {
 			HBlockBreakEvent bbevent = (HBlockBreakEvent) event;
 			handleBlockBreak(bbevent);
@@ -560,11 +791,6 @@ public class ChestShopHandler implements HyperEventListener {
 		} else if (event instanceof ChestShopCloseEvent) {
 			ChestShopCloseEvent hevent = (ChestShopCloseEvent) event;
 			handleClose(hevent);
-		} else if (event instanceof DataLoadEvent) {
-			DataLoadEvent dle = (DataLoadEvent) event;
-			if (dle.loadType == DataLoadType.COMPLETE) {
-				loadChestShops();
-			}
 		}
 	}
 	
@@ -577,12 +803,13 @@ public class ChestShopHandler implements HyperEventListener {
 		if (hc.getMC().isChestShopChest(loc)) {
 			event.cancel();
 		} else if (hc.getMC().isChestShopSign(loc)) {
+			HLocation chestLoc = loc.down();
 			boolean delete = false;
 			if (event.getPlayer().hasPermission("hyperconomy.admin") && event.getPlayer().isSneaking()) delete = true;
-			ChestShop cs = chestShops.get(loc);
+			ChestShop cs = chestShops.get(chestLoc);
 			if (cs != null && cs.getOwner().equals(event.getPlayer()) && event.getPlayer().isSneaking()) delete = true;
 			if (delete) {
-				chestShops.remove(loc);
+				chestShops.remove(chestLoc);
 				if (cs != null) cs.delete();
 				return;
 			}
@@ -596,7 +823,16 @@ public class ChestShopHandler implements HyperEventListener {
 		try {
 			HSign sign = event.getSign();
 			HyperPlayer hp = event.getHyperPlayer();
-			String line1 = hc.getMC().removeColor(sign.getLine(0)).trim();
+			String line2 = hc.getMC().removeColor(sign.getLine(1)).trim();
+			if (line2.equalsIgnoreCase("[Trade]") || line2.equalsIgnoreCase("[Buy]") || line2.equalsIgnoreCase("[Sell]")) {
+				sign.setLine(0, "&4Write");
+				sign.setLine(1, "&4ChestShop");
+				sign.setLine(2, "&4on the first");
+				sign.setLine(3, "&4line.");
+				sign.update();
+				return;
+			}
+			String line1 = hc.getMC().removeColor(sign.getLine(0)).trim().replace(" ", "");
 			if (!line1.equalsIgnoreCase("ChestShop")) return;
 			HLocation cLoc = new HLocation(sign.getLocation());
 			cLoc.setY(cLoc.getY() - 1);
@@ -654,9 +890,19 @@ public class ChestShopHandler implements HyperEventListener {
 				sign.update();
 				return;
 			}
+			
+			if (limitChestShops && getChestShops(hp).size() >= maxChestShopsPerPlayer) {
+				sign.setLine(0, "&4You have");
+				sign.setLine(1, "&4too many");
+				sign.setLine(2, "&4chest shops!");
+				sign.setLine(3, "");
+				sign.update();
+				return;
+			}
 
 			ChestShop newShop = new ChestShop(hc, cLoc, (HyperAccount)hp, 100);
 			newShop.initialize();
+			if (!newShop.isValid()) return;
 			chestShops.put(cLoc, newShop);
 			newShop.deleteFromDatabase();
 			newShop.save();

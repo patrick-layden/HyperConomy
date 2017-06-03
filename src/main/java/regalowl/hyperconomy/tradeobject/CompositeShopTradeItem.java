@@ -22,7 +22,7 @@ public class CompositeShopTradeItem extends BasicShopTradeObject implements Trad
 
 	@Override
 	public double getStock() {
-		HyperEconomy he = hc.getDataManager().getEconomy(getParentTradeObject().getEconomy());
+		HyperEconomy he = hc.getDataManager().getEconomyIB(getParentTradeObject().getEconomy());
 		PlayerShop ps = (PlayerShop)hc.getHyperShopManager().getShop(playerShop);
 		double stock = 999999999.99;
 		for (Map.Entry<String,Double> entry : getParentTradeObject().getComponents().entrySet()) {
@@ -37,7 +37,7 @@ public class CompositeShopTradeItem extends BasicShopTradeObject implements Trad
 	}
 	@Override
 	public void setStock(double stock) {
-		HyperEconomy he = hc.getDataManager().getEconomy(getParentTradeObject().getEconomy());
+		HyperEconomy he = hc.getDataManager().getEconomyIB(getParentTradeObject().getEconomy());
 		PlayerShop ps = (PlayerShop)hc.getHyperShopManager().getShop(playerShop);
 		if (stock < 0.0) {stock = 0.0;}
 		double difference = stock - getStock();
@@ -50,7 +50,7 @@ public class CompositeShopTradeItem extends BasicShopTradeObject implements Trad
 	}
 	@Override
 	public double getShopObjectBuyPrice() {
-		HyperEconomy he = hc.getDataManager().getEconomy(getParentTradeObject().getEconomy());
+		HyperEconomy he = hc.getDataManager().getEconomyIB(getParentTradeObject().getEconomy());
 		PlayerShop ps = (PlayerShop)hc.getHyperShopManager().getShop(playerShop);
 		double price = 0;
 		for (Map.Entry<String,Double> entry : getParentTradeObject().getComponents().entrySet()) {
@@ -62,7 +62,7 @@ public class CompositeShopTradeItem extends BasicShopTradeObject implements Trad
 	}
 	@Override
 	public double getShopObjectSellPrice() {
-		HyperEconomy he = hc.getDataManager().getEconomy(getParentTradeObject().getEconomy());
+		HyperEconomy he = hc.getDataManager().getEconomyIB(getParentTradeObject().getEconomy());
 		PlayerShop ps = (PlayerShop)hc.getHyperShopManager().getShop(playerShop);
 		double price = 0;
 		for (Map.Entry<String,Double> entry : getParentTradeObject().getComponents().entrySet()) {
@@ -79,7 +79,7 @@ public class CompositeShopTradeItem extends BasicShopTradeObject implements Trad
 
 	@Override
 	public void checkInitiationStatus() {
-		HyperEconomy he = hc.getDataManager().getEconomy(getParentTradeObject().getEconomy());
+		HyperEconomy he = hc.getDataManager().getEconomyIB(getParentTradeObject().getEconomy());
 		PlayerShop ps = (PlayerShop)hc.getHyperShopManager().getShop(playerShop);
 		for (Map.Entry<String,Double> entry : getParentTradeObject().getComponents().entrySet()) {
 			TradeObject pso = ps.getPlayerShopObject(he.getTradeObject(entry.getKey()));

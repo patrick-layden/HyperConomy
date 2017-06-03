@@ -4,12 +4,10 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.inventory.HInventory;
 import regalowl.hyperconomy.inventory.HItemStack;
-import regalowl.hyperconomy.shop.ChestShop;
 
 public class InventoryClickEvent extends HyperEvent {
 
 	private HyperPlayer clicker;
-	private ChestShop chestShop;
 	private int clickedSlot;
 	private HItemStack clickedItem;
 	private boolean isShiftClick;
@@ -18,16 +16,12 @@ public class InventoryClickEvent extends HyperEvent {
 	
 	public InventoryClickEvent(HyperPlayer clicker, HInventory inventory, int clickedSlot, HItemStack clickedItem) {
 		this.clicker = clicker;
-		this.chestShop = chestShop;
 		this.clickedSlot = clickedSlot;
 		this.clickedItem = clickedItem;
 	}
 
 	public HyperPlayer getClicker() {
 		return clicker;
-	}
-	public ChestShop getChestShop() {
-		return chestShop;
 	}
 	public int getClickedSlot() {
 		return clickedSlot;

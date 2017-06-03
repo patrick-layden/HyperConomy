@@ -276,7 +276,7 @@ public class RemoteGUIServer implements HyperEventListener {
 	private void processDeletedHyperEconomiesGUI(ArrayList<String> economies) {
 		for (String he:economies) {
 			if (he == null || he.equalsIgnoreCase("") || !hc.getDataManager().economyExists(he)) continue;
-			hc.getDataManager().getEconomy(he).delete();
+			hc.getDataManager().getEconomyIB(he).delete();
 			hc.getDebugMode().debugWriteMessage("Economy deleted server side: " + he);
 			hc.getHyperEventHandler().fireEventFromAsyncThread(new RequestGUIChangeEvent(GUIChangeType.SERVER_CHANGE_ECONOMY, "Economy deleted on remote server: " + he));
 		}
@@ -284,7 +284,7 @@ public class RemoteGUIServer implements HyperEventListener {
 	private void processHyperObjectsGUI(ArrayList<TradeObject> objects) {
 		for (TradeObject ho:objects) {
 			if (ho == null || ho.getEconomy() == null || ho.getEconomy().equalsIgnoreCase("")) continue;
-			HyperEconomy he = hc.getDataManager().getEconomy(ho.getEconomy());
+			HyperEconomy he = hc.getDataManager().getEconomyIB(ho.getEconomy());
 			if (he == null) continue;
 			ho.setHyperConomy(hc);
 			if (ho.isShopObject()) {
@@ -309,7 +309,7 @@ public class RemoteGUIServer implements HyperEventListener {
 	private void processDeletedTradeObjectsGUI(ArrayList<TradeObject> objects) {
 		for (TradeObject ho:objects) {
 			if (ho == null || ho.getEconomy() == null || ho.getEconomy().equalsIgnoreCase("")) continue;
-			HyperEconomy he = hc.getDataManager().getEconomy(ho.getEconomy());
+			HyperEconomy he = hc.getDataManager().getEconomyIB(ho.getEconomy());
 			if (he == null) continue;
 			ho.setHyperConomy(hc);
 			if (ho.isShopObject()) {
@@ -345,14 +345,14 @@ public class RemoteGUIServer implements HyperEventListener {
 	private void processDeletedHyperEconomiesServer(ArrayList<String> economies) {
 		for (String he:economies) {
 			if (he == null || he.equalsIgnoreCase("") || !hc.getDataManager().economyExists(he)) continue;
-			hc.getDataManager().getEconomy(he).delete();
+			hc.getDataManager().getEconomyIB(he).delete();
 			hc.getDebugMode().debugWriteMessage("Economy deleted via GUI: " + he);
 		}
 	}
 	private void processHyperObjectsServer(ArrayList<TradeObject> objects) {
 		for (TradeObject ho:objects) {
 			if (ho == null || ho.getEconomy() == null || ho.getEconomy().equalsIgnoreCase("")) continue;
-			HyperEconomy he = hc.getDataManager().getEconomy(ho.getEconomy());
+			HyperEconomy he = hc.getDataManager().getEconomyIB(ho.getEconomy());
 			if (he == null) continue;
 			ho.setHyperConomy(hc);
 			if (ho.isShopObject()) {
@@ -375,7 +375,7 @@ public class RemoteGUIServer implements HyperEventListener {
 	private void processDeletedTradeObjectsServer(ArrayList<TradeObject> objects) {
 		for (TradeObject ho:objects) {
 			if (ho == null || ho.getEconomy() == null || ho.getEconomy().equalsIgnoreCase("")) continue;
-			HyperEconomy he = hc.getDataManager().getEconomy(ho.getEconomy());
+			HyperEconomy he = hc.getDataManager().getEconomyIB(ho.getEconomy());
 			if (he == null) continue;
 			ho.setHyperConomy(hc);
 			if (ho.isShopObject()) {

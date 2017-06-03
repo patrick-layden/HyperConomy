@@ -1,7 +1,7 @@
 package regalowl.hyperconomy;
 
 
-import java.io.File;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,10 +9,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
-import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -67,13 +65,7 @@ public class HyperEconomy implements Serializable {
 		useComposites = hc.getConf().getBoolean("enable-feature.composite-items");
 		successfulLoad = loadData(sr);
 	}
-	/*
-	public HyperEconomy(String economy, SQLRead sr, FileConfiguration config) {
-		this.economyName = economy;
-		useComposites = config.getBoolean("enable-feature.composite-items");
-		loadData(sr);
-	}
-	*/
+
 	private synchronized boolean loadData(SQLRead sr) {
 		composites.clear();
 		QueryResult result = sr.select("SELECT NAME, COMPONENTS FROM hyperconomy_objects WHERE COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
@@ -82,7 +74,7 @@ public class HyperEconomy implements Serializable {
 		}
 		tradeObjectsNameMap.clear();
 		tradeObjectsStackMap.clear();
-		result = sr.select("SELECT * FROM hyperconomy_objects WHERE ECONOMY = '"+economyName+"'");
+		result = sr.select("SELECT * FROM hyperconomy_objects ho LEFT JOIN hyperconomy_object_data hod ON ho.DATA_ID = hod.ID WHERE ECONOMY = '"+economyName+"'");
 		while (result.next()) {
 			if (useComposites && composites.containsKey(result.getString("NAME").toLowerCase())) {continue;}
 			TradeObjectType type = TradeObjectType.fromString(result.getString("TYPE"));
@@ -91,19 +83,19 @@ public class HyperEconomy implements Serializable {
 				to = new ComponentTradeItem(hc, this, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"), result.getDouble("VERSION"));
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getInt("DATA_ID"), result.getString("DATA"), result.getDouble("VERSION"));
 			} else if (type == TradeObjectType.ENCHANTMENT) {
 				to = new TradeEnchant(hc, this, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), 
 						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"), result.getDouble("VERSION"));
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getInt("DATA_ID"), result.getString("DATA"), result.getDouble("VERSION"));
 			} else if (type == TradeObjectType.EXPERIENCE) {
 				to = new TradeXp(hc, this, result.getString("NAME"), result.getString("ECONOMY"), 
 						result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), result.getString("TYPE"), 
 						result.getDouble("VALUE"), result.getString("STATIC"), result.getDouble("STATICPRICE"),
 						result.getDouble("STOCK"), result.getDouble("MEDIAN"), result.getString("INITIATION"), result.getDouble("STARTPRICE"), 
-						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getString("DATA"), result.getDouble("VERSION"));
+						result.getDouble("CEILING"),result.getDouble("FLOOR"), result.getDouble("MAXSTOCK"), result.getString("COMPONENTS"), result.getInt("DATA_ID"), result.getString("DATA"), result.getDouble("VERSION"));
 				xpName = result.getString("NAME");
 			}
 			if (to != null) addObject(to);
@@ -148,8 +140,7 @@ public class HyperEconomy implements Serializable {
 	private synchronized boolean loadComposites(SQLRead sr) {
 		boolean loaded = false;
 		int counter = 0;
-		QueryResult result = sr.select("SELECT NAME, DISPLAY_NAME, ALIASES, CATEGORIES, TYPE, COMPONENTS, DATA, VERSION FROM hyperconomy_objects WHERE "
-				+ "COMPONENTS != '' AND ECONOMY = '"+economyName+"'");
+		QueryResult result = sr.select("SELECT * FROM hyperconomy_objects ho LEFT JOIN hyperconomy_object_data hod ON ho.DATA_ID = hod.ID WHERE ECONOMY = '"+economyName+"' AND COMPONENTS != ''");
 		while (!loaded) {
 			counter++;
 			if (counter > 100) {
@@ -170,7 +161,7 @@ public class HyperEconomy implements Serializable {
 					continue;
 				}
 				TradeObject to = new CompositeTradeItem(hc, this, name, economyName, result.getString("DISPLAY_NAME"), result.getString("ALIASES"), result.getString("CATEGORIES"), 
-						result.getString("TYPE"), result.getString("COMPONENTS"), result.getString("DATA"), result.getDouble("VERSION"));
+						result.getString("TYPE"), result.getString("COMPONENTS"), result.getInt("DATA_ID"), result.getString("DATA"), result.getDouble("VERSION"));
 				addObject(to);
 			}
 		}
@@ -408,72 +399,6 @@ public class HyperEconomy implements Serializable {
 		return true;
 	}
 	
-
-
-	
-	
-	public synchronized ArrayList<String> loadNewItems() {
-		ArrayList<String> objectsAdded = new ArrayList<String>();
-		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
-		FileTools ft = hc.getFileTools();
-		if (!ft.fileExists(defaultObjectsPath)) {
-			ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
-		}
-		SQLWrite sw = hc.getSQLWrite();
-		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
-		ArrayList<String> columns = data.getColumnNames();
-		while (data.next()) {
-			String objectName = data.getString("NAME");
-			if (tradeObjectsNameMap.keySet().contains(objectName.toLowerCase())) {continue;}
-			objectsAdded.add(objectName);
-			HashMap<String, String> values = new HashMap<String, String>();
-			for (String column : columns) {
-				if (column.equalsIgnoreCase("ECONOMY")) {
-					values.put(column, economyName);
-				} else {
-					values.put(column, data.getString(column));
-				}
-			}
-			sw.performInsert("hyperconomy_objects", values);
-		}
-		ft.deleteFile(defaultObjectsPath);
-		hc.restart();
-		return objectsAdded;
-	}
-	
-	
-	public synchronized void updateNamesFromYml() {
-		String defaultObjectsPath = hc.getFolderPath() + File.separator + "defaultObjects.csv";
-		FileTools ft = hc.getFileTools();
-		if (!ft.fileExists(defaultObjectsPath)) {
-			ft.copyFileFromJar("defaultObjects.csv", defaultObjectsPath);
-		}
-		QueryResult data = hc.getFileTools().readCSV(defaultObjectsPath);
-		while (data.next()) {
-			String objectName = data.getString("NAME");
-			String aliasString = data.getString("ALIASES");
-			ArrayList<String> names = CommonFunctions.explode(aliasString);
-			String displayName = data.getString("DISPLAY_NAME");
-			names.add(displayName);
-			names.add(objectName);
-			for (String cname:names) {
-				TradeObject ho = getTradeObject(cname);
-				if (ho == null) {continue;}
-				ho.setAliases(CommonFunctions.explode(aliasString));
-				ho.setDisplayName(displayName);
-				ho.setName(objectName);
-			}
-		}
-		for (Shop s:hc.getHyperShopManager().getShops()) {
-			if (s instanceof PlayerShop) {
-				PlayerShop ps = (PlayerShop)s;
-				for (TradeObject ho:ps.getShopObjects()) {
-					ho.setParentTradeObject(ho.getParentTradeObject());
-				}
-			}
-		}
-		ft.deleteFile(defaultObjectsPath);
-	}
 
 	public synchronized String getXpName() {
 		return xpName;

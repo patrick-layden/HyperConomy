@@ -202,11 +202,6 @@ commands:
       description: Check to see if an account's balance is what it should be.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-   setchestowner:
-      description: Sets the owner of the chest shop you're looking at.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sco]
    setpassword:
       description: Sets your account password.
       permission: hyperconomy.use
@@ -249,6 +244,11 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [hcte]
+   hcchestshop:
+      description: Manages chest shops.
+      permission: hyperconomy.chestshop
+      permission-message: You do not have permission.
+      aliases: [hccs]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.

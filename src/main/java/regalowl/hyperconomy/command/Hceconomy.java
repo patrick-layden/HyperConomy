@@ -28,7 +28,7 @@ public class Hceconomy extends BaseCommand implements HyperCommand {
 					data.addResponse(L.get("ECONOMY_ALREADY_EXISTS"));
 					return data;
 				}
-				String template = "default";
+				String template = "";
 				if (args.length >= 3 && dm.economyExists(args[2])) {
 					template = args[2];
 				}
@@ -44,7 +44,7 @@ public class Hceconomy extends BaseCommand implements HyperCommand {
 		} else if (args[0].equalsIgnoreCase("delete")) {
 			try {
 				String economy = args[1];
-				if (economy.equalsIgnoreCase("default")) {
+				if (economy.equalsIgnoreCase("deafult")) {
 					data.addResponse(L.get("CANT_DELETE_DEFAULT_ECONOMY"));
 					return data;
 				}

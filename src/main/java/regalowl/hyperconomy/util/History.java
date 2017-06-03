@@ -36,6 +36,7 @@ public class History {
 	private long lastTime;
 	private long timeCounter;
 	private boolean useHistory;
+	private boolean timeCounterAdded;
 	
 	private final int millisecondsInHour = 3600000;
 	//private final int millisecondsInHour = 600;
@@ -69,7 +70,10 @@ public class History {
 				value = 0L;
 			}
 		} else {
-			addSetting("history_time_counter", "0");
+			if (!timeCounterAdded) {
+				timeCounterAdded = true;
+				addSetting("history_time_counter", "0");
+			}
 		}
 		result.close();
 		return value;
@@ -129,7 +133,7 @@ public class History {
 	public double getHistoricValue(String name, String economy, int count) {
 		try {
 			count -= 1;
-			QueryResult result = sr.select("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '"+name+"' AND ECONOMY = '"+economy+"' ORDER BY TIME DESC LIMIT '"+count+"',1");
+			QueryResult result = sr.select("SELECT PRICE FROM hyperconomy_history WHERE OBJECT = '"+name+"' AND ECONOMY = '"+economy+"' ORDER BY TIME DESC LIMIT "+count+",1");
 			if (result.next()) {
 				return Double.parseDouble(result.getString("PRICE"));
 			}

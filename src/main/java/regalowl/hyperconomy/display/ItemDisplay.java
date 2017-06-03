@@ -158,7 +158,7 @@ public class ItemDisplay {
 		if (droppedItem == null) {return false;}
 		HItemStack displayStack = item.getItem();
 		HLocation dl = droppedItem.getLocation();
-		if (!displayStack.isSimilarTo(droppedItem.getItem())) return false;
+		if (!displayStack.equals(droppedItem.getItem())) return false;
 		if (!l.getWorld().equals(getWorld())) return false;
 		if (Math.abs(dl.getX() - l.getX()) > 10) return false;
 		if (Math.abs(dl.getZ() - l.getZ()) > 10) return false;

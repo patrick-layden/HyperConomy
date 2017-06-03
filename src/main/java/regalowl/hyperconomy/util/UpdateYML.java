@@ -144,5 +144,9 @@ public class UpdateYML {
 		cfg.setDefault("web-page.font", "verdana");
 		cfg.setDefault("web-page.enable-web-api", false);
 		cfg.setDefault("web-page.web-api-path", "API");
+		
+		
+		cfg.setDefault("chest-shop.limit-chest-shops", true);
+		cfg.setDefault("chest-shop.max-per-player", 5);
 	}
 }

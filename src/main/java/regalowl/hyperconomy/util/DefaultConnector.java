@@ -411,6 +411,21 @@ public class DefaultConnector implements MineCraftConnector {
 	}
 
 
+	@Override
+	public void setItemOnCursor(HyperPlayer p, HItemStack stack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setListenerState(boolean minimal) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
 
 
 

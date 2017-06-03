@@ -60,7 +60,7 @@ public class BasicShopTradeObject extends BasicTradeObject implements TradeObjec
 	}
 	@Override
 	public TradeObject getParentTradeObject() {
-		TradeObject ho = hc.getDataManager().getEconomy(economy).getTradeObject(hyperObject);
+		TradeObject ho = hc.getDataManager().getEconomyIB(economy).getTradeObject(hyperObject);
 		return ho;
 	}
 	@Override

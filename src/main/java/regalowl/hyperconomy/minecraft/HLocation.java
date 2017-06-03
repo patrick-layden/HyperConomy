@@ -99,6 +99,9 @@ public class HLocation implements Serializable {
 		return CommonFunctions.implodeMap(data);
 	}
 
+	public String toReadableString() {
+		return getBlockX() + "," + getBlockY() + "," + getBlockZ() + "(" + getWorld() + ")";
+	}
 	public String toBlockString() {
 		return getBlockX() + "|" + getBlockY() + "|" + getBlockZ() + "|" + getWorld();
 	}
@@ -106,7 +109,12 @@ public class HLocation implements Serializable {
 		ArrayList<String> parts = CommonFunctions.explode(blockString, "|");
 		return new HLocation(parts.get(3), Integer.parseInt(parts.get(0)), Integer.parseInt(parts.get(1)), Integer.parseInt(parts.get(2)));
 	}
-	
+	public HLocation down() {
+		return new HLocation(this.world, this.x, this.y - 1, this.z);
+	}
+	public HLocation up() {
+		return new HLocation(this.world, this.x, this.y + 1, this.z);
+	}
 
 	@Override
 	public int hashCode() {
@@ -137,11 +145,11 @@ public class HLocation implements Serializable {
 				return false;
 		} else if (!world.equals(other.world))
 			return false;
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
+		if (getBlockX() != other.getBlockX())
 			return false;
-		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
+		if (getBlockY() != other.getBlockY())
 			return false;
-		if (Double.doubleToLongBits(z) != Double.doubleToLongBits(other.z))
+		if (getBlockZ() != other.getBlockZ())
 			return false;
 		return true;
 	}

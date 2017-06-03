@@ -224,9 +224,13 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	}
 	@Override
 	public void registerListeners() {
+		unregisterAllListeners();
 		bl.registerListeners();
 	}
-
+	@Override
+	public void setListenerState(boolean minimal) {
+		bl.setMinimal(minimal);
+	}
 	@Override
 	public void registerCommand(String command, HyperCommand hCommand) {
 		commands.put(command.toLowerCase(), hCommand);
@@ -437,6 +441,12 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public void closeActiveInventory(HyperPlayer p) {
 		Player player = common.getPlayer(p);
 		player.closeInventory();
+	}
+	
+	@Override
+	public void setItemOnCursor(HyperPlayer p, HItemStack stack) {
+		Player player = common.getPlayer(p);
+		player.setItemOnCursor(common.getItemStack(stack));
 	}
 
 

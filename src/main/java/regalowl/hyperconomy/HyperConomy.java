@@ -30,6 +30,7 @@ import regalowl.hyperconomy.command.Hb;
 import regalowl.hyperconomy.command.HcCommand;
 import regalowl.hyperconomy.command.Hcbalance;
 import regalowl.hyperconomy.command.Hcbank;
+import regalowl.hyperconomy.command.Hcchestshop;
 import regalowl.hyperconomy.command.Hcdata;
 import regalowl.hyperconomy.command.Hcdelete;
 import regalowl.hyperconomy.command.Hceconomy;
@@ -59,7 +60,6 @@ import regalowl.hyperconomy.command.Scalebypercent;
 import regalowl.hyperconomy.command.Sell;
 import regalowl.hyperconomy.command.Sellall;
 import regalowl.hyperconomy.command.Servershopcommand;
-import regalowl.hyperconomy.command.Setchestowner;
 import regalowl.hyperconomy.command.Seteconomy;
 import regalowl.hyperconomy.command.Setlanguage;
 import regalowl.hyperconomy.command.Setpassword;
@@ -88,7 +88,6 @@ import regalowl.hyperconomy.shop.ChestShopHandler;
 import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.timeeffects.TimeEffectsManager;
 import regalowl.hyperconomy.util.DebugMode;
-import regalowl.hyperconomy.util.DisabledProtection;
 import regalowl.hyperconomy.util.History;
 import regalowl.hyperconomy.util.HyperLock;
 import regalowl.hyperconomy.util.LanguageFile;
@@ -108,7 +107,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	private transient InfoSignHandler isign;
 	private transient History hist;
 	private transient ItemDisplayHandler itdi;
-	private transient ChestShopHandler cs;
 	private transient FrameShopHandler fsh;
 	private transient HyperLock hl;
 	private transient LanguageFile L;
@@ -120,6 +118,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	private transient RemoteGUIServer rgs;
 	private transient TimeEffectsManager tem;
 	private transient HItemStack blankStack;
+	//private transient DisabledProtection dp;
 	private final int saveInterval = 1200000;
 	private AtomicBoolean enabled = new AtomicBoolean();
 	private AtomicBoolean loaded = new AtomicBoolean();
@@ -162,7 +161,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 				registerCommands();
 				loaded.set(true);;
 				hl.setLoadLock(false);
-				mc.registerListeners();
+				mc.setListenerState(false);
 				dMode.syncDebugConsoleMessage("Data loading completed.");
 				UpdateChecker uc = new UpdateChecker(this);
 				uc.runCheck();
@@ -189,9 +188,12 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		sdl.initialize();
 		sdl.getEventPublisher().registerListener(this);
 		ft = sdl.getFileTools();
+		mc.unregisterAllListeners();
 		if (heh != null) heh.clearListeners();
 		heh = new HyperEventHandler(this);
 		heh.registerListener(this);
+		//dp = new DisabledProtection(this);
+		//dp.enable();
 		waitingForLibraries.set(true);
 		lm = new LibraryManager(this,heh);
 	}
@@ -202,7 +204,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		enabled.set(true);
 		if (waitingForLibraries.get()) return;
 		loadingStarted.set(true);
-		mc.unregisterAllListeners();
 		if (hConfig.getBoolean("sql.use-mysql")) {
 			String username = hConfig.getString("sql.mysql-connection.username");
 			String password = hConfig.getString("sql.mysql-connection.password");
@@ -215,12 +216,10 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		sdl.getSQLManager().createDatabase();
 		dMode.syncDebugConsoleMessage("Database created.");
 		sdl.getSQLManager().getSQLWrite().setLogSQL(hConfig.getBoolean("sql.log-sql-statements"));
-		
 		l = new Log(this);
-		dm = new DataManager(this);
+		dm.initialize();
 		new TransactionSignHandler(this);
 		sdl.getYamlHandler().startSaveTask(saveInterval);
-		cs = new ChestShopHandler(this);
 		new MultiServer(this);
 		rgs = new RemoteGUIServer(this);
 		dMode.syncDebugConsoleMessage("Data loading started.");
@@ -229,6 +228,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	
 	private void preEnable() {
 		preEnabled.set(true);
+		mc.registerListeners();
 		YamlHandler yh = sdl.getYamlHandler();
 		yh.copyFromJar("config");
 		yh.registerFileConfiguration("config");
@@ -238,6 +238,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		hl = new HyperLock(this, true, false, false);
 		dMode = new DebugMode(this);
 		dMode.syncDebugConsoleMessage("HyperConomy loaded with Debug Mode enabled.  Configuration files created and loaded.");
+		dm = new DataManager(this);
 		mc.checkExternalEconomyRegistration();
 		api = new HyperAPI(this);
 		mc.setupHEconomyProvider();
@@ -258,7 +259,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		mc.cancelAllTasks();
 		if (heh != null && !protect) heh.clearListeners();
 		if (sdl != null) sdl.shutDown();
-		if (protect) new DisabledProtection(this);
+		if (protect) mc.setListenerState(true);
 	}
 	
 	public void restart() {
@@ -278,6 +279,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		mc.registerCommand("hc", new HcCommand(this));
 		mc.registerCommand("hcbalance", new Hcbalance(this));
 		mc.registerCommand("hcbank", new Hcbank(this));
+		mc.registerCommand("hcchestshop", new Hcchestshop(this));
 		mc.registerCommand("hcdata", new Hcdata(this));
 		mc.registerCommand("hcdelete", new Hcdelete(this));
 		mc.registerCommand("hceconomy", new Hceconomy(this));
@@ -307,7 +309,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		mc.registerCommand("sell", new Sell(this));
 		mc.registerCommand("sellall", new Sellall(this));
 		mc.registerCommand("servershop", new Servershopcommand(this));
-		mc.registerCommand("setchestowner", new Setchestowner(this));
 		mc.registerCommand("seteconomy", new Seteconomy(this));
 		mc.registerCommand("setlanguage", new Setlanguage(this));
 		mc.registerCommand("setpassword", new Setpassword(this));
@@ -375,9 +376,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	
 	public boolean loaded() {
 		return loaded.get();
-	}
-	public ChestShopHandler getChestShop() {
-		return cs;
 	}
 	public FrameShopHandler getFrameShopHandler() {
 		return fsh;

@@ -130,11 +130,11 @@ public class TransactionProcessor {
 					sellEnchant();
 					break;
 				}
-			case SELL_TO_INVENTORY:
-				sellToInventory();
+			case SELL_CUSTOM:
+				sellCustom();
 				break;
-			case BUY_FROM_INVENTORY:
-				buyFromInventory();
+			case BUY_CUSTOM:
+				buyCustom();
 				break;
 			//case BUY_FROM_ITEM:
 			//	buyEnchantFromItem();
@@ -534,7 +534,7 @@ public class TransactionProcessor {
 	
 	
 	
-	public void buyFromInventory() {
+	public void buyCustom() {
 		if (trader == null || tradePartner == null || tradeObject == null) {
 			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
@@ -542,7 +542,7 @@ public class TransactionProcessor {
 		try {
 			double price = 0.0;
 			if (setPrice) {
-				price = money;
+				price = CommonFunctions.twoDecimals(money);
 			} else {
 				price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount));
 			}
@@ -550,27 +550,29 @@ public class TransactionProcessor {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
 			}
+			/*
 			int space = trader.getInventory().getAvailableSpace(tradeObject.getItem());
 			if (space < amount) {
 				response.addFailed(L.f(L.get("ONLY_ROOM_TO_BUY"), space, tradeObject.getDisplayName()), tradeObject);
 				return;
 			}
-			trader.getInventory().add(amount, tradeObject.getItem());
-			giveInventory.remove(amount, tradeObject.getItem());
+			*/
+			//trader.getInventory().add(amount, tradeObject.getItem());
+			//giveInventory.remove(amount, tradeObject.getItem());
 			trader.withdraw(price);
 			tradePartner.deposit(price);
 			response.addSuccess(L.f(L.get("PURCHASE_CHEST_MESSAGE"), amount, price, tradeObject.getDisplayName(), tradePartner.getName()), price, tradeObject);
 			response.setSuccessful();
 			log.writeSQLLog(trader.getName(), "purchase", tradeObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
 			
-			MessageBuilder mb = new MessageBuilder(hc, "CHEST_BUY_NOTIFICATION");
+			MessageBuilder mb = new MessageBuilder(hc, "CUSTOM_BUY_NOTIFICATION");
 			mb.setAmount(amount);
 			mb.setObjectName(tradeObject.getDisplayName());
 			mb.setPrice(price);
 			mb.setPlayerName(trader.getName());
 			tradePartner.sendMessage(mb.build());
 		} catch (Exception e) {
-			String info = "Transaction buyChest() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
+			String info = "Transaction buyCustom() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}
@@ -583,7 +585,7 @@ public class TransactionProcessor {
 	 * This function handles the sale of items from HyperChests.
 	 * 
 	 */
-	public void sellToInventory() {
+	public void sellCustom() {
 		if (trader == null || tradePartner == null || tradeObject == null) {
 			response.addFailed(L.get("TRANSACTION_FAILED"), tradeObject);
 			return;
@@ -591,7 +593,7 @@ public class TransactionProcessor {
 		try {
 			double price = 0.0;
 			if (setPrice) {
-				price = money;
+				price = CommonFunctions.twoDecimals(money);
 			} else {
 				price = CommonFunctions.twoDecimals(tradeObject.getSellPrice(amount, trader));
 			}
@@ -599,22 +601,22 @@ public class TransactionProcessor {
 				response.addFailed(L.f(L.get("PLAYER_DOESNT_HAVE_ENOUGH_MONEY"), tradePartner.getName()), tradeObject);
 				return;
 			}
-			trader.getInventory().remove(amount, tradeObject.getItem());
-			receiveInventory.add(amount, tradeObject.getItem());
+			//trader.getInventory().remove(amount, tradeObject.getItem());
+			//receiveInventory.add(amount, tradeObject.getItem());
 			trader.deposit(price);
 			tradePartner.withdraw(price);
 			response.addSuccess(L.f(L.get("SELL_CHEST_MESSAGE"), amount, price, tradeObject.getDisplayName(), tradePartner.getName()), price, tradeObject);
 			response.setSuccessful();
 			log.writeSQLLog(trader.getName(), "sale", tradeObject.getDisplayName(), (double) amount, price, 0.0, tradePartner.getName(), "chestshop");
 			
-			MessageBuilder mb = new MessageBuilder(hc, "CHEST_SELL_NOTIFICATION");
+			MessageBuilder mb = new MessageBuilder(hc, "CUSTOM_SELL_NOTIFICATION");
 			mb.setAmount(amount);
 			mb.setObjectName(tradeObject.getDisplayName());
 			mb.setPrice(price);
 			mb.setPlayerName(trader.getName());
 			tradePartner.sendMessage(mb.build());
 		} catch (Exception e) {
-			String info = "Transaction sellChest() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
+			String info = "Transaction sellCustom() passed values name='" + tradeObject.getDisplayName() + "', player='" + trader.getName() + "', owner='" + tradePartner.getName() + "', amount='" + amount + "'";
 			hc.gSDL().getErrorWriter().writeError(e, info);
 		}
 	}

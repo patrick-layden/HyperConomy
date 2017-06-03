@@ -30,6 +30,7 @@ public interface MineCraftConnector {
 	
 	public void unregisterAllListeners();
 	public void registerListeners();
+	public void setListenerState(boolean minimal);
 	
 	
 	public void runTask(Runnable r);
@@ -75,6 +76,7 @@ public interface MineCraftConnector {
 	public void setItemQuantity(HLocation location, int amount, int slot);
 	public void setItemQuantity(HyperPlayer hp, int amount, int slot);
 	public void setItemLore(HInventory inventory, List<String> lore, int slot);
+	public void setItemOnCursor(HyperPlayer p, HItemStack stack);
 	public String getMinecraftItemName(HItemStack stack);
 	
 	public HInventory getChestInventory(HLocation l);

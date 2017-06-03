@@ -44,11 +44,8 @@ public class LanguageFile {
 	
 	public String buildLanguageFile(boolean overwrite) {
 		ft = hc.getFileTools();
-		updateBackup();
 		String lang = hc.getConf().getString("language");
-		if (lang == null) {
-			lang = "enUS";
-		}
+		if (lang == null) lang = "enUS";
 		lang = lang.replace(" ", "").replace("\"", "").replace("'", "");
 		boolean validLanguage = false;
 		for (int i = 0; i < supportedLanguages.size(); i++) {
@@ -59,46 +56,35 @@ public class LanguageFile {
 			}
 		}
 		String folderpath = hc.getFolderPath() + File.separator + "Languages";
-		//String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
 		ft.makeFolder(folderpath);
+		updateBackupLanguageFile();
 		String filepath = folderpath + File.separator + lang + ".hl";
-		String backuppath = folderpath + File.separator + "enUS_b.hl";
-		try {
-		ft.copyFileFromJar("Languages/enUS.hl", backuppath);
-		} catch (Exception e) {
-			hc.gSDL().getErrorWriter().writeError(e);
-		}
-		buildBackupHashMap(backuppath);
-		
-		if (ft.fileExists(filepath) && !overwrite) {
-			buildHashMap(filepath);
-		} else {
-			if (!validLanguage) {
-				lang = "enUS";
-			}
+		if (!ft.fileExists(filepath) || overwrite) {
+			if (!validLanguage) lang = "enUS";
 			filepath = folderpath + File.separator + lang + ".hl";
-			ft.makeFolder(folderpath);
-			if (!ft.fileExists(filepath) || overwrite) {
-				if (ft.fileExists(filepath)) {
-					ft.deleteFile(filepath);
-				}
-				ft.copyFileFromJar("Languages/" + lang + ".hl", filepath);
-			}
-
-			buildHashMap(filepath);
+			ft.deleteFile(filepath);
+			ft.copyFileFromJar("Languages/" + lang + ".hl.zip", filepath + ".zip");
+			ft.unZipFile(filepath + ".zip", folderpath);
+			ft.deleteFile(filepath + ".zip");		
 		}
+		buildHashMap(filepath);
 		return lang;
 	}
 	
 	
-	public void updateBackup() {
-		String folderpath = hc.getFolderPath() + File.separator + "Languages";
-		ft.makeFolder(folderpath);
-		//String folderpath = Bukkit.getServer().getPluginManager().getPlugin("HyperConomy").getDataFolder() + File.separator + "Languages";
-		String backuppath = folderpath + File.separator + "enUS_b.hl";
-		ft.copyFileFromJar("Languages/enUS.hl", backuppath);
+	public void updateBackupLanguageFile() {
+		String languageFolder = hc.getFolderPath() + File.separator + "Languages";
+		String tempFolder = languageFolder + File.separator + "lang_temp";
+		ft.deleteFile(languageFolder + File.separator + "enUS_b.hl");
+		ft.makeFolder(languageFolder);
+		ft.makeFolder(tempFolder);
+		ft.copyFileFromJar("Languages/enUS.hl.zip", tempFolder + File.separator + "enUS.hl.zip");
+		ft.unZipFile(tempFolder + File.separator + "enUS.hl.zip", tempFolder);
+		ft.moveFile(tempFolder + File.separator + "enUS.hl", languageFolder + File.separator + "enUS_b.hl");
+		ft.deleteDirectory(tempFolder);
+		ft.deleteFile(tempFolder);
 		languageBackup.clear();
-		buildBackupHashMap(backuppath);
+		buildBackupHashMap(languageFolder + File.separator + "enUS_b.hl");
 	}
 	
 	
