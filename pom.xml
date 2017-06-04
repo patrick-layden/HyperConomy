@@ -9,7 +9,11 @@
 	<repositories>
     	<repository>
 			<id>regalowl-repo</id>
-			<url>http://regalowl.net:8081/plugin/repository/everything/</url>
+			<url>http://regalowl.net:8080/plugin/repository/everything/</url>
+		</repository>
+		<repository>
+			<id>regalowl-repo-2</id>
+			<url>http://www.regalowl.net:8082/repository/snapshots/</url>
 		</repository>
 		<repository>
 			<id>Sonatype-public</id>
