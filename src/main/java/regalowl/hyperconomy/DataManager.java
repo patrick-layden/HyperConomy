@@ -37,8 +37,6 @@ import regalowl.hyperconomy.util.DatabaseUpdater;
 public class DataManager implements HyperEventListener {
 
 	private transient HyperConomy hc;
-	private transient SQLRead sr;
-	private transient SQLWrite sw;
 	private transient DatabaseUpdater du;
 	private transient FileConfiguration config;
 
@@ -69,8 +67,6 @@ public class DataManager implements HyperEventListener {
 		config = hc.getConf();
 		defaultServerShopAccount = config.getString("shop.default-server-shop-account");
 		hc.getHyperEventHandler().registerListener(this);
-		sr = hc.getSQLRead();
-		sw = hc.getSimpleDataLib().getSQLManager().getSQLWrite();
 		hpm = new HyperPlayerManager(hc);
 		hbm = new HyperBankManager(hc);
 		hsm = new HyperShopManager(hc);
@@ -154,14 +150,15 @@ public class DataManager implements HyperEventListener {
 	}
 	
 	public void runDatabaseMaintenance() {
-		sw.addToQueue("DELETE FROM hyperconomy_object_data WHERE ID NOT IN (SELECT DATA_ID FROM hyperconomy_objects) AND ID NOT IN (SELECT DATA_ID FROM hyperconomy_chest_shop_items)");
+		hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_object_data WHERE ID NOT IN (SELECT DATA_ID FROM hyperconomy_objects) AND ID NOT IN (SELECT DATA_ID FROM hyperconomy_chest_shop_items)");
 		hpm.purgeDeadAccounts();
 	}
 	
 	private void loadEconomies() {
-		hc.getSQLRead().setErrorLogging(false);
+		SQLRead sr = hc.getSQLRead();
+		sr.setErrorLogging(false);
 		QueryResult qr = sr.select("SELECT VALUE FROM hyperconomy_settings WHERE SETTING = 'version'");
-		hc.getSQLRead().setErrorLogging(true);
+		sr.setErrorLogging(true);
 		boolean success = du.updateTables(qr);
 		if (!success) {
 			hc.disable(false);
@@ -200,6 +197,7 @@ public class DataManager implements HyperEventListener {
 	
 	
 	private void restoreEconomy(String economy) {
+		SQLWrite sw = hc.getSimpleDataLib().getSQLManager().getSQLWrite();
 		boolean writeState = sw.writeSync();
 		sw.writeSync(true);
 		

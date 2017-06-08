@@ -84,7 +84,6 @@ import regalowl.hyperconomy.gui.RemoteGUIServer;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.multiserver.MultiServer;
-import regalowl.hyperconomy.shop.ChestShopHandler;
 import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.timeeffects.TimeEffectsManager;
 import regalowl.hyperconomy.util.DebugMode;
@@ -188,7 +187,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		sdl.initialize();
 		sdl.getEventPublisher().registerListener(this);
 		ft = sdl.getFileTools();
-		mc.unregisterAllListeners();
 		if (heh != null) heh.clearListeners();
 		heh = new HyperEventHandler(this);
 		heh.registerListener(this);
@@ -217,7 +215,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		dMode.syncDebugConsoleMessage("Database created.");
 		sdl.getSQLManager().getSQLWrite().setLogSQL(hConfig.getBoolean("sql.log-sql-statements"));
 		l = new Log(this);
-		dm.initialize();
 		new TransactionSignHandler(this);
 		sdl.getYamlHandler().startSaveTask(saveInterval);
 		new MultiServer(this);
@@ -228,6 +225,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	
 	private void preEnable() {
 		preEnabled.set(true);
+		mc.unregisterAllListeners();
 		mc.registerListeners();
 		YamlHandler yh = sdl.getYamlHandler();
 		yh.copyFromJar("config");
@@ -239,6 +237,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		dMode = new DebugMode(this);
 		dMode.syncDebugConsoleMessage("HyperConomy loaded with Debug Mode enabled.  Configuration files created and loaded.");
 		dm = new DataManager(this);
+		dm.initialize();
 		mc.checkExternalEconomyRegistration();
 		api = new HyperAPI(this);
 		mc.setupHEconomyProvider();

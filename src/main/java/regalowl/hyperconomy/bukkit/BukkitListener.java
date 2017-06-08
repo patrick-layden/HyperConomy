@@ -3,7 +3,6 @@ package regalowl.hyperconomy.bukkit;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;

@@ -7,12 +7,8 @@
 	<name>HyperConomy</name>
 	<description>HyperConomy creates a global market that can be accessed via designated shops. Prices follow a hyperbolic curve, and vary based on the stock of the item or enchantment. Everything in the market can be customized, from the items themselves to the names of the shops. HyperConomy supports every item in Minecraft, even the normally impossible to obtain ones. It allows a great deal of control over the economy, allowing you to edit any setting without a server restart.</description>
 	<repositories>
-    	<repository>
-			<id>regalowl-repo</id>
-			<url>http://regalowl.net:8080/plugin/repository/everything/</url>
-		</repository>
 		<repository>
-			<id>regalowl-repo-2</id>
+			<id>regalowl-repo</id>
 			<url>http://www.regalowl.net:8082/repository/snapshots/</url>
 		</repository>
 		<repository>
@@ -176,5 +172,17 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 	<url>http://dev.bukkit.org/server-mods/hyperconomy/</url>
+  <distributionManagement>
+    <repository>
+      <id>archiva.internal</id>
+      <name>Internal Release Repository</name>
+      <url>http://www.regalowl.net:8082/repository/internal/</url>
+    </repository>
+    <snapshotRepository>
+      <id>archiva.snapshots</id>
+      <name>Internal Snapshot Repository</name>
+      <url>http://www.regalowl.net:8082/repository/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
 
