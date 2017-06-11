@@ -80,4 +80,4 @@ Links
 
 [Spigot Page](https://www.spigotmc.org/resources/hyperconomy.4602/)
 
-[Latest Development Build](http://regalowl.net:8081/job/HyperConomy/)
+[Latest Development Build](http://regalowl.net:8080/job/HyperConomy/)
