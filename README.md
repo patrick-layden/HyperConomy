@@ -6,7 +6,7 @@ HyperConomy is the all in one economy and shop plugin.  It can be a simple chest
 
 Installation
 ---------
-* Download HyperConomy releases from [BukkitDev] (http://dev.bukkit.org/bukkit-plugins/hyperconomy/files/) or get the latest [development build] (http://regalowl.net:8081/job/HyperConomy/).
+* Download HyperConomy releases from [BukkitDev](http://dev.bukkit.org/bukkit-plugins/hyperconomy/files/) or get the latest [development build](http://regalowl.net:8081/job/HyperConomy/).
 * Place the HyperConomy jar file your plugins folder.
 * Restart your server.
 
@@ -65,25 +65,19 @@ Feature Requests, Bugs, Problems, etc.
 Donate
 ---------
 
-* If you'd like to send me a donation for the time and effort spent making this plugin, you can do so [here] (https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AMK9AR4CVKEJJ). 
+* If you'd like to send me a donation for the time and effort spent making this plugin, you can do so [here](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AMK9AR4CVKEJJ). 
 * To those who have donated: thank you very much for the support. If you'd like to be listed as a donor here just send me a message.
 
-Donors
----------
-
-Baamoink -> [Mantle-Craft](http://mantle-craft.com/)
-
-Thanks as well to all of the other donors that haven't requested a listing here. 
 
 
 Links
 ---------
-[Tickets] (https://github.com/RegalOwl/HyperConomy/issues)
+[Tickets](https://github.com/RegalOwl/HyperConomy/issues)
 
-[Documentation Wiki] (https://github.com/RegalOwl/HyperConomy-Documentation)
+[Documentation Wiki](https://github.com/RegalOwl/HyperConomy-Documentation)
 
-[BukkitDev Page] (http://dev.bukkit.org/bukkit-plugins/hyperconomy/)
+[BukkitDev Page](http://dev.bukkit.org/bukkit-plugins/hyperconomy/)
 
-[Spigot Page] (https://www.spigotmc.org/resources/hyperconomy.4602/)
+[Spigot Page](https://www.spigotmc.org/resources/hyperconomy.4602/)
 
-[Latest Development Build] (http://regalowl.net:8081/job/HyperConomy/)
+[Latest Development Build](http://regalowl.net:8081/job/HyperConomy/)
