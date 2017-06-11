@@ -1,13 +1,16 @@
 package regalowl.hyperconomy.inventory;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import regalowl.simpledatalib.CommonFunctions;
 
  
 
-public class HEnchantment {
+public class HEnchantment implements Serializable {
+
+	private static final long serialVersionUID = 1933101408175429161L;
 	private String enchantment;
     private int lvl;
  

@@ -1,6 +1,8 @@
 package regalowl.hyperconomy.inventory;
 
-public enum HItemMetaType {
+import java.io.Serializable;
+
+public enum HItemMetaType implements Serializable {
 	BOOK,ENCHANTMENT_STORAGE,FIREWORK,FIREWORK_EFFECT,ITEM,LEATHER_ARMOR,MAP,POTION,SKULL,BANNER,SPAWN_EGG;
 	
 	

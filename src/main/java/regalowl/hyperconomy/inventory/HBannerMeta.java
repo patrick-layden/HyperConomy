@@ -8,6 +8,8 @@ import regalowl.simpledatalib.CommonFunctions;
 
 public class HBannerMeta extends HItemMeta {
 	
+
+	private static final long serialVersionUID = 3025756503104280199L;
 	private String baseColor;
 	private ArrayList<HPattern> patterns = new ArrayList<HPattern>();
 

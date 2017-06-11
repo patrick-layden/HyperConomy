@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.inventory;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +10,11 @@ import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.account.HyperPlayer;
  
 
-public class HItemMeta {
+public class HItemMeta implements Serializable {
 
 	
+
+	private static final long serialVersionUID = -1329246498296168212L;
 	protected String displayName;
 	protected ArrayList<String> lore = new ArrayList<String>();
 	protected ArrayList<HEnchantment> enchantments = new ArrayList<HEnchantment>();

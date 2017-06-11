@@ -1,5 +1,6 @@
 package regalowl.hyperconomy.inventory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +9,9 @@ import java.util.List;
 import regalowl.simpledatalib.CommonFunctions;
 
 
-public class HFireworkEffect {
+public class HFireworkEffect implements Serializable {
 
+	private static final long serialVersionUID = 7876252177427725392L;
 	private List<HColor> colors = new ArrayList<HColor>();
 	private List<HColor> fadeColors = new ArrayList<HColor>();
 	private String type;

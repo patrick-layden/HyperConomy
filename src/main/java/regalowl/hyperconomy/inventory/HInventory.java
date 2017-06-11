@@ -1,5 +1,6 @@
 package regalowl.hyperconomy.inventory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -7,7 +8,10 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.minecraft.HLocation;
 
-public class HInventory {
+public class HInventory implements Serializable {
+
+
+	private static final long serialVersionUID = 3625422643842346395L;
 
 	private transient HyperConomy hc;
 	

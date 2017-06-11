@@ -10,6 +10,8 @@ import regalowl.simpledatalib.CommonFunctions;
 
 public class HMapMeta extends HItemMeta {
 
+
+	private static final long serialVersionUID = 4213158875277651370L;
 	private boolean isScaling;
 
 	public HMapMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, boolean unbreakable, int repairCost, boolean isScaling) {

@@ -10,6 +10,7 @@ import regalowl.simpledatalib.CommonFunctions;
 public class HSkullMeta extends HItemMeta {
 
 
+	private static final long serialVersionUID = -6909188896759686613L;
 	private String owner;
 
 	public HSkullMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, boolean unbreakable, int repairCost, String owner) {

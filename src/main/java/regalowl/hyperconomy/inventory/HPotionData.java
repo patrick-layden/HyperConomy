@@ -1,13 +1,16 @@
 package regalowl.hyperconomy.inventory;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import regalowl.simpledatalib.CommonFunctions;
 
  
 
-public class HPotionData {
+public class HPotionData implements Serializable {
+
+	private static final long serialVersionUID = 3784153968194042733L;
 	private String potionType;
     private boolean isExtended;
     private boolean isUpgraded;

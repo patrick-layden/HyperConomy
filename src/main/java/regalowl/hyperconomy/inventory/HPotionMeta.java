@@ -10,6 +10,7 @@ import regalowl.simpledatalib.CommonFunctions;
 
 public class HPotionMeta extends HItemMeta {
 
+	private static final long serialVersionUID = -1479423667890749104L;
 	private ArrayList<HPotionEffect> potionEffects = new ArrayList<HPotionEffect>();
 	private HPotionData potionData;
 

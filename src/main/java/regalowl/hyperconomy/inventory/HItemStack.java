@@ -1,6 +1,7 @@
 package regalowl.hyperconomy.inventory;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,7 +11,10 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.tradeobject.StackComparisonData;
  
 
-public class HItemStack {
+public class HItemStack implements Serializable {
+
+
+	private static final long serialVersionUID = 1L;
 
 	private transient HyperConomy hc;
 	

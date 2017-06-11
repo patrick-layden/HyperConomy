@@ -10,6 +10,7 @@ import regalowl.simpledatalib.CommonFunctions;
 
 public class HLeatherArmorMeta extends HItemMeta {
 
+	private static final long serialVersionUID = -7590943225453827214L;
 	private HColor color;
 
 	

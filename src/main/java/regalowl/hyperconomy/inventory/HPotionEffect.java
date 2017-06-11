@@ -1,13 +1,14 @@
 package regalowl.hyperconomy.inventory;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import regalowl.simpledatalib.CommonFunctions;
 
-public class HPotionEffect {
+public class HPotionEffect implements Serializable {
 
-
+	private static final long serialVersionUID = 8529334026378555718L;
 	private String potionEffectType;
 	private int amplifier;
 	private int duration;

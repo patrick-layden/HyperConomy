@@ -9,7 +9,7 @@ import regalowl.simpledatalib.CommonFunctions;
 
 public class HSpawnEggMeta extends HItemMeta {
 
-
+	private static final long serialVersionUID = -6901893813106515124L;
 	private String entityType;
 
 	public HSpawnEggMeta(String displayName, ArrayList<String> lore, ArrayList<HEnchantment> enchantments, ArrayList<HItemFlag> itemFlags, boolean unbreakable, int repairCost, String entityType) {

@@ -9,6 +9,7 @@ import regalowl.simpledatalib.CommonFunctions;
 
 public class HFireworkEffectMeta extends HItemMeta {
 
+	private static final long serialVersionUID = 5057392138978247373L;
 	private HFireworkEffect effect;
 
 	

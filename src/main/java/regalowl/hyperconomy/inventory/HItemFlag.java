@@ -1,11 +1,13 @@
 package regalowl.hyperconomy.inventory;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import regalowl.simpledatalib.CommonFunctions;
 
-public class HItemFlag {
+public class HItemFlag implements Serializable {
 
+	private static final long serialVersionUID = 1179112601647705998L;
 	private String itemFlag;
 	
 	public HItemFlag(String itemFlag) {

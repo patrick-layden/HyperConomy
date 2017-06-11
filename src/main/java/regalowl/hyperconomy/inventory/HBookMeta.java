@@ -9,6 +9,8 @@ import regalowl.simpledatalib.CommonFunctions;
 
 public class HBookMeta extends HItemMeta {
 
+
+	private static final long serialVersionUID = -1654237920132537906L;
 	private String author;
 	private ArrayList<String> pages;
 	private String title;
