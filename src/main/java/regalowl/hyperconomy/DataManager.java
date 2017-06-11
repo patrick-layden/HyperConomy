@@ -649,12 +649,7 @@ public class DataManager implements HyperEventListener {
 		economies.put(econ.getName(), econ);
 		loadAllCategories();
 	}
-/*
-	public synchronized int incrementNextObjectDataId() {
-		nextObjectDataId++;
-		return nextObjectDataId - 1;
-	}
-	*/
+
 	public String getItemDataString(int id) {
 		return itemDataIdMap.get(id);
 	}
@@ -666,14 +661,7 @@ public class DataManager implements HyperEventListener {
 	public Integer getItemDataIdFromStack(HItemStack stack) {
 		return itemStackMap.get(stack);
 	}
-	/*
-	public void addItemDataString(int id, String data) {
-		itemDataIdMap.put(id, data);
-		itemDataDataMap.put(data, id);
-		HItemStack stack = new HItemStack(data);
-		if (!stack.isBlank()) itemStackMap.put(stack, id);
-	}
-	*/
+
 	
 	public synchronized Integer addItemDataString(String data) {
 		if (getItemDataId(data) != null) return getItemDataId(data);
