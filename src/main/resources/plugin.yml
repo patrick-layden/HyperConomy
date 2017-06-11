@@ -1,9 +1,8 @@
 name: HyperConomy
-main: regalowl.hyperconomy.HyperConomy
-version: 0.974.3
+main: regalowl.hyperconomy.bukkit.BukkitConnector
+version: 0.975.7
 author: RegalOwl
 website: http://dev.bukkit.org/server-mods/hyperconomy/
-load: STARTUP
 softdepend: [HeroStronghold, Buycraft, Essentials, Vault]
 loadbefore: []
 commands:
@@ -56,6 +55,11 @@ commands:
       permission: hyperconomy.top
       permission-message: You don't have permission to do this.
       aliases: [ti]
+   lowstock:
+      description: Lists the items with the least stock.
+      permission: hyperconomy.top
+      permission-message: You don't have permission to do this.
+      aliases: [low]
    topenchants:
       description: Lists the enchantments with the most stock
       permission: hyperconomy.top
@@ -66,132 +70,30 @@ commands:
       permission: hyperconomy.top
       permission-message: You don't have permission to do this.
       aliases: [bs]
-   setshop:
-      description: Sets the shop location.
+   servershop:
+      description: Manages server shops.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [ss]
-   removeshop:
-      description: Removes a shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [rs]
-   additem:
-      description: Adds an item to a shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [ai]
-   removeitem:
-      description: Removes an item from a shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [ri]
-   renameshop:
-      description: Renames a shop to the given name.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   listshops:
-      description: Lists all shop names.
-      permission: hyperconomy.list
-      permission-message: You do not have permission.
    settax:
       description: Sets the sales tax for normal purchases.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [stax]
-   setclassvalue:
-      description: Sets the enchantment tax.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [scvalue]
-   classvalues:
-      description: Sets the enchantment tax.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [cvalues, cv]
-   setvalue:
-      description: Sets the value of an item.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [svalue]
-   setstock:
-      description: Sets the shop's stock of an item.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sstock, stock]
-   setmedian:
-      description: Sets an item's median stock quantity.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [smedian, median]
-   setstatic:
-      description: Toggles whether or not an item uses a static price.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sstatic, static]
-   setinitiation:
-      description: Toggles whether or not an item uses an initiation price.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sinitial, initial]
-   setstaticprice:
-      description: Sets the static price for an item.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [staticprice]
-   setstartprice:
-      description: Sets the initial price for an item.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [startprice]
-   setceiling:
-      description: Sets the ceiling for an object.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [ceiling]
-   setfloor:
-      description: Sets the floor for an object.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [floor]
-   writeitems:
-      description: Creates a list of all item names or enchantment names in the plugin's folder.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
    objectsettings:
       description: Displays the current shop settings for the object you're holding or the one you specify. Also works as /os
       permission: hyperconomy.settings
       permission-message: You do not have permission.
-      aliases: [is, os, ens]
+      aliases: [os, ens]
    taxsettings:
       description: Displays the current tax values.
       permission: hyperconomy.settings
       permission-message: You do not have permission.
       aliases: [tsettings, ts]
-   ebuy:
-      description: Purchases the chosen enchantment.
-      permission: hyperconomy.buy
-      permission-message: You don't have permission to do this.
-      aliases: [eb]
-   esell:
-      description: Sells the chosen enchantment.
-      permission: hyperconomy.sell
-      permission-message: You don't have permission to do this.
-      aliases: [es]
-   evalue:
-      description: Gets the value of an enchantment.
-      permission: hyperconomy.value
-      permission-message: You don't have permission to do this.
-      aliases: [ev]
    hc:
       description: Displays economy help.
       permission: hyperconomy.use
       permission-message: You don't have permission to do this.
-   setinterval:
-      description: Sets the interval at which shops check for players.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sint]
    lockshop:
       description: Locks down the shop and most commands.
       permission: hyperconomy.admin
@@ -202,24 +104,6 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [ints]
-   setmessage:
-      description: Sets the shop messages.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sm]
-   resetshop:
-      description: Resets the shop stock, initiation, and static pricing.
-      permission: hyperconomy.resetshop
-      permission-message: You do not have permission.
-   setstockmedianall:
-      description: Sets the stock of everything in the shop to its median value.
-      permission: hyperconomy.setstockmedianall
-      permission-message: You do not have permission.
-   setbalance:
-      description: Sets an account's balance.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sb]
    scalebypercent:
       description: Scales the selected value the the given percent.
       permission: hyperconomy.scalebypercent
@@ -229,94 +113,35 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [not]
-   renameeconomyaccount:
-      description: Renames the account used by the global shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
    seteconomy:
       description: Sets your economy to the specified one.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [se]
-   setshopeconomy:
-      description: Sets a shop to use the specified economy.
+   hceconomy:
+      description: Manages economies.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-      aliases: [sse]
-   createeconomy:
-      description: Creates a new economy.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [cre]
-   deleteeconomy:
-      description: Deletes an economy.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   listeconomies:
-      description: Lists all economies.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [lec]
+      aliases: [he]
    economyinfo:
       description: Tells you what economy you are a part of.
       permission: hyperconomy.use
       permission-message: You do not have permission.
       aliases: [ei]
-   importnewitems:
-      description: Loads new items into the specified economy.
+   hcdata:
+      description: Exports data from HyperConomy.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-   exporttoyml:
-      description: Exports the selected economy to the items and enchants yml files.
+   additem:
+      description: Adds the item you're holding to the database.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
-   importfromyml:
-      description: Replaces the selected economy with data from your YML files.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   hcbackup:
-      description: Backs up all HyperConomy data.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   ymladditem:
-      description: Adds the item you're holding to the yml item database.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [yai, ya]
-   copydatabase:
-      description: Copys database from SQLite to MySQL and vice versa.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   addcategory:
-      description: Adds a category to a shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [acat]
-   removecategory:
-      description: Removes a category from a shop.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [rcat]
+      aliases: [ai]
    listcategories:
       description: Lists all categories.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [lcat]
-   setstockall:
-      description: Sets the stock of all items to the specified amount.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [ssa]
-   setinitiationall:
-      description: Toggles initial pricing.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [sia]
-   setstaticall:
-      description: Toggles static pricing.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-      aliases: [ssta]
    hyperlog:
       description: Displays HyperConomy log information.
       permission: hyperconomy.admin
@@ -337,20 +162,8 @@ commands:
       permission: hyperconomy.admin
       permission-message: You do not have permission.
       aliases: [sela]
-   importprices:
-      description: Imports all prices from objects.yml.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
    repairsigns:
       description: Repairs InfoSigns within the given radii.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   hcweb:
-      description: Allows adjusting the web page from in-game.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   hcclearhistory:
-      description: Clears the hyperconomy_history table.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
    hcbalance:
@@ -368,6 +181,11 @@ commands:
       permission: hyperconomy.pay
       permission-message: You do not have permission.
       aliases: [hcp]
+   hcgive:
+      description: Gives the specified player the specified amount of the specified type.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
+      aliases: [hcg]
    toggleeconomy:
       description: Switches between an external economy plugin and the internal HyperConomy economy plugin.
       permission: hyperconomy.admin
@@ -382,10 +200,6 @@ commands:
       permission-message: You do not have permission.
    audit:
       description: Check to see if an account's balance is what it should be.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
-   setchestowner:
-      description: Sets the owner of the chest shop you're looking at.
       permission: hyperconomy.admin
       permission-message: You do not have permission.
    setpassword:
@@ -416,6 +230,25 @@ commands:
       permission: hyperconomy.frameshop
       permission-message: You do not have permission.
       aliases: [fs]
+   hcbank:
+      description: Manages banks.
+      permission: hyperconomy.bank
+      permission-message: You do not have permission.
+      aliases: [bank]      
+   hcweb:
+      description: Manages the web page.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
+   timeeffect:
+      description: Adds and removes TimeEffects from HyperConomy.
+      permission: hyperconomy.admin
+      permission-message: You do not have permission.
+      aliases: [hcte]
+   hcchestshop:
+      description: Manages chest shops.
+      permission: hyperconomy.chestshop
+      permission-message: You do not have permission.
+      aliases: [hccs]
 permissions:
     hyperconomy.*:
         description: Gives access to all HyperConomy commands.
@@ -424,9 +257,6 @@ permissions:
             hyperconomy.use: true
             hyperconomy.settings: true
             hyperconomy.admin: true
-            hyperconomy.list: true
-            hyperconomy.resetshop: true
-            hyperconomy.setstockmedianall: true
             hyperconomy.scalebypercent: true
             hyperconomy.createsign: true
             hyperconomy.notify: true
@@ -434,7 +264,10 @@ permissions:
             hyperconomy.balanceall: true
             hyperconomy.topbalance: true
             hyperconomy.playershop: true
+            hyperconomy.playershop.create: true
             hyperconomy.frameshop: true
+            hyperconomy.bank: true
+            hyperconomy.viewbanks: true
     hyperconomy.use:
         description: Allows general use of HyperConomy.
         default: true
@@ -448,6 +281,7 @@ permissions:
             hyperconomy.xp: true
             hyperconomy.chestshop: true
             hyperconomy.playershop: true
+            hyperconomy.playershop.create: true
             hyperconomy.buysign: true
             hyperconomy.sellsign: true
             hyperconomy.pay: true
@@ -485,15 +319,6 @@ permissions:
     hyperconomy.error:
         description: Displays error messages if plugin errors occur.
         default: false
-    hyperconomy.list:
-        description: Allows the use of listshops.
-        default: false
-    hyperconomy.resetshop:
-        description: Allows the use of resetshop.
-        default: false
-    hyperconomy.setstockmedianall:
-        description: Allows the use of setstockmedianall.
-        default: false
     hyperconomy.scalebypercent:
         description: Allows the use of scalebypercent.
         default: false
@@ -530,6 +355,15 @@ permissions:
     hyperconomy.playershop:
         description: Allows the use of the /manageshop command.
         default: false
+    hyperconomy.playershop.create:
+        description: Allows only the creation of player shops with /ms create.
+        default: false
     hyperconomy.frameshop:
         description: Allows the use of the /frameshop command.
+        default: false
+    hyperconomy.bank:
+        description: Allows the use of the /hcbank command.
+        default: false
+    hyperconomy.viewbanks:
+        description: Allows players to view all information about all banks.
         default: false
