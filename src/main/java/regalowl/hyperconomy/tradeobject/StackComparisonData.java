@@ -1,8 +1,14 @@
 package regalowl.hyperconomy.tradeobject;
 
+import java.io.Serializable;
+
 import regalowl.hyperconomy.inventory.HItemMeta;
 
-public class StackComparisonData {
+public class StackComparisonData implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -755014510365039145L;
 	public String material;
 	public short durability;
 	public byte data;
