@@ -314,9 +314,14 @@ public class HyperAPI implements API {
 
 	@Override
 	public boolean addItemToEconomy(HItemStack stack, String economyName, String requestedName) {
+		HyperEconomy he = hc.getDataManager().getEconomy(economyName);
+		if (he == null) return false;
+		if (he.objectTest(requestedName) || requestedName.equalsIgnoreCase("")) return false;
 		Additem ai = new Additem(hc);
 		TradeObject hobj = ai.generateNewHyperObject(stack, economyName, requestedName, 0);
-		return ai.addItem(hobj, economyName);
+		hobj.save();
+		return true;
+		//return ai.addItem(hobj, economyName);
 	}
 
 

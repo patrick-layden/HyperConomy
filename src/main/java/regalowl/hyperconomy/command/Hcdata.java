@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.hyperconomy.HyperConomy;
@@ -180,6 +180,28 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				hc.gSDL().getErrorWriter().writeError(e);
 				data.addResponse(L.get("HCDATA_UPDATEITEMS_INVALID"));
 			}
+		} else if (args[0].equalsIgnoreCase("addgeneratedaliases")) { 
+			try {
+				String economy = "default";
+				if (args.length > 1) economy = args[1];
+				if (dm.economyExists(economy)) {
+					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
+					HyperEconomy he = dm.getEconomy(economy);
+					for (TradeObject to:he.getTradeObjects()) {
+						String displayName = to.getDisplayName();
+						String alias1 = displayName.replace(" ", "_").toLowerCase();
+						String alias2 = alias1.replace("_", "");
+						if (!he.objectTest(alias1)) to.addAlias(alias1);
+						if (!he.objectTest(alias2)) to.addAlias(alias2);
+					}
+					data.addResponse(L.get("HCDATA_GENERATED_ALIASES_ADDED"));
+				} else {
+					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
+				}
+			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
+				data.addResponse(L.get("HCDATA_UPDATEITEMS_INVALID"));
+			}
 		} else if (args[0].equalsIgnoreCase("clearhistory")) {
 			String statement = "DELETE FROM hyperconomy_history";
 			hc.getSQLWrite().addToQueue(statement);
@@ -253,7 +275,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 			} catch (Exception e) {
 				data.addResponse(L.get("HCDATA_UPDATEITEMSTACK_INVALID"));
 			}
-		} else if (args[0].equalsIgnoreCase("updatedisplayname") || args[0].equalsIgnoreCase("uds")) {
+		} else if (args[0].equalsIgnoreCase("updatedisplayname") || args[0].equalsIgnoreCase("udn")) {
 			try {
 				if (args.length < 1) {
 					data.addResponse(L.get("HCDATA_UPDATEDISPLAYNAME_INVALID"));
@@ -293,6 +315,70 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				new Backup(hc);
 				data.addResponse(L.get("ALL_BACKED_UP"));
 			} catch (Exception e) {
+				hc.gSDL().getErrorWriter().writeError(e);
+			}
+		} else if (args[0].equalsIgnoreCase("roundvalues")) {
+			try {
+				String economy = "default";
+				if (args.length > 1) economy = args[1];
+				if (dm.economyExists(economy)) {
+					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
+					for (TradeObject to:dm.getEconomy(economy).getTradeObjects()) {
+						to.setValue(CommonFunctions.twoDecimals(to.getValue()));
+						to.setStartPrice(CommonFunctions.twoDecimals(to.getStartPrice()));
+						to.setStaticPrice(CommonFunctions.twoDecimals(to.getStaticPrice()));
+					}
+					data.addResponse(L.get("HCDATA_VALUES_ROUNDED"));
+				} else {
+					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
+				}
+			} catch (Exception e) {
+				data.addResponse(L.get("HCDATA_ROUNDVALUES_INVALID"));
+				hc.gSDL().getErrorWriter().writeError(e);
+			}
+		} else if (args[0].equalsIgnoreCase("formatdisplaynames")) {
+			try {
+				String economy = "default";
+				if (args.length > 1) economy = args[1];
+				if (dm.economyExists(economy)) {
+					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
+					for (TradeObject to:dm.getEconomy(economy).getTradeObjects()) {
+						String oldDisplayName = to.getDisplayName();
+						if (oldDisplayName.contains(" ")) continue;
+					    String[] parts = oldDisplayName.split("_");
+					    String newDisplayName = "";
+					    for (String part : parts) {
+					    	String camelPart = part.substring(0, 1).toUpperCase() + part.substring(1).toLowerCase();
+					    	newDisplayName = newDisplayName + " " + camelPart;
+					    }
+						to.setDisplayName(newDisplayName.trim());
+						if (!to.getAliases().contains(oldDisplayName.toLowerCase())) {
+							to.addAlias(oldDisplayName.toLowerCase());
+						}
+					}
+					data.addResponse(L.get("HCDATA_FORMAT_DISPLAY_NAMES"));
+				} else {
+					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
+				}
+			} catch (Exception e) {
+				data.addResponse(L.get("HCDATA_ROUNDVALUES_INVALID"));
+				hc.gSDL().getErrorWriter().writeError(e);
+			}
+		} else if (args[0].equalsIgnoreCase("incrementobjectversion")) {
+			try {
+				String economy = "default";
+				if (args.length > 1) economy = args[1];
+				if (dm.economyExists(economy)) {
+					if (hc.getConf().getBoolean("enable-feature.automatic-backups")) {new Backup(hc);}
+					for (TradeObject to:dm.getEconomy(economy).getTradeObjects()) {
+						to.setVersion(to.getVersion() + .1);
+					}
+					data.addResponse(L.get("HCDATA_VERSION_INCREMENTED"));
+				} else {
+					data.addResponse(L.get("ECONOMY_NOT_EXIST"));
+				}
+			} catch (Exception e) {
+				data.addResponse(L.get("HCDATA_ROUNDVALUES_INVALID"));
 				hc.gSDL().getErrorWriter().writeError(e);
 			}
 		} else if (args[0].equalsIgnoreCase("purgeaccounts")) {

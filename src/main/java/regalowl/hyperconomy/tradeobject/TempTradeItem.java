@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.inventory.HItemStack;
-import regalowl.simpledatalib.sql.WriteStatement;
 
 
 public class TempTradeItem extends ComponentTradeItem implements TradeObject {
@@ -107,12 +106,7 @@ public class TempTradeItem extends ComponentTradeItem implements TradeObject {
 		String data = stack.serialize();
 		Integer dataId = hc.getDataManager().getItemDataIdFromStack(stack);
 		if (dataId == null) {
-			int nextId = hc.getDataManager().incrementNextObjectDataId();
-			String statement = "INSERT INTO hyperconomy_object_data (ID, DATA) VALUES ('" + nextId + "', ?)";
-			WriteStatement ws = new WriteStatement(statement, hc.getSimpleDataLib());
-			ws.addParameter(data);
-			hc.getSQLWrite().addToQueue(ws);
-			hc.getDataManager().addItemDataString(nextId, data);
+			int nextId = hc.getDataManager().addItemDataString(data);
 			return new TempTradeItem(hc, null, name, "default", displayName, "", "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, "", nextId, data, 1);
 		} else {
 			return new TempTradeItem(hc, null, name, "default", displayName, "", "", "item", value, "false", startprice, 0.0, median, "true", startprice, 0.0, 0.0, 0.0, "", dataId, data, 1);

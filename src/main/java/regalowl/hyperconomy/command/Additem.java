@@ -3,8 +3,6 @@ package regalowl.hyperconomy.command;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 
 
 
@@ -22,7 +20,6 @@ import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.tradeobject.ComponentTradeItem;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.sql.WriteStatement;
 
 public class Additem extends BaseCommand implements HyperCommand {
 	
@@ -65,7 +62,9 @@ public class Additem extends BaseCommand implements HyperCommand {
 			}
 			HItemStack stack = hp.getItemInHand();
 			TradeObject hobj = generateNewHyperObject(stack, econ.getName(), displayName, value);
-			addItem(hobj, econ.getName());
+			hobj.save();
+			hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(hobj, TradeObjectModificationType.CREATED));
+			//addItem(hobj, econ.getName());
 			data.addResponse(L.get("ITEM_ADDED"));
 			return data;
 		} catch (Exception e) {
@@ -75,7 +74,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 	}
 
 	
-	
+	/*
 	public boolean addItem(TradeObject hobj, String economy) {
 		DataManager em = hc.getDataManager();
 		if (hobj == null || economy == null) {return false;}
@@ -108,6 +107,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 		hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(hobj, TradeObjectModificationType.CREATED));
 		return true;
 	}
+	*/
 	
 	public TradeObject generateNewHyperObject(HItemStack stack, String economy) {
 		return generateNewHyperObject(stack, economy, "", 0);
@@ -155,12 +155,8 @@ public class Additem extends BaseCommand implements HyperCommand {
 		} else {
 			median = 25000;
 		}
-		int nextId = hc.getDataManager().incrementNextObjectDataId();
-		String statement = "INSERT INTO hyperconomy_object_data (ID, DATA) VALUES ('" + nextId + "', ?)";
-		WriteStatement ws = new WriteStatement(statement, hc.getSimpleDataLib());
 		String data = sis.serialize();
-		ws.addParameter(data);
-		hc.getSQLWrite().addToQueue(ws);
+		int nextId = dm.addItemDataString(data);
 		TradeObject hobj = new ComponentTradeItem(hc, null, name, economy, displayName, CommonFunctions.implode(aliases), "", "item", value, "false", value*2, 0, median, "true", value*2, 1000000,0, 1000000, "", nextId, data, 1);
 		return hobj;
 	}
@@ -204,7 +200,10 @@ public class Additem extends BaseCommand implements HyperCommand {
 			TradeObject ho =  super.getEconomy().getTradeObject(stack);
 			if (ho != null) continue;
 			TradeObject hobj = generateNewHyperObject(stack, economy);
-			addItem(hobj, economy);
+			if (hobj == null) continue;
+			hobj.save();
+			hc.getHyperEventHandler().fireEvent(new TradeObjectModificationEvent(hobj, TradeObjectModificationType.CREATED));
+			//addItem(hobj, economy);
 		}
 	}
 }

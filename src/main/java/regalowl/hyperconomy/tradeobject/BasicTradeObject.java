@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.sql.SQLWrite;
-import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -116,9 +115,11 @@ public class BasicTradeObject implements TradeObject {
 		values.put("FLOOR", getFloor()+"");
 		values.put("MAXSTOCK", getMaxStock()+"");
 		values.put("COMPONENTS", getCompositeData());
-		values.put("DATA", getDataId() + "");
+		values.put("DATA_ID", getDataId() + "");
 		values.put("VERSION", getVersion()+"");
 		hc.getSQLWrite().performInsert("hyperconomy_objects", values);
+		hc.getDataManager().getEconomy(economy).removeObject(this);
+		hc.getDataManager().getEconomy(economy).addObject(this);
 	}
 	
 	@Override
@@ -492,6 +493,7 @@ public class BasicTradeObject implements TradeObject {
 	}
 	@Override
 	public void setVersion(double version) {
+		version = CommonFunctions.twoDecimals(version);
 		String statement = "UPDATE hyperconomy_objects SET VERSION='" + version + "' WHERE NAME = '" + name + "' AND ECONOMY = '" + economy + "'";
 		sw.addToQueue(statement);
 		this.version = version;
@@ -524,13 +526,7 @@ public class BasicTradeObject implements TradeObject {
 	@Override
 	public void setData(String data) {
 		Integer newDataId = hc.getDataManager().getItemDataId(data);
-		if (newDataId == null) {
-			newDataId = hc.getDataManager().incrementNextObjectDataId();
-			String statement = "INSERT INTO hyperconomy_object_data (ID, DATA) VALUES ('" + newDataId + "', ?)";
-			WriteStatement ws = new WriteStatement(statement, hc.getSimpleDataLib());
-			ws.addParameter(data);
-			sw.addToQueue(ws);
-		}
+		if (newDataId == null) newDataId = hc.getDataManager().addItemDataString(data);
 		this.objectData = data;
 		this.objectDataId = newDataId;
 		String statement = "UPDATE hyperconomy_objects SET DATA_ID='" + newDataId + "' WHERE NAME = '" + this.name + "' AND ECONOMY = '" + economy + "'";

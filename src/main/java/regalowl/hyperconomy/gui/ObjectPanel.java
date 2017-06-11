@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.command.Additem;
 import regalowl.hyperconomy.event.GUIChangeType;
 import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.HyperEventListener;
@@ -619,15 +618,17 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 		addObjectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String newName = newItemNameField.getText();
-				if (he.objectTest(newName)) {
+				String aliases = newName.replace("_", "");
+				if (he.objectTest(newName) || he.objectTest(aliases)) {
 					JOptionPane.showMessageDialog(null, "A trade object with that name already exists.", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				String aliases = newName.replace("_", "");
-				TradeObject to = new ComponentTradeItem(hc, null, newName, he.getName(), newName, aliases, "", "item", 1, "false", 2,
-						0, 10000, "true", 2, 1000000000,0, 1000000000, "", 0, "", 1);
-				boolean success = new Additem(hc).addItem(to, he.getName());
-				if (!success) JOptionPane.showMessageDialog(null, "Adding item failed.  Try a different name.", "Error", JOptionPane.ERROR_MESSAGE);
+				
+
+				TradeObject to = new ComponentTradeItem(hc, null, newName, he.getName(), newName, aliases, "", "item", 1, "false", 2, 0, 10000, "true", 2, 1000000000,0, 1000000000, "", 0, "", 1);
+				//boolean success = new Additem(hc).addItem(to, he.getName());
+				to.save();
+				//if (!success) JOptionPane.showMessageDialog(null, "Adding item failed.  Try a different name.", "Error", JOptionPane.ERROR_MESSAGE);
 				loadObjects();
 			}
 		});

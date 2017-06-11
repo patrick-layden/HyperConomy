@@ -15,6 +15,7 @@ import regalowl.simpledatalib.file.FileTools;
 import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
+import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayerManager;
@@ -243,13 +244,8 @@ public class DataManager implements HyperEventListener {
 					if (existingDataId != null) { //if data already exists, use existing data's id
 						objectValues.put(column, existingDataId+"");
 					} else { //if data doesn't exist, use new id and add data to object_data table
-						int newId = incrementNextObjectDataId();
+						int newId = addItemDataString(originalDataString);
 						objectValues.put(column, newId+"");
-						HashMap<String,String> objectDataValues = new HashMap<String,String>();
-						objectDataValues.put("ID", newId+"");
-						objectDataValues.put("DATA", originalDataString);
-						sw.performInsert("hyperconomy_object_data", objectDataValues);
-						addItemDataString(newId, originalDataString);	
 					}
 				} else if (column.equalsIgnoreCase("ECONOMY")) {
 					objectValues.put(column, economy);
@@ -304,13 +300,8 @@ public class DataManager implements HyperEventListener {
 					if (existingDataId != null) { //if data already exists, use existing data's id
 						values.put(column, existingDataId+"");
 					} else { //if data doesn't exist, use new id and add data to object_data table
-						int newId = incrementNextObjectDataId();
+						int newId = addItemDataString(originalDataString);
 						values.put(column, newId+"");
-						HashMap<String,String> objectDataValues = new HashMap<String,String>();
-						objectDataValues.put("ID", newId+"");
-						objectDataValues.put("DATA", originalDataString);
-						sw.performInsert("hyperconomy_object_data", objectDataValues);
-						addItemDataString(newId, originalDataString);	
 					}
 				} else if (column.equalsIgnoreCase("ECONOMY")) {
 					values.put(column, econ.getName());
@@ -658,12 +649,12 @@ public class DataManager implements HyperEventListener {
 		economies.put(econ.getName(), econ);
 		loadAllCategories();
 	}
-
-	public int incrementNextObjectDataId() {
+/*
+	public synchronized int incrementNextObjectDataId() {
 		nextObjectDataId++;
 		return nextObjectDataId - 1;
 	}
-	
+	*/
 	public String getItemDataString(int id) {
 		return itemDataIdMap.get(id);
 	}
@@ -675,14 +666,28 @@ public class DataManager implements HyperEventListener {
 	public Integer getItemDataIdFromStack(HItemStack stack) {
 		return itemStackMap.get(stack);
 	}
-	
+	/*
 	public void addItemDataString(int id, String data) {
 		itemDataIdMap.put(id, data);
 		itemDataDataMap.put(data, id);
 		HItemStack stack = new HItemStack(data);
 		if (!stack.isBlank()) itemStackMap.put(stack, id);
 	}
-
+	*/
+	
+	public synchronized Integer addItemDataString(String data) {
+		if (getItemDataId(data) != null) return getItemDataId(data);
+		int newId = nextObjectDataId;
+		nextObjectDataId++;
+		itemDataIdMap.put(newId, data);
+		itemDataDataMap.put(data, newId);
+		itemStackMap.put(new HItemStack(data), newId);
+		String statement = "INSERT INTO hyperconomy_object_data (ID, DATA) VALUES ('" + newId + "', ?)";
+		WriteStatement ws = new WriteStatement(statement, hc.getSimpleDataLib());
+		ws.addParameter(data);
+		hc.getSQLWrite().addToQueue(ws);
+		return newId;
+	}
 
 	
 }
