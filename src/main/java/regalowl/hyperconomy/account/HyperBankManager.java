@@ -67,14 +67,11 @@ public class HyperBankManager implements HyperEventListener {
 	
 	public void removeHyperBank(HyperBank hb) {
 		if (hb == null) {return;}
-		if (hyperBanks.contains(hb.getName().toLowerCase())) {
-			hyperBanks.remove(hb.getName().toLowerCase());
-		}
+		hyperBanks.remove(hb.getName().toLowerCase());
 	}
 	
 	public void removeHyperBank(String name) {
 		if (name == null) return;
-		if (!hasBank(name)) return;
 		hyperBanks.remove(name.toLowerCase());
 	}
 	

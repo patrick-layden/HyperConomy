@@ -59,7 +59,6 @@ public class HyperBank implements HyperAccount {
 		WriteStatement ws = new WriteStatement("DELETE FROM hyperconomy_banks WHERE NAME=?",hc.getSimpleDataLib());
 		ws.addParameter(name);
 		hc.getSQLWrite().addToQueue(ws);
-		hc.getDataManager().getHyperBankManager().removeHyperBank(this);
 		if (balance > 0) {
 			double share = balance/owners.size();
 			for (HyperPlayer hp:getOwners()) {
@@ -77,6 +76,7 @@ public class HyperBank implements HyperAccount {
 			}
 		}
 		deleted = true;
+		hc.getDataManager().getHyperBankManager().removeHyperBank(this);
 		hc.getHyperEventHandler().fireEvent(new HyperBankModificationEvent(this));
 	}
 	
