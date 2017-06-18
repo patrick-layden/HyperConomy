@@ -194,8 +194,23 @@ public class InfoSignHandler implements HyperEventListener {
 		}
 		return null;
 	}
+	
+	public void addInfoSign(InfoSign iSign) {
+		infoSigns.add(iSign);
+	}
 
-
+	public boolean isInfoSign(HLocation loc) {
+		HSign s = hc.getMC().getSign(loc);
+		if (s == null) return false;
+		String[] lines = s.getLines();	
+		String objectName = hc.getMC().removeColor(lines[0].trim() + lines[1].trim());
+		TradeObject to = hc.getDataManager().getBaseEconomy().getTradeObject(objectName);
+		if (to == null) return false;
+		SignType type = SignType.fromString(hc.getMC().removeColor(lines[2].trim()));
+		if (type != SignType.NONE) return true;
+		if (lines[2].toLowerCase().contains("s:") && lines[3].toLowerCase().contains("b:")) return true;
+		return false;
+	}
 
 
 

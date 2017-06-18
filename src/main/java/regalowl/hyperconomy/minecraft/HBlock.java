@@ -28,7 +28,7 @@ public class HBlock implements Serializable {
 	}
 	
 	public boolean isInfoSign() {
-		return hc.getMC().isInfoSign(location);
+		return hc.getInfoSignHandler().isInfoSign(location);
 	}
 	
 	public boolean isTransactionSign() {

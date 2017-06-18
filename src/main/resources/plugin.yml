@@ -263,6 +263,7 @@ permissions:
             hyperconomy.shop: true
             hyperconomy.balanceall: true
             hyperconomy.topbalance: true
+            hyperconomy.balance: true
             hyperconomy.playershop: true
             hyperconomy.playershop.create: true
             hyperconomy.frameshop: true
@@ -285,6 +286,7 @@ permissions:
             hyperconomy.buysign: true
             hyperconomy.sellsign: true
             hyperconomy.pay: true
+            hyperconomy.balance: true
     hyperconomy.econ:
         description: Allows use of all basic economy commands.
         default: op
@@ -366,4 +368,7 @@ permissions:
         default: false
     hyperconomy.viewbanks:
         description: Allows players to view all information about all banks.
+        default: false
+    hyperconomy.balance:
+        description: Allows players to check their balance.
         default: false

@@ -605,15 +605,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 
 
 
-
-
-
-	@Override
-	public boolean isInfoSign(HLocation l) {
-		return common.isInfoSign(l);
-	}
-
-
 	@Override
 	public boolean isChestShopChest(HLocation l) {
 		return common.isChestShopChest(l);

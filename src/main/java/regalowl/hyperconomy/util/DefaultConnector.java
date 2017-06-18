@@ -273,11 +273,6 @@ public class DefaultConnector implements MineCraftConnector {
 	}
 
 	@Override
-	public boolean isInfoSign(HLocation l) {
-		return false;
-	}
-
-	@Override
 	public boolean isChestShopSign(HLocation l) {
 		return false;
 	}

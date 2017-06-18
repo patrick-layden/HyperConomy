@@ -103,7 +103,7 @@ public interface MineCraftConnector {
 	
 	
 	public boolean isTransactionSign(HLocation l);
-	public boolean isInfoSign(HLocation l);
+	//public boolean isInfoSign(HLocation l);
 	public boolean isChestShopSign(HLocation l);
 	public boolean isChestShopSignBlock(HLocation l);
 	public boolean isChestShopChest(HLocation l);

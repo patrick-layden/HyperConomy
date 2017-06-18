@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 
 import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.display.InfoSign;
 import regalowl.hyperconomy.display.SignType;
 import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HLocation;
@@ -61,55 +62,48 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 			for (int i = (px - xrad); i <= (px + xrad); i++) {
 				for (int j = (pz - zrad); j <= (pz + zrad); j++) {
 					for (int k = (py - yrad); k <= (py + yrad); k++) {
+						
 						HLocation loc = new HLocation(w, i, k, j);
-						if (loc.isLoaded(hc)) {
-							HBlock cb = loc.getBlock(hc);
-							if (cb != null && cb.isInfoSign()) {
-								HSign s = hc.getMC().getSign(loc);
-								String objectName = hc.getMC().removeColor(s.getLine(0)).trim() + hc.getMC().removeColor(s.getLine(1)).trim();
-								TradeObject to = dm.getEconomy("default").getTradeObject(objectName);
-								if (to != null) {
-									String ttype = hc.getMC().removeColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
-									if (ttype.contains("[")) {
-										continue;
-									}
-									if (ttype.startsWith("s:")) {
-										ttype = "SB";
-									}
-									SignType stype = SignType.fromString(ttype.replace(":", ""));
-									String type = null;
-									if (stype != null) {
-										type = stype.toString();
-									}
-									if (type != null) {
-										HashMap<String,String> conditions = new HashMap<String,String>();
-										conditions.put("WORLD", loc.getWorld());
-										conditions.put("X", loc.getX()+"");
-										conditions.put("Y", loc.getY()+"");
-										conditions.put("Z", loc.getZ()+"");
-										hc.getSQLWrite().performDelete("hyperconomy_info_signs", conditions);
-										HashMap<String,String> values = new HashMap<String,String>();
-										values.put("WORLD", loc.getWorld());
-										values.put("X", loc.getX()+"");
-										values.put("Y", loc.getY()+"");
-										values.put("Z", loc.getZ()+"");
-										values.put("HYPEROBJECT", to.getName());
-										values.put("TYPE", type.toString());
-										values.put("MULTIPLIER", "1");
-										values.put("ECONOMY", hp.getEconomy());
-										String eclass = "";
-										if (dm.getEconomy("default").enchantTest(objectName)) {
-											eclass = EnchantmentClass.DIAMOND.toString();
-										} else {
-											eclass = EnchantmentClass.NONE.toString();
-										}
-										values.put("ECLASS", eclass);
-										hc.getSQLWrite().performInsert("hyperconomy_info_signs", values);
-										signsRepaired++;
-									}
-								}
-							}
+						if (!loc.isLoaded(hc)) continue;
+						HBlock cb = loc.getBlock(hc);
+						if (cb == null || !cb.isInfoSign()) continue;
+						HSign s = hc.getMC().getSign(loc);
+						String objectName = hc.getMC().removeColor(s.getLine(0).trim() + s.getLine(1).trim());
+						TradeObject to = dm.getBaseEconomy().getTradeObject(objectName);
+						if (to == null) continue;
+						String ttype = hc.getMC().removeColor(s.getLine(2).trim().replace(" ", "").toLowerCase());
+						if (ttype.contains("[")) continue;
+						if (ttype.startsWith("s:")) ttype = "SB";
+						SignType signType = SignType.fromString(ttype.replace(":", ""));
+						if (signType == null || signType == SignType.NONE) continue;
+						String type = signType.toString();
+
+						HashMap<String,String> conditions = new HashMap<String,String>();
+						conditions.put("WORLD", loc.getWorld());
+						conditions.put("X", loc.getX()+"");
+						conditions.put("Y", loc.getY()+"");
+						conditions.put("Z", loc.getZ()+"");
+						hc.getSQLWrite().performDelete("hyperconomy_info_signs", conditions);
+						HashMap<String,String> values = new HashMap<String,String>();
+						values.put("WORLD", loc.getWorld());
+						values.put("X", loc.getX()+"");
+						values.put("Y", loc.getY()+"");
+						values.put("Z", loc.getZ()+"");
+						values.put("HYPEROBJECT", to.getName());
+						values.put("TYPE", type);
+						values.put("MULTIPLIER", "1");
+						values.put("ECONOMY", hp.getEconomy());
+						String eclass = "";
+						if (dm.getEconomy("default").enchantTest(objectName)) {
+							eclass = EnchantmentClass.DIAMOND.toString();
+						} else {
+							eclass = EnchantmentClass.NONE.toString();
 						}
+						values.put("ECLASS", eclass);
+						hc.getSQLWrite().performInsert("hyperconomy_info_signs", values);
+						signsRepaired++;
+						InfoSign iSign = new InfoSign(hc, loc, signType, to.getName(), 1.0, hp.getEconomy(), EnchantmentClass.fromString(eclass));
+						hc.getInfoSignHandler().addInfoSign(iSign);
 					}
 				}
 			}

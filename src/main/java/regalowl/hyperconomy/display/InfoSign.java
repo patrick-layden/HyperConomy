@@ -39,7 +39,7 @@ public class InfoSign {
 	private int timeValue;
 	private String increment;
 
-	InfoSign(HyperConomy hc, HLocation signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass) {
+	public InfoSign(HyperConomy hc, HLocation signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass) {
 		this.multiplier = multiplier;
 		if (enchantClass == null) {
 			this.enchantClass = EnchantmentClass.DIAMOND;
@@ -80,7 +80,7 @@ public class InfoSign {
 	}
 
 	
-	InfoSign(HyperConomy hc, HLocation signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass, String[] lines) {
+	public InfoSign(HyperConomy hc, HLocation signLoc, SignType type, String objectName, double multiplier, String economy, EnchantmentClass enchantClass, String[] lines) {
 		this.multiplier = multiplier;
 		if (enchantClass == null) {
 			this.enchantClass = EnchantmentClass.DIAMOND;
