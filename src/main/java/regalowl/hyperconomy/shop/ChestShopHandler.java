@@ -50,16 +50,16 @@ public class ChestShopHandler implements HyperEventListener {
 	private ConcurrentHashMap<HLocation, ChestShop> chestShops = new ConcurrentHashMap<HLocation, ChestShop>();
 	private int maxChestShopsPerPlayer;
 	private boolean limitChestShops;
+	private boolean enabled;
 
 	public ChestShopHandler(HyperConomy hc) {
 		this.hc = hc;
 		em = hc.getDataManager();
 		L = hc.getLanguageFile();
-		if (hc.getConf().getBoolean("enable-feature.chest-shops")) {
-			hc.getHyperEventHandler().registerListener(this);
-			maxChestShopsPerPlayer = hc.getConf().getInt("chest-shop.max-per-player");
-			limitChestShops = hc.getConf().getBoolean("chest-shop.limit-chest-shops");
-		}		
+		hc.getHyperEventHandler().registerListener(this);
+		maxChestShopsPerPlayer = hc.getConf().getInt("chest-shop.max-per-player");
+		limitChestShops = hc.getConf().getBoolean("chest-shop.limit-chest-shops");	
+		enabled = hc.getConf().getBoolean("enable-feature.chest-shops");
 	}
 	
 
@@ -69,35 +69,37 @@ public class ChestShopHandler implements HyperEventListener {
 			chestShops.clear();
 			new Thread(new Runnable() {
 				public void run() {
-					SQLRead sr = hc.getSQLRead();
-					QueryResult dbData = sr.select("SELECT * FROM hyperconomy_chest_shops");
-					while (dbData.next()) {
-						String w = dbData.getString("WORLD");
-						int x = dbData.getInt("X");
-						int y = dbData.getInt("Y");
-						int z = dbData.getInt("Z");
-						HyperAccount owner = hc.getDataManager().getAccount(dbData.getString("OWNER"));
-						long priceIncrement = Long.parseLong(dbData.getString("PRICE_INCREMENT"));
-						HLocation l = new HLocation(w,x,y,z);
-						chestShops.put(l, new ChestShop(hc, l, owner, priceIncrement));
+					if (enabled) {
+						SQLRead sr = hc.getSQLRead();
+						QueryResult dbData = sr.select("SELECT * FROM hyperconomy_chest_shops");
+						while (dbData.next()) {
+							String w = dbData.getString("WORLD");
+							int x = dbData.getInt("X");
+							int y = dbData.getInt("Y");
+							int z = dbData.getInt("Z");
+							HyperAccount owner = hc.getDataManager().getAccount(dbData.getString("OWNER"));
+							long priceIncrement = Long.parseLong(dbData.getString("PRICE_INCREMENT"));
+							HLocation l = new HLocation(w,x,y,z);
+							chestShops.put(l, new ChestShop(hc, l, owner, priceIncrement));
+						}
+						dbData.close();
+						dbData = sr.select("SELECT * FROM hyperconomy_chest_shop_items csi INNER JOIN hyperconomy_object_data od ON csi.DATA_ID = od.ID");
+						while (dbData.next()) {
+							String chestId = dbData.getString("CHEST_ID");
+							int dataId = dbData.getInt("DATA_ID");
+							String data = dbData.getString("DATA");
+							double buyPrice = dbData.getDouble("BUY_PRICE");
+							double sellPrice = dbData.getDouble("SELL_PRICE");
+							ChestShopType type = ChestShopType.fromString(dbData.getString("TYPE"));
+							HLocation l = HLocation.fromBlockString(chestId);
+							ChestShop cs = chestShops.get(l);
+							if (cs == null) continue;
+							cs.setCustomPriceItem(chestId, dataId, data, buyPrice, sellPrice, type);
+						}
+						dbData.close();
+						dbData = null;	
+						hc.getDebugMode().ayncDebugConsoleMessage("Chest shops loaded.");
 					}
-					dbData.close();
-					dbData = sr.select("SELECT * FROM hyperconomy_chest_shop_items csi INNER JOIN hyperconomy_object_data od ON csi.DATA_ID = od.ID");
-					while (dbData.next()) {
-						String chestId = dbData.getString("CHEST_ID");
-						int dataId = dbData.getInt("DATA_ID");
-						String data = dbData.getString("DATA");
-						double buyPrice = dbData.getDouble("BUY_PRICE");
-						double sellPrice = dbData.getDouble("SELL_PRICE");
-						ChestShopType type = ChestShopType.fromString(dbData.getString("TYPE"));
-						HLocation l = HLocation.fromBlockString(chestId);
-						ChestShop cs = chestShops.get(l);
-						if (cs == null) continue;
-						cs.setCustomPriceItem(chestId, dataId, data, buyPrice, sellPrice, type);
-					}
-					dbData.close();
-					dbData = null;	
-					hc.getDebugMode().ayncDebugConsoleMessage("Chest shops loaded.");
 					hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.CHEST_SHOPS));
 				}
 			}).start();
@@ -710,6 +712,7 @@ public class ChestShopHandler implements HyperEventListener {
 				loadChestShops();
 			}
 		}
+		if (!enabled) return;
 		if (!hc.loaded()) {
 			if (event instanceof HPlayerInteractEvent) {
 				HPlayerInteractEvent hpie = (HPlayerInteractEvent)event;
