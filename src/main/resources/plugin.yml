@@ -92,7 +92,7 @@ commands:
       aliases: [tsettings, ts]
    hc:
       description: Displays economy help.
-      permission: hyperconomy.use
+      permission: hyperconomy.help
       permission-message: You don't have permission to do this.
    lockshop:
       description: Locks down the shop and most commands.
@@ -168,7 +168,7 @@ commands:
       permission-message: You do not have permission.
    hcbalance:
       description: Displays player balances.
-      permission: hyperconomy.use
+      permission: hyperconomy.balance
       permission-message: You do not have permission.
       aliases: [hcb]
    hctop:
@@ -287,6 +287,7 @@ permissions:
             hyperconomy.sellsign: true
             hyperconomy.pay: true
             hyperconomy.balance: true
+            hyperconomy.help: true
     hyperconomy.econ:
         description: Allows use of all basic economy commands.
         default: op
@@ -371,4 +372,7 @@ permissions:
         default: false
     hyperconomy.balance:
         description: Allows players to check their balance.
+        default: false
+    hyperconomy.help:
+        description: Allows players to use the /hc help command.
         default: false
