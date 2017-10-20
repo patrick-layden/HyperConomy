@@ -147,9 +147,8 @@ public class History {
 
 	/**
 	 * This function must be called from an asynchronous thread!
-	 * @param object
+	 * @param ho
 	 * @param timevalue
-	 * @param economy
 	 * @return The percentage change in theoretical price for the given object and timevalue in hours
 	 */
     
@@ -170,7 +169,6 @@ public class History {
 	//TODO improve performance
 	/**
 	 * This function must be called from an asynchronous thread!
-	 * @param object
 	 * @param timevalue
 	 * @param economy
 	 * @return The percentage change in theoretical price for the given object and timevalue in hours

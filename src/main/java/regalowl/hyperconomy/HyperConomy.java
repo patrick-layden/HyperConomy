@@ -1,20 +1,6 @@
 package regalowl.hyperconomy;
 
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import regalowl.simpledatalib.SimpleDataLib;
-import regalowl.simpledatalib.event.SDLEvent;
-import regalowl.simpledatalib.event.SDLEventListener;
-import regalowl.simpledatalib.events.LogEvent;
-import regalowl.simpledatalib.events.LogLevel;
-import regalowl.simpledatalib.events.ShutdownEvent;
-import regalowl.simpledatalib.file.FileConfiguration;
-import regalowl.simpledatalib.file.FileTools;
-import regalowl.simpledatalib.file.YamlHandler;
-import regalowl.simpledatalib.sql.SQLManager;
-import regalowl.simpledatalib.sql.SQLRead;
-import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.api.API;
@@ -76,13 +62,13 @@ import regalowl.hyperconomy.display.InfoSignHandler;
 import regalowl.hyperconomy.display.ItemDisplayHandler;
 import regalowl.hyperconomy.display.TransactionSignHandler;
 import regalowl.hyperconomy.event.DataLoadEvent;
+import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.HyperEventHandler;
 import regalowl.hyperconomy.event.HyperEventListener;
 import regalowl.hyperconomy.gui.RemoteGUIServer;
 import regalowl.hyperconomy.inventory.HItemStack;
-import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.multiserver.MultiServer;
 import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.timeeffects.TimeEffectsManager;
@@ -90,11 +76,25 @@ import regalowl.hyperconomy.util.DebugMode;
 import regalowl.hyperconomy.util.History;
 import regalowl.hyperconomy.util.HyperLock;
 import regalowl.hyperconomy.util.LanguageFile;
-import regalowl.hyperconomy.util.Log;
 import regalowl.hyperconomy.util.LibraryManager;
+import regalowl.hyperconomy.util.Log;
 import regalowl.hyperconomy.util.UpdateChecker;
 import regalowl.hyperconomy.util.UpdateYML;
 import regalowl.hyperconomy.webpage.HyperConomy_Web;
+import regalowl.simpledatalib.SimpleDataLib;
+import regalowl.simpledatalib.event.SDLEvent;
+import regalowl.simpledatalib.event.SDLEventListener;
+import regalowl.simpledatalib.events.LogEvent;
+import regalowl.simpledatalib.events.LogLevel;
+import regalowl.simpledatalib.events.ShutdownEvent;
+import regalowl.simpledatalib.file.FileConfiguration;
+import regalowl.simpledatalib.file.FileTools;
+import regalowl.simpledatalib.file.YamlHandler;
+import regalowl.simpledatalib.sql.SQLManager;
+import regalowl.simpledatalib.sql.SQLRead;
+import regalowl.simpledatalib.sql.SQLWrite;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HyperConomy implements HyperEventListener, SDLEventListener {
 
@@ -195,12 +195,18 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		waitingForLibraries.set(true);
 		lm = new LibraryManager(this,heh);
 	}
-	
+
 	public void enable() {
-		if (!preEnabled.get()) preEnable();
-		if (lm.dependencyError()) return;
+		if (!preEnabled.get()) {
+			preEnable();
+		}
+		if (lm.dependencyError()) {
+			return;
+		}
 		enabled.set(true);
-		if (waitingForLibraries.get()) return;
+		if (waitingForLibraries.get()) {
+			return;
+		}
 		loadingStarted.set(true);
 		if (hConfig.getBoolean("sql.use-mysql")) {
 			String username = hConfig.getString("sql.mysql-connection.username");
@@ -208,7 +214,8 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 			int port = hConfig.getInt("sql.mysql-connection.port");
 			String host = hConfig.getString("sql.mysql-connection.host");
 			String database = hConfig.getString("sql.mysql-connection.database");
-			sdl.getSQLManager().enableMySQL(host, database, username, password, port);
+			boolean usessl = hConfig.getBoolean("sql.mysql-connection.usesll");
+			sdl.getSQLManager().enableMySQL(host, database, username, password, port, usessl);
 		}
 		dMode.syncDebugConsoleMessage("Expected plugin folder path: [" + sdl.getStoragePath() + "]");
 		sdl.getSQLManager().createDatabase();
