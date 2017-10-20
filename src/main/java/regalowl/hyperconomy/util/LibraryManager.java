@@ -59,8 +59,8 @@ public class LibraryManager implements HyperEventListener {
 			
 			ArrayList<Dependency> dependencies = new ArrayList<Dependency>();
 
-			dependencies.add(new Dependency(libFolder + File.separator + "sqlite-jdbc-3.7.2.jar", "https://bitbucket.org/xerial/sqlite-jdbc/downloads/sqlite-jdbc-3.7.2.jar", true));
-			dependencies.add(new Dependency(libFolder + File.separator + "mysql-connector-java-5.1.37.jar", "http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.37/mysql-connector-java-5.1.37.jar", true));
+			dependencies.add(new Dependency(libFolder + File.separator + "sqlite-jdbc-3.7.2.jar", "https://bitbucket.org/xerial/sqlite-jdbc/downloads/sqlite-jdbc-3.20.0.jar", true));
+			dependencies.add(new Dependency(libFolder + File.separator + "mysql-connector-java-5.1.44.jar", "http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.44/mysql-connector-java-5.1.44.jar", true));
 			dependencies.add(new Dependency(libFolder + File.separator + "json-simple-1.1.1.jar", "http://central.maven.org/maven2/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar", true));
 			
 			//include in jar so that config can load quicker

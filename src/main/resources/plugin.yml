@@ -1,6 +1,6 @@
 name: HyperConomy
 main: regalowl.hyperconomy.bukkit.BukkitConnector
-version: 0.975.7
+version: 0.975.8
 author: RegalOwl
 website: http://dev.bukkit.org/server-mods/hyperconomy/
 softdepend: [HeroStronghold, Buycraft, Essentials, Vault]

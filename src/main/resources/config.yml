@@ -28,6 +28,7 @@ sql:
     password: default_password
     host: localhost
     database: minecraft
+    usessl: false
 language: english
 intervals:
   shop-check: 6
