@@ -47,7 +47,8 @@ public class UpdateYML {
 		cfg.setDefault("sql.mysql-connection.port", 3306);
 		cfg.setDefault("sql.mysql-connection.password", "default_password");		
 		cfg.setDefault("sql.mysql-connection.host", "localhost");		
-		cfg.setDefault("sql.mysql-connection.database", "minecraft");				
+		cfg.setDefault("sql.mysql-connection.database", "minecraft");
+		cfg.setDefault("sql.mysql-connection.usessl", "false");
 		cfg.setDefault("bank.max-ownerships-per-player", 3);
 
 		
