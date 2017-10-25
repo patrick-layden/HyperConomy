@@ -268,6 +268,7 @@ permissions:
             hyperconomy.frameshop: true
             hyperconomy.bank: true
             hyperconomy.viewbanks: true
+            hyperconomy.taxexempt: true
     hyperconomy.use:
         description: Allows general use of HyperConomy.
         default: true
@@ -366,4 +367,7 @@ permissions:
         default: false
     hyperconomy.viewbanks:
         description: Allows players to view all information about all banks.
+        default: false
+    hyperconomy.taxexempt:
+        description: Allows players to avoid paying taxes in stores
         default: false

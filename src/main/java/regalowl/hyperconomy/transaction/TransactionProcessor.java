@@ -1,9 +1,6 @@
 package regalowl.hyperconomy.transaction;
 
 
-
-
-import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -23,6 +20,7 @@ import regalowl.hyperconomy.tradeobject.TradeObjectType;
 import regalowl.hyperconomy.util.LanguageFile;
 import regalowl.hyperconomy.util.Log;
 import regalowl.hyperconomy.util.MessageBuilder;
+import regalowl.simpledatalib.CommonFunctions;
 
 
 
@@ -206,6 +204,9 @@ public class TransactionProcessor {
 		try {
 			double price = CommonFunctions.twoDecimals(tradeObject.getBuyPrice(amount));
 			double tax = CommonFunctions.twoDecimals(tradeObject.getPurchaseTax(price));
+			if (trader.hasPermission("hyperconomy.taxexempt")) {
+				tax = 0.00;
+			}
 			if (!trader.hasBalance(price + tax)) {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
@@ -239,6 +240,9 @@ public class TransactionProcessor {
 		try {
 			double price = CommonFunctions.twoDecimals(tradeObject.getBuyPrice(amount));
 			double tax = CommonFunctions.twoDecimals(tradeObject.getPurchaseTax(price));
+			if (trader.hasPermission("hyperconomy.taxexempt")) {
+				tax = 0.00;
+			}
 			if (!trader.hasBalance(price + tax)) {
 				response.addFailed(L.get("INSUFFICIENT_FUNDS"), tradeObject);
 				return;
@@ -275,6 +279,9 @@ public class TransactionProcessor {
 			HEnchantment ench = tradeObject.getEnchantment();
 			double price = CommonFunctions.twoDecimals(tradeObject.getBuyPrice(EnchantmentClass.fromString(heldItem.getMaterial())));
 			double tax = CommonFunctions.twoDecimals(tradeObject.getPurchaseTax(price));
+			if (trader.hasPermission("hyperconomy.taxexempt")) {
+				tax = 0.00;
+			}
 			if (heldItem.containsEnchantment(ench)) {
 				response.addFailed(L.get("ITEM_ALREADY_HAS_ENCHANTMENT"), tradeObject);
 				return;
