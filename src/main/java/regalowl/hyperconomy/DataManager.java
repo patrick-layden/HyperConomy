@@ -141,8 +141,7 @@ public class DataManager implements HyperEventListener {
 	}
 	
 	public ArrayList<String> getCategories() {
-		ArrayList<String> cats = new ArrayList<String>();
-		cats.addAll(categories);
+		ArrayList<String> cats = new ArrayList<String>(categories);
 		return cats;
 	}
 	

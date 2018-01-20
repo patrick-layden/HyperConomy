@@ -78,8 +78,7 @@ public class TimeEffectsManager {
 	}
 	
 	public ArrayList<TimeEffect> getTimeEffects() {
-		ArrayList<TimeEffect> effects = new ArrayList<TimeEffect>();
-		effects.addAll(timeEffects);
+		ArrayList<TimeEffect> effects = new ArrayList<TimeEffect>(timeEffects);
 		return effects;
 	}
 

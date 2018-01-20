@@ -2,6 +2,6 @@ package regalowl.hyperconomy.event;
 
 public interface HyperEventListener {
 
-	public void handleHyperEvent(HyperEvent event);
+	void handleHyperEvent(HyperEvent event);
 	
 }

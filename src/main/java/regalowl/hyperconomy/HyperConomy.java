@@ -158,7 +158,7 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 				tem = new TimeEffectsManager(this);
 				hcweb = new HyperConomy_Web(this);
 				registerCommands();
-				loaded.set(true);;
+				loaded.set(true);
 				hl.setLoadLock(false);
 				mc.setListenerState(false);
 				dMode.syncDebugConsoleMessage("Data loading completed.");

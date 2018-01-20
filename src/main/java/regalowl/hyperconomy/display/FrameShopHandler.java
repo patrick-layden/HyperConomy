@@ -5,8 +5,8 @@ import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public interface FrameShopHandler {
-	public boolean frameShopExists(HLocation l);
-	public void removeFrameShop(HLocation l);
-	public void createFrameShop(HLocation l, TradeObject to, Shop s);
-	public void removeFrameShops(TradeObject to);
+	boolean frameShopExists(HLocation l);
+	void removeFrameShop(HLocation l);
+	void createFrameShop(HLocation l, TradeObject to, Shop s);
+	void removeFrameShops(TradeObject to);
 }
