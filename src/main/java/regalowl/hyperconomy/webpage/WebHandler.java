@@ -70,7 +70,7 @@ public class WebHandler implements HyperEventListener {
 			}).start();
 			hc.getMC().logInfo("[HyperConomy_Web]Web server enabled.  Running on port " + hcw.getPort() + ".");
 		} catch (Exception e) {
-			hc.gSDL().getErrorWriter().writeError(e);;
+			hc.gSDL().getErrorWriter().writeError(e);
 		}
 	}
 	

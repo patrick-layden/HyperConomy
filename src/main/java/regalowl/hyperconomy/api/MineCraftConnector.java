@@ -19,111 +19,111 @@ import regalowl.hyperconomy.minecraft.HSign;
 
 public interface MineCraftConnector {
 	
-	public HyperConomy getHC();
-	public boolean isEnabled();
-	public void disablePlugin();
-	public String getVersion();
-	public ServerConnectionType getServerConnectionType();
+	HyperConomy getHC();
+	boolean isEnabled();
+	void disablePlugin();
+	String getVersion();
+	ServerConnectionType getServerConnectionType();
 	
-	public void registerCommand(String command, HyperCommand hCommand);
-	
-	
-	public void unregisterAllListeners();
-	public void registerListeners();
-	public void setListenerState(boolean minimal);
+	void registerCommand(String command, HyperCommand hCommand);
 	
 	
-	public void runTask(Runnable r);
-	public void runTaskLater(Runnable r, Long delayTicks);
-	public long runRepeatingTask(Runnable r, Long delayTicks, Long intervalTicks);
-	public void cancelTask(long id);
-	public void cancelAllTasks();
+	void unregisterAllListeners();
+	void registerListeners();
+	void setListenerState(boolean minimal);
+	
+	
+	void runTask(Runnable r);
+	void runTaskLater(Runnable r, Long delayTicks);
+	long runRepeatingTask(Runnable r, Long delayTicks, Long intervalTicks);
+	void cancelTask(long id);
+	void cancelAllTasks();
 	
 
-	public boolean useExternalEconomy();
-	public String getEconomyName();
-	public void checkExternalEconomyRegistration();
-	public void unRegisterAsExternalEconomy();
-	public void setupHEconomyProvider();
-	public HEconomyProvider getEconomyProvider();
+	boolean useExternalEconomy();
+	String getEconomyName();
+	void checkExternalEconomyRegistration();
+	void unRegisterAsExternalEconomy();
+	void setupHEconomyProvider();
+	HEconomyProvider getEconomyProvider();
 	
 	
-	public boolean isInCreativeMode(HyperPlayer hp);
-	public HLocation getLocation(HyperPlayer hp);
-	public HLocation getTargetLocation(HyperPlayer hp);
-	public HLocation getLocationBeforeTargetLocation(HyperPlayer hp);
-	public boolean isOnline(HyperPlayer hp);
-	public UUID getUUID(HyperPlayer hp);
-	public void teleport(HyperPlayer hp, HLocation sl);
-	public void sendMessage(HyperPlayer hp, String message);
-	public void kickPlayer(HyperPlayer hp, String message);
-	public boolean isSneaking(HyperPlayer hp);
-	public boolean hasPermission(HyperPlayer hp, String permission);
-	public boolean isPermissionSet(HyperPlayer hp, String permission);
-	public HyperPlayer getPlayer(UUID uuid);
-	public boolean playerExists(UUID uuid);
-	public int getLevel(HyperPlayer hp);
-	public float getExp(HyperPlayer hp);
-	public void setLevel(HyperPlayer hp, int level);
-	public void setExp(HyperPlayer hp, float exp);
-	public String getName(HyperPlayer hp);
-	public void checkForNameChange(HyperPlayer hp);
-	public HItemStack getItem(HyperPlayer hp, int slot);
-	public int getHeldItemSlot(HyperPlayer hp);
-	public HInventory getInventory(HyperPlayer hp);
-	public void setItem(HyperPlayer player, HItemStack item, int slot);
-	public void setItem(HLocation location, HItemStack item, int slot);
-	public void setItemQuantity(HLocation location, int amount, int slot);
-	public void setItemQuantity(HyperPlayer hp, int amount, int slot);
-	public void setItemLore(HInventory inventory, List<String> lore, int slot);
-	public void setItemOnCursor(HyperPlayer p, HItemStack stack);
-	public String getMinecraftItemName(HItemStack stack);
+	boolean isInCreativeMode(HyperPlayer hp);
+	HLocation getLocation(HyperPlayer hp);
+	HLocation getTargetLocation(HyperPlayer hp);
+	HLocation getLocationBeforeTargetLocation(HyperPlayer hp);
+	boolean isOnline(HyperPlayer hp);
+	UUID getUUID(HyperPlayer hp);
+	void teleport(HyperPlayer hp, HLocation sl);
+	void sendMessage(HyperPlayer hp, String message);
+	void kickPlayer(HyperPlayer hp, String message);
+	boolean isSneaking(HyperPlayer hp);
+	boolean hasPermission(HyperPlayer hp, String permission);
+	boolean isPermissionSet(HyperPlayer hp, String permission);
+	HyperPlayer getPlayer(UUID uuid);
+	boolean playerExists(UUID uuid);
+	int getLevel(HyperPlayer hp);
+	float getExp(HyperPlayer hp);
+	void setLevel(HyperPlayer hp, int level);
+	void setExp(HyperPlayer hp, float exp);
+	String getName(HyperPlayer hp);
+	void checkForNameChange(HyperPlayer hp);
+	HItemStack getItem(HyperPlayer hp, int slot);
+	int getHeldItemSlot(HyperPlayer hp);
+	HInventory getInventory(HyperPlayer hp);
+	void setItem(HyperPlayer player, HItemStack item, int slot);
+	void setItem(HLocation location, HItemStack item, int slot);
+	void setItemQuantity(HLocation location, int amount, int slot);
+	void setItemQuantity(HyperPlayer hp, int amount, int slot);
+	void setItemLore(HInventory inventory, List<String> lore, int slot);
+	void setItemOnCursor(HyperPlayer p, HItemStack stack);
+	String getMinecraftItemName(HItemStack stack);
 	
-	public HInventory getChestInventory(HLocation l);
-	public void setInventory(HInventory inventory);
-	public void openInventory(HInventory inventory, HyperPlayer player, String name);
-	public void closeActiveInventory(HyperPlayer p);
-	public boolean conflictsWith(HEnchantment e1, HEnchantment e2);
-	public boolean canEnchantItem(HItemStack item);
-	
-	
-	public ArrayList<HyperPlayer> getOnlinePlayers();
-	public ArrayList<String> getOnlinePlayerNames();
-	public boolean worldExists(String world);
+	HInventory getChestInventory(HLocation l);
+	void setInventory(HInventory inventory);
+	void openInventory(HInventory inventory, HyperPlayer player, String name);
+	void closeActiveInventory(HyperPlayer p);
+	boolean conflictsWith(HEnchantment e1, HEnchantment e2);
+	boolean canEnchantItem(HItemStack item);
 	
 	
-	public boolean isLoaded(HLocation l);
-	public void load(HLocation l);
+	ArrayList<HyperPlayer> getOnlinePlayers();
+	ArrayList<String> getOnlinePlayerNames();
+	boolean worldExists(String world);
+	
+	
+	boolean isLoaded(HLocation l);
+	void load(HLocation l);
 
 	
-	public void logInfo(String message);
-	public void logSevere(String message);
-	public String applyColor(String text);
-	public String removeColor(String text);
+	void logInfo(String message);
+	void logSevere(String message);
+	String applyColor(String text);
+	String removeColor(String text);
 	
 	
-	public boolean isTransactionSign(HLocation l);
-	public boolean isInfoSign(HLocation l);
-	public boolean isChestShopSign(HLocation l);
-	public boolean isChestShopSignBlock(HLocation l);
-	public boolean isChestShopChest(HLocation l);
-	public boolean isPartOfChestShop(HLocation l);
+	boolean isTransactionSign(HLocation l);
+	boolean isInfoSign(HLocation l);
+	boolean isChestShopSign(HLocation l);
+	boolean isChestShopSignBlock(HLocation l);
+	boolean isChestShopChest(HLocation l);
+	boolean isPartOfChestShop(HLocation l);
 	//public ChestShop getChestShop(HLocation location);
-	public HSign getSign(HLocation location);
-	public void setSign(HSign sign);
-	public HBlock getAttachedBlock(HSign sign);
-	public boolean isChest(HLocation l);
-	public boolean canHoldChestShopSign(HLocation l);
+	HSign getSign(HLocation location);
+	void setSign(HSign sign);
+	HBlock getAttachedBlock(HSign sign);
+	boolean isChest(HLocation l);
+	boolean canHoldChestShopSign(HLocation l);
 	
 	
-	public HItem dropItemDisplay(HLocation location, HItemStack item);
-	public void removeItem(HItem item);
-	public void clearNearbyNonDisplayItems(HItem item, double radius);
-	public void zeroVelocity(HItem item);
-	public HBlock getFirstNonAirBlockInColumn(HLocation location);
-	public boolean canFall(HBlock block);
+	HItem dropItemDisplay(HLocation location, HItemStack item);
+	void removeItem(HItem item);
+	void clearNearbyNonDisplayItems(HItem item, double radius);
+	void zeroVelocity(HItem item);
+	HBlock getFirstNonAirBlockInColumn(HLocation location);
+	boolean canFall(HBlock block);
 	
 	
-	public FrameShopHandler getFrameShopHandler();
+	FrameShopHandler getFrameShopHandler();
 	
 }
