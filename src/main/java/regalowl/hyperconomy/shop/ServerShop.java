@@ -331,7 +331,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	public void unBanObjects(ArrayList<TradeObject> objects) {
 		for (TradeObject ho:objects) {
-			if (!availableObjects.contains(ho)) {
+			if (!availableObjects.contains(ho.getName())) {
 				availableObjects.add(ho.getName());
 			}
 		}
