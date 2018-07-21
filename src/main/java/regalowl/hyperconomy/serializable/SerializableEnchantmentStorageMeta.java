@@ -20,7 +20,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 public class SerializableEnchantmentStorageMeta extends SerializableItemMeta implements Serializable {
 
-	private static final long serialVersionUID = -6050487153906386305L;
+	private static final long serialVersionUID = -797201926717838339L;
 	
 	private List<SerializableEnchantment> storedEnchantments = new ArrayList<SerializableEnchantment>();
 
@@ -64,7 +64,7 @@ public class SerializableEnchantmentStorageMeta extends SerializableItemMeta imp
 			esm.addEnchant(se.getEnchantment(), se.getLvl(), true);
 		}
 		for (SerializableEnchantment se:storedEnchantments) {
-			esm.addStoredEnchant(Enchantment.getByName(se.getEnchantmentName()), se.getLvl(), true);
+			esm.addStoredEnchant(Enchantment.getByKey(se.getEnchantmentName()), se.getLvl(), true);
 		}
 		return esm;
 	}

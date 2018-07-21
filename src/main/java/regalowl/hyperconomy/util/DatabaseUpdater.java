@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.bukkit.BukkitConnector;
+import regalowl.hyperconomy.inventory.HEnchantment;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.serializable.SerializableEnchantment;
+import regalowl.hyperconomy.serializable.SerializableItemStack;
 import regalowl.simpledatalib.CommonFunctions;
 import regalowl.simpledatalib.file.FileConfiguration;
 import regalowl.simpledatalib.sql.Field;
@@ -13,12 +19,6 @@ import regalowl.simpledatalib.sql.QueryResult;
 import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.simpledatalib.sql.Table;
-import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.bukkit.BukkitConnector;
-import regalowl.hyperconomy.inventory.HEnchantment;
-import regalowl.hyperconomy.inventory.HItemStack;
-import regalowl.hyperconomy.serializable.SerializableEnchantment;
-import regalowl.hyperconomy.serializable.SerializableItemStack;
 
 public class DatabaseUpdater {
 
@@ -102,7 +102,9 @@ public class DatabaseUpdater {
 						sw.addToQueue("UPDATE hyperconomy_objects SET DATA = '"+n.serialize()+"' WHERE NAME = '"+name+"'");
 					} else if (type.equalsIgnoreCase("ENCHANTMENT")) {
 						SerializableEnchantment sis = new SerializableEnchantment(data);
-						HEnchantment n = new HEnchantment(sis.getEnchantmentName(), sis.getLvl());
+						HEnchantment n = new HEnchantment(
+								sis.getEnchantmentName().getNamespace() + ":" + sis.getEnchantmentName().getKey(),
+								sis.getLvl());
 						sw.addToQueue("UPDATE hyperconomy_objects SET DATA = '"+n.serialize()+"' WHERE NAME = '"+name+"'");
 					}
 				}

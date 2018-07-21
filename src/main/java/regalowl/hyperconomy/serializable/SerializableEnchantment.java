@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
@@ -11,12 +12,12 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
  
 
 public class SerializableEnchantment extends SerializableObject implements Serializable {
-	private static final long serialVersionUID = 4510326523024526205L;
-	private String enchantment;
+	private static final long serialVersionUID = -5705303756771850224L;
+	private NamespacedKey enchantment;
     private int lvl;
  
 	public SerializableEnchantment(Enchantment e, int lvl) {
-        this.enchantment = e.getName();
+		this.enchantment = e.getKey();
         this.lvl = lvl;
     }
 
@@ -36,10 +37,10 @@ public class SerializableEnchantment extends SerializableObject implements Seria
     }
 
 	public Enchantment getEnchantment() {
-		return Enchantment.getByName(enchantment);
+		return Enchantment.getByKey(enchantment);
     }
 
-	public String getEnchantmentName() {
+	public NamespacedKey getEnchantmentName() {
 		return enchantment;
 	}
 
