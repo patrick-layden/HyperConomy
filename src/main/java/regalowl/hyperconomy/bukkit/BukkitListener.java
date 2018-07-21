@@ -21,6 +21,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -29,7 +30,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -371,7 +371,7 @@ public class BukkitListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerPickupItemDisplayEvent(PlayerPickupItemEvent event) {
+	public void onPlayerPickupItemDisplayEvent(EntityPickupItemEvent event) {
 		Item item = event.getItem();
 		if (!event.isCancelled()) {
 			List<MetadataValue> meta = item.getMetadata("HyperConomy");

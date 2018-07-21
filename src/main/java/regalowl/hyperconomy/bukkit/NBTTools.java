@@ -30,8 +30,7 @@ public class NBTTools {
 	private Method nbtTagCompoundGetDoubleMethod;
 	private Method nbtTagCompoundSetBooleanMethod;
 	private Method nbtTagCompoundGetBooleanMethod;
-	@SuppressWarnings("rawtypes")
-	private Class nbtTagCompound;
+	private Class<?> nbtTagCompound;
 	private boolean loadedSuccessfully = false;
 
 	@SuppressWarnings("unchecked")
@@ -42,7 +41,7 @@ public class NBTTools {
 			version = version.substring(version.lastIndexOf(".") + 1, version.length());
 			craftItemStackClass = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftItemStack");
 			nbtTagCompound = Class.forName("net.minecraft.server." + version + ".NBTTagCompound");
-			Object nbtTag = nbtTagCompound.newInstance();
+			Object nbtTag = nbtTagCompound.getDeclaredConstructor().newInstance();
 			@SuppressWarnings("rawtypes")
 			Class nbtBase = Class.forName("net.minecraft.server." + version + ".NBTBase");
 			craftItemStackAsNMSCopyMethod = craftItemStackClass.getMethod("asNMSCopy", ItemStack.class);
@@ -133,7 +132,7 @@ public class NBTTools {
 	}
 	public Object generateNBTTag() {
 		try {
-			return nbtTagCompound.newInstance();
+			return nbtTagCompound.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

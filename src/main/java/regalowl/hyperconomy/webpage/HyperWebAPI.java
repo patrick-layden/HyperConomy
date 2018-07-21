@@ -61,15 +61,19 @@ public class HyperWebAPI extends HttpServlet {
     }
     
     /**
-     * Execute an treatement
-     * @param pUri Uri source
-     * @return The text that must be send to the client
-     * @throws InvocationTargetException InvocationTargetException
-     * @throws IllegalAccessException IllegalAccessException
-     * @throws InstantiationException InstantiationException
-     * @throws IllegalArgumentException IllegalArgumentException
-     */
-    private String getObjects(String pUri) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	 * Execute an treatement
+	 * 
+	 * @param pUri Uri source
+	 * @return The text that must be send to the client
+	 * @throws InvocationTargetException InvocationTargetException
+	 * @throws IllegalAccessException    IllegalAccessException
+	 * @throws InstantiationException    InstantiationException
+	 * @throws IllegalArgumentException  IllegalArgumentException
+	 * @throws SecurityException         SecurityException
+	 * @throws NoSuchMethodException     NoSuchMethodException
+	 */
+	private String getObjects(String pUri) throws IllegalArgumentException, InstantiationException,
+			IllegalAccessException, InvocationTargetException, NoSuchMethodException, SecurityException {
     	//Find all parts of the URI
     	String[] lParts = pUri.split("/");
     	List<String> lPartList = new ArrayList<String>();
@@ -148,18 +152,23 @@ public class HyperWebAPI extends HttpServlet {
     }
     
     /**
-     * Call a method (pMethod) in an instance of pClass, with parameters (pParams)
-     * @param pClass Class to use
-     * @param pMethod Method to call
-     * @param pParams Parameters of the method
-     * @return the result of the method (or an exception)
-     * @throws IllegalAccessException IllegalAccessException
-     * @throws InstantiationException InstantiationException
-     * @throws InvocationTargetException InvocationTargetException
-     * @throws IllegalArgumentException IllegalArgumentException
-     */
+	 * Call a method (pMethod) in an instance of pClass, with parameters (pParams)
+	 * 
+	 * @param pClass  Class to use
+	 * @param pMethod Method to call
+	 * @param pParams Parameters of the method
+	 * @return the result of the method (or an exception)
+	 * @throws IllegalAccessException    IllegalAccessException
+	 * @throws InstantiationException    InstantiationException
+	 * @throws InvocationTargetException InvocationTargetException
+	 * @throws IllegalArgumentException  IllegalArgumentException
+	 * @throws SecurityException         SecurityException
+	 * @throws NoSuchMethodException     NoSuchMethodException
+	 */
 	@SuppressWarnings("rawtypes")
-	private String callMethod(String pClass, String pMethod, List<String> pParams) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private String callMethod(String pClass, String pMethod, List<String> pParams)
+			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException {
     	String lReturn = "";
 		
 		//Get the class
@@ -174,7 +183,7 @@ public class HyperWebAPI extends HttpServlet {
     	}
     	
     	//Create the instance
-    	Object lObject = lClass.newInstance();
+		Object lObject = lClass.getDeclaredConstructor().newInstance();
     	
     	//Table to call the method
     	Object[] lArgs = new Object[lMethod.getParameterTypes().length];
@@ -210,7 +219,7 @@ public class HyperWebAPI extends HttpServlet {
     			lArgs[lIndex] = Boolean.parseBoolean(pParams.get(lIndex));
     		} //It's a char
     		else if (lType.isAssignableFrom(char.class)) {
-    			lArgs[lIndex] = new Character(pParams.get(lIndex).charAt(0));
+				lArgs[lIndex] = Character.valueOf(pParams.get(lIndex).charAt(0));
     		} //It's a player -> find by name
     		else if (lType.isAssignableFrom(HyperPlayer.class)) {
     			lArgs[lIndex] = hc.getHyperPlayerManager().getHyperPlayer(pParams.get(lIndex));
