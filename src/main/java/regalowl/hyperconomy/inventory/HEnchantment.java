@@ -3,16 +3,18 @@ package regalowl.hyperconomy.inventory;
 
 import java.util.HashMap;
 
+import org.bukkit.NamespacedKey;
+
 import regalowl.simpledatalib.CommonFunctions;
 
  
 
 public class HEnchantment {
-	private String enchantment;
+	private NamespacedKey enchantment;
     private int lvl;
  
 	public HEnchantment(String enchantment, int lvl) {
-        this.enchantment = enchantment;
+		this.enchantment = NamespacedKey.minecraft(enchantment);
         this.lvl = lvl;
     }
 	
@@ -23,20 +25,24 @@ public class HEnchantment {
 	
 	public String serialize() {
 		HashMap<String,String> data = new HashMap<String,String>();
-		data.put("enchantment", enchantment);
+		data.put("enchantment", enchantment.getKey());
 		data.put("lvl", lvl+"");
 		return CommonFunctions.implodeMap(data);
 	}
 	
 	public HEnchantment(String serialized) {
 		HashMap<String,String> data = CommonFunctions.explodeMap(serialized);
-		this.enchantment = data.get("enchantment");
+		this.enchantment = NamespacedKey.minecraft(data.get("enchantment"));
 		this.lvl = Integer.parseInt(data.get("lvl"));
     }
 
 
-	public String getEnchantmentName() {
+	public NamespacedKey getEnchantmentKey() {
 		return enchantment;
+	}
+
+	public String getEnchantmentKeyString() {
+		return enchantment.getKey();
 	}
 
 	public int getLvl() {

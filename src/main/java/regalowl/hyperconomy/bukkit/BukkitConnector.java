@@ -343,8 +343,8 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	@Override
 	public boolean conflictsWith(HEnchantment e1, HEnchantment e2) {
-		Enchantment ench1 = Enchantment.getByName(e1.getEnchantmentName());
-		Enchantment ench2 = Enchantment.getByName(e2.getEnchantmentName());
+		Enchantment ench1 = Enchantment.getByKey(e1.getEnchantmentKey());
+		Enchantment ench2 = Enchantment.getByKey(e2.getEnchantmentKey());
 		return ench1.conflictsWith(ench2);
 	}
 	

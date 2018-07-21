@@ -25,7 +25,7 @@ public class TradeEnchant extends BasicTradeObject implements TradeObject {
 	}
 	@Override
 	public String getEnchantmentName() {
-		return getHEnchant().getEnchantmentName();
+		return getHEnchant().getEnchantmentKeyString();
 	}
 
 	
