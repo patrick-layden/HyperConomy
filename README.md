@@ -6,7 +6,7 @@ HyperConomy is the all in one economy and shop plugin.  It can be a simple chest
 
 Installation
 ---------
-* Download HyperConomy releases from [BukkitDev](http://dev.bukkit.org/bukkit-plugins/hyperconomy/files/) or get the latest [development build](http://regalowl.net:8081/job/HyperConomy/).
+* Download HyperConomy releases from [BukkitDev](http://dev.bukkit.org/projects/hyperconomy/files/) or get the latest [development build](http://regalowl.net:8081/job/HyperConomy/).
 * Place the HyperConomy jar file your plugins folder.
 * Restart your server.
 
@@ -49,7 +49,7 @@ Releases
 Add-ons
 ---------
 
-[HyperMerchant](http://dev.bukkit.org/bukkit-plugins/hypermerchant/)
+[HyperMerchant](http://dev.bukkit.org/projects/hypermerchant/)
 
 HyperMerchant is a graphical user interface for your players to use to interact with HyperConomy shops.  It is also includes the ability to easily create Citizens npc shopkeepers for your HyperConomy shops.
 
@@ -76,7 +76,7 @@ Links
 
 [Documentation Wiki](https://github.com/RegalOwl/HyperConomy-Documentation)
 
-[BukkitDev Page](http://dev.bukkit.org/bukkit-plugins/hyperconomy/)
+[BukkitDev Page](http://dev.bukkit.org/projects/hyperconomy/)
 
 [Spigot Page](https://www.spigotmc.org/resources/hyperconomy.4602/)
 
