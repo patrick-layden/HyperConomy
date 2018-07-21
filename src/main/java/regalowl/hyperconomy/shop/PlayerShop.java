@@ -522,7 +522,7 @@ public class PlayerShop implements Shop, Comparable<Shop> {
 		if (pso == null) {
 			return;
 		} else {
-			shopContents.remove(pso);
+			shopContents.remove(pso.getName());
 			hc.getSQLWrite().addToQueue("DELETE FROM hyperconomy_shop_objects WHERE SHOP = '"+name+"' AND HYPEROBJECT = '"+hyperObject.getName()+"'");
 			hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 		}
