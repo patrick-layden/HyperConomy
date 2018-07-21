@@ -3,7 +3,9 @@ package regalowl.hyperconomy.serializable;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,15 +17,15 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 public class SerializableSkullMeta extends SerializableItemMeta implements Serializable {
 
-	private static final long serialVersionUID = -1095975801937823837L;
-
-	private String owner;
+	private static final long serialVersionUID = -711270187445211416L;
+	
+	private UUID owner;
 
 	public SerializableSkullMeta(ItemMeta im) {
 		super(im);
 		if (im instanceof SkullMeta) {
 			SkullMeta sm = (SkullMeta)im;
-			this.owner = sm.getOwner();
+			this.owner = sm.getOwningPlayer().getUniqueId();
 		}
     }
 
@@ -36,7 +38,7 @@ public class SerializableSkullMeta extends SerializableItemMeta implements Seria
 			ois.close();
 			if (!(o instanceof SerializableSkullMeta)) {return;}
 			SerializableSkullMeta ssm = (SerializableSkullMeta)o;
-			this.owner = ssm.getOwner();
+			this.owner = ssm.getOwnerUUID();
     	} catch (Exception e) {
     		
     	}
@@ -52,11 +54,15 @@ public class SerializableSkullMeta extends SerializableItemMeta implements Seria
 		for (SerializableEnchantment se:enchantments) {
 			sm.addEnchant(se.getEnchantment(), se.getLvl(), true);
 		}
-		sm.setOwner(owner);
+		sm.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
 		return sm;
 	}
 	
-	public String getOwner() {
+	public String getOwnerName() {
+		return Bukkit.getPlayer(owner).getDisplayName();
+	}
+
+	public UUID getOwnerUUID() {
 		return owner;
 	}
 
