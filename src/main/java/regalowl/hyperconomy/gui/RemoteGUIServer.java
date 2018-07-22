@@ -1,6 +1,5 @@
 package regalowl.hyperconomy.gui;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.BindException;
@@ -11,11 +10,11 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.api.ServerConnectionType;
 import regalowl.hyperconomy.event.DataLoadEvent;
+import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.GUIChangeType;
 import regalowl.hyperconomy.event.HyperBankModificationEvent;
@@ -23,14 +22,14 @@ import regalowl.hyperconomy.event.HyperEconomyCreationEvent;
 import regalowl.hyperconomy.event.HyperEconomyDeletionEvent;
 import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.HyperEventListener;
-import regalowl.hyperconomy.event.TradeObjectModificationEvent;
-import regalowl.hyperconomy.event.TradeObjectModificationType;
-import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
-import regalowl.hyperconomy.shop.PlayerShop;
-import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
 import regalowl.hyperconomy.event.RequestGUIChangeEvent;
 import regalowl.hyperconomy.event.ShopModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationType;
+import regalowl.hyperconomy.shop.PlayerShop;
+import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.simpledatalib.CommonFunctions;
 
 
 public class RemoteGUIServer implements HyperEventListener {
@@ -418,11 +417,8 @@ public class RemoteGUIServer implements HyperEventListener {
 			public void run() {
 				while (runServer) {
 					GUITransferObject incomingTransfer = null;
-					ServerSocket serverSocket = null;
-					Socket socket = null;
-					try {
-						serverSocket = new ServerSocket(listenPort);
-						socket = serverSocket.accept();
+					try (ServerSocket serverSocket = new ServerSocket(listenPort);
+							Socket socket = serverSocket.accept()) {
 						ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 						incomingTransfer = (GUITransferObject) input.readObject();
 						
@@ -434,8 +430,6 @@ public class RemoteGUIServer implements HyperEventListener {
 							ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 							out.writeObject(response);
 							out.flush();
-							socket.close();
-							serverSocket.close();
 							return;
 						}
 						resetDisconnectTimer = true;
@@ -496,18 +490,12 @@ public class RemoteGUIServer implements HyperEventListener {
 							out.writeObject(response);
 							out.flush();
 						}
-						socket.close();
-						serverSocket.close();
 					} catch (BindException be) {
 						runServer = false;
 						hc.getDebugMode().debugWriteError(be);
 						hc.getDebugMode().debugWriteMessage("Remote GUI disabled.  Port already in use by something else.  Check your config.");
 					} catch (Exception e) {
-						try {
-							hc.getDebugMode().debugWriteError(e);
-							if (socket != null) socket.close();
-							if (serverSocket != null) serverSocket.close();
-						} catch (IOException e1) {}
+						hc.getDebugMode().debugWriteError(e);
 					}
 				}
 			}

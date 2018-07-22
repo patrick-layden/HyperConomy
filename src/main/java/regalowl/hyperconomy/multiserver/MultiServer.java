@@ -1,6 +1,5 @@
 package regalowl.hyperconomy.multiserver;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperBank;
@@ -21,13 +19,14 @@ import regalowl.hyperconomy.event.DisableEvent;
 import regalowl.hyperconomy.event.HyperBankModificationEvent;
 import regalowl.hyperconomy.event.HyperEvent;
 import regalowl.hyperconomy.event.HyperEventListener;
-import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.event.HyperPlayerModificationEvent;
 import regalowl.hyperconomy.event.ShopModificationEvent;
+import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.shop.HyperShopManager;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.simpledatalib.CommonFunctions;
 
 
 public class MultiServer implements HyperEventListener {
@@ -92,11 +91,9 @@ public class MultiServer implements HyperEventListener {
 			public void run() {
 				while (runServer) {
 					MultiServerTransferObject transferObject = null;
-					ServerSocket serverSocket = null;
-					Socket sClientSocket = null;
-					try {
-						serverSocket = new ServerSocket(listenPort);
-						sClientSocket = serverSocket.accept();
+					try (ServerSocket serverSocket = new ServerSocket(listenPort);
+							Socket sClientSocket = serverSocket.accept();) {
+
 						ObjectInputStream input = new ObjectInputStream(sClientSocket.getInputStream());
 						transferObject = (MultiServerTransferObject) input.readObject();
 						if (transferObject.getType() == MultiServerTransferType.MULTI_SERVER_REQUEST_UPDATE) {
@@ -108,14 +105,8 @@ public class MultiServer implements HyperEventListener {
 						ObjectOutputStream out = new ObjectOutputStream(sClientSocket.getOutputStream());
 						out.writeObject(new MultiServerTransferObject(MultiServerTransferType.MULTI_SERVER_UPDATE_SUCCESSFUL));
 						out.flush();
-						sClientSocket.close();
-						serverSocket.close();
 					} catch (Exception e) {
-						try {
 							//hc.getDebugMode().debugWriteError(e);
-							if (sClientSocket != null) sClientSocket.close();
-							if (serverSocket != null) serverSocket.close();
-						} catch (IOException e1) {}
 					}
 				}
 			}

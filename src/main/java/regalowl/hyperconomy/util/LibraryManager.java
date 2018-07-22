@@ -232,6 +232,11 @@ public class LibraryManager implements HyperEventListener {
 			Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] { URL.class });
 			method.setAccessible(true);
 			method.invoke(loader, url);
+			try {
+				loader.close();
+			} catch (Exception exc) {
+				// ignore, was already closed
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
