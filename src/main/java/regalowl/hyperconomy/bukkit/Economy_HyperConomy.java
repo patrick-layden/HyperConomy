@@ -39,17 +39,12 @@ public class Economy_HyperConomy implements Economy {
 	}
 	@Override
 	public boolean isEnabled() {
-		if (hc == null) {
-			return false;
-		} else {
-			return hc.getMC().isEnabled();
-		}
+		return hc == null ? false : hc.getMC().isEnabled();
 	}
 	@Override
 	public String getName() {
 		return name;
 	}
-	
 	
 	@Override
 	public double getBalance(String playerName) {
@@ -68,7 +63,6 @@ public class Economy_HyperConomy implements Economy {
 		return getBalance(player.getName(), world);
 	}
 	
-	
 	@Override
 	public boolean createPlayerAccount(String playerName) {
 		hc.getEconomyAPI().createAccount(playerName);
@@ -86,7 +80,6 @@ public class Economy_HyperConomy implements Economy {
 	public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
 		return createPlayerAccount(player.getName());
 	}
-	
 	
 	@Override
 	public EconomyResponse withdrawPlayer(String playerName, double amount) {
@@ -117,8 +110,6 @@ public class Economy_HyperConomy implements Economy {
 		return withdrawPlayer(player.getName(), amount);
 	}
 	
-	
-	
 	@Override
 	public EconomyResponse depositPlayer(String playerName, double amount) {
 		if (amount < 0) {
@@ -144,7 +135,6 @@ public class Economy_HyperConomy implements Economy {
 		 return depositPlayer(player.getName(), amount);
 	}
 	
-	
 	@Override
 	public String format(double amount) {
 		return hc.getEconomyAPI().getAmountAsString(amount);
@@ -157,7 +147,6 @@ public class Economy_HyperConomy implements Economy {
 	public String currencyNamePlural() {
 		return hc.getEconomyAPI().currencyNamePlural();
 	}
-	
 	
 	@Override
 	public boolean has(String playerName, double amount) {
@@ -175,7 +164,6 @@ public class Economy_HyperConomy implements Economy {
 	public boolean has(OfflinePlayer player, String worldName, double amount) {
 		return has(player.getName(), amount);
 	}
-	
 	
 	@Override
 	public boolean hasAccount(String playerName) {
@@ -199,9 +187,6 @@ public class Economy_HyperConomy implements Economy {
 	public int fractionalDigits() {
 		return hc.getEconomyAPI().fractionalDigits();
 	}
-
-
-
 
 	@Override
 	public EconomyResponse createBank(String name, String player) {
@@ -347,27 +332,4 @@ public class Economy_HyperConomy implements Economy {
 	public boolean hasBankSupport() {
 		return true;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
