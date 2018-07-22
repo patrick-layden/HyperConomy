@@ -50,10 +50,12 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 
 	private void load() {
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				frameShops.clear();
 				dbData = hc.getSQLRead().select("SELECT * FROM hyperconomy_frame_shops");
 				hc.getMC().runTask(new Runnable() {
+					@Override
 					public void run() {
 						while (dbData.next()) {
 							double x = dbData.getDouble("X");
@@ -89,11 +91,13 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 		return null;
 	}
 
+	@Override
 	public boolean frameShopExists(HLocation l) {
 		if (getFrameShop(l) != null) return true;
 		return false;
 	}
 
+	@Override
 	public void removeFrameShop(HLocation l) {
 		HLocation loc = new HLocation(l);
 		loc.convertToBlockLocation();
@@ -102,6 +106,7 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 		}
 	}
 
+	@Override
 	public void createFrameShop(HLocation l, TradeObject ho, Shop s) {
 		HLocation loc = new HLocation(l);
 		loc.convertToBlockLocation();
