@@ -664,7 +664,7 @@ public class PlayerShop implements Shop {
 		}
 		if (ha instanceof HyperPlayer) {
 			HyperPlayer hp = (HyperPlayer)ha;
-			if (hp != null && hp.hasPermission("hyperconomy.admin")) {
+			if (hp.hasPermission("hyperconomy.admin")) {
 				return true;
 			}
 		}
