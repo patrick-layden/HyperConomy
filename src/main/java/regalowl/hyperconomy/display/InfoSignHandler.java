@@ -87,7 +87,7 @@ public class InfoSignHandler implements HyperEventListener {
 				if (hp.hasPermission("hyperconomy.createsign")) {
 					String[] lines = s.getLines();
 					String economy = "default";
-					if (hp != null && hp.getEconomy() != null) {
+					if (hp.getEconomy() != null) {
 						economy = hp.getEconomy();
 					}
 					String objectName = lines[0].trim() + lines[1].trim();
