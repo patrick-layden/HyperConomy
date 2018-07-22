@@ -50,15 +50,8 @@ public class HyperAPI implements API {
 	}
 
 	public boolean checkHash(String player, String SHA256Hash) {
-		if (hc.getHyperPlayerManager().hyperPlayerExists(player)) {
-			if (hc.getHyperPlayerManager().getHyperPlayer(player).getHash().equals(SHA256Hash)) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
+		return hc.getHyperPlayerManager().hyperPlayerExists(player)
+				&& hc.getHyperPlayerManager().getHyperPlayer(player).getHash().equals(SHA256Hash);
 	}
 	
 	
