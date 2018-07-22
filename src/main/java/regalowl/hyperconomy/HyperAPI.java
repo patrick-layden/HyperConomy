@@ -1,16 +1,6 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-
-
-
-
-
-
-
-
-
-
 import java.util.UUID;
 
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -55,7 +45,6 @@ public class HyperAPI implements API {
 				&& hc.getHyperPlayerManager().getHyperPlayer(player).getHash().equals(SHA256Hash);
 	}
 	
-	
 	@Override
 	public String getSalt(String player) {
 		if (hc.getHyperPlayerManager().hyperPlayerExists(player)) {
@@ -65,12 +54,10 @@ public class HyperAPI implements API {
 		}
 	}
 
-
 	@Override
 	public String getDefaultServerShopAccountName() {
 		return hc.getConf().getString("shop.default-server-shop-account");
 	}
-	
 	
 	@Override
 	public boolean isItemDisplay(HItem item) {
@@ -135,16 +122,10 @@ public class HyperAPI implements API {
 		return playerShops;
 	}
 	
-
 	@Override
 	public EnchantmentClass getEnchantmentClass(HItemStack stack) {
 		return EnchantmentClass.fromString(stack.getMaterial());
 	}
-	
-	
-	
-
-	
 	
 	@Override
 	public TradeObject getHyperObject(String name, String economy) {
@@ -169,9 +150,6 @@ public class HyperAPI implements API {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		return he.getTradeObject(name, s);
 	}
-	
-
-
 	
 	@Override
 	public HyperPlayer getHyperPlayer(String name) {
@@ -209,10 +187,6 @@ public class HyperAPI implements API {
 		return hpm.getHyperPlayer(name);
 	}
 
-
-
-	
-	
 	@Override
 	public ArrayList<TradeObject> getEnchantmentHyperObjects(HItemStack stack, String player) {
 		DataManager dm = hc.getDataManager();
@@ -308,8 +282,6 @@ public class HyperAPI implements API {
 		return availableSubset;
 	}
 	
-
-
 	@Override
 	public TransactionResponse sellAll(HyperPlayer hp, HInventory inventory) {
 		DataManager em = hc.getDataManager();
@@ -344,11 +316,4 @@ public class HyperAPI implements API {
 		return true;
 		//return ai.addItem(hobj, economyName);
 	}
-
-
-	
-	
-	
-	
-
 }
