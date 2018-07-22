@@ -2,7 +2,6 @@ package regalowl.hyperconomy.serializable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +17,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
  
 
-public class SerializableEnchantmentStorageMeta extends SerializableItemMeta implements Serializable {
+public class SerializableEnchantmentStorageMeta extends SerializableItemMeta {
 
 	private static final long serialVersionUID = -797201926717838339L;
 	

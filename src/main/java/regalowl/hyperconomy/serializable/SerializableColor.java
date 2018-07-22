@@ -2,14 +2,13 @@ package regalowl.hyperconomy.serializable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
 
 import org.bukkit.Color;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 
 
-public class SerializableColor extends SerializableObject implements Serializable {
+public class SerializableColor extends SerializableObject {
 	
 	private static final long serialVersionUID = 1194773802989404854L;
 

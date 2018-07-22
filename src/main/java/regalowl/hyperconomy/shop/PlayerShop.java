@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.sql.BasicStatement;
-import regalowl.simpledatalib.sql.QueryResult;
-import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -15,17 +11,21 @@ import regalowl.hyperconomy.account.HyperBank;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.ShopModificationEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
-import regalowl.hyperconomy.tradeobject.BasicTradeObject;
 import regalowl.hyperconomy.tradeobject.BasicShopTradeObject;
-import regalowl.hyperconomy.tradeobject.CompositeTradeItem;
+import regalowl.hyperconomy.tradeobject.BasicTradeObject;
 import regalowl.hyperconomy.tradeobject.CompositeShopTradeItem;
+import regalowl.hyperconomy.tradeobject.CompositeTradeItem;
+import regalowl.hyperconomy.tradeobject.ShopTradeEnchant;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObjectStatus;
 import regalowl.hyperconomy.tradeobject.TradeObjectType;
-import regalowl.hyperconomy.tradeobject.ShopTradeEnchant;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.sql.BasicStatement;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.WriteStatement;
 
-public class PlayerShop implements Shop, Comparable<Shop> {
+public class PlayerShop implements Shop {
 
 	private transient HyperConomy hc;
 	private static final long serialVersionUID = -159740615025262195L;

@@ -8,7 +8,7 @@ import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.inventory.HItemStack;
 
 
-public class TempTradeItem extends ComponentTradeItem implements TradeObject {
+public class TempTradeItem extends ComponentTradeItem {
 
 
 	private static final long serialVersionUID = 4228578172340543286L;

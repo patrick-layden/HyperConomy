@@ -2,7 +2,6 @@ package regalowl.hyperconomy.serializable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -14,7 +13,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
  
 
-public class SerializableBookMeta extends SerializableItemMeta implements Serializable {
+public class SerializableBookMeta extends SerializableItemMeta {
 	private static final long serialVersionUID = -1095975801937823837L;
 
 	private String author;

@@ -10,7 +10,7 @@ import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 
 
-public class TradeXp extends BasicTradeObject implements TradeObject {
+public class TradeXp extends BasicTradeObject {
 
 	private static final long serialVersionUID = -5156550871200368032L;
 

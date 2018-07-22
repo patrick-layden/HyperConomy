@@ -4,15 +4,15 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import regalowl.simpledatalib.sql.WriteStatement;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.TradeObjectModificationEvent;
 import regalowl.hyperconomy.event.TradeObjectModificationType;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
+import regalowl.simpledatalib.sql.WriteStatement;
 
-public class BasicShopTradeObject extends BasicTradeObject implements TradeObject {
+public class BasicShopTradeObject extends BasicTradeObject {
 
 	private static final long serialVersionUID = -8506945265990355676L;
 	protected String playerShop;

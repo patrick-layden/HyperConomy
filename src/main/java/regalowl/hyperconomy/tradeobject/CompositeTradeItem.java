@@ -5,10 +5,9 @@ import java.util.Map;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
-import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.simpledatalib.CommonFunctions;
 
-public class CompositeTradeItem extends ComponentTradeItem implements TradeObject {
+public class CompositeTradeItem extends ComponentTradeItem {
 
 	private static final long serialVersionUID = -2104610162054897073L;
 

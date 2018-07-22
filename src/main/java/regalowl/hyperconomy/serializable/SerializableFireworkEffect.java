@@ -2,7 +2,6 @@ package regalowl.hyperconomy.serializable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 
 
-public class SerializableFireworkEffect extends SerializableObject implements Serializable {
+public class SerializableFireworkEffect extends SerializableObject {
 
 	private static final long serialVersionUID = 2644823685312321272L;
 	private List<SerializableColor> colors = new ArrayList<SerializableColor>();

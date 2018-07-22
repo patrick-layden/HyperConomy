@@ -10,7 +10,7 @@ import regalowl.hyperconomy.shop.PlayerShop;
 
 
 
-public class CompositeShopTradeItem extends BasicShopTradeObject implements TradeObject {
+public class CompositeShopTradeItem extends BasicShopTradeObject {
 
 
 	private static final long serialVersionUID = -6802879836491318792L;

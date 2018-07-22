@@ -3,7 +3,6 @@ package regalowl.hyperconomy.shop;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
@@ -13,8 +12,9 @@ import regalowl.hyperconomy.event.ShopModificationEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.simpledatalib.CommonFunctions;
 
-public class ServerShop implements Shop, Comparable<Shop>{
+public class ServerShop implements Shop {
 	
 	private transient HyperConomy hc;
 	private static final long serialVersionUID = 4242407361167946426L;
