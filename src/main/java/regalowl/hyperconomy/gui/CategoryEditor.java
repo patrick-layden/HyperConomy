@@ -6,20 +6,19 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
 
 import regalowl.hyperconomy.tradeobject.TradeObject;
-
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JTextField;
 
 public class CategoryEditor extends JFrame {
 
@@ -79,6 +78,7 @@ public class CategoryEditor extends JFrame {
 		addNewCategoryButton.setBounds(164, 489, 244, 25);
 		contentPane.add(addNewCategoryButton);
 		addNewCategoryButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				String text = newCategoryField.getText();
 				if (text == null || text == "") return;
@@ -98,6 +98,7 @@ public class CategoryEditor extends JFrame {
 		
 		JButton btnClose = new JButton("Close");
 		btnClose.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}

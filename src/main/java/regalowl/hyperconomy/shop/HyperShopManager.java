@@ -39,6 +39,7 @@ public class HyperShopManager implements HyperEventListener {
 			DataLoadEvent devent = (DataLoadEvent) event;
 			if (!(devent.loadType == DataLoadType.DEFAULT_ACCOUNT)) return;
 			new Thread(new Runnable() {
+				@Override
 				public void run() {
 					loadData();
 				}
@@ -139,7 +140,8 @@ public class HyperShopManager implements HyperEventListener {
 	}
     public void startShopCheck() {
 		shopCheckTaskId = hc.getMC().runRepeatingTask(new Runnable() {
-		    public void run() {
+		    @Override
+			public void run() {
 				for (Shop shop:shops.values()) {
 					shop.updatePlayerStatus();
 				}

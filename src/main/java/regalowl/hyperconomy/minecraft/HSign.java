@@ -75,6 +75,7 @@ public class HSign implements Serializable {
 		public SignUpdater(HSign sign) {
 			this.s = sign;
 			hc.getMC().runTask(new Runnable() {
+				@Override
 				public void run() {
 					hc.getMC().setSign(s);
 				}

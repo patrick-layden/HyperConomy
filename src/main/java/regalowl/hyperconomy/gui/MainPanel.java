@@ -83,6 +83,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					new MainPanel();
@@ -232,6 +233,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 		gbc_btnCloneSelected.gridy = 3;
 		panel.add(btnCloneSelected, gbc_btnCloneSelected);
 		btnCloneSelected.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String newName = addEconomyNameField.getText();
 				if (newName == null || newName.equals("")) return;
@@ -246,6 +248,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 		JButton btnUpdateEconomy = new JButton("Update Economy");
 		btnUpdateEconomy.setToolTipText("Changes will be applied to all objects in the economy.");
 		btnUpdateEconomy.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				String type = newValueType.getSelectedItem().toString();
 				HyperEconomy he = getSelectedEconomy();
@@ -363,6 +366,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 		
 		stockToMedianButton = new JButton("Set Stock to Median");
 		stockToMedianButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 		        if (JOptionPane.showConfirmDialog(frmEconomyEditor, "Are you sure you want to set stocks to their median value for this economy?", 
 		        		"Set Stock To Median", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
@@ -502,6 +506,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 		economySelectList.setToolTipText("Select an economy.");
 		scrollPane.setViewportView(economySelectList);
 		btnDeleteEconomy.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				HyperEconomy he = getSelectedEconomy();
 				if (he == null) return;
@@ -516,6 +521,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 			}
 		});
 		btnEditEconomy.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				HyperEconomy he = getSelectedEconomy();
 				if (he == null) return;
@@ -524,6 +530,7 @@ public class MainPanel implements SDLEventListener, HyperEventListener {
 			}
 		});
 		addEconomyButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String newName = addEconomyNameField.getText();
 				if (newName == null || newName.equals("")) return;

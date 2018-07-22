@@ -41,7 +41,8 @@ public class HyperWebAPI extends HttpServlet {
 	}
 
 
-    public void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException, ServletException {
+    @Override
+	public void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException, ServletException {
         pResponse.setContentType("text/html;charset=utf-8");
         pResponse.setStatus(HttpServletResponse.SC_OK);
     	String lUri = pRequest.getRequestURI();

@@ -25,6 +25,7 @@ public interface TradeObject extends Comparable<TradeObject>, Serializable {
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
+	@Override
 	public int compareTo(TradeObject ho);
 	
 	@Override

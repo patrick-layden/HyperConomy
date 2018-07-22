@@ -37,6 +37,7 @@ public class HPotionMeta extends HItemMeta {
 		this.potionData = new HPotionData(meta.potionData);
     }
 
+	@Override
 	public String serialize() {
 		HashMap<String,String> data = super.getMap();
 		ArrayList<String> sEffects = new ArrayList<String>();

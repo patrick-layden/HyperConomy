@@ -115,10 +115,12 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		this.hc = hc;
 	}
 	
+	@Override
 	public int compareTo(Shop s) {
 		return name.compareTo(s.getName());
 	}
 	
+	@Override
 	public void setPoint1(String world, int x, int y, int z) {
 		this.world = world;
 		p1x = x;
@@ -134,6 +136,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
+	@Override
 	public void setPoint2(String world, int x, int y, int z) {
 		this.world = world;
 		p2x = x;
@@ -152,12 +155,15 @@ public class ServerShop implements Shop, Comparable<Shop>{
 
 	
 	
+	@Override
 	public void setPoint1(HLocation l) {
 		setPoint1(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
+	@Override
 	public void setPoint2(HLocation l) {
 		setPoint2(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
+	@Override
 	public void setMessage(String message) {
 		this.message = message;
 		HashMap<String,String> conditions = new HashMap<String,String>();
@@ -168,11 +174,13 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	
+	@Override
 	public void setDefaultMessage() {
 		LanguageFile L = hc.getLanguageFile();
 		setMessage(L.get("SHOP_LINE_BREAK")+"%n&aWelcome to "+name+"%n&9Type &b/hc &9for help.%n"+L.get("SHOP_LINE_BREAK"));
 	}
 	
+	@Override
 	public void setWorld(String world) {
 		this.world = world;
 		HashMap<String,String> conditions = new HashMap<String,String>();
@@ -183,6 +191,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	
+	@Override
 	public void setName(String name) {
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		HashMap<String,String> values = new HashMap<String,String>();
@@ -192,6 +201,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		this.name = name;
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
+	@Override
 	public void setEconomy(String economy) {
 		this.economy = economy;
 		HashMap<String,String> conditions = new HashMap<String,String>();
@@ -202,6 +212,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 	
+	@Override
 	public boolean inShop(int x, int y, int z, String world) {
 		if (world == null) return false;
 		if (world.equalsIgnoreCase(this.world)) {
@@ -231,6 +242,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 
 	
+	@Override
 	public void sendEntryMessage(HyperPlayer player) {
 		if (message == "") {setDefaultMessage();}
 		if (message.equalsIgnoreCase("none")) {return;}
@@ -240,10 +252,12 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		}
 	}
 	
+	@Override
 	public String getEconomy() {
 		return economy;
 	}
 	
+	@Override
 	public HyperEconomy getHyperEconomy() {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		if (he == null) {
@@ -253,15 +267,18 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return he;
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}
 	
+	@Override
 	public String getDisplayName() {
 		return name.replace("_", " ");
 	}
 	
 
+	@Override
 	public void saveAvailable() {
 		HyperEconomy he = getHyperEconomy();
 		ArrayList<String> unavailable = new ArrayList<String>();
@@ -278,6 +295,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 	
+	@Override
 	public boolean isStocked(TradeObject ho) {
 		if (ho != null && ho.getStock() > 0) {
 			return true;
@@ -290,24 +308,29 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		}
 		return true;
 	}
+	@Override
 	public boolean isBanned(String name) {
 		return isBanned(getHyperEconomy().getTradeObject(name));
 	}
+	@Override
 	public boolean isTradeable(TradeObject ho) {
 		if (!isBanned(ho)) {
 			return true;
 		}
 		return false;
 	}
+	@Override
 	public boolean isStocked(String item) {
 		return isStocked(getHyperEconomy().getTradeObject(item));
 	}
+	@Override
 	public boolean isAvailable(TradeObject ho) {
 		if (isTradeable(ho) && isStocked(ho)) {
 			return true;
 		}
 		return false;
 	}
+	@Override
 	public ArrayList<TradeObject> getTradeableObjects() {
 		HyperEconomy he = getHyperEconomy();
 		ArrayList<TradeObject> available = new ArrayList<TradeObject>();
@@ -318,6 +341,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return available;
 	}
 	
+	@Override
 	public void unBanAllObjects() {
 		availableObjects.clear();
 		for (TradeObject ho:getHyperEconomy().getTradeObjects()) {
@@ -325,10 +349,12 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		}
 		saveAvailable();
 	}
+	@Override
 	public void banAllObjects() {
 		availableObjects.clear();
 		saveAvailable();
 	}
+	@Override
 	public void unBanObjects(ArrayList<TradeObject> objects) {
 		for (TradeObject ho:objects) {
 			if (!availableObjects.contains(ho)) {
@@ -337,6 +363,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		}
 		saveAvailable();
 	}
+	@Override
 	public void banObjects(ArrayList<TradeObject> objects) {
 		for (TradeObject ho:objects) {
 			if (availableObjects.contains(ho.getName())) {
@@ -347,38 +374,47 @@ public class ServerShop implements Shop, Comparable<Shop>{
 	}
 	
 	
+	@Override
 	public int getP1x() {
 		return p1x;
 	}
 
+	@Override
 	public int getP1y() {
 		return p1y;
 	}
 
+	@Override
 	public int getP1z() {
 		return p1z;
 	}
 
+	@Override
 	public int getP2x() {
 		return p2x;
 	}
 
+	@Override
 	public int getP2y() {
 		return p2y;
 	}
 
+	@Override
 	public int getP2z() {
 		return p2z;
 	}
 	
+	@Override
 	public HLocation getLocation1() {
 		return new HLocation(world, p1x, p1y, p1z);
 	}
 	
+	@Override
 	public HLocation getLocation2() {
 		return new HLocation(world, p2x, p2y, p2z);
 	}
 	
+	@Override
 	public HyperAccount getOwner() {
 		if (ownerIsBank) {
 			return hc.getHyperBankManager().getHyperBank(owner);
@@ -386,6 +422,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 			return hc.getHyperPlayerManager().getHyperPlayer(owner);
 		}
 	}
+	@Override
 	public void updatePlayerStatus() {
 		LanguageFile L = hc.getLanguageFile();
 		for (HyperPlayer p : hc.getHyperPlayerManager().getOnlinePlayers()) {
@@ -406,10 +443,12 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		}
 	}
 	
+	@Override
 	public int getVolume() {
 		return Math.abs(p1x - p2x) * Math.abs(p1y - p2y) * Math.abs(p1z - p2z);
 	}
 	
+	@Override
 	public void deleteShop() {
 		HashMap<String,String> conditions = new HashMap<String,String>();
 		conditions.put("NAME", name);
@@ -419,6 +458,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc.getHyperEventHandler().fireEvent(new ShopModificationEvent(this));
 	}
 
+	@Override
 	public void setOwner(HyperAccount owner) {
 		this.owner = owner.getName();
 		if (owner instanceof HyperBank) ownerIsBank = true;
@@ -433,6 +473,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		hc.getSQLWrite().performUpdate("hyperconomy_shops", values, conditions);
 	}
 	
+	@Override
 	public ArrayList<HLocation> getShopBlockLocations() {
 		ArrayList<HLocation> shopBlockLocations = new ArrayList<HLocation>();
 		ArrayList<Integer> xvals = new ArrayList<Integer>();
@@ -475,6 +516,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return shopBlockLocations;
 	}
 	
+	@Override
 	public boolean intersectsShop(Shop s, int volumeLimit) {
 		if (s.getVolume() > volumeLimit) {return false;}
 		for (HLocation l:s.getShopBlockLocations()) {
@@ -485,6 +527,7 @@ public class ServerShop implements Shop, Comparable<Shop>{
 		return false;
 	}
 	
+	@Override
 	public boolean deleted() {
 		return deleted;
 	}

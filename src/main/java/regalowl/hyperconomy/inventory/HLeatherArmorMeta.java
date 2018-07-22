@@ -29,6 +29,7 @@ public class HLeatherArmorMeta extends HItemMeta {
 		this.color = new HColor(meta.color);
     }
 
+	@Override
 	public String serialize() {
 		HashMap<String,String> data = super.getMap();
 		data.put("color", color.serialize());

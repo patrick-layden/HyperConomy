@@ -16,6 +16,7 @@ import regalowl.hyperconomy.tradeobject.TradeObject;
 
 public interface Shop extends Comparable<Shop>, Serializable{
 	
+	@Override
 	public int compareTo(Shop s);
 	public void setHyperConomy(HyperConomy hc);
 	public void setPoint1(String world, int x, int y, int z);	

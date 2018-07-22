@@ -88,6 +88,7 @@ public class MultiServer implements HyperEventListener {
 	
 	private void receiveUpdate() {
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				while (runServer) {
 					MultiServerTransferObject transferObject = null;

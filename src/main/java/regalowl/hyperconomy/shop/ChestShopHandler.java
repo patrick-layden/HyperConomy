@@ -68,6 +68,7 @@ public class ChestShopHandler implements HyperEventListener {
 		try {
 			chestShops.clear();
 			new Thread(new Runnable() {
+				@Override
 				public void run() {
 					SQLRead sr = hc.getSQLRead();
 					QueryResult dbData = sr.select("SELECT * FROM hyperconomy_chest_shops");

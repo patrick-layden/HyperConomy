@@ -39,6 +39,8 @@ public class HyperEventHandler {
     	public EventFire(HyperEvent event) {
     		this.event = event;
     	}
+
+		@Override
 		public void run() {
 			fireEvent(event);
 		}

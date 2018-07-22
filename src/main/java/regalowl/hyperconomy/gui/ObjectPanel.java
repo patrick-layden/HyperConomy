@@ -110,6 +110,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 		
 		categoryComboBox = new JComboBox<String>();
 		categoryComboBox.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!loadingCategories) loadObjects();
 			}
@@ -128,6 +129,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 		objectListScrollPane.setViewportView(listObjectSelector);
 		listObjectSelector.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listObjectSelector.addListSelectionListener(new ListSelectionListener() {
+			@Override
 			public void valueChanged(ListSelectionEvent event) {
 				TradeObject to = getSelectedObject();
 				if (to == null) return;
@@ -375,6 +377,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 		
 		editCategoriesButton = new JButton("Edit Categories");
 		editCategoriesButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				TradeObject to = getSelectedObject();
 				if (to == null) return;
@@ -435,6 +438,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 		gbc_editCompositesButton.gridy = 15;
 		settingsPanel.add(editCompositesButton, gbc_editCompositesButton);
 		editCompositesButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				TradeObject to = getSelectedObject();
 				if (to == null) return;
@@ -450,6 +454,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 		gbc_btnEditObjectData.gridy = 16;
 		settingsPanel.add(btnEditObjectData, gbc_btnEditObjectData);
 		btnEditObjectData.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				TradeObject to = getSelectedObject();
 				if (to == null) return;
@@ -519,6 +524,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 		pricePanel.add(saveButton, gbc_saveButton);
 		saveButton.setBackground(new Color(0, 51, 0));
 		saveButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				if (fieldsUpdating) return;
 				TradeObject to = getSelectedObject();
@@ -616,6 +622,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 		gbc_addObjectButton.gridy = 0;
 		addNewPanel.add(addObjectButton, gbc_addObjectButton);
 		addObjectButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String newName = newItemNameField.getText();
 				String aliases = newName.replace("_", "");
@@ -641,6 +648,7 @@ public class ObjectPanel extends JFrame implements HyperEventListener {
 		addNewPanel.add(newItemNameField, gbc_newItemNameField);
 		newItemNameField.setColumns(10);
 		deleteButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				if (fieldsUpdating) return;
 				TradeObject to = getSelectedObject();

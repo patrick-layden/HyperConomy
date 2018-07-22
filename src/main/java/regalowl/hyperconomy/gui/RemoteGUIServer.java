@@ -81,6 +81,7 @@ public class RemoteGUIServer implements HyperEventListener {
 
 			
 			new Thread(new Runnable() {
+				@Override
 				public void run() {
 					try {
 						Socket socket = new Socket();
@@ -413,6 +414,7 @@ public class RemoteGUIServer implements HyperEventListener {
 	private void startServer() {
 		hc.getDebugMode().debugWriteMessage("GUI Server started on port: " + listenPort);
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				while (runServer) {
 					GUITransferObject incomingTransfer = null;

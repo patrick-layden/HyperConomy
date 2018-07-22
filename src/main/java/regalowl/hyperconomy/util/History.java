@@ -90,6 +90,7 @@ public class History {
 	
 	private void startTimer() {
 		historylogtaskid = hc.getMC().runRepeatingTask(new Runnable() {
+			@Override
 			public void run() {
 				long currentTime = System.currentTimeMillis();
 				timeCounter += (currentTime - lastTime);
@@ -98,6 +99,7 @@ public class History {
 					timeCounter = 0;
 					writeHistoryValues();
 					hc.getMC().runTaskLater(new Runnable() {
+						@Override
 						public void run() {
 							if (isign != null) isign.updateSigns();
 						}

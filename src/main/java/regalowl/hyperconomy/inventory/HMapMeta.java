@@ -28,6 +28,7 @@ public class HMapMeta extends HItemMeta {
 		isScaling = meta.isScaling;
     }
 
+	@Override
 	public String serialize() {
 		HashMap<String,String> data = super.getMap();
 		data.put("isScaling", isScaling+"");

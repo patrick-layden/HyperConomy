@@ -42,6 +42,7 @@ public class UpdateChecker {
 		
 		hc.getMC().logInfo("[HyperConomy]Checking for updates...");
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					URL url = new URL("https://api.curseforge.com/servermods/files?projectids=38059");
@@ -83,6 +84,7 @@ public class UpdateChecker {
 						upgradeAvailable = true;
 					}
 					hc.getMC().runTask(new Runnable() {
+						@Override
 						public void run() {
 							if (upgradeAvailable) {
 								if (notifyInGame) notifyAdmins();
@@ -115,6 +117,7 @@ public class UpdateChecker {
 	
 	private void notifyAdmins() {
 		hc.getMC().runTaskLater(new Runnable() {
+			@Override
 			public void run() {
 				MessageBuilder mb = new MessageBuilder(hc, "NEW_VERSION_AVAILABLE");
 				mb.setValue(latestVersion);

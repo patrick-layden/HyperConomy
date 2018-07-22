@@ -3,12 +3,12 @@ package regalowl.hyperconomy.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
-import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 
 import regalowl.hyperconomy.tradeobject.TradeObject;
 
@@ -51,6 +51,7 @@ public class CompositeDataEditor extends JFrame {
 		saveButton.setBounds(185, 475, 117, 25);
 		contentPane.add(saveButton);
 		saveButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				tradeObject.setCompositeData(dataTextArea.getText());
 				dataEditor.dispose();

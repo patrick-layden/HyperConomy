@@ -41,6 +41,7 @@ public class TimeEffectsManager {
 	
 	private void startTimer() {
 		timerTaskId = hc.getMC().runRepeatingTask(new Runnable() {
+			@Override
 			public void run() {
 				for (TimeEffect te:timeEffects) {
 					te.subtractTime(10);

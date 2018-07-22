@@ -53,6 +53,7 @@ public class ShopPage extends HttpServlet implements HyperEventListener {
 	
 	
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=utf-8");
 		response.setStatus(HttpServletResponse.SC_OK);
@@ -74,6 +75,7 @@ public class ShopPage extends HttpServlet implements HyperEventListener {
 		if (!initialLoad && modifiedSinceLastUpdate.size() == 0) return;
 		
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				page = buildPage(s.getEconomy());
 			}

@@ -44,6 +44,7 @@ public class WebHandler implements HyperEventListener {
 	public void startServer() {
 		try {
 			new Thread(new Runnable() {
+				@Override
 				public void run() {
 					System.setProperty("org.eclipse.jetty.LEVEL", "WARN");
 					server = new Server(hcw.getPort());
@@ -78,6 +79,7 @@ public class WebHandler implements HyperEventListener {
 	public void addShop(Shop shop) {
 		s = shop;
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				ShopPage sp = new ShopPage(s, hcw);
 				shopPages.add(sp);

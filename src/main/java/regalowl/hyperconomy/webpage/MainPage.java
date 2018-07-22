@@ -50,6 +50,7 @@ public class MainPage extends HttpServlet {
 		pageUpdater.cancel();
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=utf-8");
 		response.setStatus(HttpServletResponse.SC_OK);
