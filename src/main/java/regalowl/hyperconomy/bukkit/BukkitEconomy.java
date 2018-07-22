@@ -88,11 +88,7 @@ public class BukkitEconomy implements HEconomyProvider {
 	public double getBankBalance(String bankName) {
 		if (bankName == null || bankName.equals("")) return 0;
 		EconomyResponse response = e.bankBalance(bankName);
-		if (response.type.equals(ResponseType.SUCCESS)) {
-			return response.balance;
-		} else {
-			return 0;
-		}
+		return response.type.equals(ResponseType.SUCCESS) ? response.balance : 0;
 	}
 
 	@Override
