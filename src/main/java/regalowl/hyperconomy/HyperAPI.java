@@ -49,12 +49,14 @@ public class HyperAPI implements API {
 		}
 	}
 
+	@Override
 	public boolean checkHash(String player, String SHA256Hash) {
 		return hc.getHyperPlayerManager().hyperPlayerExists(player)
 				&& hc.getHyperPlayerManager().getHyperPlayer(player).getHash().equals(SHA256Hash);
 	}
 	
 	
+	@Override
 	public String getSalt(String player) {
 		if (hc.getHyperPlayerManager().hyperPlayerExists(player)) {
 			return hc.getHyperPlayerManager().getHyperPlayer(player).getSalt();
@@ -64,11 +66,13 @@ public class HyperAPI implements API {
 	}
 
 
+	@Override
 	public String getDefaultServerShopAccountName() {
 		return hc.getConf().getString("shop.default-server-shop-account");
 	}
 	
 	
+	@Override
 	public boolean isItemDisplay(HItem item) {
 		try {
 			if (item == null) {
@@ -86,10 +90,12 @@ public class HyperAPI implements API {
 		}
 	}
 
+	@Override
 	public Shop getShop(String name) {
 		return hc.getHyperShopManager().getShop(name);
 	}
 
+	@Override
 	public ServerShop getServerShop(String name) {
 		Shop s = hc.getHyperShopManager().getShop(name);
 		if (s instanceof ServerShop) {
@@ -98,6 +104,7 @@ public class HyperAPI implements API {
 		return null;
 	}
 
+	@Override
 	public PlayerShop getPlayerShop(String name) {
 		Shop s = hc.getHyperShopManager().getShop(name);
 		if (s instanceof PlayerShop) {
@@ -129,6 +136,7 @@ public class HyperAPI implements API {
 	}
 	
 
+	@Override
 	public EnchantmentClass getEnchantmentClass(HItemStack stack) {
 		return EnchantmentClass.fromString(stack.getMaterial());
 	}
@@ -138,19 +146,25 @@ public class HyperAPI implements API {
 
 	
 	
+	@Override
 	public TradeObject getHyperObject(String name, String economy) {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		return he.getTradeObject(name);
 	}
 	
+	@Override
 	public TradeObject getHyperObject(HItemStack stack, String economy) { 
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		return he.getTradeObject(stack);
 	}
+
+	@Override
 	public TradeObject getHyperObject(HItemStack stack, String economy, Shop s) {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		return he.getTradeObject(stack, s);
 	}
+
+	@Override
 	public TradeObject getHyperObject(String name, String economy, Shop s) {
 		HyperEconomy he = hc.getDataManager().getEconomy(economy);
 		return he.getTradeObject(name, s);
@@ -159,6 +173,7 @@ public class HyperAPI implements API {
 
 
 	
+	@Override
 	public HyperPlayer getHyperPlayer(String name) {
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
 		if (hpm.hyperPlayerExists(name)) {
@@ -167,6 +182,8 @@ public class HyperAPI implements API {
 			return null;
 		}
 	}
+
+	@Override
 	public HyperPlayer getHyperPlayer(UUID uuid) {
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
 		if (hpm.hyperPlayerExistsWithUUID(uuid)) {
@@ -196,6 +213,7 @@ public class HyperAPI implements API {
 
 	
 	
+	@Override
 	public ArrayList<TradeObject> getEnchantmentHyperObjects(HItemStack stack, String player) {
 		DataManager dm = hc.getDataManager();
 		ArrayList<TradeObject> objects = new ArrayList<TradeObject>();
@@ -208,6 +226,7 @@ public class HyperAPI implements API {
 		return objects;
 	}
 
+	@Override
 	public TransactionResponse buy(HyperPlayer hp, TradeObject o, int amount) {
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 		pt.setHyperObject(o);
@@ -215,6 +234,7 @@ public class HyperAPI implements API {
 		return hp.processTransaction(pt);
 	}
 
+	@Override
 	public TransactionResponse buy(HyperPlayer hp, TradeObject o, int amount, Shop shop) {
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.BUY);
 		pt.setHyperObject(o);
@@ -223,6 +243,7 @@ public class HyperAPI implements API {
 		return hp.processTransaction(pt);
 	}
 	
+	@Override
 	public TransactionResponse sell(HyperPlayer hp, TradeObject o, int amount ) {
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 		pt.setHyperObject(o);
@@ -230,6 +251,7 @@ public class HyperAPI implements API {
 		return hp.processTransaction(pt);
 	}
 	
+	@Override
 	public TransactionResponse sell(HyperPlayer hp, TradeObject o, int amount, Shop shop) {
 		PlayerTransaction pt = new PlayerTransaction(TransactionType.SELL);
 		pt.setHyperObject(o);
@@ -238,11 +260,13 @@ public class HyperAPI implements API {
 		return hp.processTransaction(pt);
 	}
 
+	@Override
 	public TransactionResponse sellAll(HyperPlayer hp) {
 		Sellall sa = new Sellall(hc);
 		return sa.sellAll(hp, null);
 	}
 
+	@Override
 	public ArrayList<TradeObject> getAvailableObjects(HyperPlayer p) {
 		Shop s = hc.getHyperShopManager().getShop(p);
 		if (s != null) {
@@ -251,6 +275,7 @@ public class HyperAPI implements API {
 		return new ArrayList<TradeObject>();
 	}
 
+	@Override
 	public ArrayList<TradeObject> getAvailableObjects(HyperPlayer p, int startingPosition, int limit) {
 		ArrayList<TradeObject> availableObjects = getAvailableObjects(p);
 		ArrayList<TradeObject> availableSubset = new ArrayList<TradeObject>();
@@ -262,6 +287,7 @@ public class HyperAPI implements API {
 		return availableSubset;
 	}
 	
+	@Override
 	public ArrayList<TradeObject> getAvailableObjects(String shopname) {
 		Shop s = hc.getHyperShopManager().getShop(shopname);
 		if (s != null) {
@@ -270,6 +296,7 @@ public class HyperAPI implements API {
 		return new ArrayList<TradeObject>();
 	}
 
+	@Override
 	public ArrayList<TradeObject> getAvailableObjects(String shopname, int startingPosition, int limit) {
 		ArrayList<TradeObject> availableObjects = getAvailableObjects(shopname);
 		ArrayList<TradeObject> availableSubset = new ArrayList<TradeObject>();
@@ -283,6 +310,7 @@ public class HyperAPI implements API {
 	
 
 
+	@Override
 	public TransactionResponse sellAll(HyperPlayer hp, HInventory inventory) {
 		DataManager em = hc.getDataManager();
 		HyperEconomy he = hp.getHyperEconomy();
