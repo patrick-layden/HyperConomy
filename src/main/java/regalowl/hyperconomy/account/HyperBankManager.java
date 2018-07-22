@@ -26,11 +26,7 @@ public class HyperBankManager implements HyperEventListener {
 		if (event instanceof DataLoadEvent) {
 			DataLoadEvent devent = (DataLoadEvent)event;
 			if (!(devent.loadType == DataLoadType.PLAYER)) return;
-			new Thread(new Runnable() {
-				public void run() {
-					loadData();
-				}
-			}).start();
+			new Thread(() -> loadData()).start();
 		}
 	}
 	
