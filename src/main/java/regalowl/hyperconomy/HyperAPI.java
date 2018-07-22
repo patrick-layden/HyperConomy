@@ -32,11 +32,7 @@ public class HyperAPI implements API {
 
 	public String getPlayerShop(HyperPlayer player) {
 		Shop shop = hc.getHyperShopManager().getShop(player);
-		if (null == shop){
-			return "";
-		} else {
-			return shop.getName();
-		}
+		return shop == null ? "" : shop.getName();
 	}
 
 	@Override
@@ -47,11 +43,8 @@ public class HyperAPI implements API {
 	
 	@Override
 	public String getSalt(String player) {
-		if (hc.getHyperPlayerManager().hyperPlayerExists(player)) {
-			return hc.getHyperPlayerManager().getHyperPlayer(player).getSalt();
-		} else {
-			return "";
-		}
+		return hc.getHyperPlayerManager().hyperPlayerExists(player) ? ""
+				: hc.getHyperPlayerManager().getHyperPlayer(player).getSalt();
 	}
 
 	@Override
@@ -154,21 +147,13 @@ public class HyperAPI implements API {
 	@Override
 	public HyperPlayer getHyperPlayer(String name) {
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
-		if (hpm.hyperPlayerExists(name)) {
-			return hpm.getHyperPlayer(name);
-		} else {
-			return null;
-		}
+		return hpm.hyperPlayerExists(name) ? hpm.getHyperPlayer(name) : null;
 	}
 
 	@Override
 	public HyperPlayer getHyperPlayer(UUID uuid) {
 		HyperPlayerManager hpm = hc.getHyperPlayerManager();
-		if (hpm.hyperPlayerExistsWithUUID(uuid)) {
-			return hpm.getHyperPlayer(uuid);
-		} else {
-			return null;
-		}
+		return hpm.hyperPlayerExistsWithUUID(uuid) ? hpm.getHyperPlayer(uuid) : null;
 	}
 	@Override
 	public boolean hyperPlayerExists(String name) {
