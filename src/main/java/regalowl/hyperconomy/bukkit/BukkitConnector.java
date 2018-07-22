@@ -97,14 +97,17 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public void onLoad() {
 		if (hc == null) hc = new HyperConomy(this);
 		hc.load();
+		getLogger().info("Loaded");
 	}
 	@Override
 	public void onEnable() {
 		hc.enable();
+		getLogger().info("Enabled");
 	}
 	@Override
 	public void onDisable() {
 		hc.disable(false);
+		getLogger().info("Disabled");
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
