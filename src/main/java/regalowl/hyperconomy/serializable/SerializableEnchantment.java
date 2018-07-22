@@ -13,11 +13,11 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 public class SerializableEnchantment extends SerializableObject implements Serializable {
 	private static final long serialVersionUID = -5705303756771850224L;
-	private NamespacedKey enchantment;
+	private String enchantment;
     private int lvl;
  
 	public SerializableEnchantment(Enchantment e, int lvl) {
-		this.enchantment = e.getKey();
+		this.enchantment = e.getKey().getKey();
         this.lvl = lvl;
     }
 
@@ -29,7 +29,7 @@ public class SerializableEnchantment extends SerializableObject implements Seria
 			ois.close();
 			if (!(o instanceof SerializableEnchantment)) {return;}
 			SerializableEnchantment se = (SerializableEnchantment)o;
-	        this.enchantment = se.getEnchantmentName();
+			this.enchantment = se.getEnchantmentName().getKey();
 	        this.lvl = se.getLvl();
     	} catch (Exception e) {
     		
@@ -37,11 +37,11 @@ public class SerializableEnchantment extends SerializableObject implements Seria
     }
 
 	public Enchantment getEnchantment() {
-		return Enchantment.getByKey(enchantment);
+		return Enchantment.getByKey(NamespacedKey.minecraft(enchantment));
     }
 
 	public NamespacedKey getEnchantmentName() {
-		return enchantment;
+		return NamespacedKey.minecraft(enchantment);
 	}
 
 	public int getLvl() {
