@@ -450,7 +450,7 @@ public class HyperPlayer implements HyperAccount {
 	public int getLvlFromXP(int exp) {
 		double lvlraw = (Math.sqrt((exp * 7.0) + 25.0) - 5.0) * (2.0 / 7.0);
 		int lvl = (int) Math.floor(lvlraw);
-		if ((double) lvl > lvlraw) {
+		if (lvl > lvlraw) {
 			lvl = lvl - 1;
 		}
 		return lvl;
