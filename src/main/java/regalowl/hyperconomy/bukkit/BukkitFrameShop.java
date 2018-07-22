@@ -79,9 +79,7 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 		this.to = ho;
 		this.tradeAmount = amount;
 		this.s = s;
-		if (ho != null) {
-			render();
-		}
+		render();
 	}
 	
 	@Override
