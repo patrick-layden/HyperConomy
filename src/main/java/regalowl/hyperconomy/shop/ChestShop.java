@@ -1,13 +1,10 @@
 package regalowl.hyperconomy.shop;
 
 
-import regalowl.simpledatalib.CommonFunctions;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import regalowl.hyperconomy.HyperConomy;
@@ -21,6 +18,7 @@ import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.tradeobject.TempTradeItem;
 import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.simpledatalib.CommonFunctions;
 
 
 public class ChestShop {
@@ -226,7 +224,7 @@ public class ChestShop {
 		return priceIncrement;
 	}
 	public double getFractionalPriceIncrement() {
-		double p = (double)priceIncrement;
+		double p = priceIncrement;
 		return p/100.0;
 	}
 	public void setPriceIncrement(long priceIncrement) {

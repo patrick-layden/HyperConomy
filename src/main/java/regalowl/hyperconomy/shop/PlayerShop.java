@@ -12,7 +12,6 @@ import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.event.ShopModificationEvent;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.tradeobject.BasicShopTradeObject;
-import regalowl.hyperconomy.tradeobject.BasicTradeObject;
 import regalowl.hyperconomy.tradeobject.CompositeShopTradeItem;
 import regalowl.hyperconomy.tradeobject.CompositeTradeItem;
 import regalowl.hyperconomy.tradeobject.ShopTradeEnchant;
@@ -586,7 +585,8 @@ public class PlayerShop implements Shop {
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;
 		} else {
-			TradeObject pso = new BasicShopTradeObject(hc, name, (BasicTradeObject)hyperObject, 0.0, 0.0, 0.0, 100000, TradeObjectStatus.NONE, useEconomyStock);
+			TradeObject pso = new BasicShopTradeObject(hc, name, hyperObject, 0.0, 0.0, 0.0, 100000,
+					TradeObjectStatus.NONE, useEconomyStock);
 			shopContents.put(hyperObject.getName(), pso);
 			hc.getSQLWrite().addToQueue(ws);
 			return pso;

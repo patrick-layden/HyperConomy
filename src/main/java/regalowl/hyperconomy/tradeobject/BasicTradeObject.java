@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -21,7 +19,8 @@ import regalowl.hyperconomy.inventory.HEnchantment;
 import regalowl.hyperconomy.inventory.HItemStack;
 import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.Shop;
-import regalowl.hyperconomy.tradeobject.TradeObject;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.sql.SQLWrite;
 
 
 
@@ -516,7 +515,7 @@ public class BasicTradeObject implements TradeObject {
 				amount = ((double)top/(double)bottom);
 		    } else {
 		    	int number = Integer.parseInt(amountString);
-		    	amount = (double)number;
+				amount = number;
 		    }
 		    TradeObject ho = hc.getDataManager().getEconomyIB(economy).getTradeObject(oname);
 		    if (this.components != null && ho != null) this.components.put(ho.getName(), amount);

@@ -24,7 +24,7 @@ public class CompositeTradeItem extends ComponentTradeItem {
 				amount = ((double)top/(double)bottom);
 		    } else {
 		    	int number = Integer.parseInt(amountString);
-		    	amount = (double)number;
+				amount = number;
 		    }
 		    TradeObject ho = he.getTradeObject(oname);
 		    this.components.put(ho.getName(), amount);

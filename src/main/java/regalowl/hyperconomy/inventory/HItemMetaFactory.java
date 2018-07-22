@@ -25,7 +25,7 @@ public class HItemMetaFactory {
 		switch (meta.getType()) {
 			case ITEM: return new HItemMeta(meta);
 			case BOOK: return new HBookMeta((HBookMeta)meta);
-			case ENCHANTMENT_STORAGE: return new HEnchantmentStorageMeta((HEnchantmentStorageMeta)meta);
+			case ENCHANTMENT_STORAGE: return new HEnchantmentStorageMeta(meta);
 			case FIREWORK_EFFECT: return new HFireworkEffectMeta((HFireworkEffectMeta)meta);
 			case FIREWORK: return new HFireworkMeta((HFireworkMeta)meta);
 			case LEATHER_ARMOR: return new HLeatherArmorMeta((HLeatherArmorMeta)meta);

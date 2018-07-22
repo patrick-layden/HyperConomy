@@ -3,10 +3,6 @@ package regalowl.hyperconomy.shop;
 
 
 
-import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.sql.QueryResult;
-import regalowl.simpledatalib.sql.SQLRead;
-
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +11,6 @@ import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.account.HyperAccount;
 import regalowl.hyperconomy.account.HyperPlayer;
-
 import regalowl.hyperconomy.event.DataLoadEvent;
 import regalowl.hyperconomy.event.DataLoadEvent.DataLoadType;
 import regalowl.hyperconomy.event.HyperEvent;
@@ -41,6 +36,9 @@ import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
 import regalowl.hyperconomy.util.LanguageFile;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.sql.QueryResult;
+import regalowl.simpledatalib.sql.SQLRead;
 
 public class ChestShopHandler implements HyperEventListener {
 
@@ -901,7 +899,7 @@ public class ChestShopHandler implements HyperEventListener {
 				return;
 			}
 
-			ChestShop newShop = new ChestShop(hc, cLoc, (HyperAccount)hp, 100);
+			ChestShop newShop = new ChestShop(hc, cLoc, hp, 100);
 			newShop.initialize();
 			if (!newShop.isValid()) return;
 			chestShops.put(cLoc, newShop);
