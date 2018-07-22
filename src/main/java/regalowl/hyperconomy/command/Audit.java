@@ -40,14 +40,16 @@ public class Audit extends BaseCommand implements HyperCommand {
 				return data;
 			}
 			new Thread(new Runnable() {
-	    		public void run() {
+	    		@Override
+				public void run() {
 	    			HyperAccount ha = dm.getAccount(account);
 	    			account = ha.getName();
 	    			cbalance = ha.getBalance();
 	    			logbalance = getHyperLogTotal(account, "sale") - getHyperLogTotal(account, "purchase");
 	    			auditbalance = getAuditLogTotal(account);
 	    			hc.getMC().runTask(new Runnable() {
-	    	    		public void run() {
+	    	    		@Override
+						public void run() {
 	    	    			if (hp == null) {
 	    	    				hc.getMC().logInfo(L.get("LINE_BREAK"));
 	    	    				hc.getMC().logInfo(L.f(L.get("AUDIT_TRUE"), cbalance));

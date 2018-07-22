@@ -9,6 +9,7 @@ public class Hctest extends BaseCommand implements HyperCommand {
 		super(hc, false);
 	}
 
+	@Override
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		/*

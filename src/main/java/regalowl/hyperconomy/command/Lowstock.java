@@ -39,7 +39,8 @@ public class Lowstock extends BaseCommand implements HyperCommand {
 		}
 		ArrayList<TradeObject> allObjects = he.getTradeObjects(s);
 		Collections.sort(allObjects, new Comparator<TradeObject>(){
-		    public int compare(TradeObject to1, TradeObject to2) {
+		    @Override
+			public int compare(TradeObject to1, TradeObject to2) {
 		    	Double s1 = to1.getStock();
 		    	Double s2 = to2.getStock();
 		    	return s1.compareTo(s2);

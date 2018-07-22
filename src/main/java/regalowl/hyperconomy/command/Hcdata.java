@@ -43,6 +43,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 				table = args[1];
 				if (table.equalsIgnoreCase("all")) {
 					new Thread(new Runnable() {
+						@Override
 						public void run() {
 							for (String table:tables) {
 								QueryResult data = hc.getSQLRead().select("SELECT * FROM hyperconomy_" + table);
@@ -59,6 +60,7 @@ public class Hcdata extends BaseCommand implements HyperCommand {
 					return data;
 				}
 				new Thread(new Runnable() {
+					@Override
 					public void run() {
 						QueryResult data = hc.getSQLRead().select("SELECT * FROM hyperconomy_" + table);
 						ft.makeFolder(folderPath + File.separator + "import_export");

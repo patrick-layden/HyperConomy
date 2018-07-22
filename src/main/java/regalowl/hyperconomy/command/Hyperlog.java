@@ -110,10 +110,12 @@ public class Hyperlog extends BaseCommand implements HyperCommand {
 
 			statement += " ORDER BY TIME DESC";
 			new Thread(new Runnable() {
-	    		public void run() {
+	    		@Override
+				public void run() {
 	    			result = getHyperLog(statement);
 	    			hc.getMC().runTask(new Runnable() {
-	    	    		public void run() {
+	    	    		@Override
+						public void run() {
 	    	    			int m = result.size();
 	    	    			if (m > 100) {
 	    	    				m = 100;

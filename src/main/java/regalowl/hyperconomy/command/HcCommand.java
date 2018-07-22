@@ -14,6 +14,7 @@ public class HcCommand extends BaseCommand implements HyperCommand {
 		super(hc, false);
 	}
 	
+	@Override
 	public CommandData onCommand(CommandData data) {
 		String args[] = data.getArgs();
 		HyperLock hl = hc.getHyperLock();

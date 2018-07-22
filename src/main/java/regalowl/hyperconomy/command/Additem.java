@@ -30,6 +30,7 @@ public class Additem extends BaseCommand implements HyperCommand {
 	}
 
 	
+	@Override
 	public CommandData onCommand(CommandData data) {
 		if (!validate(data)) return data;
 		try {

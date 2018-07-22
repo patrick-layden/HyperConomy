@@ -116,6 +116,7 @@ public class Repairsigns extends BaseCommand implements HyperCommand {
 			if (signsRepaired > 0) {
 				hc.getInfoSignHandler().reloadSigns();
 				hc.getMC().runTaskLater(new Runnable() {
+					@Override
 					public void run() {
 						hc.getInfoSignHandler().updateSigns();
 					}
