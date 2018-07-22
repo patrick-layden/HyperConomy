@@ -6,9 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -16,6 +14,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import javax.management.loading.MLet;
 
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.api.ServerConnectionType;
@@ -228,10 +228,8 @@ public class LibraryManager implements HyperEventListener {
 	private void addURL(URL url) {
 		try {
 			ClassLoader cl = ClassLoader.getSystemClassLoader();
-			URLClassLoader loader = new URLClassLoader(new URL[] { url }, cl);
-			Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] { URL.class });
-			method.setAccessible(true);
-			method.invoke(loader, url);
+			MLet loader = new MLet(new URL[] { url }, cl);
+			loader.addURL(url);
 			try {
 				loader.close();
 			} catch (Exception exc) {
