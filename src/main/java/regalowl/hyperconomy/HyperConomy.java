@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 
 import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayerManager;
@@ -215,26 +216,37 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	public void dumpMaterialList() {
 		ArrayList<String> listMaterials = new ArrayList<>();
 		ArrayList<String> listEnchantments = new ArrayList<>();
+		ArrayList<String> listPotions = new ArrayList<>();
 		try (PrintStream out = new PrintStream(new File(((JavaPlugin) mc).getDataFolder(), "materials.list"))) {
 			for (Material m : Material.values()) {
-				if (("" + m).startsWith("LEGACY_"))
+				if (m == null || ("" + m).startsWith("LEGACY_"))
 					continue;
 				listMaterials.add("" + m);
 			}
 			for (Enchantment e : Enchantment.values()) {
-				if (("" + e).startsWith("LEGACY_"))
+				if (e == null || ("" + e).startsWith("LEGACY_"))
 					continue;
 				listEnchantments.add("" + e + " - LevelRange: " + e.getStartLevel() + "-" + e.getMaxLevel()
-						+ " - Target:" + e.getItemTarget());
+						+ " - Target: " + e.getItemTarget() + " - isTreasure: " + e.isTreasure());
+			}
+			for (PotionEffectType p : PotionEffectType.values()) {
+				if (p == null || ("" + p).startsWith("LEGACY_"))
+					continue;
+				listEnchantments
+						.add("" + p + " - DurationMod: " + p.getDurationModifier() + " - Color: " + p.getColor()
+								+ " - Instant: " + p.isInstant());
 			}
 			Collections.sort(listMaterials);
 			Collections.sort(listEnchantments);
+			Collections.sort(listPotions);
 			for (String s : listMaterials)
 				out.println(s);
 			for (String s : listEnchantments)
 				out.println(s);
+			for (String s : listPotions)
+				out.println(s);
 			((JavaPlugin) mc).getLogger().info("Material list written!" + " Materials: " + listMaterials.size()
-					+ "; Enchantments: " + listEnchantments.size());
+					+ "; Enchantments: " + listEnchantments.size() + "; Potions: " + listPotions.size());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
