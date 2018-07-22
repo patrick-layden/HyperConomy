@@ -336,6 +336,7 @@ public class InfoSign {
 			this.timeValue = timevalue;
 			this.increment = inc;
 			new Thread(new Runnable() {
+				@Override
 				public void run() {
 					String percentchange = hc.getHistory().getPercentChange(to, timeValueHours);
 					String colorcode = getcolorCode(percentchange);
@@ -345,6 +346,7 @@ public class InfoSign {
 						line3 = line3.substring(0, 13) + ")";
 					}
 					hc.getMC().runTask(new Runnable() {
+						@Override
 						public void run() {
 							HSign s = getSign();
 							if (s != null) {

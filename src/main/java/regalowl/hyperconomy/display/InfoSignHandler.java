@@ -47,10 +47,12 @@ public class InfoSignHandler implements HyperEventListener {
 		signCounter.set(0);
 		infoSigns.clear();
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				SQLRead sr = hc.getSQLRead();
 				dbData = sr.select("SELECT * FROM hyperconomy_info_signs");
 				hc.getMC().runTask(new Runnable() {
+					@Override
 					public void run() {
 						while (dbData.next()) {
 							HLocation l = new HLocation(dbData.getString("WORLD"), dbData.getInt("X"),dbData.getInt("Y"),dbData.getInt("Z"));
@@ -145,6 +147,7 @@ public class InfoSignHandler implements HyperEventListener {
 		SignUpdater() {
 			currentSign = 0;
 			updateTaskId = hc.getMC().runRepeatingTask(new Runnable() {
+				@Override
 				public void run() {
 					if (currentSign >= infoSigns.size()) {
 						if (repeatUpdate.get()) {

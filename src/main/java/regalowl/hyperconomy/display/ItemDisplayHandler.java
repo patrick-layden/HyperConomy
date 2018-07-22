@@ -54,10 +54,12 @@ public class ItemDisplayHandler implements HyperEventListener {
 		try {
 			unloadDisplays();
 			new Thread(new Runnable() {
+				@Override
 				public void run() {
 					SQLRead sr = hc.getSQLRead();
 					dbData = sr.select("SELECT * FROM hyperconomy_item_displays");
 					hc.getMC().runTask(new Runnable() {
+						@Override
 						public void run() {
 							while (dbData.next()) {
 								String w = dbData.getString("WORLD");
@@ -99,6 +101,7 @@ public class ItemDisplayHandler implements HyperEventListener {
 
 	public void startRefreshThread() {
 		refreshthreadid = hc.getMC().runRepeatingTask(new Runnable() {
+			@Override
 			public void run() {
 				for (ItemDisplay display:displays) {
 					display.refresh();
