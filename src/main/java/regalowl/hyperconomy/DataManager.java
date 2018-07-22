@@ -443,8 +443,8 @@ public class DataManager implements HyperEventListener {
 	
 	
 	public boolean economyExists(String economy) {
-		if (economy.equalsIgnoreCase("base")) return false;
 		if (economy == null || economy == "") {return false;}
+		if (economy.equalsIgnoreCase("base")) return false;
 		for (Map.Entry<String,HyperEconomy> entry : economies.entrySet()) {
 			HyperEconomy he = entry.getValue();
 			if (he.getName().equalsIgnoreCase(economy)) {
