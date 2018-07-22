@@ -1,6 +1,18 @@
 package regalowl.hyperconomy;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import regalowl.hyperconomy.account.HyperBankManager;
 import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.api.API;
@@ -93,8 +105,6 @@ import regalowl.simpledatalib.file.YamlHandler;
 import regalowl.simpledatalib.sql.SQLManager;
 import regalowl.simpledatalib.sql.SQLRead;
 import regalowl.simpledatalib.sql.SQLWrite;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HyperConomy implements HyperEventListener, SDLEventListener {
 
@@ -194,6 +204,40 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		//dp.enable();
 		waitingForLibraries.set(true);
 		lm = new LibraryManager(this,heh);
+		if (Arrays.asList(((JavaPlugin) mc).getDataFolder().list()).contains("debug.mode"))
+			dumpMaterialList();
+	}
+
+	/**
+	 * Dumps all Materials and Enchantments into materials.log (LEGCY_ Materials are
+	 * omitted!)
+	 */
+	public void dumpMaterialList() {
+		ArrayList<String> listMaterials = new ArrayList<>();
+		ArrayList<String> listEnchantments = new ArrayList<>();
+		try (PrintStream out = new PrintStream(new File(((JavaPlugin) mc).getDataFolder(), "materials.list"))) {
+			for (Material m : Material.values()) {
+				if (("" + m).startsWith("LEGACY_"))
+					continue;
+				listMaterials.add("" + m);
+			}
+			for (Enchantment e : Enchantment.values()) {
+				if (("" + e).startsWith("LEGACY_"))
+					continue;
+				listEnchantments.add("" + e + " - LevelRange: " + e.getStartLevel() + "-" + e.getMaxLevel()
+						+ " - Target:" + e.getItemTarget());
+			}
+			Collections.sort(listMaterials);
+			Collections.sort(listEnchantments);
+			for (String s : listMaterials)
+				out.println(s);
+			for (String s : listEnchantments)
+				out.println(s);
+			((JavaPlugin) mc).getLogger().info("Material list written!" + " Materials: " + listMaterials.size()
+					+ "; Enchantments: " + listEnchantments.size());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void enable() {
