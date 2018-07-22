@@ -103,11 +103,7 @@ public class DataManager implements HyperEventListener {
 			if (devent.loadType == DataLoadType.START) {
 				if (loadActive) {return;}
 				loadActive = true;
-				new Thread(new Runnable() {
-					public void run() {
-						loadEconomies();
-					}
-				}).start();
+				new Thread(() -> loadEconomies()).start();
 			} else if (devent.loadType == DataLoadType.CHEST_SHOPS) {
 				loadAllCategories();
 				hc.getHyperEventHandler().fireEventFromAsyncThread(new DataLoadEvent(DataLoadType.COMPLETE));
