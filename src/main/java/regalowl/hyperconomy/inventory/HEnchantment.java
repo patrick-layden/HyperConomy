@@ -77,4 +77,7 @@ public class HEnchantment {
 		return true;
 	}
 
+	public String toString() {
+		return enchantment.getNamespace() + ":" + enchantment.getKey() + "~" + lvl;
+	}
 }
