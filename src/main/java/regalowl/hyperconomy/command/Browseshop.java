@@ -3,13 +3,6 @@ package regalowl.hyperconomy.command;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
-
-
-
-
-
-import regalowl.simpledatalib.CommonFunctions;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
 import regalowl.hyperconomy.shop.HyperShopManager;
@@ -20,6 +13,7 @@ import regalowl.hyperconomy.tradeobject.EnchantmentClass;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObjectStatus;
 import regalowl.hyperconomy.tradeobject.TradeObjectType;
+import regalowl.simpledatalib.CommonFunctions;
 
 public class Browseshop extends BaseCommand implements HyperCommand {
 	
@@ -80,9 +74,7 @@ public class Browseshop extends BaseCommand implements HyperCommand {
 			}
     		Shop shop = null;
     		if (hp != null) {
-    			if (!hsm.inAnyShop(hp)) {
-    				shop = null;
-    			} else {
+				if (hsm.inAnyShop(hp)) {
     				shop = hsm.getShop(hp);
     			}		
     		}
