@@ -240,6 +240,7 @@ public class HyperBank implements HyperAccount {
 		hc.getSQLWrite().addToQueue(ws);
 	}
 	
+	@Override
 	public void sendMessage(String message) {
 		for (HyperPlayer owner: getOwners()) {
 			owner.sendMessage(message);

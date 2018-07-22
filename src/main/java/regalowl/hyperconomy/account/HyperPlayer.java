@@ -129,6 +129,7 @@ public class HyperPlayer implements HyperAccount {
 		return validUUID;
 	}
 	
+	@Override
 	public String getName() {
 		if (name == null || name == "") {
 			return uuid;
@@ -154,6 +155,7 @@ public class HyperPlayer implements HyperAccount {
 		return em.getEconomy(economy);
 	}
 
+	@Override
 	public double getBalance() {
 		if (hc.getMC().useExternalEconomy()) {
 			checkExternalAccount();
@@ -203,6 +205,7 @@ public class HyperPlayer implements HyperAccount {
 		hc.getSQLWrite().performDelete("hyperconomy_players", conditions);
 	}
 	
+	@Override
 	public void setName(String name) {
 		hc.getHyperPlayerManager().removeHyperPlayer(this);
 		HashMap<String,String> conditions = new HashMap<String,String>();
@@ -272,6 +275,7 @@ public class HyperPlayer implements HyperAccount {
 		return hc.getMC().getInventory(this);
 	}
 
+	@Override
 	public void sendMessage(String message) {
 		hc.getMC().sendMessage(this, message);
 	}
@@ -350,6 +354,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 	
+	@Override
 	public boolean hasBalance(double amount) {
 		if ((getBalance() - amount) >= 0) {
 			return true;
@@ -358,6 +363,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 
 
+	@Override
 	public void setBalance(double balance) {
 		if (hc.getMC().useExternalEconomy()) {
 			checkExternalAccount();
@@ -379,6 +385,7 @@ public class HyperPlayer implements HyperAccount {
 		hc.getHyperEventHandler().fireEvent(new HyperPlayerModificationEvent(this));
 	}
 
+	@Override
 	public void deposit(double amount) {
 		if (hc.getMC().useExternalEconomy()) {
 			checkExternalAccount();
@@ -397,6 +404,7 @@ public class HyperPlayer implements HyperAccount {
 	}
 	
 
+	@Override
 	public void withdraw(double amount) {
 		if (hc.getMC().useExternalEconomy()) {
 			checkExternalAccount();

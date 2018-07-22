@@ -40,13 +40,10 @@ public class HyperPlayerManager implements HyperEventListener {
 		if (event instanceof DataLoadEvent) {
 			DataLoadEvent devent = (DataLoadEvent)event;
 			if (devent.loadType == DataLoadType.ECONOMY) {
-				new Thread(new Runnable() {
-					public void run() {
-						loadData();
-					}
-				}).start();
+				new Thread(() -> loadData()).start();
 			} else if (devent.loadType == DataLoadType.BANK) {
 				hc.getMC().runTask(new Runnable() {
+					@Override
 					public void run() {
 						if (!hc.getDataManager().accountExists(defaultServerShopAccount)) {
 							HyperPlayer defaultAccount = new HyperPlayer(hc, defaultServerShopAccount);
@@ -101,6 +98,7 @@ public class HyperPlayerManager implements HyperEventListener {
 		}
 		playerData.close();
 		hc.getMC().runTask(new Runnable() {
+			@Override
 			public void run() {
 				for (HyperPlayer hp:hyperPlayers.values()) {
 					hp.validate();
