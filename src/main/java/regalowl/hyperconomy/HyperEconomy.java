@@ -274,7 +274,7 @@ public class HyperEconomy implements Serializable {
 			for (TradeObject ho:tradeObjects) {
 				if (ho.getType() != TradeObjectType.ENCHANTMENT) {continue;}
 				if (!ho.matchesEnchantment(enchant)) {continue;}
-				return (TradeObject) ((PlayerShop) s).getPlayerShopObject(ho);
+				return ((PlayerShop) s).getPlayerShopObject(ho);
 			}
 		} else {
 			for (TradeObject ho:tradeObjects) {
@@ -294,7 +294,7 @@ public class HyperEconomy implements Serializable {
 		TradeObject ho = tradeObjectsStackMap.get(stack.getStackComparisonData());
 		if (ho == null) return null;
 		if (s != null && s instanceof PlayerShop) {
-			return (TradeObject) ((PlayerShop) s).getPlayerShopObject(ho);
+			return ((PlayerShop) s).getPlayerShopObject(ho);
 		}
 		return ho;
 	}
@@ -303,7 +303,7 @@ public class HyperEconomy implements Serializable {
 		String sname = name.toLowerCase();
 		if (s != null && s instanceof PlayerShop) {
 			if (tradeObjectsNameMap.containsKey(sname)) {
-				return (TradeObject) ((PlayerShop) s).getPlayerShopObject(tradeObjectsNameMap.get(sname));
+				return ((PlayerShop) s).getPlayerShopObject(tradeObjectsNameMap.get(sname));
 			} else {
 				hc.getDebugMode().debugWriteMessage("getTradeObject() returning null for given name: ["+name+"], shop: ["+s.getName()+"]");
 				return null;
