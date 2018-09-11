@@ -12,6 +12,11 @@
 			<url>https://www.iskariot.info/jenkins/plugin/repository/everything/</url>
 		</repository>
 		<repository>
+			<id>Articdive-repo</id>
+			<url>https://ci.articdive.de/plugin/repository/everything/</url>
+		</repository>
+		
+		<repository>
 			<id>Sonatype-public</id>
 			<name>SnakeYAML repository</name>
 			<url>http://oss.sonatype.org/content/groups/public/</url>
