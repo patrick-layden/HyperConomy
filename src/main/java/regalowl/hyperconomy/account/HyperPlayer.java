@@ -3,8 +3,6 @@ package regalowl.hyperconomy.account;
 import java.util.HashMap;
 import java.util.UUID;
 
-import regalowl.simpledatalib.CommonFunctions;
-import regalowl.simpledatalib.sql.SQLWrite;
 import regalowl.hyperconomy.DataManager;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.HyperEconomy;
@@ -16,6 +14,8 @@ import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionProcessor;
 import regalowl.hyperconomy.transaction.TransactionResponse;
+import regalowl.simpledatalib.CommonFunctions;
+import regalowl.simpledatalib.sql.SQLWrite;
 
 
 
@@ -387,7 +387,9 @@ public class HyperPlayer implements HyperAccount {
 
 	@Override
 	public void deposit(double amount) {
-		if (hc.getMC().useExternalEconomy()) {
+		if (amount < 0) {
+			withdraw(-amount);
+		} else if (hc.getMC().useExternalEconomy()) {
 			checkExternalAccount();
 			hc.getMC().getEconomyProvider().depositAccount(name, amount);
 			hc.getLog().writeAuditLog(name, "deposit", amount, hc.getMC().getEconomyProvider().getEconomyName());
@@ -406,7 +408,9 @@ public class HyperPlayer implements HyperAccount {
 
 	@Override
 	public void withdraw(double amount) {
-		if (hc.getMC().useExternalEconomy()) {
+		if (amount < 0) {
+			deposit(-amount);
+		} else if (hc.getMC().useExternalEconomy()) {
 			checkExternalAccount();
 			hc.getMC().getEconomyProvider().withdrawAccount(name, amount);
 			hc.getLog().writeAuditLog(name, "withdrawal", amount, hc.getMC().getEconomyProvider().getEconomyName());
