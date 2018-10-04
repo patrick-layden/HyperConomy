@@ -13,9 +13,8 @@
 		</repository>
 		<repository>
 			<id>Articdive-repo</id>
-			<url>https://ci.articdive.de/plugin/repository/everything/</url>
+			<url>https://nexus.articdive.de/repository/maven-snapshots/</url>
 		</repository>
-		
 		<repository>
 			<id>Sonatype-public</id>
 			<name>SnakeYAML repository</name>
