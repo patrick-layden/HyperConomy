@@ -22,7 +22,7 @@ import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
-
+@SuppressWarnings("deprecation")
 public class BukkitFrameShop implements FrameShop, HyperEventListener {
 
 	private transient HyperConomy hc;
@@ -37,7 +37,6 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 	
 	private BukkitConnector bc;
 
-	@SuppressWarnings("deprecation")
 	public BukkitFrameShop(HyperConomy hc, HLocation l, TradeObject ho, Shop s, int amount) {
 		this.hc = hc;
 		hc.getHyperEventHandler().registerListener(this);
@@ -126,7 +125,6 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 			delete();
 			return;
 		}
-		@SuppressWarnings("deprecation")
 		MapView mapView = Bukkit.getServer().getMap(mapId);
 		for (MapRenderer mr : mapView.getRenderers()) {
 			mapView.removeRenderer(mr);

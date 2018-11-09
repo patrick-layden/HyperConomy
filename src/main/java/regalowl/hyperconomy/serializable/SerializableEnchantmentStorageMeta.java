@@ -17,7 +17,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 
  
-
+@SuppressWarnings("deprecation")
 public class SerializableEnchantmentStorageMeta extends SerializableItemMeta implements Serializable {
 
 	private static final long serialVersionUID = -6050487153906386305L;

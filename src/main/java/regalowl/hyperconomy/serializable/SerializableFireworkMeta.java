@@ -52,7 +52,7 @@ public class SerializableFireworkMeta extends SerializableItemMeta implements Se
 	
 	@Override
 	public ItemMeta getItemMeta() {
-		ItemStack s = new ItemStack(Material.FIREWORK);
+		ItemStack s = new ItemStack(Material.FIREWORK_ROCKET);
 		FireworkMeta fm = (FireworkMeta)s.getItemMeta();
 		fm.setDisplayName(displayName);
 		fm.setLore(lore);

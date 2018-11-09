@@ -23,7 +23,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
+
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -123,7 +123,7 @@ public class BukkitCommon {
 
 	protected boolean isTransactionSign(HLocation l) {
 		Block b = getBlock(l);
-		if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
+		if (b != null && b.getType().equals(Material.SIGN) || b != null && b.getType().equals(Material.WALL_SIGN)) {
 			Sign s = (Sign) b.getState();
 			String line3 = ChatColor.stripColor(s.getLine(2)).trim();
 			if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
@@ -135,7 +135,7 @@ public class BukkitCommon {
 
 	protected boolean isInfoSign(HLocation l) {
 		Block b = getBlock(l);
-		if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
+		if (b != null && b.getType().equals(Material.SIGN) || b != null && b.getType().equals(Material.WALL_SIGN)) {
 			Sign s = (Sign) b.getState();
 			String type = ChatColor.stripColor(s.getLine(2)).trim().replace(":", "").replace(" ", "");
 			if (SignType.isSignType(type)) return true;
@@ -688,14 +688,7 @@ public class BukkitCommon {
 		if (i == null) return null;
 		Location l = getLocation(i.getLocation());
 		if (l == null) return null;
-		for (Entity e:l.getWorld().getEntities()) {
-			if (e instanceof Item) {
-				Item item = (Item)e;
-				if (item.getEntityId() == i.getId()) {
-					return item;
-				}
-			}
-		}
+		
 		return null;
 	}
 	
@@ -703,7 +696,7 @@ public class BukkitCommon {
 		if (i == null) return null;
 		HLocation l = getLocation(i.getLocation());
 		HItemStack stack = getSerializableItemStack(i.getItemStack());
-		return new HItem(hc, l, i.getEntityId(), stack);
+		return new HItem(hc,l, i.getEntityId(), stack);
 	}
 	
 	protected boolean chunkContainsLocation(HLocation l, Chunk c) {

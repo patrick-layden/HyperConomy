@@ -19,6 +19,7 @@ public class SerializableSkullMeta extends SerializableItemMeta implements Seria
 
 	private String owner;
 
+	@SuppressWarnings("deprecation")
 	public SerializableSkullMeta(ItemMeta im) {
 		super(im);
 		if (im instanceof SkullMeta) {
@@ -43,9 +44,10 @@ public class SerializableSkullMeta extends SerializableItemMeta implements Seria
     }
 	
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public ItemMeta getItemMeta() {
-		ItemStack s = new ItemStack(Material.SKULL_ITEM);
+		ItemStack s = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta sm = (SkullMeta)s.getItemMeta();
 		sm.setDisplayName(displayName);
 		sm.setLore(lore);

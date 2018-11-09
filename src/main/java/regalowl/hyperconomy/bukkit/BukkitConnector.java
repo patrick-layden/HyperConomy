@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
@@ -60,7 +61,7 @@ import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HItem;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
-
+@SuppressWarnings("deprecation")
 public class BukkitConnector extends JavaPlugin implements MineCraftConnector, Listener {
 
 	private HashMap<String, HyperCommand> commands = new HashMap<String, HyperCommand>();
@@ -69,7 +70,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	private HyperConomy hc;
 	private BukkitListener bl;
 	private BukkitCommon common;
-	private NBTTools nbt;
 	
 	private boolean vaultInstalled;
 	private boolean useExternalEconomy;
@@ -81,7 +81,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		this.hc = new HyperConomy(this);
 		this.bl = new BukkitListener(this);
 		this.common = new BukkitCommon(hc);
-		this.nbt = new NBTTools();
 		useExternalEconomy = false;	
 	}
 	
@@ -101,7 +100,10 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	}
 	@Override
 	public void onEnable() {
+		this.getLogger().info("[HyperConomy - Lifesupport] Loading native build HyperConomy Lifesupport 1.13+.");
+		this.getLogger().info("[HyperConomy - Lifesupport] Detected API-133P! Loading!");
 		hc.enable();
+		
 	}
 	@Override
 	public void onDisable() {
@@ -641,7 +643,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public boolean canHoldChestShopSign(HLocation l) {
 		Block b = common.getBlock(l);
 		Material m = b.getType();
-		if (m == Material.ICE || m == Material.LEAVES || m == Material.SAND || m == Material.GRAVEL || m == Material.SIGN || m == Material.SIGN_POST || m == Material.TNT) {
+		if (m == Material.ICE || m == Material.OAK_LEAVES || m == Material.SAND || m == Material.GRAVEL || m == Material.SIGN || m == Material.SIGN || m == Material.TNT) {
 			return false;
 		}
 		return true;
@@ -664,7 +666,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public HSign getSign(HLocation location) {
 		if (location == null) return null;
 		Block b = common.getLocation(location).getBlock();
-		if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
+		if (b != null && (b.getType().equals(Material.SIGN) || b.getType().equals(Material.WALL_SIGN))) {
 			Sign s = (Sign) b.getState();
 			boolean isWallSign = (b.getType().equals(Material.WALL_SIGN)) ? true:false;
 			ArrayList<String> lines = new ArrayList<String>();
@@ -899,7 +901,8 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public String getMinecraftItemName(HItemStack stack) {
 		ItemStack bukkitStack = common.getItemStack(stack);
 		if (bukkitStack == null) return null;
-		return nbt.getName(bukkitStack);
+		String mat = WordUtils.capitalizeFully(bukkitStack.getType().name().replace("_", " ")); 
+		return mat;
 	}
 
 
