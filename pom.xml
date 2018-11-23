@@ -9,7 +9,7 @@
 	<repositories>
 		<repository>
 			<id>Articdive-repo</id>
-			<url>http://ci.articdive.cf/plugin/repository/everything/</url>
+			<url>https://nexus.articdive.de</url>
 		</repository>
 		<repository>
 			<id>Sonatype-public</id>
