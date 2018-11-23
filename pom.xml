@@ -9,7 +9,7 @@
 	<repositories>
 		<repository>
 			<id>Articdive-repo</id>
-			<url>https://nexus.articdive.de</url>
+			<url>https://nexus.articdive.de/repository/maven-public/</url>
 		</repository>
 		<repository>
 			<id>Sonatype-public</id>
