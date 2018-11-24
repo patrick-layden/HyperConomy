@@ -29,7 +29,7 @@ import regalowl.hyperconomy.transaction.TransactionResponse;
  interface API {
 
 
-	 String getDefaultServerShopAccountName();
+	 public String getDefaultServerShopAccountName();
 	
 	
 	 Shop getShop(String name);
