@@ -1,18 +1,7 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-
-
-
-
-
-
-
-
-
-
 import java.util.UUID;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -29,6 +18,7 @@ import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
+import regalowl.hyperconomy.tradeobject.BasicTradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
@@ -52,10 +42,13 @@ public class HyperAPI implements API {
 	}
 	public double getPrice(Player p, ItemStack item){
 		String data = item.getData().toString();
-		String itm = item.getType().toString()+"_"+data;
-		String econ = hc.getEconomyAPI().getEconomyName();
-		double price = hc.gSDL().getSQLManager().getSQLRead().getDouble("SELECT `VALUE` FROM `hyperconomy_objects` WHERE `NAME` = '"+itm+"' AND `ECONOMY` = '"+econ+"'");
-		return price;
+		String econ = hc.getConsoleEconomy();
+		HItemStack hItemStack = hc.getBlankStack();
+		hItemStack.setMaterial(item.getType().toString());
+		hItemStack.setAmount(item.getAmount());
+		TradeObject to = getHyperObject(hItemStack,econ);
+
+		return to.getSellPriceWithTax(to.getValue(),getHyperPlayer(p.getUniqueId()));
 	}
 	public boolean checkHash(String player, String SHA256Hash) {
 		if (hc.getHyperPlayerManager().hyperPlayerExists(player)) {
