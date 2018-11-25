@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 import java.util.UUID;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.api.API;
@@ -48,7 +50,13 @@ public class HyperAPI implements API {
 			return shop.getName();
 		}
 	}
-
+	public double getPrice(Player p, ItemStack item){
+		String data = item.getData().toString();
+		String itm = item.getType().toString()+"_"+data;
+		String econ = hc.getEconomyAPI().getEconomyName();
+		double price = hc.gSDL().getSQLManager().getSQLRead().getDouble("SELECT `VALUE` FROM `hyperconomy_objects` WHERE `NAME` = '"+itm+"' AND `ECONOMY` = '"+econ+"'");
+		return price;
+	}
 	public boolean checkHash(String player, String SHA256Hash) {
 		if (hc.getHyperPlayerManager().hyperPlayerExists(player)) {
 			if (hc.getHyperPlayerManager().getHyperPlayer(player).getHash().equals(SHA256Hash)) {

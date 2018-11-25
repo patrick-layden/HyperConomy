@@ -78,7 +78,7 @@ import regalowl.hyperconomy.transaction.TransactionResponse;
 	 TransactionResponse sell(HyperPlayer p, TradeObject o, int amount, Shop shop);
 	 TransactionResponse sellAll(HyperPlayer p);
 	 TransactionResponse sellAll(HyperPlayer p, HInventory inventory);
-	 Double getPrice(Player p, ItemStack item);
+	 double getPrice(Player p, ItemStack item);
 	 boolean addItemToEconomy(HItemStack stack, String economyName, String requestedName);
 
 }
