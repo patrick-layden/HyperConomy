@@ -18,7 +18,6 @@ import regalowl.hyperconomy.shop.PlayerShop;
 import regalowl.hyperconomy.shop.ServerShop;
 import regalowl.hyperconomy.shop.Shop;
 import regalowl.hyperconomy.tradeobject.EnchantmentClass;
-import regalowl.hyperconomy.tradeobject.BasicTradeObject;
 import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
@@ -41,13 +40,11 @@ public class HyperAPI implements API {
 		}
 	}
 	public double getPrice(Player p, ItemStack item){
-		String data = item.getData().toString();
 		String econ = hc.getConsoleEconomy();
 		HItemStack hItemStack = hc.getBlankStack();
 		hItemStack.setMaterial(item.getType().toString());
 		hItemStack.setAmount(item.getAmount());
 		TradeObject to = getHyperObject(hItemStack,econ);
-
 		return to.getSellPriceWithTax(to.getValue(),getHyperPlayer(p.getUniqueId()));
 	}
 	public boolean checkHash(String player, String SHA256Hash) {
