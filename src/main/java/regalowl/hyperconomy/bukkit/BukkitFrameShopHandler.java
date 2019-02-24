@@ -68,8 +68,8 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 								economy = s.getEconomy();
 							}
 							TradeObject ho = em.getEconomy(economy).getTradeObject(dbData.getString("HYPEROBJECT"), s);
-							BukkitFrameShop fs = new BukkitFrameShop(hc, (short) (int) dbData.getInt("ID"), l, ho, s, dbData.getInt("TRADE_AMOUNT"));
-							frameShops.put(l, fs);
+							//BukkitFrameShop fs = new BukkitFrameShop(hc, (int) dbData.getInt("ID"), l, ho, s, dbData.getInt("TRADE_AMOUNT"));
+							//frameShops.put(l, fs);
 
 						}
 						dbData.close();
@@ -105,8 +105,8 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 	public void createFrameShop(HLocation l, TradeObject ho, Shop s) {
 		HLocation loc = new HLocation(l);
 		loc.convertToBlockLocation();
-		BukkitFrameShop fs = new BukkitFrameShop(hc, loc, ho, s, 1);
-		frameShops.put(loc, fs);
+		//BukkitFrameShop fs = new BukkitFrameShop(hc, loc, ho, s, 1);
+		//frameShops.put(loc, fs);
 	}
 
 
@@ -194,13 +194,14 @@ public class BukkitFrameShopHandler implements Listener, FrameShopHandler {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
-		for (BukkitFrameShop fs:frameShops.values()) {
+		/*for (BukkitFrameShop fs:frameShops.values()) {
 			Block attached = fs.getAttachedBlock();
 			if (attached == null) {continue;}
 			if (attached.equals(event.getBlock())) {
 				event.setCancelled(true);
 			}
 		}
+		*/
 	}
 
 	@Override

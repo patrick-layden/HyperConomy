@@ -44,7 +44,7 @@ Releases
 * Recommended builds are marked with [RB] and are generally thought to be stable and bug free.
 * Builds marked as [Beta] are as bug free as possible, but often have large code changes which may result in the appearance of new bugs.
 * Builds marked as [Dev] are development builds.  Development builds may contain bugs as I work on releasing a new [Beta] build. They may also contain fixes for bugs found in [Beta] builds. Use these builds if you're looking for a bug fix, or would like to try out a new feature I've just added. Also, feel free to search for bugs in the development builds. Any help with testing is greatly appreciated!  Please create a ticket if you find a bug in a Dev build and I'll fix it as soon as I can.
-
+[![Build Status](https://ci.auranode.com/buildStatus/icon?job=W-HyperConomy)](https://ci.auranode.com/job/W-HyperConomy/)
 
 Add-ons
 ---------

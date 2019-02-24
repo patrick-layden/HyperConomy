@@ -43,7 +43,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
-
+import org.bukkit.Material;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.InternalEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -102,9 +102,20 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public void onEnable() {
 		this.getLogger().info("[HyperConomy - Lifesupport] Loading native build HyperConomy Lifesupport 1.13+.");
 		this.getLogger().info("[HyperConomy - Lifesupport] Detected API-133P! Loading!");
+
 		hc.enable();
-		
+		this.addItems();
 	}
+
+	public void addItems() {
+		for (Material mat:Material.values()){
+		HItemStack his = hc.getBlankStack();
+		his.setMaterial(mat.toString());
+		his.setAmount(1);
+		hc.getAPI().addItemToEconomy(his,hc.getConsoleEconomy(),hc.getMC().getMinecraftItemName(his));
+		}
+	}
+
 	@Override
 	public void onDisable() {
 		hc.disable(false);
@@ -126,12 +137,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		}
 		return true;
 	}
-	
-	
-	
-	
-	
-	
+
 	@Override
 	public HEconomyProvider getEconomyProvider() {
 		return economyProvider;
@@ -179,9 +185,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public boolean useExternalEconomy() {
 		return useExternalEconomy;
 	}
-	
-
-
 	@Override
 	public String getEconomyName() {
 		if (vaultEconomy != null && useExternalEconomy) {
@@ -189,36 +192,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		}
 		return "N/A";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//Bukkit Listeners
-	
-	
-	
-	
-	
+
 	//MineCraftConnector overrides
 	@Override
 	public void unregisterAllListeners() {
@@ -360,9 +334,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return false;
 	}
 
-
-	
-
 	@Override
 	public HInventory getInventory(HyperPlayer hp) {
 		return common.getInventory(hp);
@@ -469,22 +440,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		Logger log = Logger.getLogger("Minecraft");
 		log.severe(applyColor(message));
 	}
-
-
-
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	@Override
 	public boolean isSneaking(HyperPlayer hp) {
