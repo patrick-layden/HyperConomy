@@ -1,3 +1,4 @@
+## Download the latest LifeSupport version from https://github.com/OTGEngineering/OTG-HyperConomy-LifeSupport/releases    
 HyperConomy
 ===========
 
