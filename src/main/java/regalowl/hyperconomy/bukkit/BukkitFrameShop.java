@@ -7,6 +7,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
@@ -22,12 +24,12 @@ import regalowl.hyperconomy.tradeobject.TradeObject;
 import regalowl.hyperconomy.transaction.PlayerTransaction;
 import regalowl.hyperconomy.transaction.TransactionResponse;
 import regalowl.hyperconomy.transaction.TransactionType;
-
+@SuppressWarnings("deprecation")
 public class BukkitFrameShop implements FrameShop, HyperEventListener {
 
 	private transient HyperConomy hc;
 	
-	private short mapId;
+	private int mapId;
 	private TradeObject to;
 	private int tradeAmount;
 	private BukkitFrameShopRenderer fsr;
@@ -37,8 +39,7 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 	
 	private BukkitConnector bc;
 
-	@SuppressWarnings("deprecation")
-	public BukkitFrameShop(HyperConomy hc, HLocation l, TradeObject ho, Shop s, int amount) {
+	private BukkitFrameShop(HyperConomy hc, HLocation l, TradeObject ho, Shop s, int amount) {
 		this.hc = hc;
 		hc.getHyperEventHandler().registerListener(this);
 		if (ho == null) {
@@ -62,7 +63,7 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 		render();
 	}
 
-	public BukkitFrameShop(HyperConomy hc, short mapId, HLocation l, TradeObject ho, Shop s, int amount) {
+	private BukkitFrameShop(HyperConomy hc, short mapId, HLocation l, TradeObject ho, Shop s, int amount) {
 		this.hc = hc;
 		this.bc = (BukkitConnector)hc.getMC();
 		hc.getHyperEventHandler().registerListener(this);
@@ -79,9 +80,7 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 		this.to = ho;
 		this.tradeAmount = amount;
 		this.s = s;
-		if (ho != null) {
-			render();
-		}
+		render();
 	}
 	
 	@Override
@@ -95,7 +94,7 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 		
 	}
 
-	public short getMapId() {
+	public int getMapId() {
 		return mapId;
 	}
 
@@ -116,7 +115,7 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 		hc.getSQLWrite().addToQueue("UPDATE hyperconomy_frame_shops SET TRADE_AMOUNT = '" + tradeAmount + "' WHERE ID = '" + mapId + "'");
 	}
 
-	public void render() {
+	private void render() {
 		Location loc = bc.getBukkitCommon().getLocation(l);
 		if (!loc.getChunk().isLoaded()) {
 			return;
@@ -126,15 +125,18 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 			delete();
 			return;
 		}
-		@SuppressWarnings("deprecation")
-		MapView mapView = Bukkit.getServer().getMap(mapId);
+
+		MapView mapView = Bukkit.getServer().getMap((short)mapId);
 		for (MapRenderer mr : mapView.getRenderers()) {
 			mapView.removeRenderer(mr);
 		}
 		fsr = new BukkitFrameShopRenderer(hc, to);
 		mapView.addRenderer(fsr);
-		ItemStack stack = new ItemStack(Material.MAP, 1);
-		stack.setDurability(mapId);
+		ItemStack stack = new ItemStack(Material.FILLED_MAP, 1);
+
+
+
+		//stack.setDurability(mapId);
 		frame.setItem(stack);
 	}
 
@@ -156,7 +158,7 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 		//render();
 	}
 
-	public ItemFrame getFrame(Location loc) {
+	private ItemFrame getFrame(Location loc) {
 		for (Entity e : loc.getChunk().getEntities())
 			if (e instanceof ItemFrame) {
 				if (e.getLocation().getBlock().getLocation().distance(loc) == 0) {
@@ -170,13 +172,13 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 		return l;
 	}
 	
-	public Block getAttachedBlock() {
+	private Block getAttachedBlock() {
 		Location loc = bc.getBukkitCommon().getLocation(l);
 		if (l == null) {return null;}
 		ItemFrame frame = getFrame(loc);
 		if (frame == null) {return null;}
-		Block b = loc.getBlock().getRelative(frame.getAttachedFace());
-		return b;
+
+		return loc.getBlock().getRelative(frame.getAttachedFace());
 	}
 	
 	public void delete() {

@@ -1,18 +1,9 @@
 package regalowl.hyperconomy;
 
 import java.util.ArrayList;
-
-
-
-
-
-
-
-
-
-
 import java.util.UUID;
-
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import regalowl.hyperconomy.account.HyperPlayer;
 import regalowl.hyperconomy.account.HyperPlayerManager;
 import regalowl.hyperconomy.api.API;
@@ -48,7 +39,14 @@ public class HyperAPI implements API {
 			return shop.getName();
 		}
 	}
-
+	public double getPrice(Player p, ItemStack item){
+		String econ = hc.getConsoleEconomy();
+		HItemStack hItemStack = hc.getBlankStack();
+		hItemStack.setMaterial(item.getType().toString());
+		hItemStack.setAmount(item.getAmount());
+		TradeObject to = getHyperObject(hItemStack,econ);
+		return to.getSellPriceWithTax(to.getValue(),getHyperPlayer(p.getUniqueId()));
+	}
 	public boolean checkHash(String player, String SHA256Hash) {
 		if (hc.getHyperPlayerManager().hyperPlayerExists(player)) {
 			if (hc.getHyperPlayerManager().getHyperPlayer(player).getHash().equals(SHA256Hash)) {

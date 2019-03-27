@@ -12,21 +12,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import regalowl.hyperconomy.HyperConomy;
-import regalowl.hyperconomy.account.HyperPlayer;
+
 
 public class UpdateChecker {
 	
 	private HyperConomy hc;
 	private String currentVersion;
 	private String latestVersion;
-	private String type = "";
+	
 	private boolean dev;
 	private boolean beta;
 	private boolean rb;
-	private boolean notifyInGame;
 	
-	private boolean upgradeAvailable = false;
-	private boolean runningDevBuild = false;
 	
 	public UpdateChecker(HyperConomy hc) {
 		this.hc = hc;
@@ -38,13 +35,13 @@ public class UpdateChecker {
 		dev = hc.getConf().getBoolean("updater.notify-for.dev-builds");
 		beta = hc.getConf().getBoolean("updater.notify-for.beta-builds");
 		rb = hc.getConf().getBoolean("updater.notify-for.recommended-builds");
-		notifyInGame = hc.getConf().getBoolean("updater.notify-in-game");
+		
 		
 		hc.getMC().logInfo("[HyperConomy]Checking for updates...");
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					URL url = new URL("https://api.curseforge.com/servermods/files?projectids=38059");
+					URL url = new URL("https://apid.curseforge.com/servermods/files?projectids=38059");
 					URLConnection conn = url.openConnection();
 					conn.setReadTimeout(10000);
 					conn.addRequestProperty("User-Agent", "HyperConomy/v"+hc.getMC().getVersion()+" (by RegalOwl)");
@@ -74,28 +71,23 @@ public class UpdateChecker {
 						acceptableUpgrades.add(nameData);
 					}
 					if (acceptableUpgrades.size() == 0) {
-						int code = getVersionComparisonCode(currentVersion, latestVersion);
-						if (code == 1) runningDevBuild = true;
+						
+						
 					} else {
 						latestVersion = acceptableUpgrades.get(acceptableUpgrades.size() - 1);
-						type = getType(latestVersion);
+						
 						latestVersion = latestVersion.substring(1, latestVersion.indexOf(" "));
-						upgradeAvailable = true;
+						
 					}
 					hc.getMC().runTask(new Runnable() {
 						public void run() {
-							if (upgradeAvailable) {
-								if (notifyInGame) notifyAdmins();
-								hc.getMC().logInfo("[HyperConomy]A new "+"["+type+"] build (" + latestVersion + ") is available for download.");
-							} else if (runningDevBuild) {
-								hc.getMC().logInfo("[HyperConomy]No updates available. You are running a development build.");
-							} else {
-								hc.getMC().logInfo("[HyperConomy]No updates available.");
-							}
+							
+								hc.getMC().logInfo("[HyperConomy] You are running 0.975.8Lifesupport, No updates available. This is a development build.");
+							
 						}
 					});
 				} catch (SocketTimeoutException te) {
-					hc.getMC().logInfo("[HyperConomy]Could not connect to server.");
+					hc.getMC().logInfo("[HyperConomy] Could not connect to server.");
 				} catch (Exception e) {
 					hc.gSDL().getErrorWriter().writeError(e);
 				}
@@ -113,20 +105,7 @@ public class UpdateChecker {
 		return type;
 	}
 	
-	private void notifyAdmins() {
-		hc.getMC().runTaskLater(new Runnable() {
-			public void run() {
-				MessageBuilder mb = new MessageBuilder(hc, "NEW_VERSION_AVAILABLE");
-				mb.setValue(latestVersion);
-				mb.setType(" ["+type+"]");
-				for (HyperPlayer hp:hc.getMC().getOnlinePlayers()) {
-					if (hp.hasPermission("hyperconomy.admin")) {
-						hp.sendMessage(mb.build());
-					}
-				}
-			}
-		}, 600L);
-	}
+	
 
 	private int getVersionComparisonCode(String currentVersion, String latestVersion) {
 		try {

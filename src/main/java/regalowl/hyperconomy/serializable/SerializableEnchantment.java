@@ -9,7 +9,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 
  
-
+@SuppressWarnings("deprecation")
 public class SerializableEnchantment extends SerializableObject implements Serializable {
 	private static final long serialVersionUID = 4510326523024526205L;
 	private String enchantment;

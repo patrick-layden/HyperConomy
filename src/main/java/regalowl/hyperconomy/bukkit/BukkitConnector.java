@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
@@ -42,7 +43,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
-
+import org.bukkit.Material;
 import regalowl.hyperconomy.HyperConomy;
 import regalowl.hyperconomy.InternalEconomy;
 import regalowl.hyperconomy.account.HyperPlayer;
@@ -60,7 +61,7 @@ import regalowl.hyperconomy.minecraft.HBlock;
 import regalowl.hyperconomy.minecraft.HItem;
 import regalowl.hyperconomy.minecraft.HLocation;
 import regalowl.hyperconomy.minecraft.HSign;
-
+@SuppressWarnings("deprecation")
 public class BukkitConnector extends JavaPlugin implements MineCraftConnector, Listener {
 
 	private HashMap<String, HyperCommand> commands = new HashMap<String, HyperCommand>();
@@ -69,7 +70,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	private HyperConomy hc;
 	private BukkitListener bl;
 	private BukkitCommon common;
-	private NBTTools nbt;
 	
 	private boolean vaultInstalled;
 	private boolean useExternalEconomy;
@@ -81,7 +81,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		this.hc = new HyperConomy(this);
 		this.bl = new BukkitListener(this);
 		this.common = new BukkitCommon(hc);
-		this.nbt = new NBTTools();
 		useExternalEconomy = false;	
 	}
 	
@@ -101,8 +100,22 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	}
 	@Override
 	public void onEnable() {
+		this.getLogger().info("[HyperConomy - Lifesupport] Loading native build HyperConomy Lifesupport 1.13+.");
+		this.getLogger().info("[HyperConomy - Lifesupport] Detected API-133P! Loading!");
+
 		hc.enable();
+		this.addItems();
 	}
+
+	public void addItems() {
+		for (Material mat:Material.values()){
+		HItemStack his = hc.getBlankStack();
+		his.setMaterial(mat.toString());
+		his.setAmount(1);
+		hc.getAPI().addItemToEconomy(his,hc.getConsoleEconomy(),hc.getMC().getMinecraftItemName(his));
+		}
+	}
+
 	@Override
 	public void onDisable() {
 		hc.disable(false);
@@ -124,12 +137,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		}
 		return true;
 	}
-	
-	
-	
-	
-	
-	
+
 	@Override
 	public HEconomyProvider getEconomyProvider() {
 		return economyProvider;
@@ -177,9 +185,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public boolean useExternalEconomy() {
 		return useExternalEconomy;
 	}
-	
-
-
 	@Override
 	public String getEconomyName() {
 		if (vaultEconomy != null && useExternalEconomy) {
@@ -187,36 +192,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		}
 		return "N/A";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//Bukkit Listeners
-	
-	
-	
-	
-	
+
 	//MineCraftConnector overrides
 	@Override
 	public void unregisterAllListeners() {
@@ -358,9 +334,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		return false;
 	}
 
-
-	
-
 	@Override
 	public HInventory getInventory(HyperPlayer hp) {
 		return common.getInventory(hp);
@@ -467,22 +440,6 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		Logger log = Logger.getLogger("Minecraft");
 		log.severe(applyColor(message));
 	}
-
-
-
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	@Override
 	public boolean isSneaking(HyperPlayer hp) {
@@ -641,7 +598,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public boolean canHoldChestShopSign(HLocation l) {
 		Block b = common.getBlock(l);
 		Material m = b.getType();
-		if (m == Material.ICE || m == Material.LEAVES || m == Material.SAND || m == Material.GRAVEL || m == Material.SIGN || m == Material.SIGN_POST || m == Material.TNT) {
+		if (m == Material.ICE || m == Material.OAK_LEAVES || m == Material.SAND || m == Material.GRAVEL || m == Material.SIGN || m == Material.SIGN || m == Material.TNT) {
 			return false;
 		}
 		return true;
@@ -664,7 +621,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public HSign getSign(HLocation location) {
 		if (location == null) return null;
 		Block b = common.getLocation(location).getBlock();
-		if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
+		if (b != null && (b.getType().equals(Material.SIGN) || b.getType().equals(Material.WALL_SIGN))) {
 			Sign s = (Sign) b.getState();
 			boolean isWallSign = (b.getType().equals(Material.WALL_SIGN)) ? true:false;
 			ArrayList<String> lines = new ArrayList<String>();
@@ -899,7 +856,8 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public String getMinecraftItemName(HItemStack stack) {
 		ItemStack bukkitStack = common.getItemStack(stack);
 		if (bukkitStack == null) return null;
-		return nbt.getName(bukkitStack);
+		String mat = WordUtils.capitalizeFully(bukkitStack.getType().name().replace("_", " ")); 
+		return mat;
 	}
 
 

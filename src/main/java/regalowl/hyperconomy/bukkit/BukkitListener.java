@@ -61,6 +61,7 @@ import regalowl.hyperconomy.minecraft.HMob;
 import regalowl.hyperconomy.minecraft.HSign;
 import regalowl.hyperconomy.shop.ChestShop;
 
+@SuppressWarnings("deprecation")
 public class BukkitListener implements Listener {
 
 	private BukkitConnector bc;
