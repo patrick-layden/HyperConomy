@@ -80,7 +80,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-http</artifactId>
-			<version>8.1.9.v20130131</version>
+			<version>9.4.48.v20220622</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
